@@ -33,7 +33,10 @@ public class BAMtoMidpoint extends JFrame {
 	private ArrayList<Integer> BP;
 	private ArrayList<Integer> M_OCC;
 	
-	public BAMtoMidpoint(File b, File o) {
+	int MIN = 0;
+	int MAX = 1000;
+	
+	public BAMtoMidpoint(File b, File o, int mi, int ma) {
 		setTitle("BAM to Midpoint Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -47,11 +50,13 @@ public class BAMtoMidpoint extends JFrame {
 		
 		BAM = b;
 		OUTPUTPATH = o;
+		MIN = mi;
+		MAX = ma;
 	}
 	
 	public void run() throws IOException, InterruptedException {
 		//Open Output File
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
+		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
 		if(OUTPUTPATH != null) {
 			try { OUT = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME)); }
 			catch (FileNotFoundException e) { e.printStackTrace(); }
@@ -108,7 +113,8 @@ public class BAMtoMidpoint extends JFrame {
 	}
 	
 	public void dumpExcess(String chrom) {
-		int trim = 15000;
+		int trim = (MAX * 10) - (MAX * 2);
+		if(MAX * 10 < 1000) { trim = 600; }
 		while(trim > 0) {
 			OUT.println(chrom + "\t" + BP.get(0).intValue() + "\t" + M_OCC.get(0).intValue());
 			BP.remove(0);
@@ -137,12 +143,14 @@ public class BAMtoMidpoint extends JFrame {
 				//Must be PAIRED-END mapped, mate must be mapped, must be read1
 				if(sr.getReadPairedFlag()) {
 					if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
-						addTag(sr);
+						if(sr.getInferredInsertSize() >= MIN && sr.getInferredInsertSize() <= MAX) {
+							addTag(sr);
+						}
 					}
 				}
 				
 				//Dump ArrayLists to OUT if they get too big in order to save RAM and therefore time
-				if(BP.size() > 20000) {
+				if((BP.size() > (MAX * 10) && (MAX * 10) > 1000) || (BP.size() > 1000 && (MAX * 10) < 1000)) {
 					dumpExcess(seq.getSequenceName());
 				}
 				

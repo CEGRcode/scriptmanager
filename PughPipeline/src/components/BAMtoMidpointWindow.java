@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
@@ -35,6 +36,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class BAMtoMidpointWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -52,19 +55,34 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 	
 	JProgressBar progressBar;
 	public Task task;
+	private JTextField txtMin;
+	private JTextField txtMax;
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
         	setProgress(0);
-        	
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-        		BAMtoMidpoint convert = new BAMtoMidpoint(BAMFiles.get(x), OUTPUT);
-        		convert.setVisible(true);
-				convert.run();
-        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-        		setProgress(percentComplete);
-        	}
+        	try {
+	        	if(Integer.parseInt(txtMin.getText()) < 0) {
+	    			JOptionPane.showMessageDialog(null, "Invalid Minimum Size!!! Must be larger than 0 bp");
+	    		} else if(Integer.parseInt(txtMax.getText()) < 1) {
+	    			JOptionPane.showMessageDialog(null, "Invalid Maximum Size!!! Must be larger than 0 bp");
+	    		} else if(Integer.parseInt(txtMax.getText()) < Integer.parseInt(txtMin.getText())) {
+	    			JOptionPane.showMessageDialog(null, "Invalid Maximum and Minimum Size!!! Maximum must be larger than Minimum");
+	    		} else {
+	    			int MIN = Integer.parseInt(txtMin.getText());
+	    			int MAX = Integer.parseInt(txtMax.getText());
+		        	for(int x = 0; x < BAMFiles.size(); x++) {
+		        		BAMtoMidpoint convert = new BAMtoMidpoint(BAMFiles.get(x), OUTPUT, MIN, MAX);
+		        		convert.setVisible(true);
+						convert.run();
+		        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+		        		setProgress(percentComplete);
+		        	}
+	    		}
+	    	} catch(NumberFormatException nfe){
+				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			}
         	setProgress(100);
         	return null;
         }
@@ -79,7 +97,7 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 		setTitle("BAM to Midpoint Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 600, 350);
+		setBounds(125, 125, 600, 410);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -87,12 +105,13 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 		contentPane.setLayout(sl_contentPane);
 	
 		JScrollPane scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 15, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
 		btnLoad = new JButton("Load BAM Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 16, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -117,7 +136,6 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 		scrollPane.setViewportView(listExp);
 		
 		btnRemoveBam = new JButton("Remove BAM");
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, btnRemoveBam);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
@@ -150,7 +168,7 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
         contentPane.add(lblCurrentOutput);
 		
         btnOutputDirectory = new JButton("Output Directory");
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -11, SpringLayout.NORTH, btnOutputDirectory);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -64, SpringLayout.NORTH, btnOutputDirectory);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, 0, SpringLayout.EAST, btnIndex);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 0, SpringLayout.WEST, btnIndex);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutputDirectory, -6, SpringLayout.NORTH, lblDefaultToLocal);
@@ -165,6 +183,42 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
         contentPane.add(progressBar);
         
         btnIndex.setActionCommand("start");
+        
+        txtMin = new JTextField();
+        txtMin.setHorizontalAlignment(SwingConstants.CENTER);
+        txtMin.setText("0");
+        contentPane.add(txtMin);
+        txtMin.setColumns(10);
+        
+        txtMax = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, 0, SpringLayout.NORTH, txtMin);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtMax, -83, SpringLayout.EAST, contentPane);
+        txtMax.setHorizontalAlignment(SwingConstants.CENTER);
+        txtMax.setText("1000");
+        contentPane.add(txtMax);
+        txtMax.setColumns(10);
+        
+        JLabel lblMaxSizebp = new JLabel("Max Size (bp):");
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblMaxSizebp, -163, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtMin, -87, SpringLayout.WEST, lblMaxSizebp);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtMax, 6, SpringLayout.EAST, lblMaxSizebp);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMaxSizebp, 6, SpringLayout.NORTH, txtMin);
+        lblMaxSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblMaxSizebp);
+        
+        JLabel lblMinSizebp = new JLabel("Min Size (bp):");
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 6, SpringLayout.EAST, lblMinSizebp);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblMinSizebp, 75, SpringLayout.WEST, contentPane);
+        lblMinSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblMinSizebp);
+        
+        JLabel lblEnterInsertSize = new JLabel("Please Enter Insert Size Range to Consider:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, 4, SpringLayout.SOUTH, lblEnterInsertSize);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMinSizebp, 10, SpringLayout.SOUTH, lblEnterInsertSize);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblEnterInsertSize, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblEnterInsertSize, 0, SpringLayout.WEST, scrollPane);
+        lblEnterInsertSize.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblEnterInsertSize);
         btnIndex.addActionListener(this);
         
         btnOutputDirectory.addMouseListener(new MouseAdapter() {
@@ -224,8 +278,6 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 			return null;
 		}	
 	}
-
-
 }
 
 
