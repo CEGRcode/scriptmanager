@@ -99,7 +99,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		JScrollPane scrollPane = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -141, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
 		btnLoad = new JButton("Load BAM Files");
@@ -168,12 +168,12 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         rdbtnRead1.setSelected(true);
         
         JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 199, SpringLayout.SOUTH, btnLoad);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 10, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCombined, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead2, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
         lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 6, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 0, SpringLayout.WEST, scrollPane);
         contentPane.add(lblPleaseSelectWhich);
 
         final JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
@@ -183,10 +183,10 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(lblDefaultToLocal);
         
         JLabel lblCurrentOutput = new JLabel("Current Output:");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 10, SpringLayout.WEST, contentPane);
         lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrentOutput, -35, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
         contentPane.add(lblCurrentOutput);
 		
         btnOutputDirectory = new JButton("Output Directory");
