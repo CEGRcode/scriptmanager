@@ -120,7 +120,7 @@ public class TagPileup extends JFrame {
 						if(sr.getReadPairedFlag()) {
 							if(sr.getProperPairFlag()) {
 								if((sr.getFirstOfPairFlag() && READ == 0) || (!sr.getFirstOfPairFlag() && READ == 1) || READ == 2) {
-									int FivePrime = sr.getUnclippedStart();
+									int FivePrime = sr.getUnclippedStart() - 1;
 									if(sr.getReadNegativeStrandFlag()) { 
 										FivePrime = sr.getUnclippedEnd();
 										//SHIFT DATA HERE IF NECCESSARY
@@ -134,16 +134,14 @@ public class TagPileup extends JFrame {
 							}
 						} else {
 							//Also outputs if not paired-end since by default it is read-1
-							int FivePrime = sr.getUnclippedStart();
+							int FivePrime = sr.getUnclippedStart() - 1;
 							if(sr.getReadNegativeStrandFlag()) { 
 								FivePrime = sr.getUnclippedEnd();
 								//SHIFT DATA HERE IF NECCESSARY
 								FivePrime -= SHIFT;
 							} else { FivePrime += SHIFT; }
 							FivePrime -= read.getStart();
-							//System.out.print(FivePrime + "\t");
 							FivePrime = filterRead(FivePrime, sr.getReadNegativeStrandFlag(), read.getDir());                       
-							//System.out.println(FivePrime + "\t" + sr.getReadNegativeStrandFlag() + "\t" + read.getDir());
 	                        //Increment Final Array keeping track of pileup
 	                        if(FivePrime >= 0 && FivePrime < TAG.length) { TAG[FivePrime] += 1; }
 						}
@@ -165,7 +163,7 @@ public class TagPileup extends JFrame {
 				DOMAIN = new double[AVG.length];
 				for(int i = 0; i < AVG.length; i++) {
 					AVG[i] /= COUNT;
-					DOMAIN[i] = (double)((AVG.length / 2) - i);
+					DOMAIN[i] = (double)((AVG.length / 2) - (AVG.length - i));
 					STATS.append(DOMAIN[i] + "\t" + AVG[i] + "\n");
 				}
 				
@@ -188,11 +186,9 @@ public class TagPileup extends JFrame {
 		//check for strandedness here
 		//Readstrand true if -, false if +
         if(STRAND == 0) {
-        	//System.out.println("Correct Strand");
         	if(!Readstrand && CoordDir.equals("-")) { return -999; }
         	else if(Readstrand && CoordDir.equals("+")) { return -999; }
         } else if(STRAND == 1) {
-        	System.out.println("IncorrectCorrect Strand");
         	if(!Readstrand && CoordDir.equals("+")) { return -999; }
         	else if(Readstrand && CoordDir.equals("-")) { return -999;}
         }
