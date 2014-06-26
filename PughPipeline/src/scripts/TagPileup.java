@@ -188,9 +188,11 @@ public class TagPileup extends JFrame {
 		//check for strandedness here
 		//Readstrand true if -, false if +
         if(STRAND == 0) {
+        	//System.out.println("Correct Strand");
         	if(!Readstrand && CoordDir.equals("-")) { return -999; }
         	else if(Readstrand && CoordDir.equals("+")) { return -999; }
         } else if(STRAND == 1) {
+        	System.out.println("IncorrectCorrect Strand");
         	if(!Readstrand && CoordDir.equals("+")) { return -999; }
         	else if(Readstrand && CoordDir.equals("-")) { return -999;}
         }
