@@ -8,6 +8,7 @@ import javax.swing.SpringLayout;
 
 import components.BAIIndexerWindow;
 import components.BAMtoBEDWindow;
+import components.BAMtoMidpointWindow;
 import components.BAMtoTABWindow;
 import components.GeneTrackWindow;
 import components.MergeBAMWindow;
@@ -163,6 +164,9 @@ public class ScriptManager {
 		JButton btnBamToBed = new JButton("BAM to BED");
 		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
 		pnlBamConvert.add(btnBamToBed);
+		
+		JButton btnBamToMidpoint = new JButton("BAM to Midpoint");
+		pnlBamConvert.add(btnBamToMidpoint);
 
 		btnBamToBed.addMouseListener(new MouseAdapter() {
 			@Override
@@ -195,7 +199,22 @@ public class ScriptManager {
 				 });
 			}
 		});
-
+		
+		btnBamToMidpoint.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtoMidpointWindow frame = new BAMtoMidpointWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		
 		JPanel pnlAnalysis = new JPanel();
 		tabbedPane.addTab("Data Analysis", null, pnlAnalysis, null);
