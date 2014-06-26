@@ -132,7 +132,7 @@ public class TagPileup extends JFrame {
 			                        if(FivePrime >= 0 && FivePrime < TAG.length) { TAG[FivePrime] += 1; }
 								}
 							}
-						} else {
+						} else if(READ == 0 || READ == 2){
 							//Also outputs if not paired-end since by default it is read-1
 							int FivePrime = sr.getUnclippedStart() - 1;
 							if(sr.getReadNegativeStrandFlag()) { 
@@ -162,7 +162,7 @@ public class TagPileup extends JFrame {
 				
 				DOMAIN = new double[AVG.length];
 				for(int i = 0; i < AVG.length; i++) {
-					AVG[i] /= COUNT;
+					if(COUNT != 0) { AVG[i] /= COUNT; }
 					DOMAIN[i] = (double)((AVG.length / 2) - (AVG.length - i));
 					STATS.append(DOMAIN[i] + "\t" + AVG[i] + "\n");
 				}
