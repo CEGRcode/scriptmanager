@@ -3,19 +3,28 @@ package objects;
 import java.util.Comparator;
 
 public class Peak {
-	private String CHROM;
-	private int BP;
-	private double SCORE;
-	private int TAG;
-	private double STDDEV;
-	private int START;
-	private int STOP;
+	private String CHROM = "";
+	private int BP = -1;
+	private double SCORE = -1;
+	private int TAG = -1;
+	private double STDDEV = -1;
+	private int START = -1;
+	private int STOP = -1;
+	private String DIR = "*";
 	
-	public Peak(String c, int b, int sta, int sto) {
-		CHROM = c;
-		BP = b;
-		START = sta;
-		STOP = sto;
+	public Peak(String chr, int start, int stop, String dir) {
+		CHROM = chr;
+		START = start;
+		STOP = stop;
+		DIR = dir;
+	}
+	
+	public String getDir() {
+		return DIR;
+	}
+	
+	public void setDir(String dir) {
+		DIR = dir;
 	}
 	
 	public String getChrom() {
@@ -76,7 +85,7 @@ public class Peak {
 	
 	public String toString() {
 //		chr4    genetrack       .       51549   51559   48      +       .       stddev=1.46115797876
-		String name = CHROM + "\tgenetrack\t.\t" + START + "\t" + STOP + "\t" + TAG + "\t+\t.\tstddev=" + STDDEV; 
+		String name = CHROM + "\tgenetrack\t.\t" + START + "\t" + STOP + "\t" + TAG + "\t" + DIR + "\t.\tstddev=" + STDDEV; 
 		return name;
 	}
 		

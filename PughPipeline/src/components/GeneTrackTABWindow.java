@@ -37,7 +37,7 @@ import javax.swing.JLabel;
 import scripts.GeneTrack;
 
 @SuppressWarnings("serial")
-public class GeneTrackWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class GeneTrackTABWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
@@ -102,7 +102,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
         }
 	}
 	
-	public GeneTrackWindow() {
+	public GeneTrackTABWindow() {
 		setTitle("GeneTrack");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -124,7 +124,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		
-		btnLoad = new JButton("Load BAM Files");
+		btnLoad = new JButton("Load TAB Files");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addMouseListener(new MouseAdapter() {
@@ -143,7 +143,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnLoad);
 		
-		btnRemoveBam = new JButton("Remove BAM");
+		btnRemoveBam = new JButton("Remove TAB");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
