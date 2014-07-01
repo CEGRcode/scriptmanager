@@ -91,10 +91,10 @@ public class BAMtoTAB extends JFrame {
 	
 	public void addTag(SAMRecord sr) {
 		//Get the start of the record 
-		int recordStart = sr.getAlignmentStart();
+		int recordStart = sr.getUnclippedStart();//.getAlignmentStart();
 
 		//Accounts for reverse tag reporting 3' end of tag and converting BED to IDX/GFF format
-		if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getAlignmentEnd(); }					
+		if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }//.getAlignmentEnd(); }					
 		if(BP.contains(new Integer(recordStart))) {
 			int index = BP.indexOf(new Integer(recordStart));
 			if(sr.getReadNegativeStrandFlag()) {
