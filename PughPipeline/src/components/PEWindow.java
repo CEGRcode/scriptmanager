@@ -23,7 +23,6 @@ import javax.swing.SwingWorker;
 
 import scripts.PEStats;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -212,15 +211,11 @@ public class PEWindow extends JFrame implements ActionListener, PropertyChangeLi
 		chckbxOutputStatistics.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		        if(chckbxOutputStatistics.isSelected()) {
-		        	txtOutputName.setEditable(true);
-		        	txtOutputName.setForeground(Color.BLACK);
-		        	lblOutputName.setForeground(Color.BLACK);
-
+		        	txtOutputName.setEnabled(true);
+		        	lblOutputName.setEnabled(true);
 		        } else {
-		        	txtOutputName.setEditable(false);
-		        	txtOutputName.setForeground(Color.GRAY);
-		        	lblOutputName.setForeground(Color.GRAY);		        	
-		        }
+		        	txtOutputName.setEnabled(false);
+		        	lblOutputName.setEnabled(false);		        }
 		      }
 		    });
 		
