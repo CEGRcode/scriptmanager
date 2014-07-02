@@ -5,18 +5,18 @@ import java.util.Comparator;
 public class Peak {
 	private String CHROM = "";
 	private int BP = -1;
-	private double SCORE = -1;
 	private int TAG = -1;
 	private double STDDEV = -1;
 	private int START = -1;
 	private int STOP = -1;
 	private String DIR = "*";
 	
-	public Peak(String chr, int start, int stop, String dir) {
+	public Peak(String chr, int start, int stop, String dir, int t) {
 		CHROM = chr;
 		START = start;
 		STOP = stop;
 		DIR = dir;
+		TAG = t;
 	}
 	
 	public String getDir() {
@@ -33,10 +33,6 @@ public class Peak {
 	
 	public int getBP() {
 		return BP;
-	}
-	
-	public double getScore() {
-		return SCORE;
 	}
 	
 	public int getTag() {
@@ -63,10 +59,6 @@ public class Peak {
 		BP = b;
 	}
 	
-	public void setScore(double s) {
-		SCORE = s;
-	}
-	
 	public void setTag(int t) {
 		TAG = t;
 	}
@@ -89,10 +81,10 @@ public class Peak {
 		return name;
 	}
 		
-	public static Comparator<Peak> PeakScoreComparator = new Comparator<Peak>() {
+	public static Comparator<Peak> PeakTagComparator = new Comparator<Peak>() {
 		public int compare(Peak node1, Peak node2) {
-			double PeakScore1 = node1.getScore();
-			double PeakScore2 = node2.getScore();
+			int PeakScore1 = node1.getTag();
+			int PeakScore2 = node2.getTag();
 			if (PeakScore1 < PeakScore2) return 1;
 			else if (PeakScore1 > PeakScore2) return -1;
 			else return 0;

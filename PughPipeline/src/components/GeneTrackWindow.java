@@ -1,6 +1,6 @@
 package components;
 
-import filters.TABFilter;
+import filters.BAMFilter;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,11 +19,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -36,8 +39,10 @@ import javax.swing.JLabel;
 
 import scripts.GeneTrack;
 
+import javax.swing.JCheckBox;
+
 @SuppressWarnings("serial")
-public class GeneTrackTABWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class GeneTrackWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
@@ -58,6 +63,7 @@ public class GeneTrackTABWindow extends JFrame implements ActionListener, Proper
 	private JLabel lblUpWidth;
 	private JLabel lblDownWidth;
 	private JLabel lblMinimumTagsPer;
+	private JCheckBox chckbxPeakWidth;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -76,9 +82,13 @@ public class GeneTrackTABWindow extends JFrame implements ActionListener, Proper
 				} else {
 					int SIGMA = Integer.parseInt(txtSigma.getText());
 		        	int EXCLUSION = Integer.parseInt(txtExclusion.getText());
-		        	int UP = Integer.parseInt(txtUp.getText());
-		        	int DOWN = Integer.parseInt(txtDown.getText());
 		        	int FILTER = Integer.parseInt(txtFilter.getText());
+		        	int UP = EXCLUSION / 2;
+	        		int DOWN = EXCLUSION / 2;
+		        	if(chckbxPeakWidth.isSelected()) {
+		        		UP = Integer.parseInt(txtUp.getText());
+		        		DOWN = Integer.parseInt(txtDown.getText());
+		        	}
 		        	
 		        	setProgress(0);
 		        	for(int x = 0; x < BAMFiles.size(); x++) {       		
@@ -102,11 +112,11 @@ public class GeneTrackTABWindow extends JFrame implements ActionListener, Proper
         }
 	}
 	
-	public GeneTrackTABWindow() {
+	public GeneTrackWindow() {
 		setTitle("GeneTrack");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 345);
+		setBounds(125, 125, 500, 330);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -114,9 +124,8 @@ public class GeneTrackTABWindow extends JFrame implements ActionListener, Proper
 		contentPane.setLayout(sl_contentPane);
 	
 		JScrollPane scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -127, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
       	expList = new DefaultListModel();
@@ -124,13 +133,13 @@ public class GeneTrackTABWindow extends JFrame implements ActionListener, Proper
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		
-		btnLoad = new JButton("Load TAB Files");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
+		btnLoad = new JButton("Load BAM Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				fc.setFileFilter(new TABFilter());
+				fc.setFileFilter(new BAMFilter());
 				fc.setMultiSelectionEnabled(true);
 				File[] newBAMFiles = getCoordFile();
 				if(newBAMFiles != null) {
@@ -143,7 +152,7 @@ public class GeneTrackTABWindow extends JFrame implements ActionListener, Proper
 		});
 		contentPane.add(btnLoad);
 		
-		btnRemoveBam = new JButton("Remove TAB");
+		btnRemoveBam = new JButton("Remove BAM");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
@@ -164,83 +173,110 @@ public class GeneTrackTABWindow extends JFrame implements ActionListener, Proper
 		contentPane.add(btnGene);
 		
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -5, SpringLayout.SOUTH, btnGene);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 0, SpringLayout.NORTH, btnGene);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, contentPane);
         progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
         btnGene.setActionCommand("start");
         
         txtSigma = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtSigma, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -6, SpringLayout.NORTH, txtSigma);
         txtSigma.setHorizontalAlignment(SwingConstants.CENTER);
         txtSigma.setText("5");
         contentPane.add(txtSigma);
         txtSigma.setColumns(10);
         
         txtExclusion = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtExclusion, 6, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtExclusion, 316, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtExclusion, -72, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtSigma, 0, SpringLayout.NORTH, txtExclusion);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtExclusion, -201, SpringLayout.EAST, contentPane);
         txtExclusion.setHorizontalAlignment(SwingConstants.CENTER);
         txtExclusion.setText("20");
         contentPane.add(txtExclusion);
         txtExclusion.setColumns(10);
         
         txtUp = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtUp, 35, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtUp, 0, SpringLayout.EAST, txtSigma);
+        txtUp.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtExclusion, 0, SpringLayout.WEST, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtExclusion, -6, SpringLayout.NORTH, txtUp);
         txtUp.setHorizontalAlignment(SwingConstants.CENTER);
         txtUp.setText("10");
         contentPane.add(txtUp);
         txtUp.setColumns(10);
         
         txtDown = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtDown, 1, SpringLayout.SOUTH, txtExclusion);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtDown, 0, SpringLayout.WEST, txtExclusion);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtDown, 0, SpringLayout.EAST, txtExclusion);
+        txtDown.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtDown, -10, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtUp, 0, SpringLayout.NORTH, txtDown);
         txtDown.setHorizontalAlignment(SwingConstants.CENTER);
         txtDown.setText("10");
         contentPane.add(txtDown);
         txtDown.setColumns(10);
         
         txtFilter = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtFilter, -1, SpringLayout.NORTH, btnGene);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtFilter, -150, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtFilter, -6, SpringLayout.NORTH, txtDown);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtFilter, -10, SpringLayout.EAST, contentPane);
         txtFilter.setHorizontalAlignment(SwingConstants.CENTER);
         txtFilter.setText("1");
         contentPane.add(txtFilter);
         txtFilter.setColumns(10);
         
         JLabel lblSigma = new JLabel("Sigma:");
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblSigma, -316, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtSigma, 22, SpringLayout.EAST, lblSigma);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSigma, 12, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblSigma, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtSigma, 6, SpringLayout.EAST, lblSigma);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSigma, 6, SpringLayout.NORTH, txtExclusion);
         contentPane.add(lblSigma);
         
         JLabel lblExclusion = new JLabel("Exclusion Zone:");
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtSigma, -10, SpringLayout.WEST, lblExclusion);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblExclusion, 12, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtSigma, -30, SpringLayout.WEST, lblExclusion);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblExclusion, 6, SpringLayout.NORTH, txtSigma);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblExclusion, -6, SpringLayout.WEST, txtExclusion);
         contentPane.add(lblExclusion);
         
         lblUpWidth = new JLabel("Up Width:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpWidth, 13, SpringLayout.SOUTH, lblSigma);
+        lblUpWidth.setForeground(Color.GRAY);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtUp, 6, SpringLayout.EAST, lblUpWidth);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpWidth, 6, SpringLayout.NORTH, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblUpWidth, 0, SpringLayout.WEST, btnGene);
         contentPane.add(lblUpWidth);
         
         lblDownWidth = new JLabel("Down Width:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDownWidth, 13, SpringLayout.SOUTH, lblExclusion);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDownWidth, -6, SpringLayout.WEST, txtDown);
+        lblDownWidth.setForeground(Color.GRAY);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDownWidth, -67, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtDown, 6, SpringLayout.EAST, lblDownWidth);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtUp, -54, SpringLayout.WEST, lblDownWidth);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtDown, -6, SpringLayout.NORTH, lblDownWidth);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDownWidth, -22, SpringLayout.NORTH, progressBar);
         contentPane.add(lblDownWidth);
         
-        lblMinimumTagsPer = new JLabel("Minimum Tags per Peak:");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblUpWidth, 0, SpringLayout.WEST, lblMinimumTagsPer);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblMinimumTagsPer, -207, SpringLayout.EAST, contentPane);
+        lblMinimumTagsPer = new JLabel("Min Tags per Peak:");
         sl_contentPane.putConstraint(SpringLayout.WEST, txtFilter, 6, SpringLayout.EAST, lblMinimumTagsPer);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMinimumTagsPer, -6, SpringLayout.NORTH, btnGene);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMinimumTagsPer, -18, SpringLayout.NORTH, lblDownWidth);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblMinimumTagsPer, 0, SpringLayout.EAST, lblDownWidth);
         contentPane.add(lblMinimumTagsPer);
+        
+        chckbxPeakWidth = new JCheckBox("Set Peak Width");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxPeakWidth, 2, SpringLayout.NORTH, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxPeakWidth, 10, SpringLayout.WEST, contentPane);
+        chckbxPeakWidth.setToolTipText("Default Peak Width is Half the Exclusion Zone");
+        contentPane.add(chckbxPeakWidth);
         btnGene.addActionListener(this);
+        chckbxPeakWidth.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		        if(chckbxPeakWidth.isSelected()) {
+		        	txtUp.setEnabled(true);
+		        	txtDown.setEnabled(true);
+		        	lblUpWidth.setEnabled(true);
+		        	lblDownWidth.setEnabled(true);
+
+		        } else {
+		        	txtUp.setEnabled(false);
+		        	txtDown.setEnabled(false);
+		        	lblUpWidth.setEnabled(false);
+		        	lblDownWidth.setEnabled(false);
+		        }
+		      }
+		    }); 
 	}
 	
 	@Override

@@ -10,8 +10,7 @@ import components.BAIIndexerWindow;
 import components.BAMtoBEDWindow;
 import components.BAMtoMidpointWindow;
 import components.BAMtoTABWindow;
-import components.GeneTrackBAMWindow;
-import components.GeneTrackTABWindow;
+import components.GeneTrackWindow;
 import components.MergeBAMWindow;
 import components.PEWindow;
 import components.SEWindow;
@@ -222,37 +221,19 @@ public class ScriptManager {
 		JPanel pnlAnalysis = new JPanel();
 		tabbedPane.addTab("Data Analysis", null, pnlAnalysis, null);
 		
-		JButton btnGenetrackBam = new JButton("GeneTrack - BAM");
-		btnGenetrackBam.addActionListener(new ActionListener() {
+		JButton btnGenetrack = new JButton("GeneTrack");
+		btnGenetrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		pnlAnalysis.add(btnGenetrackBam);
-		btnGenetrackBam.addMouseListener(new MouseAdapter() {
+		pnlAnalysis.add(btnGenetrack);
+		btnGenetrack.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							GeneTrackBAMWindow frame = new GeneTrackBAMWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		
-		JButton btnGenetrackTAB = new JButton("GeneTrack - TAB");
-		pnlAnalysis.add(btnGenetrackTAB);
-		btnGenetrackTAB.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							GeneTrackTABWindow frame = new GeneTrackTABWindow();
+							GeneTrackWindow frame = new GeneTrackWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
