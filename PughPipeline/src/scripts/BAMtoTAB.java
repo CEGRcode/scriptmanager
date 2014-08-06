@@ -92,42 +92,44 @@ public class BAMtoTAB extends JFrame {
 	public void addTag(SAMRecord sr) {
 		//Get the start of the record 
 		int recordStart = sr.getUnclippedStart();//.getAlignmentStart();
-
-		//Accounts for reverse tag reporting 3' end of tag and converting BED to IDX/GFF format
-		if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }//.getAlignmentEnd(); }					
-		if(BP.contains(new Integer(recordStart))) {
-			int index = BP.indexOf(new Integer(recordStart));
-			if(sr.getReadNegativeStrandFlag()) {
-				R_OCC.set(index, new Integer(R_OCC.get(index).intValue() + 1));
-			} else {
-				F_OCC.set(index, new Integer(F_OCC.get(index).intValue() + 1));
-			}
-		} else {
-			//Sometimes the start coordinate will be out of order due to (-) strand correction
-			//Need to efficiently identify where to place it relative to the other bps
-			int index = BP.size() - 1;
-			if(index >= 0) {
-				while(index >= 0 && recordStart < BP.get(index).intValue()) {
-					index--;
-				}
-			}
-			if(index < BP.size() - 1) {
-				BP.add(index + 1, new Integer(recordStart));
+		//Make sure we only add tags that have valid starts
+		if(recordStart > 0) {
+			//Accounts for reverse tag reporting 3' end of tag and converting BED to IDX/GFF format
+			if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }//.getAlignmentEnd(); }					
+			if(BP.contains(new Integer(recordStart))) {
+				int index = BP.indexOf(new Integer(recordStart));
 				if(sr.getReadNegativeStrandFlag()) {
-					R_OCC.add(index + 1, new Integer(1));
-					F_OCC.add(index + 1, new Integer(0));
+					R_OCC.set(index, new Integer(R_OCC.get(index).intValue() + 1));
 				} else {
-					F_OCC.add(index + 1, new Integer(1));
-					R_OCC.add(index + 1, new Integer(0));
+					F_OCC.set(index, new Integer(F_OCC.get(index).intValue() + 1));
 				}
 			} else {
-				BP.add(new Integer(recordStart));
-				if(sr.getReadNegativeStrandFlag()) {
-					R_OCC.add(new Integer(1));
-					F_OCC.add(new Integer(0));
+				//Sometimes the start coordinate will be out of order due to (-) strand correction
+				//Need to efficiently identify where to place it relative to the other bps
+				int index = BP.size() - 1;
+				if(index >= 0) {
+					while(index >= 0 && recordStart < BP.get(index).intValue()) {
+						index--;
+					}
+				}
+				if(index < BP.size() - 1) {
+					BP.add(index + 1, new Integer(recordStart));
+					if(sr.getReadNegativeStrandFlag()) {
+						R_OCC.add(index + 1, new Integer(1));
+						F_OCC.add(index + 1, new Integer(0));
+					} else {
+						F_OCC.add(index + 1, new Integer(1));
+						R_OCC.add(index + 1, new Integer(0));
+					}
 				} else {
-					F_OCC.add(new Integer(1));
-					R_OCC.add(new Integer(0));
+					BP.add(new Integer(recordStart));
+					if(sr.getReadNegativeStrandFlag()) {
+						R_OCC.add(new Integer(1));
+						F_OCC.add(new Integer(0));
+					} else {
+						F_OCC.add(new Integer(1));
+						R_OCC.add(new Integer(0));
+					}
 				}
 			}
 		}
