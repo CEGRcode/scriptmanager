@@ -200,6 +200,7 @@ public class MergeSamFiles extends CommandLineProgram {
         }
 
         log.info("Finished reading inputs.");
+        iterator.close();
         out.close();
         return 0;
     }
