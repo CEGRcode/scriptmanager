@@ -1,6 +1,7 @@
 package charts;
 
 import java.awt.Color;
+import java.io.IOException;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -19,7 +20,7 @@ public class Histogram {
 
 	}
 			
-	public static ChartPanel createBarChart(double[] y, int[] x) {
+	public static ChartPanel createBarChart(double[] y, int[] x) throws IOException {
 		final XYSeries series = new XYSeries("Frequency");
 		for(int i = 0; i < x.length; i++) {
 			series.add((double)x[i], (double)y[i]);
@@ -32,7 +33,7 @@ public class Histogram {
 		return chartPanel;				
 	}
 	
-	private static JFreeChart createChart(IntervalXYDataset dataset) {
+	private static JFreeChart createChart(IntervalXYDataset dataset) throws IOException {
         final JFreeChart chart = ChartFactory.createXYBarChart(
         		"Paired-End Insert Size Frequency Histogram",      // chart title
                 "Insert Size (bp)",               // domain axis label
@@ -62,6 +63,7 @@ public class Histogram {
         //target.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
         //target.setPaint(new Color(222, 222, 255, 128));
         //plot.addRangeMarker(target, Layer.BACKGROUND);
+                
         return chart;    
     }
 }

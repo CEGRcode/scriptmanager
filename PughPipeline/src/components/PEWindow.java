@@ -3,6 +3,7 @@ package components;
 import filters.BAMFilter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -81,6 +82,9 @@ public class PEWindow extends JFrame implements ActionListener, PropertyChangeLi
 				stat.run();
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
         	setProgress(100);
         	return null;

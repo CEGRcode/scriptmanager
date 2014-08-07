@@ -3,6 +3,7 @@ package scripts;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SpringLayout;
 
 import net.sf.samtools.AbstractBAMFileIndex;
 import net.sf.samtools.SAMFileReader;
@@ -22,7 +24,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 
 import charts.Histogram;
-import javax.swing.SpringLayout;
+
 
 @SuppressWarnings("serial")
 public class PEStats extends JFrame {
@@ -68,7 +70,7 @@ public class PEStats extends JFrame {
 		MAX_INSERT = max;
 	}
 	
-	public void run() {
+	public void run() throws IOException {
 		
 		if(output != null) {
 			try {
@@ -99,12 +101,12 @@ public class PEStats extends JFrame {
 				//Code to get individual chromosome stats
 				reader = new SAMFileReader(bamFiles.get(x), new File(bamFiles.get(x) + ".bai"));
 				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.getIndex();
-				int totalTags = 0;
-				int totalGenome = 0;
+				double totalTags = 0;
+				double totalGenome = 0;
 			
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
-					int aligned = reader.getIndex().getMetaData(z).getAlignedRecordCount();
+					double aligned = reader.getIndex().getMetaData(z).getAlignedRecordCount();
 					//int unaligned = reader.getIndex().getMetaData(z).getUnalignedRecordCount();
 					if(OUT != null) OUT.println(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned);
 					STATS.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\n");
