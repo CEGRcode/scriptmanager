@@ -30,6 +30,8 @@ public class BAMtoBED extends JFrame {
 	
 	private JTextArea textArea;
 	
+	private int CHROMSTOP = 0;
+	
 	public BAMtoBED(File b, File o, int s) {
 		setTitle("BAM to TAB Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -92,7 +94,7 @@ public class BAMtoBED extends JFrame {
 		String dir = "+";
 		if(read.getReadNegativeStrandFlag()) dir = "-";
 		//Make sure we only output real reads
-		if(recordStart > 0) { OUT.println(chrom + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadName() + "\t" + read.getReadLength() + "\t" + dir); }
+		if(recordStart > 0 && recordStop <= CHROMSTOP) { OUT.println(chrom + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadName() + "\t" + read.getReadLength() + "\t" + dir); }
 	}
 	
 	public void READ1() {
@@ -104,6 +106,8 @@ public class BAMtoBED extends JFrame {
 			System.out.println("Processing: " + seq.getSequenceName());
 			textArea.append("Processing: " + seq.getSequenceName() + "\n");
 
+			CHROMSTOP = seq.getSequenceLength();
+			
 			CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
 			while (iter.hasNext()) {
 				//Create the record object 
@@ -134,6 +138,8 @@ public class BAMtoBED extends JFrame {
 			System.out.println("Processing: " + seq.getSequenceName());
 			textArea.append("Processing: " + seq.getSequenceName() + "\n");
 
+			CHROMSTOP = seq.getSequenceLength();
+			
 			CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
 			while (iter.hasNext()) {
 				//Create the record object 
@@ -161,6 +167,8 @@ public class BAMtoBED extends JFrame {
 			System.out.println("Processing: " + seq.getSequenceName());
 			textArea.append("Processing: " + seq.getSequenceName() + "\n");
 
+			CHROMSTOP = seq.getSequenceLength();
+			
 			CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
 			while (iter.hasNext()) {
 				//Create the record object 

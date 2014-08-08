@@ -35,6 +35,8 @@ public class BAMtoTAB extends JFrame {
 	
 	private JTextArea textArea;
 	
+	private int CHROMSTOP = -999;
+	
 	public BAMtoTAB(File b, File o, int s) {
 		setTitle("BAM to TAB Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -93,7 +95,7 @@ public class BAMtoTAB extends JFrame {
 		//Get the start of the record 
 		int recordStart = sr.getUnclippedStart();//.getAlignmentStart();
 		//Make sure we only add tags that have valid starts
-		if(recordStart > 0) {
+		if(recordStart > 0 && recordStart <= CHROMSTOP) {
 			//Accounts for reverse tag reporting 3' end of tag and converting BED to IDX/GFF format
 			if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }//.getAlignmentEnd(); }					
 			if(BP.contains(new Integer(recordStart))) {
@@ -156,6 +158,7 @@ public class BAMtoTAB extends JFrame {
 			System.out.println("Processing: " + seq.getSequenceName());
 			textArea.append("Processing: " + seq.getSequenceName() + "\n");
 
+			CHROMSTOP = seq.getSequenceLength();
 			BP = new ArrayList<Integer>();
 			F_OCC = new ArrayList<Integer>();
 			R_OCC = new ArrayList<Integer>();
@@ -200,6 +203,7 @@ public class BAMtoTAB extends JFrame {
 			System.out.println("Processing: " + seq.getSequenceName());
 			textArea.append("Processing: " + seq.getSequenceName() + "\n");
 
+			CHROMSTOP = seq.getSequenceLength();
 			BP = new ArrayList<Integer>();
 			F_OCC = new ArrayList<Integer>();
 			R_OCC = new ArrayList<Integer>();
@@ -240,6 +244,7 @@ public class BAMtoTAB extends JFrame {
 			System.out.println("Processing: " + seq.getSequenceName());
 			textArea.append("Processing: " + seq.getSequenceName() + "\n");
 
+			CHROMSTOP = seq.getSequenceLength();
 			BP = new ArrayList<Integer>();
 			F_OCC = new ArrayList<Integer>();
 			R_OCC = new ArrayList<Integer>();
