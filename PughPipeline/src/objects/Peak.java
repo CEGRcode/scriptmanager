@@ -11,12 +11,13 @@ public class Peak {
 	private int STOP = -1;
 	private String DIR = "*";
 	
-	public Peak(String chr, int start, int stop, String dir, int t) {
+	public Peak(String chr, int start, int stop, String dir, int t, double std) {
 		CHROM = chr;
 		START = start;
 		STOP = stop;
 		DIR = dir;
 		TAG = t;
+		STDDEV = std;
 	}
 	
 	public String getDir() {

@@ -48,9 +48,11 @@ public class GeneTrack extends JFrame {
 	
 	private double[] F_GOCC;
 	private double[] R_GOCC;
-	private int[] F_TOCC;
-	private int[] R_TOCC;
-		
+	private double[] F_TOCC;
+	private double[] R_TOCC;
+	private double[] F_STD;
+	private double[] R_STD;
+	
 	public GeneTrack(File in, int s, int e, int u, int d, int f) {
 		setTitle("BAM to Genetrack Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -105,8 +107,10 @@ public class GeneTrack extends JFrame {
 					
 					F_GOCC = new double[windowSize];
 					R_GOCC = new double[windowSize];
-					F_TOCC = new int[windowSize];
-					R_TOCC = new int[windowSize];
+					F_TOCC = new double[windowSize];
+					R_TOCC = new double[windowSize];
+					F_STD = new double[windowSize];
+					R_STD = new double[windowSize];
 					
 					//TODO currently will be hard-coded for properly paired READ1
 					CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), start, stop, false);
@@ -119,8 +123,8 @@ public class GeneTrack extends JFrame {
 				int finalstop = seq.getSequenceLength();
 				F_GOCC = new double[finalstop - finalstart];
 				R_GOCC = new double[finalstop - finalstart];
-				F_TOCC = new int[finalstop - finalstart];
-				R_TOCC = new int[finalstop - finalstart];
+				F_TOCC = new double[finalstop - finalstart];
+				R_TOCC = new double[finalstop - finalstart];
 				
 				CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), finalstart, finalstop, false);
 				loadGenomeFragment(iter, finalstart, finalstop);
@@ -154,17 +158,25 @@ public class GeneTrack extends JFrame {
 			if(threeprime < 1) { threeprime = 1; }
 			
 			if(z == 0) {
-				if(F_GOCC[z] > F_GOCC[z + 1] && F_TOCC[z] > FILTER) { FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", F_TOCC[z])); }
-				if(R_GOCC[z] > R_GOCC[z + 1] && R_TOCC[z] > FILTER) { RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", R_TOCC[z])); }
+				if(F_GOCC[z] > F_GOCC[z + 1] && F_TOCC[z] > FILTER) { 
+					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
+				}
+				if(R_GOCC[z] > R_GOCC[z + 1] && R_TOCC[z] > FILTER) {
+					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
+				}
 			} else if(z + 1 == F_GOCC.length) {
-				if(F_GOCC[z] > F_GOCC[z - 1] && F_TOCC[z] > FILTER) { FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", F_TOCC[z])); }
-				if(R_GOCC[z] > R_GOCC[z - 1] && R_TOCC[z] > FILTER) { RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", R_TOCC[z])); }
+				if(F_GOCC[z] > F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
+					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
+				}
+				if(R_GOCC[z] > R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
+					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
+				}
 			} else {
 				if(F_GOCC[z] > F_GOCC[z + 1] && F_GOCC[z] > F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
-					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", F_TOCC[z]));
+					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
 				}
 				if(R_GOCC[z] > R_GOCC[z + 1] && R_GOCC[z] > R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
-					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", R_TOCC[z]));
+					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
 				}
 			}
 			//int bp = z + start + 1;
@@ -173,37 +185,65 @@ public class GeneTrack extends JFrame {
 	}
 	
 	public void loadGenomeFragment(CloseableIterator<SAMRecord> iter, int start, int stop) {
+		double[] tempF = new double[F_TOCC.length];
+		double[] tempR = new double[R_TOCC.length];
+		
 		while (iter.hasNext()) {
 			//Create the record object 
 			SAMRecord sr = iter.next();
-			//Must be PAIRED-END mapped, mate must be mapped, must be read1
-			//if(sr.getReadPairedFlag()) {
-			//	if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
-					//Get the start of the record 
-					int recordStart = sr.getUnclippedStart();
-					//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
-					if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }
-					for(int POS = recordStart - WIDTH; POS <= recordStart + WIDTH; POS++) {
-						if(POS - start >= 0 && POS - start < F_GOCC.length) {
-							if(sr.getReadNegativeStrandFlag()) {
-								R_GOCC[POS - start] += gaussWeight[POS - (recordStart - WIDTH)];
-								R_TOCC[POS - start]++;
-							} else {
-								F_GOCC[POS - start] += gaussWeight[POS - (recordStart - WIDTH)];
-								F_TOCC[POS - start]++;
-							}
+			//Get the start of the record 
+			int recordStart = sr.getUnclippedStart();
+			//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
+			if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }
+			
+			if(recordStart > 0) {
+				for(int POS = recordStart - WIDTH; POS <= recordStart + WIDTH; POS++) {
+					if(POS - start >= 0 && POS - start < F_GOCC.length) {
+						if(sr.getReadNegativeStrandFlag()) {
+							R_GOCC[POS - start] += gaussWeight[POS - (recordStart - WIDTH)];
+							if(POS == recordStart) tempR[POS - start]++;
+						} else {
+							F_GOCC[POS - start] += gaussWeight[POS - (recordStart - WIDTH)];
+							if(POS == recordStart) tempF[POS - start]++;
 						}
 					}
-//					if(recordStart - start >= 0 && recordStart - start < F_TOCC.length) {
-//						if(sr.getReadNegativeStrandFlag()) { R_TOCC[recordStart - start]++; }
-//						else { F_TOCC[recordStart - start]++; }
-//					}
 				}
-			//} else {
-				//Also outputs if not paired-end since by default it is read-1
-				//TODO
-			//}
-		//}
+			}
+		}
+		for(int x = 0; x < tempF.length; x++) {
+			double Favg = 0, Ravg = 0, Fcount = 0, Rcount = 0;
+			for(int y = x - UP_WIDTH; y <= x + DOWN_WIDTH; y++) {
+				if(y < 0) y = 0;
+				if(y < tempF.length) {
+					if(tempF[y] != 0) {
+						F_TOCC[x] += tempF[y];
+						Favg += (y * tempF[y]);
+						Fcount += tempF[y];
+					}
+					if(tempR[y] != 0) {
+						R_TOCC[x] += tempR[y];
+						Ravg += (y * tempR[y]);
+						Rcount += tempR[y];
+					}
+				}
+			}
+			double Fstd = 0, Rstd = 0;
+			Favg /= Fcount;
+			Ravg /= Rcount;
+			for(int y = x - UP_WIDTH; y <= x + DOWN_WIDTH; y++) {
+				if(y < 0) y = 0;
+				if(y < tempF.length) {
+					if(tempF[y] != 0) for(int z = 0; z < tempF[y]; z++) Fstd += Math.pow(y - Favg, 2);
+					if(tempR[y] != 0) for(int z = 0; z < tempR[y]; z++) Rstd += Math.pow(y - Ravg, 2);
+				}
+			}
+			if(Fcount == 1) F_STD[x] = 0;
+			else F_STD[x] = Math.sqrt(Fstd / Fcount);
+			if(Rcount == 1) R_STD[x] = 0;
+			else R_STD[x] = Math.sqrt(Rstd / Rcount);
+			
+		}
+
 	}
 
 	public void parsePeaksbyExclusion(ArrayList<Peak> peaks) {
@@ -245,6 +285,7 @@ public class GeneTrack extends JFrame {
 		for(int x = 0; x < Garray.length; x++) {
              double HEIGHT = Math.exp(-1 * Math.pow((x - (Garray.length / 2)), 2) / (2 * Math.pow(SIGMA, 2)));
              HEIGHT /= (SIGMA * Math.sqrt(2 * Math.PI));
+             //Garray[x] = Double.parseDouble(String.format("%.6g%n", HEIGHT));
              Garray[x] = HEIGHT;
 		}
 		return Garray;
