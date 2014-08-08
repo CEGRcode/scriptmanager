@@ -33,8 +33,9 @@ public class BAMtoMidpoint extends JFrame {
 	private ArrayList<Integer> BP;
 	private ArrayList<Integer> M_OCC;
 	
-	int MIN = 0;
-	int MAX = 1000;
+	private int MIN = 0;
+	private int MAX = 1000;
+	private int CHROMSTOP = -999;
 	
 	public BAMtoMidpoint(File b, File o, int mi, int ma) {
 		setTitle("BAM to Midpoint Progress");
@@ -90,24 +91,27 @@ public class BAMtoMidpoint extends JFrame {
 		int recordStop = sr.getUnclippedEnd();
 		int recordMid = (recordStart + recordStop) / 2;
 
-		if(BP.contains(new Integer(recordMid))) {
-			int index = BP.indexOf(new Integer(recordMid));
-			M_OCC.set(index, new Integer(M_OCC.get(index).intValue() + 1));
-		} else {
-			//Sometimes the start coordinate will be out of order due to (-) strand correction
-			//Need to efficiently identify where to place it relative to the other bps
-			int index = BP.size() - 1;
-			if(index >= 0) {
-				while(index >= 0 && recordMid < BP.get(index).intValue()) {
-					index--;
-				}
-			}
-			if(index < BP.size() - 1) {
-				BP.add(index + 1, new Integer(recordMid));
-				M_OCC.add(index + 1, new Integer(0));
+		//Make sure we only add tags that have valid midpoints
+		if(recordMid > 0 && recordMid <= CHROMSTOP) {
+			if(BP.contains(new Integer(recordMid))) {
+				int index = BP.indexOf(new Integer(recordMid));
+				M_OCC.set(index, new Integer(M_OCC.get(index).intValue() + 1));
 			} else {
-				BP.add(new Integer(recordMid));
-				M_OCC.add(new Integer(1));
+				//Sometimes the start coordinate will be out of order due to (-) strand correction
+				//Need to efficiently identify where to place it relative to the other bps
+				int index = BP.size() - 1;
+				if(index >= 0) {
+					while(index >= 0 && recordMid < BP.get(index).intValue()) {
+						index--;
+					}
+				}
+				if(index < BP.size() - 1) {
+					BP.add(index + 1, new Integer(recordMid));
+					M_OCC.add(index + 1, new Integer(0));
+				} else {
+					BP.add(new Integer(recordMid));
+					M_OCC.add(new Integer(1));
+				}
 			}
 		}
 	}
@@ -134,7 +138,8 @@ public class BAMtoMidpoint extends JFrame {
 
 			BP = new ArrayList<Integer>();
 			M_OCC = new ArrayList<Integer>();
-					
+			CHROMSTOP = seq.getSequenceLength();
+			
 			CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
 			while (iter.hasNext()) {
 				//Create the record object 
