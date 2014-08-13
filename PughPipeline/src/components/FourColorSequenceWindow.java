@@ -1,6 +1,6 @@
 package components;
 
-import filters.BAMFilter;
+import filters.FASTAFilter;
 
 import java.io.File;
 import java.io.IOException;
@@ -99,7 +99,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		btnLoad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				fc.setFileFilter(new BAMFilter());
+				fc.setFileFilter(new FASTAFilter());
 				fc.setMultiSelectionEnabled(true);
 				File[] newBAMFiles = getCoordFile();
 				if(newBAMFiles != null) {
