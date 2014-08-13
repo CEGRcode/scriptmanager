@@ -73,11 +73,11 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 					JOptionPane.showMessageDialog(null, "Invalid Sigma!!!");
 				} else if(Integer.parseInt(txtExclusion.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Exclusion!!!");
-				} else if(Integer.parseInt(txtUp.getText()) < 1) {
+				} else if(chckbxPeakWidth.isSelected() && Integer.parseInt(txtUp.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Upstream Window Width!!!");
-				} else if(Integer.parseInt(txtDown.getText()) < 1) {
+				} else if(chckbxPeakWidth.isSelected() && Integer.parseInt(txtDown.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Downstream Window Width!!!");
-				} else if(Integer.parseInt(txtFilter.getText()) < 1) {
+				} else if(Integer.parseInt(txtFilter.getText()) < 0) {
 					JOptionPane.showMessageDialog(null, "Invalid Peak Filtering Criteria!!!");
 				} else {
 					int SIGMA = Integer.parseInt(txtSigma.getText());
@@ -222,18 +222,21 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
         txtFilter.setColumns(10);
         
         JLabel lblSigma = new JLabel("Sigma:");
+        lblSigma.setToolTipText("Sigma to use when smoothing reads to call peaks");
         sl_contentPane.putConstraint(SpringLayout.WEST, lblSigma, 10, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtSigma, 6, SpringLayout.EAST, lblSigma);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblSigma, 6, SpringLayout.NORTH, txtExclusion);
         contentPane.add(lblSigma);
         
         JLabel lblExclusion = new JLabel("Exclusion Zone:");
+        lblExclusion.setToolTipText("Exclusion zone around each peak that prevents others from being called");
         sl_contentPane.putConstraint(SpringLayout.EAST, txtSigma, -30, SpringLayout.WEST, lblExclusion);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblExclusion, 6, SpringLayout.NORTH, txtSigma);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblExclusion, -6, SpringLayout.WEST, txtExclusion);
         contentPane.add(lblExclusion);
         
         lblUpWidth = new JLabel("Up Width:");
+        lblUpWidth.setToolTipText("Upstream width of called peaks (Default uses half exclusion)");
         lblUpWidth.setForeground(Color.GRAY);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtUp, 6, SpringLayout.EAST, lblUpWidth);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpWidth, 6, SpringLayout.NORTH, txtUp);
@@ -241,6 +244,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblUpWidth);
         
         lblDownWidth = new JLabel("Down Width:");
+        lblDownWidth.setToolTipText("Downstream width of called peaks (Default uses half exclusion)");
         lblDownWidth.setForeground(Color.GRAY);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblDownWidth, -67, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtDown, 6, SpringLayout.EAST, lblDownWidth);
@@ -250,6 +254,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblDownWidth);
         
         lblMinimumTagsPer = new JLabel("Min Tags per Peak:");
+        lblMinimumTagsPer.setToolTipText("Absolute read filter; outputs only peaks with larger read count");
         sl_contentPane.putConstraint(SpringLayout.WEST, txtFilter, 6, SpringLayout.EAST, lblMinimumTagsPer);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMinimumTagsPer, -18, SpringLayout.NORTH, lblDownWidth);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblMinimumTagsPer, 0, SpringLayout.EAST, lblDownWidth);
