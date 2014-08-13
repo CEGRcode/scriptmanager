@@ -13,6 +13,7 @@ import components.BAMtoTABWindow;
 import components.GeneTrackWindow;
 import components.MergeBAMWindow;
 import components.PEWindow;
+import components.PeakPairWindow;
 import components.SEWindow;
 import components.SortBAMWindow;
 import components.TagPileupWindow;
@@ -36,7 +37,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.1");
+		frmScriptManager.setTitle("Script Manager v0.2");
 		frmScriptManager.setBounds(100, 100, 500, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
@@ -245,9 +246,27 @@ public class ScriptManager {
 		
 		JButton btnPeakpairing = new JButton("Peak-Pairing");
 		pnlAnalysis.add(btnPeakpairing);
+		btnPeakpairing.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							PeakPairWindow frame = new PeakPairWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		
 		JButton btnTagPileup = new JButton("Tag Pileup");
 		pnlAnalysis.add(btnTagPileup);
+		
+		JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
+		pnlAnalysis.add(btncolorSequencePlot);
 		btnTagPileup.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
