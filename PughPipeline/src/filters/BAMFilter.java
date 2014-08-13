@@ -4,11 +4,6 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-/**
- * Interior class to filter out the filechooser window to BAM only
- * @author jbard
- */
-
 public class BAMFilter extends FileFilter{
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
