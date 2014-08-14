@@ -10,6 +10,7 @@ import components.BAIIndexerWindow;
 import components.BAMtoBEDWindow;
 import components.BAMtoMidpointWindow;
 import components.BAMtoTABWindow;
+import components.FourColorSequenceWindow;
 import components.GeneTrackWindow;
 import components.MergeBAMWindow;
 import components.PEWindow;
@@ -264,9 +265,6 @@ public class ScriptManager {
 		
 		JButton btnTagPileup = new JButton("Tag Pileup");
 		pnlAnalysis.add(btnTagPileup);
-		
-		JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
-		pnlAnalysis.add(btncolorSequencePlot);
 		btnTagPileup.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -274,6 +272,24 @@ public class ScriptManager {
 					public void run() {
 						try {
 							TagPileupWindow frame = new TagPileupWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+	
+		JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
+		pnlAnalysis.add(btncolorSequencePlot);
+		btncolorSequencePlot.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FourColorSequenceWindow frame = new FourColorSequenceWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();

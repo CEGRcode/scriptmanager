@@ -4,8 +4,12 @@ import filters.FASTAFilter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,17 +23,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
 
-import net.sf.samtools.BAMIndexer;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -42,11 +46,11 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	final DefaultListModel expList;
-	Vector<File> BAMFiles = new Vector<File>();
+	Vector<File> fastaFiles = new Vector<File>();
 	
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
-	private JButton btnIndex;
+	private JButton btnGen;
 
 	private JProgressBar progressBar;
 	public Task task;
@@ -55,13 +59,14 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         @Override
         public Void doInBackground() throws IOException {
         	setProgress(0);
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-				generateIndex(BAMFiles.get(x));
-				int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+        	for(int x = 0; x < fastaFiles.size(); x++) {
+        		String[] out = fastaFiles.get(x).getName().split("\\.");
+				generatePLOT(fastaFiles.get(x), new File(out[0] + ".png"));
+				int percentComplete = (int)(((double)(x + 1) / fastaFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
         	setProgress(100);
-			JOptionPane.showMessageDialog(null, "Indexing Complete");
+			JOptionPane.showMessageDialog(null, "Plots Generated");
         	return null;
         }
         
@@ -104,7 +109,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 				File[] newBAMFiles = getCoordFile();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
-						BAMFiles.add(newBAMFiles[x]);
+						fastaFiles.add(newBAMFiles[x]);
 						expList.addElement(newBAMFiles[x].getName());
 					}
 				}
@@ -119,18 +124,18 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
-					BAMFiles.remove(listExp.getSelectedIndex());
+					fastaFiles.remove(listExp.getSelectedIndex());
 					expList.remove(listExp.getSelectedIndex());
 				}
 			}
 		});		
 		contentPane.add(btnRemoveBam);
 		
-		btnIndex = new JButton("Generate");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnIndex, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnIndex, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnIndex, -175, SpringLayout.EAST, contentPane);
-		contentPane.add(btnIndex);
+		btnGen = new JButton("Generate");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
+		contentPane.add(btnGen);
 		
 		progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
@@ -138,8 +143,8 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, contentPane);
 		contentPane.add(progressBar);
 		
-        btnIndex.setActionCommand("start");
-        btnIndex.addActionListener(this);
+        btnGen.setActionCommand("start");
+        btnGen.addActionListener(this);
 	}
 	
 	@Override
@@ -169,36 +174,74 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		}
 	}
     
-	public static File generateIndex(File input) throws IOException {
-		File retVal = null;
-		System.out.println("Generating New Index File...");
-		try{
-			String output = input.getCanonicalPath() + ".bai";
-			retVal = new File(output);
-			//Generate index
-			SAMFileReader inputSam = new SAMFileReader(input);
-			BAMIndexer bamindex = new BAMIndexer(retVal, inputSam.getFileHeader());
-			inputSam.enableFileSource(true);
-			int counter = 0;
-			for(SAMRecord record : inputSam) {
-				if(counter % 1000000 == 0) {
-					System.out.print("Tags processed: " + counter + "\r");
-					System.out.flush();
-				}
-				counter++;
-				bamindex.processAlignment(record);
+	/**
+	 * Visualize sequences as color pixels
+	 * @param width, width of each base, in pixel
+	 * @param height, height of each base, in pixel
+	 */
+	public static void generatePLOT(File input, File output) throws IOException {
+		int width = 3;
+		int height = 1;
+		
+		List<String> seq = new ArrayList<String>();
+		int maxLen = 0;
+
+		Scanner scan = new Scanner(input);
+		while (scan.hasNextLine()) {
+			String temp = scan.nextLine();
+			if(!temp.contains(">")) {
+				if (maxLen < temp.length()) maxLen = temp.length();
+				seq.add(temp);
 			}
-			bamindex.finish();
-			inputSam.close();
-			System.out.println("\nIndex File Generated");
-			return retVal;
 		}
-		catch(net.sf.samtools.SAMException exception){
-			System.out.println(exception.getMessage());
-			JOptionPane.showMessageDialog(null, exception.getMessage());
-			retVal = null;
-		}
-		return retVal;
+		scan.close();
+		int pixwidth = maxLen * width;
+		int pixheight = seq.size() * height;
+		
+		System.setProperty("java.awt.headless", "true");
+		BufferedImage im = new BufferedImage(pixwidth, pixheight,BufferedImage.TYPE_INT_ARGB);
+        Graphics g = im.getGraphics();
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setColor(Color.WHITE);
+        g2.fillRect(0,0,pixwidth, pixheight);
+        
+        int count = 0;
+        for (int x = 0; x < seq.size(); x++){
+        	String s = seq.get(x);
+        	char[] letters = s.toCharArray();
+        	for (int j=0;j<letters.length;j++){
+        		switch(letters[j]){
+        		case 'A':
+        		case 'a':
+        			g.setColor(Color.RED);
+        			break;
+        		case 'C':
+        		case 'c':
+                    g.setColor(Color.BLUE);
+        			break;
+        		case 'G':
+        		case 'g':
+                    g.setColor(Color.ORANGE);
+        			break;
+        		case 'T':
+        		case 't':
+                    g.setColor(Color.GREEN);
+        			break;
+        		case '-':
+                    g.setColor(Color.WHITE);
+        			break;
+                default:
+                	g.setColor(Color.GRAY);
+        		}
+                g.fillRect(j*width, count*height, width, height);
+        	}
+            count++;
+        }
+        try {
+            ImageIO.write(im, "png", output);
+        }  catch (IOException ex) {
+            ex.printStackTrace();
+        }
 	}
 	
 	public File[] getCoordFile(){
