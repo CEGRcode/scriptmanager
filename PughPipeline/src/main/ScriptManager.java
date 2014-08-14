@@ -19,9 +19,6 @@ import components.SEWindow;
 import components.SortBAMWindow;
 import components.TagPileupWindow;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 
@@ -65,9 +62,8 @@ public class ScriptManager {
 		btnPEStats.setToolTipText("Output Alignment Statistics and Parameters given an Paired-End BAM File.\nAlso generates Insert Size Histogram.\nBAM file must be sorted and BAM BAI Index must be present.");
 		pnlStat.add(btnPEStats);
 		
-		btnBAMStats.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnBAMStats.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -81,9 +77,8 @@ public class ScriptManager {
 			}
 		});
 				
-		btnPEStats.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnPEStats.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -104,9 +99,8 @@ public class ScriptManager {
 				JButton btnBaiIndexer = new JButton("BAM-BAI Indexer");
 				btnBaiIndexer.setToolTipText("Generates BAI Index for given BAM files");
 				pnlExtract.add(btnBaiIndexer);
-				btnBaiIndexer.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
+				btnBaiIndexer.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								try {
@@ -123,9 +117,8 @@ public class ScriptManager {
 				JButton btnBamSort = new JButton("BAM File Sorter");
 				btnBamSort.setToolTipText("Sort BAM files in order to efficiently extract and manipulate.\nRAM intensive process. If program freezes, increase JAVA heap size");
 				pnlExtract.add(btnBamSort);
-				btnBamSort.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
+				btnBamSort.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								try {
@@ -142,9 +135,8 @@ public class ScriptManager {
 				JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
 				btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
 				pnlExtract.add(btnBamReplicateMerge);
-				btnBamReplicateMerge.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
+				btnBamReplicateMerge.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								try {
@@ -172,9 +164,8 @@ public class ScriptManager {
 		JButton btnBamToMidpoint = new JButton("BAM to Midpoint");
 		pnlBamConvert.add(btnBamToMidpoint);
 
-		btnBamToBed.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnBamToBed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -188,9 +179,8 @@ public class ScriptManager {
 			}
 		});
 		
-		btnBamToTab.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnBamToTab.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -204,9 +194,8 @@ public class ScriptManager {
 			}
 		});
 		
-		btnBamToMidpoint.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnBamToMidpoint.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -229,9 +218,8 @@ public class ScriptManager {
 			}
 		});
 		pnlAnalysis.add(btnGenetrack);
-		btnGenetrack.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnGenetrack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -246,10 +234,10 @@ public class ScriptManager {
 		});
 		
 		JButton btnPeakpairing = new JButton("Peak-Pairing");
+		btnPeakpairing.setEnabled(false);
 		pnlAnalysis.add(btnPeakpairing);
-		btnPeakpairing.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnPeakpairing.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -264,10 +252,10 @@ public class ScriptManager {
 		});
 		
 		JButton btnTagPileup = new JButton("Tag Pileup");
+		btnTagPileup.setEnabled(false);
 		pnlAnalysis.add(btnTagPileup);
-		btnTagPileup.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnTagPileup.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
@@ -283,9 +271,8 @@ public class ScriptManager {
 	
 		JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
 		pnlAnalysis.add(btncolorSequencePlot);
-		btncolorSequencePlot.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btncolorSequencePlot.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
