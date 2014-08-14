@@ -35,8 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import scripts.TagPileup;
 
@@ -158,9 +156,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		btnLoad = new JButton("Load BAM Files");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
-		btnLoad.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnLoad.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BAMFilter());
 				fc.setMultiSelectionEnabled(true);
 				fc.setDialogTitle("BAM File Selection");
@@ -411,9 +408,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			      }
 			    });
         
-        btnLoadBedFile.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+        btnLoadBedFile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BEDFilter());
 				fc.setDialogTitle("BED File Selection");
 
@@ -425,9 +421,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});   
               
-        btnOutputDirectory.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+        btnOutputDirectory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				OUTPUT = getOutputDir();
 				if(OUTPUT != null) {
 					lblDefaultToLocal.setText(OUTPUT.getAbsolutePath());

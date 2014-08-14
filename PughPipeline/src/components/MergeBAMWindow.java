@@ -5,8 +5,6 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -98,9 +96,8 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 		btnLoad = new JButton("Load BAM Files");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
-		btnLoad.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnLoad.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BAMFilter());
 				fc.setMultiSelectionEnabled(true);
 				File[] newBAMFiles = getCoordFile();

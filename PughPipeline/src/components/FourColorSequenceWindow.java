@@ -31,8 +31,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -101,9 +99,8 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		btnLoad = new JButton("Load FASTA Files");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
-		btnLoad.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnLoad.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new FASTAFilter());
 				fc.setMultiSelectionEnabled(true);
 				File[] newBAMFiles = getCoordFile();

@@ -21,8 +21,6 @@ import javax.swing.SwingWorker;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JRadioButton;
 import javax.swing.JLabel;
@@ -105,9 +103,8 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		btnLoad = new JButton("Load BAM Files");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
-		btnLoad.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnLoad.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BAMFilter());
 				fc.setMultiSelectionEnabled(true);
 				fc.setDialogTitle("BAM File Selection");
@@ -205,9 +202,8 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         btnIndex.setActionCommand("start");
         btnIndex.addActionListener(this);
         
-        btnOutputDirectory.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+        btnOutputDirectory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				OUTPUT = getOutputDir();
 				if(OUTPUT != null) {
 					lblDefaultToLocal.setText(OUTPUT.getAbsolutePath());
