@@ -210,19 +210,19 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         		switch(letters[j]){
         		case 'A':
         		case 'a':
-        			g.setColor(Color.RED);
+        			g.setColor(new Color(254, 25, 24));
         			break;
         		case 'C':
         		case 'c':
-                    g.setColor(Color.BLUE);
+                    g.setColor(new Color(43, 49, 246));
         			break;
         		case 'G':
         		case 'g':
-                    g.setColor(Color.ORANGE);
+                    g.setColor(new Color(252, 252, 80));
         			break;
         		case 'T':
         		case 't':
-                    g.setColor(Color.GREEN);
+                    g.setColor(new Color(50, 204, 60));
         			break;
         		case '-':
                     g.setColor(Color.WHITE);
