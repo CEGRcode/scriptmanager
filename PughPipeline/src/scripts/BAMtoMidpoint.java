@@ -87,10 +87,10 @@ public class BAMtoMidpoint extends JFrame {
 	
 	public void addTag(SAMRecord sr) {
 		//Get the start of the record 
-		int recordStart = sr.getUnclippedStart();
-		int recordStop = sr.getUnclippedEnd();
-		int recordMid = (recordStart + recordStop) / 2;
-
+//		int recordStart = sr.getUnclippedStart();
+//		int recordStop = recordStart + sr.getInferredInsertSize();
+		int recordMid = sr.getUnclippedStart() + (sr.getInferredInsertSize() / 2);
+		
 		//Make sure we only add tags that have valid midpoints
 		if(recordMid > 0 && recordMid <= CHROMSTOP) {
 			if(BP.contains(new Integer(recordMid))) {
