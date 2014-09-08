@@ -30,11 +30,16 @@ public class TagPileup extends JFrame {
 	File OUTPUT = null;
 	private int READ = 0;
 	private int STRAND = 0;
+	private int TRANS = 0;
 	private int SHIFT = 0;
 	private int BIN = 1;
+	private int SMOOTH = 0;
+	private int STDSIZE = 0;
+	private int STDNUM = 0;
 	
 	SAMFileReader inputSam;
-	PrintStream OUT = null;
+	PrintStream OUT_S1 = null;
+	PrintStream OUT_S2 = null;
 	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
@@ -42,7 +47,7 @@ public class TagPileup extends JFrame {
 	final JTabbedPane tabbedPane_Statistics;
 	
 	//TagPileup pile = new TagPileup(INPUT, BAMFiles.get(x), OUTPUT, READ, STRAND, SHIFT, BIN);
-	public TagPileup(Vector<BEDCoord> in, Vector<File> ba, File o, int r, int stra, int shif, int bi) {
+	public TagPileup(Vector<BEDCoord> in, Vector<File> ba, File o, int r, int stra, int shif, int bi, int tra, int smo, int size, int num) {
 		setTitle("BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -72,42 +77,65 @@ public class TagPileup extends JFrame {
 		STRAND = stra;
 		SHIFT = shif;
 		BIN = bi;
+		
+		TRANS = tra;
+		SMOOTH = smo;
+		STDSIZE = size;
+		STDNUM = num;
 	}
 	
 	public void run() {
-		//Generate TimeStamp
-		String time = getTimeStamp();
-		
+			
 		for(int z = 0; z < BAMFiles.size(); z++) {
+			//Pull first BAM file
 			File BAM = BAMFiles.get(z);
 			
+			//Generate TimeStamp
+			String time = getTimeStamp();
+			
 			if(OUTPUT != null) {
-				try { OUT = new PrintStream(OUTPUT + File.separator + generateFileName(BAM.getName()));
-				} catch (FileNotFoundException e) {	e.printStackTrace(); }
+				if(STRAND == 0) {
+					try { OUT_S1 = new PrintStream(OUTPUT + File.separator + generateFileName(BAM.getName(), 0));
+					OUT_S2 = new PrintStream(OUTPUT + File.separator + generateFileName(BAM.getName(), 1));
+					} catch (FileNotFoundException e) {	e.printStackTrace(); }
+				} else {
+					try { OUT_S1 = new PrintStream(OUTPUT + File.separator + generateFileName(BAM.getName(), 2));
+					} catch (FileNotFoundException e) {	e.printStackTrace(); }
+				}
 			}
-			if(OUT != null) OUT.println(time);
+			if(OUT_S1 != null) OUT_S1.println(time);
+			if(OUT_S2 != null) OUT_S2.println(time);
 			
 			JTextArea STATS = new JTextArea();
 			STATS.setEditable(false);
 			STATS.append(time + "\n");
 
-			double[] AVG = null;
+			double[] AVG_S1 = null;
+			double[] AVG_S2 = null;
 			double[] DOMAIN = null;
+			
+			double[] TAG_S1 = null;
+			double[] TAG_S2 = null;
 			double COUNT = 0;
 			
 			File f = new File(BAM + ".bai");
 			//Check if BAI index file exists
 			if(f.exists() && !f.isDirectory()) {
-				if(OUT != null) OUT.println(BAM.getName());
+				if(OUT_S1 != null) OUT_S1.println(BAM.getName() + "_sense");
+				if(OUT_S2 != null) OUT_S2.println(BAM.getName() + "_anti");
 				STATS.append(BAM.getName() + "\n");
 				
 				inputSam = new SAMFileReader(BAM, new File(BAM + ".bai"));
 				for(int x = 0; x < INPUT.size(); x++) {
 					BEDCoord read = INPUT.get(x);
-					double[] TAG = new double[read.getStop() - read.getStart()];
+					TAG_S1 = new double[read.getStop() - read.getStart()];
+					if(STRAND == 0) TAG_S2 = new double[read.getStop() - read.getStart()];
 					
 					//Keep track of average profile for composite
-					if(AVG == null) { AVG = new double[TAG.length];	}
+					if(AVG_S1 == null) { 
+						AVG_S1 = new double[TAG_S1.length];
+						if(STRAND == 0) AVG_S2 = new double[TAG_S2.length];
+					}
 					
 					//FETCH coordinate start minus shift to stop plus shift
 					//SAMRecords are 1-based
@@ -127,12 +155,22 @@ public class TagPileup extends JFrame {
 										FivePrime -= SHIFT;
 									} else { FivePrime += SHIFT; }
 									FivePrime -= read.getStart();
-									FivePrime = filterRead(FivePrime, sr.getReadNegativeStrandFlag(), read.getDir());                       
+									//FivePrime = filterRead(FivePrime, sr.getReadNegativeStrandFlag(), read.getDir());
+									
 			                        //Increment Final Array keeping track of pileup
-			                        if(FivePrime >= 0 && FivePrime < TAG.length) { TAG[FivePrime] += 1; }
+									if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
+										if(STRAND == 0) {
+											if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S2[FivePrime] += 1; }
+								        	else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S2[FivePrime] += 1; }
+								        	else if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S1[FivePrime] += 1; }
+								        	else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S1[FivePrime] += 1;}
+										} else {
+											TAG_S1[FivePrime] += 1;
+										}
+									}
 								}
 							}
-						} else if(READ == 0 || READ == 2){
+						} else if(READ == 0 || READ == 2) {
 							//Also outputs if not paired-end since by default it is read-1
 							int FivePrime = sr.getUnclippedStart() - 1;
 							if(sr.getReadNegativeStrandFlag()) { 
@@ -141,43 +179,67 @@ public class TagPileup extends JFrame {
 								FivePrime -= SHIFT;
 							} else { FivePrime += SHIFT; }
 							FivePrime -= read.getStart();
-							FivePrime = filterRead(FivePrime, sr.getReadNegativeStrandFlag(), read.getDir());                       
+							//FivePrime = filterRead(FivePrime, sr.getReadNegativeStrandFlag(), read.getDir());                       
 	                        //Increment Final Array keeping track of pileup
-	                        if(FivePrime >= 0 && FivePrime < TAG.length) { TAG[FivePrime] += 1; }
+	                        if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
+	                        	if(STRAND == 0) {
+	                        		if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S2[FivePrime] += 1; }
+						        	else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S2[FivePrime] += 1; }
+						        	else if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S1[FivePrime] += 1; }
+						        	else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S1[FivePrime] += 1;}
+								} else {
+									TAG_S1[FivePrime] += 1;
+								}
+	                        }
 						}
-						if(read.getDir().equals("-")) { reverse(TAG); }
-						
+						if(read.getDir().equals("-")) { 
+							TransformArray.reverseTran(TAG_S1);
+							TransformArray.reverseTran(TAG_S2);
+						}
 					}
 					iter.close();
 					
-					if(OUT != null) { OUT.print(read.getName()); }
-					for(int i = 0; i < TAG.length; i++) {
-						if(OUT != null) { OUT.print("\t" + TAG[i]); }
-						if(i < AVG.length) { AVG[i] += TAG[i]; }
+					if(OUT_S1 != null) { OUT_S1.print(read.getName()); }
+					if(OUT_S2 != null) { OUT_S2.print(read.getName()); }
+					for(int i = 0; i < TAG_S1.length; i++) {
+						if(OUT_S1 != null) {
+							OUT_S1.print("\t" + TAG_S1[i]);
+							if(i < AVG_S1.length) { AVG_S1[i] += TAG_S1[i]; }
+						}
+						if(OUT_S2 != null) {
+							OUT_S2.print("\t" + TAG_S2[i]);
+							if(i < AVG_S2.length) { AVG_S2[i] += TAG_S2[i]; }
+						}
 					}
-					if(OUT != null) { OUT.println(); }
+					if(OUT_S1 != null) { OUT_S1.println(); }
+					if(OUT_S2 != null) { OUT_S2.println(); }
 					COUNT++;
 				}
 				inputSam.close();
 				
-				DOMAIN = new double[AVG.length];
-				for(int i = 0; i < AVG.length; i++) {
-					if(COUNT != 0) { AVG[i] /= COUNT; }
-					DOMAIN[i] = (double)((AVG.length / 2) - (AVG.length - i));
-					STATS.append(DOMAIN[i] + "\t" + AVG[i] + "\n");
+				DOMAIN = new double[AVG_S1.length];
+				for(int i = 0; i < AVG_S1.length; i++) {
+					if(COUNT != 0) { AVG_S1[i] /= COUNT; }
+					if(AVG_S2 != null && COUNT != 0) { AVG_S2[i] /= COUNT; }
+					DOMAIN[i] = (double)((AVG_S1.length / 2) - (AVG_S1.length - i));
+					if(AVG_S2 != null) STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
+					else STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n");
 				}
-				
 			} else {
-				if(OUT != null) OUT.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+				if(OUT_S1 != null) OUT_S1.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+				if(OUT_S2 != null) OUT_S2.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
 				STATS.append("BAI Index File does not exist for: " + BAM.getName() + "\n\n");
 			}
 			
 			STATS.setCaretPosition(0);
 			JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			tabbedPane_Statistics.add(BAM.getName(), newpane);
-			tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG));
-			if(OUT != null) OUT.close();
+			if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2));
+			else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1));
+			if(OUT_S1 != null) OUT_S1.close();
+			if(OUT_S2 != null) OUT_S2.close();
 			
+	        firePropertyChange("tag", z, z + 1);
 		}
 		
 	}
@@ -195,32 +257,12 @@ public class TagPileup extends JFrame {
         return coord;
 	}
 	
-//	private double[] gaussTran(double[] orig) {
-//		double[] Garray = new double[orig.length];
-//		int window = (Parameters.getSDSize() * Parameters.getSDNum()) / Parameters.getResolution();
-//		double SDSize = (double)Parameters.getSDSize();
-//		for(int x = 0; x < orig.length; x++) {
-//             double score = 0;
-//             double weight = 0;
-//             for(int y = x - window; y <= x + window; y++) {
-//                    if(y < 0) y = -1;
-//                    else if(y < orig.length) {
-//                    	double HEIGHT = Math.exp(-1 * Math.pow((y - x), 2) / (2 * Math.pow(SDSize, 2)));
-//                    	score += (HEIGHT * orig[y]);
-//                    	weight += HEIGHT;
-//                    } else y = x + window + 1;
-//             }
-//             if(weight != 0) Garray[x] = score / weight;
-//		}
-//		return Garray;
-//     }
-	
-	public String generateFileName(String origin) {
+	public String generateFileName(String origin, int strandnum) {
 		String[] name = origin.split("\\.");
 		
 		String strand = "sense";
-		if(STRAND == 1) strand = "anti";
-		else if(STRAND == 2) strand = "combined";
+		if(strandnum == 1) strand = "anti";
+		else if(strandnum == 2) strand = "combined";
 		String read = "read1";
 		if(READ == 1) strand = "read2";
 		else if(READ == 2) strand = "readc";
@@ -228,22 +270,7 @@ public class TagPileup extends JFrame {
 		String filename = name[0] + "_" + read + "_" + strand + ".tab";
 		return filename;
 	}
-	
-	public static void reverse(double[] data) {
-		if(data != null) {
-			int x = 0;
-			int y = data.length - 1;
-			double temp;
-			while (y > x) {
-				temp = data[y];
-				data[y] = data[x];
-				data[x] = temp;
-				y--;
-				x++;
-			}
-		}
-	}
-	
+		
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();

@@ -2,6 +2,7 @@ package charts;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -20,14 +21,19 @@ public class CompositePlot {
 		
 	}
 	
-	public static ChartPanel createCompositePlot(double[] x, double[] y){
-		final XYSeries series1 = new XYSeries("Data");
-		for (int i = 0; i < x.length; i++) {
-			series1.add(x[i], y[i]);
-		}
+	public static ChartPanel createCompositePlot(double[] x, double[] y1, double[] y2){
 		final XYSeriesCollection dataset = new XYSeriesCollection();
-		dataset.addSeries(series1);
-		final JFreeChart chart = createChart(dataset, 1);
+		final XYSeries seriesF = new XYSeries("Sense Strand");
+		final XYSeries seriesR = new XYSeries("Anti Strand");
+		
+		for(int i = 0; i < x.length; i++) {
+			seriesF.add(x[i], y1[i]);
+			seriesR.add(x[i], y2[i]);
+		}
+		dataset.addSeries(seriesF);
+		dataset.addSeries(seriesR);
+		
+		final JFreeChart chart = createChart(dataset, 2);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		return chartPanel;
@@ -57,6 +63,11 @@ public class CompositePlot {
 			renderer.setSeriesShapesVisible(x, false);	//Data point dot visibility
 			renderer.setSeriesStroke(x, new BasicStroke(3));
 		}
+		if(numseries == 2) {
+			renderer.setSeriesPaint(0, new Color(0, 0, 204));
+			renderer.setSeriesPaint(1, new Color(210, 22, 22));
+		} else { renderer.setSeriesPaint(0, new Color(0, 100, 0)); }
+		
 		plot.setRenderer(renderer);
 		// change the auto tick unit selection to integer units only...
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
@@ -67,5 +78,19 @@ public class CompositePlot {
 		domainAxis.setAxisLineVisible(true);
 		rangeAxis.setAxisLineVisible(true);
 		return chart;
+	}
+
+	public static Component createCompositePlot(double[] x, double[] y1){
+		final XYSeriesCollection dataset = new XYSeriesCollection();
+		final XYSeries seriesC = new XYSeries("Data");
+		for(int i = 0; i < x.length; i++) {
+			seriesC.add(x[i], y1[i]);
+		}
+		dataset.addSeries(seriesC);
+		
+		final JFreeChart chart = createChart(dataset, 1);
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		return chartPanel;
 	}
 }
