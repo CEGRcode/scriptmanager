@@ -35,7 +35,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.2");
+		frmScriptManager.setTitle("Script Manager v0.3");
 		frmScriptManager.setBounds(100, 100, 500, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
@@ -252,7 +252,6 @@ public class ScriptManager {
 		});
 		
 		JButton btnTagPileup = new JButton("Tag Pileup");
-		btnTagPileup.setEnabled(false);
 		pnlAnalysis.add(btnTagPileup);
 		btnTagPileup.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
