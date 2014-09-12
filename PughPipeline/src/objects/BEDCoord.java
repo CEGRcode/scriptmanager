@@ -9,6 +9,9 @@ public class BEDCoord {
 	private String NAME = "";
 	private double SCORE = 0;
 
+	private double[] Fstrand = null;
+	private double[] Rstrand = null;
+	
 	public BEDCoord() {
 		
 	}
@@ -19,6 +22,22 @@ public class BEDCoord {
 		STOP = sto;
 		DIR = di;
 		NAME = na;
+	}
+	
+	public double[] getFStrand() {
+		return Fstrand;
+	}
+	
+	public double[] getRStrand() {
+		return Rstrand;
+	}
+	
+	public void setFstrand(double[] f) {
+		Fstrand = f;
+	}
+	
+	public void setRstrand(double[] r) {
+		Rstrand = r;
 	}
 	
 	public String getChrom() {

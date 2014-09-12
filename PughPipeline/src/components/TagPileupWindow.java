@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
 import objects.BEDCoord;
+import objects.PileupParameters;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,14 +57,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	Vector<BEDCoord> COORD = null;
 	private File INPUT = null;
 	private File OUTPUT = null;
-	private int READ = 0;
-	private int STRAND = 0;
-	private int TRANS = 0;
-	private int SHIFT = 0;
-	private int BIN = 1;
-	private int SMOOTH = 0;
-	private int STDSIZE = 0;
-	private int STDNUM = 0;
 	
 	private JButton btnPileup;
 	private JButton btnLoad;
@@ -103,42 +96,50 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         public Void doInBackground() throws IOException, InterruptedException {
         	try {
         		if(Double.parseDouble(txtBin.getText()) < 1) {
-        			JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 1 bp");
-        		} else if(rdbtnSlidingWindow.isSelected() && Double.parseDouble(txtSmooth.getText()) < 0) {
+        			JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
+        		} else if(rdbtnSlidingWindow.isSelected() && Double.parseDouble(txtSmooth.getText()) < 1) {
         			JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be larger than 0 bp");
         		} else if(rdbtnGaussianSmooth.isSelected() && Double.parseDouble(txtStdSize.getText()) < 1) {
         			JOptionPane.showMessageDialog(null, "Invalid Standard Deviation Size!!! Must be larger than 0 bp");
         		} else if(rdbtnGaussianSmooth.isSelected() && Double.parseDouble(txtNumStd.getText()) < 1) {
         			JOptionPane.showMessageDialog(null, "Invalid Number of Standard Deviations!!! Must be larger than 0");
+        		} else if(Integer.parseInt(txtCPU.getText()) < 1) {
+        			JOptionPane.showMessageDialog(null, "Invalid Number of CPU's!!! Must use at least 1");
         		} else if(INPUT == null) {
         			JOptionPane.showMessageDialog(null, "BED File Not Loaded!!!");
         		} else if(BAMFiles.size() < 1) {
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
         		} else {
 		        	setProgress(0);
-		        	if(rdbtnSeperate.isSelected()) { STRAND = 0; }
-		        	else if(rdbtnComb.isSelected()) { STRAND = 1; }
 		        	
-		        	if(rdbtnRead1.isSelected()) { READ = 0; }
-		        	else if(rdbtnRead2.isSelected()) { READ = 1; }
-		        	else if(rdbtnCombined.isSelected()) { READ = 2; }
+		        	//Load up parameters for the pileup into single object
+		        	PileupParameters param = new PileupParameters();
+		        	if(rdbtnSeperate.isSelected()) { param.setStrand(0); }
+		        	else if(rdbtnComb.isSelected()) { param.setStrand(1); }
 		        	
-		        	if(rdbtnSlidingWindow.isSelected()) { TRANS = 1; }
-		        	else if(rdbtnSlidingWindow.isSelected()) { TRANS = 2; }
+		        	if(rdbtnRead1.isSelected()) { param.setRead(0); }
+		        	else if(rdbtnRead2.isSelected()) { param.setRead(1); }
+		        	else if(rdbtnCombined.isSelected()) { param.setRead(2); }
+		        	
+		        	if(rdbtnNone.isSelected()) { param.setTrans(0); }
+		        	else if(rdbtnSlidingWindow.isSelected()) { param.setTrans(1); }
+		        	else if(rdbtnGaussianSmooth.isSelected()) { param.setTrans(2); }
+		        			        	
+		        	if(!chckbxOutputData.isSelected()) { param.setOutput(null); }
+		        	else if(OUTPUT == null) { param.setOutput(new File(System.getProperty("user.dir"))); }
+		        	else { param.setOutput(OUTPUT); }
+		        	
+		        	//SHIFT can be negative
+		        	param.setShift(Integer.parseInt(txtShift.getText()));
+		        	param.setBin(Integer.parseInt(txtBin.getText()));
+		        	param.setSmooth(Integer.parseInt(txtSmooth.getText()));
+		        	param.setStdSize(Integer.parseInt(txtStdSize.getText()));
+		        	param.setStdNum(Integer.parseInt(txtNumStd.getText()));
+		        	param.setCPU(Integer.parseInt(txtCPU.getText()));
 		        	
 		        	loadCoord();
 		        	
-		        	if(OUTPUT == null) { OUTPUT = new File(System.getProperty("user.dir")); }
-		        	if(!chckbxOutputData.isSelected()) { OUTPUT = null; }
-		        	
-		        	//SHIFT can be negative
-		        	SHIFT = Integer.parseInt(txtShift.getText());
-		        	BIN = Integer.parseInt(txtBin.getText());
-		        	SMOOTH = Integer.parseInt(txtSmooth.getText());
-		        	STDSIZE = Integer.parseInt(txtStdSize.getText());
-		        	STDNUM = Integer.parseInt(txtNumStd.getText());
-		        	
-	        		TagPileup pile = new TagPileup(COORD, BAMFiles, OUTPUT, READ, STRAND, SHIFT, BIN, TRANS, SMOOTH, STDSIZE, STDNUM);
+	        		TagPileup pile = new TagPileup(COORD, BAMFiles, param);
 	        		
 	        		pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -331,16 +332,15 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblNumStd);
         
         JLabel lblBinSizebp = new JLabel("Bin Size (bp):");
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtShift, -90, SpringLayout.WEST, lblBinSizebp);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtShift, -69, SpringLayout.WEST, lblBinSizebp);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblBinSizebp, 0, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblBinSizebp, 0, SpringLayout.EAST, btnPileup);
         lblBinSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblBinSizebp);
         
         txtBin = new JTextField();
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtBin, 6, SpringLayout.SOUTH, rdbtnComb);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtBin, 0, SpringLayout.WEST, rdbtnComb);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtBin, -194, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtBin, 6, SpringLayout.EAST, lblBinSizebp);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtBin, -213, SpringLayout.EAST, contentPane);
         txtBin.setText("1");
         txtBin.setHorizontalAlignment(SwingConstants.CENTER);
         txtBin.setColumns(10);
@@ -415,6 +415,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         rdbtnNone.setSelected(true);
         
         lblWindowSizebin = new JLabel("Window Size (Bin #):");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblBinSizebp, 0, SpringLayout.WEST, lblWindowSizebin);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtStdSize, 7, SpringLayout.SOUTH, lblWindowSizebin);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblWindowSizebin, 4, SpringLayout.NORTH, rdbtnNone);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblWindowSizebin, 6, SpringLayout.EAST, rdbtnSlidingWindow);
@@ -434,14 +435,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         txtSmooth.setColumns(10);
         
         lblCpusToUse = new JLabel("CPU's to Use:");
-        lblCpusToUse.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblCpusToUse, 0, SpringLayout.NORTH, lblTagShift);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 0, SpringLayout.WEST, rdbtnCombined);
         lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCpusToUse);
         
         txtCPU = new JTextField();
-        txtCPU.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -6, SpringLayout.NORTH, lblTagShift);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 3, SpringLayout.EAST, lblCpusToUse);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtCPU, -15, SpringLayout.EAST, contentPane);
@@ -570,8 +569,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	    		txtStdSize.setEnabled(false);
 	    		txtNumStd.setEnabled(false);
 			}
-			lblCpusToUse.setEnabled(false);
-			txtCPU.setEnabled(false);
 		}
 	}
 	

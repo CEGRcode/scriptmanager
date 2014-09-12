@@ -1,20 +1,16 @@
-package scripts;
+package scripts.PileupScripts;
 
 public class TransformArray {
 	
-	public static void reverseTran(double[] orig) {
+	public static double[] reverseTran(double[] orig) {
 		if(orig != null) {
-			int x = 0;
-			int y = orig.length - 1;
-			double temp;
-			while (y > x) {
-				temp = orig[y];
-				orig[y] = orig[x];
-				orig[x] = temp;
-				y--;
-				x++;
+			double[] reverse = new double[orig.length];
+			for(int x = orig.length - 1; x >= 0; x--) {
+				reverse[orig.length - 1 - x] = orig[x];
 			}
-		}	
+			return reverse;
+		}
+		return null;
 	}
 	
 	
