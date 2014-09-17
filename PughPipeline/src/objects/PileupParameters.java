@@ -13,11 +13,20 @@ public class PileupParameters {
 	private int STDSIZE = 0;
 	private int STDNUM = 0;
 	private int CPU = 1;
+	private int OUTTYPE = 0;
 	
 	public PileupParameters() {
 		
 	}
 
+	public void setOutputType(int newtype) {
+		OUTTYPE = newtype;
+	}
+	
+	public int getOutputType() {
+		return OUTTYPE;
+	}
+	
 	public File getOutput() {
 		return OUTPUT;
 	}
