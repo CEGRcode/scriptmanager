@@ -198,10 +198,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new BAMFilter());
-				fc.setMultiSelectionEnabled(true);
-				fc.setDialogTitle("BAM File Selection");
-
 				File[] newBAMFiles = getBAMFiles();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
@@ -536,9 +532,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         
         btnLoadBedFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new BEDFilter());
-				fc.setDialogTitle("BED File Selection");
-
 				File temp = getBEDFile();
 				if(temp != null) {
 					INPUT = temp;
@@ -646,6 +639,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
     }
     
 	public File[] getBAMFiles() {
+		fc.setDialogTitle("BAM File Selection");
+		fc.setFileFilter(new BAMFilter());
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -655,6 +653,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	}
 	
 	public File getBEDFile() {
+		fc.setDialogTitle("BED File Selection");
+		fc.setFileFilter(new BEDFilter());
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(false);
+		
 		File bedFile = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -667,6 +670,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		fc.setDialogTitle("Output Directory");
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fc.setAcceptAllFileFilterUsed(false);
+		
 		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
 			return fc.getSelectedFile();
 		} else {
