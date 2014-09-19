@@ -25,6 +25,7 @@ import objects.BEDCoord;
 import objects.PileupParameters;
 import scripts.PileupScripts.JTVOutput;
 import scripts.PileupScripts.PileupExtract;
+import scripts.PileupScripts.TransformArray;
 
 @SuppressWarnings("serial")
 public class TagPileup extends JFrame {
@@ -179,13 +180,22 @@ public class TagPileup extends JFrame {
 			for(int i = 0; i < AVG_S1.length; i++) {
 				DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin());
 				AVG_S1[i] /= INPUT.size();
-				if(AVG_S2 != null) {
-					AVG_S2[i] /= INPUT.size();
-					STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
-				} else STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n");
-
+				if(AVG_S2 != null) AVG_S2[i] /= INPUT.size();
 			}
-						
+			
+			if(PARAM.getTrans() == 1) { 
+				AVG_S1 = TransformArray.smoothTran(AVG_S1, PARAM.getSmooth());
+				if(AVG_S2 != null) AVG_S2 = TransformArray.smoothTran(AVG_S2, PARAM.getSmooth());
+			} else if(PARAM.getTrans() == 2) {
+				AVG_S1 = TransformArray.gaussTran(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
+				if(AVG_S2 != null) AVG_S2 = TransformArray.gaussTran(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
+			}
+			
+			for(int i = 0; i < AVG_S1.length; i++) {
+				if(AVG_S2 != null) STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
+				else  STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n");
+			}
+			
 			STATS.setCaretPosition(0);
 			JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			tabbedPane_Statistics.add(BAM.getName(), newpane);

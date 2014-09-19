@@ -14,7 +14,8 @@ public class TransformArray {
 	}
 	
 	
-	public static double[] smoothTran(double[] orig, int window) {
+	public static double[] smoothTran(double[] orig, int win) {
+		int window = win / 2;
 		double[] Sarray = new double[orig.length];
 		for(int x = 0; x < orig.length; x++) {
 			double score = 0;
