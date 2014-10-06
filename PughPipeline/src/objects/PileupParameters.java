@@ -15,9 +15,18 @@ public class PileupParameters {
 	private int CPU = 1;
 	private int OUTTYPE = 0;
 	private boolean STANDARD = false;
+	private double STANDRATIO = 1;
 	
 	public PileupParameters() {
 		
+	}
+	
+	public void setRatio(double rat) {
+		STANDRATIO = rat;
+	}
+	
+	public double getRatio() {
+		return STANDRATIO;
 	}
 	
 	public void setStandard(boolean stand) {

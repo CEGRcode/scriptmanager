@@ -16,7 +16,7 @@ public class PileupExtract implements Runnable{
 	int index;
 	int subsetsize;
 	SAMFileReader inputSam;
-	
+		
 	public void run() {
 		inputSam = new SAMFileReader(BAM, new File(BAM + ".bai"));
 		for(int x = index; x < index + subsetsize; x++) {
@@ -135,6 +135,14 @@ public class PileupExtract implements Runnable{
 		for(int x = (param.getBin() / 2); x < TAG_S1.length - (param.getBin() / 2); x += param.getBin()) {
 			finalF[(x - (param.getBin() / 2)) / param.getBin()] = TAG_S1[x];
 			if(TAG_S2 != null) finalR[(x - (param.getBin() / 2)) / param.getBin()] = TAG_S2[x];
+		}
+		
+		//Perform Tag Standardization Here
+		if(param.getStandard()) {
+			for(int i = 0; i < finalF.length; i++) {
+				if(finalF != null) finalF[i] /= param.getRatio();
+				if(finalR != null) finalR[i] /= param.getRatio();
+			}
 		}
 		
 		read.setFstrand(finalF);

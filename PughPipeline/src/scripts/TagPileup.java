@@ -14,7 +14,11 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import net.sf.samtools.AbstractBAMFileIndex;
 import net.sf.samtools.SAMFileReader;
+import net.sf.samtools.SAMRecord;
+import net.sf.samtools.SAMSequenceRecord;
+import net.sf.samtools.util.CloseableIterator;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
@@ -37,7 +41,6 @@ public class TagPileup extends JFrame {
 	private int STRAND = 0;
 	private int CPU = 1;
 	
-	SAMFileReader inputSam;
 	PrintStream OUT_S1 = null;
 	PrintStream OUT_S2 = null;
 	
@@ -108,6 +111,36 @@ public class TagPileup extends JFrame {
 			} else {
 			//if(f.exists() && !f.isDirectory()) {
 				STATS.append(BAM.getName() + "\n");
+				
+				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
+				if(PARAM.getStandard()) {
+					SAMFileReader inputSam = new SAMFileReader(BAM, f);
+					AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.getIndex();
+					double counter = 0;
+					double totalAligned = 0;
+					double totalGenome = 0;
+					
+					for (int x = 0; x < bai.getNumberOfReferences(); x++) {
+						SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(x);
+						totalAligned += inputSam.getIndex().getMetaData(z).getAlignedRecordCount();
+						totalGenome += seq.getSequenceLength();
+					}
+					CloseableIterator<SAMRecord> iter = inputSam.iterator();
+					while (iter.hasNext()) {
+						SAMRecord sr = iter.next();
+						if(sr.getReadPairedFlag()) {
+							if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
+								counter++;
+							}
+						}
+					}
+					inputSam.close();
+					bai.close();
+					iter.close();
+					if(counter != 0) PARAM.setRatio(counter / totalGenome);
+					else PARAM.setRatio(totalAligned / totalGenome);
+					System.out.println(counter + "\t" + totalGenome + "\t" + PARAM.getRatio());
+				}
 				
 				//Split up job and send out to threads to process				
 				ExecutorService parseMaster = Executors.newFixedThreadPool(CPU);
