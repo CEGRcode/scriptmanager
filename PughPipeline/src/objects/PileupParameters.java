@@ -14,9 +14,18 @@ public class PileupParameters {
 	private int STDNUM = 0;
 	private int CPU = 1;
 	private int OUTTYPE = 0;
+	private boolean STANDARD = false;
 	
 	public PileupParameters() {
 		
+	}
+	
+	public void setStandard(boolean stand) {
+		STANDARD = stand;
+	}
+	
+	public boolean getStandard() {
+		return STANDARD;
 	}
 
 	public void setOutputType(int newtype) {
