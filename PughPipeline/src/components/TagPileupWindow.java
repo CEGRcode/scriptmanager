@@ -325,13 +325,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(txtShift);
         txtShift.setColumns(10);
         
-        lblStdDevSize = new JLabel("Std Dev Size (bp):");
+        lblStdDevSize = new JLabel("Std Dev Size (Bin #):");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblStdDevSize, 0, SpringLayout.WEST, rdbtnSeperate);
         lblStdDevSize.setEnabled(false);
         lblStdDevSize.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblStdDevSize);
         
         lblNumStd = new JLabel("# of Std Deviations:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblNumStd, 0, SpringLayout.NORTH, lblStdDevSize);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStdDevSize, 0, SpringLayout.NORTH, lblNumStd);
         lblNumStd.setEnabled(false);
         lblNumStd.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblNumStd);
@@ -352,10 +353,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(txtBin);
         
         txtStdSize = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtStdSize, 289, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblStdDevSize, -6, SpringLayout.WEST, txtStdSize);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtStdSize, -6, SpringLayout.NORTH, lblStdDevSize);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtStdSize, -21, SpringLayout.WEST, lblNumStd);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtStdSize, 6, SpringLayout.EAST, lblStdDevSize);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtStdSize, -8, SpringLayout.WEST, lblNumStd);
         txtStdSize.setEnabled(false);
         txtStdSize.setHorizontalAlignment(SwingConstants.CENTER);
         txtStdSize.setText("5");
@@ -363,10 +363,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         txtStdSize.setColumns(10);
         
         txtNumStd = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtNumStd, 492, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtNumStd, -66, SpringLayout.NORTH, lblDefaultToLocal);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblNumStd, -6, SpringLayout.WEST, txtNumStd);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtNumStd, -6, SpringLayout.NORTH, lblStdDevSize);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtNumStd, -49, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtNumStd, 495, SpringLayout.WEST, contentPane);
         txtNumStd.setEnabled(false);
         txtNumStd.setHorizontalAlignment(SwingConstants.CENTER);
         txtNumStd.setText("3");
@@ -407,7 +406,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         rdbtnGaussianSmooth = new JRadioButton("Gaussian Smooth");
         sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnGaussianSmooth, 10, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputData, 10, SpringLayout.SOUTH, rdbtnGaussianSmooth);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStdDevSize, 4, SpringLayout.NORTH, rdbtnGaussianSmooth);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnGaussianSmooth, 6, SpringLayout.SOUTH, rdbtnNone);
         contentPane.add(rdbtnGaussianSmooth);
         
@@ -430,6 +428,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblWindowSizebin);
         
         txtSmooth = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblNumStd, 7, SpringLayout.SOUTH, txtSmooth);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtSmooth, 407, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblWindowSizebin, -6, SpringLayout.WEST, txtSmooth);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtSmooth, -2, SpringLayout.NORTH, rdbtnNone);
@@ -441,16 +440,17 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         txtSmooth.setColumns(10);
         
         lblCpusToUse = new JLabel("CPU's to Use:");
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblCpusToUse, -104, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtBin, -36, SpringLayout.WEST, lblCpusToUse);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblCpusToUse, 0, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblCpusToUse, 0, SpringLayout.EAST, lblNumStd);
         lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCpusToUse);
         
         txtCPU = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -6, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 0, SpringLayout.WEST, txtNumStd);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 492, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtCPU, -46, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtNumStd, 0, SpringLayout.EAST, txtCPU);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -6, SpringLayout.NORTH, lblTagShift);
         txtCPU.setHorizontalAlignment(SwingConstants.CENTER);
         txtCPU.setText("1");
         contentPane.add(txtCPU);
@@ -459,10 +459,10 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         rdbtnTabdelimited = new JRadioButton("TAB-Delimited");
         contentPane.add(rdbtnTabdelimited);
         rdbtnCdt = new JRadioButton("CDT");
+        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnCdt, -104, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnTabdelimited, 0, SpringLayout.NORTH, rdbtnCdt);
         sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnTabdelimited, -6, SpringLayout.WEST, rdbtnCdt);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, rdbtnCdt, -6, SpringLayout.NORTH, lblDefaultToLocal);
-        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnCdt, 0, SpringLayout.EAST, lblNumStd);
         contentPane.add(rdbtnCdt);
         
         ButtonGroup output = new ButtonGroup();

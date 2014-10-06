@@ -167,31 +167,21 @@ public class TagPileup extends JFrame {
 				double[] AVG_S2 = null;
 				if(STRAND == 0) AVG_S2 = new double[AVG_S1.length];
 				double[] DOMAIN = new double[AVG_S1.length];
-				
+
+				//Account for the shifted oversized window produced by binning and smoothing
+				int OUTSTART = 0;
+				if(PARAM.getTrans() == 1) { OUTSTART = PARAM.getSmooth(); }
+				else if(PARAM.getTrans() == 2) { OUTSTART = (PARAM.getStdSize() * PARAM.getStdNum()); }
+								
 				if(PARAM.getOutputType() == 2) {
 					if(OUT_S1 != null) OUT_S1.print("YORF\tNAME");
 					if(OUT_S2 != null) OUT_S2.print("YORF\tNAME");
 					double[] tempF = INPUT.get(0).getFStrand();
-					
-					
-					
-					/*
-					 * 
-					 * 		int WINDOW = (read.getStop() - read.getStart()) + ((param.getBin() / 2) * 2);
-		int QUERYWINDOW = 0;
-		if(param.getTrans() == 1) {
-			WINDOW = (read.getStop() - read.getStart()) + (param.getBin() * param.getSmooth() * 2);
-			QUERYWINDOW = (param.getBin() * param.getSmooth()); 
-		}
-		else if(param.getTrans() == 2) {
-			WINDOW = (read.getStop() - read.getStart()) + (param.getBin() * param.getStdSize() * param.getStdNum() * 2);
-			QUERYWINDOW = (param.getBin() * param.getStdSize() * param.getStdNum()); 
-		}
-					 */
-					
-					for(int i = 0; i < tempF.length; i++) {
-						if(OUT_S1 != null) OUT_S1.print("\t" + i);
-						if(OUT_S2 != null) OUT_S2.print("\t" + i);
+										
+					for(int i = OUTSTART; i < tempF.length - OUTSTART; i++) {
+						int index = i - OUTSTART;
+						if(OUT_S1 != null) OUT_S1.print("\t" + index);
+						if(OUT_S2 != null) OUT_S2.print("\t" + index);
 					}
 					if(OUT_S1 != null) OUT_S1.println();
 					if(OUT_S2 != null) OUT_S2.println();
@@ -201,7 +191,6 @@ public class TagPileup extends JFrame {
 				for(int i = 0; i < INPUT.size(); i++) {
 					double[] tempF = INPUT.get(i).getFStrand();
 					double[] tempR = INPUT.get(i).getRStrand();
-					
 					if(OUT_S1 != null) OUT_S1.print(INPUT.get(i).getName());
 					if(OUT_S2 != null) OUT_S2.print(INPUT.get(i).getName());
 					
@@ -211,15 +200,18 @@ public class TagPileup extends JFrame {
 					}
 					
 					for(int j = 0; j < tempF.length; j++) {
-						if(OUT_S1 != null) OUT_S1.print("\t" + tempF[j]);
-						if(OUT_S2 != null) OUT_S2.print("\t" + tempR[j]);
+						if(j >= OUTSTART && j < tempF.length - OUTSTART) {
+							if(OUT_S1 != null) OUT_S1.print("\t" + tempF[j]);
+							if(OUT_S2 != null) OUT_S2.print("\t" + tempR[j]);
+						}
 						AVG_S1[j] += tempF[j];
 						if(AVG_S2 != null) AVG_S2[j] += tempR[j];
 					}
 					if(OUT_S1 != null) OUT_S1.println();
 					if(OUT_S2 != null) OUT_S2.println();
 				}
-	
+
+				//Calculate average and domain here
 				int temp = (int) (((double)AVG_S1.length / 2.0) + 0.5);
 				for(int i = 0; i < AVG_S1.length; i++) {
 					DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin());
@@ -227,6 +219,7 @@ public class TagPileup extends JFrame {
 					if(AVG_S2 != null) AVG_S2[i] /= INPUT.size();
 				}
 				
+				//Transform average given transformation parameters
 				if(PARAM.getTrans() == 1) { 
 					AVG_S1 = TransformArray.smoothTran(AVG_S1, PARAM.getSmooth());
 					if(AVG_S2 != null) AVG_S2 = TransformArray.smoothTran(AVG_S2, PARAM.getSmooth());
@@ -235,11 +228,23 @@ public class TagPileup extends JFrame {
 					if(AVG_S2 != null) AVG_S2 = TransformArray.gaussTran(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
 				}
 				
-				for(int i = 0; i < AVG_S1.length; i++) {
-					if(AVG_S2 != null) STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
+				//Trim average here and output to statistics pane
+				double[] AVG_S1_trim = new double[AVG_S1.length - (OUTSTART * 2)];
+				double[] AVG_S2_trim = null;
+				if(STRAND == 0) AVG_S2_trim = new double[AVG_S1_trim.length];
+				double[] DOMAIN_trim = new double[AVG_S1_trim.length];
+				for(int i = OUTSTART; i < AVG_S1.length - OUTSTART; i++) {
+					if(AVG_S2 != null) {
+						STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
+						AVG_S2_trim[i - OUTSTART] = AVG_S2[i];
+					}
 					else  STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n");
+					AVG_S1_trim[i - OUTSTART] = AVG_S1[i];
+					DOMAIN_trim[i - OUTSTART] = DOMAIN[i];
 				}
-				
+				AVG_S1 = AVG_S1_trim;
+				AVG_S2 = AVG_S2_trim;
+				DOMAIN = DOMAIN_trim;
 				
 				if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2));
 				else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1));
