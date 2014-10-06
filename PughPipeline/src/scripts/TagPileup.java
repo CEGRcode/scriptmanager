@@ -94,8 +94,6 @@ public class TagPileup extends JFrame {
 					} catch (FileNotFoundException e) {	e.printStackTrace(); }
 				}
 			}
-//			if(OUT_S1 != null) OUT_S1.println(time);
-//			if(OUT_S2 != null) OUT_S2.println(time);
 			
 			JTextArea STATS = new JTextArea();
 			STATS.setEditable(false);
@@ -103,9 +101,12 @@ public class TagPileup extends JFrame {
 			
 			File f = new File(BAM + ".bai");
 			//Check if BAI index file exists
-			if(f.exists() && !f.isDirectory()) {
-//				if(OUT_S1 != null) OUT_S1.println(BAM.getName() + "_sense");
-//				if(OUT_S2 != null) OUT_S2.println(BAM.getName() + "_anti");
+			if(!f.exists() || f.isDirectory()) {
+				if(OUT_S1 != null) OUT_S1.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+				if(OUT_S2 != null) OUT_S2.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+				STATS.append("BAI Index File does not exist for: " + BAM.getName() + "\n\n");
+			} else {
+			//if(f.exists() && !f.isDirectory()) {
 				STATS.append(BAM.getName() + "\n");
 				
 				//Split up job and send out to threads to process				
@@ -128,92 +129,104 @@ public class TagPileup extends JFrame {
 				parseMaster.shutdown();
 				while (!parseMaster.isTerminated()) {
 				}
-			} else {
-				if(OUT_S1 != null) OUT_S1.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
-				if(OUT_S2 != null) OUT_S2.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
-				STATS.append("BAI Index File does not exist for: " + BAM.getName() + "\n\n");
-			}
 			
-			//TODO if bam.bai doesn't exist, quit out rather than proceed
-			
-			double[] AVG_S1 = new double[INPUT.get(0).getFStrand().length];
-			double[] AVG_S2 = null;
-			if(STRAND == 0) AVG_S2 = new double[AVG_S1.length];
-			double[] DOMAIN = new double[AVG_S1.length];
-			
-			if(PARAM.getOutputType() == 2) {
-				if(OUT_S1 != null) OUT_S1.print("YORF\tNAME");
-				if(OUT_S2 != null) OUT_S2.print("YORF\tNAME");
-				double[] tempF = INPUT.get(0).getFStrand();
-				for(int i = 0; i < tempF.length; i++) {
-					if(OUT_S1 != null) OUT_S1.print("\t" + i);
-					if(OUT_S2 != null) OUT_S2.print("\t" + i);
-				}
-				if(OUT_S1 != null) OUT_S1.println();
-				if(OUT_S2 != null) OUT_S2.println();
-			}
-			
-			//Output individual sites
-			for(int i = 0; i < INPUT.size(); i++) {
-				double[] tempF = INPUT.get(i).getFStrand();
-				double[] tempR = INPUT.get(i).getRStrand();
-				
-				if(OUT_S1 != null) OUT_S1.print(INPUT.get(i).getName());
-				if(OUT_S2 != null) OUT_S2.print(INPUT.get(i).getName());
+				double[] AVG_S1 = new double[INPUT.get(0).getFStrand().length];
+				double[] AVG_S2 = null;
+				if(STRAND == 0) AVG_S2 = new double[AVG_S1.length];
+				double[] DOMAIN = new double[AVG_S1.length];
 				
 				if(PARAM.getOutputType() == 2) {
-					if(OUT_S1 != null) OUT_S1.print("\t" + INPUT.get(i).getName());
-					if(OUT_S2 != null) OUT_S2.print("\t" + INPUT.get(i).getName());
+					if(OUT_S1 != null) OUT_S1.print("YORF\tNAME");
+					if(OUT_S2 != null) OUT_S2.print("YORF\tNAME");
+					double[] tempF = INPUT.get(0).getFStrand();
+					
+					
+					
+					/*
+					 * 
+					 * 		int WINDOW = (read.getStop() - read.getStart()) + ((param.getBin() / 2) * 2);
+		int QUERYWINDOW = 0;
+		if(param.getTrans() == 1) {
+			WINDOW = (read.getStop() - read.getStart()) + (param.getBin() * param.getSmooth() * 2);
+			QUERYWINDOW = (param.getBin() * param.getSmooth()); 
+		}
+		else if(param.getTrans() == 2) {
+			WINDOW = (read.getStop() - read.getStart()) + (param.getBin() * param.getStdSize() * param.getStdNum() * 2);
+			QUERYWINDOW = (param.getBin() * param.getStdSize() * param.getStdNum()); 
+		}
+					 */
+					
+					for(int i = 0; i < tempF.length; i++) {
+						if(OUT_S1 != null) OUT_S1.print("\t" + i);
+						if(OUT_S2 != null) OUT_S2.print("\t" + i);
+					}
+					if(OUT_S1 != null) OUT_S1.println();
+					if(OUT_S2 != null) OUT_S2.println();
 				}
 				
-				for(int j = 0; j < tempF.length; j++) {
-					if(OUT_S1 != null) OUT_S1.print("\t" + tempF[j]);
-					if(OUT_S2 != null) OUT_S2.print("\t" + tempR[j]);
-					AVG_S1[j] += tempF[j];
-					if(AVG_S2 != null) AVG_S2[j] += tempR[j];
+				//Output individual sites
+				for(int i = 0; i < INPUT.size(); i++) {
+					double[] tempF = INPUT.get(i).getFStrand();
+					double[] tempR = INPUT.get(i).getRStrand();
+					
+					if(OUT_S1 != null) OUT_S1.print(INPUT.get(i).getName());
+					if(OUT_S2 != null) OUT_S2.print(INPUT.get(i).getName());
+					
+					if(PARAM.getOutputType() == 2) {
+						if(OUT_S1 != null) OUT_S1.print("\t" + INPUT.get(i).getName());
+						if(OUT_S2 != null) OUT_S2.print("\t" + INPUT.get(i).getName());
+					}
+					
+					for(int j = 0; j < tempF.length; j++) {
+						if(OUT_S1 != null) OUT_S1.print("\t" + tempF[j]);
+						if(OUT_S2 != null) OUT_S2.print("\t" + tempR[j]);
+						AVG_S1[j] += tempF[j];
+						if(AVG_S2 != null) AVG_S2[j] += tempR[j];
+					}
+					if(OUT_S1 != null) OUT_S1.println();
+					if(OUT_S2 != null) OUT_S2.println();
 				}
-				if(OUT_S1 != null) OUT_S1.println();
-				if(OUT_S2 != null) OUT_S2.println();
+	
+				int temp = (int) (((double)AVG_S1.length / 2.0) + 0.5);
+				for(int i = 0; i < AVG_S1.length; i++) {
+					DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin());
+					AVG_S1[i] /= INPUT.size();
+					if(AVG_S2 != null) AVG_S2[i] /= INPUT.size();
+				}
+				
+				if(PARAM.getTrans() == 1) { 
+					AVG_S1 = TransformArray.smoothTran(AVG_S1, PARAM.getSmooth());
+					if(AVG_S2 != null) AVG_S2 = TransformArray.smoothTran(AVG_S2, PARAM.getSmooth());
+				} else if(PARAM.getTrans() == 2) {
+					AVG_S1 = TransformArray.gaussTran(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
+					if(AVG_S2 != null) AVG_S2 = TransformArray.gaussTran(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
+				}
+				
+				for(int i = 0; i < AVG_S1.length; i++) {
+					if(AVG_S2 != null) STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
+					else  STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n");
+				}
+				
+				
+				if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2));
+				else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1));
+				if(OUT_S1 != null) {
+					if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 0), "blue");
+					else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 2), "green");
+					OUT_S1.close();
+				}
+				if(OUT_S2 != null){
+					JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 1), "red");
+					OUT_S2.close();
+				}
+							
 			}
-
-			int temp = (int) (((double)AVG_S1.length / 2.0) + 0.5);
-			for(int i = 0; i < AVG_S1.length; i++) {
-				DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin());
-				AVG_S1[i] /= INPUT.size();
-				if(AVG_S2 != null) AVG_S2[i] /= INPUT.size();
-			}
-			
-			if(PARAM.getTrans() == 1) { 
-				AVG_S1 = TransformArray.smoothTran(AVG_S1, PARAM.getSmooth());
-				if(AVG_S2 != null) AVG_S2 = TransformArray.smoothTran(AVG_S2, PARAM.getSmooth());
-			} else if(PARAM.getTrans() == 2) {
-				AVG_S1 = TransformArray.gaussTran(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
-				if(AVG_S2 != null) AVG_S2 = TransformArray.gaussTran(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
-			}
-			
-			for(int i = 0; i < AVG_S1.length; i++) {
-				if(AVG_S2 != null) STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
-				else  STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n");
-			}
-			
 			STATS.setCaretPosition(0);
 			JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			tabbedPane_Statistics.add(BAM.getName(), newpane);
-			if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2));
-			else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1));
-			if(OUT_S1 != null) {
-				if(STRAND == 0) JTVOutput.outputJTV(generateFileName(BAM.getName(), 0), "blue");
-				else JTVOutput.outputJTV(generateFileName(BAM.getName(), 2), "green");
-				OUT_S1.close();
-			}
-			if(OUT_S2 != null){
-				JTVOutput.outputJTV(generateFileName(BAM.getName(), 1), "red");
-				OUT_S2.close();
-			}
-						
+			
 	        firePropertyChange("tag", z, z + 1);
-		}
-		
+		}		
 	}
 	
 	/*private int filterRead(int coord, boolean Readstrand, String CoordDir) {
