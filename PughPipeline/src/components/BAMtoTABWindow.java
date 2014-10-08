@@ -101,6 +101,7 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(scrollPane);
 		
 		btnLoad = new JButton("Load BAM Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
@@ -126,9 +127,8 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		scrollPane.setViewportView(listExp);
 		
 		btnRemoveBam = new JButton("Remove BAM");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -174,14 +174,14 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(lblPleaseSelectWhich);
 
         final JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, -6, SpringLayout.NORTH, btnIndex);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 0, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -15, SpringLayout.EAST, contentPane);
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
         
         JLabel lblCurrentOutput = new JLabel("Current Output:");
-        lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
+        lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrentOutput, -35, SpringLayout.SOUTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
         contentPane.add(lblCurrentOutput);
@@ -193,10 +193,10 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(btnOutputDirectory);
         
         progressBar = new JProgressBar();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnIndex);
+        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, -167, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
         progressBar.setStringPainted(true);
-        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, -225, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -4, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, contentPane);
         contentPane.add(progressBar);
         
         btnIndex.setActionCommand("start");

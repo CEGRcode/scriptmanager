@@ -94,8 +94,8 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load BAM Files");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BAMFilter());
@@ -112,9 +112,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnLoad);
 		
 		btnRemoveBam = new JButton("Remove BAM");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -135,26 +135,26 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         btnMerge.addActionListener(this);
         
 		progressBar = new JProgressBar();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnMerge);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
         progressBar.setStringPainted(true);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, contentPane);
 		contentPane.add(progressBar);
 		
         txtOutput = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, txtOutput);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtOutput, -5, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -6, SpringLayout.NORTH, txtOutput);
         txtOutput.setText("merged_BAM.bam");
         contentPane.add(txtOutput);
         txtOutput.setColumns(10);
         
         JLabel lblOutputFileName = new JLabel("Output File Name:");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputFileName, 5, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutput, -6, SpringLayout.NORTH, lblOutputFileName);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutput, -2, SpringLayout.NORTH, lblOutputFileName);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtOutput, 6, SpringLayout.EAST, lblOutputFileName);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputFileName, 5, SpringLayout.WEST, contentPane);
         contentPane.add(lblOutputFileName);
         
         chckbxUseMultipleCpus = new JCheckBox("Use Multiple CPU's");
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxUseMultipleCpus, -6, SpringLayout.NORTH, progressBar);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxUseMultipleCpus, -4, SpringLayout.NORTH, progressBar);
         sl_contentPane.putConstraint(SpringLayout.EAST, chckbxUseMultipleCpus, -5, SpringLayout.EAST, contentPane);
         chckbxUseMultipleCpus.setToolTipText("Increases Merging Speed on Computers with Multiple CPUs");
         contentPane.add(chckbxUseMultipleCpus);

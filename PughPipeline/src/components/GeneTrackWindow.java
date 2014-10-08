@@ -132,8 +132,9 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load BAM Files");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -268, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BAMFilter());
@@ -150,9 +151,8 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(btnLoad);
 		
 		btnRemoveBam = new JButton("Remove BAM");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -6, SpringLayout.NORTH, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -185,33 +185,34 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
         txtSigma.setColumns(10);
         
         txtExclusion = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtExclusion, -74, SpringLayout.SOUTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtSigma, 0, SpringLayout.NORTH, txtExclusion);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtExclusion, -201, SpringLayout.EAST, contentPane);
         txtExclusion.setHorizontalAlignment(SwingConstants.CENTER);
         txtExclusion.setText("20");
         contentPane.add(txtExclusion);
         txtExclusion.setColumns(10);
         
         txtUp = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtUp, 6, SpringLayout.SOUTH, txtExclusion);
         txtUp.setEnabled(false);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtExclusion, 0, SpringLayout.WEST, txtUp);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtExclusion, -6, SpringLayout.NORTH, txtUp);
         txtUp.setHorizontalAlignment(SwingConstants.CENTER);
         txtUp.setText("10");
         contentPane.add(txtUp);
         txtUp.setColumns(10);
         
         txtDown = new JTextField();
-        txtDown.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtDown, 0, SpringLayout.NORTH, txtUp);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtDown, -10, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtUp, 0, SpringLayout.NORTH, txtDown);
+        txtDown.setEnabled(false);
         txtDown.setHorizontalAlignment(SwingConstants.CENTER);
         txtDown.setText("10");
         contentPane.add(txtDown);
         txtDown.setColumns(10);
         
         txtFilter = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtFilter, -6, SpringLayout.NORTH, txtDown);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtDown, 0, SpringLayout.WEST, txtFilter);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, txtFilter, -74, SpringLayout.SOUTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtFilter, 429, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtFilter, -10, SpringLayout.EAST, contentPane);
         txtFilter.setHorizontalAlignment(SwingConstants.CENTER);
         txtFilter.setText("1");
@@ -219,46 +220,45 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
         txtFilter.setColumns(10);
         
         JLabel lblSigma = new JLabel("Sigma:");
-        lblSigma.setToolTipText("Sigma to use when smoothing reads to call peaks");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblSigma, 10, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtSigma, 6, SpringLayout.EAST, lblSigma);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSigma, 6, SpringLayout.NORTH, txtExclusion);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSigma, 2, SpringLayout.NORTH, txtSigma);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblSigma, 0, SpringLayout.WEST, scrollPane);
+        lblSigma.setToolTipText("Sigma to use when smoothing reads to call peaks");
         contentPane.add(lblSigma);
         
         JLabel lblExclusion = new JLabel("Exclusion Zone:");
-        lblExclusion.setToolTipText("Exclusion zone around each peak that prevents others from being called");
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblExclusion, -259, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtExclusion, 6, SpringLayout.EAST, lblExclusion);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtSigma, -30, SpringLayout.WEST, lblExclusion);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblExclusion, 6, SpringLayout.NORTH, txtSigma);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblExclusion, -6, SpringLayout.WEST, txtExclusion);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblExclusion, 8, SpringLayout.SOUTH, scrollPane);
+        lblExclusion.setToolTipText("Exclusion zone around each peak that prevents others from being called");
         contentPane.add(lblExclusion);
         
         lblUpWidth = new JLabel("Up Width:");
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtUp, 6, SpringLayout.EAST, lblUpWidth);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblUpWidth, -259, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpWidth, 2, SpringLayout.NORTH, txtUp);
         lblUpWidth.setToolTipText("Upstream width of called peaks (Default uses half exclusion)");
         lblUpWidth.setForeground(Color.GRAY);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtUp, 6, SpringLayout.EAST, lblUpWidth);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpWidth, 6, SpringLayout.NORTH, txtUp);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblUpWidth, 0, SpringLayout.WEST, btnGene);
         contentPane.add(lblUpWidth);
         
         lblDownWidth = new JLabel("Down Width:");
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtUp, -54, SpringLayout.WEST, lblDownWidth);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDownWidth, 2, SpringLayout.NORTH, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDownWidth, -6, SpringLayout.WEST, txtDown);
         lblDownWidth.setToolTipText("Downstream width of called peaks (Default uses half exclusion)");
         lblDownWidth.setForeground(Color.GRAY);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDownWidth, -67, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtDown, 6, SpringLayout.EAST, lblDownWidth);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtUp, -54, SpringLayout.WEST, lblDownWidth);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtDown, -6, SpringLayout.NORTH, lblDownWidth);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDownWidth, -22, SpringLayout.NORTH, progressBar);
         contentPane.add(lblDownWidth);
         
         lblMinimumTagsPer = new JLabel("Min Tags per Peak:");
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtExclusion, -17, SpringLayout.WEST, lblMinimumTagsPer);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMinimumTagsPer, 8, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblMinimumTagsPer, -6, SpringLayout.WEST, txtFilter);
         lblMinimumTagsPer.setToolTipText("Absolute read filter; outputs only peaks with larger read count");
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtFilter, 6, SpringLayout.EAST, lblMinimumTagsPer);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMinimumTagsPer, -18, SpringLayout.NORTH, lblDownWidth);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblMinimumTagsPer, 0, SpringLayout.EAST, lblDownWidth);
         contentPane.add(lblMinimumTagsPer);
         
         chckbxPeakWidth = new JCheckBox("Set Peak Width");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxPeakWidth, 2, SpringLayout.NORTH, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxPeakWidth, 8, SpringLayout.SOUTH, txtSigma);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxPeakWidth, 10, SpringLayout.WEST, contentPane);
         chckbxPeakWidth.setToolTipText("Default Peak Width is Half the Exclusion Zone");
         contentPane.add(chckbxPeakWidth);

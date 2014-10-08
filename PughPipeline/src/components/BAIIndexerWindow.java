@@ -82,7 +82,6 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 	
 		JScrollPane scrollPane = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -35, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
@@ -92,8 +91,8 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load BAM Files");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BAMFilter());
@@ -110,9 +109,9 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 		contentPane.add(btnLoad);
 		
 		btnRemoveBam = new JButton("Remove BAM");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -124,15 +123,16 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 		contentPane.add(btnRemoveBam);
 		
 		btnIndex = new JButton("Index");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, btnIndex);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnIndex, 167, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnIndex, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnIndex, -175, SpringLayout.EAST, contentPane);
 		contentPane.add(btnIndex);
 		
 		progressBar = new JProgressBar();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnIndex);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
         progressBar.setStringPainted(true);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, contentPane);
 		contentPane.add(progressBar);
 		
         btnIndex.setActionCommand("start");

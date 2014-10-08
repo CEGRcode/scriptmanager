@@ -135,10 +135,10 @@ public class PEWindow extends JFrame implements ActionListener, PropertyChangeLi
 		
 		lblOutputName = new JLabel("Output File Name:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputName, 0, SpringLayout.WEST, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblOutputName, -49, SpringLayout.SOUTH, contentPane);
 		contentPane.add(lblOutputName);
 		
 		chckbxOutputStatistics = new JCheckBox("Output Statistics");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputName, 11, SpringLayout.SOUTH, chckbxOutputStatistics);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -51, SpringLayout.NORTH, chckbxOutputStatistics);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputStatistics, 0, SpringLayout.WEST, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxOutputStatistics, -71, SpringLayout.SOUTH, contentPane);
@@ -161,16 +161,13 @@ public class PEWindow extends JFrame implements ActionListener, PropertyChangeLi
 		
 		btnRun = new JButton("Run");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnRun, 171, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRun, -10, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -171, SpringLayout.EAST, contentPane);
 		contentPane.add(btnRun);
 		
 		txtOutputName = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 120, SpringLayout.WEST, lblOutputName);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, txtOutputName, -43, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, 0, SpringLayout.EAST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, 5, SpringLayout.SOUTH, chckbxOutputStatistics);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 123, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, txtOutputName, -6, SpringLayout.NORTH, btnRun);
 		txtOutputName.setText("output_name.txt");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, -6, SpringLayout.NORTH, lblOutputName);
 		contentPane.add(txtOutputName);
 		txtOutputName.setColumns(10);
 		
@@ -180,13 +177,13 @@ public class PEWindow extends JFrame implements ActionListener, PropertyChangeLi
 		contentPane.add(lblHistogramRange);
 		
 		JLabel lblMin = new JLabel("Min:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblMin, 6, SpringLayout.SOUTH, lblHistogramRange);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblMin, 0, SpringLayout.WEST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMin, -6, SpringLayout.NORTH, chckbxOutputStatistics);
 		contentPane.add(lblMin);
 		
 		txtMin = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, -6, SpringLayout.NORTH, lblMin);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 38, SpringLayout.EAST, lblMin);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, -2, SpringLayout.NORTH, lblMin);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 31, SpringLayout.EAST, lblMin);
 		txtMin.setText("0");
 		contentPane.add(txtMin);
 		txtMin.setColumns(10);
@@ -196,16 +193,19 @@ public class PEWindow extends JFrame implements ActionListener, PropertyChangeLi
 		contentPane.add(lblMax);
 		
 		txtMax = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtMax, 296, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblMax, -6, SpringLayout.WEST, txtMax);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, -6, SpringLayout.NORTH, lblMin);
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, 0, SpringLayout.EAST, txtMax);
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblMax, -23, SpringLayout.WEST, txtMax);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, -2, SpringLayout.NORTH, lblMin);
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtMax, -10, SpringLayout.EAST, contentPane);
 		txtMax.setText("1000");
 		contentPane.add(txtMax);
 		txtMax.setColumns(10);
 		
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -5, SpringLayout.SOUTH, btnRun);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -6, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, -3, SpringLayout.NORTH, progressBar);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -18, SpringLayout.WEST, progressBar);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		

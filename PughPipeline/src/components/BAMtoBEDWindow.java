@@ -95,14 +95,14 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.setLayout(sl_contentPane);
 	
 		JScrollPane scrollPane = new JScrollPane();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 36, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -141, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
 		btnLoad = new JButton("Load BAM Files");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new BAMFilter());
@@ -126,9 +126,9 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		scrollPane.setViewportView(listExp);
 		
 		btnRemoveBam = new JButton("Remove BAM");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -338, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -146,15 +146,18 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnIndex);
 		
 		rdbtnRead1 = new JRadioButton("Read 1");
-		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnRead1, -455, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 263, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead1, 123, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnRead1);
 		
 		rdbtnRead2 = new JRadioButton("Read 2");
-		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnRead2, -282, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead2, 0, SpringLayout.NORTH, rdbtnRead1);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead2, 98, SpringLayout.EAST, rdbtnRead1);
 		contentPane.add(rdbtnRead2);
 		
 		rdbtnCombined = new JRadioButton("Combined");
-		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCombined, 108, SpringLayout.EAST, rdbtnRead2);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCombined, 0, SpringLayout.NORTH, rdbtnRead1);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCombined, 111, SpringLayout.EAST, rdbtnRead2);
 		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnCombined, -78, SpringLayout.EAST, contentPane);
 		contentPane.add(rdbtnCombined);
 		
@@ -165,38 +168,35 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         rdbtnRead1.setSelected(true);
         
         JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 199, SpringLayout.SOUTH, btnLoad);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 10, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCombined, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead2, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblPleaseSelectWhich, -6, SpringLayout.NORTH, rdbtnRead1);
         lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblPleaseSelectWhich);
 
         final JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, -6, SpringLayout.NORTH, btnIndex);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 0, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 0, SpringLayout.WEST, rdbtnRead1);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -15, SpringLayout.EAST, contentPane);
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
         
         JLabel lblCurrentOutput = new JLabel("Current Output:");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 10, SpringLayout.WEST, contentPane);
-        lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrentOutput, -35, SpringLayout.SOUTH, contentPane);
+        lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrentOutput);
 		
         btnOutputDirectory = new JButton("Output Directory");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 7, SpringLayout.SOUTH, btnOutputDirectory);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 250, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutputDirectory, -57, SpringLayout.SOUTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -250, SpringLayout.EAST, contentPane);
         contentPane.add(btnOutputDirectory);
         
         progressBar = new JProgressBar();
+        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -15, SpringLayout.EAST, contentPane);
         progressBar.setStringPainted(true);
         sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, -225, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -4, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, contentPane);
         contentPane.add(progressBar);
         
         btnIndex.setActionCommand("start");

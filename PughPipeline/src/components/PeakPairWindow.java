@@ -136,6 +136,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load GeneTrack Peaks");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 5, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
@@ -154,9 +155,8 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnLoad);
 		
 		btnRemoveBam = new JButton("Remove Peak Files");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -174,7 +174,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnPeak);
 		
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 0, SpringLayout.NORTH, btnPeak);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnPeak);
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
         progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
@@ -323,14 +323,14 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         String[] chromSort = {"ascending", "descending"};
         cmboChrom = new JComboBox(chromSort);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, cmboChrom, -6, SpringLayout.NORTH, btnPeak);
-        sl_contentPane.putConstraint(SpringLayout.EAST, cmboChrom, 14, SpringLayout.EAST, txtUp);
         contentPane.add(cmboChrom);
         
         String[] scoreSort = {"ascending", "descending", "none"};
         cmboScore = new JComboBox(scoreSort);
+        sl_contentPane.putConstraint(SpringLayout.WEST, cmboScore, 316, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, cmboScore, -44, SpringLayout.EAST, contentPane);
         cmboScore.setSelectedIndex(2);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, cmboScore, -6, SpringLayout.NORTH, btnPeak);
-        sl_contentPane.putConstraint(SpringLayout.EAST, cmboScore, -44, SpringLayout.EAST, contentPane);
         contentPane.add(cmboScore);
                 
         JLabel lblFilterBy = new JLabel("Filter by:");
@@ -342,17 +342,17 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(lblFilterBy);
         
         JLabel lblChromosome = new JLabel("Chromosome:");
-        lblChromosome.setToolTipText("Output files will be sorted by chromosome");
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblChromosome, -383, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, cmboChrom, 6, SpringLayout.EAST, lblChromosome);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblChromosome, 11, SpringLayout.SOUTH, lblSort);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblChromosome, 10, SpringLayout.WEST, lblSort);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblChromosome, 5, SpringLayout.NORTH, cmboChrom);
+        lblChromosome.setToolTipText("Output files will be sorted by chromosome");
         contentPane.add(lblChromosome);
         
         lblScore = new JLabel("Score:");
+        sl_contentPane.putConstraint(SpringLayout.EAST, cmboChrom, -25, SpringLayout.WEST, lblScore);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblScore, 5, SpringLayout.NORTH, cmboChrom);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblScore, -6, SpringLayout.WEST, cmboScore);
         lblScore.setToolTipText("Output files will be sorted by score");
-        sl_contentPane.putConstraint(SpringLayout.WEST, cmboScore, 9, SpringLayout.EAST, lblScore);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblScore, 4, SpringLayout.NORTH, cmboChrom);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblScore, 0, SpringLayout.WEST, rdbtnRelativeThreshold);
         contentPane.add(lblScore);
         btnPeak.addActionListener(this);
 	}

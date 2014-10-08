@@ -79,8 +79,7 @@ public class SEWindow extends JFrame {
 		contentPane.add(btnLoad);
 		
 		lblOutputName = new JLabel("Output File Name:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputName, 228, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputName, 15, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputName, 0, SpringLayout.WEST, scrollPane);
 		contentPane.add(lblOutputName);
 		
 		chckbxOutputStatistics = new JCheckBox("Output Statistics");
@@ -111,10 +110,11 @@ public class SEWindow extends JFrame {
 		contentPane.add(btnRun);
 		
 		txtOutputName = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, 4, SpringLayout.SOUTH, chckbxOutputStatistics);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 16, SpringLayout.EAST, lblOutputName);
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, -15, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputName, 2, SpringLayout.NORTH, txtOutputName);
 		txtOutputName.setText("output_name.txt");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, -6, SpringLayout.NORTH, lblOutputName);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 120, SpringLayout.WEST, lblOutputName);
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, 0, SpringLayout.EAST, scrollPane);
 		contentPane.add(txtOutputName);
 		txtOutputName.setColumns(10);
 		
