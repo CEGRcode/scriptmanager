@@ -28,6 +28,8 @@ public class GeneTrack extends JFrame {
 	private PrintStream OUT = null;
 	private SAMFileReader inputSam = null;
 	
+	private int READ = 0;
+	
 	private int SIGMA = 5;
 	private int EXCLUSION = 20;
 	private int UP_WIDTH = 10;
@@ -53,7 +55,7 @@ public class GeneTrack extends JFrame {
 	private double[] F_STD;
 	private double[] R_STD;
 	
-	public GeneTrack(File in, int s, int e, int u, int d, int f) {
+	public GeneTrack(File in, int r, int s, int e, int u, int d, int f) {
 		setTitle("BAM to Genetrack Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -66,6 +68,7 @@ public class GeneTrack extends JFrame {
 		scrollPane.setViewportView(textArea);
 		
 		INPUT = in;
+		READ = r;
 		SIGMA = s;
 		EXCLUSION = e;
 		UP_WIDTH = u;
@@ -75,8 +78,11 @@ public class GeneTrack extends JFrame {
 	
 	public void run() {
 		String TIME = getTimeStamp();;
-		String READ = "s" + SIGMA + "e" + EXCLUSION;
-		String NAME = INPUT.getName().split("\\.")[0] + "_" + READ + ".gff";
+		String PARAM = "s" + SIGMA + "e" + EXCLUSION;
+		String READNAME = "READ1";
+		if(READ == 1) READNAME = "READ2";
+		else if(READ == 2) READNAME = "COMBINED";
+		String NAME = INPUT.getName().split("\\.")[0] + "_" + READNAME + "_" + PARAM + ".gff";
 		textArea.append(TIME + "\n" + NAME + "\n");
 		textArea.append("Sigma: " + SIGMA + "\nExclusion: " + EXCLUSION + "\nFilter: " + FILTER + "\nUpstream width of called Peaks: " + UP_WIDTH + "\nDownstream width of called Peaks: " + DOWN_WIDTH + "\n");
 		
@@ -112,7 +118,6 @@ public class GeneTrack extends JFrame {
 					F_STD = new double[windowSize];
 					R_STD = new double[windowSize];
 					
-					//TODO currently will be hard-coded for properly paired READ1
 					CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), start, stop, false);
 					loadGenomeFragment(iter, start, stop);
 					iter.close();
@@ -158,24 +163,24 @@ public class GeneTrack extends JFrame {
 			if(threeprime < 1) { threeprime = 1; }
 			
 			if(z == 0) {
-				if(F_GOCC[z] > F_GOCC[z + 1] && F_TOCC[z] > FILTER) { 
+				if(F_GOCC[z] >= F_GOCC[z + 1] && F_TOCC[z] > FILTER) { 
 					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
 				}
-				if(R_GOCC[z] > R_GOCC[z + 1] && R_TOCC[z] > FILTER) {
+				if(R_GOCC[z] >= R_GOCC[z + 1] && R_TOCC[z] > FILTER) {
 					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
 				}
 			} else if(z + 1 == F_GOCC.length) {
-				if(F_GOCC[z] > F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
+				if(F_GOCC[z] >= F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
 					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
 				}
-				if(R_GOCC[z] > R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
+				if(R_GOCC[z] >= R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
 					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
 				}
 			} else {
-				if(F_GOCC[z] > F_GOCC[z + 1] && F_GOCC[z] > F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
+				if(F_GOCC[z] >= F_GOCC[z + 1] && F_GOCC[z] > F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
 					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
 				}
-				if(R_GOCC[z] > R_GOCC[z + 1] && R_GOCC[z] > R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
+				if(R_GOCC[z] >= R_GOCC[z + 1] && R_GOCC[z] > R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
 					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
 				}
 			}
@@ -191,11 +196,30 @@ public class GeneTrack extends JFrame {
 		while (iter.hasNext()) {
 			//Create the record object 
 			SAMRecord sr = iter.next();
-			//Get the start of the record 
-			int recordStart = sr.getUnclippedStart();
-			//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
-			if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }
 			
+			int recordStart = -999;
+			
+			//Check for paired-end
+			if(sr.getReadPairedFlag()) {
+				//Must be PAIRED-END mapped, mate must be mapped, must be read 1
+				if(sr.getProperPairFlag() && sr.getFirstOfPairFlag() && (READ == 0 || READ == 2)) {
+					//Get the start of the record 
+					recordStart = sr.getUnclippedStart();
+					//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
+					if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }
+				} else if(sr.getProperPairFlag() && !sr.getFirstOfPairFlag() && (READ == 1 || READ == 2)) {
+					//Get the start of the record 
+					recordStart = sr.getUnclippedStart();
+					//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
+					if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }
+				} 
+			} else if(READ == 0 || READ == 2) {
+				//Get the start of the record 
+				recordStart = sr.getUnclippedStart();
+				//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
+				if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }				
+			}
+	
 			if(recordStart > 0) {
 				for(int POS = recordStart - WIDTH; POS <= recordStart + WIDTH; POS++) {
 					if(POS - start >= 0 && POS - start < F_GOCC.length) {
