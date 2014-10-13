@@ -69,12 +69,12 @@ public class SEStats extends JFrame {
 				//Code to get individual chromosome stats
 				reader = new SAMFileReader(bamFiles.get(x), new File(bamFiles.get(x) + ".bai"));
 				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.getIndex();
-				int totalTags = 0;
-				int totalGenome = 0;
+				double totalTags = 0;
+				double totalGenome = 0;
 			
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
-					int aligned = reader.getIndex().getMetaData(z).getAlignedRecordCount();
+					double aligned = reader.getIndex().getMetaData(z).getAlignedRecordCount();
 					//int unaligned = reader.getIndex().getMetaData(z).getUnalignedRecordCount();
 					if(OUT != null) OUT.println(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned);
 					textArea.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\n");
