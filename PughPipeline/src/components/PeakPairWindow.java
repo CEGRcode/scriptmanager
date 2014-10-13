@@ -37,6 +37,8 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 
+import scripts.PeakPair;
+
 import java.awt.Font;
 
 @SuppressWarnings("serial")
@@ -84,19 +86,33 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 					JOptionPane.showMessageDialog(null, "Invalid Downstream Distance!!!");
 				} else if(Integer.parseInt(txtBin.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Binning Size!!!");
-				} else if(rdbtnAbsoluteThreshold.isSelected() && Integer.parseInt(txtAbs.getText()) < 1) {
+				} else if(rdbtnAbsoluteThreshold.isSelected() && Integer.parseInt(txtAbs.getText()) < 0) {
 					JOptionPane.showMessageDialog(null, "Invalid Absolute Threshold Size!!!");
-				} else if(rdbtnRelativeThreshold.isSelected() && (Integer.parseInt(txtRel.getText()) < 1 || Integer.parseInt(txtRel.getText()) > 100)) {
+				} else if(rdbtnRelativeThreshold.isSelected() && (Integer.parseInt(txtRel.getText()) < 0 || Integer.parseInt(txtRel.getText()) > 100)) {
 					JOptionPane.showMessageDialog(null, "Invalid Relative Threshold Size!!!");
 				} else {
-					//int SIGMA = Integer.parseInt(txtSigma.getText());
-		        			        	
+					int MODE = 0;
+					if(rdbtnMode.isSelected()) MODE = 0;
+					else if(rdbtnClosest.isSelected()) MODE = 1;
+					else if(rdbtnLargest.isSelected()) MODE = 2;
+					else if(rdbtnAll.isSelected()) MODE = 3;
+
+					int UP = Integer.parseInt(txtUp.getText());
+					int DOWN = Integer.parseInt(txtDown.getText());
+					int BIN = Integer.parseInt(txtBin.getText());
+					
+					int ABS = -999;
+					int REL = -999;
+					if(rdbtnAbsoluteThreshold.isSelected()) ABS = Integer.parseInt(txtAbs.getText());
+					if(rdbtnRelativeThreshold.isSelected()) REL = Integer.parseInt(txtRel.getText());
+					
 		        	setProgress(0);
-		        	for(int x = 0; x < BAMFiles.size(); x++) {       		
-		        		//GeneTrack track = new GeneTrack(BAMFiles.get(x), SIGMA, EXCLUSION, UP, DOWN, FILTER);
-		        		//track.setVisible(true);
-						//track.run();
-						int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+		        	for(int x = 0; x < BAMFiles.size(); x++) { 
+		        		PeakPair peak = new PeakPair(BAMFiles.get(x), MODE, UP, DOWN, BIN, ABS, REL);
+		        		peak.setVisible(true);
+		        		peak.run();
+
+		        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
 		        		setProgress(percentComplete);
 		        	}
 		        	setProgress(100);
@@ -182,22 +198,21 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         btnPeak.setActionCommand("start");
         
         rdbtnMode = new JRadioButton("Mode");
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnMode, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnMode, 41, SpringLayout.WEST, contentPane);
         contentPane.add(rdbtnMode);
         
         rdbtnClosest = new JRadioButton("Closest");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnClosest, 0, SpringLayout.NORTH, rdbtnMode);
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnClosest, 67, SpringLayout.EAST, rdbtnMode);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnMode, 0, SpringLayout.NORTH, rdbtnClosest);
         contentPane.add(rdbtnClosest);
         
         rdbtnLargest = new JRadioButton("Largest");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnLargest, 0, SpringLayout.NORTH, rdbtnMode);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnLargest, 28, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnLargest, 53, SpringLayout.EAST, rdbtnClosest);
         contentPane.add(rdbtnLargest);
         
         rdbtnAll = new JRadioButton("All");
-        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnLargest, -53, SpringLayout.WEST, rdbtnAll);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnAll, 0, SpringLayout.NORTH, rdbtnMode);
-        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnAll, 0, SpringLayout.EAST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnAll, -33, SpringLayout.EAST, contentPane);
         contentPane.add(rdbtnAll);
         
         ButtonGroup METHOD = new ButtonGroup();
@@ -208,39 +223,40 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         rdbtnMode.setSelected(true);
         
         JLabel lblMethodOfPeak = new JLabel("Method of Peak Pairing:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnClosest, 6, SpringLayout.SOUTH, lblMethodOfPeak);
         lblMethodOfPeak.setToolTipText("Method of finding match");
         lblMethodOfPeak.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnMode, 6, SpringLayout.SOUTH, lblMethodOfPeak);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblMethodOfPeak, 6, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblMethodOfPeak, 0, SpringLayout.WEST, scrollPane);
         contentPane.add(lblMethodOfPeak);
         
         JLabel lblUpstreamDistance = new JLabel("Upstream Distance (bp):");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpstreamDistance, 16, SpringLayout.SOUTH, rdbtnMode);
         lblUpstreamDistance.setToolTipText("Distance upstream of a Watson peak to allow a Crick pair.");
         lblUpstreamDistance.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpstreamDistance, 16, SpringLayout.SOUTH, rdbtnMode);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblUpstreamDistance, 10, SpringLayout.WEST, contentPane);
         contentPane.add(lblUpstreamDistance);
         
         txtUp = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtUp, -6, SpringLayout.NORTH, lblUpstreamDistance);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtUp, 10, SpringLayout.WEST, btnPeak);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtUp, -255, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnClosest, 0, SpringLayout.EAST, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtUp, -1, SpringLayout.NORTH, lblUpstreamDistance);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtUp, 9, SpringLayout.EAST, lblUpstreamDistance);
         txtUp.setHorizontalAlignment(SwingConstants.CENTER);
         txtUp.setText("50");
         contentPane.add(txtUp);
         txtUp.setColumns(10);
         
         JLabel lblDownstreamDistance = new JLabel("Downstream Distance (bp):");
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtUp, -6, SpringLayout.WEST, lblDownstreamDistance);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDownstreamDistance, -70, SpringLayout.EAST, contentPane);
         lblDownstreamDistance.setToolTipText("Distance downstream of a Watson peak to allow a Crick pair");
         lblDownstreamDistance.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblDownstreamDistance, 0, SpringLayout.NORTH, lblUpstreamDistance);
         contentPane.add(lblDownstreamDistance);
         
         txtDown = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDownstreamDistance, -6, SpringLayout.WEST, txtDown);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtDown, -6, SpringLayout.NORTH, lblUpstreamDistance);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtDown, 426, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtDown, -1, SpringLayout.NORTH, lblUpstreamDistance);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtDown, 10, SpringLayout.EAST, lblDownstreamDistance);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtDown, 0, SpringLayout.EAST, scrollPane);
         txtDown.setHorizontalAlignment(SwingConstants.CENTER);
         txtDown.setText("100");
@@ -248,16 +264,15 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         txtDown.setColumns(10);
         
         lblBinSizebp = new JLabel("Bin Size (bp):");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblBinSizebp, 0, SpringLayout.WEST, scrollPane);
         lblBinSizebp.setToolTipText("Width of bins for frequency plots and mode calculations");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblBinSizebp, 10, SpringLayout.WEST, contentPane);
         lblBinSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblBinSizebp);
         
         txtBin = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtBin, 6, SpringLayout.SOUTH, txtUp);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblBinSizebp, 6, SpringLayout.NORTH, txtBin);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtBin, 0, SpringLayout.WEST, txtUp);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtBin, 0, SpringLayout.EAST, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtBin, -1, SpringLayout.NORTH, lblBinSizebp);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtBin, 86, SpringLayout.EAST, lblBinSizebp);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtBin, -257, SpringLayout.EAST, contentPane);
         txtBin.setHorizontalAlignment(SwingConstants.CENTER);
         txtBin.setText("1");
         contentPane.add(txtBin);
@@ -296,19 +311,19 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		    });
         
         txtRel = new JTextField();
-        txtRel.setEnabled(false);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtRel, 74, SpringLayout.SOUTH, txtDown);
-        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnRelativeThreshold, -14, SpringLayout.WEST, txtRel);
+        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnRelativeThreshold, -23, SpringLayout.WEST, txtRel);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtRel, -15, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtRel, 2, SpringLayout.NORTH, rdbtnRelativeThreshold);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtRel, 0, SpringLayout.WEST, txtDown);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtRel, 0, SpringLayout.EAST, scrollPane);
+        txtRel.setEnabled(false);
         txtRel.setHorizontalAlignment(SwingConstants.CENTER);
         txtRel.setText("0");
         contentPane.add(txtRel);
         txtRel.setColumns(10);
         
         txtAbs = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtAbs, 40, SpringLayout.SOUTH, txtBin);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtAbs, 0, SpringLayout.WEST, txtUp);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtAbs, 2, SpringLayout.NORTH, rdbtnRelativeThreshold);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtAbs, 29, SpringLayout.EAST, rdbtnAbsoluteThreshold);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtAbs, 0, SpringLayout.EAST, txtUp);
         txtAbs.setHorizontalAlignment(SwingConstants.CENTER);
         txtAbs.setText("0");
@@ -316,8 +331,9 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         txtAbs.setColumns(10);
         
         lblSort = new JLabel("Sort by:");
-        lblSort.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSort, 6, SpringLayout.SOUTH, rdbtnAbsoluteThreshold);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblSort, 0, SpringLayout.WEST, scrollPane);
+        lblSort.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblSort);
         
         String[] chromSort = {"ascending", "descending"};
@@ -334,9 +350,9 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(cmboScore);
                 
         JLabel lblFilterBy = new JLabel("Filter by:");
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblBinSizebp, -18, SpringLayout.NORTH, lblFilterBy);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnAbsoluteThreshold, 12, SpringLayout.SOUTH, lblFilterBy);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblFilterBy, -126, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSort, 41, SpringLayout.SOUTH, lblFilterBy);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblFilterBy, 0, SpringLayout.WEST, scrollPane);
         lblFilterBy.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblFilterBy);
@@ -381,6 +397,14 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
+		}
+		if(status && rdbtnRelativeThreshold.isSelected()) {
+			txtRel.setEditable(true);
+			txtAbs.setEnabled(false);
+		}
+		if(status && rdbtnAbsoluteThreshold.isSelected()) {
+			txtRel.setEditable(false);
+			txtAbs.setEnabled(true);
 		}
 	}
     

@@ -20,6 +20,14 @@ public class Peak {
 		STDDEV = std;
 	}
 	
+	public Peak(String chr, int start, int stop, String dir, int t) {
+		CHROM = chr;
+		START = start;
+		STOP = stop;
+		DIR = dir;
+		TAG = t;
+	}
+	
 	public String getDir() {
 		return DIR;
 	}
