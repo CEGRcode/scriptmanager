@@ -42,7 +42,7 @@ public class GeneTrack extends JFrame {
 	private int WIDTH;
 	
 	//Arbitrarily set windowSize to 10,000bp in order to chop up the genome efficiently
-	private int windowSize = 10000;
+	private int windowSize = 200000;
 	
 	//Array to contain genetrack peaks separated by strand
 	private ArrayList<Peak> FPEAKS = null;
@@ -77,7 +77,10 @@ public class GeneTrack extends JFrame {
 	}
 	
 	public void run() {
-		String TIME = getTimeStamp();;
+		String TIME = getTimeStamp();
+		
+		System.out.println(getTimeStamp());
+		
 		String PARAM = "s" + SIGMA + "e" + EXCLUSION;
 		String READNAME = "READ1";
 		if(READ == 1) READNAME = "READ2";
@@ -124,7 +127,7 @@ public class GeneTrack extends JFrame {
 					
 					filterbyLocalMaxima(seq.getSequenceName(), start);
 				}
-				int finalstart = numwindows * 10000;
+				int finalstart = numwindows * windowSize;
 				int finalstop = seq.getSequenceLength();
 				F_GOCC = new double[finalstop - finalstart];
 				R_GOCC = new double[finalstop - finalstart];
@@ -152,6 +155,9 @@ public class GeneTrack extends JFrame {
 			textArea.append("BAI Index File does not exist for: " + INPUT.getName() + "\n");
 			OUT.println("BAI Index File does not exist for: " + INPUT.getName() + "\n");
 		}
+		
+		System.out.println(getTimeStamp());
+		
 		dispose();
 	}
 	
@@ -234,6 +240,7 @@ public class GeneTrack extends JFrame {
 				}
 			}
 		}
+		
 		for(int x = 0; x < tempF.length; x++) {
 			double Favg = 0, Ravg = 0, Fcount = 0, Rcount = 0;
 			for(int y = x - UP_WIDTH; y <= x + DOWN_WIDTH; y++) {
