@@ -36,7 +36,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.3");
+		frmScriptManager.setTitle("Script Manager v0.4");
 		frmScriptManager.setBounds(100, 100, 500, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
