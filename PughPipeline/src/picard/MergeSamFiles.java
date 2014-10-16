@@ -24,25 +24,33 @@ package picard;
  * THE SOFTWARE.
  */
 
-import net.sf.picard.cmdline.CommandLineProgram;
-import net.sf.picard.cmdline.Option;
-import net.sf.picard.cmdline.Usage;
-import net.sf.picard.io.IoUtil;
-import net.sf.picard.sam.MergingSamRecordIterator;
-import net.sf.picard.sam.SamFileHeaderMerger;
-import net.sf.picard.util.Log;
-import net.sf.picard.util.ProgressLogger;
-import net.sf.samtools.*;
+
+import htsjdk.samtools.MergingSamRecordIterator;
+import htsjdk.samtools.SAMFileHeader;
+import htsjdk.samtools.SAMFileReader;
+import htsjdk.samtools.SAMFileWriter;
+import htsjdk.samtools.SAMFileWriterFactory;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMSequenceDictionary;
+import htsjdk.samtools.SamFileHeaderMerger;
+import htsjdk.samtools.util.IOUtil;
+import htsjdk.samtools.util.Log;
+import htsjdk.samtools.util.ProgressLogger;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import picard.cmdline.CommandLineProgram;
+import picard.cmdline.Option;
+import picard.cmdline.Usage;
 
 /**
  * Reads a SAM or BAM file and combines the output to one file
  *
  * @author Tim Fennell
  */
+@SuppressWarnings("deprecation")
 public class MergeSamFiles extends CommandLineProgram {
 	
 	/**
@@ -134,7 +142,7 @@ public class MergeSamFiles extends CommandLineProgram {
             SAMSequenceDictionary dict = null; // Used to try and reduce redundant SDs in memory
 
             for (final File inFile : INPUT) {
-                IoUtil.assertFileIsReadable(inFile);
+                IOUtil.assertFileIsReadable(inFile);
                 final SAMFileReader in = new SAMFileReader(inFile);
                 readers.add(in);
                 headers.add(in.getFileHeader());
@@ -154,7 +162,7 @@ public class MergeSamFiles extends CommandLineProgram {
 
         // If all the input sort orders match the output sort order then just merge them and
         // write on the fly, otherwise setup to merge and sort before writing out the final file
-        IoUtil.assertFileIsWritable(OUTPUT);
+        IOUtil.assertFileIsWritable(OUTPUT);
         final boolean presorted;
         final SAMFileHeader.SortOrder headerMergerSortOrder;
         final boolean mergingSamRecordIteratorAssumeSorted;

@@ -1,13 +1,15 @@
 package scripts.PileupScripts;
 
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.util.CloseableIterator;
+
 import java.io.File;
 import java.util.Vector;
 
 import objects.BEDCoord;
 import objects.PileupParameters;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.util.CloseableIterator;
 
 public class PileupExtract implements Runnable{
 	PileupParameters param;
@@ -15,14 +17,13 @@ public class PileupExtract implements Runnable{
 	Vector<BEDCoord> INPUT;
 	int index;
 	int subsetsize;
-	SAMFileReader inputSam;
+	SamReader inputSam;
 		
 	public void run() {
-		inputSam = new SAMFileReader(BAM, new File(BAM + ".bai"));
+		inputSam = SamReaderFactory.makeDefault().open(BAM);
 		for(int x = index; x < index + subsetsize; x++) {
 			extract(INPUT.get(x));		
 		}
-		inputSam.close();
 	}
 	
 	public PileupExtract(PileupParameters p, File b, Vector<BEDCoord> i, int current, int length) {

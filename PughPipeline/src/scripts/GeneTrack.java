@@ -1,5 +1,12 @@
 package scripts;
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.util.CloseableIterator;
+
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,11 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMSequenceRecord;
-import net.sf.samtools.util.CloseableIterator;
 import objects.Peak;
 
 @SuppressWarnings("serial")
@@ -26,7 +28,7 @@ public class GeneTrack extends JFrame {
 	
 	private File INPUT = null;
 	private PrintStream OUT = null;
-	private SAMFileReader inputSam = null;
+	private SamReader inputSam = null;
 	
 	private int READ = 0;
 	
@@ -98,8 +100,8 @@ public class GeneTrack extends JFrame {
 				
 		File f = new File(INPUT.getAbsolutePath() + ".bai");
 		if(f.exists() && !f.isDirectory()) {	
-			inputSam = new SAMFileReader(INPUT, new File(INPUT.getAbsolutePath() + ".bai"));
-			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.getIndex();
+			inputSam = SamReaderFactory.makeDefault().open(INPUT);
+			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
 			
 			for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 				SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
@@ -148,7 +150,6 @@ public class GeneTrack extends JFrame {
 				}
 				
 			}
-			inputSam.close();
 			bai.close();
 			OUT.close();
 		} else {

@@ -1,5 +1,12 @@
 package scripts;
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.util.CloseableIterator;
+
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,12 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMSequenceRecord;
-import net.sf.samtools.util.CloseableIterator;
-
 @SuppressWarnings("serial")
 public class BAMtoTAB extends JFrame {
 	private File BAM = null;
@@ -26,7 +27,8 @@ public class BAMtoTAB extends JFrame {
 	private int STRAND = 0;
 	private String READ = "READ1";
 	
-	private SAMFileReader inputSam = null;
+	private SamReader inputSam = null;
+	//final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.CACHE_FILE_BASED_INDEXES, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.LENIENT);
 	private PrintStream OUT = null;
 	
 	private ArrayList<Integer> BP;
@@ -58,6 +60,8 @@ public class BAMtoTAB extends JFrame {
 	}
 	
 	public void run() throws IOException, InterruptedException {
+		System.out.println(getTimeStamp());
+		
 		//Open Output File
 		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
 		if(OUTPUTPATH != null) {
@@ -88,7 +92,9 @@ public class BAMtoTAB extends JFrame {
 			OUT.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
 		}
 		Thread.sleep(2000);
-		dispose();	
+		dispose();
+		
+		System.out.println(getTimeStamp());
 	}
 	
 	public void addTag(SAMRecord sr) {
@@ -151,8 +157,8 @@ public class BAMtoTAB extends JFrame {
 	}
 	
 	public void READ1() {
-		inputSam = new SAMFileReader(BAM, new File(BAM.getAbsolutePath() + ".bai"));
-		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.getIndex();
+		inputSam = SamReaderFactory.makeDefault().open(BAM);//factory.open(BAM);
+		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
@@ -191,13 +197,12 @@ public class BAMtoTAB extends JFrame {
 				OUT.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + F_OCC.get(z).intValue() + "\t" + R_OCC.get(z).intValue() + "\t" + sum);		
 			}
 		}
-		inputSam.close();
 		bai.close();
 	}
 	
 	public void READ2() {
-		inputSam = new SAMFileReader(BAM, new File(BAM.getAbsolutePath() + ".bai"));
-		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.getIndex();
+		inputSam = SamReaderFactory.makeDefault().open(BAM);//factory.open(BAM);
+		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
@@ -232,13 +237,12 @@ public class BAMtoTAB extends JFrame {
 				OUT.println(seq.getSequenceName() + "\t" + BP.get(x).intValue() + "\t" + F_OCC.get(x).intValue() + "\t" + R_OCC.get(x).intValue() + "\t" + sum);		
 			}
 		}
-		inputSam.close();
 		bai.close();
 	}
 	
 	public void COMBINED() {
-		inputSam = new SAMFileReader(BAM, new File(BAM.getAbsolutePath() + ".bai"));
-		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.getIndex();
+		inputSam = SamReaderFactory.makeDefault().open(BAM);//factory.open(BAM);
+		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
@@ -269,7 +273,6 @@ public class BAMtoTAB extends JFrame {
 				OUT.println(seq.getSequenceName() + "\t" + BP.get(x).intValue() + "\t" + F_OCC.get(x).intValue() + "\t" + R_OCC.get(x).intValue() + "\t" + sum);		
 			}
 		}
-		inputSam.close();
 		bai.close();
 	}
 	

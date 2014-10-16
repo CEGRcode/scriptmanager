@@ -1,5 +1,12 @@
 package scripts;
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.util.CloseableIterator;
+
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,19 +20,14 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMSequenceRecord;
-import net.sf.samtools.util.CloseableIterator;
-
 @SuppressWarnings("serial")
 public class BAMtoMidpoint extends JFrame {
 	private File BAM = null;
 	private File OUTPUTPATH = null;
 	private String READ = "MIDPOINT";
 	
-	private SAMFileReader inputSam = null;
+	private SamReader inputSam = null;
+	//final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.CACHE_FILE_BASED_INDEXES, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.LENIENT);
 	private PrintStream OUT = null;
 	
 	private JTextArea textArea;
@@ -129,8 +131,8 @@ public class BAMtoMidpoint extends JFrame {
 	}
 	
 	public void MIDPOINT() {
-		inputSam = new SAMFileReader(BAM, new File(BAM.getAbsolutePath() + ".bai"));
-		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.getIndex();
+		inputSam = SamReaderFactory.makeDefault().open(BAM);//factory.open(BAM);
+		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
@@ -166,7 +168,6 @@ public class BAMtoMidpoint extends JFrame {
 				OUT.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + M_OCC.get(z).intValue());		
 			}
 		}
-		inputSam.close();
 		bai.close();
 	}
 	

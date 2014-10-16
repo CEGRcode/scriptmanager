@@ -1,26 +1,34 @@
 package scripts;
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.ValidationStringency;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFrame;
-
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMSequenceRecord;
 import javax.swing.JScrollPane;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JTextArea;
 
 @SuppressWarnings("serial")
 public class SEStats extends JFrame {
 	Vector<File> bamFiles = null;
 	File output = null;
-	SAMFileReader reader;
+	//SAMFileReader reader;
+	
+	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
+	SamReader reader;
 	PrintStream OUT = null;
 	
 	private JTextArea textArea;
@@ -67,14 +75,16 @@ public class SEStats extends JFrame {
 				textArea.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\n");
 				
 				//Code to get individual chromosome stats
-				reader = new SAMFileReader(bamFiles.get(x), new File(bamFiles.get(x) + ".bai"));
-				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.getIndex();
+				//reader = new SamReader(bamFiles.get(x), new File(bamFiles.get(x) + ".bai"));
+				reader = factory.open(bamFiles.get(x));
+				
+				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
 				double totalTags = 0;
 				double totalGenome = 0;
 			
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
-					double aligned = reader.getIndex().getMetaData(z).getAlignedRecordCount();
+					double aligned = reader.indexing().getIndex().getMetaData(z).getAlignedRecordCount();
 					//int unaligned = reader.getIndex().getMetaData(z).getUnalignedRecordCount();
 					if(OUT != null) OUT.println(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned);
 					textArea.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\n");
@@ -106,7 +116,12 @@ public class SEStats extends JFrame {
 				if(OUT != null) OUT.println();
 				textArea.append("\n");
 				
-				reader.close();
+				try {
+					reader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				bai.close();
 				
 			} else {

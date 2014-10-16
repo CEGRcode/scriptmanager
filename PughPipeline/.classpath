@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="jcommon-1.0.21.jar"/>
 	<classpathentry kind="lib" path="jfreechart-1.0.17.jar"/>
-	<classpathentry kind="lib" path="sam-1.113.jar"/>
-	<classpathentry kind="lib" path="MergeSamFiles.jar"/>
+	<classpathentry kind="lib" path="htsjdk-1.122.jar"/>
+	<classpathentry kind="lib" path="picard-1.122.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

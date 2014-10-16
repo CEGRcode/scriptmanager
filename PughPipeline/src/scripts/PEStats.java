@@ -1,5 +1,13 @@
 package scripts;
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.ValidationStringency;
+import htsjdk.samtools.util.CloseableIterator;
+
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,18 +21,10 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
-
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMSequenceRecord;
-import net.sf.samtools.util.CloseableIterator;
-
 import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 
 import charts.Histogram;
-
 
 @SuppressWarnings("serial")
 public class PEStats extends JFrame {
@@ -33,7 +33,9 @@ public class PEStats extends JFrame {
 	private int MIN_INSERT = 0;
 	private int MAX_INSERT = 1000;
 	
-	SAMFileReader reader;
+	SamReader reader;
+	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
+
 	PrintStream OUT = null;
 	
 	final JLayeredPane layeredPane;
@@ -99,14 +101,16 @@ public class PEStats extends JFrame {
 				STATS.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\n");
 				
 				//Code to get individual chromosome stats
-				reader = new SAMFileReader(bamFiles.get(x), new File(bamFiles.get(x) + ".bai"));
-				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.getIndex();
+				//reader = new SAMFileReader(bamFiles.get(x), new File(bamFiles.get(x) + ".bai"));
+				reader = factory.open(bamFiles.get(x));
+				
+				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
 				double totalTags = 0;
 				double totalGenome = 0;
 			
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
-					double aligned = reader.getIndex().getMetaData(z).getAlignedRecordCount();
+					double aligned = reader.indexing().getIndex().getMetaData(z).getAlignedRecordCount();
 					//int unaligned = reader.getIndex().getMetaData(z).getUnalignedRecordCount();
 					if(OUT != null) OUT.println(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned);
 					STATS.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\n");

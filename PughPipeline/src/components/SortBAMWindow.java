@@ -1,5 +1,13 @@
 package components;
 
+import htsjdk.samtools.SAMFileHeader;
+import htsjdk.samtools.SAMFileWriter;
+import htsjdk.samtools.SAMFileWriterFactory;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.util.IOUtil;
+
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,17 +30,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
-
-import filters.BAMFilter;
-
 import javax.swing.JLabel;
 
-import net.sf.picard.io.IoUtil;
-import net.sf.samtools.SAMFileHeader;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMFileWriter;
-import net.sf.samtools.SAMFileWriterFactory;
-import net.sf.samtools.SAMRecord;
+import filters.BAMFilter;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -205,15 +205,14 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	}
 	
 	public void sort(File INPUT, File OUTPUT) {
-		IoUtil.assertFileIsReadable(INPUT);
-        IoUtil.assertFileIsWritable(OUTPUT);
-        final SAMFileReader reader = new SAMFileReader(IoUtil.openFileForReading(INPUT));
+		IOUtil.assertFileIsReadable(INPUT);
+        IOUtil.assertFileIsWritable(OUTPUT);
+        final SamReader reader = SamReaderFactory.makeDefault().open(INPUT);
         reader.getFileHeader().setSortOrder(SAMFileHeader.SortOrder.coordinate);
         final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, OUTPUT);
         for (final SAMRecord rec: reader) {
             writer.addAlignment(rec);
         }
-        reader.close();
         writer.close();
 	}
 
