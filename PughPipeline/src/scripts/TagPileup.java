@@ -1,5 +1,12 @@
 package scripts;
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.util.CloseableIterator;
+
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,13 +20,6 @@ import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMSequenceRecord;
-import net.sf.samtools.util.CloseableIterator;
-
 import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
@@ -114,15 +114,15 @@ public class TagPileup extends JFrame {
 				
 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
 				if(PARAM.getStandard()) {
-					SAMFileReader inputSam = new SAMFileReader(BAM, f);
-					AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.getIndex();
+					SamReader inputSam = SamReaderFactory.makeDefault().open(BAM);
+					AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
 					double counter = 0;
 					double totalAligned = 0;
 					double totalGenome = 0;
 					
 					for (int x = 0; x < bai.getNumberOfReferences(); x++) {
 						SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(x);
-						totalAligned += inputSam.getIndex().getMetaData(z).getAlignedRecordCount();
+						totalAligned += inputSam.indexing().getIndex().getMetaData(z).getAlignedRecordCount();
 						totalGenome += seq.getSequenceLength();
 					}
 					CloseableIterator<SAMRecord> iter = inputSam.iterator();
@@ -134,7 +134,6 @@ public class TagPileup extends JFrame {
 							}
 						}
 					}
-					inputSam.close();
 					bai.close();
 					iter.close();
 					if(counter != 0) PARAM.setRatio(counter / totalGenome);
@@ -248,12 +247,12 @@ public class TagPileup extends JFrame {
 				
 				if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2));
 				else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1));
-				if(OUT_S1 != null) {
+				if(OUT_S1 != null && PARAM.getOutputType() == 2) {
 					if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 0), "blue");
 					else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 2), "green");
 					OUT_S1.close();
 				}
-				if(OUT_S2 != null){
+				if(OUT_S2 != null && PARAM.getOutputType() == 2){
 					JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 1), "red");
 					OUT_S2.close();
 				}
