@@ -1,9 +1,15 @@
 package components;
 
 import filters.BAMFilter;
+import htsjdk.samtools.BAMIndexer;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.ValidationStringency;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -18,10 +24,6 @@ import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
-
-import net.sf.samtools.BAMIndexer;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -167,19 +169,19 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 	}
     
 	public static File generateIndex(File input) throws IOException {
+		SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.CACHE_FILE_BASED_INDEXES, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.LENIENT);
 		File retVal = null;
 		System.out.println("Generating New Index File...");
 		try{
 			String output = input.getCanonicalPath() + ".bai";
 			retVal = new File(output);
 			//Generate index
-			SAMFileReader inputSam = new SAMFileReader(input);
+			SamReader inputSam = factory.open(input);
 			BAMIndexer bamindex = new BAMIndexer(retVal, inputSam.getFileHeader());
-			inputSam.enableFileSource(true);
 			int counter = 0;
 			for(SAMRecord record : inputSam) {
 				if(counter % 1000000 == 0) {
-					System.out.print("Tags processed: " + counter + "\r");
+					System.out.print("Tags processed: " + NumberFormat.getIntegerInstance().format(counter) + "\r");
 					System.out.flush();
 				}
 				counter++;
@@ -190,7 +192,7 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 			System.out.println("\nIndex File Generated");
 			return retVal;
 		}
-		catch(net.sf.samtools.SAMException exception){
+		catch(htsjdk.samtools.SAMException exception){
 			System.out.println(exception.getMessage());
 			JOptionPane.showMessageDialog(null, exception.getMessage());
 			retVal = null;
