@@ -291,7 +291,6 @@ public class GeneTrack extends JFrame {
 		//Sort by Peak Score
 		Collections.sort(peaks, Peak.PeakTagComparator);
 		
-		//TODO adjust x and y by the changing size of the peak array
 		for(int x = 0; x < peaks.size(); x++) {
 			for(int y = 0; y < peaks.size(); y++) {
 				if(x != y) {
