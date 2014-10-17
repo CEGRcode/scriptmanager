@@ -264,6 +264,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblPleaseSelectWhich);
 
         lblDefaultToLocal = new JLabel("Default to Local Directory");
+        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, -6, SpringLayout.NORTH, btnPileup);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -15, SpringLayout.EAST, contentPane);
         lblDefaultToLocal.setBackground(Color.WHITE);

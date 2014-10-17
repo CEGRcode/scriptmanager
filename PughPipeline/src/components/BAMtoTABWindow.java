@@ -174,6 +174,7 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(lblPleaseSelectWhich);
 
         final JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
+        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
         sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -15, SpringLayout.EAST, contentPane);
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
