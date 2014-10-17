@@ -126,21 +126,28 @@ public class GeneTrack extends JFrame {
 					CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), start, stop, false);
 					loadGenomeFragment(iter, start, stop);
 					iter.close();
-					
+					//call peaks by local maxima
 					filterbyLocalMaxima(seq.getSequenceName(), start);
 				}
+								
 				int finalstart = numwindows * windowSize;
 				int finalstop = seq.getSequenceLength();
 				F_GOCC = new double[finalstop - finalstart];
 				R_GOCC = new double[finalstop - finalstart];
 				F_TOCC = new double[finalstop - finalstart];
 				R_TOCC = new double[finalstop - finalstart];
+				F_STD = new double[finalstop - finalstart];
+				R_STD = new double[finalstop - finalstart];
 				
 				CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), finalstart, finalstop, false);
 				loadGenomeFragment(iter, finalstart, finalstop);
 				iter.close();
-				
+				//call peaks by local maxima
 				filterbyLocalMaxima(seq.getSequenceName(), finalstart);
+				
+				//parse peaks by exclusion zone
+				parsePeaksbyExclusion(FPEAKS);
+				parsePeaksbyExclusion(RPEAKS);
 				
 				for(int z = 0; z < FPEAKS.size(); z++) {
 					OUT.println(FPEAKS.get(z).toString());		
@@ -163,7 +170,7 @@ public class GeneTrack extends JFrame {
 	}
 	
 	public void filterbyLocalMaxima(String chrom, int start) {
-		for(int z = 0; z < F_GOCC.length; z++) {
+		for(int z = 0; z < F_GOCC.length; z++) {	
 			int fiveprime = z + start - UP_WIDTH;
 			int threeprime = z + start + DOWN_WIDTH;
 			if(fiveprime < 1) { fiveprime = 1; }
@@ -242,42 +249,44 @@ public class GeneTrack extends JFrame {
 			}
 		}
 		
+		//Variance code adapted from Donald Knuth's implementation of Welford method
 		for(int x = 0; x < tempF.length; x++) {
-			double Favg = 0, Ravg = 0, Fcount = 0, Rcount = 0;
+			double meanF = 0, meanR = 0, varF = 0, varR = 0, Fcount = 0, Rcount = 0;
 			for(int y = x - UP_WIDTH; y <= x + DOWN_WIDTH; y++) {
 				if(y < 0) y = 0;
 				if(y < tempF.length) {
 					if(tempF[y] != 0) {
 						F_TOCC[x] += tempF[y];
-						Favg += (y * tempF[y]);
+						if(Fcount == 0) { meanF = y; }
+						else {
+							 double tempMean = ((meanF * Fcount) + (tempF[y] * y)) / (Fcount + tempF[y]);
+							 double tempVar = varF + ((y - meanF) * (y - tempMean) * tempF[y]);
+							 meanF = tempMean;
+							 varF = tempVar;
+						}
 						Fcount += tempF[y];
 					}
 					if(tempR[y] != 0) {
 						R_TOCC[x] += tempR[y];
-						Ravg += (y * tempR[y]);
+						if(Rcount == 0) { meanR = y; }
+						else {
+							double tempMean = ((meanR * Rcount) + (tempR[y] * y)) / (Rcount + tempR[y]);
+							double tempVar = varR + ((y - meanR) * (y - tempMean) * tempR[y]);
+							meanR = tempMean;
+							varR = tempVar;
+						}
 						Rcount += tempR[y];
 					}
 				}
 			}
-			double Fstd = 0, Rstd = 0;
-			Favg /= Fcount;
-			Ravg /= Rcount;
-			for(int y = x - UP_WIDTH; y <= x + DOWN_WIDTH; y++) {
-				if(y < 0) y = 0;
-				if(y < tempF.length) {
-					if(tempF[y] != 0) for(int z = 0; z < tempF[y]; z++) Fstd += Math.pow(y - Favg, 2);
-					if(tempR[y] != 0) for(int z = 0; z < tempR[y]; z++) Rstd += Math.pow(y - Ravg, 2);
-				}
-			}
-			if(Fcount == 1) F_STD[x] = 0;
-			else F_STD[x] = Math.sqrt(Fstd / Fcount);
-			if(Rcount == 1) R_STD[x] = 0;
-			else R_STD[x] = Math.sqrt(Rstd / Rcount);
-			
+			if(Fcount != 0) varF /= Fcount;
+			if(Rcount != 0) varR /= Rcount;
+			F_STD[x] = Math.sqrt(varF);
+			R_STD[x] = Math.sqrt(varR);
 		}
-
+		
 	}
-
+	
 	public void parsePeaksbyExclusion(ArrayList<Peak> peaks) {
 		//Sort by Peak Score
 		Collections.sort(peaks, Peak.PeakTagComparator);
@@ -288,30 +297,20 @@ public class GeneTrack extends JFrame {
 				if(x != y) {
 					if(peaks.get(x).getStop() > peaks.get(y).getStart() && peaks.get(x).getStart() < peaks.get(y).getStop()) {
 						peaks.remove(y);
+						if(x > y) x--;
+						y--;
 					} else if(peaks.get(x).getStart() < peaks.get(y).getStop() && peaks.get(x).getStop() > peaks.get(y).getStart()) {
 						peaks.remove(y);
+						if(x > y) x--;
+						y--;
 					}
 				}
 			}
 		}
+		//Sort by position
+		Collections.sort(peaks, Peak.PeakPositionComparator);
+	}
 		
-		//Output peaks that pass exclusion filtering
-		for(int x = 0; x < peaks.size(); x++) {
-			OUT.println(peaks.toString());
-		}
-	}
-	
-	public double getStd(double[] tag) {
-		if(tag.length > 0) {
-			double std = 0;
-			double avg = 0;
-			for(int x = 0; x < tag.length; x++) { avg += tag[x]; }
-			avg /= tag.length;
-			for(int x = 0; x < tag.length; x++) { std += Math.pow(tag[x] - avg, 2); }
-			return Math.sqrt(std / (tag.length - 1));
-		} else return Double.NaN;
-	}
-	
 	private double[] gaussKernel() {
 		double[] Garray = new double[(int) (SIGMA * NUM_STD * 2) + 1];
 		for(int x = 0; x < Garray.length; x++) {
