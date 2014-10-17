@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import objects.GenetrackParameters;
 import objects.Peak;
 
 @SuppressWarnings("serial")
@@ -27,6 +28,7 @@ public class GeneTrack extends JFrame {
 	private JTextArea textArea;
 	
 	private File INPUT = null;
+	private String OUTPUTPATH = null;
 	private PrintStream OUT = null;
 	private SamReader inputSam = null;
 	
@@ -57,7 +59,7 @@ public class GeneTrack extends JFrame {
 	private double[] F_STD;
 	private double[] R_STD;
 	
-	public GeneTrack(File in, int r, int s, int e, int u, int d, int f) {
+	public GeneTrack(File in, GenetrackParameters PARAM) {
 		setTitle("BAM to Genetrack Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -70,12 +72,16 @@ public class GeneTrack extends JFrame {
 		scrollPane.setViewportView(textArea);
 		
 		INPUT = in;
-		READ = r;
-		SIGMA = s;
-		EXCLUSION = e;
-		UP_WIDTH = u;
-		DOWN_WIDTH = d;
-		FILTER = f;
+		OUTPUTPATH = PARAM.getName();
+		
+		READ = PARAM.getRead();
+		SIGMA = PARAM.getSigma();
+		EXCLUSION = PARAM.getExclusion();
+		if(PARAM.getUp() == -999) UP_WIDTH = EXCLUSION / 2;
+		else UP_WIDTH = PARAM.getUp();
+		if(PARAM.getDown() == -999) DOWN_WIDTH = EXCLUSION / 2;
+		else DOWN_WIDTH = PARAM.getDown();
+		FILTER = PARAM.getFilter();
 	}
 	
 	public void run() {
@@ -91,7 +97,7 @@ public class GeneTrack extends JFrame {
 		textArea.append(TIME + "\n" + NAME + "\n");
 		textArea.append("Sigma: " + SIGMA + "\nExclusion: " + EXCLUSION + "\nFilter: " + FILTER + "\nUpstream width of called Peaks: " + UP_WIDTH + "\nDownstream width of called Peaks: " + DOWN_WIDTH + "\n");
 		
-		try { OUT = new PrintStream(new File(NAME)); }
+		try { OUT = new PrintStream(new File(OUTPUTPATH + File.separator + NAME)); }
 		catch (FileNotFoundException e) { e.printStackTrace(); }
 
 		//Set genetrack parameters
