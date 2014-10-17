@@ -99,4 +99,24 @@ public class Peak {
 			else return 0;
 	}
 	};
+	
+	public static Comparator<Peak> PeakPositionComparator = new Comparator<Peak>() {
+		public int compare(Peak node1, Peak node2) {
+			int PeakStart1 = node1.getStart();
+			int PeakStart2 = node2.getStart();
+			if (PeakStart1 > PeakStart2) return 1;
+			else if (PeakStart1 < PeakStart2) return -1;
+			else return 0;
+	}
+	};
+	
+	public static Comparator<Peak> PeakStrandComparator = new Comparator<Peak>() {
+		public int compare(Peak node1, Peak node2) {
+			String PeakStrand1 = node1.getDir();
+			String PeakStrand2 = node2.getDir();
+			if (PeakStrand1.equals("+") && PeakStrand2.equals("-")) return 1;
+			else if (PeakStrand1.equals("-") && PeakStrand2.equals("+")) return -1;
+			else return 0;
+	}
+	};
 }
