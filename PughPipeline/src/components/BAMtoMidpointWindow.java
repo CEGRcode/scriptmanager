@@ -113,10 +113,6 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new BAMFilter());
-				fc.setMultiSelectionEnabled(true);
-				fc.setDialogTitle("BAM File Selection");
-
 				File[] newBAMFiles = getCoordFile();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
@@ -257,6 +253,10 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 	}
     
 	public File[] getCoordFile() {
+		fc.setFileFilter(new BAMFilter());
+		fc.setMultiSelectionEnabled(true);
+		fc.setDialogTitle("BAM File Selection");
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {

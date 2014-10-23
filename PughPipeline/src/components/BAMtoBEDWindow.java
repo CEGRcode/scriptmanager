@@ -105,10 +105,6 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new BAMFilter());
-				fc.setMultiSelectionEnabled(true);
-				fc.setDialogTitle("BAM File Selection");
-
 				File[] newBAMFiles = getCoordFile();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
@@ -241,6 +237,10 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	}
     
 	public File[] getCoordFile() {
+		fc.setFileFilter(new BAMFilter());
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setDialogTitle("BAM File Selection");
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
