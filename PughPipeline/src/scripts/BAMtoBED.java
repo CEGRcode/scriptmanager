@@ -91,8 +91,8 @@ public class BAMtoBED extends JFrame {
 	public void outputRead(SAMRecord read) {
 		//chr7   118970079   118970129   TUPAC_0001:3:1:0:1452#0/1   37   -
 		//chr7   118965072   118965122   TUPAC_0001:3:1:0:1452#0/2   37   +
-		int recordStart = read.getAlignmentStart() - 1;
-		int recordStop = read.getAlignmentEnd();
+		int recordStart = read.getUnclippedStart() - 1;
+		int recordStop = read.getUnclippedEnd();
 		String chrom = read.getReferenceName();
 		String dir = "+";
 		if(read.getReadNegativeStrandFlag()) dir = "-";
