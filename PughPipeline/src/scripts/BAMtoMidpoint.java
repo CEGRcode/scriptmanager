@@ -110,7 +110,7 @@ public class BAMtoMidpoint extends JFrame {
 				}
 				if(index < BP.size() - 1) {
 					BP.add(index + 1, new Integer(recordMid));
-					M_OCC.add(index + 1, new Integer(0));
+					M_OCC.add(index + 1, new Integer(1));
 				} else {
 					BP.add(new Integer(recordMid));
 					M_OCC.add(new Integer(1));
