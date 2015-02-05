@@ -36,6 +36,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JProgressBar;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 
 @SuppressWarnings("serial")
@@ -45,6 +47,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 	
 	final DefaultListModel expList;
 	Vector<File> fastaFiles = new Vector<File>();
+	private File OUTPUTPATH = null;
 	
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -52,14 +55,20 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 
 	private JProgressBar progressBar;
 	public Task task;
+	private JLabel lblCurrentOutput;
+	private JLabel lblDefaultToLocal;
+	private JButton btnOutputDirectory;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException {
         	setProgress(0);
+        	if(OUTPUTPATH == null) {
+        		OUTPUTPATH = new File(System.getProperty("user.dir"));
+        	}
         	for(int x = 0; x < fastaFiles.size(); x++) {
         		String[] out = fastaFiles.get(x).getName().split("\\.");
-				generatePLOT(fastaFiles.get(x), new File(out[0] + ".png"));
+				generatePLOT(fastaFiles.get(x), new File(OUTPUTPATH + File.separator + out[0] + ".png"));
 				int percentComplete = (int)(((double)(x + 1) / fastaFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
@@ -78,7 +87,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		setTitle("Four Color Sequence Plot Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 260);
+		setBounds(125, 125, 450, 320);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -96,8 +105,8 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load FASTA Files");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				fc.setFileFilter(new FASTAFilter());
@@ -128,7 +137,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		contentPane.add(btnRemoveBam);
 		
 		btnGen = new JButton("Generate");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, btnGen);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -92, SpringLayout.NORTH, btnGen);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
@@ -136,11 +145,41 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnGen);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
         progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
         btnGen.setActionCommand("start");
+        
+        lblCurrentOutput = new JLabel("Current Output:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 39, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
+        lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblCurrentOutput);
+        
+        lblDefaultToLocal = new JLabel("Default to Local Directory");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 10, SpringLayout.SOUTH, lblCurrentOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.WEST, lblCurrentOutput);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 313, SpringLayout.EAST, lblCurrentOutput);
+        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+        lblDefaultToLocal.setBackground(Color.WHITE);
+        contentPane.add(lblDefaultToLocal);
+        
+        btnOutputDirectory = new JButton("Output Directory");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 145, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -145, SpringLayout.EAST, contentPane);
+        contentPane.add(btnOutputDirectory);
+        
+        btnOutputDirectory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	OUTPUTPATH = getOutputDir();
+				if(OUTPUTPATH != null) {
+					lblDefaultToLocal.setText(OUTPUTPATH.getAbsolutePath());
+				}
+			}
+		});
+        
         btnGen.addActionListener(this);
 	}
 	
@@ -248,6 +287,17 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 			bamFiles = fc.getSelectedFiles();
 		}
 		return bamFiles;
+	}
+	
+	public File getOutputDir() {
+		fc.setDialogTitle("Output Directory");
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setAcceptAllFileFilterUsed(false);
+		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
+			return fc.getSelectedFile();
+		} else {
+			return null;
+		}	
 	}
 }
 
