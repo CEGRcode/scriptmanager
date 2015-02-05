@@ -36,7 +36,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.4");
+		frmScriptManager.setTitle("Script Manager v0.5");
 		frmScriptManager.setBounds(100, 100, 500, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
@@ -235,7 +235,6 @@ public class ScriptManager {
 		});
 		
 		JButton btnPeakpairing = new JButton("Peak-Pairing");
-		btnPeakpairing.setEnabled(false);
 		pnlAnalysis.add(btnPeakpairing);
 		btnPeakpairing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
