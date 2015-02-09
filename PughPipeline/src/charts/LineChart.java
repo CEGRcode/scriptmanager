@@ -30,6 +30,19 @@ public class LineChart {
 		return chartPanel;				
 	}
 	
+	public static ChartPanel createLineChart(ArrayList<Double> y1, ArrayList<Double> y2, String[] x) throws IOException {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		for(int i = 0; i < x.length; i++) {
+			dataset.addValue(y1.get(i).doubleValue(), "Signal Duplication Rate", x[i]);
+			dataset.addValue(y2.get(i).doubleValue(), "Genome Duplication Rate", x[i]);
+		}
+		
+        JFreeChart chart = createChart(dataset);
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		return chartPanel;				
+	}
+	
 	private static JFreeChart createChart(CategoryDataset dataset) throws IOException {
         final JFreeChart chart = ChartFactory.createLineChart(
         		"Paired-End Duplication Rate",      // chart title
