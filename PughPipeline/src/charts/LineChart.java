@@ -22,13 +22,11 @@ public class LineChart {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		for(int i = 0; i < x.length; i++) {
 			dataset.addValue(y.get(i).doubleValue(), "Duplication Rate", x[i]);
-			System.out.println(y.get(i).doubleValue());
 		}
 		
         JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-		System.out.println("got here");
 		return chartPanel;				
 	}
 	
