@@ -17,6 +17,7 @@ import components.MergeBAMWindow;
 import components.PEStatWindow;
 import components.PeakPairWindow;
 import components.SEWindow;
+import components.SignalDuplicationWindow;
 import components.SortBAMWindow;
 import components.TagPileupWindow;
 
@@ -267,6 +268,23 @@ public class ScriptManager {
 				 });
 			}
 		});
+		
+		JButton btnSignalDuplication = new JButton("Signal Duplication");
+		btnSignalDuplication.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SignalDuplicationWindow frame = new SignalDuplicationWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlAnalysis.add(btnSignalDuplication);
 	
 		JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
 		pnlAnalysis.add(btncolorSequencePlot);
