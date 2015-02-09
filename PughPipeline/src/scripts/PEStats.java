@@ -228,6 +228,7 @@ public class PEStats extends JFrame {
 				}
 				
 				//Duplication statistics
+				double UNIQUE_MOLECULES = 0;
 				ArrayList<Double> BIN = new ArrayList<Double>();
 				//Initialize BINs for 1,2,3,4,5-9,10-99
 				BIN.add(new Double(0)); // Bin 1
@@ -253,6 +254,7 @@ public class PEStats extends JFrame {
 			        	 }
 			        	 BIN.set(index, new Double((ALL_COMPLEXITY.get(str).doubleValue() * str.doubleValue()) + BIN.get(index)));
 			         }
+			         UNIQUE_MOLECULES += ALL_COMPLEXITY.get(str).doubleValue(); 
 				}
 				
 				String[] BIN_NAME = new String[BIN.size()];
@@ -266,6 +268,7 @@ public class PEStats extends JFrame {
 					}
 					DUP_STATS.append(BIN_NAME[z] + "\t" + BIN.get(z).toString() + "\n");
 				}
+				DUP_STATS.append("Unique Molecules:\n" + UNIQUE_MOLECULES);
 				
 				//Add pe stats to tabbed pane
 				PE_STATS.setCaretPosition(0);
