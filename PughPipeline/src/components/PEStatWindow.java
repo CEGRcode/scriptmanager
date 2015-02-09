@@ -38,7 +38,7 @@ import javax.swing.JProgressBar;
 
 
 @SuppressWarnings("serial")
-public class PEWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class PEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 		
@@ -94,7 +94,7 @@ public class PEWindow extends JFrame implements ActionListener, PropertyChangeLi
         }
 	}
 	
-	public PEWindow() {
+	public PEStatWindow() {
 		setTitle("Paired-End BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

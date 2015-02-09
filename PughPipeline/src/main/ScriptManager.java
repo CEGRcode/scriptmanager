@@ -14,7 +14,7 @@ import components.BAMtoTABWindow;
 import components.FourColorSequenceWindow;
 import components.GeneTrackWindow;
 import components.MergeBAMWindow;
-import components.PEWindow;
+import components.PEStatWindow;
 import components.PeakPairWindow;
 import components.SEWindow;
 import components.SortBAMWindow;
@@ -83,7 +83,7 @@ public class ScriptManager {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							PEWindow frame = new PEWindow();
+							PEStatWindow frame = new PEStatWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
