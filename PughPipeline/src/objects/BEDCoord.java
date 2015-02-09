@@ -1,12 +1,14 @@
 package objects;
 
+import java.util.Comparator;
+
 public class BEDCoord {
 	private String CHROM = "";
 	private int START = 0;
 	private int STOP = 0;
 	private String DIR = "+";
 	
-	private String NAME = "";
+	private String NAME = ".";
 	private double SCORE = 0;
 
 	private double[] Fstrand = null;
@@ -87,4 +89,25 @@ public class BEDCoord {
 	public void setScore(double sco) {
 		SCORE = sco;
 	}
+	
+	public String toString() {
+		String line = CHROM + "\t" + START + "\t" + STOP + "\t" + NAME + "\t" + SCORE + "\t" + DIR;
+		return line;
+	}
+	
+	public static Comparator<BEDCoord> PeakChromComparator = new Comparator<BEDCoord>() {
+		public int compare(BEDCoord node1, BEDCoord node2) {
+			return node1.getChrom().compareTo(node2.getChrom());
+	}
+	};
+		
+	public static Comparator<BEDCoord> PeakPositionComparator = new Comparator<BEDCoord>() {
+		public int compare(BEDCoord node1, BEDCoord node2) {
+			int PeakStart1 = node1.getStart();
+			int PeakStart2 = node2.getStart();
+			if (PeakStart1 > PeakStart2) return 1;
+			else if (PeakStart1 < PeakStart2) return -1;
+			else return 0;
+	}
+	};
 }
