@@ -45,6 +45,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel expList;
+	private File OUTPUT_PATH = null;
 	List<File> BAMFiles = new ArrayList<File>();
 
 	private JButton btnLoad;
@@ -55,7 +56,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	public Task task;
 	private JButton btnOutput;
 	private JLabel label;
-	private JLabel lblOut;
+	private JLabel lblDefaultToLocal;
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -63,7 +64,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         	setProgress(0);
         	for(int x = 0; x < BAMFiles.size(); x++) {
         		String[] NAME = BAMFiles.get(x).getName().split("\\.");
-        	    File OUTPUT = new File(NAME[0] + "_sorted.bam");
+        	    File OUTPUT = null;
+        	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_sorted.bam"); }
+        	    else { OUTPUT = new File(NAME[0] + "_sorted.bam"); }
         	    sort(BAMFiles.get(x), OUTPUT);
         		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);
@@ -106,8 +109,6 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new BAMFilter());
-				fc.setMultiSelectionEnabled(true);
 				File[] newBAMFiles = getCoordFile();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
@@ -149,6 +150,14 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(progressBar);
 		
 		btnOutput = new JButton("Output Directory");
+		btnOutput.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OUTPUT_PATH = getOutputDir();
+				if(OUTPUT_PATH != null) {
+					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				}
+			}
+		});
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 193, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -3, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 146, SpringLayout.WEST, contentPane);
@@ -162,21 +171,36 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		label.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(label);
 		
-		lblOut = new JLabel("Default to Local Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOut, 0, SpringLayout.NORTH, label);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblOut, 6, SpringLayout.EAST, label);
-		lblOut.setBackground(Color.WHITE);
-		contentPane.add(lblOut);
+		lblDefaultToLocal = new JLabel("Default to Local Directory");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, label);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, label);
+		lblDefaultToLocal.setBackground(Color.WHITE);
+		contentPane.add(lblDefaultToLocal);
 	}
 	
 	
-	public File[] getCoordFile(){
+	public File[] getCoordFile() {
+		fc.setFileFilter(new BAMFilter());
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setDialogTitle("BAM File Selection");
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			bamFiles = fc.getSelectedFiles();
 		}
 		return bamFiles;
+	}
+	
+	public File getOutputDir() {
+		fc.setDialogTitle("Output Directory");
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setAcceptAllFileFilterUsed(false);
+		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
+			return fc.getSelectedFile();
+		} else {
+			return null;
+		}	
 	}
 
 	@Override
