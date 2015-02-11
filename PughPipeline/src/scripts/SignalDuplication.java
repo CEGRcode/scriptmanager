@@ -114,7 +114,7 @@ public class SignalDuplication extends JFrame {
 				
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
-					
+									
 					//Loop through each chromosome looking at each perfect F-R PE read
 					CHROM_COMPLEXITY = new HashMap<String, Integer>();
 					CloseableIterator<SAMRecord> iter = reader.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
@@ -171,69 +171,29 @@ public class SignalDuplication extends JFrame {
 				//Duplication statistics
 				double SIG_UNIQUE_MOLECULES = 0;
 				double GEN_UNIQUE_MOLECULES = 0;
+				String[] BIN_NAME = initializeBIN_Names();
 				ArrayList<Double> S_BIN = new ArrayList<Double>();
 				ArrayList<Double> G_BIN = new ArrayList<Double>();
-				//Initialize BINs for 1,2,3,4,5-9,10-99
-				S_BIN.add(new Double(0)); // Bin 1
-				S_BIN.add(new Double(0)); // Bin 2
-				S_BIN.add(new Double(0)); // Bin 3
-				S_BIN.add(new Double(0)); // Bin 4
-				S_BIN.add(new Double(0)); // Bin 5-9
-				S_BIN.add(new Double(0)); // Bin 10-99
-				G_BIN.add(new Double(0)); // Bin 1
-				G_BIN.add(new Double(0)); // Bin 2
-				G_BIN.add(new Double(0)); // Bin 3
-				G_BIN.add(new Double(0)); // Bin 4
-				G_BIN.add(new Double(0)); // Bin 5-9
-				G_BIN.add(new Double(0)); // Bin 10-99	
+				initializeBINS(S_BIN);
+				initializeBINS(G_BIN);
 				
 				Iterator<Integer> Ckeys = SIG_COMPLEXITY.keySet().iterator();
 				while(Ckeys.hasNext()) {
 			         Integer str = (Integer) Ckeys.next();
-			         if(str.intValue() == 1) S_BIN.set(0, SIG_COMPLEXITY.get(str).doubleValue());
-			         else if(str.intValue() == 2) S_BIN.set(1, SIG_COMPLEXITY.get(str).doubleValue() * 2);
-			         else if(str.intValue() == 3) S_BIN.set(2, SIG_COMPLEXITY.get(str).doubleValue() * 3);
-			         else if(str.intValue() == 4) S_BIN.set(3, SIG_COMPLEXITY.get(str).doubleValue() * 4);
-			         else if(str.intValue() >= 5 && str.intValue() < 10) S_BIN.set(4, S_BIN.get(4) + SIG_COMPLEXITY.get(str).doubleValue() * str.doubleValue());
-			         else if(str.intValue() >= 10) {
-			        	 int index = (int) ((Math.log10(str.intValue())) + 4);
-			        	 //Add new bins by order of magnitudes until array size matches current duplication level
-			        	 while(S_BIN.size() <= index) {
-			        		 S_BIN.add(new Double(0));
-			        	 }
-			        	 S_BIN.set(index, new Double((SIG_COMPLEXITY.get(str).doubleValue() * str.doubleValue()) + S_BIN.get(index)));
-			         }
+			         int index = getBinIndex(str.intValue());
+			         S_BIN.set(index, S_BIN.get(index) + (SIG_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));
 			         SIG_UNIQUE_MOLECULES += SIG_COMPLEXITY.get(str).doubleValue(); 
 				}
 				
 				Iterator<Integer> Gkeys = GEN_COMPLEXITY.keySet().iterator();
 				while(Gkeys.hasNext()) {
 			         Integer str = (Integer) Gkeys.next();
-			         if(str.intValue() == 1) G_BIN.set(0, GEN_COMPLEXITY.get(str).doubleValue());
-			         else if(str.intValue() == 2) G_BIN.set(1, GEN_COMPLEXITY.get(str).doubleValue() * 2);
-			         else if(str.intValue() == 3) G_BIN.set(2, GEN_COMPLEXITY.get(str).doubleValue() * 3);
-			         else if(str.intValue() == 4) G_BIN.set(3, GEN_COMPLEXITY.get(str).doubleValue() * 4);
-			         else if(str.intValue() >= 5 && str.intValue() < 10) G_BIN.set(4, G_BIN.get(4) + GEN_COMPLEXITY.get(str).doubleValue() * str.doubleValue());
-			         else if(str.intValue() >= 10) {
-			        	 int index = (int) ((Math.log10(str.intValue())) + 4);
-			        	 //Add new bins by order of magnitudes until array size matches current duplication level
-			        	 while(G_BIN.size() <= index) {
-			        		 G_BIN.add(new Double(0));
-			        	 }
-			        	 G_BIN.set(index, new Double((GEN_COMPLEXITY.get(str).doubleValue() * str.doubleValue()) + G_BIN.get(index)));
-			         }
+			         int index = getBinIndex(str.intValue());
+			         G_BIN.set(index, G_BIN.get(index) + (GEN_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));
 			         GEN_UNIQUE_MOLECULES += GEN_COMPLEXITY.get(str).doubleValue(); 
 				}
-				
-				String[] BIN_NAME = new String[S_BIN.size()];
-				for(int z = 0; z < S_BIN.size(); z++) {
-					if(z < 4) { BIN_NAME[z] = new Integer(z + 1).toString(); }
-					else if(z == 4) { BIN_NAME[z] = "5-9"; }
-					else if(z >= 5) {
-						int start = (int) Math.pow(10, z - 4);
-						int stop = (int) Math.pow(10, z - 3) - 1;
-						BIN_NAME[z] = start + "-" + stop;
-					}
+
+				for(int z = 0; z < BIN_NAME.length; z++) {
 					DUP_STATS.append(BIN_NAME[z] + "\t" + S_BIN.get(z).toString() + "\n");
 				}
 				DUP_STATS.append("Signal Unique Molecules:\n" + SIG_UNIQUE_MOLECULES  + "\n\n");
@@ -242,7 +202,7 @@ public class SignalDuplication extends JFrame {
 					DUP_STATS.append(BIN_NAME[z] + "\t" + G_BIN.get(z).toString() + "\n");
 				}
 				DUP_STATS.append("Genomic Unique Molecules:\n" + GEN_UNIQUE_MOLECULES + "\n");
-				
+								
 				//Add duplication stats to tabbed pane
 				DUP_STATS.setCaretPosition(0);
 				JScrollPane dup_pane = new JScrollPane(DUP_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -259,6 +219,61 @@ public class SignalDuplication extends JFrame {
 		if(OUT != null) OUT.close();
 	}
 	
+	public static int getBinIndex(int COUNT) {
+		if(COUNT == 1) return 0;
+        else if(COUNT >= 2 && COUNT <= 10) return 1;
+        else if(COUNT >= 11 && COUNT <= 25) return 2;
+        else if(COUNT >= 26 && COUNT <= 50) return 3;
+        else if(COUNT >= 51 && COUNT <= 75) return 4;
+        else if(COUNT >= 76 && COUNT <= 100) return 5;
+        else if(COUNT >= 101 && COUNT <= 125) return 6;
+        else if(COUNT >= 126 && COUNT <= 150) return 7;
+        else if(COUNT >= 151 && COUNT <= 250) return 8;
+        else if(COUNT >= 251 && COUNT <= 500) return 9;
+        else if(COUNT >= 501 && COUNT <= 1000) return 10;
+        else if(COUNT >= 1001 && COUNT <= 5000) return 11;
+        else if(COUNT >= 5001 && COUNT <= 10000) return 12;
+        else if(COUNT >= 10001) return 13;
+		
+		return -999;
+	}
+	
+	public static void initializeBINS(ArrayList<Double> BIN) {
+		BIN.add(new Double(0)); // Bin 1
+		BIN.add(new Double(0)); // Bin 2-10
+		BIN.add(new Double(0)); // Bin 11-25
+		BIN.add(new Double(0)); // Bin 26-50
+		BIN.add(new Double(0)); // Bin 51-75
+		BIN.add(new Double(0)); // Bin 76-100
+		BIN.add(new Double(0)); // Bin 101-125
+		BIN.add(new Double(0)); // Bin 126-150
+		BIN.add(new Double(0)); // Bin 151-250
+		BIN.add(new Double(0)); // Bin 251-500
+		BIN.add(new Double(0)); // Bin 501-1,000
+		BIN.add(new Double(0)); // Bin 1,001-5,000
+		BIN.add(new Double(0)); // Bin 5,001-10,000
+		BIN.add(new Double(0)); // Bin 10,000+
+	}
+	
+	public static String[] initializeBIN_Names() {
+		String[] NAME = new String[14];
+		NAME[0] = "1";
+		NAME[1] = "2-10";
+		NAME[2] = "11-25";
+		NAME[3] = "26-50";
+		NAME[4] = "51-75";
+		NAME[5] = "76-100";
+		NAME[6] = "101-125";
+		NAME[7] = "126-150";
+		NAME[8] = "151-250";
+		NAME[9] = "251-500";
+		NAME[10] = "501-1,000";
+		NAME[11] = "1,001-5,000";
+		NAME[12] = "5,001-10,000";
+		NAME[13] = "10,000+";
+		return NAME;
+	}
+	
 	public boolean checkOverlap(String chrom, String ID, ArrayList<GFFCoord> coord) {
 		String[] temp = ID.split("_");
 		int start = Integer.parseInt(temp[0]); 
@@ -271,7 +286,6 @@ public class SignalDuplication extends JFrame {
 
 		for(int z = 0; z < coord.size(); z++) {
 			if(coord.get(z).getChrom().equals(chrom)) {
-				//System.out.println("here");
 				if(start <= coord.get(z).getStop() + (WINDOW / 2) && start >= coord.get(z).getStart() - (WINDOW / 2)) { return true; }
 				if(stop <= coord.get(z).getStop() +  (WINDOW / 2) && stop >= coord.get(z).getStart() -  (WINDOW / 2)) { return true; }
 				if(start <= coord.get(z).getStart() -  (WINDOW / 2) && stop >= coord.get(z).getStop() +  (WINDOW / 2)) { return true; }
