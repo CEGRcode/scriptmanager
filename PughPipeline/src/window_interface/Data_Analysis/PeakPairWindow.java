@@ -1,6 +1,6 @@
-package components;
+package window_interface.Data_Analysis;
 
-import filters.GFFFilter;
+import file_filters.GFFFilter;
 
 import java.io.File;
 import java.io.IOException;
@@ -211,6 +211,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(rdbtnLargest);
         
         rdbtnAll = new JRadioButton("All");
+        rdbtnAll.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnAll, 0, SpringLayout.NORTH, rdbtnMode);
         sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnAll, -33, SpringLayout.EAST, contentPane);
         contentPane.add(rdbtnAll);

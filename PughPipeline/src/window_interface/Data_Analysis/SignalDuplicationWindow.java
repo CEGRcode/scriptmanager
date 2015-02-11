@@ -1,7 +1,7 @@
-package components;
+package window_interface.Data_Analysis;
 
-import filters.BAMFilter;
-import filters.GFFFilter;
+import file_filters.BAMFilter;
+import file_filters.GFFFilter;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,6 @@
-package components;
+package window_interface.Data_Analysis;
 
-import filters.FASTAFilter;
+import file_filters.FASTAFilter;
 
 import java.io.File;
 import java.io.IOException;

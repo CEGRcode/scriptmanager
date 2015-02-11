@@ -1,15 +1,15 @@
-package filters;
+package file_filters;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-public class BAMFilter extends FileFilter{
+public class TABFilter extends FileFilter{
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
 		String extension = getExtension(f);
 		if (extension != null) {
-			if (extension.equals("bam")) {
+			if (extension.equals("tab")) {
 				return true;
 			} else {
 				return false;

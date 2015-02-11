@@ -1,6 +1,6 @@
-package components;
+package window_interface.BAM_Statistics;
 
-import filters.BAMFilter;
+import file_filters.BAMFilter;
 
 import java.io.File;
 import java.util.Vector;
@@ -28,7 +28,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 @SuppressWarnings("serial")
-public class SEWindow extends JFrame {
+public class SEStatWindow extends JFrame {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 		
@@ -39,7 +39,7 @@ public class SEWindow extends JFrame {
 	final DefaultListModel expList;
 	Vector<File> BAMFiles = new Vector<File>();
 
-	public SEWindow() {
+	public SEStatWindow() {
 		setTitle("BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

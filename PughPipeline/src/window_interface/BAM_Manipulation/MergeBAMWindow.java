@@ -1,13 +1,7 @@
-package components;
+package window_interface.BAM_Manipulation;
 
-import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileWriter;
-import htsjdk.samtools.SAMFileWriterFactory;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.util.IOUtil;
-
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,60 +24,58 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
 import javax.swing.JLabel;
 
-import filters.BAMFilter;
+import file_filters.BAMFilter;
+import picard.MergeSamFiles;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.Color;
 
 @SuppressWarnings("serial")
-public class SortBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel expList;
 	List<File> BAMFiles = new ArrayList<File>();
+    private File OUTPUT = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
-	private JButton btnSort;
+	private JButton btnMerge;
+	private JTextField txtOutput;
+	private JCheckBox chckbxUseMultipleCpus;
+	private JCheckBox chckbxGenerateBaiindex;
 
 	private JProgressBar progressBar;
 	public Task task;
-	private JButton btnOutput;
-	private JLabel label;
-	private JLabel lblOut;
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-        		String[] NAME = BAMFiles.get(x).getName().split("\\.");
-        	    File OUTPUT = new File(NAME[0] + "_sorted.bam");
-        	    sort(BAMFiles.get(x), OUTPUT);
-        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-        		setProgress(percentComplete);
-        	}
-        	setProgress(100);
-			JOptionPane.showMessageDialog(null, "Sorting Complete");
+        	OUTPUT = new File(txtOutput.getText());
+			mergeBAM();
+			if(chckbxGenerateBaiindex.isSelected()) {
+				BAIIndexerWindow.generateIndex(OUTPUT);
+			}	
+			JOptionPane.showMessageDialog(null, "Merging Complete");
         	return null;
         }
         
         public void done() {
-        	massXable(contentPane, true);
+        	setProgress(100);
+    		massXable(contentPane, true);
             setCursor(null); //turn off the wait cursor
         }
 	}
 	
-	public SortBAMWindow() {
-		setTitle("BAM File Sort");
+	public MergeBAMWindow() {
+		setTitle("BAM File Replicate Merger");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 300);
+		setBounds(125, 125, 450, 310);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -133,40 +125,46 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		});		
 		contentPane.add(btnRemoveBam);
 		
-		btnSort = new JButton("Sort");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnSort, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnSort, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnSort, -175, SpringLayout.EAST, contentPane);
-		contentPane.add(btnSort);
+		btnMerge = new JButton("Merge");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnMerge, 167, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnMerge, 0, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnMerge, -175, SpringLayout.EAST, contentPane);
+		contentPane.add(btnMerge);
         
-		btnSort.setActionCommand("start");
-        btnSort.addActionListener(this);
+		btnMerge.setActionCommand("start");
+        btnMerge.addActionListener(this);
         
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnSort);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnMerge);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
         progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
-		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 193, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -3, SpringLayout.NORTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 146, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -50, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -146, SpringLayout.EAST, contentPane);
-		contentPane.add(btnOutput);
-		
-		label = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.WEST, label, 0, SpringLayout.WEST, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, label, -30, SpringLayout.SOUTH, contentPane);
-		label.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(label);
-		
-		lblOut = new JLabel("Default to Local Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOut, 0, SpringLayout.NORTH, label);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblOut, 6, SpringLayout.EAST, label);
-		lblOut.setBackground(Color.WHITE);
-		contentPane.add(lblOut);
+        txtOutput = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, txtOutput);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtOutput, -5, SpringLayout.EAST, contentPane);
+        txtOutput.setText("merged_BAM.bam");
+        contentPane.add(txtOutput);
+        txtOutput.setColumns(10);
+        
+        JLabel lblOutputFileName = new JLabel("Output File Name:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutput, -2, SpringLayout.NORTH, lblOutputFileName);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtOutput, 6, SpringLayout.EAST, lblOutputFileName);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputFileName, 5, SpringLayout.WEST, contentPane);
+        contentPane.add(lblOutputFileName);
+        
+        chckbxUseMultipleCpus = new JCheckBox("Use Multiple CPU's");
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxUseMultipleCpus, -4, SpringLayout.NORTH, progressBar);
+        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxUseMultipleCpus, -5, SpringLayout.EAST, contentPane);
+        chckbxUseMultipleCpus.setToolTipText("Increases Merging Speed on Computers with Multiple CPUs");
+        contentPane.add(chckbxUseMultipleCpus);
+        
+        chckbxGenerateBaiindex = new JCheckBox("Generate BAI-Index");
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiindex, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblOutputFileName, -6, SpringLayout.NORTH, chckbxGenerateBaiindex);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiindex, 0, SpringLayout.NORTH, chckbxUseMultipleCpus);
+        chckbxGenerateBaiindex.setSelected(true);
+        contentPane.add(chckbxGenerateBaiindex);
 	}
 	
 	
@@ -204,16 +202,8 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		}
 	}
 	
-	public void sort(File INPUT, File OUTPUT) {
-		IOUtil.assertFileIsReadable(INPUT);
-        IOUtil.assertFileIsWritable(OUTPUT);
-        final SamReader reader = SamReaderFactory.makeDefault().open(INPUT);
-        reader.getFileHeader().setSortOrder(SAMFileHeader.SortOrder.coordinate);
-        final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, OUTPUT);
-        for (final SAMRecord rec: reader) {
-            writer.addAlignment(rec);
-        }
-        writer.close();
-	}
-
+	protected void mergeBAM() {
+		MergeSamFiles merge = new MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
+		merge.run();
+    }
 }

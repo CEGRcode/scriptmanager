@@ -1,15 +1,15 @@
-package filters;
+package file_filters;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-public class GFFFilter extends FileFilter{
+public class BAIFilter extends FileFilter{
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
 		String extension = getExtension(f);
 		if (extension != null) {
-			if (extension.equals("gff")) {
+			if (extension.equals("bai")) {
 				return true;
 			} else {
 				return false;

@@ -6,23 +6,22 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
-
-import components.BAIIndexerWindow;
-import components.BAMtoBEDWindow;
-import components.BAMtoMidpointWindow;
-import components.BAMtoTABWindow;
-import components.FourColorSequenceWindow;
-import components.GeneTrackWindow;
-import components.MergeBAMWindow;
-import components.PEStatWindow;
-import components.PeakPairWindow;
-import components.SEWindow;
-import components.SignalDuplicationWindow;
-import components.SortBAMWindow;
-import components.TagPileupWindow;
-
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+
+import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
+import window_interface.BAM_Format_Converter.BAMtoMidpointWindow;
+import window_interface.BAM_Format_Converter.BAMtoTABWindow;
+import window_interface.BAM_Manipulation.BAIIndexerWindow;
+import window_interface.BAM_Manipulation.MergeBAMWindow;
+import window_interface.BAM_Manipulation.SortBAMWindow;
+import window_interface.BAM_Statistics.PEStatWindow;
+import window_interface.BAM_Statistics.SEStatWindow;
+import window_interface.Data_Analysis.FourColorSequenceWindow;
+import window_interface.Data_Analysis.GeneTrackWindow;
+import window_interface.Data_Analysis.PeakPairWindow;
+import window_interface.Data_Analysis.SignalDuplicationWindow;
+import window_interface.Data_Analysis.TagPileupWindow;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -38,7 +37,7 @@ public class ScriptManager {
 	private void initialize() {
 		frmScriptManager = new JFrame();
 		frmScriptManager.setTitle("Script Manager v0.5");
-		frmScriptManager.setBounds(100, 100, 500, 275);
+		frmScriptManager.setBounds(100, 100, 450, 250);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
 		SpringLayout springLayout = new SpringLayout();
@@ -47,12 +46,12 @@ public class ScriptManager {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		springLayout.putConstraint(SpringLayout.NORTH, tabbedPane, 10, SpringLayout.NORTH, frmScriptManager.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, tabbedPane, 10, SpringLayout.WEST, frmScriptManager.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, tabbedPane, 243, SpringLayout.NORTH, frmScriptManager.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, tabbedPane, 490, SpringLayout.WEST, frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, tabbedPane, -10, SpringLayout.SOUTH, frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, tabbedPane, -10, SpringLayout.EAST, frmScriptManager.getContentPane());
 		frmScriptManager.getContentPane().add(tabbedPane);
 		
 		JPanel pnlStat = new JPanel();
-		tabbedPane.addTab("Statistics", null, pnlStat, null);
+		tabbedPane.addTab("BAM Statistics", null, pnlStat, null);
 		
 		JButton btnBAMStats = new JButton("BAM Statistics");
 		btnBAMStats.setToolTipText("Output Alignment Statistics and Parameters given an Input BAM File.\nBAM file must be sorted and BAM BAI Index must be present.");
@@ -69,7 +68,7 @@ public class ScriptManager {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							SEWindow frame = new SEWindow();
+							SEStatWindow frame = new SEStatWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -94,13 +93,46 @@ public class ScriptManager {
 			}
 		});
 		
-		JPanel pnlExtract = new JPanel();
-		pnlExtract.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		tabbedPane.addTab("BAM Manipulation", null, pnlExtract, null);
+		JPanel pnlBED_Manip = new JPanel();
+		tabbedPane.addTab("BED Manipulation", null, pnlBED_Manip, null);
+		
+		JButton btnBEDSort = new JButton("Sort BED File");
+		btnBEDSort.setEnabled(false);
+		btnBEDSort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		pnlBED_Manip.add(btnBEDSort);
+		
+		JButton btnExpandBedFile = new JButton("Expand BED File");
+		btnExpandBedFile.setEnabled(false);
+		pnlBED_Manip.add(btnExpandBedFile);
+		
+		JButton btnBedToGFF = new JButton("Convert BED to GFF");
+		pnlBED_Manip.add(btnBedToGFF);
+		
+		JPanel pnlGFF_Manip = new JPanel();
+		tabbedPane.addTab("GFF Manipulation", null, pnlGFF_Manip, null);
+		
+		JButton btnSortGffFile = new JButton("Sort GFF File");
+		btnSortGffFile.setEnabled(false);
+		pnlGFF_Manip.add(btnSortGffFile);
+		
+		JButton btnExpandGffFile = new JButton("Expand GFF File");
+		btnExpandGffFile.setEnabled(false);
+		pnlGFF_Manip.add(btnExpandGffFile);
+		
+		JButton btnGffToBed = new JButton("Convert GFF to BED");
+		btnGffToBed.setEnabled(false);
+		pnlGFF_Manip.add(btnGffToBed);
+		
+		JPanel pnlBAM_Manip = new JPanel();
+		pnlBAM_Manip.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		tabbedPane.addTab("BAM Manipulation", null, pnlBAM_Manip, null);
 		
 				JButton btnBaiIndexer = new JButton("BAM-BAI Indexer");
 				btnBaiIndexer.setToolTipText("Generates BAI Index for given BAM files");
-				pnlExtract.add(btnBaiIndexer);
+				pnlBAM_Manip.add(btnBaiIndexer);
 				btnBaiIndexer.addActionListener(new ActionListener() {
 		            public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
@@ -118,7 +150,7 @@ public class ScriptManager {
 				
 				JButton btnBamSort = new JButton("BAM File Sorter");
 				btnBamSort.setToolTipText("Sort BAM files in order to efficiently extract and manipulate.\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlExtract.add(btnBamSort);
+				pnlBAM_Manip.add(btnBamSort);
 				btnBamSort.addActionListener(new ActionListener() {
 		            public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
@@ -136,7 +168,7 @@ public class ScriptManager {
 				
 				JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
 				btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlExtract.add(btnBamReplicateMerge);
+				pnlBAM_Manip.add(btnBamReplicateMerge);
 				btnBamReplicateMerge.addActionListener(new ActionListener() {
 		            public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
@@ -153,7 +185,7 @@ public class ScriptManager {
 				});
 		
 		JPanel pnlBamConvert = new JPanel();
-		tabbedPane.addTab("BAM Converter", null, pnlBamConvert, null);
+		tabbedPane.addTab("BAM Format Converter", null, pnlBamConvert, null);
 		
 		JButton btnBamToTab = new JButton("BAM to TAB");
 		pnlBamConvert.add(btnBamToTab);
@@ -165,51 +197,6 @@ public class ScriptManager {
 		
 		JButton btnBamToMidpoint = new JButton("BAM to Midpoint");
 		pnlBamConvert.add(btnBamToMidpoint);
-
-		btnBamToBed.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BAMtoBEDWindow frame = new BAMtoBEDWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		
-		btnBamToTab.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BAMtoTABWindow frame = new BAMtoTABWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		
-		btnBamToMidpoint.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BAMtoMidpointWindow frame = new BAMtoMidpointWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
 		
 		JPanel pnlAnalysis = new JPanel();
 		tabbedPane.addTab("Data Analysis", null, pnlAnalysis, null);
@@ -236,6 +223,7 @@ public class ScriptManager {
 		});
 		
 		JButton btnPeakpairing = new JButton("Peak-Pairing");
+		btnPeakpairing.setEnabled(false);
 		pnlAnalysis.add(btnPeakpairing);
 		btnPeakpairing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -285,15 +273,64 @@ public class ScriptManager {
 			}
 		});
 		pnlAnalysis.add(btnSignalDuplication);
-	
-		JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
-		pnlAnalysis.add(btncolorSequencePlot);
-		btncolorSequencePlot.addActionListener(new ActionListener() {
+			
+			JButton btnFASTAExtract = new JButton("FASTA from BED");
+			btnFASTAExtract.setEnabled(false);
+			pnlAnalysis.add(btnFASTAExtract);
+		
+			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
+			pnlAnalysis.add(btncolorSequencePlot);
+			btncolorSequencePlot.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								FourColorSequenceWindow frame = new FourColorSequenceWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+
+		btnBamToBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							FourColorSequenceWindow frame = new FourColorSequenceWindow();
+							BAMtoBEDWindow frame = new BAMtoBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		
+		btnBamToTab.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtoTABWindow frame = new BAMtoTABWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		
+		btnBamToMidpoint.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtoMidpointWindow frame = new BAMtoMidpointWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();

@@ -1,15 +1,15 @@
-package filters;
+package file_filters;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-public class TABFilter extends FileFilter{
+public class GFFFilter extends FileFilter{
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
 		String extension = getExtension(f);
 		if (extension != null) {
-			if (extension.equals("tab")) {
+			if (extension.equals("gff")) {
 				return true;
 			} else {
 				return false;

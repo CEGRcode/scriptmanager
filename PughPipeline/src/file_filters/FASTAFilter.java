@@ -1,15 +1,15 @@
-package filters;
+package file_filters;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-public class BEDFilter extends FileFilter{
+public class FASTAFilter extends FileFilter{
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
 		String extension = getExtension(f);
 		if (extension != null) {
-			if (extension.equals("bed")) {
+			if (extension.equals("fa") || extension.equals("fasta")) {
 				return true;
 			} else {
 				return false;

@@ -1,6 +1,6 @@
-package components;
+package window_interface.BAM_Manipulation;
 
-import filters.BAMFilter;
+import file_filters.BAMFilter;
 import htsjdk.samtools.BAMIndexer;
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SamReader;
