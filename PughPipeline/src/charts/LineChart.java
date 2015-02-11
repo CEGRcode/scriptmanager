@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
@@ -59,6 +61,9 @@ public class LineChart {
         //Set Histogram Color to Red
         plot.getRenderer().setSeriesPaint(0, Color.blue);
 
+        CategoryAxis xAxis = (CategoryAxis)plot.getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.DOWN_45);
+        
         //Code to turn off shadows if 3D
         //renderer.setShadowVisible(false);
 
