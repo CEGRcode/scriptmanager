@@ -17,11 +17,13 @@ import window_interface.BAM_Manipulation.MergeBAMWindow;
 import window_interface.BAM_Manipulation.SortBAMWindow;
 import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
+import window_interface.BED_Manipulation.BEDtoGFFWindow;
 import window_interface.Data_Analysis.FourColorSequenceWindow;
 import window_interface.Data_Analysis.GeneTrackWindow;
 import window_interface.Data_Analysis.PeakPairWindow;
 import window_interface.Data_Analysis.SignalDuplicationWindow;
 import window_interface.Data_Analysis.TagPileupWindow;
+import window_interface.GFF_Manipulation.GFFtoBEDWindow;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -109,6 +111,20 @@ public class ScriptManager {
 		pnlBED_Manip.add(btnExpandBedFile);
 		
 		JButton btnBedToGFF = new JButton("Convert BED to GFF");
+		btnBedToGFF.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BEDtoGFFWindow frame = new BEDtoGFFWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		pnlBED_Manip.add(btnBedToGFF);
 		
 		JPanel pnlGFF_Manip = new JPanel();
@@ -123,7 +139,20 @@ public class ScriptManager {
 		pnlGFF_Manip.add(btnExpandGffFile);
 		
 		JButton btnGffToBed = new JButton("Convert GFF to BED");
-		btnGffToBed.setEnabled(false);
+		btnGffToBed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							GFFtoBEDWindow frame = new GFFtoBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		pnlGFF_Manip.add(btnGffToBed);
 		
 		JPanel pnlBAM_Manip = new JPanel();
