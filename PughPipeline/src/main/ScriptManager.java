@@ -18,11 +18,13 @@ import window_interface.BAM_Manipulation.SortBAMWindow;
 import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BED_Manipulation.BEDtoGFFWindow;
+import window_interface.BED_Manipulation.ExpandBEDWindow;
 import window_interface.Data_Analysis.FourColorSequenceWindow;
 import window_interface.Data_Analysis.GeneTrackWindow;
 import window_interface.Data_Analysis.PeakPairWindow;
 import window_interface.Data_Analysis.SignalDuplicationWindow;
 import window_interface.Data_Analysis.TagPileupWindow;
+import window_interface.GFF_Manipulation.ExpandGFFWindow;
 import window_interface.GFF_Manipulation.GFFtoBEDWindow;
 
 import java.awt.FlowLayout;
@@ -98,16 +100,21 @@ public class ScriptManager {
 		JPanel pnlBED_Manip = new JPanel();
 		tabbedPane.addTab("BED Manipulation", null, pnlBED_Manip, null);
 		
-		JButton btnBEDSort = new JButton("Sort BED File");
-		btnBEDSort.setEnabled(false);
-		btnBEDSort.addActionListener(new ActionListener() {
+		JButton btnExpandBedFile = new JButton("Expand BED File");
+		btnExpandBedFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ExpandBEDWindow frame = new ExpandBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
 			}
 		});
-		pnlBED_Manip.add(btnBEDSort);
-		
-		JButton btnExpandBedFile = new JButton("Expand BED File");
-		btnExpandBedFile.setEnabled(false);
 		pnlBED_Manip.add(btnExpandBedFile);
 		
 		JButton btnBedToGFF = new JButton("Convert BED to GFF");
@@ -125,18 +132,39 @@ public class ScriptManager {
 				 });
 			}
 		});
+		
+		JButton btnBEDSort = new JButton("Sort BED File");
+		btnBEDSort.setEnabled(false);
+		btnBEDSort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		pnlBED_Manip.add(btnBEDSort);
 		pnlBED_Manip.add(btnBedToGFF);
 		
 		JPanel pnlGFF_Manip = new JPanel();
 		tabbedPane.addTab("GFF Manipulation", null, pnlGFF_Manip, null);
 		
+		JButton btnExpandGffFile = new JButton("Expand GFF File");
+		btnExpandGffFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ExpandGFFWindow frame = new ExpandGFFWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlGFF_Manip.add(btnExpandGffFile);
+		
 		JButton btnSortGffFile = new JButton("Sort GFF File");
 		btnSortGffFile.setEnabled(false);
 		pnlGFF_Manip.add(btnSortGffFile);
-		
-		JButton btnExpandGffFile = new JButton("Expand GFF File");
-		btnExpandGffFile.setEnabled(false);
-		pnlGFF_Manip.add(btnExpandGffFile);
 		
 		JButton btnGffToBed = new JButton("Convert GFF to BED");
 		btnGffToBed.addActionListener(new ActionListener() {
