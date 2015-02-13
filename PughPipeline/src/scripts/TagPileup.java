@@ -286,8 +286,8 @@ public class TagPileup extends JFrame {
 		if(strandnum == 1) strand = "anti";
 		else if(strandnum == 2) strand = "combined";
 		String read = "read1";
-		if(PARAM.getRead() == 1) strand = "read2";
-		else if(PARAM.getRead() == 2) strand = "readc";
+		if(PARAM.getRead() == 1) read = "read2";
+		else if(PARAM.getRead() == 2) read = "readc";
 		
 		String filename = name[0] + "_" + read + "_" + strand;
 		if(PARAM.getOutputType() == 1) filename += ".tab";
