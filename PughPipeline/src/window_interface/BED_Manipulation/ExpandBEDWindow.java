@@ -42,6 +42,8 @@ import javax.swing.SwingConstants;
 @SuppressWarnings("serial")
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	private JProgressBar progressBar;
+
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	private File OUTPUT_PATH = null;
@@ -53,7 +55,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveBED;
 	private JButton btnConvert;
 
-	private JProgressBar progressBar;
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
