@@ -27,9 +27,9 @@ import javax.swing.SpringLayout;
 import charts.CompositePlot;
 import objects.BEDCoord;
 import objects.PileupParameters;
-import scripts.PileupScripts.JTVOutput;
 import scripts.PileupScripts.PileupExtract;
 import scripts.PileupScripts.TransformArray;
+import util.JTVOutput;
 
 @SuppressWarnings("serial")
 public class TagPileup extends JFrame {
