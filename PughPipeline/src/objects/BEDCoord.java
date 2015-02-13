@@ -26,6 +26,11 @@ public class BEDCoord {
 		NAME = na;
 	}
 	
+	public BEDCoord(String na, double sco) {
+		NAME = na;
+		SCORE = sco;
+	}
+	
 	public double[] getFStrand() {
 		return Fstrand;
 	}
@@ -107,6 +112,16 @@ public class BEDCoord {
 			int PeakStart2 = node2.getStart();
 			if (PeakStart1 > PeakStart2) return 1;
 			else if (PeakStart1 < PeakStart2) return -1;
+			else return 0;
+	}
+	};
+	
+	public static Comparator<BEDCoord> ScoreComparator = new Comparator<BEDCoord>() {
+		public int compare(BEDCoord node1, BEDCoord node2) {
+			double PeakStart1 = node1.getScore();
+			double PeakStart2 = node2.getScore();
+			if (PeakStart1 < PeakStart2) return 1;
+			else if (PeakStart1 > PeakStart2) return -1;
 			else return 0;
 	}
 	};

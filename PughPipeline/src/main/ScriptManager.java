@@ -19,6 +19,7 @@ import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BED_Manipulation.BEDtoGFFWindow;
 import window_interface.BED_Manipulation.ExpandBEDWindow;
+import window_interface.BED_Manipulation.SortBEDWindow;
 import window_interface.Data_Analysis.FourColorSequenceWindow;
 import window_interface.Data_Analysis.GeneTrackWindow;
 import window_interface.Data_Analysis.PeakPairWindow;
@@ -134,9 +135,18 @@ public class ScriptManager {
 		});
 		
 		JButton btnBEDSort = new JButton("Sort BED File");
-		btnBEDSort.setEnabled(false);
 		btnBEDSort.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SortBEDWindow frame = new SortBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
 			}
 		});
 		pnlBED_Manip.add(btnBEDSort);
