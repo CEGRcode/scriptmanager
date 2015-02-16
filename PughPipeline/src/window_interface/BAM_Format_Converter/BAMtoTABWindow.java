@@ -1,7 +1,5 @@
 package window_interface.BAM_Format_Converter;
 
-import file_filters.BAMFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -26,6 +24,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 
 import scripts.BAMtoTAB;
+import util.ExtensionFileFilter;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -106,7 +105,7 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = getCoordFile();
+				File[] newBAMFiles = getBAMFiles();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -236,10 +235,11 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
     
-	public File[] getCoordFile() {
-		fc.setFileFilter(new BAMFilter());
+	public File[] getBAMFiles(){
+		fc.setFileFilter(new ExtensionFileFilter("bam"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
 		fc.setDialogTitle("BAM File Selection");
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);

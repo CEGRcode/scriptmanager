@@ -1,7 +1,5 @@
 package window_interface.BED_Manipulation;
 
-import file_filters.BEDFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -23,6 +21,8 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+
+import util.ExtensionFileFilter;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -99,7 +99,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = getCoordFile();
+				File[] newBEDFiles = getBEDFiles();
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						BEDFiles.add(newBEDFiles[x]);
@@ -227,10 +227,11 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		OUT.close();
 	}
 	
-	public File[] getCoordFile() {
-		fc.setFileFilter(new BEDFilter());
+	public File[] getBEDFiles(){
+		fc.setFileFilter(new ExtensionFileFilter("bed"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
 		fc.setDialogTitle("BED File Selection");
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);

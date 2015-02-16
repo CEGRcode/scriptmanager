@@ -1,15 +1,26 @@
-package file_filters;
+package util;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-public class BEDFilter extends FileFilter{
+public class ExtensionFileFilter extends FileFilter{
+	//Filters files such as BAI, BAM, BED, CDT, FASTA, FA, GFF, TAB
+		
+	private String ext = "";
+	private String ext2 = "";
+	
+	public ExtensionFileFilter(String filter) {
+		ext = filter;
+		if(ext.equals("fa")) { ext2 = "fasta"; }
+		if(ext.equals("gff")) { ext2 = "gtf"; }
+	}
+	
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
 		String extension = getExtension(f);
 		if (extension != null) {
-			if (extension.equals("bed")) {
+			if (extension.equals(ext) || extension.equals(ext2)) {
 				return true;
 			} else {
 				return false;

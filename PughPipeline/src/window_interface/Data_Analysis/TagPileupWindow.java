@@ -1,8 +1,5 @@
 package window_interface.Data_Analysis;
 
-import file_filters.BAMFilter;
-import file_filters.BEDFilter;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,6 +36,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import scripts.TagPileup;
+import util.ExtensionFileFilter;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -651,7 +649,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
     
 	public File[] getBAMFiles() {
 		fc.setDialogTitle("BAM File Selection");
-		fc.setFileFilter(new BAMFilter());
+		fc.setFileFilter(new ExtensionFileFilter("bam"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
 		
@@ -665,7 +663,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	
 	public File getBEDFile() {
 		fc.setDialogTitle("BED File Selection");
-		fc.setFileFilter(new BEDFilter());
+		fc.setFileFilter(new ExtensionFileFilter("bed"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(false);
 		

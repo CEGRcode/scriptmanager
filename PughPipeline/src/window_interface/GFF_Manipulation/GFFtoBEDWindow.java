@@ -1,7 +1,5 @@
 package window_interface.GFF_Manipulation;
 
-import file_filters.GFFFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -23,6 +21,8 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+
+import util.ExtensionFileFilter;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -99,11 +99,11 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = getCoordFile();
-				if(newBEDFiles != null) {
-					for(int x = 0; x < newBEDFiles.length; x++) { 
-						BEDFiles.add(newBEDFiles[x]);
-						expList.addElement(newBEDFiles[x].getName());
+				File[] newGFFFiles = getGFFFiles();
+				if(newGFFFiles != null) {
+					for(int x = 0; x < newGFFFiles.length; x++) { 
+						BEDFiles.add(newGFFFiles[x]);
+						expList.addElement(newGFFFiles[x].getName());
 					}
 				}
 			}
@@ -228,17 +228,18 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		OUT.close();
 	}
 	
-	public File[] getCoordFile() {
-		fc.setFileFilter(new GFFFilter());
+	public File[] getGFFFiles(){
+		fc.setFileFilter(new ExtensionFileFilter("gff"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
 		fc.setDialogTitle("GFF File Selection");
-		File[] bamFiles = null;
+		File[] gffFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
+			gffFiles = fc.getSelectedFiles();
 		}
-		return bamFiles;
+		return gffFiles;
 	}
 	
 	public File getOutputDir() {

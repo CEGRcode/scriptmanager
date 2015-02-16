@@ -1,8 +1,5 @@
 package window_interface.BED_Manipulation;
 
-import file_filters.BEDFilter;
-import file_filters.CDTFilter;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,6 +38,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import objects.BEDCoord;
+import util.ExtensionFileFilter;
 import util.JTVOutput;
 
 @SuppressWarnings("serial")
@@ -450,7 +448,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	
 	public File getBEDFile() {
 		fc.setDialogTitle("BED File Selection");
-		fc.setFileFilter(new BEDFilter());
+		fc.setFileFilter(new ExtensionFileFilter("bed"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(false);
 		
@@ -464,7 +462,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	
 	public File getCDTFile() {
 		fc.setDialogTitle("CDT File Selection");
-		fc.setFileFilter(new CDTFilter());
+		fc.setFileFilter(new ExtensionFileFilter("cdt"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(false);
 		

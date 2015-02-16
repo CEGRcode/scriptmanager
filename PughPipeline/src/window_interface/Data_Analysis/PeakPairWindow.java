@@ -1,7 +1,5 @@
 package window_interface.Data_Analysis;
 
-import file_filters.GFFFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -38,6 +36,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 
 import scripts.PeakPair;
+import util.ExtensionFileFilter;
 
 import java.awt.Font;
 
@@ -157,9 +156,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new GFFFilter());
-				fc.setMultiSelectionEnabled(true);
-				File[] newBAMFiles = getCoordFile();
+				File[] newBAMFiles = getBAMFiles();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -409,7 +406,12 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
     
-	public File[] getCoordFile(){
+	public File[] getBAMFiles(){
+		fc.setFileFilter(new ExtensionFileFilter("bam"));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("BAM File Selection");
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {

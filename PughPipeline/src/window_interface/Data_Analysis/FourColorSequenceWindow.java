@@ -1,7 +1,5 @@
 package window_interface.Data_Analysis;
 
-import file_filters.FASTAFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +35,9 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+
+import util.ExtensionFileFilter;
+
 import java.awt.Font;
 
 
@@ -109,13 +110,13 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new FASTAFilter());
+				fc.setFileFilter(new ExtensionFileFilter("fa"));
 				fc.setMultiSelectionEnabled(true);
-				File[] newBAMFiles = getCoordFile();
-				if(newBAMFiles != null) {
-					for(int x = 0; x < newBAMFiles.length; x++) { 
-						fastaFiles.add(newBAMFiles[x]);
-						expList.addElement(newBAMFiles[x].getName());
+				File[] newFASTAFiles = getFASTAFiles();
+				if(newFASTAFiles != null) {
+					for(int x = 0; x < newFASTAFiles.length; x++) { 
+						fastaFiles.add(newFASTAFiles[x]);
+						expList.addElement(newFASTAFiles[x].getName());
 					}
 				}
 			}
@@ -280,7 +281,12 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         }
 	}
 	
-	public File[] getCoordFile(){
+	public File[] getFASTAFiles(){
+		fc.setFileFilter(new ExtensionFileFilter("fa"));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("FASTA File Selection");
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {

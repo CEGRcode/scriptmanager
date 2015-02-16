@@ -1,7 +1,5 @@
 package window_interface.BED_Manipulation;
 
-import file_filters.BEDFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -38,6 +36,8 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import util.ExtensionFileFilter;
 
 @SuppressWarnings("serial")
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -120,7 +120,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = getCoordFile();
+				File[] newBEDFiles = getBEDFiles();
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						BEDFiles.add(newBEDFiles[x]);
@@ -281,11 +281,12 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		OUT.close();
 	}
 	
-	public File[] getCoordFile() {
-		fc.setFileFilter(new BEDFilter());
+	public File[] getBEDFiles(){
+		fc.setFileFilter(new ExtensionFileFilter("bed"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
-		fc.setDialogTitle("BED File Selection");
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("BAM File Selection");
 		File[] bamFiles = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
