@@ -26,6 +26,11 @@ public class GFFCoord {
 		NAME = na;
 	}
 	
+	public GFFCoord(String na, double sco) {
+		NAME = na;
+		SCORE = sco;
+	}
+	
 	public double[] getFStrand() {
 		return Fstrand;
 	}
@@ -109,6 +114,16 @@ public class GFFCoord {
 			int PeakStart2 = node2.getStart();
 			if (PeakStart1 > PeakStart2) return 1;
 			else if (PeakStart1 < PeakStart2) return -1;
+			else return 0;
+	}
+	};
+	
+	public static Comparator<GFFCoord> ScoreComparator = new Comparator<GFFCoord>() {
+		public int compare(GFFCoord node1, GFFCoord node2) {
+			double PeakStart1 = node1.getScore();
+			double PeakStart2 = node2.getScore();
+			if (PeakStart1 < PeakStart2) return 1;
+			else if (PeakStart1 > PeakStart2) return -1;
 			else return 0;
 	}
 	};

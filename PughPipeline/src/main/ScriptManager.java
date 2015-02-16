@@ -27,6 +27,7 @@ import window_interface.Data_Analysis.SignalDuplicationWindow;
 import window_interface.Data_Analysis.TagPileupWindow;
 import window_interface.GFF_Manipulation.ExpandGFFWindow;
 import window_interface.GFF_Manipulation.GFFtoBEDWindow;
+import window_interface.GFF_Manipulation.SortGFFWindow;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -173,7 +174,20 @@ public class ScriptManager {
 		pnlGFF_Manip.add(btnExpandGffFile);
 		
 		JButton btnSortGffFile = new JButton("Sort GFF File");
-		btnSortGffFile.setEnabled(false);
+		btnSortGffFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SortGFFWindow frame = new SortGFFWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		pnlGFF_Manip.add(btnSortGffFile);
 		
 		JButton btnGffToBed = new JButton("Convert GFF to BED");
