@@ -16,16 +16,12 @@ import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
+import javax.swing.JRadioButton;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JRadioButton;
-import javax.swing.JLabel;
-
-import scripts.BAMtoTAB;
-import util.FileSelection;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -34,7 +30,8 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JProgressBar;
+import scripts.BAM_Format_Converter.BAMtoTAB;
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -17,13 +17,12 @@ import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
+import javax.swing.JProgressBar;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import scripts.BAMtoMidpoint;
-import util.FileSelection;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -32,9 +31,8 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import scripts.BAM_Format_Converter.BAMtoMidpoint;
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class BAMtoMidpointWindow extends JFrame implements ActionListener, PropertyChangeListener {

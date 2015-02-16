@@ -16,16 +16,12 @@ import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 
-import scripts.BAMtoBED;
-import util.FileSelection;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -34,7 +30,8 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JProgressBar;
+import scripts.BAM_Format_Converter.BAMtoBED;
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {

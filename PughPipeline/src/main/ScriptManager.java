@@ -20,6 +20,7 @@ import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BED_Manipulation.BEDtoGFFWindow;
 import window_interface.BED_Manipulation.ExpandBEDWindow;
 import window_interface.BED_Manipulation.SortBEDWindow;
+import window_interface.Data_Analysis.FASTAExtractWindow;
 import window_interface.Data_Analysis.FourColorSequenceWindow;
 import window_interface.Data_Analysis.GeneTrackWindow;
 import window_interface.Data_Analysis.PeakPairWindow;
@@ -356,7 +357,20 @@ public class ScriptManager {
 		pnlAnalysis.add(btnSignalDuplication);
 			
 			JButton btnFASTAExtract = new JButton("FASTA from BED");
-			btnFASTAExtract.setEnabled(false);
+			btnFASTAExtract.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								FASTAExtractWindow frame = new FASTAExtractWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
 			pnlAnalysis.add(btnFASTAExtract);
 		
 			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");

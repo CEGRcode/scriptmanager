@@ -17,7 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
-import scripts.SEStats;
+import scripts.BAM_Statistics.SEStats;
 import util.FileSelection;
 
 import java.awt.Color;

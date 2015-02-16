@@ -19,8 +19,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
+import javax.swing.JProgressBar;
 
-import scripts.PEStats;
+import scripts.BAM_Statistics.PEStats;
 import util.FileSelection;
 
 import java.awt.Component;
@@ -33,7 +34,6 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JProgressBar;
 
 
 @SuppressWarnings("serial")
