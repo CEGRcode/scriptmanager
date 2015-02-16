@@ -412,7 +412,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 				GFFFile.put(ID, line);
 			}
 		}
-		//Output sorted BED File
+		//Output sorted GFF File
 		String newGFF = outname +".gff";    
 	    if(OUTPUT_PATH == null) OUT = new PrintStream(newGFF);
 	    else OUT = new PrintStream(OUTPUT_PATH + File.separator + newGFF);
