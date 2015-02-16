@@ -24,7 +24,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 
 import scripts.BAMtoTAB;
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -105,7 +105,7 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = getBAMFiles();
+				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -200,7 +200,7 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         
         btnOutputDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				OUTPUT = getOutputDir();
+				OUTPUT = FileSelection.getOutputDir(fc);
 				if(OUTPUT != null) {
 					lblDefaultToLocal.setText(OUTPUT.getAbsolutePath());
 				}
@@ -234,33 +234,6 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
 	}
-    
-	public File[] getBAMFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("bam"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("BAM File Selection");
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
-	}
-	
-	public File getOutputDir() {
-		fc.setDialogTitle("Output Directory");
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fc.setAcceptAllFileFilterUsed(false);
-		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
-			return fc.getSelectedFile();
-		} else {
-			return null;
-		}	
-	}
-
-
 }
 
 

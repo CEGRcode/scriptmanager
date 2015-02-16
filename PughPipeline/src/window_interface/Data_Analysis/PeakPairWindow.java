@@ -17,7 +17,14 @@ import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
+import javax.swing.JProgressBar;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JComboBox;
 
+import java.awt.Font;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -28,17 +35,8 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JComboBox;
-
 import scripts.PeakPair;
-import util.ExtensionFileFilter;
-
-import java.awt.Font;
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class PeakPairWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -156,11 +154,11 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = getBAMFiles();
-				if(newBAMFiles != null) {
-					for(int x = 0; x < newBAMFiles.length; x++) { 
-						BAMFiles.add(newBAMFiles[x]);
-						expList.addElement(newBAMFiles[x].getName());
+				File[] newGFFFiles = FileSelection.getGFFFiles(fc);
+				if(newGFFFiles != null) {
+					for(int x = 0; x < newGFFFiles.length; x++) { 
+						BAMFiles.add(newGFFFiles[x]);
+						expList.addElement(newGFFFiles[x].getName());
 					}
 				}
 			}
@@ -404,20 +402,6 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 			txtRel.setEditable(false);
 			txtAbs.setEnabled(true);
 		}
-	}
-    
-	public File[] getBAMFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("bam"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("BAM File Selection");
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
 	}
 }
 

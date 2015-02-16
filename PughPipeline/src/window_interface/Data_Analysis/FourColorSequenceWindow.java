@@ -20,7 +20,10 @@ import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
+import javax.swing.JProgressBar;
+import javax.swing.JLabel;
 
+import java.awt.Font;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -33,13 +36,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-
-import util.ExtensionFileFilter;
-
-import java.awt.Font;
-
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class FourColorSequenceWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -110,7 +107,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newFASTAFiles = getFASTAFiles();
+				File[] newFASTAFiles = FileSelection.getFASTAFiles(fc);
 				if(newFASTAFiles != null) {
 					for(int x = 0; x < newFASTAFiles.length; x++) { 
 						fastaFiles.add(newFASTAFiles[x]);
@@ -172,7 +169,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         
         btnOutputDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	OUTPUTPATH = getOutputDir();
+            	OUTPUTPATH = FileSelection.getOutputDir(fc);
 				if(OUTPUTPATH != null) {
 					lblDefaultToLocal.setText(OUTPUTPATH.getAbsolutePath());
 				}
@@ -277,31 +274,6 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         }  catch (IOException ex) {
             ex.printStackTrace();
         }
-	}
-	
-	public File[] getFASTAFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("fa"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("FASTA File Selection");
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
-	}
-	
-	public File getOutputDir() {
-		fc.setDialogTitle("Output Directory");
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fc.setAcceptAllFileFilterUsed(false);
-		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
-			return fc.getSelectedFile();
-		} else {
-			return null;
-		}	
 	}
 }
 

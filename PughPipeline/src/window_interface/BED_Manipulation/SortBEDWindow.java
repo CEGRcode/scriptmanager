@@ -38,7 +38,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import objects.BEDCoord;
-import util.ExtensionFileFilter;
+import util.FileSelection;
 import util.JTVOutput;
 
 @SuppressWarnings("serial")
@@ -159,7 +159,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = getOutputDir();
+    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
     			if(OUTPUT_PATH != null) {
     				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
     			}
@@ -283,7 +283,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBEDFile, 10, SpringLayout.NORTH, contentPane);
 		btnLoadBEDFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File newBEDFile = getBEDFile();
+				File newBEDFile = FileSelection.getBEDFile(fc);
 				if(newBEDFile != null) {
 					BED_File = newBEDFile;
 					lblBEDFile.setText(BED_File.getName());
@@ -302,7 +302,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadCdtFile, 0, SpringLayout.WEST, rdbtnSortbyCenter);
 		btnLoadCdtFile.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		File newCDTFile = getCDTFile();
+	    		File newCDTFile = FileSelection.getCDTFile(fc);
 				if(newCDTFile != null) {
 					CDT_File = newCDTFile;
 					lblCDTFile.setText(CDT_File.getName());
@@ -444,45 +444,6 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		CDT_SIZE = currentSize;
 		if(consistentSize) { return true; }
 		else { return false; }
-	}
-	
-	public File getBEDFile() {
-		fc.setDialogTitle("BED File Selection");
-		fc.setFileFilter(new ExtensionFileFilter("bed"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(false);
-		
-		File bedFile = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bedFile = fc.getSelectedFile();
-		}
-		return bedFile;
-	}
-	
-	public File getCDTFile() {
-		fc.setDialogTitle("CDT File Selection");
-		fc.setFileFilter(new ExtensionFileFilter("cdt"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(false);
-		
-		File bedFile = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bedFile = fc.getSelectedFile();
-		}
-		return bedFile;
-	}
-	
-	public File getOutputDir() {
-		fc.setDialogTitle("Output Directory");
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fc.setAcceptAllFileFilterUsed(false);
-		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
-			return fc.getSelectedFile();
-		} else {
-			return null;
-		}	
 	}
 }
 

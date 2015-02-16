@@ -22,6 +22,9 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -33,11 +36,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -120,7 +119,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = getBEDFiles();
+				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						BEDFiles.add(newBEDFiles[x]);
@@ -174,7 +173,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 0, SpringLayout.EAST, btnOutput);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = getOutputDir();
+    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
     			if(OUTPUT_PATH != null) {
     				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
     			}
@@ -279,31 +278,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	    }
 		scan.close();
 		OUT.close();
-	}
-	
-	public File[] getBEDFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("bed"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("BAM File Selection");
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
-	}
-	
-	public File getOutputDir() {
-		fc.setDialogTitle("Output Directory");
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fc.setAcceptAllFileFilterUsed(false);
-		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
-			return fc.getSelectedFile();
-		} else {
-			return null;
-		}	
 	}
 }
 

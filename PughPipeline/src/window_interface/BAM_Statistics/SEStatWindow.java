@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 
 import scripts.SEStats;
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -64,7 +64,7 @@ public class SEStatWindow extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = getBAMFiles();
+				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -139,20 +139,6 @@ public class SEStatWindow extends JFrame {
 				stat.run();
 			}
 		});
-	}
-	
-	public File[] getBAMFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("bam"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("BAM File Selection");
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
 	}
 }
 

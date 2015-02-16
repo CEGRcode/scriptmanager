@@ -16,6 +16,10 @@ import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.SwingWorker;
+import javax.swing.JProgressBar;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -25,13 +29,8 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
 import scripts.SignalDuplication;
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 
 @SuppressWarnings("serial")
@@ -115,7 +114,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = getBAMFiles();
+				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -168,7 +167,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 
         btnLoadGFF.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		File temp = getGFFFile();
+        		File temp = FileSelection.getGFFFile(fc);
 				if(temp != null) {
 					INPUT = temp;
 					lblGFFFile.setText(INPUT.getName());
@@ -218,34 +217,6 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
-	}
-    
-	public File getGFFFile() {
-		fc.setFileFilter(new ExtensionFileFilter("gff"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(false);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("GFF File Selection");
-		File gffFile = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			gffFile = fc.getSelectedFile();
-		}
-		return gffFile;
-	}
-	
-	public File[] getBAMFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("bam"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("BAM File Selection");
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
 	}
 }
 

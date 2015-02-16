@@ -21,7 +21,7 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 
 import scripts.PEStats;
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -119,7 +119,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = getBAMFiles();
+				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -246,20 +246,6 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
-	}
-    
-	public File[] getBAMFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("bam"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("BAM File Selection");
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
 	}
 }
 

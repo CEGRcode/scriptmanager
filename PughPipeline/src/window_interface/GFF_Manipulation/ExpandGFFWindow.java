@@ -22,6 +22,9 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -33,11 +36,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -119,7 +118,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = getGFFFiles();
+				File[] newGFFFiles = FileSelection.getGFFFiles(fc);
 				if(newGFFFiles != null) {
 					for(int x = 0; x < newGFFFiles.length; x++) { 
 						GFFFiles.add(newGFFFiles[x]);
@@ -173,7 +172,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 0, SpringLayout.EAST, btnOutput);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = getOutputDir();
+    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
     			if(OUTPUT_PATH != null) {
     				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
     			}
@@ -278,31 +277,6 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	    }
 		scan.close();
 		OUT.close();
-	}
-	
-	public File[] getGFFFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("gff"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("GFF File Selection");
-		File[] gffFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			gffFiles = fc.getSelectedFiles();
-		}
-		return gffFiles;
-	}
-	
-	public File getOutputDir() {
-		fc.setDialogTitle("Output Directory");
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fc.setAcceptAllFileFilterUsed(false);
-		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
-			return fc.getSelectedFile();
-		} else {
-			return null;
-		}	
 	}
 }
 

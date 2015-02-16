@@ -36,7 +36,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import scripts.TagPileup;
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -201,7 +201,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = getBAMFiles();
+				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -541,7 +541,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         
         btnLoadBedFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File temp = getBEDFile();
+				File temp = FileSelection.getBEDFile(fc);
 				if(temp != null) {
 					INPUT = temp;
 					lblBEDFile.setText(INPUT.getName());
@@ -551,7 +551,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
               
         btnOutputDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				OUTPUT = getOutputDir();
+				OUTPUT = FileSelection.getOutputDir(fc);
 				if(OUTPUT != null) {
 					lblDefaultToLocal.setText(OUTPUT.getAbsolutePath());
 				}
@@ -646,46 +646,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		}
 		scan.close();
     }
-    
-	public File[] getBAMFiles() {
-		fc.setDialogTitle("BAM File Selection");
-		fc.setFileFilter(new ExtensionFileFilter("bam"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		
-		File[] bamFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bamFiles = fc.getSelectedFiles();
-		}
-		return bamFiles;
-	}
-	
-	public File getBEDFile() {
-		fc.setDialogTitle("BED File Selection");
-		fc.setFileFilter(new ExtensionFileFilter("bed"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(false);
-		
-		File bedFile = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			bedFile = fc.getSelectedFile();
-		}
-		return bedFile;
-	}
-	
-	public File getOutputDir() {
-		fc.setDialogTitle("Output Directory");
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fc.setAcceptAllFileFilterUsed(false);
-		
-		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
-			return fc.getSelectedFile();
-		} else {
-			return null;
-		}	
-	}
 }
 
 

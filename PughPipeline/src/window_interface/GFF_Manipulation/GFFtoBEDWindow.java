@@ -22,7 +22,7 @@ import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
 
-import util.ExtensionFileFilter;
+import util.FileSelection;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -99,7 +99,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = getGFFFiles();
+				File[] newGFFFiles = FileSelection.getGFFFiles(fc);
 				if(newGFFFiles != null) {
 					for(int x = 0; x < newGFFFiles.length; x++) { 
 						BEDFiles.add(newGFFFiles[x]);
@@ -154,7 +154,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         btnOutput = new JButton("Output Directory");
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = getOutputDir();
+    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
     			if(OUTPUT_PATH != null) {
     				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
     			}
@@ -226,31 +226,6 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	    }
 		scan.close();
 		OUT.close();
-	}
-	
-	public File[] getGFFFiles(){
-		fc.setFileFilter(new ExtensionFileFilter("gff"));
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(true);
-		fc.setSelectedFile(new File(""));
-		fc.setDialogTitle("GFF File Selection");
-		File[] gffFiles = null;
-		int returnVal = fc.showOpenDialog(fc);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			gffFiles = fc.getSelectedFiles();
-		}
-		return gffFiles;
-	}
-	
-	public File getOutputDir() {
-		fc.setDialogTitle("Output Directory");
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fc.setAcceptAllFileFilterUsed(false);
-		if (fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) { 
-			return fc.getSelectedFile();
-		} else {
-			return null;
-		}	
 	}
 }
 
