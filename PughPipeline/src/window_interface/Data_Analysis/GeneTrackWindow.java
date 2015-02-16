@@ -161,8 +161,6 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new ExtensionFileFilter("bam"));
-				fc.setMultiSelectionEnabled(true);
 				File[] newBAMFiles = getBAMFiles();
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 

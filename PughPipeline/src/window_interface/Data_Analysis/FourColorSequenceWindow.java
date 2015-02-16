@@ -110,8 +110,6 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				fc.setFileFilter(new ExtensionFileFilter("fa"));
-				fc.setMultiSelectionEnabled(true);
 				File[] newFASTAFiles = getFASTAFiles();
 				if(newFASTAFiles != null) {
 					for(int x = 0; x < newFASTAFiles.length; x++) { 
