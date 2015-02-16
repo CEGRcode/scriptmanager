@@ -87,6 +87,20 @@ public class FileSelection {
 		return fastaFiles;
 	}
 	
+	public static File getFASTAFile(JFileChooser fc){
+		fc.setFileFilter(new ExtensionFileFilter("fa"));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(false);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("FASTA File Selection");
+		File fastaFile = null;
+		int returnVal = fc.showOpenDialog(fc);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			fastaFile = fc.getSelectedFile();
+		}
+		return fastaFile;
+	}
+	
 	public static File[] getGFFFiles(JFileChooser fc){
 		fc.setFileFilter(new ExtensionFileFilter("gff"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
