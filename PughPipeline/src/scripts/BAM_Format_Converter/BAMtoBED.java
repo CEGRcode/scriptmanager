@@ -36,7 +36,7 @@ public class BAMtoBED extends JFrame {
 	private int CHROMSTOP = 0;
 	
 	public BAMtoBED(File b, File o, int s) {
-		setTitle("BAM to TAB Progress");
+		setTitle("BAM to BED Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
 		
