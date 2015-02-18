@@ -98,6 +98,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(scrollPane);
 		
 		btnLoad = new JButton("Load BAM Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 5, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -118,8 +119,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		scrollPane.setViewportView(listExp);
 		
 		btnRemoveBam = new JButton("Remove BAM");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -338, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -160,7 +160,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         rdbtnRead1.setSelected(true);
         
         JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 0, SpringLayout.WEST, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblPleaseSelectWhich, -6, SpringLayout.NORTH, rdbtnRead1);
         lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblPleaseSelectWhich);
