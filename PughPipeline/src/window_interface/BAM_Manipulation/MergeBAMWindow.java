@@ -30,6 +30,7 @@ import javax.swing.JLabel;
 
 import picard.MergeSamFiles;
 import util.FileSelection;
+import java.awt.Font;
 
 
 @SuppressWarnings("serial")
@@ -40,15 +41,18 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	final DefaultListModel expList;
 	List<File> BAMFiles = new ArrayList<File>();
     private File OUTPUT = null;
+	private File OUTPUT_PATH = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnMerge;
+	private JButton btnOutput;
 	private JTextField txtOutput;
 	private JCheckBox chckbxUseMultipleCpus;
 	private JCheckBox chckbxGenerateBaiindex;
-
 	private JProgressBar progressBar;
+	private JLabel lblDefaultToLocal;
+	
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
@@ -75,7 +79,7 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 		setTitle("BAM File Replicate Merger");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 310);
+		setBounds(125, 125, 450, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -94,8 +98,8 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load BAM Files");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
@@ -134,12 +138,12 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnMerge);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
         progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
         txtOutput = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, txtOutput);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -65, SpringLayout.NORTH, txtOutput);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtOutput, -5, SpringLayout.EAST, contentPane);
         txtOutput.setText("merged_BAM.bam");
         contentPane.add(txtOutput);
@@ -163,6 +167,31 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiindex, 0, SpringLayout.NORTH, chckbxUseMultipleCpus);
         chckbxGenerateBaiindex.setSelected(true);
         contentPane.add(chckbxGenerateBaiindex);
+               
+        JLabel lblCurrent = new JLabel("Current Output:");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrent, -15, SpringLayout.NORTH, lblOutputFileName);
+        contentPane.add(lblCurrent);
+        
+        lblDefaultToLocal = new JLabel("Default to Local Directory");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 0, SpringLayout.NORTH, lblCurrent);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
+        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+        contentPane.add(lblDefaultToLocal);
+        
+        btnOutput = new JButton("Output Directory");
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
+        btnOutput.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
+    			if(OUTPUT_PATH != null) {
+    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+    			}
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 5, SpringLayout.SOUTH, scrollPane);
+        contentPane.add(btnOutput);
 	}
 
 	@Override
@@ -191,6 +220,7 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	}
 	
 	protected void mergeBAM() {
+		if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH + File.separator + OUTPUT); }
 		MergeSamFiles merge = new MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
 		merge.run();
     }
