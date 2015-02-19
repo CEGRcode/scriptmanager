@@ -243,6 +243,8 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
     
 	public static void expandGFFBorders(File out_path, File input) throws IOException {
 		//GFF:	chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
+		//GFF:	chr12	bed2gff	chr12_384641_384659_+	384642	384659	42.6	+	.	chr12_384641_384659_+;
+
 		String newName = (input.getName()).substring(0,input.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
 	    Scanner scan = new Scanner(input);
 	    PrintStream OUT = null;
@@ -258,9 +260,11 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 						int newstart = Integer.parseInt(temp[3]) - SIZE;
 						int newstop = Integer.parseInt(temp[4]) + SIZE;
 				        if(rdbtnExpandFromCenter.isSelected()) { //Else expand from center
+							boolean EVEN = ((Integer.parseInt(temp[4]) - Integer.parseInt(temp[3])) % 2 == 0);
 				        	int CENTER = (int)((Integer.parseInt(temp[3]) + Integer.parseInt(temp[4])) / 2);
-					        newstart = CENTER - (SIZE / 2);
-					        newstop = CENTER + (SIZE / 2);
+				        	if(!EVEN || !temp[6].equals("-")) {	CENTER++; }
+				        	newstart = CENTER - (SIZE / 2);
+					        newstop = CENTER + ((SIZE / 2) - 1);
 				        }
 
 				        OUT.print(temp[0] + "\t" + temp[1] + "\t" + temp[2] + "\t" + newstart + "\t" + newstop);
