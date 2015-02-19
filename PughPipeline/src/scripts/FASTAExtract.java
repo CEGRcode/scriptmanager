@@ -66,39 +66,51 @@ public class FASTAExtract extends JFrame {
 			INDEX = buildFASTAIndex(GENOME);
 		}
 		
+		System.out.println("Hello World");
+		
 		if(INDEX) {
-			IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
-			for(int x = 0; x < BED.size(); x++) {
-				textArea.append("Proccessing File: " + BED.get(x).getName() + "\n");
-				//Open Output File
-				String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
-				if(OUTPUTPATH != null) {
-					try { OUT = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME)); }
-					catch (FileNotFoundException e) { e.printStackTrace(); }
-					catch (IOException e) {	e.printStackTrace(); }
-				} else {
-					try { OUT = new PrintStream(new File(NAME)); }
-					catch (FileNotFoundException e) { e.printStackTrace(); }
-				}
-				
-				ArrayList<BEDCoord> BED_Coord = loadCoord(BED.get(x));
-				
-				for(int y = 0; y < BED_Coord.size(); y++) {
-					try {
-						String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(), BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases());
-						if(STRAND && BED_Coord.get(y).getDir().equals("-")) {
-							seq = RevComplement(seq);
-						}
-						OUT.println(">" + BED_Coord.get(y).getName() + "\n" + seq);
-					} catch (SAMException e) {
-						textArea.append("INVALID COORDINATE: " + BED_Coord.get(y).toString() + "\n");
+			try{			
+				IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
+				System.out.println("QUERY OPENED");
+	
+				for(int x = 0; x < BED.size(); x++) {
+					textArea.append("Proccessing File: " + BED.get(x).getName() + "\n");
+					//Open Output File
+					String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
+					if(OUTPUTPATH != null) {
+						try { OUT = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME)); }
+						catch (FileNotFoundException e) { e.printStackTrace(); }
+						catch (IOException e) {	e.printStackTrace(); }
+					} else {
+						try { OUT = new PrintStream(new File(NAME)); }
+						catch (FileNotFoundException e) { e.printStackTrace(); }
 					}
+					
+					ArrayList<BEDCoord> BED_Coord = loadCoord(BED.get(x));
+					
+					for(int y = 0; y < BED_Coord.size(); y++) {
+						try {
+							String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(), BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases());
+							if(STRAND && BED_Coord.get(y).getDir().equals("-")) {
+								seq = RevComplement(seq);
+							}
+							OUT.println(">" + BED_Coord.get(y).getName() + "\n" + seq);
+						} catch (SAMException e) {
+							textArea.append("INVALID COORDINATE: " + BED_Coord.get(y).toString() + "\n");
+						}
+					}
+					OUT.close();
+			        firePropertyChange("fa",x, x + 1);	
 				}
-				OUT.close();
-		        firePropertyChange("fa",x, x + 1);	
+				QUERY.close();
+				textArea.append("Extraction Complete\n");
+			} catch(IllegalArgumentException e) {
+				textArea.append(e.getMessage());
+			} catch(FileNotFoundException e) {
+				textArea.append(e.getMessage());
+			} catch(SAMException e) {
+				textArea.append(e.getMessage());
 			}
-			QUERY.close();
-			textArea.append("Extraction Complete\n");
 		} else {
 			textArea.append("Genome FASTA file contains invalid lines!!!\n");
 		}
