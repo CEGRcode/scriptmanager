@@ -196,7 +196,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
     
 	public static void convertBEDtoGFF(File out_path, File input) throws IOException {
 		//chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
-	    String gffName = (input.toString()).substring(0,input.toString().length() - 4) + ".gff";
+	    String gffName = (input.getName()).substring(0,input.getName().length() - 4) + ".gff";
 	    Scanner scan = new Scanner(input);
 	    PrintStream OUT = null;
 	    if(out_path == null) OUT = new PrintStream(gffName);

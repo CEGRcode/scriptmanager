@@ -243,8 +243,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
     
 	public static void expandGFFBorders(File out_path, File input) throws IOException {
 		//GFF:	chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
-
-	    String newName = (input.toString()).substring(0,input.toString().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
+		String newName = (input.getName()).substring(0,input.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
 	    Scanner scan = new Scanner(input);
 	    PrintStream OUT = null;
 	    if(out_path == null) OUT = new PrintStream(newName);

@@ -198,7 +198,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		//GFF:	chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
 		//BED:	chr12	605113	605120	region_0	0	+
 
-	    String bedName = (input.toString()).substring(0,input.toString().length() - 4) + ".bed";
+	    String bedName = (input.getName()).substring(0,input.getName().length() - 4) + ".bed";
 	    Scanner scan = new Scanner(input);
 	    PrintStream OUT = null;
 	    if(out_path == null) OUT = new PrintStream(bedName);

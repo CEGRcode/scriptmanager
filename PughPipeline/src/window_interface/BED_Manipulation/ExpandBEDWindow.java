@@ -42,7 +42,6 @@ import util.FileSelection;
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
-
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	private File OUTPUT_PATH = null;
@@ -243,8 +242,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	}
     
 	public static void expandBEDBorders(File out_path, File input) throws IOException {
-		
-	    String newName = (input.toString()).substring(0,input.toString().length() - 4) + "_" + Integer.toString(SIZE) +"bp.bed";
+		String newName = (input.getName()).substring(0,input.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.bed";
 	    Scanner scan = new Scanner(input);
 	    PrintStream OUT = null;
 	    if(out_path == null) OUT = new PrintStream(newName);
