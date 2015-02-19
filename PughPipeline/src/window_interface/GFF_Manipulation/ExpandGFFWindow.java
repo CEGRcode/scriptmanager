@@ -163,13 +163,13 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
         
         lblDefaultToLocal = new JLabel("Default to Local Directory");
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrent);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
         
         btnOutput = new JButton("Output Directory");
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 143, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -157, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 0, SpringLayout.EAST, btnOutput);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
     			OUTPUT_PATH = FileSelection.getOutputDir(fc);
