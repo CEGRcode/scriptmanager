@@ -257,8 +257,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						int newstart = Integer.parseInt(temp[1]) - SIZE;
 						int newstop = Integer.parseInt(temp[2]) + SIZE;
 				        if(rdbtnExpandFromCenter.isSelected()) { //Else expand from center
+							boolean EVEN = ((Integer.parseInt(temp[2]) - Integer.parseInt(temp[1])) % 2 == 0);
 				        	int CENTER = (int)((Integer.parseInt(temp[1]) + Integer.parseInt(temp[2])) / 2);
-					        if(temp[5].equals("-")) { CENTER++; }
+				        	if(!temp[5].equals("-") && !EVEN) { CENTER++; }
 					        newstart = CENTER - (SIZE / 2);
 					        newstop = CENTER + (SIZE / 2);
 				        }
