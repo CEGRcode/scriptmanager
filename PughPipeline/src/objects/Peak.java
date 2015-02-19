@@ -100,6 +100,12 @@ public class Peak {
 	}
 	};
 	
+	public static Comparator<Peak> PeakChromComparator = new Comparator<Peak>() {
+		public int compare(Peak node1, Peak node2) {
+			return node1.getChrom().compareTo(node2.getChrom());
+	}
+	};
+		
 	public static Comparator<Peak> PeakPositionComparator = new Comparator<Peak>() {
 		public int compare(Peak node1, Peak node2) {
 			int PeakStart1 = node1.getStart();

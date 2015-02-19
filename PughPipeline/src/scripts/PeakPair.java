@@ -72,9 +72,13 @@ public class PeakPair extends JFrame {
 		FPEAKS = new ArrayList<Peak>();
 		RPEAKS = new ArrayList<Peak>();
 		
-		//Load genetrack peaks
+		//Load genetrack peaks and sort them
 		loadPeaks(INPUT);
-		
+		Collections.sort(FPEAKS, Peak.PeakPositionComparator);
+		Collections.sort(RPEAKS, Peak.PeakPositionComparator);
+		Collections.sort(FPEAKS, Peak.PeakChromComparator);
+		Collections.sort(RPEAKS, Peak.PeakChromComparator);
+
 		//generate directory to put matched peaks
 		String NAME = "cwpair_output_";
 		if(MODE == 0) NAME += "mode_";
@@ -85,7 +89,10 @@ public class PeakPair extends JFrame {
 		
 		NAME += "u" + UP + "d" + DOWN + "b" + BIN_SIZE;
 		new File(NAME).mkdirs();
-		   
+		  
+		//TODO Calculate frequency distribution of location of all peaks relative to each other here
+		frequencyPlot(FPEAKS, RPEAKS);
+		
 		//create output files for called peak pairs
 	    PrintStream DOUT = null;
 		PrintStream SOUT = null;
@@ -102,14 +109,7 @@ public class PeakPair extends JFrame {
 		try { OOUT = new PrintStream(new File(ORPHAN)); }
 		catch (FileNotFoundException e) { e.printStackTrace(); }
 
-		
-		
-		
-		
-		
-		
-		
-		
+		//Peak Pairing HERE
 		
 		DOUT.close();
 		SOUT.close();
@@ -118,6 +118,26 @@ public class PeakPair extends JFrame {
 		System.out.println(getTimeStamp());
 		
 		dispose();
+	}
+	
+	private void frequencyPlot(ArrayList<Peak> FPEAKS, ArrayList<Peak> RPEAKS) {
+		int[] FREQ = new int[UP + DOWN + 1];
+		for(int x = 0; x < FPEAKS.size(); x++) {
+			int Xdist = (FPEAKS.get(x).getStart() + FPEAKS.get(x).getStop()) / 2;
+			//System.out.println(FPEAKS.get(x).toString() + "\t" + Xdist);
+			for(int y = 0; y < RPEAKS.size(); y++) {
+				if(FPEAKS.get(x).getChrom().equals(RPEAKS.get(y).getChrom())) {
+					int Ydist = (RPEAKS.get(y).getStart() + RPEAKS.get(y).getStop()) / 2;
+					int dist = Ydist - Xdist;
+					if(dist <= DOWN && dist >= (UP * -1)) {
+						FREQ[dist + UP]++;
+					}
+				}
+			}
+		}
+		for(int x = 0; x < FREQ.length; x++) {
+			System.out.println(x + "\t" + FREQ[x]);
+		}
 	}
 	
 	private void loadPeaks(File in) {
