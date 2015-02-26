@@ -2,9 +2,6 @@ package window_interface.GFF_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -36,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import scripts.GFF_Manipulation.ExpandGFF;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -72,7 +70,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
         		} else {
 		        	setProgress(0);
 		        	for(int x = 0; x < GFFFiles.size(); x++) {
-		        		expandGFFBorders(OUTPUT_PATH, GFFFiles.get(x));
+		        		ExpandGFF.expandGFFBorders(OUTPUT_PATH, GFFFiles.get(x), SIZE, rdbtnExpandFromCenter.isSelected());
 						int percentComplete = (int)(((double)(x + 1) / GFFFiles.size()) * 100);
 		        		setProgress(percentComplete);
 		        	}
@@ -239,47 +237,6 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
-	}
-    
-	public static void expandGFFBorders(File out_path, File input) throws IOException {
-		//GFF:	chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
-		//GFF:	chr12	bed2gff	chr12_384641_384659_+	384642	384659	42.6	+	.	chr12_384641_384659_+;
-
-		String newName = (input.getName()).substring(0,input.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
-	    Scanner scan = new Scanner(input);
-	    PrintStream OUT = null;
-	    if(out_path == null) OUT = new PrintStream(newName);
-	    else OUT = new PrintStream(out_path + File.separator + newName);
-	    
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
-			if(temp.length == 9) {
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
-					if(Integer.parseInt(temp[3]) >= 1) {
-						//Default to add to border
-						int newstart = Integer.parseInt(temp[3]) - SIZE;
-						int newstop = Integer.parseInt(temp[4]) + SIZE;
-				        if(rdbtnExpandFromCenter.isSelected()) { //Else expand from center
-							boolean EVEN = ((Integer.parseInt(temp[4]) - Integer.parseInt(temp[3])) % 2 == 0);
-				        	int CENTER = (int)((Integer.parseInt(temp[3]) + Integer.parseInt(temp[4])) / 2);
-				        	if(!EVEN || !temp[6].equals("-")) {	CENTER++; }
-				        	newstart = CENTER - (SIZE / 2);
-					        newstop = CENTER + ((SIZE / 2) - 1);
-				        }
-
-				        OUT.print(temp[0] + "\t" + temp[1] + "\t" + temp[2] + "\t" + newstart + "\t" + newstop);
-				        for(int x = 5; x < temp.length; x++) {
-				        	OUT.print("\t" + temp[x]);
-				        }
-				        OUT.println();
-					} else {
-						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
-					}
-				}
-			}
-	    }
-		scan.close();
-		OUT.close();
 	}
 }
 

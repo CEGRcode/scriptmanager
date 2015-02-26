@@ -3,10 +3,6 @@ package window_interface.GFF_Manipulation;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
@@ -20,6 +16,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -33,13 +32,8 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import objects.GFFCoord;
+import scripts.GFF_Manipulation.SortGFF;
 import util.FileSelection;
-import util.JTVOutput;
 
 @SuppressWarnings("serial")
 public class SortGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -99,8 +93,11 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
             			STOP_INDEX = Integer.parseInt(txtStop.getText());
             		}
         			
+        			String OUTPUT = txtOutput.getText();
+        			if(OUTPUT_PATH != null) { OUTPUT = OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText(); }
+        			
 		        	setProgress(0);
-		        	sortGFFbyCDT(txtOutput.getText(), GFF_File, CDT_File);
+		        	SortGFF.sortGFFbyCDT(OUTPUT, GFF_File, CDT_File, START_INDEX, STOP_INDEX);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Sort Complete");
         		}
@@ -366,61 +363,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		}
 	}
     
-	public static void sortGFFbyCDT(String outname, File gff, File cdt) throws IOException {
-		ArrayList<GFFCoord> SORT = new ArrayList<GFFCoord>();
-		HashMap<String, String> CDTFile = new HashMap<String, String>();
-		String CDTHeader = "";
-		//Parse CDT File first
-		Scanner scan = new Scanner(cdt);
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
-			String[] ID = line.split("\t");
-			if(!ID[0].contains("YORF") && !ID[0].contains("NAME")) {
-				double count = 0;
-				for(int x = 2 + START_INDEX; x < STOP_INDEX + 2; x++) {
-					count += Double.parseDouble(ID[x]);
-				}
-				SORT.add(new GFFCoord(ID[0], count));
-				CDTFile.put(ID[0], line);
-			} else { CDTHeader = line; }
-		}
-		scan.close();
-		//Sort by score
-		Collections.sort(SORT, GFFCoord.ScoreComparator);
-		
-		//Output sorted CDT File
-		String newCDT = outname + ".cdt";
-		PrintStream OUT = null;
-	    if(OUTPUT_PATH == null) { OUT = new PrintStream(newCDT); }
-	    else { OUT = new PrintStream(OUTPUT_PATH + File.separator + newCDT); }
-	    OUT.println(CDTHeader);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(CDTFile.get(SORT.get(x).getName()));
-	    }
-	    OUT.close();
-		CDTFile = null; //Free up memory by getting CDT file out of memory
-		if(OUTPUT_PATH == null) { JTVOutput.outputJTV(outname, "green"); }
-		else { JTVOutput.outputJTV(OUTPUT_PATH + File.separator + outname, "green"); }
-		
-		//Match to gff file after
-		HashMap<String, String> GFFFile = new HashMap<String, String>();
-		scan = new Scanner(gff);
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
-			String ID = line.split("\t")[8];
-			if(!ID.contains("YORF") && !ID.contains("NAME")) {
-				GFFFile.put(ID, line);
-			}
-		}
-		//Output sorted GFF File
-		String newGFF = outname +".gff";    
-	    if(OUTPUT_PATH == null) OUT = new PrintStream(newGFF);
-	    else OUT = new PrintStream(OUTPUT_PATH + File.separator + newGFF);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(GFFFile.get(SORT.get(x).getName()));
-	    }
-	    OUT.close();
-	}
+	
 	
 	public boolean parseCDTFile(File CDT) throws FileNotFoundException {
 		Scanner scan = new Scanner(CDT);

@@ -2,9 +2,6 @@ package window_interface.BED_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -22,6 +19,7 @@ import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
 
+import scripts.BED_Manipulation.BEDtoGFF;
 import util.FileSelection;
 
 import java.awt.Component;
@@ -58,7 +56,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
         public Void doInBackground() throws IOException {
         	setProgress(0);
         	for(int x = 0; x < BEDFiles.size(); x++) {
-				convertBEDtoGFF(OUTPUT_PATH, BEDFiles.get(x));
+				BEDtoGFF.convertBEDtoGFF(OUTPUT_PATH, BEDFiles.get(x));
 				int percentComplete = (int)(((double)(x + 1) / BEDFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
@@ -192,39 +190,6 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
-	}
-    
-	public static void convertBEDtoGFF(File out_path, File input) throws IOException {
-		//chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
-	    String gffName = (input.getName()).substring(0,input.getName().length() - 4) + ".gff";
-	    Scanner scan = new Scanner(input);
-	    PrintStream OUT = null;
-	    if(out_path == null) OUT = new PrintStream(gffName);
-	    else OUT = new PrintStream(out_path + File.separator + gffName);
-	    
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
-			if(temp.length > 2) {
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
-					String name = temp[0] + "_" + temp[1] + "_" + temp[2]; //Get or make name from BED file
-					if(temp.length > 3) { name = temp[3]; }
-					String score = "0"; //Get or make direction
-					if(temp.length > 4) { score = temp[4]; }
-					String dir = "+";
-					if(temp.length > 5) { dir = temp[5]; }
-					
-					//Make sure coordinate start is >= 0
-					if(Integer.parseInt(temp[1]) >= 0) {
-						int newstart = Integer.parseInt(temp[1]) + 1;
-						OUT.println(temp[0] + "\tbed2gff\t" + name + "\t" + newstart + "\t" + temp[2] + "\t" + score + "\t" + dir + "\t.\t" + name + ";");						
-					} else {
-						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
-					}
-				}
-			}
-	    }
-		scan.close();
-		OUT.close();
 	}
 }
 

@@ -3,10 +3,6 @@ package window_interface.BED_Manipulation;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
@@ -20,6 +16,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -33,13 +32,8 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import objects.BEDCoord;
+import scripts.BED_Manipulation.SortBED;
 import util.FileSelection;
-import util.JTVOutput;
 
 @SuppressWarnings("serial")
 public class SortBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -92,15 +86,18 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
         			JOptionPane.showMessageDialog(null, "Start Index is smaller than 0!!!");
         		} else {
         			if(rdbtnSortbyCenter.isSelected()) {
-            			START_INDEX = (CDT_SIZE / 2) - (Integer.parseInt(txtMid.getText()) / 2);
-            			STOP_INDEX = (CDT_SIZE / 2) + (Integer.parseInt(txtMid.getText()) / 2);
-            		} else {
-            			START_INDEX = Integer.parseInt(txtStart.getText());
-            			STOP_INDEX = Integer.parseInt(txtStop.getText());
-            		}
+        				START_INDEX = (CDT_SIZE / 2) - (Integer.parseInt(txtMid.getText()) / 2);
+        				STOP_INDEX = (CDT_SIZE / 2) + (Integer.parseInt(txtMid.getText()) / 2);
+        			} else {
+        				START_INDEX = Integer.parseInt(txtStart.getText());
+        				STOP_INDEX = Integer.parseInt(txtStop.getText());
+        			}
+        			
+        			String OUTPUT = txtOutput.getText();
+        			if(OUTPUT_PATH != null) { OUTPUT = OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText(); }
         			
 		        	setProgress(0);
-		        	sortBEDbyCDT(txtOutput.getText(), BED_File, CDT_File);
+		        	SortBED.sortBEDbyCDT(OUTPUT, BED_File, CDT_File, START_INDEX, STOP_INDEX);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Sort Complete");
         		}
@@ -364,62 +361,6 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 				lblIndexStop.setEnabled(true);
 			}
 		}
-	}
-    
-	public static void sortBEDbyCDT(String outname, File bed, File cdt) throws IOException {
-		ArrayList<BEDCoord> SORT = new ArrayList<BEDCoord>();
-		HashMap<String, String> CDTFile = new HashMap<String, String>();
-		String CDTHeader = "";
-		//Parse CDT File first
-		Scanner scan = new Scanner(cdt);
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
-			String[] ID = line.split("\t");
-			if(!ID[0].contains("YORF") && !ID[0].contains("NAME")) {
-				double count = 0;
-				for(int x = 2 + START_INDEX; x < STOP_INDEX + 2; x++) {
-					count += Double.parseDouble(ID[x]);
-				}
-				SORT.add(new BEDCoord(ID[0], count));
-				CDTFile.put(ID[0], line);
-			} else { CDTHeader = line; }
-		}
-		scan.close();
-		//Sort by score
-		Collections.sort(SORT, BEDCoord.ScoreComparator);
-		
-		//Output sorted CDT File
-		String newCDT = outname + ".cdt";
-		PrintStream OUT = null;
-	    if(OUTPUT_PATH == null) { OUT = new PrintStream(newCDT); }
-	    else { OUT = new PrintStream(OUTPUT_PATH + File.separator + newCDT); }
-	    OUT.println(CDTHeader);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(CDTFile.get(SORT.get(x).getName()));
-	    }
-	    OUT.close();
-		CDTFile = null; //Free up memory by getting CDT file out of memory
-		if(OUTPUT_PATH == null) { JTVOutput.outputJTV(outname, "green"); }
-		else { JTVOutput.outputJTV(OUTPUT_PATH + File.separator + outname, "green"); }
-		
-		//Match to bed file after
-		HashMap<String, String> BEDFile = new HashMap<String, String>();
-		scan = new Scanner(bed);
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
-			String ID = line.split("\t")[3];
-			if(!ID.contains("YORF") && !ID.contains("NAME")) {
-				BEDFile.put(ID, line);
-			}
-		}
-		//Output sorted BED File
-		String newBED = outname +".bed";    
-	    if(OUTPUT_PATH == null) OUT = new PrintStream(newBED);
-	    else OUT = new PrintStream(OUTPUT_PATH + File.separator + newBED);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(BEDFile.get(SORT.get(x).getName()));
-	    }
-	    OUT.close();
 	}
 	
 	public boolean parseCDTFile(File CDT) throws FileNotFoundException {
