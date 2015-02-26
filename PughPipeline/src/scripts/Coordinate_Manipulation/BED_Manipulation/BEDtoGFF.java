@@ -1,4 +1,4 @@
-package scripts.BED_Manipulation;
+package scripts.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
 import java.io.IOException;

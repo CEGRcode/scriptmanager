@@ -51,7 +51,7 @@ public class TagPileup extends JFrame {
 	
 	//TagPileup pile = new TagPileup(INPUT, BAMFiles.get(x), OUTPUT, READ, STRAND, SHIFT, BIN);
 	public TagPileup(Vector<BEDCoord> in, Vector<File> ba, PileupParameters param) {
-		setTitle("BAM File Statistics");
+		setTitle("Tag Pileup Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
 		

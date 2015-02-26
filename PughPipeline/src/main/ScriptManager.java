@@ -18,18 +18,19 @@ import window_interface.BAM_Manipulation.MergeBAMWindow;
 import window_interface.BAM_Manipulation.SortBAMWindow;
 import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
-import window_interface.BED_Manipulation.BEDtoGFFWindow;
-import window_interface.BED_Manipulation.ExpandBEDWindow;
-import window_interface.BED_Manipulation.SortBEDWindow;
+import window_interface.BAM_Statistics.SignalDuplicationWindow;
+import window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow;
+import window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow;
+import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
+import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow;
+import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
+import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.Data_Analysis.FASTAExtractWindow;
-import window_interface.Data_Analysis.FourColorSequenceWindow;
 import window_interface.Data_Analysis.GeneTrackWindow;
 import window_interface.Data_Analysis.PeakPairWindow;
-import window_interface.Data_Analysis.SignalDuplicationWindow;
 import window_interface.Data_Analysis.TagPileupWindow;
-import window_interface.GFF_Manipulation.ExpandGFFWindow;
-import window_interface.GFF_Manipulation.GFFtoBEDWindow;
-import window_interface.GFF_Manipulation.SortGFFWindow;
+import window_interface.Visualization.FourColorSequenceWindow;
+import window_interface.Visualization.HeatMapWindow;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -45,7 +46,7 @@ public class ScriptManager {
 	private void initialize() {
 		frmScriptManager = new JFrame();
 		frmScriptManager.setTitle("Script Manager v0.6");
-		frmScriptManager.setBounds(100, 100, 450, 250);
+		frmScriptManager.setBounds(100, 100, 500, 276);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
 		SpringLayout springLayout = new SpringLayout();
@@ -70,6 +71,23 @@ public class ScriptManager {
 		JButton btnPEStats = new JButton("Paired-End Statistics");
 		btnPEStats.setToolTipText("Output Alignment Statistics and Parameters given an Paired-End BAM File.\nAlso generates Insert Size Histogram.\nBAM file must be sorted and BAM BAI Index must be present.");
 		pnlStat.add(btnPEStats);
+		
+		JButton btnSignalDuplication = new JButton("Signal Duplication");
+		pnlStat.add(btnSignalDuplication);
+		btnSignalDuplication.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SignalDuplicationWindow frame = new SignalDuplicationWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		
 		btnBAMStats.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -101,8 +119,8 @@ public class ScriptManager {
 			}
 		});
 		
-		JPanel pnlBED_Manip = new JPanel();
-		tabbedPane.addTab("BED Manipulation", null, pnlBED_Manip, null);
+		JPanel pnlCoord_Manip = new JPanel();
+		tabbedPane.addTab("Coordinate Manipulation", null, pnlCoord_Manip, null);
 		
 		JButton btnExpandBedFile = new JButton("Expand BED File");
 		btnExpandBedFile.addActionListener(new ActionListener() {
@@ -119,7 +137,7 @@ public class ScriptManager {
 				 });
 			}
 		});
-		pnlBED_Manip.add(btnExpandBedFile);
+		pnlCoord_Manip.add(btnExpandBedFile);
 		
 		JButton btnBedToGFF = new JButton("Convert BED to GFF");
 		btnBedToGFF.addActionListener(new ActionListener() {
@@ -152,47 +170,17 @@ public class ScriptManager {
 				 });
 			}
 		});
-		pnlBED_Manip.add(btnBEDSort);
-		pnlBED_Manip.add(btnBedToGFF);
-		
-		JPanel pnlGFF_Manip = new JPanel();
-		tabbedPane.addTab("GFF Manipulation", null, pnlGFF_Manip, null);
+		pnlCoord_Manip.add(btnBEDSort);
+		pnlCoord_Manip.add(btnBedToGFF);
 		
 		JButton btnExpandGffFile = new JButton("Expand GFF File");
-		btnExpandGffFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							ExpandGFFWindow frame = new ExpandGFFWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		pnlGFF_Manip.add(btnExpandGffFile);
+		pnlCoord_Manip.add(btnExpandGffFile);
 		
 		JButton btnSortGffFile = new JButton("Sort GFF File");
-		btnSortGffFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							SortGFFWindow frame = new SortGFFWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		pnlGFF_Manip.add(btnSortGffFile);
+		pnlCoord_Manip.add(btnSortGffFile);
 		
 		JButton btnGffToBed = new JButton("Convert GFF to BED");
+		pnlCoord_Manip.add(btnGffToBed);
 		btnGffToBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -207,7 +195,34 @@ public class ScriptManager {
 				 });
 			}
 		});
-		pnlGFF_Manip.add(btnGffToBed);
+		btnSortGffFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SortGFFWindow frame = new SortGFFWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		btnExpandGffFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ExpandGFFWindow frame = new ExpandGFFWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		
 		JPanel pnlBAM_Manip = new JPanel();
 		pnlBAM_Manip.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -357,23 +372,6 @@ public class ScriptManager {
 				 });
 			}
 		});
-		
-		JButton btnSignalDuplication = new JButton("Signal Duplication");
-		btnSignalDuplication.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							SignalDuplicationWindow frame = new SignalDuplicationWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		pnlAnalysis.add(btnSignalDuplication);
 			
 			JButton btnFASTAExtract = new JButton("FASTA from BED");
 			btnFASTAExtract.addActionListener(new ActionListener() {
@@ -391,9 +389,29 @@ public class ScriptManager {
 				}
 			});
 			pnlAnalysis.add(btnFASTAExtract);
-		
+			
+			JPanel pnlVisualization = new JPanel();
+			tabbedPane.addTab("Data Visualization", null, pnlVisualization, null);
+				
+			JButton btnHeatMap = new JButton("Heat Map");
+			btnHeatMap.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								HeatMapWindow frame = new HeatMapWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlVisualization.add(btnHeatMap);
+			
 			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
-			pnlAnalysis.add(btncolorSequencePlot);
+			pnlVisualization.add(btncolorSequencePlot);
 			btncolorSequencePlot.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 					EventQueue.invokeLater(new Runnable() {

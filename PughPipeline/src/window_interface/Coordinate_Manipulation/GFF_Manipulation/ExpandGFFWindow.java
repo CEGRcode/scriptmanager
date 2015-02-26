@@ -1,4 +1,4 @@
-package window_interface.GFF_Manipulation;
+package window_interface.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.GFF_Manipulation.ExpandGFF;
+import scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 import util.FileSelection;
 
 @SuppressWarnings("serial")

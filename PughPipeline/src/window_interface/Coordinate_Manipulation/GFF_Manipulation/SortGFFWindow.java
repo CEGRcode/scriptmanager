@@ -1,4 +1,4 @@
-package window_interface.GFF_Manipulation;
+package window_interface.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +32,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.GFF_Manipulation.SortGFF;
+import scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 import util.FileSelection;
 
 @SuppressWarnings("serial")

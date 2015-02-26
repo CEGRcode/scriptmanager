@@ -1,4 +1,4 @@
-package window_interface.BED_Manipulation;
+package window_interface.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +32,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.BED_Manipulation.SortBED;
+import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 import util.FileSelection;
 
 @SuppressWarnings("serial")

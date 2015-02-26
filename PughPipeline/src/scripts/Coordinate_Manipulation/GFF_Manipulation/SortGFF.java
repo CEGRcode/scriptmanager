@@ -1,4 +1,4 @@
-package scripts.BED_Manipulation;
+package scripts.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,12 +8,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import objects.BEDCoord;
+import objects.GFFCoord;
 import util.JTVOutput;
 
-public class SortBED {
-	public static void sortBEDbyCDT(String outname, File bed, File cdt, int START_INDEX, int STOP_INDEX) throws IOException {
-		ArrayList<BEDCoord> SORT = new ArrayList<BEDCoord>();
+public class SortGFF {
+	public static void sortGFFbyCDT(String outname, File gff, File cdt, int START_INDEX, int STOP_INDEX) throws IOException {
+		ArrayList<GFFCoord> SORT = new ArrayList<GFFCoord>();
 		HashMap<String, String> CDTFile = new HashMap<String, String>();
 		String CDTHeader = "";
 		//Parse CDT File first
@@ -26,18 +26,17 @@ public class SortBED {
 				for(int x = 2 + START_INDEX; x < STOP_INDEX + 2; x++) {
 					count += Double.parseDouble(ID[x]);
 				}
-				SORT.add(new BEDCoord(ID[0], count));
+				SORT.add(new GFFCoord(ID[0], count));
 				CDTFile.put(ID[0], line);
 			} else { CDTHeader = line; }
 		}
 		scan.close();
 		//Sort by score
-		Collections.sort(SORT, BEDCoord.ScoreComparator);
+		Collections.sort(SORT, GFFCoord.ScoreComparator);
 		
 		//Output sorted CDT File
 		String newCDT = outname + ".cdt";
-		PrintStream OUT = null;
-	    OUT = new PrintStream(newCDT);
+		PrintStream OUT = new PrintStream(newCDT);
 	    OUT.println(CDTHeader);
 	    for(int x = 0; x < SORT.size(); x++) {
 	    	OUT.println(CDTFile.get(SORT.get(x).getName()));
@@ -46,21 +45,21 @@ public class SortBED {
 		CDTFile = null; //Free up memory by getting CDT file out of memory
 		JTVOutput.outputJTV(outname, "green");
 		
-		//Match to bed file after
-		HashMap<String, String> BEDFile = new HashMap<String, String>();
-		scan = new Scanner(bed);
+		//Match to gff file after
+		HashMap<String, String> GFFFile = new HashMap<String, String>();
+		scan = new Scanner(gff);
 		while (scan.hasNextLine()) {
 			String line = scan.nextLine();
-			String ID = line.split("\t")[3];
+			String ID = line.split("\t")[8];
 			if(!ID.contains("YORF") && !ID.contains("NAME")) {
-				BEDFile.put(ID, line);
+				GFFFile.put(ID, line);
 			}
 		}
-		//Output sorted BED File
-		String newBED = outname +".bed";    
-	    OUT = new PrintStream(newBED);
+		//Output sorted GFF File
+		String newGFF = outname +".gff";    
+	    OUT = new PrintStream(newGFF);
 	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(BEDFile.get(SORT.get(x).getName()));
+	    	OUT.println(GFFFile.get(SORT.get(x).getName()));
 	    }
 	    OUT.close();
 	}

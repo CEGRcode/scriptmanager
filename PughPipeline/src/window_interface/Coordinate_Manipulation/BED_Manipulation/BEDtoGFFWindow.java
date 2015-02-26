@@ -1,4 +1,4 @@
-package window_interface.GFF_Manipulation;
+package window_interface.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
 
-import scripts.GFF_Manipulation.GFFtoBED;
+import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 import util.FileSelection;
 
 import java.awt.Component;
@@ -33,7 +33,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 @SuppressWarnings("serial")
-public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
@@ -42,7 +42,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	Vector<File> BEDFiles = new Vector<File>();
 	
 	private JButton btnLoad;
-	private JButton btnRemoveGFF;
+	private JButton btnRemoveBED;
 	private JButton btnConvert;
 
 	private JProgressBar progressBar;
@@ -56,7 +56,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         public Void doInBackground() throws IOException {
         	setProgress(0);
         	for(int x = 0; x < BEDFiles.size(); x++) {
-				GFFtoBED.convertBEDtoGFF(OUTPUT_PATH, BEDFiles.get(x));
+				BEDtoGFF.convertBEDtoGFF(OUTPUT_PATH, BEDFiles.get(x));
 				int percentComplete = (int)(((double)(x + 1) / BEDFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
@@ -71,8 +71,8 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         }
 	}
 	
-	public GFFtoBEDWindow() {
-		setTitle("GFF to BED File Converter");
+	public BEDtoGFFWindow() {
+		setTitle("BED to GFF File Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 450, 300);
@@ -92,27 +92,27 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		
-		btnLoad = new JButton("Load GFF Files");
+		btnLoad = new JButton("Load BED Files");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getGFFFiles(fc);
-				if(newGFFFiles != null) {
-					for(int x = 0; x < newGFFFiles.length; x++) { 
-						BEDFiles.add(newGFFFiles[x]);
-						expList.addElement(newGFFFiles[x].getName());
+				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				if(newBEDFiles != null) {
+					for(int x = 0; x < newBEDFiles.length; x++) { 
+						BEDFiles.add(newBEDFiles[x]);
+						expList.addElement(newBEDFiles[x].getName());
 					}
 				}
 			}
 		});
 		contentPane.add(btnLoad);
 		
-		btnRemoveGFF = new JButton("Remove GFF");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveGFF);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveGFF, 0, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveGFF, -5, SpringLayout.EAST, contentPane);
-		btnRemoveGFF.addActionListener(new ActionListener() {
+		btnRemoveBED = new JButton("Remove BED");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBED);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBED, 0, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBED, -5, SpringLayout.EAST, contentPane);
+		btnRemoveBED.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
 					BEDFiles.remove(listExp.getSelectedIndex());
@@ -120,7 +120,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 				}
 			}
 		});		
-		contentPane.add(btnRemoveGFF);
+		contentPane.add(btnRemoveBED);
 		
 		btnConvert = new JButton("Convert");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -62, SpringLayout.NORTH, btnConvert);
