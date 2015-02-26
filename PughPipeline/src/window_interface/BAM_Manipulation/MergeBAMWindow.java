@@ -3,6 +3,7 @@ package window_interface.BAM_Manipulation;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -28,10 +29,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
-import picard.MergeSamFiles;
+import scripts.BAM_Manipulation.BAIIndexer;
+import scripts.BAM_Manipulation.MergeSamFiles;
 import util.FileSelection;
-import java.awt.Font;
-
 
 @SuppressWarnings("serial")
 public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -59,10 +59,13 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	OUTPUT = new File(txtOutput.getText());
-			mergeBAM();
-			if(chckbxGenerateBaiindex.isSelected()) {
-				BAIIndexerWindow.generateIndex(OUTPUT);
+        	if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText()); }
+     	    else { OUTPUT = new File(txtOutput.getText()); }
+        	MergeSamFiles merge = new MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
+    		merge.run();
+
+    		if(chckbxGenerateBaiindex.isSelected()) {
+				BAIIndexer.generateIndex(OUTPUT);
 			}	
 			JOptionPane.showMessageDialog(null, "Merging Complete");
         	return null;
@@ -218,10 +221,4 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
 	}
-	
-	protected void mergeBAM() {
-		if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH + File.separator + OUTPUT); }
-		MergeSamFiles merge = new MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
-		merge.run();
-    }
 }

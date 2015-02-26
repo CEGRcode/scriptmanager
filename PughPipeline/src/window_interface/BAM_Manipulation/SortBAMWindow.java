@@ -1,13 +1,5 @@
 package window_interface.BAM_Manipulation;
 
-import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileWriter;
-import htsjdk.samtools.SAMFileWriterFactory;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.util.IOUtil;
-
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +28,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
+import scripts.BAM_Manipulation.BAMFileSort;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -66,7 +59,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         	    File OUTPUT = null;
         	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_sorted.bam"); }
         	    else { OUTPUT = new File(NAME[0] + "_sorted.bam"); }
-        	    sort(BAMFiles.get(x), OUTPUT);
+        	    BAMFileSort.sort(BAMFiles.get(x), OUTPUT);
         		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
@@ -201,17 +194,4 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
 	}
-	
-	public void sort(File INPUT, File OUTPUT) {
-		IOUtil.assertFileIsReadable(INPUT);
-        IOUtil.assertFileIsWritable(OUTPUT);
-        final SamReader reader = SamReaderFactory.makeDefault().open(INPUT);
-        reader.getFileHeader().setSortOrder(SAMFileHeader.SortOrder.coordinate);
-        final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, OUTPUT);
-        for (final SAMRecord rec: reader) {
-            writer.addAlignment(rec);
-        }
-        writer.close();
-	}
-
 }

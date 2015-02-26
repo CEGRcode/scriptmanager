@@ -1,4 +1,4 @@
-package picard;
+package scripts.BAM_Manipulation;
 
 /*
  * The MIT License
