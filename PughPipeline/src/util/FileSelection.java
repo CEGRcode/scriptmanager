@@ -59,6 +59,20 @@ public class FileSelection {
 		return bedFile;
 	}
 	
+	public static File[] getCDTFiles(JFileChooser fc) {
+		fc.setFileFilter(new ExtensionFileFilter("cdt"));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("CDT File Selection");
+		File[] cdtFiles = null;
+		int returnVal = fc.showOpenDialog(fc);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			cdtFiles = fc.getSelectedFiles();
+		}
+		return cdtFiles;
+	}
+	
 	public static File getCDTFile(JFileChooser fc) {
 		fc.setFileFilter(new ExtensionFileFilter("cdt"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -72,7 +86,7 @@ public class FileSelection {
 		}
 		return cdtFile;
 	}
-	
+		
 	public static File[] getFASTAFiles(JFileChooser fc){
 		fc.setFileFilter(new ExtensionFileFilter("fa"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
