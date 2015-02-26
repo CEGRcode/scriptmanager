@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="jfreechart-1.0.17.jar"/>
 	<classpathentry kind="lib" path="htsjdk-1.122.jar"/>
 	<classpathentry kind="lib" path="picard-1.122.jar"/>
+	<classpathentry kind="lib" path="jfreesvg-2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
