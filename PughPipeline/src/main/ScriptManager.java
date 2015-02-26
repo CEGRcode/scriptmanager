@@ -13,6 +13,7 @@ import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import window_interface.BAM_Format_Converter.BAMtoMidpointWindow;
 import window_interface.BAM_Format_Converter.BAMtoTABWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
+import window_interface.BAM_Manipulation.BAMRemoveDupWindow;
 import window_interface.BAM_Manipulation.MergeBAMWindow;
 import window_interface.BAM_Manipulation.SortBAMWindow;
 import window_interface.BAM_Statistics.PEStatWindow;
@@ -43,7 +44,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.5");
+		frmScriptManager.setTitle("Script Manager v0.6");
 		frmScriptManager.setBounds(100, 100, 450, 250);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
@@ -247,6 +248,24 @@ public class ScriptManager {
 						 });
 					}
 				});
+				
+				JButton btnBamRemoveDuplicates = new JButton("BAM Remove Duplicates");
+				btnBamRemoveDuplicates.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									BAMRemoveDupWindow frame = new BAMRemoveDupWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
+				btnBamRemoveDuplicates.setToolTipText("Removes duplicate reads in Paired-End sequencing given identical 5' read locations\nRAM intensive process. If program freezes, increase JAVA heap size");
+				pnlBAM_Manip.add(btnBamRemoveDuplicates);
 				
 				JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
 				btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
