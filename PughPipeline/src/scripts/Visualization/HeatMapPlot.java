@@ -11,25 +11,35 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 
-public class HeatMapPlot {
-	/**
-	 * Visualize sequences as color pixels
-	 * @param width, width of each base, in pixel
-	 * @param height, height of each base, in pixel
-	 */
-	public static void generatePLOT(File input, File output) throws IOException {
-		int width = 3;
-		int height = 1;
+@SuppressWarnings("serial")
+public class HeatMapPlot extends JFrame {
+	
+	private File INPUT = null;
+	private File OUTPUT = null;
 		
-		List<String> seq = new ArrayList<String>();
+	public HeatMapPlot(File in, File out) {
+		setTitle("Heatmap");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(150, 150, 800, 600);
+		
+		INPUT = in;
+		OUTPUT = out;
+	}
+	
+	public void run() throws IOException {
+		int width = 2;
+		int height = 2;
+		
+		List<String[]> seq = new ArrayList<String[]>();
 		int maxLen = 0;
 
-		Scanner scan = new Scanner(input);
+		Scanner scan = new Scanner(INPUT);
 		while (scan.hasNextLine()) {
-			String temp = scan.nextLine();
-			if(!temp.contains(">")) {
-				if (maxLen < temp.length()) maxLen = temp.length();
+			String[] temp = scan.nextLine().split("\t");
+			if(!temp[0].contains("YORF")) {
+				if (maxLen < temp.length) maxLen = temp.length;
 				seq.add(temp);
 			}
 		}
@@ -46,38 +56,17 @@ public class HeatMapPlot {
         
         int count = 0;
         for (int x = 0; x < seq.size(); x++){
-        	String s = seq.get(x);
-        	char[] letters = s.toCharArray();
-        	for (int j=0;j<letters.length;j++){
-        		switch(letters[j]){
-        		case 'A':
-        		case 'a':
-        			g.setColor(new Color(254, 25, 24));
-        			break;
-        		case 'C':
-        		case 'c':
-                    g.setColor(new Color(43, 49, 246));
-        			break;
-        		case 'G':
-        		case 'g':
-                    g.setColor(new Color(252, 252, 80));
-        			break;
-        		case 'T':
-        		case 't':
-                    g.setColor(new Color(50, 204, 60));
-        			break;
-        		case '-':
-                    g.setColor(Color.WHITE);
-        			break;
-                default:
-                	g.setColor(Color.GRAY);
-        		}
+        	String[] ID = seq.get(x);
+
+        	for (int j=2;j< ID.length;j++){
+        		if(Double.parseDouble(ID[j]) > 0) g.setColor(new Color(254, 25, 24));
+        		else g.setColor(Color.WHITE);
                 g.fillRect(j*width, count*height, width, height);
         	}
             count++;
         }
         try {
-            ImageIO.write(im, "png", output);
+            ImageIO.write(im, "png", OUTPUT);
         }  catch (IOException ex) {
             ex.printStackTrace();
         }

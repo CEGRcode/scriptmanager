@@ -60,7 +60,11 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         	}
         	for(int x = 0; x < cdtFiles.size(); x++) {
         		String[] out = cdtFiles.get(x).getName().split("\\.");
-				HeatMapPlot.generatePLOT(cdtFiles.get(x), new File(OUTPUTPATH + File.separator + out[0] + ".png"));
+
+        		HeatMapPlot heat = new HeatMapPlot(cdtFiles.get(x), new File(OUTPUTPATH + File.separator + out[0] + ".png"));
+        		heat.setVisible(true);
+				heat.run();
+        		
 				int percentComplete = (int)(((double)(x + 1) / cdtFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
