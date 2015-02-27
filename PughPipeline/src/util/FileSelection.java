@@ -142,4 +142,18 @@ public class FileSelection {
 		}
 		return gffFile;
 	}
+	
+	public static File[] getPNGFiles(JFileChooser fc){
+		fc.setFileFilter(new ExtensionFileFilter("png"));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("PNG File Selection");
+		File[] gffFiles = null;
+		int returnVal = fc.showOpenDialog(fc);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			gffFiles = fc.getSelectedFiles();
+		}
+		return gffFiles;
+	}
 }

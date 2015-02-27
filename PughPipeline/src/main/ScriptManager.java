@@ -31,10 +31,13 @@ import window_interface.Data_Analysis.PeakPairWindow;
 import window_interface.Data_Analysis.TagPileupWindow;
 import window_interface.Visualization.FourColorSequenceWindow;
 import window_interface.Visualization.HeatMapWindow;
+import window_interface.Visualization.MergeHeatMapWindow;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.JSplitPane;
 
 public class ScriptManager {
 
@@ -122,7 +125,28 @@ public class ScriptManager {
 		JPanel pnlCoord_Manip = new JPanel();
 		tabbedPane.addTab("Coordinate Manipulation", null, pnlCoord_Manip, null);
 		
+		JSplitPane splitPaneExpand = new JSplitPane();
+		pnlCoord_Manip.add(splitPaneExpand);
+		
 		JButton btnExpandBedFile = new JButton("Expand BED File");
+		splitPaneExpand.setLeftComponent(btnExpandBedFile);
+		
+		JButton btnExpandGffFile = new JButton("Expand GFF File");
+		splitPaneExpand.setRightComponent(btnExpandGffFile);
+		btnExpandGffFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ExpandGFFWindow frame = new ExpandGFFWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		btnExpandBedFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -137,9 +161,29 @@ public class ScriptManager {
 				 });
 			}
 		});
-		pnlCoord_Manip.add(btnExpandBedFile);
+		
+		JSplitPane splitPaneConvert = new JSplitPane();
+		pnlCoord_Manip.add(splitPaneConvert);
 		
 		JButton btnBedToGFF = new JButton("Convert BED to GFF");
+		splitPaneConvert.setLeftComponent(btnBedToGFF);
+		
+		JButton btnGffToBed = new JButton("Convert GFF to BED");
+		splitPaneConvert.setRightComponent(btnGffToBed);
+		btnGffToBed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							GFFtoBEDWindow frame = new GFFtoBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		btnBedToGFF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				EventQueue.invokeLater(new Runnable() {
@@ -155,46 +199,14 @@ public class ScriptManager {
 			}
 		});
 		
-		JButton btnBEDSort = new JButton("Sort BED File");
-		btnBEDSort.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							SortBEDWindow frame = new SortBEDWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		pnlCoord_Manip.add(btnBEDSort);
-		pnlCoord_Manip.add(btnBedToGFF);
+		JSplitPane splitPaneSort = new JSplitPane();
+		pnlCoord_Manip.add(splitPaneSort);
 		
-		JButton btnExpandGffFile = new JButton("Expand GFF File");
-		pnlCoord_Manip.add(btnExpandGffFile);
+		JButton btnBEDSort = new JButton("Sort BED by CDT");
+		splitPaneSort.setLeftComponent(btnBEDSort);
 		
-		JButton btnSortGffFile = new JButton("Sort GFF File");
-		pnlCoord_Manip.add(btnSortGffFile);
-		
-		JButton btnGffToBed = new JButton("Convert GFF to BED");
-		pnlCoord_Manip.add(btnGffToBed);
-		btnGffToBed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							GFFtoBEDWindow frame = new GFFtoBEDWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
+		JButton btnSortGffFile = new JButton("Sort GFF by CDT");
+		splitPaneSort.setRightComponent(btnSortGffFile);
 		btnSortGffFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -209,12 +221,12 @@ public class ScriptManager {
 				 });
 			}
 		});
-		btnExpandGffFile.addActionListener(new ActionListener() {
+		btnBEDSort.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							ExpandGFFWindow frame = new ExpandGFFWindow();
+							SortBEDWindow frame = new SortBEDWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -412,6 +424,23 @@ public class ScriptManager {
 			
 			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
 			pnlVisualization.add(btncolorSequencePlot);
+			
+			JButton btnMergeHeatPlots = new JButton("Merge Heat Plots");
+			btnMergeHeatPlots.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								MergeHeatMapWindow frame = new MergeHeatMapWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlVisualization.add(btnMergeHeatPlots);
 			btncolorSequencePlot.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 					EventQueue.invokeLater(new Runnable() {
