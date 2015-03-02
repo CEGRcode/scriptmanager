@@ -11,21 +11,32 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class HeatMapPlot extends JFrame {
 	
 	private File INPUT = null;
 	private File OUTPUT = null;
-		
-	public HeatMapPlot(File in, File out) {
+	private Color HEATMAP = null;
+	
+	JTabbedPane newpane;
+	
+	public HeatMapPlot(File in, Color heat, File out) {
 		setTitle("Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
 		
+		newpane = new JTabbedPane(JTabbedPane.TOP);
+		this.getContentPane().add(newpane);
+		
 		INPUT = in;
 		OUTPUT = out;
+		HEATMAP = heat;
 	}
 	
 	public void run() throws IOException {
@@ -59,7 +70,7 @@ public class HeatMapPlot extends JFrame {
         	String[] ID = seq.get(x);
 
         	for (int j=2;j< ID.length;j++){
-        		if(Double.parseDouble(ID[j]) > 0) g.setColor(new Color(254, 25, 24));
+        		if(Double.parseDouble(ID[j]) > 0) g.setColor(HEATMAP);
         		else g.setColor(Color.WHITE);
                 g.fillRect(j*width, count*height, width, height);
         	}
@@ -67,6 +78,7 @@ public class HeatMapPlot extends JFrame {
         }
         try {
             ImageIO.write(im, "png", OUTPUT);
+            newpane.addTab(OUTPUT.getName(),  new JScrollPane(new JLabel(new ImageIcon(im)), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         }  catch (IOException ex) {
             ex.printStackTrace();
         }

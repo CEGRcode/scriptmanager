@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import java.io.File;
@@ -112,6 +113,6 @@ public class MergeHeatMapPlot extends JFrame {
 			}
 		}
 		//Output image/error to GUI
-		newpane.addTab(OUTPUT.getName(), picLabel);
+		newpane.addTab(OUTPUT.getName(), new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 	}
 }
