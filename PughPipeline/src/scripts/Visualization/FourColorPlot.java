@@ -18,7 +18,7 @@ public class FourColorPlot {
 	 * @param width, width of each base, in pixel
 	 * @param height, height of each base, in pixel
 	 */
-	public static void generatePLOT(File input, File output) throws IOException {
+	public static void generatePLOT(File input, File output, ArrayList<Color> COLOR) throws IOException {
 		int width = 3;
 		int height = 1;
 		
@@ -52,25 +52,25 @@ public class FourColorPlot {
         		switch(letters[j]){
         		case 'A':
         		case 'a':
-        			g.setColor(new Color(254, 25, 24));
-        			break;
-        		case 'C':
-        		case 'c':
-                    g.setColor(new Color(43, 49, 246));
-        			break;
-        		case 'G':
-        		case 'g':
-                    g.setColor(new Color(252, 252, 80));
+        			g.setColor(COLOR.get(0));
         			break;
         		case 'T':
         		case 't':
-                    g.setColor(new Color(50, 204, 60));
+                    g.setColor(COLOR.get(1));
+        			break;
+        		case 'G':
+        		case 'g':
+                    g.setColor(COLOR.get(2));
+        			break;
+        		case 'C':
+        		case 'c':
+                    g.setColor(COLOR.get(3));
         			break;
         		case '-':
                     g.setColor(Color.WHITE);
         			break;
                 default:
-                	g.setColor(Color.GRAY);
+                	g.setColor(COLOR.get(4));
         		}
                 g.fillRect(j*width, count*height, width, height);
         	}

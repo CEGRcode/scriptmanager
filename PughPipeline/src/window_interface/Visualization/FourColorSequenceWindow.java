@@ -2,6 +2,7 @@ package window_interface.Visualization;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -10,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
@@ -44,23 +46,37 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnGen;
+	private JButton btnAColor;
+	private JButton btnTColor;
+	private JButton btnGColor;
+	private JButton btnCColor;
+	private JButton btnNColor;
+
+	private JButton btnOutputDirectory;
 
 	private JProgressBar progressBar;
 	public Task task;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
-	private JButton btnOutputDirectory;
-	
+		
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException {
         	setProgress(0);
+        	
+        	ArrayList<Color> COLORS = new ArrayList<Color>();
+        	COLORS.add(btnAColor.getForeground());
+        	COLORS.add(btnTColor.getForeground());
+        	COLORS.add(btnGColor.getForeground());
+        	COLORS.add(btnCColor.getForeground());
+        	COLORS.add(btnNColor.getForeground());
+        	
         	if(OUTPUTPATH == null) {
         		OUTPUTPATH = new File(System.getProperty("user.dir"));
         	}
         	for(int x = 0; x < fastaFiles.size(); x++) {
         		String[] out = fastaFiles.get(x).getName().split("\\.");
-        		FourColorPlot.generatePLOT(fastaFiles.get(x), new File(OUTPUTPATH + File.separator + out[0] + ".png"));
+        		FourColorPlot.generatePLOT(fastaFiles.get(x), new File(OUTPUTPATH + File.separator + out[0] + ".png"), COLORS);
 				int percentComplete = (int)(((double)(x + 1) / fastaFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
@@ -79,7 +95,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		setTitle("Four Color Sequence Plot Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 320);
+		setBounds(125, 125, 450, 340);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -127,7 +143,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		contentPane.add(btnRemoveBam);
 		
 		btnGen = new JButton("Generate");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -92, SpringLayout.NORTH, btnGen);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -112, SpringLayout.NORTH, btnGen);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
@@ -142,24 +158,79 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         btnGen.setActionCommand("start");
         
         lblCurrentOutput = new JLabel("Current Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 39, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
         lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrentOutput);
         
         lblDefaultToLocal = new JLabel("Default to Local Directory");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 10, SpringLayout.SOUTH, lblCurrentOutput);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.WEST, lblCurrentOutput);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 313, SpringLayout.EAST, lblCurrentOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -20, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrentOutput, -6, SpringLayout.NORTH, lblDefaultToLocal);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, -6, SpringLayout.NORTH, btnGen);
         lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
         
         btnOutputDirectory = new JButton("Output Directory");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 6, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 145, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutputDirectory, -75, SpringLayout.SOUTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -145, SpringLayout.EAST, contentPane);
         contentPane.add(btnOutputDirectory);
+        
+        btnAColor = new JButton("A Color");
+        btnAColor.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		btnAColor.setForeground(JColorChooser.showDialog(btnAColor, "Select a Background Color", btnAColor.getForeground()));
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnAColor, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnAColor, 0, SpringLayout.WEST, scrollPane);
+        btnAColor.setForeground(new Color(254, 25, 24));
+        contentPane.add(btnAColor);
+        
+        btnTColor = new JButton("T Color");
+        btnTColor.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnTColor.setForeground(JColorChooser.showDialog(btnTColor, "Select a Background Color", btnTColor.getForeground()));
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnTColor, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnTColor, 6, SpringLayout.EAST, btnAColor);
+        btnTColor.setForeground(new Color(50, 204, 60));
+        contentPane.add(btnTColor);
+        
+        btnGColor = new JButton("G Color");
+        btnGColor.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnGColor.setForeground(JColorChooser.showDialog(btnGColor, "Select a Background Color", btnGColor.getForeground()));
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnGColor, 6, SpringLayout.EAST, btnTColor);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGColor, -6, SpringLayout.NORTH, btnOutputDirectory);
+        btnGColor.setForeground(new Color(252, 252, 80));
+        contentPane.add(btnGColor);
+        
+        btnCColor = new JButton("C Color");
+        btnCColor.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnCColor.setForeground(JColorChooser.showDialog(btnCColor, "Select a Background Color", btnCColor.getForeground()));
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnCColor, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnCColor, 6, SpringLayout.EAST, btnGColor);
+        btnCColor.setForeground(new Color(43, 49, 246));
+        contentPane.add(btnCColor);
+        
+        btnNColor = new JButton("N Color");
+        btnNColor.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		btnNColor.setForeground(JColorChooser.showDialog(btnNColor, "Select a Background Color", btnNColor.getForeground()));
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnNColor, 0, SpringLayout.NORTH, btnAColor);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnNColor, 6, SpringLayout.EAST, btnCColor);
+        btnNColor.setForeground(Color.GRAY);
+        contentPane.add(btnNColor);
         
         btnOutputDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
