@@ -245,15 +245,15 @@ public class TagPileup extends JFrame {
 				AVG_S2 = AVG_S2_trim;
 				DOMAIN = DOMAIN_trim;
 				
-				if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2));
-				else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1));
+				if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2, PARAM.getColors()));
+				else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, PARAM.getColors()));
 				if(OUT_S1 != null && PARAM.getOutputType() == 2) {
-					if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 0), "blue");
-					else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 2), "green");
+					if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 0), PARAM.getSenseColor());
+					else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 2), PARAM.getCombinedColor());
 					OUT_S1.close();
 				}
 				if(OUT_S2 != null && PARAM.getOutputType() == 2){
-					JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 1), "red");
+					JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BAM.getName(), 1), PARAM.getAntiColor());
 					OUT_S2.close();
 				}
 							

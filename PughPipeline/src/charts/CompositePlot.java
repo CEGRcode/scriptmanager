@@ -3,6 +3,7 @@ package charts;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.util.ArrayList;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,7 +22,7 @@ public class CompositePlot {
 		
 	}
 	
-	public static ChartPanel createCompositePlot(double[] x, double[] y1, double[] y2){
+	public static ChartPanel createCompositePlot(double[] x, double[] y1, double[] y2, ArrayList<Color> COLORS){
 		final XYSeriesCollection dataset = new XYSeriesCollection();
 		final XYSeries seriesF = new XYSeries("Sense Strand");
 		final XYSeries seriesR = new XYSeries("Anti Strand");
@@ -32,14 +33,28 @@ public class CompositePlot {
 		}
 		dataset.addSeries(seriesF);
 		dataset.addSeries(seriesR);
-		
-		final JFreeChart chart = createChart(dataset, 2);
+
+		final JFreeChart chart = createChart(dataset, COLORS);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		return chartPanel;
 	}
 	
-	private static JFreeChart createChart(final XYDataset dataset, int numseries) {
+	public static Component createCompositePlot(double[] x, double[] y1, ArrayList<Color> COLORS){
+		final XYSeriesCollection dataset = new XYSeriesCollection();
+		final XYSeries seriesC = new XYSeries("Data");
+		for(int i = 0; i < x.length; i++) {
+			seriesC.add(x[i], y1[i]);
+		}
+		dataset.addSeries(seriesC);
+		
+		final JFreeChart chart = createChart(dataset, COLORS);
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		return chartPanel;
+	}
+		
+	private static JFreeChart createChart(final XYDataset dataset, ArrayList<Color> COLORS) {
 		//Call Chart
 		final JFreeChart chart = ChartFactory.createXYLineChart(
 				"Composite Plot", // chart title
@@ -58,15 +73,13 @@ public class CompositePlot {
 		plot.setRangeGridlinePaint(Color.black);
 
 		final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-		for(int x = 0; x < numseries; x++) {
+		for(int x = 0; x < COLORS.size(); x++) {
 			renderer.setSeriesLinesVisible(x, true);	//Spline visibility
 			renderer.setSeriesShapesVisible(x, false);	//Data point dot visibility
 			renderer.setSeriesStroke(x, new BasicStroke(3));
 		}
-		if(numseries == 2) {
-			renderer.setSeriesPaint(0, new Color(0, 0, 204));
-			renderer.setSeriesPaint(1, new Color(210, 22, 22));
-		} else { renderer.setSeriesPaint(0, new Color(0, 100, 0)); }
+		renderer.setSeriesPaint(0, COLORS.get(0));
+		if(COLORS.size() == 2) { renderer.setSeriesPaint(1, COLORS.get(1)); }
 		
 		plot.setRenderer(renderer);
 		// change the auto tick unit selection to integer units only...
@@ -78,19 +91,5 @@ public class CompositePlot {
 		domainAxis.setAxisLineVisible(true);
 		rangeAxis.setAxisLineVisible(true);
 		return chart;
-	}
-
-	public static Component createCompositePlot(double[] x, double[] y1){
-		final XYSeriesCollection dataset = new XYSeriesCollection();
-		final XYSeries seriesC = new XYSeries("Data");
-		for(int i = 0; i < x.length; i++) {
-			seriesC.add(x[i], y1[i]);
-		}
-		dataset.addSeries(seriesC);
-		
-		final JFreeChart chart = createChart(dataset, 1);
-		final ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-		return chartPanel;
 	}
 }

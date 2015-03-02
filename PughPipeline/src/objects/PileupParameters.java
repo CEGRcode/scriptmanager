@@ -1,6 +1,8 @@
 package objects;
 
+import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
 
 public class PileupParameters {
 	private File OUTPUT = null;
@@ -17,8 +19,44 @@ public class PileupParameters {
 	private boolean STANDARD = false;
 	private double STANDRATIO = 1;
 	
+	private Color Sense = null;
+	private Color Anti = null;
+	private Color Combined = null;
+	
 	public PileupParameters() {
 		
+	}
+	
+	public ArrayList<Color> getColors() {
+		ArrayList<Color> ALL = new ArrayList<Color>();
+		if(Sense != null) ALL.add(Sense);
+		if(Anti != null) ALL.add(Anti);
+		if(Combined != null) ALL.add(Combined);
+		return ALL;
+	}
+	
+	public void setSenseColor(Color s) {
+		Sense = s;
+	}
+	
+	public Color getSenseColor() {
+		return Sense;
+	}
+	
+	public void setAntiColor(Color a) {
+		Anti = a;
+	}
+	
+	public Color getAntiColor() {
+		return Anti;
+	}
+	
+	public void setCombinedColor(Color c) {
+		Combined = c;
+	}
+	
+	public Color getCombinedColor() {
+		return Combined;
 	}
 	
 	public void setRatio(double rat) {
