@@ -179,7 +179,6 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 
         txtMid = new JTextField();
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtMid, 2, SpringLayout.NORTH, rdbtnSortbyCenter);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtMid, -79, SpringLayout.EAST, contentPane);
         txtMid.setHorizontalAlignment(SwingConstants.CENTER);
         txtMid.setText("100");
         contentPane.add(txtMid);
@@ -187,11 +186,13 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
         
         lblSizeOfExpansion = new JLabel("Size of Expansion (bins):");
         sl_contentPane.putConstraint(SpringLayout.WEST, txtMid, 6, SpringLayout.EAST, lblSizeOfExpansion);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtMid, 59, SpringLayout.EAST, lblSizeOfExpansion);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeOfExpansion, 4, SpringLayout.NORTH, rdbtnSortbyCenter);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 0, SpringLayout.WEST, btnOutput);
         contentPane.add(lblSizeOfExpansion);
         
         txtOutput = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtOutput, 0, SpringLayout.EAST, progressBar);
         txtOutput.setEnabled(false);
         contentPane.add(txtOutput);
         txtOutput.setColumns(10);
@@ -226,13 +227,12 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
         
         txtStop = new JTextField();
         txtStop.setEnabled(false);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtOutput, 0, SpringLayout.EAST, txtStop);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtStop, 2, SpringLayout.NORTH, rdbtnSortbyIndex);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtStop, -25, SpringLayout.EAST, contentPane);
         contentPane.add(txtStop);
         txtStop.setColumns(10);
         
         lblIndexStart = new JLabel("Index Start:");
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtStart, 59, SpringLayout.EAST, lblIndexStart);
         lblIndexStart.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtStart, 6, SpringLayout.EAST, lblIndexStart);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblIndexStart, 4, SpringLayout.NORTH, rdbtnSortbyIndex);
@@ -240,9 +240,9 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
         contentPane.add(lblIndexStart);
         
         lblIndexStop = new JLabel("Index Stop:");
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtStop, 59, SpringLayout.EAST, lblIndexStop);
         lblIndexStop.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtStop, 6, SpringLayout.EAST, lblIndexStop);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtStart, -15, SpringLayout.WEST, lblIndexStop);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblIndexStop, 4, SpringLayout.NORTH, rdbtnSortbyIndex);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblIndexStop, 0, SpringLayout.WEST, progressBar);
         contentPane.add(lblIndexStop);

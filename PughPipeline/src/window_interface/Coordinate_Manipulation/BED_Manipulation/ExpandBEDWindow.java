@@ -196,7 +196,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
         
         txtSize = new JTextField();
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 6, SpringLayout.SOUTH, txtSize);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtSize, -107, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtSize, 6, SpringLayout.SOUTH, rdbtnAddToBorder);
         txtSize.setHorizontalAlignment(SwingConstants.CENTER);
         txtSize.setText("250");
@@ -204,10 +203,11 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
         txtSize.setColumns(10);
         
         JLabel lblSizeOfExpansion = new JLabel("Size of Expansion (bp):");
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtSize, 68, SpringLayout.EAST, lblSizeOfExpansion);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeOfExpansion, 8, SpringLayout.SOUTH, rdbtnExpandFromCenter);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtSize, 10, SpringLayout.EAST, lblSizeOfExpansion);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 100, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 40, SpringLayout.SOUTH, lblSizeOfExpansion);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblSizeOfExpansion, -205, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtSize, 6, SpringLayout.EAST, lblSizeOfExpansion);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeOfExpansion, 2, SpringLayout.NORTH, txtSize);
         contentPane.add(lblSizeOfExpansion);
         btnConvert.addActionListener(this);
 	}

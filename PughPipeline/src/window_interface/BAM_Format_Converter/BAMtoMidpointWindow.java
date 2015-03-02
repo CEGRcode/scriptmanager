@@ -102,6 +102,7 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 		JScrollPane scrollPane = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 41, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 15, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -160, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
@@ -142,6 +143,7 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
 		btnIndex = new JButton("Convert");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnIndex, 250, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnIndex, -10, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnIndex, -250, SpringLayout.EAST, contentPane);
 		contentPane.add(btnIndex);
 		
         final JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
@@ -159,13 +161,12 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
         contentPane.add(lblCurrentOutput);
 		
         btnOutputDirectory = new JButton("Output Directory");
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, -13, SpringLayout.WEST, btnIndex);
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -193, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 225, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutputDirectory, -70, SpringLayout.SOUTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -225, SpringLayout.EAST, contentPane);
         contentPane.add(btnOutputDirectory);
         
         progressBar = new JProgressBar();
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnIndex, -30, SpringLayout.WEST, progressBar);
-        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 415, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -15, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, 0, SpringLayout.SOUTH, btnIndex);
         progressBar.setStringPainted(true);
@@ -174,39 +175,37 @@ public class BAMtoMidpointWindow extends JFrame implements ActionListener, Prope
         btnIndex.setActionCommand("start");
         
         txtMin = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 6, SpringLayout.SOUTH, txtMin);
         txtMin.setHorizontalAlignment(SwingConstants.CENTER);
         txtMin.setText("0");
         contentPane.add(txtMin);
         txtMin.setColumns(10);
         
         txtMax = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, 31, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtMax, 433, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtMax, -83, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, 0, SpringLayout.NORTH, txtMax);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, 35, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtMax, 419, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtMax, 489, SpringLayout.WEST, contentPane);
         txtMax.setHorizontalAlignment(SwingConstants.CENTER);
         txtMax.setText("1000");
         contentPane.add(txtMax);
         txtMax.setColumns(10);
         
         JLabel lblMaxSizebp = new JLabel("Max Size (bp):");
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtMin, -76, SpringLayout.WEST, lblMaxSizebp);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMaxSizebp, 1, SpringLayout.NORTH, txtMin);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblMaxSizebp, -17, SpringLayout.WEST, txtMax);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtMin, -54, SpringLayout.WEST, lblMaxSizebp);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblMaxSizebp, -15, SpringLayout.WEST, txtMax);
         lblMaxSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblMaxSizebp);
         
         JLabel lblMinSizebp = new JLabel("Min Size (bp):");
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblMinSizebp, -431, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 13, SpringLayout.EAST, lblMinSizebp);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMinSizebp, 1, SpringLayout.NORTH, txtMin);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 15, SpringLayout.EAST, lblMinSizebp);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblMinSizebp, 80, SpringLayout.WEST, contentPane);
         lblMinSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblMinSizebp);
         
         JLabel lblEnterInsertSize = new JLabel("Please Enter Insert Size Range to Consider:");
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -6, SpringLayout.NORTH, lblEnterInsertSize);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblEnterInsertSize, 230, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMinSizebp, 10, SpringLayout.SOUTH, lblEnterInsertSize);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMaxSizebp, 10, SpringLayout.SOUTH, lblEnterInsertSize);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblEnterInsertSize, 10, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, 9, SpringLayout.SOUTH, lblEnterInsertSize);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblEnterInsertSize, 0, SpringLayout.WEST, scrollPane);
         lblEnterInsertSize.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblEnterInsertSize);

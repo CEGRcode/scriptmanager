@@ -138,16 +138,15 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnIndex);
 		
 		rdbtnRead1 = new JRadioButton("Read 1");
-		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnRead1, -455, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead1, 120, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnRead1);
 		
 		rdbtnRead2 = new JRadioButton("Read 2");
-		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnRead2, -282, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead2, 160, SpringLayout.WEST, rdbtnRead1);
 		contentPane.add(rdbtnRead2);
 		
 		rdbtnCombined = new JRadioButton("Combined");
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCombined, 108, SpringLayout.EAST, rdbtnRead2);
-		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnCombined, -78, SpringLayout.EAST, contentPane);
 		contentPane.add(rdbtnCombined);
 		
 		ButtonGroup OutputRead = new ButtonGroup();

@@ -150,7 +150,6 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 				}
 			}
 		});
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 193, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -3, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 146, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -50, SpringLayout.SOUTH, contentPane);

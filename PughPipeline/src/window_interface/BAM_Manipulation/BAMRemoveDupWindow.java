@@ -151,7 +151,6 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 		
 		btnOutput = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -42, SpringLayout.NORTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 223, SpringLayout.NORTH, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUTPUT_PATH = FileSelection.getOutputDir(fc);

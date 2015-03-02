@@ -138,7 +138,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnIndex);
 		
 		rdbtnRead1 = new JRadioButton("Read 1");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 263, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 30, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead1, 123, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnRead1);
 		
@@ -150,7 +150,6 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		rdbtnCombined = new JRadioButton("Combined");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCombined, 0, SpringLayout.NORTH, rdbtnRead1);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCombined, 111, SpringLayout.EAST, rdbtnRead2);
-		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnCombined, -78, SpringLayout.EAST, contentPane);
 		contentPane.add(rdbtnCombined);
 		
 		ButtonGroup OutputRead = new ButtonGroup();
@@ -160,6 +159,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         rdbtnRead1.setSelected(true);
         
         JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 10, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 0, SpringLayout.WEST, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblPleaseSelectWhich, -6, SpringLayout.NORTH, rdbtnRead1);
         lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));

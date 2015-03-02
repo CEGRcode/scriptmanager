@@ -297,10 +297,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(btnOutputDirectory);
         
         progressBar = new JProgressBar();
-        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 94, SpringLayout.EAST, btnPileup);
-        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -15, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnPileup);
+        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -44, SpringLayout.EAST, contentPane);
         progressBar.setStringPainted(true);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -4, SpringLayout.SOUTH, contentPane);
         contentPane.add(progressBar);
         
         btnPileup.setActionCommand("start");
@@ -387,8 +386,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(txtBin);
         
         txtStdSize = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtStdSize, -261, SpringLayout.EAST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblNumStd, 11, SpringLayout.EAST, txtStdSize);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblNumStd, 20, SpringLayout.EAST, txtStdSize);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtStdSize, 47, SpringLayout.EAST, lblStdDevSize);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtStdSize, -1, SpringLayout.NORTH, lblStdDevSize);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtStdSize, 6, SpringLayout.EAST, lblStdDevSize);
         txtStdSize.setEnabled(false);
@@ -464,6 +463,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblWindowSizebin);
         
         txtSmooth = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 0, SpringLayout.WEST, txtSmooth);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtSmooth, 2, SpringLayout.NORTH, rdbtnNone);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtSmooth, 6, SpringLayout.EAST, lblWindowSizebin);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtSmooth, 66, SpringLayout.EAST, lblWindowSizebin);
