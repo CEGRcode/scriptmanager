@@ -41,7 +41,7 @@ public class FASTAExtract extends JFrame {
 	private JTextArea textArea;
 	
 	public FASTAExtract(File gen, ArrayList<File> b, File out, boolean str) {
-		setTitle("BAM File Statistics");
+		setTitle("FASTA Extraction Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
 		
@@ -64,15 +64,10 @@ public class FASTAExtract extends JFrame {
 		if(!FAI.exists() || FAI.isDirectory()) {
 			textArea.append("FASTA Index file not found.\nGenerating new one...\n");
 			INDEX = buildFASTAIndex(GENOME);
-		}
-		
-		System.out.println("Hello World");
-		
+		}		
 		if(INDEX) {
 			try{			
 				IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
-				System.out.println("QUERY OPENED");
-	
 				for(int x = 0; x < BED.size(); x++) {
 					textArea.append("Proccessing File: " + BED.get(x).getName() + "\n");
 					//Open Output File
