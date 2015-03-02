@@ -58,10 +58,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private File INPUT = null;
 	private File OUTPUT = null;
 	
-	private Color SenseColor = Color.BLUE;
-	private Color AntiColor = Color.RED;
-	private Color CombinedColor = Color.GREEN;
-	
 	private JButton btnPileup;
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -128,11 +124,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        	PileupParameters param = new PileupParameters();
 		        	if(rdbtnSeperate.isSelected()) { 
 		        		param.setStrand(0);
-		        		param.setSenseColor(SenseColor);
-		        		param.setAntiColor(AntiColor);
+		        		param.setSenseColor(btnSenseColor.getForeground());
+		        		param.setAntiColor(btnAntiColor.getForeground());
 		        	} else if(rdbtnComb.isSelected()) {
 		        		param.setStrand(1);
-		        		param.setCombinedColor(CombinedColor);
+		        		param.setCombinedColor(btnCombinedColor.getForeground());
 		        	}
 		        	
 		        	if(rdbtnRead1.isSelected()) { param.setRead(0); }
@@ -516,8 +512,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         btnSenseColor = new JButton("Sense Color");
         btnSenseColor.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
-        		SenseColor = JColorChooser.showDialog(btnSenseColor, "Select an Output Color", SenseColor);
-        		btnSenseColor.setForeground(SenseColor);
+        		btnSenseColor.setForeground(JColorChooser.showDialog(btnSenseColor, "Select an Output Color", btnSenseColor.getForeground()));
         	}
         });
         btnSenseColor.setForeground(Color.BLUE);
@@ -528,8 +523,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         btnAntiColor = new JButton("Anti Color");
         btnAntiColor.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		AntiColor = JColorChooser.showDialog(btnAntiColor, "Select an Output Color", AntiColor);
-        		btnAntiColor.setForeground(AntiColor);
+        		btnAntiColor.setForeground(JColorChooser.showDialog(btnAntiColor, "Select an Output Color", btnAntiColor.getForeground()));
         	}
         });
         btnAntiColor.setForeground(Color.RED);
@@ -540,8 +534,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         btnCombinedColor = new JButton("Combined Color");
         btnCombinedColor.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		CombinedColor = JColorChooser.showDialog(btnCombinedColor, "Select an Output Color", CombinedColor);
-        		btnCombinedColor.setForeground(CombinedColor);
+        		btnCombinedColor.setForeground(JColorChooser.showDialog(btnCombinedColor, "Select an Output Color", btnCombinedColor.getForeground()));
         	}
         });
         btnCombinedColor.setEnabled(false);
