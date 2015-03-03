@@ -92,7 +92,7 @@ public class MergeHeatMapPlot extends JFrame {
 					    int overlay_blue  = (overlay_rgb & 0x000000FF) >>> 0;
 				
 					    int new_rgb;
-					    if(image_red == image_green && image_green == image_blue && image_red >= 250) {
+					    if(image_green >= 250 && image_blue >= 250 && image_red >= 250) {
 					    	new_rgb = (overlay_alpha << 24) | (overlay_red << 16) | (overlay_green << 8) | overlay_blue;
 					    } else if(overlay_red == overlay_green && overlay_green == overlay_blue && overlay_red >= 250) {
 					    	new_rgb = (image_alpha << 24) | (image_red << 16) | (image_green << 8) | image_blue;
