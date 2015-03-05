@@ -20,6 +20,9 @@ import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
 
+import scripts.Visualization.HeatMapPlot;
+import util.FileSelection;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Component;
@@ -29,9 +32,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import scripts.Visualization.HeatMapPlot;
-import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class HeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
