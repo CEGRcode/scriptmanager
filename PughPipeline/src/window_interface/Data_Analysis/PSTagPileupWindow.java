@@ -30,13 +30,15 @@ import javax.swing.JCheckBox;
 
 import objects.BEDCoord;
 import objects.PileupParameters;
-import scripts.TagPileup;
-import util.FileSelection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
+import scripts.PSTagPileup;
+import util.FileSelection;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -45,9 +47,8 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-
 @SuppressWarnings("serial")
-public class TagPileupWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class PSTagPileupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
@@ -161,7 +162,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		        	loadCoord();
 		        	
-	        		TagPileup pile = new TagPileup(COORD, BAMFiles, param);
+	        		PSTagPileup pile = new PSTagPileup(COORD, BAMFiles, param);
 	        		
 	        		pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -189,7 +190,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         }
 	}
 	
-	public TagPileupWindow() {
+	public PSTagPileupWindow() {
 		setTitle("Tag Pileup");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
