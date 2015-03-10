@@ -22,14 +22,13 @@ public class ExpandBED {
 						//Default to add to border
 						int newstart = Integer.parseInt(temp[1]) - SIZE;
 						int newstop = Integer.parseInt(temp[2]) + SIZE;
-				        if(ExCenter) { //Else expand from center
+						if(ExCenter) { //Else expand from center
 							boolean EVEN = ((Integer.parseInt(temp[2]) - Integer.parseInt(temp[1])) % 2 == 0);
 				        	int CENTER = (int)((Integer.parseInt(temp[1]) + Integer.parseInt(temp[2])) / 2);
-				        	if(!temp[5].equals("-") && !EVEN) { CENTER++; }
+				        	if(temp.length > 4) { if(!temp[5].equals("-") && !EVEN) { CENTER++; } }
 					        newstart = CENTER - (SIZE / 2);
 					        newstop = CENTER + (SIZE / 2);
 				        }
-
 				        OUT.print(temp[0] + "\t" + newstart + "\t" + newstop);
 				        for(int x = 3; x < temp.length; x++) {
 				        	OUT.print("\t" + temp[x]);
