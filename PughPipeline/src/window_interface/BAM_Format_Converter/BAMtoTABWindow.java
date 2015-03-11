@@ -35,6 +35,7 @@ import java.beans.PropertyChangeListener;
 
 import scripts.BAM_Format_Converter.BAMtoTAB;
 import util.FileSelection;
+import util.NucleotideUtilities;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
@@ -71,9 +72,9 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
-        	if(chckbx5FilterEnd.isSelected() && !parseStringforNuc(txt5Seq.getText())) { 
+        	if(chckbx5FilterEnd.isSelected() && !NucleotideUtilities.parseStringforInvalideNuc(txt5Seq.getText())) { 
         			JOptionPane.showMessageDialog(null, "Invalid 5' Sequence!!! Must be A/T/G/C");
-        	} else if(chckbx3FilterEnd.isSelected() && !parseStringforNuc(txt3Seq.getText())) {
+        	} else if(chckbx3FilterEnd.isSelected() && !NucleotideUtilities.parseStringforInvalideNuc(txt3Seq.getText())) {
         			JOptionPane.showMessageDialog(null, "Invalid 3' Sequence!!! Must be A/T/G/C");
         	} else {
 	        	setProgress(0);
@@ -312,17 +313,6 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         	if(chckbx3FilterEnd.isSelected()) { txt3Seq.setEnabled(true); }
         	else { txt3Seq.setEnabled(false); }
 		}
-	}
-	
-	public boolean parseStringforNuc(String seq) {
-		seq = seq.toUpperCase();
-		char[] check = seq.toCharArray();
-		for(int x = 0; x < check.length; x++) {
-			if(check[x] != 'A' && check[x] != 'T' && check[x] != 'G' && check[x] != 'C') {
-				return false;
-			}
-		}
-		return true;
 	}
 }
 

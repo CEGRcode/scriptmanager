@@ -20,6 +20,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import util.NucleotideUtilities;
+
 @SuppressWarnings("serial")
 public class BAMtoTAB extends JFrame {
 	private File BAM = null;
@@ -111,14 +113,14 @@ public class BAMtoTAB extends JFrame {
 			String SEQ = "";
 			//if on the positive strand
 			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(0, FiveFilter.length()); }
-			else { SEQ =  RevComplement(sr.getReadString().substring(sr.getReadString().length() - FiveFilter.length())); }
+			else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(sr.getReadString().length() - FiveFilter.length())); }
 			if(!SEQ.equals(FiveFilter)) { recordStart = -999; }
 		}
 		if(!ThreeFilter.equals("")) {
 			String SEQ = "";
 			//if on the positive strand
 			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(sr.getReadString().length() - FiveFilter.length()); }
-			else { SEQ =  RevComplement(sr.getReadString().substring(0, FiveFilter.length())); }
+			else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(0, FiveFilter.length())); }
 			if(!SEQ.equals(ThreeFilter)) { recordStart = -999; }
 		}
 		
@@ -294,19 +296,7 @@ public class BAMtoTAB extends JFrame {
 		}
 		bai.close();
 	}
-	
-	public String RevComplement (String SEQ) {
-		String RC = "";
-		for (int x = 0; x < SEQ.length(); x++){
-			if(SEQ.charAt(x) == 'A') { RC = 'T' + RC; }
-			else if(SEQ.charAt(x) == 'T') { RC = 'A' + RC; }
-			else if(SEQ.charAt(x) == 'G') { RC = 'C' + RC; }
-			else if(SEQ.charAt(x) == 'C') { RC = 'G' + RC; }
-			else { RC = 'N' + RC; }
-		}
-		return RC;
-	}
-	
+		
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();
