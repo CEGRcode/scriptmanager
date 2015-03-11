@@ -27,8 +27,10 @@ public class BAMtoTAB extends JFrame {
 	private int STRAND = 0;
 	private String READ = "READ1";
 	
+	private String FiveFilter = "";
+	private String ThreeFilter = "";
+	
 	private SamReader inputSam = null;
-	//final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.CACHE_FILE_BASED_INDEXES, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.LENIENT);
 	private PrintStream OUT = null;
 	
 	private ArrayList<Integer> BP;
@@ -39,7 +41,7 @@ public class BAMtoTAB extends JFrame {
 	
 	private int CHROMSTOP = -999;
 	
-	public BAMtoTAB(File b, File o, int s) {
+	public BAMtoTAB(File b, File o, int s, String five, String three) {
 		setTitle("BAM to TAB Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -57,6 +59,8 @@ public class BAMtoTAB extends JFrame {
 		if(STRAND == 0) { READ = "READ1"; }
 		else if(STRAND == 1) { READ = "READ2"; }
 		else if(STRAND == 2) { READ = "COMBINED"; }
+		FiveFilter = five;
+		ThreeFilter = three;
 	}
 	
 	public void run() throws IOException, InterruptedException {
@@ -102,7 +106,22 @@ public class BAMtoTAB extends JFrame {
 		int recordStart = sr.getUnclippedStart();//.getAlignmentStart();
 		//Accounts for reverse tag reporting 3' end of tag and converting BED to IDX/GFF format
 		if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }//.getAlignmentEnd(); }					
-
+		
+		if(!FiveFilter.equals("")) {
+			String SEQ = "";
+			//if on the positive strand
+			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(0, FiveFilter.length()); }
+			else { SEQ =  RevComplement(sr.getReadString().substring(sr.getReadString().length() - FiveFilter.length())); }
+			if(!SEQ.equals(FiveFilter)) { recordStart = -999; }
+		}
+		if(!ThreeFilter.equals("")) {
+			String SEQ = "";
+			//if on the positive strand
+			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(sr.getReadString().length() - FiveFilter.length()); }
+			else { SEQ =  RevComplement(sr.getReadString().substring(0, FiveFilter.length())); }
+			if(!SEQ.equals(ThreeFilter)) { recordStart = -999; }
+		}
+		
 		//Make sure we only add tags that have valid starts
 		if(recordStart > 0 && recordStart <= CHROMSTOP) {
 			if(BP.contains(new Integer(recordStart))) {
@@ -274,6 +293,18 @@ public class BAMtoTAB extends JFrame {
 			}
 		}
 		bai.close();
+	}
+	
+	public String RevComplement (String SEQ) {
+		String RC = "";
+		for (int x = 0; x < SEQ.length(); x++){
+			if(SEQ.charAt(x) == 'A') { RC = 'T' + RC; }
+			else if(SEQ.charAt(x) == 'T') { RC = 'A' + RC; }
+			else if(SEQ.charAt(x) == 'G') { RC = 'C' + RC; }
+			else if(SEQ.charAt(x) == 'C') { RC = 'G' + RC; }
+			else { RC = 'N' + RC; }
+		}
+		return RC;
 	}
 	
 	private static String getTimeStamp() {
