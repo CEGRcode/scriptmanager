@@ -119,8 +119,8 @@ public class BAMtoTAB extends JFrame {
 		if(!ThreeFilter.equals("")) {
 			String SEQ = "";
 			//if on the positive strand
-			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(sr.getReadString().length() - FiveFilter.length()); }
-			else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(0, FiveFilter.length())); }
+			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(sr.getReadString().length() - ThreeFilter.length()); }
+			else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(0, ThreeFilter.length())); }
 			if(!SEQ.equals(ThreeFilter)) { recordStart = -999; }
 		}
 		
