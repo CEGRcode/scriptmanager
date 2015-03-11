@@ -115,9 +115,10 @@ public class FASTAExtract extends JFrame {
 		String RC = "";
 		for (int x = 0; x < SEQ.length(); x++){
 			if(SEQ.charAt(x) == 'A') { RC = 'T' + RC; }
-			if(SEQ.charAt(x) == 'T') { RC = 'A' + RC; }
-			if(SEQ.charAt(x) == 'G') { RC = 'C' + RC; }
-			if(SEQ.charAt(x) == 'C') { RC = 'G' + RC; }
+			else if(SEQ.charAt(x) == 'T') { RC = 'A' + RC; }
+			else if(SEQ.charAt(x) == 'G') { RC = 'C' + RC; }
+			else if(SEQ.charAt(x) == 'C') { RC = 'G' + RC; }
+			else { RC = 'N' + RC; }
 		}
 		return RC;
 	}
