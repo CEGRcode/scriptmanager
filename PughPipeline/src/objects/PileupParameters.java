@@ -19,12 +19,31 @@ public class PileupParameters {
 	private boolean STANDARD = false;
 	private double STANDRATIO = 1;
 	
+	private String FivePrimeSeq = "";
+	private String ThreePrimeSeq = "";
+	
 	private Color Sense = null;
 	private Color Anti = null;
 	private Color Combined = null;
 	
 	public PileupParameters() {
 		
+	}
+	
+	public String getFivePrimeFilter() {
+		return FivePrimeSeq;
+	}
+	
+	public void setFivePrimeFilter(String f) {
+		FivePrimeSeq = f;
+	}
+	
+	public String getThreePrimeFilter() {
+		return ThreePrimeSeq;
+	}
+	
+	public void setThreePrimeFilter(String t) {
+		ThreePrimeSeq = t;
 	}
 	
 	public ArrayList<Color> getColors() {

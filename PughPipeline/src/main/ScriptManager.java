@@ -27,7 +27,6 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.Data_Analysis.FASTAExtractWindow;
 import window_interface.Data_Analysis.GeneTrackWindow;
-import window_interface.Data_Analysis.PSTagPileupWindow;
 import window_interface.Data_Analysis.PeakPairWindow;
 import window_interface.Data_Analysis.TagPileupWindow;
 import window_interface.Visualization.FourColorSequenceWindow;
@@ -402,23 +401,6 @@ public class ScriptManager {
 					 });
 				}
 			});
-			
-			JButton btnPermanganateseqTagPileup = new JButton("Permanganate-Seq Tag Pileup");
-			btnPermanganateseqTagPileup.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								PSTagPileupWindow frame = new PSTagPileupWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
-			pnlAnalysis.add(btnPermanganateseqTagPileup);
 			pnlAnalysis.add(btnFASTAExtract);
 			
 			JPanel pnlVisualization = new JPanel();

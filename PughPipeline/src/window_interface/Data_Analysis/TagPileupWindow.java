@@ -32,6 +32,7 @@ import objects.BEDCoord;
 import objects.PileupParameters;
 import scripts.TagPileup;
 import util.FileSelection;
+import util.NucleotideUtilities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -94,9 +95,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JCheckBox chckbxOutputData;
 	private JCheckBox chckbxTagStandard;
 	
+	private JCheckBox chckbx5FilterEnd;
+	private JTextField txt5Seq;
+	private JCheckBox chckbx3FilterEnd;
+	private JTextField txt3Seq;
+	
 	JProgressBar progressBar;
 	public Task task;
-
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -116,7 +121,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         			JOptionPane.showMessageDialog(null, "BED File Not Loaded!!!");
         		} else if(BAMFiles.size() < 1) {
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
-        		} else {
+        		} else if(chckbx5FilterEnd.isSelected() && !NucleotideUtilities.parseStringforInvalideNuc(txt5Seq.getText())) { 
+        			JOptionPane.showMessageDialog(null, "Invalid 5' Sequence!!! Must be A/T/G/C");
+	        	} else if(chckbx3FilterEnd.isSelected() && !NucleotideUtilities.parseStringforInvalideNuc(txt3Seq.getText())) {
+	        			JOptionPane.showMessageDialog(null, "Invalid 3' Sequence!!! Must be A/T/G/C");
+	        	} else {
 		        	setProgress(0);
 		        	
 		        	//Load up parameters for the pileup into single object
@@ -159,6 +168,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        	param.setStdNum(Integer.parseInt(txtNumStd.getText()));
 		        	param.setCPU(Integer.parseInt(txtCPU.getText()));
 
+		        	if(chckbx5FilterEnd.isSelected()) { param.setFivePrimeFilter(txt5Seq.getText()); }
+		        	if(chckbx3FilterEnd.isSelected()) { param.setThreePrimeFilter(txt3Seq.getText()); }
+		        	
 		        	loadCoord();
 		        	
 	        		TagPileup pile = new TagPileup(COORD, BAMFiles, param);
@@ -193,7 +205,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		setTitle("Tag Pileup");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 600, 700);
+		setBounds(125, 125, 600, 730);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -202,7 +214,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	
 		JScrollPane scrollPane = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -418, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -448, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
@@ -267,9 +279,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         rdbtnRead1.setSelected(true);
         
         JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 10, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 10, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 6, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 0, SpringLayout.WEST, scrollPane);
         lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblPleaseSelectWhich);
 
@@ -293,7 +305,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         
         progressBar = new JProgressBar();
         sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnPileup);
-        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -44, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
         progressBar.setStringPainted(true);
         contentPane.add(progressBar);
         
@@ -301,7 +313,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         
         lblPleaseSelectWhich_1 = new JLabel("Please Select How to Output Strands:");
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich_1, 6, SpringLayout.SOUTH, rdbtnRead1);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich_1, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich_1, 10, SpringLayout.WEST, contentPane);
         lblPleaseSelectWhich_1.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblPleaseSelectWhich_1);
         
@@ -458,7 +470,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblWindowSizebin);
         
         txtSmooth = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 0, SpringLayout.WEST, txtSmooth);
+        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 34, SpringLayout.WEST, txtSmooth);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtSmooth, 2, SpringLayout.NORTH, rdbtnNone);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtSmooth, 6, SpringLayout.EAST, lblWindowSizebin);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtSmooth, 66, SpringLayout.EAST, lblWindowSizebin);
@@ -541,6 +553,46 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnCombinedColor, 0, SpringLayout.NORTH, btnSenseColor);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnCombinedColor, 75, SpringLayout.EAST, btnAntiColor);
         contentPane.add(btnCombinedColor);
+        
+        chckbx5FilterEnd = new JCheckBox("Filter 5' End by Sequence:");
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbx5FilterEnd, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbx5FilterEnd, -15, SpringLayout.NORTH, txtShift);
+        chckbx5FilterEnd.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+			        if(chckbx5FilterEnd.isSelected()) { txt5Seq.setEnabled(true); }
+			        else { txt5Seq.setEnabled(false); }
+		      }
+        });  
+        contentPane.add(chckbx5FilterEnd);
+        
+        txt5Seq = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txt5Seq, 2, SpringLayout.NORTH, chckbx5FilterEnd);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txt5Seq, 6, SpringLayout.EAST, chckbx5FilterEnd);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txt5Seq, 280, SpringLayout.WEST, contentPane);
+        txt5Seq.setHorizontalAlignment(SwingConstants.CENTER);
+        txt5Seq.setEnabled(false);
+        txt5Seq.setColumns(10);
+        contentPane.add(txt5Seq);
+        
+        chckbx3FilterEnd = new JCheckBox("Filter 3' End by Sequence:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbx3FilterEnd, 0, SpringLayout.NORTH, chckbx5FilterEnd);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbx3FilterEnd, 0, SpringLayout.WEST, txtStdSize);
+        chckbx3FilterEnd.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+			        if(chckbx3FilterEnd.isSelected()) { txt3Seq.setEnabled(true); }
+			        else { txt3Seq.setEnabled(false); }
+		      }
+        });  
+        contentPane.add(chckbx3FilterEnd);
+        
+        txt3Seq = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txt3Seq, 2, SpringLayout.NORTH, chckbx5FilterEnd);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txt3Seq, 6, SpringLayout.EAST, chckbx3FilterEnd);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txt3Seq, 91, SpringLayout.EAST, chckbx3FilterEnd);
+        txt3Seq.setHorizontalAlignment(SwingConstants.CENTER);
+        txt3Seq.setEnabled(false);
+        txt3Seq.setColumns(10);
+        contentPane.add(txt3Seq);
         
         rdbtnNone.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
@@ -682,6 +734,10 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				rdbtnTabdelimited.setEnabled(false);
 				rdbtnCdt.setEnabled(false);
 			}
+			if(chckbx5FilterEnd.isSelected()) { txt5Seq.setEnabled(true); }
+        	else { txt5Seq.setEnabled(false); }
+        	if(chckbx3FilterEnd.isSelected()) { txt3Seq.setEnabled(true); }
+        	else { txt3Seq.setEnabled(false); }
 		}
 	}
 	

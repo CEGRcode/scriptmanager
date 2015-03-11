@@ -138,7 +138,7 @@ public class TagPileup extends JFrame {
 					iter.close();
 					if(counter != 0) PARAM.setRatio(counter / totalGenome);
 					else PARAM.setRatio(totalAligned / totalGenome);
-					System.out.println(counter + "\t" + totalGenome + "\t" + PARAM.getRatio());
+					//System.out.println(counter + "\t" + totalGenome + "\t" + PARAM.getRatio());
 				}
 				
 				//Split up job and send out to threads to process				
