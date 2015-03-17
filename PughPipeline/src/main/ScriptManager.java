@@ -424,6 +424,7 @@ public class ScriptManager {
 			tabbedPane.addTab("Data Visualization", null, pnlVisualization, null);
 				
 			JButton btnHeatMap = new JButton("Heat Map");
+			btnHeatMap.setEnabled(false);
 			btnHeatMap.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {
