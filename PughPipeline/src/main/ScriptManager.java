@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import window_interface.BAM_Format_Converter.BAMtoMidpointWindow;
 import window_interface.BAM_Format_Converter.BAMtoTABWindow;
+import window_interface.BAM_Format_Converter.FilterforPermanganateSeqWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
 import window_interface.BAM_Manipulation.BAMRemoveDupWindow;
 import window_interface.BAM_Manipulation.MergeBAMWindow;
@@ -31,7 +32,6 @@ import window_interface.Data_Analysis.PeakPairWindow;
 import window_interface.Data_Analysis.TagPileupWindow;
 import window_interface.Visualization.FourColorSequenceWindow;
 import window_interface.Visualization.HeatMapWindow;
-import window_interface.Visualization.HeatMapWindowv2;
 import window_interface.Visualization.MergeHeatMapWindow;
 
 import java.awt.FlowLayout;
@@ -327,6 +327,23 @@ public class ScriptManager {
 		JButton btnBamToMidpoint = new JButton("BAM to Midpoint");
 		pnlBamConvert.add(btnBamToMidpoint);
 		
+		JButton btnFilterForPermanganateseq = new JButton("Filter for Permanganate-Seq");
+		btnFilterForPermanganateseq.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FilterforPermanganateSeqWindow frame = new FilterforPermanganateSeqWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlBamConvert.add(btnFilterForPermanganateseq);
+		
 		JPanel pnlAnalysis = new JPanel();
 		tabbedPane.addTab("Data Analysis", null, pnlAnalysis, null);
 		
@@ -422,23 +439,6 @@ public class ScriptManager {
 				}
 			});
 			pnlVisualization.add(btnHeatMap);
-			
-			JButton btnHeatMap2 = new JButton("Heat Map v2");
-			btnHeatMap2.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								HeatMapWindowv2 frame = new HeatMapWindowv2();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
-			pnlVisualization.add(btnHeatMap2);
 			
 			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
 			pnlVisualization.add(btncolorSequencePlot);

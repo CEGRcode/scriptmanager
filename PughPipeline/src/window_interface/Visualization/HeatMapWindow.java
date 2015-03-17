@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
-import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.JScrollPane;
@@ -19,9 +18,6 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
-
-import scripts.Visualization.HeatMapPlot;
-import util.FileSelection;
 
 import java.awt.Font;
 import java.awt.Color;
@@ -33,6 +29,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import scripts.Visualization.HeatMapPlot;
+import util.FileSelection;
+
 @SuppressWarnings("serial")
 public class HeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -41,19 +40,21 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	final DefaultListModel expList;
 	Vector<File> cdtFiles = new Vector<File>();
 	private File OUTPUTPATH = null;
-	private Color MAP_COLOR = Color.RED;
+	private Color MIN_COLOR = Color.WHITE;
+	private Color MAX_COLOR = Color.RED;
 	
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnGen;
 	private JButton btnOutputDirectory;
-	private JButton btnChooseColor;
+	private JButton btnChooseMinColor;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
-	private JLabel lblMapColor;
+	private JLabel lblMinColor;
 	private JProgressBar progressBar;
 		
 	public Task task;
+	private JLabel lblMaxColor;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -65,7 +66,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         	for(int x = 0; x < cdtFiles.size(); x++) {
         		String[] out = cdtFiles.get(x).getName().split("\\.");
 
-        		HeatMapPlot heat = new HeatMapPlot(cdtFiles.get(x), MAP_COLOR, new File(OUTPUTPATH + File.separator + out[0] + ".png"));
+        		HeatMapPlot heat = new HeatMapPlot(cdtFiles.get(x), MIN_COLOR, MAX_COLOR, new File(OUTPUTPATH + File.separator + out[0] + ".png"));
         		heat.setVisible(true);
 				heat.run();
         		
@@ -73,7 +74,6 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         		setProgress(percentComplete);
         	}
         	setProgress(100);
-			JOptionPane.showMessageDialog(null, "Plots Generated");
         	return null;
         }
         
@@ -168,23 +168,52 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -145, SpringLayout.EAST, contentPane);
         contentPane.add(btnOutputDirectory);
         
-        btnChooseColor = new JButton("Choose Color");
-        btnChooseColor.addActionListener(new ActionListener() {
+        btnChooseMinColor = new JButton("Choose Min Color");
+        btnChooseMinColor.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
-        		MAP_COLOR = JColorChooser.showDialog(btnChooseColor, "Select a Background Color", MAP_COLOR);
-        		lblMapColor.setForeground(MAP_COLOR);
+        		Color temp = JColorChooser.showDialog(btnChooseMinColor, "Select a Background Color", MIN_COLOR);
+        		if(temp != null) {
+        			MIN_COLOR = temp;
+        			lblMinColor.setBackground(MIN_COLOR);
+        		}
         	}
         });
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 42, SpringLayout.SOUTH, btnChooseColor);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnChooseColor, 6, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnChooseColor, 0, SpringLayout.WEST, scrollPane);
-        contentPane.add(btnChooseColor);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 42, SpringLayout.SOUTH, btnChooseMinColor);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnChooseMinColor, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnChooseMinColor, 0, SpringLayout.WEST, scrollPane);
+        contentPane.add(btnChooseMinColor);
         
-        lblMapColor = new JLabel("Heatmap Color");
-        lblMapColor.setForeground(MAP_COLOR);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMapColor, 5, SpringLayout.NORTH, btnChooseColor);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblMapColor, 20, SpringLayout.EAST, btnChooseColor);
-        contentPane.add(lblMapColor);
+        lblMinColor = new JLabel("");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMinColor, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblMinColor, 0, SpringLayout.WEST, btnGen);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMinColor, -9, SpringLayout.NORTH, btnOutputDirectory);
+        lblMinColor.setOpaque(true);
+        lblMinColor.setBackground(MIN_COLOR);
+        contentPane.add(lblMinColor);
+        
+        JButton btnChooseMaxColor = new JButton("Choose Max Color");
+        btnChooseMaxColor.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		Color temp = JColorChooser.showDialog(btnChooseMinColor, "Select a Background Color", MAX_COLOR);
+        		if(temp != null) {
+        			MAX_COLOR = temp;
+        			lblMaxColor.setBackground(MAX_COLOR);
+        		}
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblMinColor, -20, SpringLayout.WEST, btnChooseMaxColor);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnChooseMaxColor, 212, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnChooseMaxColor, 6, SpringLayout.SOUTH, scrollPane);
+        contentPane.add(btnChooseMaxColor);
+        
+        lblMaxColor = new JLabel("");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMaxColor, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblMaxColor, 15, SpringLayout.EAST, btnChooseMaxColor);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMaxColor, 0, SpringLayout.SOUTH, btnChooseMaxColor);
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblMaxColor, 40, SpringLayout.EAST, btnChooseMaxColor);
+        lblMaxColor.setOpaque(true);
+        lblMaxColor.setBackground(MAX_COLOR);
+        contentPane.add(lblMaxColor);
         
         btnOutputDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
