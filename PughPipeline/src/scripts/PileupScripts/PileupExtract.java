@@ -10,7 +10,6 @@ import java.util.Vector;
 
 import objects.BEDCoord;
 import objects.PileupParameters;
-import util.NucleotideUtilities;
 
 public class PileupExtract implements Runnable{
 	PileupParameters param;
@@ -73,21 +72,6 @@ public class PileupExtract implements Runnable{
 						} else { FivePrime += SHIFT; }
 						FivePrime -= (read.getStart() - QUERYWINDOW);
 						
-						if(!param.getFivePrimeFilter().equals("")) {
-							String SEQ = "";
-							//if on the positive strand
-							if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(0, param.getFivePrimeFilter().length()); }
-							else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(sr.getReadString().length() - param.getFivePrimeFilter().length())); }
-							if(!SEQ.equals(param.getFivePrimeFilter())) { FivePrime = -999; }
-						}
-						if(!param.getThreePrimeFilter().equals("")) {
-							String SEQ = "";
-							//if on the positive strand
-							if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(sr.getReadString().length() - param.getThreePrimeFilter().length()); }
-							else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(0, param.getThreePrimeFilter().length())); }
-							if(!SEQ.equals(param.getThreePrimeFilter())) { FivePrime = -999; }
-						}
-						
 	                    //Increment Final Array keeping track of pileup
 						if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
 							if(STRAND == 0) {
@@ -111,21 +95,6 @@ public class PileupExtract implements Runnable{
 				} else { FivePrime += SHIFT; }
 				FivePrime -= (read.getStart() - QUERYWINDOW);
 				
-				if(!param.getFivePrimeFilter().equals("")) {
-					String SEQ = "";
-					//if on the positive strand
-					if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(0, param.getFivePrimeFilter().length()); }
-					else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(sr.getReadString().length() - param.getFivePrimeFilter().length())); }
-					if(!SEQ.equals(param.getFivePrimeFilter())) { FivePrime = -999; }
-				}
-				if(!param.getThreePrimeFilter().equals("")) {
-					String SEQ = "";
-					//if on the positive strand
-					if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(sr.getReadString().length() - param.getThreePrimeFilter().length()); }
-					else { SEQ =  NucleotideUtilities.RevComplement(sr.getReadString().substring(0, param.getThreePrimeFilter().length())); }
-					if(!SEQ.equals(param.getThreePrimeFilter())) { FivePrime = -999; }
-				}
-				
 				//Increment Final Array keeping track of pileup
 				if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
 					if(STRAND == 0) {
@@ -138,12 +107,13 @@ public class PileupExtract implements Runnable{
 					}
 				}
 			}
-			if(read.getDir().equals("-")) {
-				TAG_S1 = TransformArray.reverseTran(TAG_S1);
-				TAG_S2 = TransformArray.reverseTran(TAG_S2);
-			}
 		}
 		iter.close();
+		
+		if(read.getDir().equals("-")) {
+			TAG_S1 = TransformArray.reverseTran(TAG_S1);
+			TAG_S2 = TransformArray.reverseTran(TAG_S2);
+		}
 		
 		//Perform Binning here
 		double[] binF = new double[TAG_S1.length];

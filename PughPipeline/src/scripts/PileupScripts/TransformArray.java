@@ -4,7 +4,7 @@ public class TransformArray {
 	
 	public static double[] reverseTran(double[] orig) {
 		if(orig != null) {
-			double[] reverse = new double[orig.length];
+			double[] reverse = new double[orig.length];		
 			for(int x = orig.length - 1; x >= 0; x--) {
 				reverse[orig.length - 1 - x] = orig[x];
 			}
@@ -12,7 +12,6 @@ public class TransformArray {
 		}
 		return null;
 	}
-	
 	
 	public static double[] smoothTran(double[] orig, int win) {
 		int window = win / 2;
