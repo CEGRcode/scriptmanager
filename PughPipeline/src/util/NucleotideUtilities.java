@@ -2,6 +2,7 @@ package util;
 
 public class NucleotideUtilities {
 	public static String RevComplement(String SEQ) {
+		SEQ = SEQ.toUpperCase();
 		String RC = "";
 		for (int x = 0; x < SEQ.length(); x++){
 			if(SEQ.charAt(x) == 'A') { RC = 'T' + RC; }
