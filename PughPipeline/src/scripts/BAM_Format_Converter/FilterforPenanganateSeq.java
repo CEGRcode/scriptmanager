@@ -78,6 +78,8 @@ public class FilterforPenanganateSeq extends JFrame {
 			reader.getFileHeader().setSortOrder(SAMFileHeader.SortOrder.coordinate);
 			final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, output);
 			
+			textArea.append(bamFile.getName() + "\n"); //output file name to textarea
+			
 			//Code to get individual chromosome stats
 			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
 			for (int z = 0; z < bai.getNumberOfReferences(); z++) {
@@ -94,11 +96,13 @@ public class FilterforPenanganateSeq extends JFrame {
 							String filter = "";
 							//if on the positive strand
 							if(!sr.getReadNegativeStrandFlag()) {
-								filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedStart() - 1, sr.getUnclippedStart() - 1).getBases());
+								if(sr.getUnclippedStart() - 1 > 0) { filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedStart() - 1, sr.getUnclippedStart() - 1).getBases()); }
 							}
 							else {
-								filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedEnd() + 1, sr.getUnclippedEnd() + 1).getBases());
-								filter = NucleotideUtilities.RevComplement(filter);
+								if(sr.getUnclippedEnd() + 1 <= seq.getSequenceLength()) {
+										filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedEnd() + 1, sr.getUnclippedEnd() + 1).getBases());
+										filter = NucleotideUtilities.RevComplement(filter);
+								}
 							}
 							//System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
 							if(filter.equals(SEQ)) { writer.addAlignment(sr); }							
