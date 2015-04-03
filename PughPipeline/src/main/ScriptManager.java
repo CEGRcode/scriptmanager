@@ -49,7 +49,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.6");
+		frmScriptManager.setTitle("Script Manager v0.7");
 		frmScriptManager.setBounds(100, 100, 500, 276);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
@@ -122,6 +122,82 @@ public class ScriptManager {
 				 });
 			}
 		});
+		
+		JPanel pnlBAM_Manip = new JPanel();
+		pnlBAM_Manip.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		tabbedPane.addTab("BAM Manipulation", null, pnlBAM_Manip, null);
+		
+				JButton btnBaiIndexer = new JButton("BAM-BAI Indexer");
+				btnBaiIndexer.setToolTipText("Generates BAI Index for given BAM files");
+				pnlBAM_Manip.add(btnBaiIndexer);
+				btnBaiIndexer.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									BAIIndexerWindow frame = new BAIIndexerWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
+				
+				JButton btnBamSort = new JButton("BAM File Sorter");
+				btnBamSort.setToolTipText("Sort BAM files in order to efficiently extract and manipulate.\nRAM intensive process. If program freezes, increase JAVA heap size");
+				pnlBAM_Manip.add(btnBamSort);
+				btnBamSort.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									SortBAMWindow frame = new SortBAMWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
+				
+				JButton btnBamRemoveDuplicates = new JButton("BAM Remove Duplicates");
+				btnBamRemoveDuplicates.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									BAMRemoveDupWindow frame = new BAMRemoveDupWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
+				btnBamRemoveDuplicates.setToolTipText("Removes duplicate reads in Paired-End sequencing given identical 5' read locations\nRAM intensive process. If program freezes, increase JAVA heap size");
+				pnlBAM_Manip.add(btnBamRemoveDuplicates);
+				
+				JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
+				btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
+				pnlBAM_Manip.add(btnBamReplicateMerge);
+				btnBamReplicateMerge.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									MergeBAMWindow frame = new MergeBAMWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
 		
 		JPanel pnlCoord_Manip = new JPanel();
 		tabbedPane.addTab("Coordinate Manipulation", null, pnlCoord_Manip, null);
@@ -237,82 +313,6 @@ public class ScriptManager {
 			}
 		});
 		
-		JPanel pnlBAM_Manip = new JPanel();
-		pnlBAM_Manip.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		tabbedPane.addTab("BAM Manipulation", null, pnlBAM_Manip, null);
-		
-				JButton btnBaiIndexer = new JButton("BAM-BAI Indexer");
-				btnBaiIndexer.setToolTipText("Generates BAI Index for given BAM files");
-				pnlBAM_Manip.add(btnBaiIndexer);
-				btnBaiIndexer.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									BAIIndexerWindow frame = new BAIIndexerWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
-					}
-				});
-				
-				JButton btnBamSort = new JButton("BAM File Sorter");
-				btnBamSort.setToolTipText("Sort BAM files in order to efficiently extract and manipulate.\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlBAM_Manip.add(btnBamSort);
-				btnBamSort.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									SortBAMWindow frame = new SortBAMWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
-					}
-				});
-				
-				JButton btnBamRemoveDuplicates = new JButton("BAM Remove Duplicates");
-				btnBamRemoveDuplicates.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									BAMRemoveDupWindow frame = new BAMRemoveDupWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
-					}
-				});
-				btnBamRemoveDuplicates.setToolTipText("Removes duplicate reads in Paired-End sequencing given identical 5' read locations\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlBAM_Manip.add(btnBamRemoveDuplicates);
-				
-				JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
-				btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlBAM_Manip.add(btnBamReplicateMerge);
-				btnBamReplicateMerge.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									MergeBAMWindow frame = new MergeBAMWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
-					}
-				});
-		
 		JPanel pnlBamConvert = new JPanel();
 		tabbedPane.addTab("BAM Format Converter", null, pnlBamConvert, null);
 		
@@ -424,7 +424,6 @@ public class ScriptManager {
 			tabbedPane.addTab("Data Visualization", null, pnlVisualization, null);
 				
 			JButton btnHeatMap = new JButton("Heat Map");
-			btnHeatMap.setEnabled(false);
 			btnHeatMap.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {

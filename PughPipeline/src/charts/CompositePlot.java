@@ -22,7 +22,7 @@ public class CompositePlot {
 		
 	}
 	
-	public static ChartPanel createCompositePlot(double[] x, double[] y1, double[] y2, ArrayList<Color> COLORS){
+	public static ChartPanel createCompositePlot(double[] x, double[] y1, double[] y2, String name, ArrayList<Color> COLORS){
 		final XYSeriesCollection dataset = new XYSeriesCollection();
 		final XYSeries seriesF = new XYSeries("Sense Strand");
 		final XYSeries seriesR = new XYSeries("Anti Strand");
@@ -34,13 +34,13 @@ public class CompositePlot {
 		dataset.addSeries(seriesF);
 		dataset.addSeries(seriesR);
 
-		final JFreeChart chart = createChart(dataset, COLORS);
+		final JFreeChart chart = createChart(dataset, name, COLORS);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		return chartPanel;
 	}
 	
-	public static Component createCompositePlot(double[] x, double[] y1, ArrayList<Color> COLORS){
+	public static Component createCompositePlot(double[] x, double[] y1, String name, ArrayList<Color> COLORS){
 		final XYSeriesCollection dataset = new XYSeriesCollection();
 		final XYSeries seriesC = new XYSeries("Data");
 		for(int i = 0; i < x.length; i++) {
@@ -48,16 +48,16 @@ public class CompositePlot {
 		}
 		dataset.addSeries(seriesC);
 		
-		final JFreeChart chart = createChart(dataset, COLORS);
+		final JFreeChart chart = createChart(dataset, name, COLORS);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		return chartPanel;
 	}
 		
-	private static JFreeChart createChart(final XYDataset dataset, ArrayList<Color> COLORS) {
+	private static JFreeChart createChart(final XYDataset dataset, String TITLE, ArrayList<Color> COLORS) {
 		//Call Chart
 		final JFreeChart chart = ChartFactory.createXYLineChart(
-				"Composite Plot", // chart title
+				TITLE, // chart title
 				"Distance from Feature (bp)", // x axis label
 				"Score", // y axis label
 				dataset, // data

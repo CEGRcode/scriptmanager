@@ -1,10 +1,7 @@
 package window_interface.Data_Analysis;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -28,7 +25,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
-import objects.BEDCoord;
 import objects.PileupParameters;
 import scripts.TagPileup;
 import util.FileSelection;
@@ -52,12 +48,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	
 	final DefaultListModel expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	Vector<BEDCoord> COORD = null;
-	private File INPUT = null;
+	final DefaultListModel bedList;
+	Vector<File> BEDFiles = new Vector<File>();
 	private File OUTPUT = null;
 	
 	private JButton btnPileup;
-	private JButton btnLoad;
+	private JButton btnLoadBamFiles;
 	private JButton btnRemoveBam;
 	private JButton btnOutputDirectory;
 	private JButton btnSenseColor;
@@ -79,7 +75,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JLabel lblTagShift;
 	private JLabel lblStdDevSize;
 	private JLabel lblNumStd;
-	private JLabel lblBEDFile;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrentOutput;
 	private JLabel lblPleaseSelectOutput;
@@ -110,8 +105,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         			JOptionPane.showMessageDialog(null, "Invalid Number of Standard Deviations!!! Must be larger than 0");
         		} else if(Integer.parseInt(txtCPU.getText()) < 1) {
         			JOptionPane.showMessageDialog(null, "Invalid Number of CPU's!!! Must use at least 1");
-        		} else if(INPUT == null) {
-        			JOptionPane.showMessageDialog(null, "BED File Not Loaded!!!");
+        		} else if(BEDFiles.size() < 1) {
+        			JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
         		} else if(BAMFiles.size() < 1) {
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
         		} else {
@@ -157,14 +152,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        	param.setStdNum(Integer.parseInt(txtNumStd.getText()));
 		        	param.setCPU(Integer.parseInt(txtCPU.getText()));
 
-		        	loadCoord();
-		        	
-	        		TagPileup pile = new TagPileup(COORD, BAMFiles, param);
+		        	TagPileup pile = new TagPileup(BEDFiles, BAMFiles, param);
 	        		
 	        		pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 					    	int temp = (Integer) propertyChangeEvent.getNewValue();
-					    	int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
+					    	int percentComplete = (int)(((double)(temp) / (BAMFiles.size() * BEDFiles.size())) * 100);
 				        	setProgress(percentComplete);
 					     }
 					 });
@@ -191,23 +184,23 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		setTitle("Tag Pileup");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 600, 700);
+		setBounds(125, 125, 600, 800);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		SpringLayout sl_contentPane = new SpringLayout();
 		contentPane.setLayout(sl_contentPane);
 	
-		JScrollPane scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -420, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
-		contentPane.add(scrollPane);
+		JScrollPane scrollPane_BAM = new JScrollPane();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BAM, 207, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BAM, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BAM, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(scrollPane_BAM);
 		
-		btnLoad = new JButton("Load BAM Files");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
-		btnLoad.addActionListener(new ActionListener() {
+		btnLoadBamFiles = new JButton("Load BAM Files");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBamFiles, 0, SpringLayout.WEST, scrollPane_BAM);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoadBamFiles, -6, SpringLayout.NORTH, scrollPane_BAM);
+		btnLoadBamFiles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
 				if(newBAMFiles != null) {
@@ -218,16 +211,16 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				}
 			}
 		});
-		contentPane.add(btnLoad);
+		contentPane.add(btnLoadBamFiles);
 		
       	expList = new DefaultListModel();
 		final JList listExp = new JList(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		scrollPane.setViewportView(listExp);
+		scrollPane_BAM.setViewportView(listExp);
 		
 		btnRemoveBam = new JButton("Remove BAM");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -6, SpringLayout.NORTH, scrollPane_BAM);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane_BAM);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -265,7 +258,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         rdbtnRead1.setSelected(true);
         
         JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 10, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 353, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BAM, -5, SpringLayout.NORTH, lblPleaseSelectWhich);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 10, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
         lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -400,17 +394,10 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(txtNumStd);
         txtNumStd.setColumns(10);
         
-        JButton btnLoadBedFile = new JButton("Load BED File");
+        JButton btnLoadBedFile = new JButton("Load BED Files");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBedFile, -1, SpringLayout.NORTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(btnLoadBedFile);
-        
-        lblBEDFile = new JLabel("No BED File Loaded");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 14, SpringLayout.SOUTH, lblBEDFile);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBedFile, -6, SpringLayout.NORTH, lblBEDFile);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblBEDFile, 5, SpringLayout.NORTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblBEDFile, 12, SpringLayout.EAST, btnLoadBedFile);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblBEDFile, 0, SpringLayout.EAST, contentPane);
-        contentPane.add(lblBEDFile);
         
         chckbxOutputData = new JCheckBox("Output Data");
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, -1, SpringLayout.NORTH, chckbxOutputData);
@@ -540,6 +527,30 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.WEST, btnCombinedColor, 75, SpringLayout.EAST, btnAntiColor);
         contentPane.add(btnCombinedColor);
         
+        JScrollPane scrollPane_BED = new JScrollPane();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BED, 6, SpringLayout.SOUTH, btnLoadBedFile);
+        sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BED, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BED, -5, SpringLayout.NORTH, btnLoadBamFiles);
+        sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BED, -10, SpringLayout.EAST, contentPane);
+        contentPane.add(scrollPane_BED);
+        
+        bedList = new DefaultListModel();
+		final JList listBed = new JList(bedList);
+		listBed.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		scrollPane_BED.setViewportView(listBed);
+        
+        JButton btnRemoveBed = new JButton("Remove BED");
+        btnRemoveBed.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		while(listBed.getSelectedIndex() > -1) {
+   					BEDFiles.remove(listBed.getSelectedIndex());
+   					bedList.remove(listBed.getSelectedIndex());
+   				}
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBed, 0, SpringLayout.EAST, scrollPane_BAM);
+        contentPane.add(btnRemoveBed);
+        
         rdbtnNone.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		    	  if(rdbtnNone.isSelected()) {
@@ -600,14 +611,16 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         
         btnLoadBedFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File temp = FileSelection.getBEDFile(fc);
-				if(temp != null) {
-					INPUT = temp;
-					lblBEDFile.setText(INPUT.getName());
+				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				if(newBEDFiles != null) {
+					for(int x = 0; x < newBEDFiles.length; x++) { 
+						BEDFiles.add(newBEDFiles[x]);
+						bedList.addElement(newBEDFiles[x].getName());
+					}
 				}
 			}
 		});   
-              
+		
         btnOutputDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				OUTPUT = FileSelection.getOutputDir(fc);
@@ -691,30 +704,5 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
         }
-    }
-	
-    public void loadCoord() throws FileNotFoundException {
-		Scanner scan = new Scanner(INPUT);
-		COORD = new Vector<BEDCoord>();
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
-			if(temp.length > 2) { 
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
-					String name = "";
-					if(temp.length > 3) { name = temp[3]; }
-					else { name = temp[0] + "_" + temp[1] + "_" + temp[2]; }
-					if(Integer.parseInt(temp[1]) >= 0) {
-						if(temp.length > 4) { 
-							if(temp[5].equals("+")) { COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name)); }
-							else { COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "-", name)); }
-						} else { COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name)); }
-
-					} else {
-						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
-					}
-				}
-			}
-		}
-		scan.close();
     }
 }
