@@ -1,15 +1,9 @@
 package scripts;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.util.CloseableIterator;
-
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -31,6 +25,7 @@ import objects.BEDCoord;
 import objects.PileupParameters;
 import scripts.PileupScripts.PileupExtract;
 import scripts.PileupScripts.TransformArray;
+import util.BAMUtilities;
 import util.JTVOutput;
 
 @SuppressWarnings("serial")
@@ -82,7 +77,7 @@ public class TagPileup extends JFrame {
 		CPU = param.getCPU();
 	}
 	
-	public void run() throws FileNotFoundException {		
+	public void run() throws IOException {		
 		for(int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z);	//Pull current BAM file
 			String time = getTimeStamp(); //Generate TimeStamp
@@ -98,7 +93,7 @@ public class TagPileup extends JFrame {
 				STATS.append(BAM.getName() + "\n");
 				
 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
-				if(PARAM.getStandard()) { calculateStandardizationRatio(BAM); }
+				if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM)); }
 				
 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
 					
@@ -262,32 +257,7 @@ public class TagPileup extends JFrame {
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
 	}
-	
-	public void calculateStandardizationRatio(File BAM) {
-		SamReader inputSam = SamReaderFactory.makeDefault().open(BAM);
-		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
-		double counter = 0;
-		double totalAligned = 0;
-		double totalGenome = 0;
 		
-		for (int x = 0; x < bai.getNumberOfReferences(); x++) {
-			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(x);
-			totalAligned += inputSam.indexing().getIndex().getMetaData(x).getAlignedRecordCount();
-			totalGenome += seq.getSequenceLength();
-		}
-		CloseableIterator<SAMRecord> iter = inputSam.iterator();
-		while (iter.hasNext()) {
-			SAMRecord sr = iter.next();
-			if(sr.getReadPairedFlag()) {
-				if(sr.getSecondOfPairFlag()) { counter++; } //count read 2 to remove from aligned reads
-			}
-		}
-		bai.close();
-		iter.close();
-		totalAligned -= counter;
-		PARAM.setRatio(totalAligned / totalGenome);
-	}
-	
     public Vector<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
 		Scanner scan = new Scanner(INPUT);
 		Vector<BEDCoord> COORD = new Vector<BEDCoord>();
