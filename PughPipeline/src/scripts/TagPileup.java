@@ -122,22 +122,30 @@ public class TagPileup extends JFrame {
 					
 					for (int x = 0; x < bai.getNumberOfReferences(); x++) {
 						SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(x);
-						totalAligned += inputSam.indexing().getIndex().getMetaData(z).getAlignedRecordCount();
+						totalAligned += inputSam.indexing().getIndex().getMetaData(x).getAlignedRecordCount();
 						totalGenome += seq.getSequenceLength();
 					}
 					CloseableIterator<SAMRecord> iter = inputSam.iterator();
 					while (iter.hasNext()) {
 						SAMRecord sr = iter.next();
 						if(sr.getReadPairedFlag()) {
-							if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
-								counter++;
-							}
+							if(sr.getSecondOfPairFlag()) { counter++; } //count read 2 to remove from aligned reads
 						}
+//						if(sr.getReadPairedFlag()) {
+//							if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
+//								counter++;
+//							}
+//						}
 					}
 					bai.close();
 					iter.close();
-					if(counter != 0) PARAM.setRatio(counter / totalGenome);
-					else PARAM.setRatio(totalAligned / totalGenome);
+
+					totalAligned -= counter;
+					PARAM.setRatio(totalAligned / totalGenome);
+
+					//if(counter != 0) PARAM.setRatio(counter / totalGenome);
+					//else PARAM.setRatio(totalAligned / totalGenome);
+					
 					//System.out.println(counter + "\t" + totalGenome + "\t" + PARAM.getRatio());
 				}
 				
