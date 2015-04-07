@@ -47,7 +47,7 @@ public class MergeHeatMapPlot extends JFrame {
 		
 		for(int x = 0; x < senseFile.size(); x++) {
 			String name = senseFile.get(x).getName();
-			String out = name.substring(0, name.indexOf("sense"));
+			String out = name.substring(0, name.lastIndexOf("sense"));
 			int matchIndex = -999;
 			for(int y = 0; y < antiFile.size(); y++) {
 				if(antiFile.get(y).getName().contains(out)) { matchIndex = y; }
