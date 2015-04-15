@@ -26,6 +26,7 @@ import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
+import window_interface.Data_Analysis.DNAShapeWindow;
 import window_interface.Data_Analysis.FASTAExtractWindow;
 import window_interface.Data_Analysis.GeneTrackWindow;
 import window_interface.Data_Analysis.PeakPairWindow;
@@ -419,6 +420,23 @@ public class ScriptManager {
 				}
 			});
 			pnlAnalysis.add(btnFASTAExtract);
+			
+			JButton btnDnaShapePredictions = new JButton("DNA Shape Predictions");
+			btnDnaShapePredictions.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								DNAShapeWindow frame = new DNAShapeWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlAnalysis.add(btnDnaShapePredictions);
 			
 			JPanel pnlVisualization = new JPanel();
 			tabbedPane.addTab("Data Visualization", null, pnlVisualization, null);
