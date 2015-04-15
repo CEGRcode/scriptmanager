@@ -18,22 +18,20 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+import javax.swing.JCheckBox;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.FASTAExtract;
+import scripts.Data_Analysis.FASTAExtract;
 import util.FileSelection;
-
-import java.awt.Font;
-import java.awt.Color;
-import javax.swing.JCheckBox;
-
 
 @SuppressWarnings("serial")
 public class FASTAExtractWindow extends JFrame implements ActionListener, PropertyChangeListener {

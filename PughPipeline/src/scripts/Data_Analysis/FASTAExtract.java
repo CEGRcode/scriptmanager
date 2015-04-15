@@ -1,4 +1,4 @@
-package scripts;
+package scripts.Data_Analysis;
 
 import htsjdk.samtools.SAMException;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;

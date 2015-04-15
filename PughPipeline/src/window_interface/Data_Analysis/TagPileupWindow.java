@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
 import objects.PileupParameters;
-import scripts.TagPileup;
+import scripts.Data_Analysis.TagPileup;
 import util.FileSelection;
 
 import java.awt.event.ActionEvent;

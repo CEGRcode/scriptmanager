@@ -1,4 +1,4 @@
-package scripts.PileupScripts;
+package scripts.Data_Analysis.PileupScripts;
 
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SamReader;

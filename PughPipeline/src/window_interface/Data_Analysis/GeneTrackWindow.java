@@ -35,7 +35,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.GeneTrack;
+import scripts.Data_Analysis.GeneTrack;
 import util.FileSelection;
 import objects.GenetrackParameters;
 

@@ -35,7 +35,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.PeakPair;
+import scripts.Data_Analysis.PeakPair;
 import util.FileSelection;
 
 @SuppressWarnings("serial")

@@ -1,4 +1,4 @@
-package scripts;
+package scripts.Data_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;

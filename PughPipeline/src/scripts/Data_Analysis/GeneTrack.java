@@ -1,4 +1,4 @@
-package scripts;
+package scripts.Data_Analysis;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMRecord;
