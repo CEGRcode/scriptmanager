@@ -4,16 +4,12 @@ import htsjdk.samtools.SAMException;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 
 import java.awt.BorderLayout;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -21,13 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import objects.BEDCoord;
-import util.LineReader;
-
-/*
- * Adapted from:
- * https://github.com/mdshw5/pyfaidx/blob/master/pyfaidx/__init__.py
- * pyfaidx python program for manipulating fasta files efficiently
- */
+import util.FASTAUtilities;
 
 @SuppressWarnings("serial")
 public class FASTAExtract extends JFrame {
@@ -63,7 +53,7 @@ public class FASTAExtract extends JFrame {
 		//Check if FAI index file exists
 		if(!FAI.exists() || FAI.isDirectory()) {
 			textArea.append("FASTA Index file not found.\nGenerating new one...\n");
-			INDEX = buildFASTAIndex(GENOME);
+			INDEX = FASTAUtilities.buildFASTAIndex(GENOME);
 		}		
 		if(INDEX) {
 			try{			
@@ -87,7 +77,7 @@ public class FASTAExtract extends JFrame {
 						try {
 							String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(), BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases());
 							if(STRAND && BED_Coord.get(y).getDir().equals("-")) {
-								seq = RevComplement(seq);
+								seq = FASTAUtilities.RevComplement(seq);
 							}
 							OUT.println(">" + BED_Coord.get(y).getName() + "\n" + seq);
 						} catch (SAMException e) {
@@ -110,20 +100,7 @@ public class FASTAExtract extends JFrame {
 			textArea.append("Genome FASTA file contains invalid lines!!!\n");
 		}
 	}
-	
-	public String RevComplement (String SEQ) {
-		SEQ = SEQ.toUpperCase();
-		String RC = "";
-		for (int x = 0; x < SEQ.length(); x++){
-			if(SEQ.charAt(x) == 'A') { RC = 'T' + RC; }
-			else if(SEQ.charAt(x) == 'T') { RC = 'A' + RC; }
-			else if(SEQ.charAt(x) == 'G') { RC = 'C' + RC; }
-			else if(SEQ.charAt(x) == 'C') { RC = 'G' + RC; }
-			else { RC = 'N' + RC; }
-		}
-		return RC;
-	}
-	
+		
     public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
 		Scanner scan = new Scanner(INPUT);
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
@@ -146,74 +123,4 @@ public class FASTAExtract extends JFrame {
 		scan.close();
 		return COORD;
     }
-
-    //contig_name\tcontig_length\toffset_distance_from_last_contig\tcolumnlength\tcolumnlength_with_endline\n"
-    //chr1    230218  6       60      61
-    //chr2    813184  234067  60      61
-    public boolean buildFASTAIndex(File fasta) throws IOException {
-    	textArea.append(getTimeStamp() + "\nBuilding Genome Index...\n");
-    	
-    	boolean properFASTA = true;
-    	ArrayList<String> IMPROPER_FASTA = new ArrayList<String>();
-    	int counter = 0;
-
-    	String contig = "";
-    	int binaryOffset = 0;
-    	int currentOffset = 0;
-    	int contigLength = 0;
-    	int column_Length = 0;
-    	int untrimmed_Column_Length = 0;
-    	    	
-    	BufferedReader b_read = new BufferedReader(new FileReader(fasta));
-    	LineReader reader = new LineReader(b_read);
-    	PrintStream FAI = new PrintStream(fasta.getName() + ".fai");
-    	
-    	String strLine = "";
-    	while(!(strLine = reader.readLine()).equals("")) {
-    		//Pull parameters line
-    		int current_untrimmed_Column_Length = strLine.length();
-			int current_column_Length = strLine.trim().length();
-
-			if(strLine.contains(">")) {
-				if(IMPROPER_FASTA.size() > 1) {
-					textArea.append("Unequal column size FASTA Line at:\n");
-					for(int z = 0; z < IMPROPER_FASTA.size(); z++) {	textArea.append(contig + "\t" + IMPROPER_FASTA.get(z) + "\n");	}
-					properFASTA = false;
-					break;
-				}
-				if(counter > 0) { FAI.println(contig + "\t" + contigLength + "\t" + currentOffset + "\t" + column_Length + "\t" + untrimmed_Column_Length);	}
-				//Reset parameters for new contig
-				untrimmed_Column_Length = 0;
-				contigLength = 0;
-				column_Length = 0;
-				contig = strLine.trim().substring(1);
-				binaryOffset += current_untrimmed_Column_Length;
-				currentOffset = binaryOffset;
-				IMPROPER_FASTA = new ArrayList<String>();
-			} else {
-				if(untrimmed_Column_Length == 0) { untrimmed_Column_Length = current_untrimmed_Column_Length; }
-				if(column_Length == 0) { column_Length = current_column_Length;	}
-				binaryOffset += current_untrimmed_Column_Length;
-				contigLength += current_column_Length;
-				
-				//Check to make sure all the columns are equal. Index is invalid otherwise
-				if(current_untrimmed_Column_Length != untrimmed_Column_Length || current_untrimmed_Column_Length == 0) { IMPROPER_FASTA.add(strLine.trim());	}
-			}
-			counter++;
-    	}
-		FAI.println(contig + "\t" + contigLength + "\t" + currentOffset + "\t" + column_Length + "\t" + untrimmed_Column_Length);
-		b_read.close();
-    	FAI.close();
-    	
-		if(properFASTA) textArea.append("Genome Index Built\n" + getTimeStamp() + "\n");
-		else { new File(fasta.getName() + ".fai").delete(); }
-		
-		return properFASTA;
-    }
-    
-	private static String getTimeStamp() {
-		Date date= new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
-	}
 }
