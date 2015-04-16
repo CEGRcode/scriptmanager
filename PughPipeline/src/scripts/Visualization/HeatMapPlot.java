@@ -24,7 +24,7 @@ import javax.swing.JSplitPane;
 import org.jfree.chart.ChartPanel;
 
 import charts.CompositePlot;
-import util.MatrixStatistics;
+import util.CDTUtilities;
 import window_interface.Visualization.HeatMapOptions;
 
 import java.awt.event.ActionListener;
@@ -103,16 +103,16 @@ public class HeatMapPlot extends JFrame {
 	
 	public void run() throws IOException {
 		//Load CDT File into memory && calculate basics stats
-		CDT = MatrixStatistics.loadCDT(INPUT);
-		STATS = MatrixStatistics.getStats(CDT);
+		CDT = CDTUtilities.loadCDT(INPUT);
+		STATS = CDTUtilities.getStats(CDT);
 		
 		//Generate composite plot
-		double[] COMPOSITE = MatrixStatistics.getComposite(CDT);
+		double[] COMPOSITE = CDTUtilities.getComposite(CDT);
 		double[] DOMAIN = new double[COMPOSITE.length];
 		ArrayList<Color> COLOR = new ArrayList<Color>();
 		COLOR.add(MAXCOLOR);
 		for(int x = 0; x < DOMAIN.length; x++) { DOMAIN[x] = x; }
-		COMPOSITE_PLOT = (ChartPanel) CompositePlot.createCompositePlot(DOMAIN, COMPOSITE, COLOR);
+		COMPOSITE_PLOT = (ChartPanel) CompositePlot.createCompositePlot(DOMAIN, COMPOSITE, INPUT.getName(), COLOR);
 		
 		
 		//Generate heatmap
@@ -130,10 +130,8 @@ public class HeatMapPlot extends JFrame {
 		heatPane.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
             	if(allowResize) { resizeLabel(); }
-            }
+			}
         });
-		
-		System.out.println("Here");
 		
 		option = new HeatMapOptions(this);
 		option.populate();

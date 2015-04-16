@@ -53,6 +53,22 @@ public class CompositePlot {
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		return chartPanel;
 	}
+	
+	public static Component createCompositePlot(double[] x, double[] y1, String name){
+		final XYSeriesCollection dataset = new XYSeriesCollection();
+		final XYSeries seriesC = new XYSeries("Data");
+		for(int i = 0; i < x.length; i++) {
+			seriesC.add(x[i], y1[i]);
+		}
+		dataset.addSeries(seriesC);
+		
+		ArrayList<Color> COLORS = new ArrayList<Color>();
+		COLORS.add(Color.BLACK);
+		final JFreeChart chart = createChart(dataset, name, COLORS);
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		return chartPanel;
+	}
 		
 	private static JFreeChart createChart(final XYDataset dataset, String TITLE, ArrayList<Color> COLORS) {
 		//Call Chart
