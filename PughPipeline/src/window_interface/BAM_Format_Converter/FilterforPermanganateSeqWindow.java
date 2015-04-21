@@ -31,7 +31,7 @@ import javax.swing.JLabel;
 import scripts.BAM_Format_Converter.FilterforPenanganateSeq;
 import scripts.BAM_Manipulation.BAIIndexer;
 import util.FileSelection;
-import util.NucleotideUtilities;
+import util.FASTAUtilities;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
@@ -66,7 +66,7 @@ public class FilterforPermanganateSeqWindow extends JFrame implements ActionList
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	if(!NucleotideUtilities.parseStringforInvalideNuc(txtSeq.getText())) {
+        	if(!FASTAUtilities.parseStringforInvalideNuc(txtSeq.getText())) {
         		JOptionPane.showMessageDialog(null, "Invalid Sequence to filter by!!!");
         	} else {
 	        	for(int x = 0; x < BAMFiles.size(); x++) {

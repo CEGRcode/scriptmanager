@@ -81,7 +81,7 @@ public class TagPileup extends JFrame {
 		for(int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z);	//Pull current BAM file
 			String time = getTimeStamp(); //Generate TimeStamp
-			
+						
 			JTextArea STATS = new JTextArea();
 			STATS.setEditable(false);
 			STATS.append(time + "\n");
@@ -94,7 +94,7 @@ public class TagPileup extends JFrame {
 				
 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
 				if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM)); }
-				
+								
 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
 					
 					if(PARAM.getOutput() != null) {
@@ -109,7 +109,7 @@ public class TagPileup extends JFrame {
 					}
 					
 					Vector<BEDCoord> INPUT = loadCoord(BEDFiles.get(BED_Index));
-					
+										
 					//Split up job and send out to threads to process				
 					ExecutorService parseMaster = Executors.newFixedThreadPool(CPU);
 					if(INPUT.size() < CPU) CPU = INPUT.size();
@@ -130,7 +130,7 @@ public class TagPileup extends JFrame {
 					parseMaster.shutdown();
 					while (!parseMaster.isTerminated()) {
 					}
-
+					
 					double[] AVG_S1 = new double[INPUT.get(0).getFStrand().length];
 					double[] AVG_S2 = null;
 					if(STRAND == 0) AVG_S2 = new double[AVG_S1.length];

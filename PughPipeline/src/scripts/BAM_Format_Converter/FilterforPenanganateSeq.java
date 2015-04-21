@@ -28,7 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import util.LineReader;
-import util.NucleotideUtilities;
+import util.FASTAUtilities;
 
 @SuppressWarnings("serial")
 public class FilterforPenanganateSeq extends JFrame {
@@ -101,7 +101,7 @@ public class FilterforPenanganateSeq extends JFrame {
 							else {
 								if(sr.getUnclippedEnd() + 1 <= seq.getSequenceLength()) {
 										filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedEnd() + 1, sr.getUnclippedEnd() + 1).getBases());
-										filter = NucleotideUtilities.RevComplement(filter);
+										filter = FASTAUtilities.RevComplement(filter);
 								}
 							}
 							//System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
@@ -115,7 +115,7 @@ public class FilterforPenanganateSeq extends JFrame {
 						}
 						else {
 							filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedEnd() + 1, sr.getUnclippedEnd() + 1).getBases());
-							filter = NucleotideUtilities.RevComplement(filter);
+							filter = FASTAUtilities.RevComplement(filter);
 						}
 						System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
 						if(filter.equals(SEQ)) { writer.addAlignment(sr); }		

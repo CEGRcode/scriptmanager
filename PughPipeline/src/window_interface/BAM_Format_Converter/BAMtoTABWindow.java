@@ -35,7 +35,7 @@ import java.beans.PropertyChangeListener;
 
 import scripts.BAM_Format_Converter.BAMtoTAB;
 import util.FileSelection;
-import util.NucleotideUtilities;
+import util.FASTAUtilities;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
@@ -72,9 +72,9 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
-        	if(chckbx5FilterEnd.isSelected() && !NucleotideUtilities.parseStringforInvalideNuc(txt5Seq.getText())) { 
+        	if(chckbx5FilterEnd.isSelected() && !FASTAUtilities.parseStringforInvalideNuc(txt5Seq.getText())) { 
         			JOptionPane.showMessageDialog(null, "Invalid 5' Sequence!!! Must be A/T/G/C");
-        	} else if(chckbx3FilterEnd.isSelected() && !NucleotideUtilities.parseStringforInvalideNuc(txt3Seq.getText())) {
+        	} else if(chckbx3FilterEnd.isSelected() && !FASTAUtilities.parseStringforInvalideNuc(txt3Seq.getText())) {
         			JOptionPane.showMessageDialog(null, "Invalid 3' Sequence!!! Must be A/T/G/C");
         	} else {
 	        	setProgress(0);

@@ -33,6 +33,7 @@ public class BAMUtilities {
 		inputSam.close();
 		bai.close();
 		iter.close();
+				
 		totalAligned -= counter;
 		if(totalAligned > 0) { return (totalAligned / totalGenome); }
 		else { return 1; }
