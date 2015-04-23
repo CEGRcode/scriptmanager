@@ -173,9 +173,10 @@ public class HeatMapPanel extends JFrame {
 	}
 	
 	public BufferedImage resize(BufferedImage img, int newW, int newH) { 
-	    BufferedImage resized_image = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage resized_image = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D)resized_image.createGraphics();
-		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		//g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		g2.drawImage(img, 0, 0, newW, newH, null);
 		g2.dispose();
 		return resized_image;

@@ -179,7 +179,7 @@ public class HeatMapOptions extends JFrame {
 				JFileChooser saveFile = new JFileChooser();
 				saveFile.setSelectedFile(new File(NAME + ".png"));
                 saveFile.showSaveDialog(null);
-                try { ImageIO.write(ORIGIN.resize(ORIGIN.HEAT_PLOT, ORIGIN.heatLabel.getWidth(), ORIGIN.heatLabel.getHeight()), "PNG", saveFile.getSelectedFile()); }
+                try { ImageIO.write(ORIGIN.resize(ORIGIN.HEAT_PLOT, ORIGIN.heatLabel.getIcon().getIconWidth(), ORIGIN.heatLabel.getIcon().getIconHeight()), "PNG", saveFile.getSelectedFile()); }
                 catch (IOException e) { e.printStackTrace(); }
 			}
 		});
