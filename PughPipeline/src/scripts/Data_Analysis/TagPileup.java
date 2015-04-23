@@ -225,12 +225,11 @@ public class TagPileup extends JFrame {
 						JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1), PARAM.getAntiColor());
 						OUT_S2.close();
 					}
-								
+					STATS.setCaretPosition(0);
+					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					tabbedPane_Statistics.add(BAM.getName(), newpane);
+			        firePropertyChange("tag", z, z + 1);								
 				}
-				STATS.setCaretPosition(0);
-				JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				tabbedPane_Statistics.add(BAM.getName(), newpane);
-		        firePropertyChange("tag", z, z + 1);
 			}
 		}		
 	}
