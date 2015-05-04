@@ -133,8 +133,8 @@ public class HeatMapPanel extends JFrame {
 	}
 	
 	public BufferedImage generateHeatMap() throws FileNotFoundException {
-		int width = 2;
-		int height = 2;
+		int width = 1;
+		int height = 1;
 		
 		int pixwidth = CDT.get(0).length * width;
 		int pixheight = CDT.size() * height;
