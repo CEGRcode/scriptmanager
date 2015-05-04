@@ -19,7 +19,7 @@ public class FourColorPlot {
 	 * @param height, height of each base, in pixel
 	 */
 	public static void generatePLOT(File input, File output, ArrayList<Color> COLOR) throws IOException {
-		int width = 3;
+		int width = 1;
 		int height = 1;
 		
 		List<String> seq = new ArrayList<String>();
