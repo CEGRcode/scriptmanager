@@ -56,7 +56,7 @@ public class FilterforPenanganateSeq extends JFrame {
 		bamFile = in;
 		genome = gen;
 		output = out;
-		SEQ = s;
+		SEQ = s.toUpperCase();
 	}
 	
 	public void run() throws IOException {
@@ -105,7 +105,7 @@ public class FilterforPenanganateSeq extends JFrame {
 								}
 							}
 							//System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
-							if(filter.equals(SEQ)) { writer.addAlignment(sr); }							
+							if(filter.toUpperCase().equals(SEQ)) { writer.addAlignment(sr); }							
 						}
 					} else {
 						String filter = "";
@@ -117,8 +117,8 @@ public class FilterforPenanganateSeq extends JFrame {
 							filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedEnd() + 1, sr.getUnclippedEnd() + 1).getBases());
 							filter = FASTAUtilities.RevComplement(filter);
 						}
-						System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
-						if(filter.equals(SEQ)) { writer.addAlignment(sr); }		
+						//System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
+						if(filter.toUpperCase().equals(SEQ)) { writer.addAlignment(sr); }		
 					}
 				}
 				iter.close();
