@@ -55,7 +55,7 @@ public class FASTAUtilities {
     	    	
     	BufferedReader b_read = new BufferedReader(new FileReader(fasta));
     	LineReader reader = new LineReader(b_read);
-    	PrintStream FAI = new PrintStream(fasta.getName() + ".fai");
+    	PrintStream FAI = new PrintStream(fasta.getCanonicalPath() + ".fai");
     	
     	String strLine = "";
     	while(!(strLine = reader.readLine()).equals("")) {
