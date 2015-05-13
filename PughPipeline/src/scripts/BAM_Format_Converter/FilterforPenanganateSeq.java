@@ -13,21 +13,14 @@ import htsjdk.samtools.util.CloseableIterator;
 import htsjdk.samtools.util.IOUtil;
 
 import java.awt.BorderLayout;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import util.LineReader;
 import util.FASTAUtilities;
 
 @SuppressWarnings("serial")
@@ -64,7 +57,7 @@ public class FilterforPenanganateSeq extends JFrame {
 		//Check if FAI index file exists
 		if(!FAI.exists() || FAI.isDirectory()) {
 			textArea.append("FASTA Index file not found.\nGenerating new one...\n");
-			FASTA_INDEX = buildFASTAIndex(genome);
+			FASTA_INDEX = FASTAUtilities.buildFASTAIndex(genome);
 		}		
 		
 		//Check if BAI index file exists
@@ -133,75 +126,5 @@ public class FilterforPenanganateSeq extends JFrame {
 		} else {
 			JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + bamFile.getName() + "\n");
 		}
-	}
-	
-	//contig_name\tcontig_length\toffset_distance_from_last_contig\tcolumnlength\tcolumnlength_with_endline\n"
-    //chr1    230218  6       60      61
-    //chr2    813184  234067  60      61
-    public boolean buildFASTAIndex(File fasta) throws IOException {
-    	textArea.append(getTimeStamp() + "\nBuilding Genome Index...\n");
-    	
-    	boolean properFASTA = true;
-    	ArrayList<String> IMPROPER_FASTA = new ArrayList<String>();
-    	int counter = 0;
-
-    	String contig = "";
-    	int binaryOffset = 0;
-    	int currentOffset = 0;
-    	int contigLength = 0;
-    	int column_Length = 0;
-    	int untrimmed_Column_Length = 0;
-    	    	
-    	BufferedReader b_read = new BufferedReader(new FileReader(fasta));
-    	LineReader reader = new LineReader(b_read);
-    	PrintStream FAI = new PrintStream(fasta.getName() + ".fai");
-    	
-    	String strLine = "";
-    	while(!(strLine = reader.readLine()).equals("")) {
-    		//Pull parameters line
-    		int current_untrimmed_Column_Length = strLine.length();
-			int current_column_Length = strLine.trim().length();
-
-			if(strLine.contains(">")) {
-				if(IMPROPER_FASTA.size() > 1) {
-					textArea.append("Unequal column size FASTA Line at:\n");
-					for(int z = 0; z < IMPROPER_FASTA.size(); z++) {	textArea.append(contig + "\t" + IMPROPER_FASTA.get(z) + "\n");	}
-					properFASTA = false;
-					break;
-				}
-				if(counter > 0) { FAI.println(contig + "\t" + contigLength + "\t" + currentOffset + "\t" + column_Length + "\t" + untrimmed_Column_Length);	}
-				//Reset parameters for new contig
-				untrimmed_Column_Length = 0;
-				contigLength = 0;
-				column_Length = 0;
-				contig = strLine.trim().substring(1);
-				binaryOffset += current_untrimmed_Column_Length;
-				currentOffset = binaryOffset;
-				IMPROPER_FASTA = new ArrayList<String>();
-			} else {
-				if(untrimmed_Column_Length == 0) { untrimmed_Column_Length = current_untrimmed_Column_Length; }
-				if(column_Length == 0) { column_Length = current_column_Length;	}
-				binaryOffset += current_untrimmed_Column_Length;
-				contigLength += current_column_Length;
-				
-				//Check to make sure all the columns are equal. Index is invalid otherwise
-				if(current_untrimmed_Column_Length != untrimmed_Column_Length || current_untrimmed_Column_Length == 0) { IMPROPER_FASTA.add(strLine.trim());	}
-			}
-			counter++;
-    	}
-		FAI.println(contig + "\t" + contigLength + "\t" + currentOffset + "\t" + column_Length + "\t" + untrimmed_Column_Length);
-		b_read.close();
-    	FAI.close();
-    	
-		if(properFASTA) textArea.append("Genome Index Built\n" + getTimeStamp() + "\n");
-		else { new File(fasta.getName() + ".fai").delete(); }
-		
-		return properFASTA;
-    }
-    
-	private static String getTimeStamp() {
-		Date date= new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
 	}
 }
