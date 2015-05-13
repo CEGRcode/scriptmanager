@@ -59,7 +59,7 @@ public class FilterforPenanganateSeq extends JFrame {
 		SEQ = s.toUpperCase();
 	}
 	
-	public void run() throws IOException {
+	public void run() throws IOException, InterruptedException {
 		File FAI = new File(genome + ".fai");
 		//Check if FAI index file exists
 		if(!FAI.exists() || FAI.isDirectory()) {
@@ -127,7 +127,9 @@ public class FilterforPenanganateSeq extends JFrame {
 			writer.close();
 			reader.close();
 			bai.close();
-
+			
+			Thread.sleep(2000);
+			dispose();
 		} else {
 			JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + bamFile.getName() + "\n");
 		}
