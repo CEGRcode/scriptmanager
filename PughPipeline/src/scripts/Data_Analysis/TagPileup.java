@@ -228,7 +228,7 @@ public class TagPileup extends JFrame {
 					STATS.setCaretPosition(0);
 					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					tabbedPane_Statistics.add(BAM.getName(), newpane);
-			        firePropertyChange("tag", z, z + 1);								
+			        firePropertyChange("tag", (z + 1) * (BED_Index + 1), ((z + 1) * (BED_Index + 1)) + 1);								
 				}
 			}
 		}		
