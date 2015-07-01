@@ -91,10 +91,9 @@ public class DNAShapePrediction extends JFrame {
 			try{
 				IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
 				STRUCTURE = DNAShapeReference.InitializeStructure();
-				
+
 				for(int x = 0; x < BED.size(); x++) {
 					String NAME = BED.get(x).getName().split("\\.")[0];
-					
 					String time = getTimeStamp(); //Generate TimeStamp
 					JTextArea STATS_MGW = null;
 					JTextArea STATS_PropT = null;
@@ -120,7 +119,6 @@ public class DNAShapePrediction extends JFrame {
 						STATS_Roll.setEditable(false);
 						STATS_Roll.append(time + "\n" + NAME + "\n");	
 					}
-					
 					openOutputFiles(x);
 					ArrayList<BEDCoord> BED_Coord = loadCoord(BED.get(x));
 					
@@ -131,9 +129,8 @@ public class DNAShapePrediction extends JFrame {
 					
 					for(int y = 0; y < BED_Coord.size(); y++) {
 						try {
-							String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(), BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases());
+							String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(), BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases()).toUpperCase();
 							if(STRAND && BED_Coord.get(y).getDir().equals("-")) { seq = FASTAUtilities.RevComplement(seq); }
-
 							//Populate array for each BED file
 							List<Double> MGW = new ArrayList<Double>();
 							List<Double> PropT = new ArrayList<Double>();
