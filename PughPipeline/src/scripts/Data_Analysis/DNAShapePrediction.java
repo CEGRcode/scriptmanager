@@ -130,93 +130,95 @@ public class DNAShapePrediction extends JFrame {
 					for(int y = 0; y < BED_Coord.size(); y++) {
 						try {
 							String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(), BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases()).toUpperCase();
-							if(STRAND && BED_Coord.get(y).getDir().equals("-")) { seq = FASTAUtilities.RevComplement(seq); }
-							//Populate array for each BED file
-							List<Double> MGW = new ArrayList<Double>();
-							List<Double> PropT = new ArrayList<Double>();
-							List<Double> HelT = new ArrayList<Double>();
-							List<Double> Roll = new ArrayList<Double>();
-							for(int z = 0; z < seq.length() - 4; z++) {
-								String key = seq.substring(z, z + 5);
-								List<Double> SCORES = STRUCTURE.get(key);
-								if(OUTPUT_TYPE[0]) { MGW.add(SCORES.get(0)); }
-								if(OUTPUT_TYPE[1]) { PropT.add(SCORES.get(1)); }
-								if(OUTPUT_TYPE[2]) { 
-									if(z == 0) {
-										HelT.add(SCORES.get(2));
-										HelT.add(SCORES.get(3));
-									} else {
-										HelT.set(HelT.size() - 1, (HelT.get(HelT.size() - 1) + SCORES.get(2)) / 2);
-										HelT.add(SCORES.get(3));
+							if(!seq.contains("N")) {
+								if(STRAND && BED_Coord.get(y).getDir().equals("-")) { seq = FASTAUtilities.RevComplement(seq); }
+								//Populate array for each BED file
+								List<Double> MGW = new ArrayList<Double>();
+								List<Double> PropT = new ArrayList<Double>();
+								List<Double> HelT = new ArrayList<Double>();
+								List<Double> Roll = new ArrayList<Double>();
+								for(int z = 0; z < seq.length() - 4; z++) {
+									String key = seq.substring(z, z + 5);
+									List<Double> SCORES = STRUCTURE.get(key);
+									if(OUTPUT_TYPE[0]) { MGW.add(SCORES.get(0)); }
+									if(OUTPUT_TYPE[1]) { PropT.add(SCORES.get(1)); }
+									if(OUTPUT_TYPE[2]) { 
+										if(z == 0) {
+											HelT.add(SCORES.get(2));
+											HelT.add(SCORES.get(3));
+										} else {
+											HelT.set(HelT.size() - 1, (HelT.get(HelT.size() - 1) + SCORES.get(2)) / 2);
+											HelT.add(SCORES.get(3));
+										}
 									}
+									if(OUTPUT_TYPE[3]) {
+										if(z == 0) {
+											Roll.add(SCORES.get(4));
+											Roll.add(SCORES.get(5));
+										} else {
+											Roll.set(Roll.size() - 1, (Roll.get(Roll.size() - 1) + SCORES.get(4)) / 2);
+											Roll.add(SCORES.get(5));
+										}
+									}
+								}
+								
+								if(OUTPUT_TYPE[0]) {
+									if(y == 0) {
+										OUT_M.print("YORF\tNAME");
+										for(int z = 0; z < MGW.size(); z++) { OUT_M.print("\t" + z); }
+										OUT_M.println();
+										AVG_MGW = new double[MGW.size()];
+									}
+									OUT_M.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
+									for(int z = 0; z < MGW.size(); z++) {
+										OUT_M.print("\t" + MGW.get(z));	
+										AVG_MGW[z] += MGW.get(z);
+									}
+									OUT_M.println();
+								}
+								if(OUTPUT_TYPE[1]) {
+									if(y == 0) {
+										OUT_P.print("YORF\tNAME");
+										for(int z = 0; z < PropT.size(); z++) { OUT_P.print("\t" + z); }
+										OUT_P.println();
+										AVG_PropT = new double[PropT.size()];
+									}
+									OUT_P.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
+									for(int z = 0; z < PropT.size(); z++) {
+										OUT_P.print("\t" + PropT.get(z));
+										AVG_PropT[z] += PropT.get(z);
+									}
+									OUT_P.println();
+								}
+								if(OUTPUT_TYPE[2]) {
+									if(y == 0) {
+										OUT_H.print("YORF\tNAME");
+										for(int z = 0; z < HelT.size(); z++) { OUT_H.print("\t" + z); }
+										OUT_H.println();
+										AVG_HelT = new double[HelT.size()];
+									}
+									OUT_H.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
+									for(int z = 0; z < HelT.size(); z++) {
+										OUT_H.print("\t" + HelT.get(z));	
+										AVG_HelT[z] += HelT.get(z);
+									}
+									OUT_H.println();
 								}
 								if(OUTPUT_TYPE[3]) {
-									if(z == 0) {
-										Roll.add(SCORES.get(4));
-										Roll.add(SCORES.get(5));
-									} else {
-										Roll.set(Roll.size() - 1, (Roll.get(Roll.size() - 1) + SCORES.get(4)) / 2);
-										Roll.add(SCORES.get(5));
+									if(y == 0) {
+										OUT_R.print("YORF\tNAME");
+										for(int z = 0; z < Roll.size(); z++) { OUT_R.print("\t" + z); }
+										OUT_R.println();
+										AVG_Roll = new double[Roll.size()];
 									}
-								}
-							}
-							
-							if(OUTPUT_TYPE[0]) {
-								if(y == 0) {
-									OUT_M.print("YORF\tNAME");
-									for(int z = 0; z < MGW.size(); z++) { OUT_M.print("\t" + z); }
-									OUT_M.println();
-									AVG_MGW = new double[MGW.size()];
-								}
-								OUT_M.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
-								for(int z = 0; z < MGW.size(); z++) {
-									OUT_M.print("\t" + MGW.get(z));	
-									AVG_MGW[z] += MGW.get(z);
-								}
-								OUT_M.println();
-							}
-							if(OUTPUT_TYPE[1]) {
-								if(y == 0) {
-									OUT_P.print("YORF\tNAME");
-									for(int z = 0; z < PropT.size(); z++) { OUT_P.print("\t" + z); }
-									OUT_P.println();
-									AVG_PropT = new double[PropT.size()];
-								}
-								OUT_P.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
-								for(int z = 0; z < PropT.size(); z++) {
-									OUT_P.print("\t" + PropT.get(z));
-									AVG_PropT[z] += PropT.get(z);
-								}
-								OUT_P.println();
-							}
-							if(OUTPUT_TYPE[2]) {
-								if(y == 0) {
-									OUT_H.print("YORF\tNAME");
-									for(int z = 0; z < HelT.size(); z++) { OUT_H.print("\t" + z); }
-									OUT_H.println();
-									AVG_HelT = new double[HelT.size()];
-								}
-								OUT_H.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
-								for(int z = 0; z < HelT.size(); z++) {
-									OUT_H.print("\t" + HelT.get(z));	
-									AVG_HelT[z] += HelT.get(z);
-								}
-								OUT_H.println();
-							}
-							if(OUTPUT_TYPE[3]) {
-								if(y == 0) {
-									OUT_R.print("YORF\tNAME");
-									for(int z = 0; z < Roll.size(); z++) { OUT_R.print("\t" + z); }
+									OUT_R.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
+									for(int z = 0; z < Roll.size(); z++) {
+										OUT_R.print("\t" + Roll.get(z));
+										AVG_Roll[z] += Roll.get(z);
+									}
 									OUT_R.println();
-									AVG_Roll = new double[Roll.size()];
 								}
-								OUT_R.print(BED_Coord.get(y).getName() + "\t" + BED_Coord.get(y).getName());
-								for(int z = 0; z < Roll.size(); z++) {
-									OUT_R.print("\t" + Roll.get(z));
-									AVG_Roll[z] += Roll.get(z);
-								}
-								OUT_R.println();
-							}			
+							}
 						} catch (SAMException e) {
 							if(OUTPUT_TYPE[0]) { STATS_MGW.append("INVALID COORDINATE: " + BED_Coord.get(y).toString() + "\n"); }
 							if(OUTPUT_TYPE[1]) { STATS_PropT.append("INVALID COORDINATE: " + BED_Coord.get(y).toString() + "\n"); }
