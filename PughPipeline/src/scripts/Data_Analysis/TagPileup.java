@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JLayeredPane;
@@ -80,23 +81,20 @@ public class TagPileup extends JFrame {
 	public void run() throws IOException {		
 		for(int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z);	//Pull current BAM file
-			String time = getTimeStamp(); //Generate TimeStamp
-						
-			JTextArea STATS = new JTextArea();
-			STATS.setEditable(false);
-			STATS.append(time + "\n");
-			
-			File f = new File(BAM + ".bai");
+			File f = new File(BAM + ".bai"); //Generate file name for BAI index file
 			//Check if BAI index file exists
-			if(!f.exists() || f.isDirectory()) { STATS.append("BAI Index File does not exist for: " + BAM.getName() + "\n\n"); }
+			if(!f.exists() || f.isDirectory()) { JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + BAM.getName()); }
 			else {
-				STATS.append(BAM.getName() + "\n");
 				
 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
 				if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM)); }
 								
 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
-					
+					JTextArea STATS = new JTextArea(); //Generate statistics object
+					STATS.setEditable(false); //Make it un-editable
+					STATS.append(getTimeStamp() + "\n"); //Timestamp process
+					STATS.append(BAM.getName() + "\n"); //Label stat object with what BAM file is generating it
+
 					if(PARAM.getOutput() != null) {
 						if(STRAND == 0) {
 							try { OUT_S1 = new PrintStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
