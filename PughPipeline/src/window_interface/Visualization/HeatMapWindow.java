@@ -130,6 +130,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         btnGen.setActionCommand("start");
         
         chckbxAutomaticallyMatchSenseantisense = new JCheckBox("Automatically Match Sense-Antisense");
+        chckbxAutomaticallyMatchSenseantisense.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxAutomaticallyMatchSenseantisense, 85, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, chckbxAutomaticallyMatchSenseantisense, -85, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -6, SpringLayout.NORTH, chckbxAutomaticallyMatchSenseantisense);
