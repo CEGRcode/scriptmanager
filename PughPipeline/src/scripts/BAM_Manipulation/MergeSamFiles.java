@@ -24,87 +24,63 @@ package scripts.BAM_Manipulation;
  * THE SOFTWARE.
  */
 
-
 import htsjdk.samtools.MergingSamRecordIterator;
 import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileReader;
 import htsjdk.samtools.SAMFileWriter;
 import htsjdk.samtools.SAMFileWriterFactory;
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SAMSequenceDictionary;
 import htsjdk.samtools.SamFileHeaderMerger;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.IOUtil;
 import htsjdk.samtools.util.Log;
 import htsjdk.samtools.util.ProgressLogger;
+import picard.cmdline.CommandLineProgram;
+import picard.cmdline.CommandLineProgramProperties;
+import picard.cmdline.Option;
+import picard.cmdline.StandardOptionDefinitions;
+import picard.cmdline.programgroups.SamOrBam;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import picard.cmdline.CommandLineProgram;
-import picard.cmdline.Option;
-import picard.cmdline.Usage;
 
 /**
  * Reads a SAM or BAM file and combines the output to one file
  *
  * @author Tim Fennell
  */
-@SuppressWarnings("deprecation")
+@CommandLineProgramProperties(
+        usage = "Merges multiple SAM/BAM files into one file.",
+        usageShort = "Merges multiple SAM or BAM files into one file",
+        programGroup = SamOrBam.class
+)
 public class MergeSamFiles extends CommandLineProgram {
-	
-	/**
-	 * A set of String constants in which the name of the constant (minus the _SHORT_NAME suffix)
-	 * is the standard long Option name, and the value of the constant is the standard shortName.
-	 */
-	public class StandardOptionDefinitions {
-	    public static final String INPUT_SHORT_NAME = "I";
-	    public static final String OUTPUT_SHORT_NAME = "O";
-	    public static final String REFERENCE_SHORT_NAME = "R";
-	    public static final String SAMPLE_ALIAS_SHORT_NAME = "ALIAS";
-	    public static final String LIBRARY_NAME_SHORT_NAME = "LIB";
-	    public static final String EXPECTED_INSERT_SIZE_SHORT_NAME = "INSERT";
-	    public static final String LANE_SHORT_NAME = "L";
-	    public static final String SEQUENCE_DICTIONARY_SHORT_NAME = "SD";
-	    public static final String METRICS_FILE_SHORT_NAME = "M";
-	    public static final String ASSUME_SORTED_SHORT_NAME = "AS";
-	    public static final String PF_READS_ONLY_SHORT_NAME = "PF";
-	    public static final String MINIMUM_MAPPING_QUALITY_SHORT_NAME = "MQ";
-	    public static final String READ_GROUP_ID_SHORT_NAME = "RG";
-	    public static final String PROGRAM_RECORD_ID_SHORT_NAME = "PG";
-	    public static final String MINIMUM_LOD_SHORT_NAME = "LOD";
-	    public static final String SORT_ORDER_SHORT_NAME = "SO";
-	    public static final String USE_ORIGINAL_QUALITIES_SHORT_NAME = "OQ";
-	}
-	
-    private static final Log log = Log.getInstance(MergeSamFiles.class);
+	private static final Log log = Log.getInstance(MergeSamFiles.class);
 
-    // Usage and parameters
-    @Usage
-    public String USAGE = "Merges multiple SAM/BAM files into one file.\n";
+    @Option(shortName = "I", doc = "SAM or BAM input file", minElements = 1)
+    public List<File> INPUT = new ArrayList<File>();
 
-    @Option(shortName="I", doc="SAM or BAM input file", minElements=1)
-    public static List<File> INPUT = new ArrayList<File>();
+    @Option(shortName = "O", doc = "SAM or BAM file to write merged result to")
+    public File OUTPUT;
 
-    @Option(shortName="O", doc="SAM or BAM file to write merged result to")
-    public static File OUTPUT;
-
-    @Option(shortName=StandardOptionDefinitions.SORT_ORDER_SHORT_NAME, doc="Sort order of output file", optional=true)
+    @Option(shortName = StandardOptionDefinitions.SORT_ORDER_SHORT_NAME, doc = "Sort order of output file", optional = true)
     public SAMFileHeader.SortOrder SORT_ORDER = SAMFileHeader.SortOrder.coordinate;
 
-    @Option(doc="If true, assume that the input files are in the same sort order as the requested output sort order, even if their headers say otherwise.",
-    shortName = StandardOptionDefinitions.ASSUME_SORTED_SHORT_NAME)
+    @Option(doc = "If true, assume that the input files are in the same sort order as the requested output sort order, even if their headers say otherwise.",
+            shortName = StandardOptionDefinitions.ASSUME_SORTED_SHORT_NAME)
     public boolean ASSUME_SORTED = false;
 
-    @Option(shortName="MSD", doc="Merge the sequence dictionaries", optional=true)
+    @Option(shortName = "MSD", doc = "Merge the sequence dictionaries", optional = true)
     public boolean MERGE_SEQUENCE_DICTIONARIES = false;
 
-    @Option(doc="Option to create a background thread to encode, " +
+    @Option(doc = "Option to create a background thread to encode, " +
             "compress and write to disk the output file. The threaded version uses about 20% more CPU and decreases " +
             "runtime by ~20% when writing out a compressed BAM file.")
     public boolean USE_THREADING = false;
 
-    @Option(doc="Comment(s) to include in the merged output file's header.", optional=true, shortName="CO")
+    @Option(doc = "Comment(s) to include in the merged output file's header.", optional = true, shortName = "CO")
     public List<String> COMMENT = new ArrayList<String>();
 
     private static final int PROGRESS_INTERVAL = 1000000;
@@ -135,15 +111,15 @@ public class MergeSamFiles extends CommandLineProgram {
         boolean matchedSortOrders = true;
        // ASSUME_SORTED = true;
         
-        // Open the files for reading and writing
-        final List<SAMFileReader> readers = new ArrayList<SAMFileReader>();
+     // Open the files for reading and writing
+        final List<SamReader> readers = new ArrayList<SamReader>();
         final List<SAMFileHeader> headers = new ArrayList<SAMFileHeader>();
         {
             SAMSequenceDictionary dict = null; // Used to try and reduce redundant SDs in memory
 
             for (final File inFile : INPUT) {
                 IOUtil.assertFileIsReadable(inFile);
-                final SAMFileReader in = new SAMFileReader(inFile);
+                final SamReader in = SamReaderFactory.makeDefault().referenceSequence(REFERENCE_SEQUENCE).open(inFile);
                 readers.add(in);
                 headers.add(in.getFileHeader());
 
@@ -187,6 +163,7 @@ public class MergeSamFiles extends CommandLineProgram {
             header.addComment(comment);
         }
         
+        //Unique to this build
         for (final File inFile : INPUT) {
         	header.addComment("@CO\tReplicate:" + inFile.getName());
         }
