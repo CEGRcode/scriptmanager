@@ -39,25 +39,34 @@ public class PileupExtract implements Runnable{
 		double[] TAG_S2 = null;
 		int SHIFT = param.getShift();
 		int STRAND = param.getStrand();
-			
+		
+		int BEDSTART = read.getStart();
+		int BEDSTOP = read.getStop();
+		//Correct for '-' strand BED coord so they align with '+' strand
+		if(read.getDir().equals("-")) {
+			BEDSTART++;
+			BEDSTOP++;
+		}
+		
 		//Correct Window Size for proper transformations
-		int WINDOW = (read.getStop() - read.getStart()) + ((param.getBin() / 2) * 2);
+		int WINDOW = (BEDSTOP - BEDSTART) + ((param.getBin() / 2) * 2);
 		int QUERYWINDOW = 0;
 		if(param.getTrans() == 1) {
-			WINDOW = (read.getStop() - read.getStart()) + (param.getBin() * param.getSmooth() * 2);
+			WINDOW = (BEDSTOP - BEDSTART) + (param.getBin() * param.getSmooth() * 2);
 			QUERYWINDOW = (param.getBin() * param.getSmooth()); 
 		}
 		else if(param.getTrans() == 2) {
-			WINDOW = (read.getStop() - read.getStart()) + (param.getBin() * param.getStdSize() * param.getStdNum() * 2);
+			WINDOW = (BEDSTOP - BEDSTART) + (param.getBin() * param.getStdSize() * param.getStdNum() * 2);
 			QUERYWINDOW = (param.getBin() * param.getStdSize() * param.getStdNum()); 
 		}
 		TAG_S1 = new double[WINDOW];
 		if(STRAND == 0) TAG_S2 = new double[WINDOW];
-			
+		
 		//SAMRecords are 1-based
-		CloseableIterator<SAMRecord> iter = inputSam.query(read.getChrom(), read.getStart() - QUERYWINDOW - SHIFT - 1, read.getStop() + QUERYWINDOW + SHIFT + 1, false);
+		CloseableIterator<SAMRecord> iter = inputSam.query(read.getChrom(), BEDSTART - QUERYWINDOW - SHIFT - 1, BEDSTOP + QUERYWINDOW + SHIFT + 1, false);
 		while (iter.hasNext()) {
 			//Create the record object 
+		    //SAMRecord is 1-based
 			SAMRecord sr = iter.next();
 			
 			//Must be PAIRED-END mapped, mate must be mapped, must be read1
@@ -67,10 +76,9 @@ public class PileupExtract implements Runnable{
 						int FivePrime = sr.getUnclippedStart() - 1;
 						if(sr.getReadNegativeStrandFlag()) { 
 							FivePrime = sr.getUnclippedEnd();
-							//SHIFT DATA HERE IF NECCESSARY
-							FivePrime -= SHIFT;
+							FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
 						} else { FivePrime += SHIFT; }
-						FivePrime -= (read.getStart() - QUERYWINDOW);
+						FivePrime -= (BEDSTART - QUERYWINDOW);
 						
 	                    //Increment Final Array keeping track of pileup
 						if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
@@ -90,10 +98,9 @@ public class PileupExtract implements Runnable{
 				int FivePrime = sr.getUnclippedStart() - 1;
 				if(sr.getReadNegativeStrandFlag()) { 
 					FivePrime = sr.getUnclippedEnd();
-					//SHIFT DATA HERE IF NECCESSARY
-					FivePrime -= SHIFT;
+					FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
 				} else { FivePrime += SHIFT; }
-				FivePrime -= (read.getStart() - QUERYWINDOW);
+				FivePrime -= (BEDSTART - QUERYWINDOW);
 				
 				//Increment Final Array keeping track of pileup
 				if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
