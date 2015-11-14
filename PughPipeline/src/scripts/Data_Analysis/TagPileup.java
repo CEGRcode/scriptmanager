@@ -180,7 +180,7 @@ public class TagPileup extends JFrame {
 					//Calculate average and domain here
 					int temp = (int) (((double)AVG_S1.length / 2.0) + 0.5);
 					for(int i = 0; i < AVG_S1.length; i++) {
-						DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin());
+						DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin()) + 1;
 						AVG_S1[i] /= INPUT.size();
 						if(AVG_S2 != null) AVG_S2[i] /= INPUT.size();
 					}
@@ -204,7 +204,7 @@ public class TagPileup extends JFrame {
 							STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
 							AVG_S2_trim[i - OUTSTART] = AVG_S2[i];
 						}
-						else  STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n");
+						else { STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n"); }
 						AVG_S1_trim[i - OUTSTART] = AVG_S1[i];
 						DOMAIN_trim[i - OUTSTART] = DOMAIN[i];
 					}
