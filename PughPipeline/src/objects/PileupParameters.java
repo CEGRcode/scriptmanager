@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class PileupParameters {
 	private File OUTPUT = null;
+	private String COMPOSITE = null;
 	private int READ = 0;
 	private int STRAND = 0;
 	private int TRANS = 0;
@@ -17,6 +18,7 @@ public class PileupParameters {
 	private int CPU = 1;
 	private int OUTTYPE = 0;
 	private boolean STANDARD = false;
+	private boolean outputCOMPOSITE = false;
 	private double STANDRATIO = 1;
 	
 	private Color Sense = null;
@@ -25,6 +27,22 @@ public class PileupParameters {
 	
 	public PileupParameters() {
 		
+	}
+	
+	public String getCompositeFile() {
+		return COMPOSITE;
+	}
+	
+	public void setCompositeFile(String comp) {
+		COMPOSITE = comp;
+	}
+	
+	public boolean getOutputCompositeStatus() {
+		return outputCOMPOSITE;
+	}
+	
+	public void setOutputCompositeStatus(boolean out) {
+		outputCOMPOSITE = out;
 	}
 	
 	public ArrayList<Color> getColors() {

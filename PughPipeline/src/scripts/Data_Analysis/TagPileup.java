@@ -39,6 +39,7 @@ public class TagPileup extends JFrame {
 	private int STRAND = 0;
 	private int CPU = 1;
 	
+	PrintStream COMPOSITE = null;
 	PrintStream OUT_S1 = null;
 	PrintStream OUT_S2 = null;
 	
@@ -78,7 +79,11 @@ public class TagPileup extends JFrame {
 		CPU = param.getCPU();
 	}
 	
-	public void run() throws IOException {		
+	public void run() throws IOException {
+		if(PARAM.getOutputCompositeStatus()) {
+			try { COMPOSITE = new PrintStream(PARAM.getOutput() + File.separator + PARAM.getCompositeFile());
+			} catch (FileNotFoundException e) {	e.printStackTrace(); }
+		}
 		for(int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z);	//Pull current BAM file
 			File f = new File(BAM + ".bai"); //Generate file name for BAI index file
@@ -95,7 +100,7 @@ public class TagPileup extends JFrame {
 					STATS.append(getTimeStamp() + "\n"); //Timestamp process
 					STATS.append(BAM.getName() + "\n"); //Label stat object with what BAM file is generating it
 
-					if(PARAM.getOutput() != null) {
+					if(PARAM.getOutputType() != 0) {
 						if(STRAND == 0) {
 							try { OUT_S1 = new PrintStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
 							OUT_S2 = new PrintStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1));
@@ -212,8 +217,37 @@ public class TagPileup extends JFrame {
 					AVG_S2 = AVG_S2_trim;
 					DOMAIN = DOMAIN_trim;
 					
+					//Output composite data to tab-delimited file
+					if(COMPOSITE != null) {
+						for(int a = 0; a < DOMAIN.length; a++) {
+							COMPOSITE.print("\t" + DOMAIN[a]);
+						}
+						COMPOSITE.println();
+						if(STRAND == 0) {
+							COMPOSITE.print(generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
+							for(int a = 0; a < AVG_S1.length; a++) {
+								COMPOSITE.print("\t" + AVG_S1[a]);
+							}
+							COMPOSITE.println();
+							COMPOSITE.print(generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1));
+							for(int a = 0; a < AVG_S2.length; a++) {
+								COMPOSITE.print("\t" + AVG_S2[a]);
+							}
+							COMPOSITE.println();
+						} else {
+							COMPOSITE.print(generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2));
+							for(int a = 0; a < AVG_S1.length; a++) {
+								COMPOSITE.print("\t" + AVG_S1[a]);
+							}
+							COMPOSITE.println();
+						}			
+					}
+					
 					if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
 					else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
+					
+					System.out.println(PARAM.getOutput() + "\n" + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
+					
 					if(OUT_S1 != null && PARAM.getOutputType() == 2) {
 						if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0), PARAM.getSenseColor());
 						else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2), PARAM.getCombinedColor());
