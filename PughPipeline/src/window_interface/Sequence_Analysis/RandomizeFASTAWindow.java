@@ -55,7 +55,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
         	if(FASTAFiles.size() < 1) {
-        		JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
+        		JOptionPane.showMessageDialog(null, "No FASTA Files Loaded!!!");
         	} else {
         		setProgress(0);
         		
