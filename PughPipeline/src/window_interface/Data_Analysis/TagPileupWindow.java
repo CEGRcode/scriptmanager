@@ -401,7 +401,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(btnLoadBedFile);
         
-        chckbxOutputData = new JCheckBox("Output Data for all Sites");
+        chckbxOutputData = new JCheckBox("Output for Heatmap");
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 28, SpringLayout.EAST, chckbxOutputData);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputData, 0, SpringLayout.WEST, scrollPane_BAM);
         chckbxOutputData.setSelected(true);
@@ -472,6 +472,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnTabdelimited, 0, SpringLayout.WEST, btnPileup);
         contentPane.add(rdbtnTabdelimited);
         rdbtnCdt = new JRadioButton("CDT");
+        rdbtnCdt.setSelected(true);
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCdt, 0, SpringLayout.NORTH, rdbtnTabdelimited);
         sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCdt, 0, SpringLayout.WEST, txtSmooth);
         contentPane.add(rdbtnCdt);
@@ -479,7 +480,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         ButtonGroup output = new ButtonGroup();
         output.add(rdbtnTabdelimited);
         output.add(rdbtnCdt);
-        rdbtnTabdelimited.setSelected(true);
         
         lblPleaseSelectOutput = new JLabel("Please select Output File Format:");
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectOutput, 10, SpringLayout.SOUTH, chckbxOutputData);
@@ -569,7 +569,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sepComposite.setForeground(Color.BLACK);
         contentPane.add(sepComposite);
         
-        chckbxOutputCompositeData = new JCheckBox("Output Composite Average");
+        chckbxOutputCompositeData = new JCheckBox("Output for Composite");
         chckbxOutputCompositeData.setSelected(true);
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputCompositeData, 10, SpringLayout.SOUTH, lblPleaseSelectOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputCompositeData, 0, SpringLayout.WEST, scrollPane_BAM);
