@@ -26,14 +26,16 @@ import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
-import window_interface.Data_Analysis.DNAShapeWindow;
-import window_interface.Data_Analysis.FASTAExtractWindow;
-import window_interface.Data_Analysis.GeneTrackWindow;
-import window_interface.Data_Analysis.PeakPairWindow;
-import window_interface.Data_Analysis.TagPileupWindow;
-import window_interface.Visualization.FourColorSequenceWindow;
-import window_interface.Visualization.HeatMapWindow;
-import window_interface.Visualization.MergeHeatMapWindow;
+import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
+import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
+import window_interface.Sequence_Analysis.FASTAExtractWindow;
+import window_interface.Sequence_Analysis.FourColorSequenceWindow;
+import window_interface.Sequence_Analysis.RandomizeFASTAWindow;
+import window_interface.Tag_Analysis.GeneTrackWindow;
+import window_interface.Tag_Analysis.HeatMapWindow;
+import window_interface.Tag_Analysis.MergeHeatMapWindow;
+import window_interface.Tag_Analysis.PeakPairWindow;
+import window_interface.Tag_Analysis.TagPileupWindow;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -345,15 +347,15 @@ public class ScriptManager {
 		});
 		pnlBamConvert.add(btnFilterForPermanganateseq);
 		
-		JPanel pnlAnalysis = new JPanel();
-		tabbedPane.addTab("Data Analysis", null, pnlAnalysis, null);
+		JPanel pnlTagAnalysis = new JPanel();
+		tabbedPane.addTab("Tag Analysis", null, pnlTagAnalysis, null);
 		
 		JButton btnGenetrack = new JButton("GeneTrack");
 		btnGenetrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		pnlAnalysis.add(btnGenetrack);
+		pnlTagAnalysis.add(btnGenetrack);
 		btnGenetrack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -371,7 +373,7 @@ public class ScriptManager {
 		
 		JButton btnPeakpairing = new JButton("Peak-Pairing");
 		btnPeakpairing.setEnabled(false);
-		pnlAnalysis.add(btnPeakpairing);
+		pnlTagAnalysis.add(btnPeakpairing);
 		btnPeakpairing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -388,7 +390,6 @@ public class ScriptManager {
 		});
 		
 		JButton btnTagPileup = new JButton("Tag Pileup");
-		pnlAnalysis.add(btnTagPileup);
 		btnTagPileup.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -403,6 +404,46 @@ public class ScriptManager {
 				 });
 			}
 		});
+		pnlTagAnalysis.add(btnTagPileup);
+		
+			JButton btnHeatMap = new JButton("Heat Map");
+			btnHeatMap.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								HeatMapWindow frame = new HeatMapWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlTagAnalysis.add(btnHeatMap);
+			
+			JButton btnMergeHeatPlots = new JButton("Merge Heat Plots");
+			pnlTagAnalysis.add(btnMergeHeatPlots);
+			btnMergeHeatPlots.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								MergeHeatMapWindow frame = new MergeHeatMapWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			
+		
+			
+			JPanel pnlSeqAnalysis = new JPanel();
+			tabbedPane.addTab("Sequence Analysis", null, pnlSeqAnalysis, null);
 			
 			JButton btnFASTAExtract = new JButton("FASTA from BED");
 			btnFASTAExtract.addActionListener(new ActionListener() {
@@ -419,15 +460,15 @@ public class ScriptManager {
 					 });
 				}
 			});
-			pnlAnalysis.add(btnFASTAExtract);
+			pnlSeqAnalysis.add(btnFASTAExtract);
 			
-			JButton btnDnaShapePredictions = new JButton("DNA Shape Predictions");
-			btnDnaShapePredictions.addActionListener(new ActionListener() {
+			JButton btnRandomizeFasta = new JButton("Randomize FASTA");
+			btnRandomizeFasta.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							try {
-								DNAShapeWindow frame = new DNAShapeWindow();
+								RandomizeFASTAWindow frame = new RandomizeFASTAWindow();
 								frame.setVisible(true);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -436,47 +477,9 @@ public class ScriptManager {
 					 });
 				}
 			});
-			pnlAnalysis.add(btnDnaShapePredictions);
-			
-			JPanel pnlVisualization = new JPanel();
-			tabbedPane.addTab("Data Visualization", null, pnlVisualization, null);
-				
-			JButton btnHeatMap = new JButton("Heat Map");
-			btnHeatMap.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								HeatMapWindow frame = new HeatMapWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
-			pnlVisualization.add(btnHeatMap);
+			pnlSeqAnalysis.add(btnRandomizeFasta);
 			
 			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
-			pnlVisualization.add(btncolorSequencePlot);
-			
-			JButton btnMergeHeatPlots = new JButton("Merge Heat Plots");
-			btnMergeHeatPlots.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								MergeHeatMapWindow frame = new MergeHeatMapWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
-			pnlVisualization.add(btnMergeHeatPlots);
 			btncolorSequencePlot.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 					EventQueue.invokeLater(new Runnable() {
@@ -491,7 +494,42 @@ public class ScriptManager {
 					 });
 				}
 			});
-
+			pnlSeqAnalysis.add(btncolorSequencePlot);
+			
+			JButton btnDnaShapeBed = new JButton("DNA Shape from BED");
+			btnDnaShapeBed.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								DNAShapefromBEDWindow frame = new DNAShapefromBEDWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlSeqAnalysis.add(btnDnaShapeBed);
+			
+			JButton btnDnaShapeFasta = new JButton("DNA Shape from FASTA");
+			btnDnaShapeFasta.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								DNAShapefromFASTAWindow frame = new DNAShapefromFASTAWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlSeqAnalysis.add(btnDnaShapeFasta);
+			
 		btnBamToBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
