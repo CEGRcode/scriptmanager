@@ -1,4 +1,4 @@
-package scripts.Visualization;
+package scripts.Tag_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -10,7 +10,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
 
-import scripts.Visualization.HeatmapScripts.HeatMapPanel;
+import scripts.Tag_Analysis.HeatmapScripts.HeatMapPanel;
 
 @SuppressWarnings("serial")
 public class HeatMapPlot extends JFrame {

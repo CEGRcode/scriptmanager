@@ -1,4 +1,4 @@
-package scripts.Visualization.HeatmapScripts;
+package scripts.Tag_Analysis.HeatmapScripts;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;

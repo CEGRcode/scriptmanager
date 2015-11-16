@@ -1,4 +1,4 @@
-package scripts.Visualization;
+package scripts.Sequence_Analysis;
 
 import java.awt.Color;
 import java.awt.Graphics;

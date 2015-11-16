@@ -1,4 +1,4 @@
-package window_interface.Data_Analysis;
+package window_interface.Tag_Analysis;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Data_Analysis.PeakPair;
+import scripts.Tag_Analysis.PeakPair;
 import util.FileSelection;
 
 @SuppressWarnings("serial")

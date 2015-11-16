@@ -1,4 +1,4 @@
-package scripts.Data_Analysis;
+package scripts.Tag_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -24,8 +24,8 @@ import javax.swing.SpringLayout;
 import charts.CompositePlot;
 import objects.BEDCoord;
 import objects.PileupParameters;
-import scripts.Data_Analysis.PileupScripts.PileupExtract;
-import scripts.Data_Analysis.PileupScripts.TransformArray;
+import scripts.Tag_Analysis.PileupScripts.PileupExtract;
+import scripts.Tag_Analysis.PileupScripts.TransformArray;
 import util.BAMUtilities;
 import util.JTVOutput;
 

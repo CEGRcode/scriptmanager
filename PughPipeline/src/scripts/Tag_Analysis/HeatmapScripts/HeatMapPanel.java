@@ -1,4 +1,4 @@
-package scripts.Visualization.HeatmapScripts;
+package scripts.Tag_Analysis.HeatmapScripts;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

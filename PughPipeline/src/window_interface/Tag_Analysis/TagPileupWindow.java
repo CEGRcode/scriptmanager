@@ -1,4 +1,4 @@
-package window_interface.Data_Analysis;
+package window_interface.Tag_Analysis;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
 import objects.PileupParameters;
-import scripts.Data_Analysis.TagPileup;
+import scripts.Tag_Analysis.TagPileup;
 import util.FileSelection;
 
 import java.awt.event.ActionEvent;
@@ -40,6 +40,7 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import javax.swing.JSeparator;
 
 @SuppressWarnings("serial")

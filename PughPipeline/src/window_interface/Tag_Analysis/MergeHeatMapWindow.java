@@ -1,4 +1,4 @@
-package window_interface.Visualization;
+package window_interface.Tag_Analysis;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Visualization.MergeHeatMapPlot;
+import scripts.Tag_Analysis.MergeHeatMapPlot;
 import util.FileSelection;
 
 @SuppressWarnings("serial")

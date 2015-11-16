@@ -1,4 +1,4 @@
-package window_interface.Visualization;
+package window_interface.Sequence_Analysis;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Visualization.FourColorPlot;
+import scripts.Sequence_Analysis.FourColorPlot;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
