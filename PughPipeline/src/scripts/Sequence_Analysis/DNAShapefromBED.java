@@ -30,7 +30,7 @@ import util.DNAShapeReference;
 import util.FASTAUtilities;
 
 @SuppressWarnings("serial")
-public class DNAShapePrediction extends JFrame {
+public class DNAShapefromBED extends JFrame {
 	private File GENOME = null;
 	private File OUTPUTPATH = null;
 	private boolean[] OUTPUT_TYPE = null;
@@ -51,7 +51,7 @@ public class DNAShapePrediction extends JFrame {
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 	
-	public DNAShapePrediction(File gen, ArrayList<File> b, File out, boolean[] type, boolean str) {
+	public DNAShapefromBED(File gen, ArrayList<File> b, File out, boolean[] type, boolean str) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);

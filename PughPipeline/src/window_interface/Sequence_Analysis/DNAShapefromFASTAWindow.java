@@ -32,29 +32,25 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Sequence_Analysis.DNAShapePrediction;
+import scripts.Sequence_Analysis.DNAShapefromFASTA;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
-public class DNAShapeWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	final DefaultListModel expList;
-	ArrayList<File> BEDFiles = new ArrayList<File>();
-	private File INPUT = null;
+	ArrayList<File> FASTAFiles = new ArrayList<File>();
 	private File OUTPUT_PATH = null;
 	
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
-	private JLabel lblGenome;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
 	private JProgressBar progressBar;
-	
-	private JCheckBox chckbxStrand;
 	private JCheckBox chckbxAll;
 	private JCheckBox chckbxMinorGrooveWidth;
 	private JCheckBox chckbxRoll;
@@ -67,10 +63,8 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         @Override
         public Void doInBackground() throws IOException {
         	try {
-        		if(INPUT == null) {
-        			JOptionPane.showMessageDialog(null, "Genomic File Not Loaded!!!");
-        		} else if(BEDFiles.size() < 1) {
-        			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
+        		if(FASTAFiles.size() < 1) {
+        			JOptionPane.showMessageDialog(null, "No FASTA Files Loaded!!!");
         		} else if(!chckbxMinorGrooveWidth.isSelected() && !chckbxRoll.isSelected() && !chckbxHelicalTwist.isSelected() && !chckbxPropellerTwist.isSelected()) {
         			JOptionPane.showMessageDialog(null, "No Structural Predictions Selected!!!");
         		} else {
@@ -81,12 +75,12 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         			OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
         			OUTPUT_TYPE[3] = chckbxRoll.isSelected();
         			
-        			DNAShapePrediction signal = new DNAShapePrediction(INPUT, BEDFiles, OUTPUT_PATH, OUTPUT_TYPE, chckbxStrand.isSelected());
+        			DNAShapefromFASTA signal = new DNAShapefromFASTA(FASTAFiles, OUTPUT_PATH, OUTPUT_TYPE);
         				
         			signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 					    	int temp = (Integer) propertyChangeEvent.getNewValue();
-					    	int percentComplete = (int)(((double)(temp) / BEDFiles.size()) * 100);
+					    	int percentComplete = (int)(((double)(temp) / FASTAFiles.size()) * 100);
 				        	setProgress(percentComplete);
 					     }
 					 });
@@ -95,9 +89,7 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         			signal.run();
 					
         		}
-        	} catch(NumberFormatException nfe){
-				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
-			} catch (InterruptedException e) {
+        	} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
         	return null;
@@ -109,7 +101,7 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         }
 	}
 	
-	public DNAShapeWindow() {
+	public DNAShapefromFASTAWindow() {
 		setTitle("DNA Shape Predictions");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -121,7 +113,7 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.setLayout(sl_contentPane);
 	
 		JScrollPane scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 97, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 48, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
@@ -131,29 +123,29 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		
-		btnLoad = new JButton("Load BED Files");
+		btnLoad = new JButton("Load FASTA Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 10, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
-				if(newBEDFiles != null) {
-					for(int x = 0; x < newBEDFiles.length; x++) { 
-						BEDFiles.add(newBEDFiles[x]);
-						expList.addElement(newBEDFiles[x].getName());
+				File[] newFASTAFiles = FileSelection.getFASTAFiles(fc);
+				if(newFASTAFiles != null) {
+					for(int x = 0; x < newFASTAFiles.length; x++) { 
+						FASTAFiles.add(newFASTAFiles[x]);
+						expList.addElement(newFASTAFiles[x].getName());
 					}
 				}
 			}
 		});
 		contentPane.add(btnLoad);
 		
-		btnRemoveBam = new JButton("Remove BED");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -16, SpringLayout.NORTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+		btnRemoveBam = new JButton("Remove FASTA");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
-					BEDFiles.remove(listExp.getSelectedIndex());
+					FASTAFiles.remove(listExp.getSelectedIndex());
 					expList.remove(listExp.getSelectedIndex());
 				}
 			}
@@ -161,30 +153,19 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnRemoveBam);
 		
 		btnCalculate = new JButton("Calculate");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -116, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -125, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnCalculate, -5, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnCalculate, 165, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnCalculate, -10, SpringLayout.SOUTH, contentPane);
 		contentPane.add(btnCalculate);
 		
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, contentPane);
         progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
         btnCalculate.setActionCommand("start");
-        
-        JButton btnLoadGenome = new JButton("Load Genome FASTA");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGenome, 0, SpringLayout.NORTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadGenome, 10, SpringLayout.WEST, contentPane);
-        contentPane.add(btnLoadGenome);
-        
-        lblGenome = new JLabel("No Genomic FASTA File Loaded");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblGenome, 10, SpringLayout.SOUTH, btnLoadGenome);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblGenome, 0, SpringLayout.WEST, btnLoad);
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblGenome, 0, SpringLayout.EAST, contentPane);
-        contentPane.add(lblGenome);
         
         lblCurrent = new JLabel("Current Output:");
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
@@ -199,7 +180,6 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(lblDefaultToLocal);
         
         btnOutput = new JButton("Output Directory");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 60, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
         btnOutput.addActionListener(new ActionListener() {
@@ -212,14 +192,9 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         });
         contentPane.add(btnOutput);
         
-        chckbxStrand = new JCheckBox("Force Strandedness");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxStrand, 1, SpringLayout.NORTH, btnLoad);
-        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxStrand, -17, SpringLayout.WEST, btnRemoveBam);
-        chckbxStrand.setSelected(true);
-        contentPane.add(chckbxStrand);
-        
         chckbxMinorGrooveWidth = new JCheckBox("Minor Groove Width");
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxMinorGrooveWidth, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxMinorGrooveWidth, 10, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxMinorGrooveWidth, 10, SpringLayout.WEST, contentPane);
         chckbxMinorGrooveWidth.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		    	  if(!chckbxMinorGrooveWidth.isSelected()) {
@@ -230,8 +205,7 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(chckbxMinorGrooveWidth);
         
         chckbxRoll = new JCheckBox("Roll");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxMinorGrooveWidth, 0, SpringLayout.NORTH, chckbxRoll);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRoll, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRoll, 0, SpringLayout.NORTH, chckbxMinorGrooveWidth);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRoll, 0, SpringLayout.WEST, btnCalculate);
         chckbxRoll.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
@@ -243,7 +217,7 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(chckbxRoll);
         
         chckbxHelicalTwist = new JCheckBox("Helical Twist");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxHelicalTwist, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxHelicalTwist, 0, SpringLayout.NORTH, chckbxMinorGrooveWidth);
         chckbxHelicalTwist.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		    	  if(!chckbxHelicalTwist.isSelected()) {
@@ -254,8 +228,8 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(chckbxHelicalTwist);
         
         chckbxPropellerTwist = new JCheckBox("Propeller Twist");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxPropellerTwist, 0, SpringLayout.NORTH, chckbxMinorGrooveWidth);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxHelicalTwist, 6, SpringLayout.EAST, chckbxPropellerTwist);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxPropellerTwist, 6, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxPropellerTwist, 6, SpringLayout.EAST, chckbxRoll);
         chckbxPropellerTwist.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
@@ -267,6 +241,7 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(chckbxPropellerTwist);
         
         chckbxAll = new JCheckBox("All");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 3, SpringLayout.SOUTH, chckbxAll);
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxAll, 5, SpringLayout.SOUTH, chckbxRoll);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxAll, 206, SpringLayout.WEST, contentPane);
         chckbxAll.addItemListener(new ItemListener() {
@@ -280,16 +255,6 @@ public class DNAShapeWindow extends JFrame implements ActionListener, PropertyCh
 		      }
         });
         contentPane.add(chckbxAll);
-
-        btnLoadGenome.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		File temp = FileSelection.getFASTAFile(fc);
-				if(temp != null) {
-					INPUT = temp;
-					lblGenome.setText(INPUT.getName());
-				}
-        	}
-        });
         btnCalculate.addActionListener(this);
 	}
 	
