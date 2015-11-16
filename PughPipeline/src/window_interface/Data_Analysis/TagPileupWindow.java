@@ -283,6 +283,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblCurrentOutput);
 		
         btnOutputDirectory = new JButton("Output Directory");
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 188, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -221, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
         contentPane.add(btnOutputDirectory);
         
@@ -402,7 +404,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(btnLoadBedFile);
         
         chckbxOutputData = new JCheckBox("Output for Heatmap");
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 28, SpringLayout.EAST, chckbxOutputData);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputData, 0, SpringLayout.WEST, scrollPane_BAM);
         chckbxOutputData.setSelected(true);
         contentPane.add(chckbxOutputData);
@@ -468,13 +469,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         txtCPU.setColumns(10);
         
         rdbtnTabdelimited = new JRadioButton("TAB-Delimited");
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, 0, SpringLayout.EAST, rdbtnTabdelimited);
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnTabdelimited, 0, SpringLayout.WEST, btnPileup);
         contentPane.add(rdbtnTabdelimited);
         rdbtnCdt = new JRadioButton("CDT");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnTabdelimited, 0, SpringLayout.NORTH, rdbtnCdt);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnTabdelimited, 40, SpringLayout.EAST, rdbtnCdt);
         rdbtnCdt.setSelected(true);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCdt, 0, SpringLayout.NORTH, rdbtnTabdelimited);
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCdt, 0, SpringLayout.WEST, txtSmooth);
         contentPane.add(rdbtnCdt);
         
         ButtonGroup output = new ButtonGroup();
@@ -482,8 +481,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         output.add(rdbtnCdt);
         
         lblPleaseSelectOutput = new JLabel("Please select Output File Format:");
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCdt, 10, SpringLayout.EAST, lblPleaseSelectOutput);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectOutput, 10, SpringLayout.SOUTH, chckbxOutputData);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnTabdelimited, -3, SpringLayout.NORTH, lblPleaseSelectOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectOutput, 0, SpringLayout.WEST, scrollPane_BAM);
         lblPleaseSelectOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblPleaseSelectOutput);
@@ -554,6 +553,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(btnRemoveBed);
         
         JSeparator sepOutput = new JSeparator();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCdt, 40, SpringLayout.SOUTH, sepOutput);
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputData, 10, SpringLayout.SOUTH, sepOutput);
         sl_contentPane.putConstraint(SpringLayout.NORTH, sepOutput, 10, SpringLayout.SOUTH, rdbtnGaussianSmooth);
         sl_contentPane.putConstraint(SpringLayout.WEST, sepOutput, 0, SpringLayout.WEST, scrollPane_BAM);
