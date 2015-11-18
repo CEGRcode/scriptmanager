@@ -110,7 +110,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 	}
 	
 	public DNAShapefromBEDWindow() {
-		setTitle("DNA Shape Predictions");
+		setTitle("DNA Shape Predictions from BED");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 475, 380);

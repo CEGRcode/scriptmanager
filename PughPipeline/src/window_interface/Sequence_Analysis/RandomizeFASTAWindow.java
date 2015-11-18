@@ -77,7 +77,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 	}
 	
 	public RandomizeFASTAWindow() {
-		setTitle("FASTA Extract from BED");
+		setTitle("Randomize FASTA File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 450, 310);

@@ -102,7 +102,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	}
 	
 	public DNAShapefromFASTAWindow() {
-		setTitle("DNA Shape Predictions");
+		setTitle("DNA Shape Predictions from FASTA");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 475, 380);
