@@ -112,7 +112,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	}
 	
 	public BAMtoscIDXWindow() {
-		setTitle("BAM to TAB Converter");
+		setTitle("BAM to scIDX Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 650, 475);
