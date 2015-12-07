@@ -33,16 +33,15 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.BAM_Format_Converter.BAMtoTAB;
+import scripts.BAM_Format_Converter.BAMtoscIDX;
 import util.FileSelection;
-import util.FASTAUtilities;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class BAMtoscIDXWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
@@ -50,8 +49,6 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 	Vector<File> BAMFiles = new Vector<File>();
 	private File OUTPUT = null;
 	private int STRAND = 0;
-	private String FivePrimeSeq = "";
-	private String ThreePrimeSeq = "";
 	
 	private JButton btnIndex;
 	private JButton btnLoad;
@@ -61,53 +58,64 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 	private JRadioButton rdbtnRead2;
 	private JRadioButton rdbtnCombined;
 	
-	private JCheckBox chckbx5FilterEnd;
-	private JCheckBox chckbx3FilterEnd;
-	private JTextField txt5Seq;
-	private JTextField txt3Seq;
-	
+	private JCheckBox chckbxRequireProperMatepair;
+	private JCheckBox chckbxFilterByMaximum;
+	private JCheckBox chckbxFilterByMinimum;
+	private JTextField txtMin;
+	private JTextField txtMax;
+
 	JProgressBar progressBar;
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
-        	if(chckbx5FilterEnd.isSelected() && !FASTAUtilities.parseStringforInvalideNuc(txt5Seq.getText())) { 
-        			JOptionPane.showMessageDialog(null, "Invalid 5' Sequence!!! Must be A/T/G/C");
-        	} else if(chckbx3FilterEnd.isSelected() && !FASTAUtilities.parseStringforInvalideNuc(txt3Seq.getText())) {
-        			JOptionPane.showMessageDialog(null, "Invalid 3' Sequence!!! Must be A/T/G/C");
-        	} else {
-	        	setProgress(0);
-	        	if(rdbtnRead1.isSelected()) { STRAND = 0; }
-	        	else if(rdbtnRead2.isSelected()) { STRAND = 1; }
-	        	else if(rdbtnCombined.isSelected()) { STRAND = 2; }
-	        	
-	        	if(chckbx5FilterEnd.isSelected()) { FivePrimeSeq = txt5Seq.getText(); }
-	        	if(chckbx3FilterEnd.isSelected()) { ThreePrimeSeq = txt3Seq.getText(); }
-	        	
-	        	for(int x = 0; x < BAMFiles.size(); x++) {
-	        		BAMtoTAB convert = new BAMtoTAB(BAMFiles.get(x), OUTPUT, STRAND, FivePrimeSeq, ThreePrimeSeq);
-	        		convert.setVisible(true);
-					convert.run();
-	        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-	        		setProgress(percentComplete);
+        	try {
+        		if(chckbxFilterByMinimum.isSelected() && Integer.parseInt(txtMin.getText()) < 1) {
+        			JOptionPane.showMessageDialog(null, "Invalid Minimum Insert Size!!! Must be larger than 0 bp");
+        		} else if(chckbxFilterByMaximum.isSelected() && Integer.parseInt(txtMax.getText()) < 1) {
+        			JOptionPane.showMessageDialog(null, "Invalid Maximum Insert Size!!! Must be larger than 0 bp");
+        		} else if(chckbxFilterByMinimum.isSelected() && chckbxFilterByMaximum.isSelected() && Integer.parseInt(txtMax.getText()) < Integer.parseInt(txtMin.getText())) {
+        			JOptionPane.showMessageDialog(null, "Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!");
+        		} else {
+		        	setProgress(0);
+		        	if(rdbtnRead1.isSelected()) { STRAND = 0; }
+		        	else if(rdbtnRead2.isSelected()) { STRAND = 1; }
+		        	else if(rdbtnCombined.isSelected()) { STRAND = 2; }
+		        	
+		        	int PAIR = 0;
+		        	if(chckbxRequireProperMatepair.isSelected()) { PAIR = 1; } 
+		        	int MIN = -9999;
+		        	if(chckbxFilterByMinimum.isSelected()) { MIN = Integer.parseInt(txtMin.getText()); }
+		        	int MAX = -9999;
+		        	if(chckbxFilterByMaximum.isSelected()) { MAX = Integer.parseInt(txtMax.getText()); }
+		        	
+		        	for(int x = 0; x < BAMFiles.size(); x++) {
+		        		BAMtoscIDX convert = new BAMtoscIDX(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
+		        		convert.setVisible(true);
+						convert.run();
+		        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+		        		setProgress(percentComplete);
+		        	}
+		        	setProgress(100);
+		        	return null;
 	        	}
-	        	setProgress(100);
+        	} catch(NumberFormatException nfe){
+        		JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
         	}
         	return null;
         }
-        
         public void done() {
         	massXable(contentPane, true);
             setCursor(null); //turn off the wait cursor
         }
 	}
 	
-	public BAMtoTABWindow() {
+	public BAMtoscIDXWindow() {
 		setTitle("BAM to TAB Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 650, 440);
+		setBounds(125, 125, 650, 475);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -116,14 +124,14 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 	
 		JScrollPane scrollPane = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -182, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -200, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
 		btnLoad = new JButton("Load BAM Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 11, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
@@ -172,22 +180,6 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 		rdbtnCombined = new JRadioButton("Combined");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCombined, 0, SpringLayout.NORTH, rdbtnRead1);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCombined, 150, SpringLayout.WEST, rdbtnRead2);
-		rdbtnCombined.addItemListener(new ItemListener() {
-		      public void itemStateChanged(ItemEvent e) {
-			        if(rdbtnCombined.isSelected()) { 
-			        	chckbx5FilterEnd.setEnabled(false);
-			        	chckbx3FilterEnd.setEnabled(false);
-			        	txt5Seq.setEnabled(false);
-			        	txt3Seq.setEnabled(false);
-			        }
-			        else { 
-			        	chckbx5FilterEnd.setEnabled(true);
-			        	chckbx3FilterEnd.setEnabled(true);
-			        	if(chckbx5FilterEnd.isSelected()) { txt5Seq.setEnabled(true); }
-			        	if(chckbx3FilterEnd.isSelected()) { txt3Seq.setEnabled(true); }
-			        }
-		      }
-        }); 
 		contentPane.add(rdbtnCombined);
 		
 		ButtonGroup OutputRead = new ButtonGroup();
@@ -198,7 +190,7 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         
         JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
         sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 10, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 0, SpringLayout.WEST, scrollPane);
         lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblPleaseSelectWhich);
@@ -233,43 +225,58 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
         
         btnIndex.setActionCommand("start");
         
-        chckbx5FilterEnd = new JCheckBox("Filter 5' End by Sequence:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbx5FilterEnd, 17, SpringLayout.SOUTH, rdbtnRead1);
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbx5FilterEnd, 0, SpringLayout.WEST, scrollPane);
-        chckbx5FilterEnd.addItemListener(new ItemListener() {
+        chckbxRequireProperMatepair = new JCheckBox("Require Proper Mate-Pair");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRequireProperMatepair, 6, SpringLayout.SOUTH, rdbtnRead2);
+        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxRequireProperMatepair, 425, SpringLayout.WEST, contentPane);
+        contentPane.add(chckbxRequireProperMatepair);
+        
+        chckbxFilterByMinimum = new JCheckBox("Filter by Min Insert Size (bp)");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxFilterByMinimum, 6, SpringLayout.SOUTH, chckbxRequireProperMatepair);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxFilterByMinimum, 10, SpringLayout.WEST, contentPane);
+        chckbxFilterByMinimum.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
-			        if(chckbx5FilterEnd.isSelected()) { txt5Seq.setEnabled(true); }
-			        else { txt5Seq.setEnabled(false); }
-		      }
-        });     
-        contentPane.add(chckbx5FilterEnd);
+			        if(chckbxFilterByMinimum.isSelected()) {
+			        	txtMin.setEnabled(true);
+			        } else {
+			        	txtMin.setEnabled(false);
+			        }
+			      }
+			    });
+        contentPane.add(chckbxFilterByMinimum);
         
-        txt5Seq = new JTextField();
-        txt5Seq.setHorizontalAlignment(SwingConstants.CENTER);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txt5Seq, 2, SpringLayout.NORTH, chckbx5FilterEnd);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txt5Seq, 6, SpringLayout.EAST, chckbx5FilterEnd);
-        txt5Seq.setEnabled(false);
-        contentPane.add(txt5Seq);
-        txt5Seq.setColumns(10);
+        txtMin = new JTextField();
+        txtMin.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, 2, SpringLayout.NORTH, chckbxFilterByMinimum);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 6, SpringLayout.EAST, chckbxFilterByMinimum);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtMin, 75, SpringLayout.EAST, chckbxFilterByMinimum);
+        txtMin.setHorizontalAlignment(SwingConstants.CENTER);
+        txtMin.setText("0");
+        contentPane.add(txtMin);
+        txtMin.setColumns(10);
         
-        chckbx3FilterEnd = new JCheckBox("Filter 3' End by Sequence:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbx3FilterEnd, 0, SpringLayout.NORTH, chckbx5FilterEnd);
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbx3FilterEnd, 8, SpringLayout.EAST, txt5Seq);
-        chckbx3FilterEnd.addItemListener(new ItemListener() {
+        chckbxFilterByMaximum = new JCheckBox("Filter by Max Insert Size (bp)");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxFilterByMaximum, 6, SpringLayout.SOUTH, chckbxRequireProperMatepair);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxFilterByMaximum, 25, SpringLayout.EAST, txtMin);
+        chckbxFilterByMaximum.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
-			        if(chckbx3FilterEnd.isSelected()) { txt3Seq.setEnabled(true); }
-			        else { txt3Seq.setEnabled(false); }
-		      }
-        });
-        contentPane.add(chckbx3FilterEnd);
+			        if(chckbxFilterByMaximum.isSelected()) {
+			        	txtMax.setEnabled(true);
+			        } else {
+			        	txtMax.setEnabled(false);
+			        }
+			      }
+			    });
+        contentPane.add(chckbxFilterByMaximum);
         
-        txt3Seq = new JTextField();
-        txt3Seq.setHorizontalAlignment(SwingConstants.CENTER);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txt3Seq, 2, SpringLayout.NORTH, chckbx5FilterEnd);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txt3Seq, 6, SpringLayout.EAST, chckbx3FilterEnd);
-        txt3Seq.setEnabled(false);
-        contentPane.add(txt3Seq);
-        txt3Seq.setColumns(10);
+        txtMax = new JTextField();
+        txtMax.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtMax, 6, SpringLayout.EAST, chckbxFilterByMaximum);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, 2, SpringLayout.NORTH, chckbxFilterByMinimum);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtMax, 75, SpringLayout.EAST, chckbxFilterByMaximum);
+        txtMax.setHorizontalAlignment(SwingConstants.CENTER);
+        txtMax.setText("1000");
+        contentPane.add(txtMax);
+        txtMax.setColumns(10);
         btnIndex.addActionListener(this);
         
         btnOutputDirectory.addActionListener(new ActionListener() {
@@ -308,10 +315,10 @@ public class BAMtoTABWindow extends JFrame implements ActionListener, PropertyCh
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
 		if(status) {
-        	if(chckbx5FilterEnd.isSelected()) { txt5Seq.setEnabled(true); }
-        	else { txt5Seq.setEnabled(false); }
-        	if(chckbx3FilterEnd.isSelected()) { txt3Seq.setEnabled(true); }
-        	else { txt3Seq.setEnabled(false); }
+        	if(chckbxFilterByMaximum.isSelected()) { txtMax.setEnabled(true); }
+        	else { txtMax.setEnabled(false); }
+        	if(chckbxFilterByMinimum.isSelected()) { txtMin.setEnabled(true); }
+        	else { txtMin.setEnabled(false); }
 		}
 	}
 }

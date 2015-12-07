@@ -20,17 +20,16 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import util.FASTAUtilities;
-
 @SuppressWarnings("serial")
-public class BAMtoTAB extends JFrame {
+public class BAMtoscIDX extends JFrame {
 	private File BAM = null;
 	private File OUTPUTPATH = null;
 	private int STRAND = 0;
 	private String READ = "READ1";
 	
-	private String FiveFilter = "";
-	private String ThreeFilter = "";
+	private static int PAIR = 1;
+	private static int MIN_INSERT = -9999;
+	private static int MAX_INSERT = -9999;
 	
 	private SamReader inputSam = null;
 	private PrintStream OUT = null;
@@ -43,7 +42,7 @@ public class BAMtoTAB extends JFrame {
 	
 	private int CHROMSTOP = -999;
 	
-	public BAMtoTAB(File b, File o, int s, String five, String three) {
+	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to TAB Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -58,11 +57,12 @@ public class BAMtoTAB extends JFrame {
 		BAM = b;
 		OUTPUTPATH = o;
 		STRAND = s;
+		PAIR = pair_status;
+		MIN_INSERT = min_size;
+		MAX_INSERT = max_size;
 		if(STRAND == 0) { READ = "READ1"; }
 		else if(STRAND == 1) { READ = "READ2"; }
 		else if(STRAND == 2) { READ = "COMBINED"; }
-		FiveFilter = five;
-		ThreeFilter = three;
 	}
 	
 	public void run() throws IOException, InterruptedException {
@@ -85,13 +85,28 @@ public class BAMtoTAB extends JFrame {
 		//Check to Make Sure BAI-index file exists
 		File f = new File(BAM.getAbsolutePath() + ".bai");
 		if(f.exists() && !f.isDirectory()) {
+			textArea.append("-----------------------------------------\nBAM to scIDX Parameters:\n");
+			textArea.append("BAM file: " + BAM + "\n");
+			textArea.append("Output: " + NAME + "\n");
+			
+			textArea.append("Require proper Mate-pair: ");
+			if(PAIR == 0) { textArea.append("no" + "\n"); }
+			else { textArea.append("yes" + "\n"); }
+			
+			textArea.append("Output Read: " + READ + "\n");
+			textArea.append("Minimum insert size required to output: ");
+			if(MIN_INSERT == -9999) { textArea.append("NaN\n"); }
+			else { textArea.append(MIN_INSERT + "\n"); }
+			textArea.append("Maximum insert size required to output: ");
+			if(MAX_INSERT == -9999) { textArea.append("NaN\n"); }
+			else { textArea.append(MAX_INSERT + "\n"); }
+			
 			//Print Header
 			OUT.println("#" + getTimeStamp() + ";" + BAM.getName() + ";" + READ);
 			OUT.println("chrom\tindex\tforward\treverse\tvalue");
+					
+			processREADS(); //Begin processing reads in BAM file
 			
-			if(STRAND == 0) { READ1(); }
-			else if(STRAND == 1) { READ2(); }
-			else if(STRAND == 2) { COMBINED(); }
 			OUT.close();
 		} else {
 			textArea.append("BAI Index File does not exist for: " + BAM.getName() + "\n");
@@ -102,27 +117,12 @@ public class BAMtoTAB extends JFrame {
 		
 		System.out.println(getTimeStamp());
 	}
-	
+		
 	public void addTag(SAMRecord sr) {
 		//Get the start of the record 
 		int recordStart = sr.getUnclippedStart();//.getAlignmentStart();
 		//Accounts for reverse tag reporting 3' end of tag and converting BED to IDX/GFF format
 		if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }//.getAlignmentEnd(); }					
-		
-		if(!FiveFilter.equals("")) {
-			String SEQ = "";
-			//if on the positive strand
-			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(0, FiveFilter.length()); }
-			else { SEQ =  FASTAUtilities.RevComplement(sr.getReadString().substring(sr.getReadString().length() - FiveFilter.length())); }
-			if(!SEQ.equals(FiveFilter)) { recordStart = -999; }
-		}
-		if(!ThreeFilter.equals("")) {
-			String SEQ = "";
-			//if on the positive strand
-			if(!sr.getReadNegativeStrandFlag()) { SEQ = sr.getReadString().substring(sr.getReadString().length() - ThreeFilter.length()); }
-			else { SEQ =  FASTAUtilities.RevComplement(sr.getReadString().substring(0, ThreeFilter.length())); }
-			if(!SEQ.equals(ThreeFilter)) { recordStart = -999; }
-		}
 		
 		//Make sure we only add tags that have valid starts
 		if(recordStart > 0 && recordStart <= CHROMSTOP) {
@@ -177,7 +177,7 @@ public class BAMtoTAB extends JFrame {
 		}
 	}
 	
-	public void READ1() {
+	public void processREADS() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);//factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
 					
@@ -196,20 +196,31 @@ public class BAMtoTAB extends JFrame {
 				//Create the record object 
 				SAMRecord sr = iter.next();
 				
-				//Must be PAIRED-END mapped, mate must be mapped, must be read1
-				if(sr.getReadPairedFlag()) {
-					if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
-						addTag(sr);
+				if(STRAND == 2) { //Output combined READ 1 && READ 2
+					if(PAIR == 0) { addTag(sr); } //Output read if proper mate-pairing is NOT required
+					else if(sr.getReadPairedFlag()) { //otherwise, check for PE flag
+						if(sr.getProperPairFlag()) { addTag(sr); } //output read if proper mate-pair is detected
 					}
-				} else {
-					//Also outputs if not paired-end since by default it is read-1
-					addTag(sr);
+				} else if(STRAND == 0) { //Output READ 1
+					if(sr.getReadPairedFlag()) { //Check if PAIRED-END
+						if(((sr.getProperPairFlag() && PAIR == 1) || PAIR == 0) && sr.getFirstOfPairFlag()) { //mate must be mapped if PAIR requirement, must be read1
+							boolean flag1 = (Math.abs(sr.getInferredInsertSize()) >= MIN_INSERT && MIN_INSERT != -9999) || MIN_INSERT == -9999; //check if insert size >= min if in use
+							boolean flag2 = (Math.abs(sr.getInferredInsertSize()) <= MAX_INSERT && MAX_INSERT != -9999) || MAX_INSERT == -9999; //check if insert size <= max if in use
+							if(flag1 && flag2) { addTag(sr); } //add tag if both flags true
+						}
+					} else if(PAIR == 0) { addTag(sr); } //Output if not paired-end, by default it is Read1, and mate-pair not required
+				} else if(STRAND == 1) { //Output READ 2
+					if(sr.getReadPairedFlag()) { ////Must be PAIRED-END for valid Read 2
+						if(((sr.getProperPairFlag() && PAIR == 1) || PAIR == 0) && !sr.getFirstOfPairFlag()) { //mate must be mapped if PAIR requirement, must be read2
+							boolean flag1 = (Math.abs(sr.getInferredInsertSize()) >= MIN_INSERT && MIN_INSERT != -9999) || MIN_INSERT == -9999; //check if insert size >= min if in use
+							boolean flag2 = (Math.abs(sr.getInferredInsertSize()) <= MAX_INSERT && MAX_INSERT != -9999) || MAX_INSERT == -9999; //check if insert size <= max if in use
+							if(flag1 && flag2) { addTag(sr); } //add tag if both flags true
+						}
+					}
 				}
 				
 				//Dump ArrayLists to OUT if they get too big in order to save RAM and therefore time
-				if(BP.size() > 10000) {
-					dumpExcess(seq.getSequenceName());
-				}
+				if(BP.size() > 10000) {	dumpExcess(seq.getSequenceName()); }
 				
 			}
 			iter.close();
@@ -221,82 +232,6 @@ public class BAMtoTAB extends JFrame {
 		bai.close();
 	}
 	
-	public void READ2() {
-		inputSam = SamReaderFactory.makeDefault().open(BAM);//factory.open(BAM);
-		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
-					
-		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
-			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-			System.out.println("Processing: " + seq.getSequenceName());
-			textArea.append("Processing: " + seq.getSequenceName() + "\n");
-
-			CHROMSTOP = seq.getSequenceLength();
-			BP = new ArrayList<Integer>();
-			F_OCC = new ArrayList<Integer>();
-			R_OCC = new ArrayList<Integer>();
-			
-			CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
-			while (iter.hasNext()) {
-				//Create the record object 
-				SAMRecord sr = iter.next();
-				
-				//Must be PAIRED-END mapped, mate must be mapped, must be read2
-				if(sr.getReadPairedFlag()) {
-					if(sr.getProperPairFlag() && !sr.getFirstOfPairFlag()) {
-						addTag(sr);
-					}
-				}
-				
-				//Dump ArrayLists to OUT if they get too big in order to save RAM and therefore time
-				if(BP.size() > 10000) {
-					dumpExcess(seq.getSequenceName());
-				}
-			}
-			iter.close();
-			for(int x = 0; x < BP.size(); x++) {
-				int sum = F_OCC.get(x).intValue() + R_OCC.get(x).intValue();
-				OUT.println(seq.getSequenceName() + "\t" + BP.get(x).intValue() + "\t" + F_OCC.get(x).intValue() + "\t" + R_OCC.get(x).intValue() + "\t" + sum);		
-			}
-		}
-		bai.close();
-	}
-	
-	public void COMBINED() {
-		inputSam = SamReaderFactory.makeDefault().open(BAM);//factory.open(BAM);
-		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
-					
-		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
-			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-			System.out.println("Processing: " + seq.getSequenceName());
-			textArea.append("Processing: " + seq.getSequenceName() + "\n");
-
-			CHROMSTOP = seq.getSequenceLength();
-			BP = new ArrayList<Integer>();
-			F_OCC = new ArrayList<Integer>();
-			R_OCC = new ArrayList<Integer>();
-			
-			CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
-			while (iter.hasNext()) {
-				//Create the record object 
-				SAMRecord sr = iter.next();
-				
-				//No filter required here
-				addTag(sr);
-								
-				//Dump ArrayLists to OUT if they get too big in order to save RAM and therefore time
-				if(BP.size() > 10000) {
-					dumpExcess(seq.getSequenceName());
-				}
-			}
-			iter.close();
-			for(int x = 0; x < BP.size(); x++) {
-				int sum = F_OCC.get(x).intValue() + R_OCC.get(x).intValue();
-				OUT.println(seq.getSequenceName() + "\t" + BP.get(x).intValue() + "\t" + F_OCC.get(x).intValue() + "\t" + R_OCC.get(x).intValue() + "\t" + sum);		
-			}
-		}
-		bai.close();
-	}
-		
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();

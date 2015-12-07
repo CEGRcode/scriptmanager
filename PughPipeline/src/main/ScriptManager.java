@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import window_interface.BAM_Format_Converter.BAMtoMidpointWindow;
-import window_interface.BAM_Format_Converter.BAMtoTABWindow;
+import window_interface.BAM_Format_Converter.BAMtoscIDXWindow;
 import window_interface.BAM_Format_Converter.FilterforPermanganateSeqWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
 import window_interface.BAM_Manipulation.BAMRemoveDupWindow;
@@ -319,9 +319,9 @@ public class ScriptManager {
 		JPanel pnlBamConvert = new JPanel();
 		tabbedPane.addTab("BAM Format Converter", null, pnlBamConvert, null);
 		
-		JButton btnBamToTab = new JButton("BAM to TAB");
-		pnlBamConvert.add(btnBamToTab);
-		btnBamToTab.setToolTipText("Convert BAM file to TAB file.");
+		JButton btnBamToscIDX = new JButton("BAM to scIDX");
+		pnlBamConvert.add(btnBamToscIDX);
+		btnBamToscIDX.setToolTipText("Convert BAM file to scIDX file.");
 		
 		JButton btnBamToBed = new JButton("BAM to BED");
 		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
@@ -545,12 +545,12 @@ public class ScriptManager {
 			}
 		});
 		
-		btnBamToTab.addActionListener(new ActionListener() {
+		btnBamToscIDX.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							BAMtoTABWindow frame = new BAMtoTABWindow();
+							BAMtoscIDXWindow frame = new BAMtoscIDXWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
