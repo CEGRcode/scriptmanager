@@ -37,6 +37,7 @@ public class BAMDeDuplication extends JFrame {
 			IOUtil.assertFileIsWritable(output);
 			final SamReader reader = SamReaderFactory.makeDefault().open(bamFile);
 			reader.getFileHeader().setSortOrder(SAMFileHeader.SortOrder.coordinate);
+
 			final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, output);
 			//Code to get individual chromosome stats
 			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
@@ -46,7 +47,6 @@ public class BAMDeDuplication extends JFrame {
 				
 			for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 				SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
-				
 				System.out.println(seq.getSequenceName());
 				//Loop through each chromosome looking at each perfect F-R PE read
 				CHROM_COMPLEXITY = new HashMap<String, Integer>();
@@ -56,9 +56,9 @@ public class BAMDeDuplication extends JFrame {
 					SAMRecord sr = iter.next();
 									
 					if(sr.getReadPairedFlag()) {
-						if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
+						if(sr.getProperPairFlag()) {
 							//Unique ID
-							String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
+							String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize() + "_" + sr.getFirstOfPairFlag();
 							//Duplication rate for each chrom determined
 							if(CHROM_COMPLEXITY.isEmpty()) {
 								writer.addAlignment(sr);
@@ -68,7 +68,7 @@ public class BAMDeDuplication extends JFrame {
 								CHROM_COMPLEXITY.put(tagName, new Integer(1));
 							}
 						}
-					}	
+					}
 				}
 				iter.close();
 			}
