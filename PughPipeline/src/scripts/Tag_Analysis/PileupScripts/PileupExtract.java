@@ -71,7 +71,7 @@ public class PileupExtract implements Runnable{
 			
 			//Must be PAIRED-END mapped, mate must be mapped, must be read1
 			if(sr.getReadPairedFlag()) {
-				if(sr.getProperPairFlag()) {
+				if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) {
 					if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2) {
 						int FivePrime = sr.getUnclippedStart() - 1;
 						if(sr.getReadNegativeStrandFlag()) { 

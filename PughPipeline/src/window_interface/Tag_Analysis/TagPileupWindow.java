@@ -91,7 +91,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JCheckBox chckbxOutputData;
 	private JCheckBox chckbxOutputCompositeData;
 	private JCheckBox chckbxTagStandard;
-	
+	private JCheckBox chckbxRequireProperPe;
+	 
 	JProgressBar progressBar;
 	public Task task;
 
@@ -130,6 +131,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        	if(rdbtnRead1.isSelected()) { param.setRead(0); }
 		        	else if(rdbtnRead2.isSelected()) { param.setRead(1); }
 		        	else if(rdbtnCombined.isSelected()) { param.setRead(2); }
+		        	
+		        	if(chckbxRequireProperPe.isSelected()) { param.setPErequire(true); }
+		        	else { param.setPErequire(false); }
 		        	
 		        	if(rdbtnNone.isSelected()) { param.setTrans(0); }
 		        	else if(rdbtnSlidingWindow.isSelected()) { param.setTrans(1); }
@@ -189,7 +193,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		setTitle("Tag Pileup");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 600, 870);
+		setBounds(125, 125, 600, 880);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -243,17 +247,17 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(btnPileup);
 		
 		rdbtnRead1 = new JRadioButton("Read 1");
-		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead1, 125, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead1, 20, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnRead1);
 		
 		rdbtnRead2 = new JRadioButton("Read 2");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead2, 0, SpringLayout.NORTH, rdbtnRead1);
-		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnRead2, 340, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead2, 60, SpringLayout.EAST, rdbtnRead1);
 		contentPane.add(rdbtnRead2);
 		
 		rdbtnCombined = new JRadioButton("Combined");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCombined, 0, SpringLayout.NORTH, rdbtnRead1);
-		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCombined, 125, SpringLayout.WEST, rdbtnRead2);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCombined, 60, SpringLayout.EAST, rdbtnRead2);
 		contentPane.add(rdbtnCombined);
 		
 		ButtonGroup OutputRead = new ButtonGroup();
@@ -271,7 +275,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(lblPleaseSelectWhich);
 
         lblDefaultToLocal = new JLabel("Default to Local Directory");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 0, SpringLayout.WEST, rdbtnRead1);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -13, SpringLayout.EAST, contentPane);
         lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
         lblDefaultToLocal.setBackground(Color.WHITE);
@@ -279,6 +282,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         
         lblCurrentOutput = new JLabel("Current Output:");
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.EAST, lblCurrentOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane_BAM);
         lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrentOutput);
@@ -299,7 +303,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         btnPileup.setActionCommand("start");
         
         lblPleaseSelectWhich_1 = new JLabel("Please Select How to Output Strands:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich_1, 6, SpringLayout.SOUTH, rdbtnRead1);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich_1, 10, SpringLayout.WEST, contentPane);
         lblPleaseSelectWhich_1.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblPleaseSelectWhich_1);
@@ -584,6 +587,20 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         txtCompositeName.setText("composite_average.out");
         contentPane.add(txtCompositeName);
         txtCompositeName.setColumns(10);
+        
+        chckbxRequireProperPe = new JCheckBox("Require Proper PE Pairing");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRequireProperPe, 0, SpringLayout.NORTH, rdbtnRead1);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRequireProperPe, 20, SpringLayout.EAST, rdbtnCombined);
+        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxRequireProperPe, 0, SpringLayout.EAST, scrollPane_BAM);
+        contentPane.add(chckbxRequireProperPe);
+        
+        JSeparator sepReadOutput = new JSeparator();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich_1, 10, SpringLayout.SOUTH, sepReadOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, sepReadOutput, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, sepReadOutput, 10, SpringLayout.SOUTH, rdbtnRead1);
+        sl_contentPane.putConstraint(SpringLayout.EAST, sepReadOutput, -10, SpringLayout.EAST, contentPane);
+        sepReadOutput.setForeground(Color.BLACK);
+        contentPane.add(sepReadOutput);
         
         rdbtnNone.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {

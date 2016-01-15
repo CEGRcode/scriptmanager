@@ -245,9 +245,7 @@ public class TagPileup extends JFrame {
 					
 					if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
 					else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
-					
-					System.out.println(PARAM.getOutput() + "\n" + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
-					
+										
 					if(OUT_S1 != null && PARAM.getOutputType() == 2) {
 						if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0), PARAM.getSenseColor());
 						else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2), PARAM.getCombinedColor());

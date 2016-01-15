@@ -19,6 +19,7 @@ public class PileupParameters {
 	private int OUTTYPE = 0;
 	private boolean STANDARD = false;
 	private boolean outputCOMPOSITE = false;
+	private boolean requirePE = false;
 	private double STANDRATIO = 1;
 	
 	private Color Sense = null;
@@ -27,6 +28,14 @@ public class PileupParameters {
 	
 	public PileupParameters() {
 		
+	}
+	
+	public boolean getPErequire() {
+		return requirePE;
+	}
+	
+	public void setPErequire(boolean status) {
+		requirePE = status;
 	}
 	
 	public String getCompositeFile() {
