@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,6 +33,8 @@ import javax.swing.border.EmptyBorder;
 import scripts.Sequence_Analysis.FASTAExtract;
 import util.FileSelection;
 
+import javax.swing.JRadioButton;
+
 @SuppressWarnings("serial")
 public class FASTAExtractWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -49,6 +52,8 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 	private JLabel lblGenome;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
+	private JRadioButton rdbtnBedName;
+	private JRadioButton rdbtnGenomeCoordinate;
 	private JProgressBar progressBar;
 	private JCheckBox chckbxStrand;
 
@@ -64,8 +69,9 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
         		} else {
         			setProgress(0);
-        			FASTAExtract signal = new FASTAExtract(INPUT, BEDFiles, OUTPUT_PATH, chckbxStrand.isSelected());
-        				
+        			System.out.println(rdbtnBedName.isSelected());
+        			FASTAExtract signal = new FASTAExtract(INPUT, BEDFiles, OUTPUT_PATH, chckbxStrand.isSelected(), rdbtnBedName.isSelected());
+        			
         			signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 					    	int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -96,7 +102,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		setTitle("FASTA Extract from BED");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 350);
+		setBounds(125, 125, 450, 380);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -104,7 +110,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		contentPane.setLayout(sl_contentPane);
 	
 		JScrollPane scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 97, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 140, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
@@ -115,7 +121,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load BED Files");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
@@ -130,8 +136,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		contentPane.add(btnLoad);
 		
 		btnRemoveBam = new JButton("Remove BED");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -11, SpringLayout.NORTH, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, 0, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -160,28 +165,31 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
         
         JButton btnLoadGenome = new JButton("Load Genome FASTA");
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGenome, 0, SpringLayout.NORTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadGenome, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadGenome, 10, SpringLayout.WEST, contentPane);
         contentPane.add(btnLoadGenome);
         
         lblGenome = new JLabel("No Genomic FASTA File Loaded");
+        lblGenome.setFont(new Font("Dialog", Font.PLAIN, 12));
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblGenome, 10, SpringLayout.SOUTH, btnLoadGenome);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblGenome, 0, SpringLayout.WEST, btnLoad);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblGenome, 0, SpringLayout.EAST, contentPane);
         contentPane.add(lblGenome);
         
         lblCurrent = new JLabel("Current Output:");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrent, -45, SpringLayout.SOUTH, contentPane);
         lblCurrent.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrent);
         
         lblDefaultToLocal = new JLabel("Default to Local Directory");
+        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrent);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
         
         btnOutput = new JButton("Output Directory");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 10, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
         btnOutput.addActionListener(new ActionListener() {
@@ -192,7 +200,6 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
     			}
         	}
         });
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 6, SpringLayout.SOUTH, scrollPane);
         contentPane.add(btnOutput);
         
         chckbxStrand = new JCheckBox("Force Strandedness");
@@ -200,7 +207,28 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
         sl_contentPane.putConstraint(SpringLayout.EAST, chckbxStrand, -17, SpringLayout.WEST, btnRemoveBam);
         chckbxStrand.setSelected(true);
         contentPane.add(chckbxStrand);
+        
+        JLabel lblHeaderId = new JLabel("FASTA Header ID:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblHeaderId, 8, SpringLayout.SOUTH, lblGenome);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblHeaderId, 10, SpringLayout.WEST, contentPane);
+        contentPane.add(lblHeaderId);
+        
+        rdbtnBedName = new JRadioButton("BED Name");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 6, SpringLayout.SOUTH, rdbtnBedName);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnBedName, 6, SpringLayout.SOUTH, lblHeaderId);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnBedName, 10, SpringLayout.WEST, contentPane);
+        contentPane.add(rdbtnBedName);
+        
+        rdbtnGenomeCoordinate = new JRadioButton("Genome Coordinate");
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnGenomeCoordinate, 25, SpringLayout.EAST, rdbtnBedName);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, rdbtnGenomeCoordinate, 0, SpringLayout.SOUTH, rdbtnBedName);
+        contentPane.add(rdbtnGenomeCoordinate);
 
+        ButtonGroup HeaderID = new ButtonGroup();
+        HeaderID.add(rdbtnBedName);
+        HeaderID.add(rdbtnGenomeCoordinate);
+        rdbtnBedName.setSelected(true);
+        
         btnLoadGenome.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		File temp = FileSelection.getFASTAFile(fc);
