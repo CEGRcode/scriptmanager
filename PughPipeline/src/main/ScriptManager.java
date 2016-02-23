@@ -49,6 +49,7 @@ public class ScriptManager {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
