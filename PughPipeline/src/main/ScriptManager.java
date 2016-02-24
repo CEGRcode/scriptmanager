@@ -80,6 +80,7 @@ public class ScriptManager {
 		pnlStat.add(btnPEStats);
 		
 		JButton btnSignalDuplication = new JButton("Signal Duplication");
+		btnSignalDuplication.setToolTipText("Output signal duplication statistics");
 		pnlStat.add(btnSignalDuplication);
 		btnSignalDuplication.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -209,9 +210,11 @@ public class ScriptManager {
 		pnlCoord_Manip.add(splitPaneExpand);
 		
 		JButton btnExpandBedFile = new JButton("Expand BED File");
+		btnExpandBedFile.setToolTipText("Expand BED file given user-defined criteria");
 		splitPaneExpand.setLeftComponent(btnExpandBedFile);
 		
 		JButton btnExpandGffFile = new JButton("Expand GFF File");
+		btnExpandGffFile.setToolTipText("Expand GFF file given user-defined criteria");
 		splitPaneExpand.setRightComponent(btnExpandGffFile);
 		btnExpandGffFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -246,9 +249,11 @@ public class ScriptManager {
 		pnlCoord_Manip.add(splitPaneConvert);
 		
 		JButton btnBedToGFF = new JButton("Convert BED to GFF");
+		btnBedToGFF.setToolTipText("Convert BED file to GFF file");
 		splitPaneConvert.setLeftComponent(btnBedToGFF);
 		
 		JButton btnGffToBed = new JButton("Convert GFF to BED");
+		btnGffToBed.setToolTipText("Convert GFF file to BED file");
 		splitPaneConvert.setRightComponent(btnGffToBed);
 		btnGffToBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -283,9 +288,11 @@ public class ScriptManager {
 		pnlCoord_Manip.add(splitPaneSort);
 		
 		JButton btnBEDSort = new JButton("Sort BED by CDT");
+		btnBEDSort.setToolTipText("Sort BED file by CDT file statistics");
 		splitPaneSort.setLeftComponent(btnBEDSort);
 		
 		JButton btnSortGffFile = new JButton("Sort GFF by CDT");
+		btnSortGffFile.setToolTipText("Sort BED file by CDT file statistics");
 		splitPaneSort.setRightComponent(btnSortGffFile);
 		btnSortGffFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -328,9 +335,11 @@ public class ScriptManager {
 		pnlBamConvert.add(btnBamToBed);
 		
 		JButton btnBamToMidpoint = new JButton("BAM to Midpoint");
+		btnBamToMidpoint.setToolTipText("Convert BAM to scIDX Midpoint file");
 		pnlBamConvert.add(btnBamToMidpoint);
 		
 		JButton btnFilterForPermanganateseq = new JButton("Filter for Permanganate-Seq");
+		btnFilterForPermanganateseq.setToolTipText("Filter BAM file by -1 nucleotide");
 		btnFilterForPermanganateseq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -351,6 +360,7 @@ public class ScriptManager {
 		tabbedPane.addTab("Tag Analysis", null, pnlTagAnalysis, null);
 		
 		JButton btnGenetrack = new JButton("GeneTrack");
+		btnGenetrack.setToolTipText("Genetrack peak-calling algorithm");
 		btnGenetrack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -390,6 +400,7 @@ public class ScriptManager {
 		});
 		
 		JButton btnTagPileup = new JButton("Tag Pileup");
+		btnTagPileup.setToolTipText("Pileup 5' ends of aligned tags given BED and BAM files according to user-defined parameters");
 		btnTagPileup.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -407,6 +418,7 @@ public class ScriptManager {
 		pnlTagAnalysis.add(btnTagPileup);
 		
 			JButton btnHeatMap = new JButton("Heat Map");
+			btnHeatMap.setToolTipText("Generate heat map using CDT files");
 			btnHeatMap.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {
@@ -424,6 +436,7 @@ public class ScriptManager {
 			pnlTagAnalysis.add(btnHeatMap);
 			
 			JButton btnMergeHeatPlots = new JButton("Merge Heat Plots");
+			btnMergeHeatPlots.setToolTipText("Merge Sense and Antisense png plots");
 			pnlTagAnalysis.add(btnMergeHeatPlots);
 			btnMergeHeatPlots.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -446,6 +459,7 @@ public class ScriptManager {
 			tabbedPane.addTab("Sequence Analysis", null, pnlSeqAnalysis, null);
 			
 			JButton btnFASTAExtract = new JButton("FASTA from BED");
+			btnFASTAExtract.setToolTipText("Generate FASTA file from Genome FASTA file and BED file");
 			btnFASTAExtract.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					EventQueue.invokeLater(new Runnable() {
@@ -463,6 +477,7 @@ public class ScriptManager {
 			pnlSeqAnalysis.add(btnFASTAExtract);
 			
 			JButton btnRandomizeFasta = new JButton("Randomize FASTA");
+			btnRandomizeFasta.setToolTipText("Randomize FASTA sequence for each input entry");
 			btnRandomizeFasta.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {
@@ -480,6 +495,7 @@ public class ScriptManager {
 			pnlSeqAnalysis.add(btnRandomizeFasta);
 			
 			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
+			btncolorSequencePlot.setToolTipText("Generate 4Color sequence plot given FASTA file and user-defined RGB colors");
 			btncolorSequencePlot.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 					EventQueue.invokeLater(new Runnable() {
@@ -497,6 +513,7 @@ public class ScriptManager {
 			pnlSeqAnalysis.add(btncolorSequencePlot);
 			
 			JButton btnDnaShapeBed = new JButton("DNA Shape from BED");
+			btnDnaShapeBed.setToolTipText("Calculate intrinsic DNA shape parameters given BED file and Genome FASTA file");
 			btnDnaShapeBed.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {
@@ -514,6 +531,7 @@ public class ScriptManager {
 			pnlSeqAnalysis.add(btnDnaShapeBed);
 			
 			JButton btnDnaShapeFasta = new JButton("DNA Shape from FASTA");
+			btnDnaShapeFasta.setToolTipText("Calculate intrinsic DNA shape given input FASTA file");
 			btnDnaShapeFasta.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {
