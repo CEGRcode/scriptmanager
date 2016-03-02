@@ -10,7 +10,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
-import window_interface.BAM_Format_Converter.BAMtoMidpointWindow;
 import window_interface.BAM_Format_Converter.BAMtoscIDXWindow;
 import window_interface.BAM_Format_Converter.FilterforPermanganateSeqWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
@@ -334,10 +333,6 @@ public class ScriptManager {
 		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
 		pnlBamConvert.add(btnBamToBed);
 		
-		JButton btnBamToMidpoint = new JButton("BAM to Midpoint");
-		btnBamToMidpoint.setToolTipText("Convert BAM to scIDX Midpoint file");
-		pnlBamConvert.add(btnBamToMidpoint);
-		
 		JButton btnFilterForPermanganateseq = new JButton("Filter for Permanganate-Seq");
 		btnFilterForPermanganateseq.setToolTipText("Filter BAM file by -1 nucleotide");
 		btnFilterForPermanganateseq.addActionListener(new ActionListener() {
@@ -569,21 +564,6 @@ public class ScriptManager {
 					public void run() {
 						try {
 							BAMtoscIDXWindow frame = new BAMtoscIDXWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		
-		btnBamToMidpoint.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BAMtoMidpointWindow frame = new BAMtoMidpointWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
