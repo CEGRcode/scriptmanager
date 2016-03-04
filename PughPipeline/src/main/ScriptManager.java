@@ -35,6 +35,7 @@ import window_interface.Tag_Analysis.HeatMapWindow;
 import window_interface.Tag_Analysis.MergeHeatMapWindow;
 import window_interface.Tag_Analysis.PeakPairWindow;
 import window_interface.Tag_Analysis.TagPileupWindow;
+import window_interface.Tag_Analysis.VarianceCalcWindow;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -448,8 +449,23 @@ public class ScriptManager {
 				}
 			});
 			
-		
-			
+			JButton btnVarianceCalculation = new JButton("Variance Calculation");
+			btnVarianceCalculation.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								VarianceCalcWindow frame = new VarianceCalcWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlTagAnalysis.add(btnVarianceCalculation);
+					
 			JPanel pnlSeqAnalysis = new JPanel();
 			tabbedPane.addTab("Sequence Analysis", null, pnlSeqAnalysis, null);
 			
