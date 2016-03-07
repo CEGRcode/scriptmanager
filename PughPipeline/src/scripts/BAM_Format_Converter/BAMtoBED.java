@@ -140,7 +140,8 @@ public class BAMtoBED extends JFrame {
 			if(read.getReadNegativeStrandFlag()) { midStart = read.getUnclippedEnd() + (read.getInferredInsertSize() / 2); }
 			int midStop = midStart + 1;
 			if(midStart >= 0 && midStop < CHROMSTOP) {
-				OUT.println(chrom + "\t" + midStart + "\t" + midStop + "\t" + read.getReadName() + "\t" + read.getReadLength() + "\t" + dir);
+				int size = Math.abs(read.getInferredInsertSize());
+				OUT.println(chrom + "\t" + midStart + "\t" + midStop + "\t" + read.getReadName() + "\t" + size + "\t" + dir);
 			}
 		} else if(STRAND == 4) { //Make sure we only output real reads
 			if(read.getReadNegativeStrandFlag()) {
@@ -150,7 +151,8 @@ public class BAMtoBED extends JFrame {
 				recordStop = read.getMateAlignmentStart() + read.getReadLength();
 			}
 			if(recordStart >= 0 && recordStop < CHROMSTOP) {
-				OUT.println(chrom + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadName() + "\t" + read.getReadLength() + "\t" + dir);
+				int size = Math.abs(read.getInferredInsertSize());
+				OUT.println(chrom + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadName() + "\t" + size + "\t" + dir);
 			}
 		}
 	}
