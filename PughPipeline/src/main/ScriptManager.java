@@ -10,6 +10,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
+import window_interface.BAM_Format_Converter.BAMtoGFFWindow;
 import window_interface.BAM_Format_Converter.BAMtoscIDXWindow;
 import window_interface.BAM_Format_Converter.FilterforPermanganateSeqWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
@@ -327,15 +328,60 @@ public class ScriptManager {
 		tabbedPane.addTab("BAM Format Converter", null, pnlBamConvert, null);
 		
 		JButton btnBamToscIDX = new JButton("BAM to scIDX");
-		pnlBamConvert.add(btnBamToscIDX);
+		btnBamToscIDX.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtoscIDXWindow frame = new BAMtoscIDXWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		btnBamToscIDX.setToolTipText("Convert BAM file to scIDX file.");
+		pnlBamConvert.add(btnBamToscIDX);
 		
 		JButton btnBamToBed = new JButton("BAM to BED");
+		btnBamToBed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtoBEDWindow frame = new BAMtoBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
 		pnlBamConvert.add(btnBamToBed);
+				
+		JButton btnBamToGff = new JButton("BAM to GFF");
+		btnBamToGff.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									BAMtoGFFWindow frame = new BAMtoGFFWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
+		btnBamToGff.setToolTipText("Convert BAM file to GFF file.");
+		pnlBamConvert.add(btnBamToGff);
 		
 		JButton btnFilterForPermanganateseq = new JButton("Filter for Permanganate-Seq");
-		btnFilterForPermanganateseq.setToolTipText("Filter BAM file by -1 nucleotide");
 		btnFilterForPermanganateseq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -350,6 +396,7 @@ public class ScriptManager {
 				 });
 			}
 		});
+		btnFilterForPermanganateseq.setToolTipText("Filter BAM file by -1 nucleotide");
 		pnlBamConvert.add(btnFilterForPermanganateseq);
 		
 		JPanel pnlTagAnalysis = new JPanel();
@@ -558,36 +605,6 @@ public class ScriptManager {
 				}
 			});
 			pnlSeqAnalysis.add(btnDnaShapeFasta);
-			
-		btnBamToBed.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BAMtoBEDWindow frame = new BAMtoBEDWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		
-		btnBamToscIDX.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BAMtoscIDXWindow frame = new BAMtoscIDXWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
 	}
 	
 	/**
