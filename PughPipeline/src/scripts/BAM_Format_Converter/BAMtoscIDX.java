@@ -171,9 +171,17 @@ public class BAMtoscIDX extends JFrame {
 	}
 
 	public void addMidTag(SAMRecord sr) {
-		int recordMid = sr.getUnclippedStart() + (sr.getInferredInsertSize() / 2);
-		if(sr.getReadNegativeStrandFlag()) { recordMid = sr.getUnclippedEnd() + (sr.getInferredInsertSize() / 2); }
+		//int recordMid = sr.getUnclippedStart() + (sr.getInferredInsertSize() / 2);
+		//if(sr.getReadNegativeStrandFlag()) { recordMid = sr.getUnclippedEnd() + (sr.getInferredInsertSize() / 2); }
 
+		int recordStart = sr.getUnclippedStart() - 1;
+		int recordStop = sr.getMateAlignmentStart() + sr.getReadLength() - 1;
+		if(sr.getMateAlignmentStart() - 1 < recordStart) {
+			recordStart = sr.getMateAlignmentStart() - 1;
+			recordStop = sr.getUnclippedEnd();
+		}
+		int recordMid = (recordStart + recordStop) / 2;
+		
 		//Make sure we only add tags that have valid midpoints
 		if(recordMid > 0 && recordMid <= CHROMSTOP) {
 			if(BP.contains(new Integer(recordMid))) {
