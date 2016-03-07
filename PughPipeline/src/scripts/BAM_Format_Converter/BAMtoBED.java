@@ -135,22 +135,26 @@ public class BAMtoBED extends JFrame {
 			if(recordStart >= 0 && recordStop < CHROMSTOP) { //Make sure we only output real reads
 				OUT.println(chrom + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadName() + "\t" + read.getReadLength() + "\t" + dir);
 			}
-		} else if(STRAND == 3) { //Make sure we only output real reads
-			int midStart = read.getUnclippedStart() + (read.getInferredInsertSize() / 2);
-			if(read.getReadNegativeStrandFlag()) { midStart = read.getUnclippedEnd() + (read.getInferredInsertSize() / 2); }
+		} else if(STRAND == 3) {
+			recordStop = read.getMateAlignmentStart() + read.getReadLength() - 1;
+			if(read.getMateAlignmentStart() - 1 < recordStart) {
+				recordStart = read.getMateAlignmentStart() - 1;
+				recordStop = read.getUnclippedEnd();
+			}
+			int midStart = (recordStart + recordStop) / 2;
 			int midStop = midStart + 1;
-			if(midStart >= 0 && midStop < CHROMSTOP) {
+			
+			if(midStart >= 0 && midStop < CHROMSTOP) { //Make sure we only output real reads
 				int size = Math.abs(read.getInferredInsertSize());
 				OUT.println(chrom + "\t" + midStart + "\t" + midStop + "\t" + read.getReadName() + "\t" + size + "\t" + dir);
 			}
-		} else if(STRAND == 4) { //Make sure we only output real reads
-			if(read.getReadNegativeStrandFlag()) {
+		} else if(STRAND == 4) { 
+			recordStop = read.getMateAlignmentStart() + read.getReadLength() - 1;
+			if(read.getMateAlignmentStart() - 1 < recordStart) {
 				recordStart = read.getMateAlignmentStart() - 1;
-				recordStop = read.getAlignmentEnd();
-			} else {
-				recordStop = read.getMateAlignmentStart() + read.getReadLength();
+				recordStop = read.getUnclippedEnd();
 			}
-			if(recordStart >= 0 && recordStop < CHROMSTOP) {
+			if(recordStart >= 0 && recordStop < CHROMSTOP) { //Make sure we only output real reads
 				int size = Math.abs(read.getInferredInsertSize());
 				OUT.println(chrom + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadName() + "\t" + size + "\t" + dir);
 			}

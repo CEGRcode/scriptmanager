@@ -8,6 +8,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import scripts.BAM_Format_Converter.BAMtoBED;
+
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -33,7 +36,6 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.BAM_Format_Converter.BAMtoBED;
 import util.FileSelection;
 
 import javax.swing.JCheckBox;
