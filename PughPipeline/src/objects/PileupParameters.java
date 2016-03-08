@@ -22,12 +22,31 @@ public class PileupParameters {
 	private boolean requirePE = false;
 	private double STANDRATIO = 1;
 	
+	private int MIN_INSERT = -9999;
+	private int MAX_INSERT = -9999;
+	
 	private Color Sense = null;
 	private Color Anti = null;
 	private Color Combined = null;
 	
 	public PileupParameters() {
 		
+	}
+	
+	public void setMaxInsert(int max) {
+		MAX_INSERT = max;
+	}
+	
+	public int getMaxInsert() {
+		return MAX_INSERT;
+	}
+	
+	public void setMinInsert(int min) {
+		MIN_INSERT = min;
+	}
+	
+	public int getMinInsert() {
+		return MIN_INSERT;
 	}
 	
 	public boolean getPErequire() {

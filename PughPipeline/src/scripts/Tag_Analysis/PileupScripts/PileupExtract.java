@@ -69,15 +69,32 @@ public class PileupExtract implements Runnable{
 		    //SAMRecord is 1-based
 			SAMRecord sr = iter.next();
 			
-			//Must be PAIRED-END mapped, mate must be mapped, must be read1
-			if(sr.getReadPairedFlag()) {
-				if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) {
-					if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2) {
+			if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
+				if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
+					//Read 1 and want Read 1, Read 2 and want Read 2, want any read, Read 1 and want midpoint
+					if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 || (sr.getFirstOfPairFlag() && param.getRead() == 3)) {
 						int FivePrime = sr.getUnclippedStart() - 1;
 						if(sr.getReadNegativeStrandFlag()) { 
 							FivePrime = sr.getUnclippedEnd();
 							FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
 						} else { FivePrime += SHIFT; }
+						
+						if(sr.getProperPairFlag()) { //prevent cases where non-properly paired Read1 gets to this point
+							int recordStart = sr.getUnclippedStart() - 1;
+							int recordStop = sr.getMateAlignmentStart() + sr.getReadLength() - 1;
+							if(sr.getMateAlignmentStart() - 1 < recordStart) {
+								recordStart = sr.getMateAlignmentStart() - 1;
+								recordStop = sr.getUnclippedEnd();
+							}
+							
+							//Find midpoint is read flag == 3
+							if(param.getRead() == 3) { FivePrime = (recordStart + recordStop) / 2; }
+							
+							if(recordStop - recordStart < param.getMinInsert() && param.getMinInsert() != -9999) { FivePrime = -1; } //Test for MIN insert size cutoff here
+							if(recordStop - recordStart > param.getMaxInsert() && param.getMaxInsert() != -9999) { FivePrime = -1; } //Test for MAX insert size cutoff here
+						}
+	
+						//Adjust tag start to be within array reference
 						FivePrime -= (BEDSTART - QUERYWINDOW);
 						
 	                    //Increment Final Array keeping track of pileup
@@ -93,8 +110,7 @@ public class PileupExtract implements Runnable{
 						}
 					}
 				}
-			} else if(param.getRead() == 0 || param.getRead() == 2) {
-				//Also outputs if not paired-end since by default it is read-1
+			} else if(param.getRead() == 0 || param.getRead() == 2) { //Also outputs if not paired-end since by default it is read-1
 				int FivePrime = sr.getUnclippedStart() - 1;
 				if(sr.getReadNegativeStrandFlag()) { 
 					FivePrime = sr.getUnclippedEnd();
