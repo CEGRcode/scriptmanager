@@ -34,8 +34,8 @@ import charts.LineChart;
 public class PEStats extends JFrame {
 	Vector<File> bamFiles = null;
 	File output = null;
-	private int MIN_INSERT = 0;
-	private int MAX_INSERT = 1000;
+	private static int MIN_INSERT = 0;
+	private static int MAX_INSERT = 1000;
 	
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
@@ -217,8 +217,17 @@ public class PEStats extends JFrame {
 				
 				//Insert Size statistics
 				if(counter != 0) InsertAverage /= counter;
-				if(OUT != null) OUT.println("Average Insert Size: " + InsertAverage + "\nNumber of ReadPairs: " + counter + "\n\nHistogram\nSize (bp)\tFrequency");
-				PE_STATS.append("Average Insert Size: " + InsertAverage + "\nNumber of ReadPairs: " + counter + "\n\nHistogram\nSize (bp)\tFrequency\n");
+				if(OUT != null) {
+					OUT.println("Average Insert Size: " + InsertAverage);
+					OUT.println("Median Insert Size: " + getMedian(HIST));
+					OUT.println("Std deviation of Insert Size: " + getStdDev(HIST, InsertAverage));
+					OUT.println("Number of ReadPairs: " + counter + "\n\nHistogram\nSize (bp)\tFrequency");
+				}
+				PE_STATS.append("Average Insert Size: " + InsertAverage + "\n");
+				PE_STATS.append("Median Insert Size: " + getMedian(HIST) + "\n");
+				PE_STATS.append("Std deviation of Insert Size: " + getStdDev(HIST, InsertAverage) + "\n");
+				PE_STATS.append("Number of ReadPairs: " + counter + "\n\nHistogram\nSize (bp)\tFrequency\n");
+
 				int[] DOMAIN = new int[(MAX_INSERT - MIN_INSERT) + 1];
 				for(int z = 0; z < HIST.length; z++) {
 					int bp = MIN_INSERT + z;
@@ -267,6 +276,42 @@ public class PEStats extends JFrame {
 			}
 		}
 		if(OUT != null) OUT.close();
+	}
+	
+	public static double getMedian(double[] histogram) {
+		double sum = 0;
+		for(int x = 0; x < histogram.length; x++) { sum += histogram[x]; }
+		if(sum % 2 == 1 && sum > 0) {
+			int num = (int) ((sum + 1) / 2);
+			double count = 0;
+			for(int x = 0; x < histogram.length; x++) {
+				count += histogram[x];
+				if(count >= num) return (x + MIN_INSERT);
+			}
+		} else if(sum > 0) {
+			double first = -999;
+			double second = -999;
+			int num = (int) (sum / 2);
+			double count = 0;
+			for(int x = 0; x < histogram.length; x++) {
+				count += histogram[x];
+				if(count >= num & first == -999) first = (x + MIN_INSERT);
+				if(count >= num + 1) second = (x + MIN_INSERT);
+				if(first != -999 && second != -999) { return (first + second) / 2; }
+			}
+		}		
+		return 0;
+	}
+	
+	public static double getStdDev(double[] histogram, double avg) {
+		double stddev = 0;
+		double sum = 0;
+		for(int x = 0; x < histogram.length; x++) {
+			stddev += (Math.pow(((x + MIN_INSERT) - avg), 2) * histogram[x]);
+			sum += histogram[x];
+		}
+		if(sum > 0) return Math.sqrt(stddev / sum);
+		else return 0;
 	}
 	
 	public static int getBinIndex(int COUNT) {
