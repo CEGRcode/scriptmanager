@@ -31,6 +31,7 @@ import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
 import window_interface.Sequence_Analysis.FourColorSequenceWindow;
 import window_interface.Sequence_Analysis.RandomizeFASTAWindow;
+import window_interface.Tag_Analysis.CorrelationMatrixWindow;
 import window_interface.Tag_Analysis.GeneTrackWindow;
 import window_interface.Tag_Analysis.HeatMapWindow;
 import window_interface.Tag_Analysis.MergeHeatMapWindow;
@@ -519,7 +520,7 @@ public class ScriptManager {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							try {
-								VarianceCalcWindow frame = new VarianceCalcWindow();
+								CorrelationMatrixWindow frame = new CorrelationMatrixWindow();
 								frame.setVisible(true);
 							} catch (Exception e) {
 								e.printStackTrace();
