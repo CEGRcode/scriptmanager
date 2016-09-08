@@ -6,6 +6,19 @@ import javax.swing.JFileChooser;
 
 public class FileSelection {
 
+	public static File getGenericFile(JFileChooser fc, boolean enable){
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(enable);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("File Selection");
+		File Files = null;
+		int returnVal = fc.showOpenDialog(fc);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			Files = fc.getSelectedFile();
+		}
+		return Files;
+	}
+	
 	public static File getOutputDir(JFileChooser fc) {
 		fc.setDialogTitle("Output Directory");
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
