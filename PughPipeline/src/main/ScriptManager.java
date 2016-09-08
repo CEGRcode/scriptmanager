@@ -512,6 +512,23 @@ public class ScriptManager {
 				}
 			});
 			pnlTagAnalysis.add(btnVarianceCalculation);
+			
+			JButton btnCorrelationMatrix = new JButton("Correlation Matrix");
+			btnCorrelationMatrix.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								VarianceCalcWindow frame = new VarianceCalcWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			pnlTagAnalysis.add(btnCorrelationMatrix);
 					
 			JPanel pnlSeqAnalysis = new JPanel();
 			tabbedPane.addTab("Sequence Analysis", null, pnlSeqAnalysis, null);
