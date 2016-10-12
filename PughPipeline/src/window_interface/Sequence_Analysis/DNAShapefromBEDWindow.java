@@ -40,7 +40,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	final DefaultListModel expList;
+	final DefaultListModel<String> expList;
 	ArrayList<File> BEDFiles = new ArrayList<File>();
 	private File INPUT = null;
 	private File OUTPUT_PATH = null;
@@ -126,8 +126,8 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
-      	expList = new DefaultListModel();
-		final JList listExp = new JList(expList);
+      	expList = new DefaultListModel<String>();
+		final JList<String> listExp = new JList<>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		
