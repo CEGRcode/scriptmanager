@@ -18,6 +18,19 @@ public class FileSelection {
 		}
 		return Files;
 	}
+		
+	public static File[] getGenericFiles(JFileChooser fc){
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("File Selection");
+		File[] Files = null;
+		int returnVal = fc.showOpenDialog(fc);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			Files = fc.getSelectedFiles();
+		}
+		return Files;
+	}
 	
 	public static File getOutputDir(JFileChooser fc) {
 		fc.setDialogTitle("Output Directory");
