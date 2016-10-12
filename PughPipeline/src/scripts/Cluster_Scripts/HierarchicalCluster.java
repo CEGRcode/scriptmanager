@@ -1,7 +1,11 @@
-package scripts.Tag_Analysis.CorrelationScripts;
+package scripts.Cluster_Scripts;
 
 import java.io.File;
 import java.io.IOException;
+
+import scripts.Cluster_Scripts.CorrelationScripts.CCDendrogram;
+import scripts.Cluster_Scripts.CorrelationScripts.CCHeatmap;
+import scripts.Cluster_Scripts.CorrelationScripts.CCProcess;
 
 /*
 This script will calculate the pearson correlation for all against all
@@ -16,12 +20,12 @@ Translated to Java by Geoffrey Billy on 2016-07-18.
 Copyright (c) 2013 __PughLab@PSU__. All rights reserved.
 */
 
-public class CCMain {
+public class HierarchicalCluster {
 	
 	private File INPUT = null;
 	private File OUTPUT = null;
 		
-	public CCMain(File in, File out) {
+	public HierarchicalCluster(File in, File out) {
 		INPUT = in;
 		OUTPUT = out;
 	}
