@@ -16,7 +16,9 @@ public class FASTARandomize {
 			if(x == name.length - 2) { NEWNAME += (name[x] + "_RAND.fa"); }
 			else { NEWNAME += (name[x] + "."); }
 		}
-		File RAND = new File(out + File.separator + NEWNAME);
+		File RAND = null;
+		if(out != null) { RAND = new File(out + File.separator + NEWNAME); }
+		else { RAND = new File(NEWNAME); }
 		
 		Random randnum = new Random();
 		PrintStream OUT = new PrintStream(RAND);
