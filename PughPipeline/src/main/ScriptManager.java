@@ -434,7 +434,6 @@ public class ScriptManager {
 				 });
 			}
 		});
-		btnHierarchicalClustering.setEnabled(false);
 		pnlCluster.add(btnHierarchicalClustering);
 		
 		JButton btnKmeansClustering = new JButton("k-Means Clustering");
