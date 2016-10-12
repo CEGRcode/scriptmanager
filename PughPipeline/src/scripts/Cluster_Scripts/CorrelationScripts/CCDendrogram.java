@@ -1,4 +1,4 @@
-package scripts.Tag_Analysis.CorrelationScripts;
+package scripts.Cluster_Scripts.CorrelationScripts;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
