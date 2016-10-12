@@ -1,6 +1,9 @@
 package main;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -8,6 +11,7 @@ import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import window_interface.BAM_Format_Converter.BAMtoGFFWindow;
@@ -20,6 +24,8 @@ import window_interface.BAM_Manipulation.SortBAMWindow;
 import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BAM_Statistics.SignalDuplicationWindow;
+import window_interface.Cluster_Tools.CorrelationMatrixWindow;
+import window_interface.Cluster_Tools.HierarchicalClusteringWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
@@ -31,19 +37,12 @@ import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
 import window_interface.Sequence_Analysis.FourColorSequenceWindow;
 import window_interface.Sequence_Analysis.RandomizeFASTAWindow;
-import window_interface.Tag_Analysis.CorrelationMatrixWindow;
 import window_interface.Tag_Analysis.GeneTrackWindow;
 import window_interface.Tag_Analysis.HeatMapWindow;
 import window_interface.Tag_Analysis.MergeHeatMapWindow;
 import window_interface.Tag_Analysis.PeakPairWindow;
 import window_interface.Tag_Analysis.TagPileupWindow;
 import window_interface.Tag_Analysis.VarianceCalcWindow;
-
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JSplitPane;
 
 public class ScriptManager {
 
@@ -55,7 +54,7 @@ public class ScriptManager {
 	private void initialize() {
 		frmScriptManager = new JFrame();
 		frmScriptManager.setTitle("Script Manager v0.11");
-		frmScriptManager.setBounds(100, 100, 500, 276);
+		frmScriptManager.setBounds(100, 100, 475, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
 		SpringLayout springLayout = new SpringLayout();
@@ -205,8 +204,83 @@ public class ScriptManager {
 					}
 				});
 		
+		JPanel pnlBamConvert = new JPanel();
+		tabbedPane.addTab("BAM Format Converter", null, pnlBamConvert, null);
+		
+		JButton btnBamToscIDX = new JButton("BAM to scIDX");
+		btnBamToscIDX.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtoscIDXWindow frame = new BAMtoscIDXWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		btnBamToscIDX.setToolTipText("Convert BAM file to scIDX file.");
+		pnlBamConvert.add(btnBamToscIDX);
+		
+		JButton btnBamToBed = new JButton("BAM to BED");
+		btnBamToBed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtoBEDWindow frame = new BAMtoBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
+		pnlBamConvert.add(btnBamToBed);
+				
+		JButton btnBamToGff = new JButton("BAM to GFF");
+		btnBamToGff.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									BAMtoGFFWindow frame = new BAMtoGFFWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
+		btnBamToGff.setToolTipText("Convert BAM file to GFF file.");
+		pnlBamConvert.add(btnBamToGff);
+		
+		JButton btnFilterForPermanganateseq = new JButton("Filter for Permanganate-Seq");
+		btnFilterForPermanganateseq.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FilterforPermanganateSeqWindow frame = new FilterforPermanganateSeqWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		btnFilterForPermanganateseq.setToolTipText("Filter BAM file by -1 nucleotide");
+		pnlBamConvert.add(btnFilterForPermanganateseq);
+		
 		JPanel pnlCoord_Manip = new JPanel();
-		tabbedPane.addTab("Coordinate Manipulation", null, pnlCoord_Manip, null);
+		tabbedPane.addTab("Coordinate File Manipulation", null, pnlCoord_Manip, null);
 		
 		JSplitPane splitPaneExpand = new JSplitPane();
 		pnlCoord_Manip.add(splitPaneExpand);
@@ -325,16 +399,16 @@ public class ScriptManager {
 			}
 		});
 		
-		JPanel pnlBamConvert = new JPanel();
-		tabbedPane.addTab("BAM Format Converter", null, pnlBamConvert, null);
+		JPanel pnlCluster = new JPanel();
+		tabbedPane.addTab("Cluster Tools", null, pnlCluster, null);
 		
-		JButton btnBamToscIDX = new JButton("BAM to scIDX");
-		btnBamToscIDX.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+		JButton btnCorrelationMatrix = new JButton("Create Correlation Matrix");
+		btnCorrelationMatrix.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							BAMtoscIDXWindow frame = new BAMtoscIDXWindow();
+							CorrelationMatrixWindow frame = new CorrelationMatrixWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -343,16 +417,15 @@ public class ScriptManager {
 				 });
 			}
 		});
-		btnBamToscIDX.setToolTipText("Convert BAM file to scIDX file.");
-		pnlBamConvert.add(btnBamToscIDX);
+		pnlCluster.add(btnCorrelationMatrix);
 		
-		JButton btnBamToBed = new JButton("BAM to BED");
-		btnBamToBed.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+		JButton btnHierarchicalClustering = new JButton("Hierarchical Clustering");
+		btnHierarchicalClustering.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							BAMtoBEDWindow frame = new BAMtoBEDWindow();
+							HierarchicalClusteringWindow frame = new HierarchicalClusteringWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -361,47 +434,16 @@ public class ScriptManager {
 				 });
 			}
 		});
-		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
-		pnlBamConvert.add(btnBamToBed);
-				
-		JButton btnBamToGff = new JButton("BAM to GFF");
-		btnBamToGff.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									BAMtoGFFWindow frame = new BAMtoGFFWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
-					}
-				});
-		btnBamToGff.setToolTipText("Convert BAM file to GFF file.");
-		pnlBamConvert.add(btnBamToGff);
+		btnHierarchicalClustering.setEnabled(false);
+		pnlCluster.add(btnHierarchicalClustering);
 		
-		JButton btnFilterForPermanganateseq = new JButton("Filter for Permanganate-Seq");
-		btnFilterForPermanganateseq.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							FilterforPermanganateSeqWindow frame = new FilterforPermanganateSeqWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		btnFilterForPermanganateseq.setToolTipText("Filter BAM file by -1 nucleotide");
-		pnlBamConvert.add(btnFilterForPermanganateseq);
+		JButton btnKmeansClustering = new JButton("k-Means Clustering");
+		btnKmeansClustering.setEnabled(false);
+		pnlCluster.add(btnKmeansClustering);
+
 		
 		JPanel pnlTagAnalysis = new JPanel();
-		tabbedPane.addTab("Tag Analysis", null, pnlTagAnalysis, null);
+		tabbedPane.addTab("Sequence Tag Analysis", null, pnlTagAnalysis, null);
 		
 		JButton btnGenetrack = new JButton("GeneTrack");
 		btnGenetrack.setToolTipText("Genetrack peak-calling algorithm");
@@ -513,26 +555,9 @@ public class ScriptManager {
 				}
 			});
 			pnlTagAnalysis.add(btnVarianceCalculation);
-			
-			JButton btnCorrelationMatrix = new JButton("Correlation Matrix");
-			btnCorrelationMatrix.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								CorrelationMatrixWindow frame = new CorrelationMatrixWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
-			pnlTagAnalysis.add(btnCorrelationMatrix);
 					
 			JPanel pnlSeqAnalysis = new JPanel();
-			tabbedPane.addTab("Sequence Analysis", null, pnlSeqAnalysis, null);
+			tabbedPane.addTab("DNA Sequence Analysis", null, pnlSeqAnalysis, null);
 			
 			JButton btnFASTAExtract = new JButton("FASTA from BED");
 			btnFASTAExtract.setToolTipText("Generate FASTA file from Genome FASTA file and BED file");
