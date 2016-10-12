@@ -23,7 +23,8 @@ public class CDTUtilities {
 				}
 				matrix.add(ARRAY);
 			}
-		}		
+		}
+		scan.close();
 		return matrix;
 	}
 	

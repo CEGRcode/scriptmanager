@@ -55,6 +55,7 @@ public class SortGFF {
 				GFFFile.put(ID, line);
 			}
 		}
+		scan.close();
 		//Output sorted GFF File
 		String newGFF = outname +".gff";    
 	    OUT = new PrintStream(newGFF);

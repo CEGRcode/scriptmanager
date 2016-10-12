@@ -56,6 +56,7 @@ public class SortBED {
 				BEDFile.put(ID, line);
 			}
 		}
+		scan.close();
 		//Output sorted BED File
 		String newBED = outname +".bed";    
 	    OUT = new PrintStream(newBED);
