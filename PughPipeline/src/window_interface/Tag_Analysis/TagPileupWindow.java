@@ -48,9 +48,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	final DefaultListModel expList;
+	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	final DefaultListModel bedList;
+	final DefaultListModel<String> bedList;
 	Vector<File> BEDFiles = new Vector<File>();
 	private File OUTPUT = null;
 	
@@ -237,8 +237,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnLoadBamFiles);
 		
-      	expList = new DefaultListModel();
-		final JList listExp = new JList(expList);
+      	expList = new DefaultListModel<String>();
+		final JList<String> listExp = new JList<>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane_BAM.setViewportView(listExp);
 		
@@ -631,8 +631,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BED, -10, SpringLayout.EAST, contentPane);
         contentPane.add(scrollPane_BED);
         
-        bedList = new DefaultListModel();
-		final JList listBed = new JList(bedList);
+        bedList = new DefaultListModel<String>();
+		final JList<String> listBed = new JList<>(bedList);
 		listBed.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane_BED.setViewportView(listBed);
         
