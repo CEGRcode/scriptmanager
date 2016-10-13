@@ -178,7 +178,7 @@ public class CorrelationMatrixWindow extends JFrame implements ActionListener, P
         contentPane.add(btnOutput);
         
         String[] metrics = { "Standard Pearson", "Reflective Pearson", "Spearman Rank", "Euclidean Distance", "Manhattan Distance" };
-        comboBox = new JComboBox<>(metrics);
+        comboBox = new JComboBox(metrics);
         contentPane.add(comboBox);
         
         JLabel lblSimilarityMetric = new JLabel("Similarity Metric");
