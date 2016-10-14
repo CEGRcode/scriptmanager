@@ -37,12 +37,12 @@ import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
 import window_interface.Sequence_Analysis.FourColorSequenceWindow;
 import window_interface.Sequence_Analysis.RandomizeFASTAWindow;
+import window_interface.Tag_Analysis.AggregateDataWindow;
 import window_interface.Tag_Analysis.GeneTrackWindow;
 import window_interface.Tag_Analysis.HeatMapWindow;
 import window_interface.Tag_Analysis.MergeHeatMapWindow;
 import window_interface.Tag_Analysis.PeakPairWindow;
 import window_interface.Tag_Analysis.TagPileupWindow;
-import window_interface.Tag_Analysis.VarianceCalcWindow;
 
 public class ScriptManager {
 
@@ -500,6 +500,10 @@ public class ScriptManager {
 				 });
 			}
 		});
+		
+		JButton btnReplicateMatch = new JButton("Replicate Match");
+		btnReplicateMatch.setEnabled(false);
+		pnlTagAnalysis.add(btnReplicateMatch);
 		pnlTagAnalysis.add(btnTagPileup);
 		
 			JButton btnHeatMap = new JButton("Heat Map");
@@ -538,13 +542,13 @@ public class ScriptManager {
 				}
 			});
 			
-			JButton btnVarianceCalculation = new JButton("Variance Calculation");
-			btnVarianceCalculation.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
+			JButton btnAggregateData = new JButton("Aggregate Data");
+			btnAggregateData.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							try {
-								VarianceCalcWindow frame = new VarianceCalcWindow();
+								AggregateDataWindow frame = new AggregateDataWindow();
 								frame.setVisible(true);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -553,7 +557,7 @@ public class ScriptManager {
 					 });
 				}
 			});
-			pnlTagAnalysis.add(btnVarianceCalculation);
+			pnlTagAnalysis.add(btnAggregateData);
 					
 			JPanel pnlSeqAnalysis = new JPanel();
 			tabbedPane.addTab("DNA Sequence Analysis", null, pnlSeqAnalysis, null);
