@@ -78,22 +78,6 @@ public class CorrelationMatrix {
 		}
 	}
 	
-	public void outputMatrixLoadFail() throws FileNotFoundException, IOException {
-		String[] name = INPUT.getName().split("\\.");
-		String NEWNAME = "";
-		for(int x = 0; x < name.length - 1; x++) {
-			if(x == name.length - 2) { NEWNAME += (name[x]); }
-			else { NEWNAME += (name[x] + "."); }
-		}
-		
-		//Open Output File
-		PrintStream OUT = null;
-		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_CORRMATRIX.out"));
-		} else { OUT = new PrintStream(new File(NEWNAME + "_MATRIX.out")); }
-		OUT.println(INPUT.getName() + "\tLoad failed due to non-numeric values in matrix");
-		OUT.close();
-	}
-	
 	public double[][] calculateMatrix(ArrayList<double[]> data) {
 		SimilarityMetric corr = new SimilarityMetric();
 		if(METRIC == 0) { corr.setType("pearson"); }
@@ -113,6 +97,22 @@ public class CorrelationMatrix {
 		return matrix;
 	}
 	
+	public void outputMatrixLoadFail() throws FileNotFoundException, IOException {
+		String[] name = INPUT.getName().split("\\.");
+		String NEWNAME = "";
+		for(int x = 0; x < name.length - 1; x++) {
+			if(x == name.length - 2) { NEWNAME += (name[x]); }
+			else { NEWNAME += (name[x] + "."); }
+		}
+		
+		//Open Output File
+		PrintStream OUT = null;
+		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_CORRMATRIX.out"));
+		} else { OUT = new PrintStream(new File(NEWNAME + "_MATRIX.out")); }
+		OUT.println(INPUT.getName() + "\tLoad failed due to non-numeric values in matrix");
+		OUT.close();
+	}
+	
 	public void outputMatrix(double[][] matrix, ArrayList<String> id) throws IOException {
 		String[] name = INPUT.getName().split("\\.");
 		String NEWNAME = "";
@@ -124,7 +124,7 @@ public class CorrelationMatrix {
 		//Open Output File
 		PrintStream OUT = null;
 		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_CORRMATRIX.out"));
-		} else { OUT = new PrintStream(new File(NEWNAME + "_MATRIX.out")); }
+		} else { OUT = new PrintStream(new File(NEWNAME + "_CORRMATRIX.out")); }
 		
 		for(int x = 0; x < id.size(); x++) { OUT.print("\t" + id.get(x)); }
 		OUT.println();
