@@ -1,4 +1,4 @@
-package scripts.Cluster_Scripts.CorrelationScripts;
+package scripts.Cluster_Scripts.HierarchicalClusterScripts;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package scripts.Cluster_Scripts.CorrelationScripts;
+package scripts.Cluster_Scripts.HierarchicalClusterScripts;
 
 import java.awt.Color;
 import java.awt.Rectangle;
