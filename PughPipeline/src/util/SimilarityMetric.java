@@ -40,29 +40,31 @@ public class SimilarityMetric {
 	}
 	
 	public double Pearson(double[] arrayx, double[] arrayy) {
-		double xmean = 0;
-		double ymean = 0;
+		double xmean = 0, ymean = 0;
+		int arraycount = 0;
 		for(int a = 0; a < arrayx.length; a++) {
-			xmean += arrayx[a];
-			ymean += arrayy[a];
+			if(!Double.isNaN(arrayx[a]) && !Double.isNaN(arrayy[a])) {
+				xmean += arrayx[a];
+				ymean += arrayy[a];
+				arraycount++;
+			}
 		}
-		xmean /= arrayx.length;
-		ymean /= arrayx.length;
+		xmean /= arraycount;
+		ymean /= arraycount;
 		
 		double t1 = 0, t2 = 0, xv = 0, yv = 0, s = 0;
 		double correlation;
 		for(int a = 0; a < arrayx.length; a++) {
-			t1 = arrayx[a] - xmean;
-			t2 = arrayy[a] - ymean;
-			xv += Math.pow(t1, 2);
-			yv += Math.pow(t2, 2);
-			s += (t1 * t2);
+			if(!Double.isNaN(arrayx[a]) && !Double.isNaN(arrayy[a])) {
+				t1 = arrayx[a] - xmean;
+				t2 = arrayy[a] - ymean;
+				xv += Math.pow(t1, 2);
+				yv += Math.pow(t2, 2);
+				s += (t1 * t2);
+			}
 		}
-		if (xv == 0 || yv == 0) {
-			correlation = 0;
-		} else {
-			correlation = (s / (Math.sqrt(xv) * Math.sqrt(yv)));
-		} 
+		if (xv == 0 || yv == 0) { correlation = 0; }
+		else { correlation = (s / (Math.sqrt(xv) * Math.sqrt(yv))); } 
 		DecimalFormat df = new DecimalFormat("#.############");
 		correlation = Double.parseDouble(df.format(correlation));
 		return correlation;
@@ -70,13 +72,17 @@ public class SimilarityMetric {
 	
 	private double Euclidean(double[] arrayx, double[] arrayy) {
 		double distance = 0;
-		for(int i = 0; i < arrayx.length; i++) { distance += Math.pow(arrayx[i] - arrayy[i], 2); }
+		for(int i = 0; i < arrayx.length; i++) {
+			if(!Double.isNaN(arrayx[i]) && !Double.isNaN(arrayy[i])) { distance += Math.pow(arrayx[i] - arrayy[i], 2); }
+		}
 		return Math.sqrt(distance);
 	}
 	
 	private double Manhattan(double[] arrayx, double[] arrayy) {
 		double distance = 0;
-		for(int i = 0; i < arrayx.length; i++) { distance += Math.abs(arrayx[i] - arrayy[i]); }
+		for(int i = 0; i < arrayx.length; i++) {
+			if(!Double.isNaN(arrayx[i]) && !Double.isNaN(arrayy[i])) { distance += Math.abs(arrayx[i] - arrayy[i]); }
+		}
 		return distance;
 	}
 	
@@ -161,5 +167,9 @@ public class SimilarityMetric {
 			newx[c[i]] = r[i];
 		}
 		return newx;
+	}
+	
+	public String toString() {
+		return metrictype;
 	}
 }
