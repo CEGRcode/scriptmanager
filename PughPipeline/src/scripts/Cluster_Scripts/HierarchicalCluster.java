@@ -3,9 +3,9 @@ package scripts.Cluster_Scripts;
 import java.io.File;
 import java.io.IOException;
 
-import scripts.Cluster_Scripts.CorrelationScripts.CCDendrogram;
-import scripts.Cluster_Scripts.CorrelationScripts.CCHeatmap;
-import scripts.Cluster_Scripts.CorrelationScripts.CCProcess;
+import scripts.Cluster_Scripts.HierarchicalClusterScripts.CCDendrogram;
+import scripts.Cluster_Scripts.HierarchicalClusterScripts.CCHeatmap;
+import scripts.Cluster_Scripts.HierarchicalClusterScripts.CCProcess;
 
 /*
 This script will calculate the pearson correlation for all against all

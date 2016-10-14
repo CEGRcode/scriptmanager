@@ -44,9 +44,6 @@ public class HierarchicalClusteringWindow extends JFrame implements ActionListen
 	private JButton btnOutput;
 	
 	private JCheckBox chckbxOutputData; 
-	
-	private JComboBox<String> cmbRowMetric;
-	private JComboBox<String> cmbColMetric;
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -148,6 +145,8 @@ public class HierarchicalClusteringWindow extends JFrame implements ActionListen
         contentPane.add(lblMatrixFileName);
         
         JLabel lblDendrogramSimilarityMetric = new JLabel("Clustering Method:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDendrogramSimilarityMetric, 52, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDendrogramSimilarityMetric, 317, SpringLayout.WEST, contentPane);
         contentPane.add(lblDendrogramSimilarityMetric);
                 
         JCheckBox chckbxClusterRows = new JCheckBox("Cluster Rows");
@@ -159,30 +158,11 @@ public class HierarchicalClusteringWindow extends JFrame implements ActionListen
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxClusterColumns, 0, SpringLayout.WEST, btnLoad);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxClusterColumns, -41, SpringLayout.NORTH, chckbxOutputData);
         contentPane.add(chckbxClusterColumns);
-        
-        String[] metrics = {"Pearson", "Euclidean Distance"};
-        cmbRowMetric = new JComboBox<>(metrics);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, cmbRowMetric, -1, SpringLayout.NORTH, chckbxClusterRows);
-        sl_contentPane.putConstraint(SpringLayout.WEST, cmbRowMetric, 24, SpringLayout.EAST, chckbxClusterRows);
-        contentPane.add(cmbRowMetric);
-               
-        
-        JLabel lblSimilarityMetric = new JLabel("Similarity Metric:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDendrogramSimilarityMetric, 0, SpringLayout.NORTH, lblSimilarityMetric);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblDendrogramSimilarityMetric, 72, SpringLayout.EAST, lblSimilarityMetric);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSimilarityMetric, 17, SpringLayout.SOUTH, btnLoad);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblSimilarityMetric, 0, SpringLayout.WEST, cmbRowMetric);
-        contentPane.add(lblSimilarityMetric);
-        
+                
         JComboBox<String> cmbRowCluster = new JComboBox<>();
-        sl_contentPane.putConstraint(SpringLayout.WEST, cmbRowCluster, 156, SpringLayout.EAST, cmbRowMetric);
+        sl_contentPane.putConstraint(SpringLayout.WEST, cmbRowCluster, 325, SpringLayout.EAST, chckbxClusterRows);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, cmbRowCluster, 0, SpringLayout.SOUTH, chckbxClusterRows);
         contentPane.add(cmbRowCluster);
-        
-        cmbColMetric = new JComboBox<>(metrics);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, cmbColMetric, 0, SpringLayout.NORTH, chckbxClusterColumns);
-        sl_contentPane.putConstraint(SpringLayout.WEST, cmbColMetric, 23, SpringLayout.EAST, chckbxClusterColumns);
-        contentPane.add(cmbColMetric);
 
         JComboBox<String> cmbColCluster = new JComboBox<>();
         sl_contentPane.putConstraint(SpringLayout.WEST, cmbColCluster, 0, SpringLayout.WEST, cmbRowCluster);
