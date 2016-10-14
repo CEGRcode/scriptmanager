@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -177,8 +178,7 @@ public class CorrelationMatrixWindow extends JFrame implements ActionListener, P
         });
         contentPane.add(btnOutput);
         
-        String[] metrics = { "Standard Pearson", "Reflective Pearson", "Spearman Rank", "Euclidean Distance", "Manhattan Distance" };
-        comboBox = new JComboBox(metrics);
+        comboBox = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {"Standard Pearson", "Reflective Pearson", "Spearman Rank", "Euclidean Distance", "Manhattan Distance"}));;
         contentPane.add(comboBox);
         
         JLabel lblSimilarityMetric = new JLabel("Similarity Metric");
