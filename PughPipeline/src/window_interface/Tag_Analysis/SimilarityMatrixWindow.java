@@ -1,80 +1,81 @@
 package window_interface.Tag_Analysis;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
+
+import scripts.Tag_Analysis.SimilarityMatrix;
 import util.FileSelection;
-import scripts.Tag_Analysis.AggregateData;
 
 @SuppressWarnings("serial")
 public class SimilarityMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	private File OUTPUT_PATH = null;
 	final DefaultListModel<String> expList;
-	ArrayList<File> SUMFiles = new ArrayList<File>();
+	ArrayList<File> TABFiles = new ArrayList<File>();
+	private File OUTPUT_PATH = null;
 	
 	private JButton btnLoad;
-	private JButton btnRemoveCDT;
-	private JButton btnConvert;
+	private JButton btnRemoveBam;
+	private JButton btnCalculate;
 	private JButton btnOutput;
-	private JProgressBar progressBar;
-	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
-	private JCheckBox chckbxMergeToOne;
-	private JCheckBox chckbxHeader;
-	private JComboBox<String> cmbMethod;
+	private JLabel lblCurrent;
+	private JProgressBar progressBar;
 
+	private JRadioButton rdbtnCorrelateColumns;
+	private JRadioButton rdbtnCorrelateRows;
+	private JComboBox<String> comboBox;
+	
 	public Task task;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException {
-        	setProgress(0);
-        	
-        	AggregateData parse = new AggregateData(SUMFiles, OUTPUT_PATH, chckbxMergeToOne.isSelected(), chckbxHeader.isSelected(), cmbMethod.getSelectedIndex());
-        	
-        	parse.addPropertyChangeListener("file", new PropertyChangeListener() {
-			    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-			    	int temp = (Integer) propertyChangeEvent.getNewValue();
-			    	int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
-		        	setProgress(percentComplete);
-			     }
-			 });
-        	
-    		parse.run();
-        	
-        	setProgress(100);
-			JOptionPane.showMessageDialog(null, "Data Parsed");
+        	if(TABFiles.size() < 1) {
+        		JOptionPane.showMessageDialog(null, "No TAB Files Loaded!!!");
+        	} else {
+        		setProgress(0);
+        		
+        		for(int x = 0; x < TABFiles.size(); x++) {
+        			SimilarityMatrix matrix = new SimilarityMatrix(TABFiles.get(x), OUTPUT_PATH, comboBox.getSelectedIndex(), rdbtnCorrelateColumns.isSelected());
+            		matrix.run();
+
+            		int percentComplete = (int)(((double)(x + 1) / TABFiles.size()) * 100);
+   			       	setProgress(percentComplete);
+           		}
+           		setProgress(100);
+        		JOptionPane.showMessageDialog(null, "All Matrices Generated");	
+       		}
         	return null;
         }
         
@@ -85,10 +86,10 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 	}
 	
 	public SimilarityMatrixWindow() {
-		setTitle("Aggregate Data");
+		setTitle("Generate Similarity Matrix");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 330);
+		setBounds(125, 125, 450, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -96,109 +97,111 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 		contentPane.setLayout(sl_contentPane);
 	
 		JScrollPane scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
       	expList = new DefaultListModel<String>();
-		final JList<String> listExp = new JList<>(expList);
+		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		
-		btnLoad = new JButton("Load Files");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
+		btnLoad = new JButton("Load TAB Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 6, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newCDTFiles = FileSelection.getGenericFiles(fc);
-				if(newCDTFiles != null) {
-					for(int x = 0; x < newCDTFiles.length; x++) { 
-						SUMFiles.add(newCDTFiles[x]);
-						expList.addElement(newCDTFiles[x].getName());
+				File[] newTABFiles = FileSelection.getGenericFiles(fc);
+				if(newTABFiles != null) {
+					for(int x = 0; x < newTABFiles.length; x++) { 
+						TABFiles.add(newTABFiles[x]);
+						expList.addElement(newTABFiles[x].getName());
 					}
 				}
 			}
 		});
 		contentPane.add(btnLoad);
 		
-		btnRemoveCDT = new JButton("Remove Files");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveCDT);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveCDT, 0, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveCDT, -5, SpringLayout.EAST, contentPane);
-		btnRemoveCDT.addActionListener(new ActionListener() {
+		btnRemoveBam = new JButton("Remove TAB");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
+		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
-					SUMFiles.remove(listExp.getSelectedIndex());
+					TABFiles.remove(listExp.getSelectedIndex());
 					expList.remove(listExp.getSelectedIndex());
 				}
 			}
 		});		
-		contentPane.add(btnRemoveCDT);
+		contentPane.add(btnRemoveBam);
 		
-		btnConvert = new JButton("Parse Matrix");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnConvert, 165, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnConvert, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -95, SpringLayout.NORTH, btnConvert);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConvert, 0, SpringLayout.SOUTH, contentPane);
-		contentPane.add(btnConvert);
-		
+		btnCalculate = new JButton("Calculate");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -130, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnCalculate, 165, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -165, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnCalculate, -10, SpringLayout.SOUTH, contentPane);
+		contentPane.add(btnCalculate);
+        btnCalculate.setActionCommand("start");
+        btnCalculate.addActionListener(this);
+
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnConvert);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, contentPane);
         progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
-        btnConvert.setActionCommand("start");
-        
         lblCurrent = new JLabel("Current Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 68, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrent, -45, SpringLayout.SOUTH, contentPane);
         lblCurrent.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrent);
         
         lblDefaultToLocal = new JLabel("Default to Local Directory");
+        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrent);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
         
         btnOutput = new JButton("Output Directory");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 38, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 0, SpringLayout.WEST, btnCalculate);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -10, SpringLayout.NORTH, lblDefaultToLocal);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -135, SpringLayout.EAST, contentPane);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
+        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
     			if(OUTPUT_PATH != null) {
     				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
     			}
         	}
         });
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
         contentPane.add(btnOutput);
         
-        chckbxMergeToOne = new JCheckBox("Merge to one file");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxMergeToOne, 1, SpringLayout.NORTH, btnOutput);
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxMergeToOne, 4, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxMergeToOne, -6, SpringLayout.WEST, btnOutput);
-        chckbxMergeToOne.setSelected(true);
-        contentPane.add(chckbxMergeToOne);
+        comboBox = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {"Standard Pearson", "Reflective Pearson", "Spearman Rank", "Euclidean Distance", "Manhattan Distance"}));;
+        contentPane.add(comboBox);
         
-        //String[] function = {"Sum", "Average", "Median", "Mode", "Min", "Max"};
-        cmbMethod = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {"Sum", "Average", "Median", "Mode", "Min", "Max","Positional Variance"}));
-        sl_contentPane.putConstraint(SpringLayout.NORTH, cmbMethod, 6, SpringLayout.SOUTH, scrollPane);
-        contentPane.add(cmbMethod);
+        JLabel lblSimilarityMetric = new JLabel("Similarity Metric");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblSimilarityMetric, 60, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, comboBox, -5, SpringLayout.NORTH, lblSimilarityMetric);
+        sl_contentPane.putConstraint(SpringLayout.WEST, comboBox, 41, SpringLayout.EAST, lblSimilarityMetric);
+        contentPane.add(lblSimilarityMetric);
         
-        JLabel lblMathematicalFunction = new JLabel("Aggregation Method:");
-        sl_contentPane.putConstraint(SpringLayout.WEST, cmbMethod, 6, SpringLayout.EAST, lblMathematicalFunction);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMathematicalFunction, 10, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblMathematicalFunction, 0, SpringLayout.WEST, scrollPane);
-        contentPane.add(lblMathematicalFunction);
+        rdbtnCorrelateColumns = new JRadioButton("Correlate Columns");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSimilarityMetric, 10, SpringLayout.SOUTH, rdbtnCorrelateColumns);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCorrelateColumns, 60, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCorrelateColumns, 10, SpringLayout.SOUTH, scrollPane);
+        contentPane.add(rdbtnCorrelateColumns);
         
-        chckbxHeader = new JCheckBox("Data has headers");
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxHeader, 0, SpringLayout.SOUTH, cmbMethod);
-        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxHeader, 0, SpringLayout.EAST, scrollPane);
-        contentPane.add(chckbxHeader);
-        btnConvert.addActionListener(this);
+        rdbtnCorrelateRows = new JRadioButton("Correlate Rows");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCorrelateRows, 10, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCorrelateRows, 40, SpringLayout.EAST, rdbtnCorrelateColumns);
+        contentPane.add(rdbtnCorrelateRows);
+
+        ButtonGroup CorrelateDIR = new ButtonGroup();
+        CorrelateDIR.add(rdbtnCorrelateColumns);
+        CorrelateDIR.add(rdbtnCorrelateRows);
+        rdbtnCorrelateColumns.setSelected(true);
 	}
 	
 	@Override

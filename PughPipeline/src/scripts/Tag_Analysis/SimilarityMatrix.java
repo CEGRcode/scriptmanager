@@ -1,4 +1,4 @@
-package scripts.Cluster_Scripts;
+package scripts.Tag_Analysis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,14 +9,14 @@ import java.util.Scanner;
 
 import util.SimilarityMetric;
 
-public class CorrelationMatrix {
+public class SimilarityMatrix {
 	
 	private File INPUT = null;
 	private File OUT_PATH = null;
 	private int METRIC = 0;	
 	private boolean COLUMN = true;
 	
-	public CorrelationMatrix(File in, File out_path, int m, boolean col) {
+	public SimilarityMatrix(File in, File out_path, int m, boolean col) {
 		INPUT = in;
 		OUT_PATH = out_path;
 		METRIC = m;
@@ -107,8 +107,8 @@ public class CorrelationMatrix {
 		
 		//Open Output File
 		PrintStream OUT = null;
-		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_CORRMATRIX.out"));
-		} else { OUT = new PrintStream(new File(NEWNAME + "_MATRIX.out")); }
+		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_SIMMATRIX.out"));
+		} else { OUT = new PrintStream(new File(NEWNAME + "_SIMMATRIX.out")); }
 		OUT.println(INPUT.getName() + "\tLoad failed due to non-numeric values in matrix");
 		OUT.close();
 	}
@@ -123,8 +123,8 @@ public class CorrelationMatrix {
 			
 		//Open Output File
 		PrintStream OUT = null;
-		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_CORRMATRIX.out"));
-		} else { OUT = new PrintStream(new File(NEWNAME + "_CORRMATRIX.out")); }
+		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_SIMMATRIX.out"));
+		} else { OUT = new PrintStream(new File(NEWNAME + "_SIMMATRIX.out")); }
 		
 		for(int x = 0; x < id.size(); x++) { OUT.print("\t" + id.get(x)); }
 		OUT.println();
