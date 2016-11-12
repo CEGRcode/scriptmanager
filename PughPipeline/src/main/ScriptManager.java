@@ -24,9 +24,6 @@ import window_interface.BAM_Manipulation.SortBAMWindow;
 import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BAM_Statistics.SignalDuplicationWindow;
-import window_interface.Cluster_Tools.CorrelationMatrixWindow;
-import window_interface.Cluster_Tools.HierarchicalClusteringWindow;
-import window_interface.Cluster_Tools.kMeansClusteringWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
@@ -399,61 +396,6 @@ public class ScriptManager {
 				 });
 			}
 		});
-		
-		JPanel pnlCluster = new JPanel();
-		tabbedPane.addTab("Cluster Tools", null, pnlCluster, null);
-		
-		JButton btnCorrelationMatrix = new JButton("Create Correlation Matrix");
-		btnCorrelationMatrix.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							CorrelationMatrixWindow frame = new CorrelationMatrixWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		pnlCluster.add(btnCorrelationMatrix);
-		
-		JButton btnHierarchicalClustering = new JButton("Hierarchical Clustering");
-		btnHierarchicalClustering.setEnabled(false);
-		btnHierarchicalClustering.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							HierarchicalClusteringWindow frame = new HierarchicalClusteringWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		
-		JButton btnKmeansClustering = new JButton("k-Means Clustering");
-		btnKmeansClustering.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							kMeansClusteringWindow frame = new kMeansClusteringWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		pnlCluster.add(btnKmeansClustering);
-		pnlCluster.add(btnHierarchicalClustering);
 
 		
 		JPanel pnlTagAnalysis = new JPanel();
