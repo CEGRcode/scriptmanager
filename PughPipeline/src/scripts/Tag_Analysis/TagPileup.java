@@ -134,7 +134,7 @@ public class TagPileup extends JFrame {
 					while (!parseMaster.isTerminated()) {
 					}
 					
-					double[] AVG_S1 = new double[INPUT.get(0).getFStrand().length];
+					double[] AVG_S1 = new double[getMaxBEDSize(INPUT)];
 					double[] AVG_S2 = null;
 					if(STRAND == 0) AVG_S2 = new double[AVG_S1.length];
 					double[] DOMAIN = new double[AVG_S1.length];
@@ -262,6 +262,18 @@ public class TagPileup extends JFrame {
 				}
 			}
 		}		
+	}
+	
+	//Get size of largest array for composite generation
+	public static int getMaxBEDSize(Vector<BEDCoord> sites) {
+		int maxSize = 0;
+		for(int x = 0; x < sites.size(); x++) {
+			int SIZE = sites.get(x).getFStrand().length;
+			if(SIZE > maxSize) {
+				maxSize = SIZE;
+			}
+		}
+		return maxSize;
 	}
 	
 	public String generateFileName(String bed, String bam, int strandnum) {
