@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
@@ -22,6 +23,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
 
 import charts.CompositePlot;
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
 import objects.BEDCoord;
 import objects.PileupParameters;
 import scripts.Tag_Analysis.PileupScripts.PileupExtract;
@@ -111,8 +115,8 @@ public class TagPileup extends JFrame {
 						}
 					}
 					
-					Vector<BEDCoord> INPUT = loadCoord(BEDFiles.get(BED_Index));
-										
+					Vector<BEDCoord> INPUT = validateBED(loadCoord(BEDFiles.get(BED_Index)));
+					
 					//Split up job and send out to threads to process				
 					ExecutorService parseMaster = Executors.newFixedThreadPool(CPU);
 					if(INPUT.size() < CPU) CPU = INPUT.size();
@@ -274,6 +278,55 @@ public class TagPileup extends JFrame {
 			}
 		}
 		return maxSize;
+	}
+	
+	//Validate BED coordinates exist within BAM file and satisfy BED format
+	public Vector<BEDCoord> validateBED(Vector<BEDCoord> COORD) throws IOException {
+		Vector<BEDCoord> FINAL = new Vector<BEDCoord>();
+		ArrayList<Integer> indexFail = new ArrayList<Integer>();
+		
+		//check for starts smaller than the stop
+		for(int x = 0; x < COORD.size(); x++) {
+			if(COORD.get(x).getStart() > COORD.get(x).getStop()) {
+				if(!indexFail.contains(new Integer(x))) {
+					indexFail.add(new Integer(x));
+				}
+			}
+		}
+		
+		for(int z = 0; z < BAMFiles.size(); z++) {
+			//Get chromosome IDs
+			SamReader inputSam = SamReaderFactory.makeDefault().open(BAMFiles.get(z));
+			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
+			ArrayList<String> chrom = new ArrayList<String>();
+			for(int x = 0; x < bai.getNumberOfReferences(); x++) {
+				chrom.add(inputSam.getFileHeader().getSequence(x).getSequenceName());
+			}
+			inputSam.close();
+			bai.close();
+
+			//check for bed chrom that aren't in BAM file 
+			for(int x = 0; x < COORD.size(); x++) {
+				if(!chrom.contains(COORD.get(x).getChrom())) {
+					if(!indexFail.contains(new Integer(x))) {
+						indexFail.add(new Integer(x));
+					}
+				}
+			}
+			
+		}
+		if(indexFail.size() == COORD.size()) {
+			System.err.println("No BED Coordinates exist within BAM file!!!");
+		}
+		
+		//Create new input file without failed indexes to more efficiently use CPUs
+		for(int x = 0; x < COORD.size(); x++) {
+			if(!indexFail.contains(new Integer(x))) {
+				FINAL.add(COORD.get(x));
+			}
+		}
+		
+		return FINAL;
 	}
 	
 	public String generateFileName(String bed, String bam, int strandnum) {
