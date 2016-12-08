@@ -187,6 +187,24 @@ public class ScriptManager {
 				JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
 				btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
 				pnlBAM_Manip.add(btnBamReplicateMerge);
+				
+				JButton btnFilterForPIPseq = new JButton("Filter for PIP-seq");
+				pnlBAM_Manip.add(btnFilterForPIPseq);
+				btnFilterForPIPseq.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									FilterforPermanganateSeqWindow frame = new FilterforPermanganateSeqWindow();
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						 });
+					}
+				});
+				btnFilterForPIPseq.setToolTipText("Filter BAM file by -1 nucleotide");
 				btnBamReplicateMerge.addActionListener(new ActionListener() {
 		            public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
@@ -222,24 +240,6 @@ public class ScriptManager {
 		});
 		btnBamToscIDX.setToolTipText("Convert BAM file to scIDX file.");
 		pnlBamConvert.add(btnBamToscIDX);
-		
-		JButton btnBamToBed = new JButton("BAM to BED");
-		btnBamToBed.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BAMtoBEDWindow frame = new BAMtoBEDWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
-		pnlBamConvert.add(btnBamToBed);
 				
 		JButton btnBamToGff = new JButton("BAM to GFF");
 		btnBamToGff.addActionListener(new ActionListener() {
@@ -259,13 +259,13 @@ public class ScriptManager {
 		btnBamToGff.setToolTipText("Convert BAM file to GFF file.");
 		pnlBamConvert.add(btnBamToGff);
 		
-		JButton btnFilterForPermanganateseq = new JButton("Filter for Permanganate-Seq");
-		btnFilterForPermanganateseq.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		JButton btnBamToBed = new JButton("BAM to BED");
+		btnBamToBed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							FilterforPermanganateSeqWindow frame = new FilterforPermanganateSeqWindow();
+							BAMtoBEDWindow frame = new BAMtoBEDWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -274,8 +274,8 @@ public class ScriptManager {
 				 });
 			}
 		});
-		btnFilterForPermanganateseq.setToolTipText("Filter BAM file by -1 nucleotide");
-		pnlBamConvert.add(btnFilterForPermanganateseq);
+		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
+		pnlBamConvert.add(btnBamToBed);
 		
 		JPanel pnlCoord_Manip = new JPanel();
 		tabbedPane.addTab("Coordinate File Manipulation", null, pnlCoord_Manip, null);
@@ -500,6 +500,7 @@ public class ScriptManager {
 			});
 			
 			JButton btnAggregateData = new JButton("Aggregate Data");
+			btnAggregateData.setToolTipText("Compile data from CDT file into matrix according to user-specified metric");
 			btnAggregateData.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					EventQueue.invokeLater(new Runnable() {
@@ -555,24 +556,6 @@ public class ScriptManager {
 			});
 			pnlSeqAnalysis.add(btnRandomizeFasta);
 			
-			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
-			btncolorSequencePlot.setToolTipText("Generate 4Color sequence plot given FASTA file and user-defined RGB colors");
-			btncolorSequencePlot.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								FourColorSequenceWindow frame = new FourColorSequenceWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
-			pnlSeqAnalysis.add(btncolorSequencePlot);
-			
 			JButton btnDnaShapeBed = new JButton("DNA Shape from BED");
 			btnDnaShapeBed.setToolTipText("Calculate intrinsic DNA shape parameters given BED file and Genome FASTA file");
 			btnDnaShapeBed.addActionListener(new ActionListener() {
@@ -591,6 +574,23 @@ public class ScriptManager {
 			});
 			pnlSeqAnalysis.add(btnDnaShapeBed);
 			
+			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
+			btncolorSequencePlot.setToolTipText("Generate 4Color sequence plot given FASTA file and user-defined RGB colors");
+			btncolorSequencePlot.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								FourColorSequenceWindow frame = new FourColorSequenceWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			
 			JButton btnDnaShapeFasta = new JButton("DNA Shape from FASTA");
 			btnDnaShapeFasta.setToolTipText("Calculate intrinsic DNA shape given input FASTA file");
 			btnDnaShapeFasta.addActionListener(new ActionListener() {
@@ -608,6 +608,7 @@ public class ScriptManager {
 				}
 			});
 			pnlSeqAnalysis.add(btnDnaShapeFasta);
+			pnlSeqAnalysis.add(btncolorSequencePlot);
 	}
 	
 	/**
