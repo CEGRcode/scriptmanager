@@ -1,66 +1,52 @@
 package scripts.Tag_Analysis;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.util.CloseableIterator;
-
 import java.awt.BorderLayout;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.sql.Timestamp;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.GenetrackParameters;
-import objects.Peak;
-
 @SuppressWarnings("serial")
 public class GeneTrack extends JFrame {
 	private JTextArea textArea;
 	
-	private File INPUT = null;
-	private String OUTPUTPATH = null;
-	private PrintStream OUT = null;
-	private SamReader inputSam = null;
+	private File INPUT = null; // input tab file
+	private String OUT_PATH = ""; // Path to output directory
+
+	private int SIGMA;		// sigma to use when smoothing reads to call peaks
+	private int EXCLUDE;	// exclusion zone around each peak that prevents others from being called
+	private int UP_WIDTH;	// upstream width of called peaks
+	private int DOWN_WIDTH; // downstream width of called peaks
+	private int FILTER;		// absolute read filter, outputs only peaks with larger read count
 	
-	private int READ = 0;
+	private int CHUNK;		// the base pair size of the data processed at once, will not affect output
 	
-	private int SIGMA = 5;
-	private int EXCLUSION = 20;
-	private int UP_WIDTH = 10;
-	private int DOWN_WIDTH = 10;
-	private int FILTER = 1;
+	private int WIDTH;		// equivalent to the half the gaussian smoothing kernel distribution size
+	private int frameshift;
 	
-	//Arbitrarily set to 5 std deviations up and down for gaussian kernel smoothing
-	private int NUM_STD = 5;
-	private double[] gaussWeight;
-	private int WIDTH;
+	private double[] sense = null; 		// sense - raw data from the input tab file, taken from column 3 
+	private double[] anti = null;		// anti - raw data from the input tab file, taken from column 4
 	
-	//Arbitrarily set windowSize to 10,000bp in order to chop up the genome efficiently
-	private int windowSize = 200000;
+	private String chromname = null;	// chromname - name of the current chromosome, changes when column 1 does not match the previous column 1
+	private long chromline = 0;			// chromline - size of how many chunks have passed, changes when a value from column 2 exceeds chromline's previous value + chunk size
+
+	private BufferedWriter write;		// read/write - buffered reader and writer to handle data input/output
+	private BufferedReader read;
+
+	private boolean empty = true;		// empty - determines if there is data to process, changes after any data has been added to either array
+	private ArrayList<String[]> error = new ArrayList<String[]>(); // error - counts the amount of unreadable lines in a chunk
 	
-	//Array to contain genetrack peaks separated by strand
-	private ArrayList<Peak> FPEAKS = null;
-	private ArrayList<Peak> RPEAKS = null;
-	
-	private double[] F_GOCC;
-	private double[] R_GOCC;
-	private double[] F_TOCC;
-	private double[] R_TOCC;
-	private double[] F_STD;
-	private double[] R_STD;
-	
-	public GeneTrack(File in, GenetrackParameters PARAM) {
-		setTitle("BAM to Genetrack Progress");
+	public GeneTrack(File id, int s, int e, int f, int u, int d, String path) {
+		setTitle("GeneTrack Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
 		
@@ -71,265 +57,538 @@ public class GeneTrack extends JFrame {
 		textArea.setEditable(false);
 		scrollPane.setViewportView(textArea);
 		
-		INPUT = in;
-		OUTPUTPATH = PARAM.getName();
+		INPUT = id;
 		
-		READ = PARAM.getRead();
-		SIGMA = PARAM.getSigma();
-		EXCLUSION = PARAM.getExclusion();
-		if(PARAM.getUp() == -999) UP_WIDTH = EXCLUSION / 2;
-		else UP_WIDTH = PARAM.getUp();
-		if(PARAM.getDown() == -999) DOWN_WIDTH = EXCLUSION / 2;
-		else DOWN_WIDTH = PARAM.getDown();
-		FILTER = PARAM.getFilter();
-	}
-	
-	public void run() {
-		String TIME = getTimeStamp();
+		SIGMA = s;
+		EXCLUDE = e;
+		UP_WIDTH = u;
+		DOWN_WIDTH = d;
+		FILTER = f;
+		OUT_PATH = path;
+		CHUNK = 100000;
+				
+		WIDTH = SIGMA * 5;
 		
-		System.out.println(getTimeStamp());
-		
-		String PARAM = "s" + SIGMA + "e" + EXCLUSION;
-		String READNAME = "READ1";
-		if(READ == 1) READNAME = "READ2";
-		else if(READ == 2) READNAME = "COMBINED";
-		String NAME = INPUT.getName().split("\\.")[0] + "_" + READNAME + "_" + PARAM + ".gff";
-		textArea.append(TIME + "\n" + NAME + "\n");
-		textArea.append("Sigma: " + SIGMA + "\nExclusion: " + EXCLUSION + "\nFilter: " + FILTER + "\nUpstream width of called Peaks: " + UP_WIDTH + "\nDownstream width of called Peaks: " + DOWN_WIDTH + "\n");
-		
-		try { OUT = new PrintStream(new File(OUTPUTPATH + File.separator + NAME)); }
-		catch (FileNotFoundException e) { e.printStackTrace(); }
-
-		//Set genetrack parameters
-		gaussWeight = gaussKernel();
-		WIDTH = SIGMA * NUM_STD;
-				
-		File f = new File(INPUT.getAbsolutePath() + ".bai");
-		if(f.exists() && !f.isDirectory()) {	
-			inputSam = SamReaderFactory.makeDefault().open(INPUT);
-			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
-			
-			for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
-				SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-				System.out.println("Processing: " + seq.getSequenceName());
-				textArea.append("Processing: " + seq.getSequenceName() + "\n");
-				
-				FPEAKS = new ArrayList<Peak>();
-				RPEAKS = new ArrayList<Peak>();
-				
-				int numwindows = (int) (seq.getSequenceLength() / windowSize);
-				for(int x = 0; x < numwindows; x++) {
-					int start = x * windowSize;
-					int stop = start + windowSize + WIDTH;
-					
-					F_GOCC = new double[windowSize];
-					R_GOCC = new double[windowSize];
-					F_TOCC = new double[windowSize];
-					R_TOCC = new double[windowSize];
-					F_STD = new double[windowSize];
-					R_STD = new double[windowSize];
-					
-					CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), start, stop, false);
-					loadGenomeFragment(iter, start, stop);
-					iter.close();
-					//call peaks by local maxima
-					filterbyLocalMaxima(seq.getSequenceName(), start);
-				}
-								
-				int finalstart = numwindows * windowSize;
-				int finalstop = seq.getSequenceLength();
-				F_GOCC = new double[finalstop - finalstart];
-				R_GOCC = new double[finalstop - finalstart];
-				F_TOCC = new double[finalstop - finalstart];
-				R_TOCC = new double[finalstop - finalstart];
-				F_STD = new double[finalstop - finalstart];
-				R_STD = new double[finalstop - finalstart];
-				
-				CloseableIterator<SAMRecord> iter = inputSam.query(seq.getSequenceName(), finalstart, finalstop, false);
-				loadGenomeFragment(iter, finalstart, finalstop);
-				iter.close();
-				//call peaks by local maxima
-				filterbyLocalMaxima(seq.getSequenceName(), finalstart);
-				
-				//parse peaks by exclusion zone
-				parsePeaksbyExclusion(FPEAKS);
-				parsePeaksbyExclusion(RPEAKS);
-				
-				for(int z = 0; z < FPEAKS.size(); z++) {
-					OUT.println(FPEAKS.get(z).toString());		
-				}
-				for(int z = 0; z < RPEAKS.size(); z++) {
-					OUT.println(RPEAKS.get(z).toString());		
-				}
-				
-			}
-			bai.close();
-			OUT.close();
+		//frameshift parameter that is used to remove chunk overlap is the maximum of UP, DOWN and WIDTH parameters
+		if (DOWN_WIDTH > WIDTH) {
+			frameshift = DOWN_WIDTH;
 		} else {
-			textArea.append("BAI Index File does not exist for: " + INPUT.getName() + "\n");
-			OUT.println("BAI Index File does not exist for: " + INPUT.getName() + "\n");
+			frameshift = WIDTH;
 		}
 		
-		System.out.println(getTimeStamp());
-		
-		dispose();
-	}
-	
-	public void filterbyLocalMaxima(String chrom, int start) {
-		for(int z = 0; z < F_GOCC.length; z++) {	
-			int fiveprime = z + start - UP_WIDTH;
-			int threeprime = z + start + DOWN_WIDTH;
-			if(fiveprime < 1) { fiveprime = 1; }
-			if(threeprime < 1) { threeprime = 1; }
-			
-			if(z == 0) {
-				if(F_GOCC[z] >= F_GOCC[z + 1] && F_TOCC[z] > FILTER) { 
-					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
-				}
-				if(R_GOCC[z] >= R_GOCC[z + 1] && R_TOCC[z] > FILTER) {
-					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
-				}
-			} else if(z + 1 == F_GOCC.length) {
-				if(F_GOCC[z] >= F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
-					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
-				}
-				if(R_GOCC[z] >= R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
-					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
-				}
-			} else {
-				if(F_GOCC[z] >= F_GOCC[z + 1] && F_GOCC[z] > F_GOCC[z - 1] && F_TOCC[z] > FILTER) {
-					FPEAKS.add(new Peak(chrom, fiveprime, threeprime, "+", (int)F_TOCC[z], F_STD[z]));
-				}
-				if(R_GOCC[z] >= R_GOCC[z + 1] && R_GOCC[z] > R_GOCC[z - 1] && R_TOCC[z] > FILTER) {
-					RPEAKS.add(new Peak(chrom, fiveprime, threeprime, "-", (int)R_TOCC[z], R_STD[z]));
-				}
-			}
-			//int bp = z + start + 1;
-			//OUT.println(seq.getSequenceName() + "\t" + bp + "\t" + F_GOCC[z] + "\t" + R_GOCC[z] + "\t" + F_TOCC[z] + "\t" + R_TOCC[z]);		
+		if (frameshift < UP_WIDTH) {
+			frameshift = UP_WIDTH;
 		}
 	}
-	
-	public void loadGenomeFragment(CloseableIterator<SAMRecord> iter, int start, int stop) {
-		double[] tempF = new double[F_TOCC.length];
-		double[] tempR = new double[R_TOCC.length];
+
+	public void run() {	
+		//finds the input file name and adds parameters to the label
+		String NAME = INPUT.getName().split("\\.")[0] + "_s" + SIGMA + "e" + EXCLUDE;
+		if(UP_WIDTH != EXCLUDE / 2) NAME += "u" + UP_WIDTH;
+		if(DOWN_WIDTH != EXCLUDE / 2) NAME += "d" + DOWN_WIDTH;
+		NAME += "F" + FILTER + ".gff";
+		System.out.println("Processing: " + NAME);
 		
-		while (iter.hasNext()) {
-			//Create the record object 
-			SAMRecord sr = iter.next();
-			
-			int recordStart = -999;
-			
-			//Check for paired-end
-			if(sr.getReadPairedFlag()) {
-				//Must be PAIRED-END mapped, mate must be mapped, must be read 1
-				if(sr.getProperPairFlag() && sr.getFirstOfPairFlag() && (READ == 0 || READ == 2)) {
-					//Get the start of the record 
-					recordStart = sr.getUnclippedStart();
-					//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
-					if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }
-				} else if(sr.getProperPairFlag() && !sr.getFirstOfPairFlag() && (READ == 1 || READ == 2)) {
-					//Get the start of the record 
-					recordStart = sr.getUnclippedStart();
-					//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
-					if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }
-				} 
-			} else if(READ == 0 || READ == 2) {
-				//Get the start of the record 
-				recordStart = sr.getUnclippedStart();
-				//Accounts for reverse tag reporting 3' end of tag and converting BAM to IDX/GFF format
-				if(sr.getReadNegativeStrandFlag()) { recordStart = sr.getUnclippedEnd(); }				
+		//creates output gff file in the output folder
+		try {
+			write = new BufferedWriter(new FileWriter(OUT_PATH + File.separator + NAME));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		
+		//holds the new line before it is broken by delimiter
+		String passedline = null;
+		
+		sense = new double[(int) CHUNK];
+		anti = new double[(int) CHUNK];
+		Arrays.fill(sense, (double) 0);					
+		Arrays.fill(anti, (double) 0);
+
+		try {
+			read = new BufferedReader(new FileReader(INPUT));	
+			try {
+				while((passedline = read.readLine()) != null) {	  
+					arrayFill(passedline.split("\\s+"));
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} 
+
+		//forces the output of the last chromosome as processing is triggered when a new chunk is found
+		chromBreak("DONE", true, true);
+		try {
+			read.close(); 
+			write.close();
+		} catch (IOException e1) { e1.printStackTrace(); }
+		
+	}
+
+	private void arrayFill(String[] line) {
+		 //checks for errors of line length and line composition (of numbers)
+		 if (line.length > 4 && line.length <= 5 && line[1].matches("[0-9]+") && line[2].matches("[0-9]+") && line[3].matches("[0-9]+")) {
+			 if (!empty && !line[0].equals(chromname) && chromname != null) { // processes the data held if a new chromosome is found
+			 	chromBreak(line[0], true, false);
+				chromline = 0;
+			 } else if (chromname == null) { // if this is the first line, load the chromosome name and do not process as no data is held
+				chromname = line[0];
+			 }
+
+			 //processes the data held as the chunk is filled
+			 if (!empty && Long.parseLong(line[1]) >= CHUNK + chromline) {				 
+				 //exclude first value as it cannot be a peak
+				 if (chromline == 0) {	chromBreak(line[0], false, true); }
+				 //do not exclude first value, it can be a valid peak
+				 else { chromBreak(line[0], false, false); }
+			 }	
+
+			//increase chunk count after processing until it can hold the new indexes
+			while ((Long.parseLong(line[1])) >= CHUNK + chromline) { chromline += CHUNK; }
+
+			//save sense line
+			if (line[2].matches("[0-9]+") && Integer.parseInt(line[2]) > 0) {
+				sense[(int) (Integer.parseInt(line[1]) - chromline)] = Double.parseDouble(line[2]);
+			}		
+			
+			//save anti line
+			if (line[3].matches("[0-9]+") && Integer.parseInt(line[3]) > 0) {
+				anti[(int) (Integer.parseInt(line[1]) - chromline)] = Double.parseDouble(line[3]);
+			}				
+
+			//used to skip over empty chunks
+			empty = false;
+		 } else {
+			//if an error is found, print it later to the user
+			 error.add(line); 
+		 }	 
+	}
+
+	private void chromBreak(String nextcname, boolean getLast, boolean getFirst) {		
+
+		//sense processing + file writing
+		smoothPeaks(sense, false, getLastValue(getLast), getFirstValue(getFirst));
+		fileWriter(getPeaks(), "+");
 	
-			if(recordStart > 0) {
-				for(int POS = recordStart - WIDTH; POS <= recordStart + WIDTH; POS++) {
-					if(POS - start >= 0 && POS - start < F_GOCC.length) {
-						if(sr.getReadNegativeStrandFlag()) {
-							R_GOCC[POS - start] += gaussWeight[POS - (recordStart - WIDTH)];
-							if(POS == recordStart) tempR[POS - start]++;
-						} else {
-							F_GOCC[POS - start] += gaussWeight[POS - (recordStart - WIDTH)];
-							if(POS == recordStart) tempF[POS - start]++;
-						}
+		//anti processing + file writing
+		smoothPeaks(anti, true, getLastValue(getLast), getFirstValue(getFirst));	
+		fileWriter(getPeaks(), "-");
+		
+		//resets both raw data arrays
+		for (int z = 0; z < CHUNK; z++) {
+			sense[z] = 0;
+			anti[z] = 0;
+		}
+	
+		//resets empty state and increments the chomosome name
+		empty = true;
+	    chromname = nextcname;
+		    
+	}
+
+ 	private int getLastValue(boolean getLast) {
+ 		//finds the last value of a chromosome that is not a valid peak
+	 	if (getLast) {
+ 			int lastSenseValue = 0;
+ 			int lastAntiValue = 0;
+			int ii = 1;
+			while (lastSenseValue == 0 && lastAntiValue == 0) {
+				lastSenseValue = (int) sense[(int) (CHUNK - ii)];
+				lastAntiValue = (int) anti[(int) (CHUNK - ii)];
+				ii ++;
+			}
+			return (int) (CHUNK - ii + 1 + WIDTH);
+	 	}
+		
+		else {
+			return -1;
+		}
+ 	}
+ 	
+ 	private int getFirstValue(boolean getFirst) {
+ 		//finds the first value of a chromosome that is not a valid peak
+	 	if (getFirst) {
+ 			int firstSenseValue = 0;
+ 			int firstAntiValue = 0;
+			int ii = 0;
+			while (firstSenseValue == 0 && firstAntiValue == 0) {
+				firstSenseValue = (int) sense[ii];
+				firstAntiValue = (int) anti[ii];
+				ii ++;
+			}
+			return (int) (ii + WIDTH);
+	 	}
+		
+		else {
+			return -1;
+		}
+ 	}
+	
+	private void fileWriter(float[][] peaks, String s) {
+		int first = UP_WIDTH;
+		int second = DOWN_WIDTH;
+		
+		//switches up and down parameters for anti strand
+		if (s == "-") {
+			first = DOWN_WIDTH;
+			second = UP_WIDTH;
+		}
+
+		int front = 0;
+
+			for (int i = 0; i < CHUNK; i++) {
+
+				if (peaks[i][0] > FILTER) {
+				
+					//prevents negative indexes 
+					if (i + chromline > first + frameshift) {
+						front = (int) (chromline + i) - first - frameshift;
+					}
+					
+					else {
+						front = 1;
+					}															
+
+					try {
+						write.write(	
+						//chromosome name	
+						chromname +		
+						//source(genetrack), placeholder(.)
+						"\tgenetrack\t.\t" +	
+						//starting position
+						front +								
+						"\t" +
+						//ending position
+						(i + second + chromline - frameshift) + 		
+						"\t" +
+						//score sum of the peak
+						(int) peaks[i][0] +		
+						"\t" +
+						//strand (+ or -)
+						s +	
+						//placeholder(.)
+						"\t.\t"	
+						//standard deviation
+						+ "stddev=" + peaks[i][1] +	
+						"\n");
+
+						write.flush();
+					}
+
+					catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
 			}
+			
+		System.out.println(chromname + ", chunk " + chromline + ", strand " + s + "\n");
+		System.out.println("ERRORS: ");
+		if (!error.isEmpty()) {
+			for (String[] errorline : error) {
+				for (String erroritem : errorline) {
+					System.out.print(erroritem + " ");
+				}
+			}
+		}
+		else {
+			System.out.print("none");
+		}
+		System.out.println("\n\n");
+		error.clear();
+	}
+
+	private float[][] peaks;
+	private double[] data;
+	private double[] NORM;
+	
+	private int firstvalue;
+
+	/***the purpose of the below holders are to hold overlapped data so peaks have correct sums when split between two chunks***
+	 *anti/sensedata		- holds the end overlapping region of the sense strand
+	 *anti/sensehold 		- holds the end overlapping sum values of the anti strand
+	 *anti/sensesum			- holds the moving sum value over the end overlap
+	 *anti/senseavg			- holds the standard deviation sum over the end overlap
+	 *anit/sensestand		- holds the values that form the standard deviation sum
+	 */
+	
+	private double[] antidata;
+	private double[] sensedata;
+	private ArrayList<Integer> sensehold = new ArrayList<Integer>();	
+	private ArrayList<Integer> antihold = new ArrayList<Integer>();
+	private int sensesum = 0;
+	private int antisum = 0;
+	private double senseavg = 0;
+	private double antiavg = 0;
+	private ArrayList<Integer> antistand = new ArrayList<Integer>();	
+	private ArrayList<Integer> sensestand = new ArrayList<Integer>();
+	
+	public void smoothPeaks(double[] raw, boolean reverse, int excludeLast, int excludeFirst) {
+		
+		boolean cut = true;
+		
+		if (excludeFirst > -1) {
+			firstvalue = excludeFirst;
+			cut = false;
+		}
+				
+		//held data is loaded into these placeholders to be used
+		ArrayList<Integer> hold = new ArrayList<Integer>();
+		ArrayList<Integer> standdev = new ArrayList<Integer>();		
+		int sum = 0;
+		double avg = 0;
+		int lastadd = 0;
+		
+		//if any data holder if empty, fill it
+		if (antidata == null || antidata.length <= 0) {
+			antidata = new double[WIDTH + frameshift];
+			Arrays.fill(antidata, 0);
 		}
 		
-		//Variance code adapted from Donald Knuth's implementation of Welford method
-		for(int x = 0; x < tempF.length; x++) {
-			double meanF = 0, meanR = 0, varF = 0, varR = 0, Fcount = 0, Rcount = 0;
-			for(int y = x - UP_WIDTH; y <= x + DOWN_WIDTH; y++) {
-				if(y < 0) y = 0;
-				if(y < tempF.length) {
-					if(tempF[y] != 0) {
-						F_TOCC[x] += tempF[y];
-						if(Fcount == 0) { meanF = y; }
+		if (sensedata == null || sensedata.length <= 0) {
+			sensedata = new double[WIDTH + frameshift];
+			Arrays.fill(sensedata, 0);
+		}
+		
+		int first = UP_WIDTH;
+		int second = DOWN_WIDTH;
+		
+		//load shift data and corresponding values
+		if (reverse) {
+			for (int shift = 0; shift < WIDTH + frameshift; shift ++) {
+				data[shift] = antidata[shift];
+			}
+			hold = antihold;
+			sum = antisum;
+			avg = antiavg;
+			standdev = antistand;
+			first = DOWN_WIDTH;
+			second = UP_WIDTH;
+		}
+		
+		else {
+			for (int shift = 0; shift < WIDTH + frameshift; shift ++) {
+				data[shift] = sensedata[shift];
+			}
+			hold = sensehold;
+			sum = sensesum;
+			avg = senseavg;
+			standdev = sensestand;
+		}
+			
+		for (int reset = WIDTH + frameshift; reset < CHUNK; reset++) {
+			data[reset] = 0;
+			peaks[reset][0] = 0;
+		}
+		
+		//reset only beginning peak data as we just shifted the smoothed data
+		for (int reset = 0; reset < WIDTH + frameshift; reset ++) {
+			peaks[reset][0] = 0;
+		}
+		
+		//adds zeroes for the overhang to the left of the 0 bp
+		if (hold.isEmpty()) {
+			while (hold.size() < first + second + 1) {
+				hold.add(0);
+			}
+		}
+
+		int b = 0;
+		//preloads values to the right of the 0 bp
+		while (hold.size() < first + second + 1) {
+			hold.add((int) raw[b]);
+			sum += raw[b];
+			b ++;
+		}
+		
+		//preloads additional values skipped by the parser
+		while (hold.size() < first + frameshift + 1) {
+			hold.add((int) raw[b]);
+			b++;
+		}
+				
+		//iterates through one chunk and therefore can only call one chunk of peaks
+		for (int line = 0; line < CHUNK; line ++) {	
+			
+			//superimposes the spread data over the previous distribution
+			if (raw[line] != 0) {
+				for (int i = line - WIDTH; i < line + WIDTH; i ++) {	
+					data[i + frameshift] = data[i + frameshift] + raw[line] * NORM[i - line + WIDTH];	
+				}
+			}
+					
+			//if a nonzero read is found, add it to the hold sum array and standdard deviation hold array 
+			if (line > 0 && raw[line - 1] > 0) {
+								
+				for (int c = 0; c < raw[line - 1]; c++) {
+					standdev.add(line - 1);
+				}
+				
+				hold.add((int) raw[line - 1]);	
+			}
+			
+			//else add a zero placeholder
+			else {
+				hold.add(0);
+			}
+			
+			//add the read value to correctly size the sum range
+			sum += hold.get(first + second + 1);
+			
+			//add the standard deviation value if it is within range
+			while (lastadd < standdev.size() && standdev.get(lastadd) <= line + second - frameshift - 1) {
+				avg += standdev.get(lastadd);
+				lastadd ++;
+			}
+			
+			//remove the hold array value that is now out of range
+			sum -= hold.get(0);		
+			hold.remove(0);
+			
+			//remove the standard deviation that is now out of range
+			while (!standdev.isEmpty() && standdev.get(0) < line - frameshift - first - 1) {
+				avg -= standdev.get(0);
+				standdev.remove(0);
+				lastadd --;
+			}
+			
+			//call the peaks
+			if (line < CHUNK - 1 && line >= 2) {
+				if (data[line - 2] < data[line - 1] && data[line - 1] > data[line] && sum > FILTER) {
+						peaks[line - 1][0] = origChange(line - 1, sum, hold, second, first, cut);  //sum;
+						peaks[line - 1][1] = standDev(standdev, avg, lastadd);		
+				}
+			}
+		}
+
+		//save shift data and corresponding values
+		if (reverse) {
+			for (int shift = 0; shift < WIDTH + frameshift; shift ++) {
+				antidata[shift] = data[shift + CHUNK];
+				data[shift + CHUNK] = 0;
+			}
+			antihold = hold;
+			antisum = sum;
+			antiavg = avg;
+			antistand = standdev;
+		}
+		
+		else {
+			for (int shift = 0; shift < WIDTH + frameshift; shift ++) {
+				sensedata[shift] = data[shift + CHUNK];
+				data[shift + CHUNK] = 0;
+			}
+			sensehold = hold;
+			sensesum = sum;
+			senseavg = avg;
+			sensestand = standdev;
+		}
+		
+		avg = 0;
+		standdev.clear();
+		
+		//call peak exclusion
+		peakExclude(excludeLast, excludeFirst, reverse);
+	}
+ 
+	private float origChange(int line, int sum, ArrayList<Integer> hold, int second, int first, boolean cut) {
+		if (cut) {
+			if (line + second > (firstvalue + frameshift - WIDTH) && line < (firstvalue + frameshift - WIDTH)) {
+				for (int ii = (firstvalue + frameshift - WIDTH) - (line - first) + WIDTH; ii < hold.size(); ii ++) {
+					sum -= hold.get(ii);
+				}
+			}
+			
+
+			if (line - first < (firstvalue + frameshift - WIDTH) && line > (firstvalue + frameshift - WIDTH)) {
+				for (int ii = 0; ii < (firstvalue + frameshift - WIDTH) - (line - first) - WIDTH; ii ++) {
+					sum -= hold.get(ii);
+				}
+			}
+		}
+		return sum;
+	}
+	
+	private void peakExclude(int excludeLast, int excludeFirst, boolean reverse) {
+				
+		int size = 0;
+		
+		//MAJOR PROBLEM WHEN USING DIFFERENT U AND D PARAMETERS, WILL BE INCLUDED IN A BUG FIX LATER, SHOULD BE size = up when up is greater
+//		if (first > second) {size = second;}
+//		else {size = first;}
+		
+		size = EXCLUDE / 2;
+				
+		ArrayList<Integer> excluded = new ArrayList<Integer>();	
+		
+		for (int index = 0; index < CHUNK; index++) {
+			if (peaks[index][0] > 0) {
+				
+				//if a nonzero index is found, check for adjacent peaks
+				for (int n = 1; n <= size; n++) {		
+					if (index + n < peaks.length && peaks[index + n][0] > 0) {
+							
+						//add the lower peak to be removed later
+						if (peaks[index][0] < peaks[index + n][0]) {
+							excluded.add(index);
+						}
+						
 						else {
-							 double tempMean = ((meanF * Fcount) + (tempF[y] * y)) / (Fcount + tempF[y]);
-							 double tempVar = varF + ((y - meanF) * (y - tempMean) * tempF[y]);
-							 meanF = tempMean;
-							 varF = tempVar;
+							excluded.add(index + n);
 						}
-						Fcount += tempF[y];
-					}
-					if(tempR[y] != 0) {
-						R_TOCC[x] += tempR[y];
-						if(Rcount == 0) { meanR = y; }
-						else {
-							double tempMean = ((meanR * Rcount) + (tempR[y] * y)) / (Rcount + tempR[y]);
-							double tempVar = varR + ((y - meanR) * (y - tempMean) * tempR[y]);
-							meanR = tempMean;
-							varR = tempVar;
-						}
-						Rcount += tempR[y];
-					}
-				}
-			}
-			if(Fcount != 0) varF /= Fcount;
-			if(Rcount != 0) varR /= Rcount;
-			F_STD[x] = Math.sqrt(varF);
-			R_STD[x] = Math.sqrt(varR);
-		}
-		
-	}
-	
-	public void parsePeaksbyExclusion(ArrayList<Peak> peaks) {
-		//Sort by Peak Score
-		Collections.sort(peaks, Peak.PeakTagComparator);
-		
-		for(int x = 0; x < peaks.size(); x++) {
-			for(int y = 0; y < peaks.size(); y++) {
-				if(x != y) {
-					if(peaks.get(x).getStop() > peaks.get(y).getStart() && peaks.get(x).getStart() < peaks.get(y).getStop()) {
-						peaks.remove(y);
-						if(x > y) x--;
-						y--;
-					} else if(peaks.get(x).getStart() < peaks.get(y).getStop() && peaks.get(x).getStop() > peaks.get(y).getStart()) {
-						peaks.remove(y);
-						if(x > y) x--;
-						y--;
 					}
 				}
 			}
 		}
-		//Sort by position
-		Collections.sort(peaks, Peak.PeakPositionComparator);
-	}
-		
-	private double[] gaussKernel() {
-		double[] Garray = new double[(int) (SIGMA * NUM_STD * 2) + 1];
-		for(int x = 0; x < Garray.length; x++) {
-             double HEIGHT = Math.exp(-1 * Math.pow((x - (Garray.length / 2)), 2) / (2 * Math.pow(SIGMA, 2)));
-             HEIGHT /= (SIGMA * Math.sqrt(2 * Math.PI));
-             //Garray[x] = Double.parseDouble(String.format("%.6g%n", HEIGHT));
-             Garray[x] = HEIGHT;
+
+		//removes the last index if at the end of a chromosome and resets the hold arrays
+		if (excludeLast > -1) {
+			excluded.add(excludeLast);
+			
+			if (reverse) {
+				antihold.clear();
+				antisum = 0;
+				antiavg = 0;
+				antistand.clear();
+			}
+			
+			else {
+				sensehold.clear();
+				sensesum = 0;
+				senseavg = 0;
+				sensestand.clear();
+			}
 		}
-		return Garray;
-     }
-	
-	private static String getTimeStamp() {
-		Date date= new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
+		
+		if (excludeFirst > -1) {
+			excluded.add(excludeFirst);
+		}
+		
+		//removes excluded peaks
+		for (int remove : excluded) {
+			peaks[remove][0] = 0;
+		}	
+		
+		excluded.clear();					
 	}
+
+	private float standDev(ArrayList<Integer> standdev, double avg, int lastadd) {
+		
+		double total = 0;
+					
+		for (int i = 0; i < lastadd; i++) {
+			total += Math.pow(Math.abs((avg / lastadd) - standdev.get(i)), 2);
+		}
+		
+		total = total / lastadd;
+		return (float) Math.pow(total, 0.5);
+	}
+
+	public float[][] getPeaks() {
+		return peaks;
+	}
+	
+	public void emptyPeaks() {
+		Arrays.fill(peaks, 0);
+	}	
 }
