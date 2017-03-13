@@ -65,7 +65,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException {
+        public Void doInBackground() throws IOException, InterruptedException {
         	try {
 				if(Integer.parseInt(txtSigma.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Sigma!!!");
