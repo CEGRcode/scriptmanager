@@ -30,6 +30,7 @@ import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
+import window_interface.Coordinate_Analysis.BEDPeakAligntoRefWindow;
 import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
 import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
@@ -41,7 +42,6 @@ import window_interface.Tag_Analysis.HeatMapWindow;
 import window_interface.Tag_Analysis.MergeHeatMapWindow;
 import window_interface.Tag_Analysis.PeakPairWindow;
 import window_interface.Tag_Analysis.TagPileupWindow;
-import window_interface.Peak_Alignment.BEDPeakAligntoRefWindow;;
 
 public class ScriptManager {
 
@@ -52,7 +52,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.12");
+		frmScriptManager.setTitle("Script Manager v0.11");
 		frmScriptManager.setBounds(100, 100, 475, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
@@ -397,6 +397,28 @@ public class ScriptManager {
 				 });
 			}
 		});
+		
+		JPanel pnlPeakAnalysis = new JPanel();
+		tabbedPane.addTab("Coordinate File Analysis", null, pnlPeakAnalysis, null);
+		
+		JButton btnBedPeakAlignment = new JButton("Align BED to Reference");
+		btnBedPeakAlignment.setToolTipText("Align BED file to Reference file creating CDT file");
+		pnlPeakAnalysis.add(btnBedPeakAlignment);
+		
+		btnBedPeakAlignment.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BEDPeakAligntoRefWindow frame = new BEDPeakAligntoRefWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
 
 		
 		JPanel pnlTagAnalysis = new JPanel();
@@ -610,27 +632,6 @@ public class ScriptManager {
 			});
 			pnlSeqAnalysis.add(btnDnaShapeFasta);
 			pnlSeqAnalysis.add(btncolorSequencePlot);
-			
-			JPanel pnlPeakAlign = new JPanel();
-			tabbedPane.addTab("Peak Alignment", null, pnlPeakAlign, null);
-			
-			JButton btnBedPeakAlignment = new JButton("BED Peaks Alignment");
-			pnlPeakAlign.add(btnBedPeakAlignment);
-			
-			btnBedPeakAlignment.addActionListener(new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								BEDPeakAligntoRefWindow frame = new BEDPeakAligntoRefWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
 			
 			
 	}

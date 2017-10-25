@@ -1,4 +1,4 @@
-package scripts.Peak_Alignment;
+package scripts.Coordinate_Analysis;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,7 +40,8 @@ public class BEDPeakAligntoRef extends JFrame{
 	}
 		
 	public void run() throws IOException, InterruptedException {
-		System.out.println(getTimeStamp());
+		System.out.println("Mapping: " + peakPath + " to " + refPath);
+		System.out.println("Starting: " + getTimeStamp());
 		int counter = 0;
 		InputStream inputStream = new FileInputStream(peakPath);
 	    BufferedReader buff = new BufferedReader(new InputStreamReader(inputStream), 100); 
@@ -108,8 +109,8 @@ public class BEDPeakAligntoRef extends JFrame{
 			}
 	    buff.close();
 	    inputStream.close();
-	    System.out.println(getTimeStamp());
-	    System.out.println(counter);
+		System.out.println("Completing: " + getTimeStamp());
+	    //System.out.println(counter);
 	    }
 				
 
