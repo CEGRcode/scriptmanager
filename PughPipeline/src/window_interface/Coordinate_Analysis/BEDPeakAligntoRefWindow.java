@@ -72,7 +72,7 @@ public Task task;
     				{
     					for(int p=0; p < PeakFiles.size(); p++)
     					{
-    						align = new BEDPeakAligntoRef(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH.getCanonicalPath());	
+    						align = new BEDPeakAligntoRef(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH);	
         	        			align.setVisible(true);
         	        			align.run();
         	        			counter++;
