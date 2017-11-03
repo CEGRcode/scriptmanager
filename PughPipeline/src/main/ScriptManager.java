@@ -36,6 +36,7 @@ import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
 import window_interface.Sequence_Analysis.FourColorSequenceWindow;
 import window_interface.Sequence_Analysis.RandomizeFASTAWindow;
+import window_interface.Sequence_Analysis.SearchMotifWindow;
 import window_interface.Tag_Analysis.AggregateDataWindow;
 import window_interface.Tag_Analysis.GeneTrackWindow;
 import window_interface.Tag_Analysis.HeatMapWindow;
@@ -632,6 +633,24 @@ public class ScriptManager {
 			});
 			pnlSeqAnalysis.add(btnDnaShapeFasta);
 			pnlSeqAnalysis.add(btncolorSequencePlot);
+			
+			JButton btnSearchMotifIn = new JButton("Search Motif in Genome");
+			pnlSeqAnalysis.add(btnSearchMotifIn);
+			btnSearchMotifIn.setToolTipText("Search a motif in genome files with mismatch");
+			btnSearchMotifIn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								SearchMotifWindow frame = new SearchMotifWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
 			
 			
 	}
