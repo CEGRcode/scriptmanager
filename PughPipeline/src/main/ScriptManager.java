@@ -632,12 +632,11 @@ public class ScriptManager {
 				}
 			});
 			pnlSeqAnalysis.add(btnDnaShapeFasta);
-			pnlSeqAnalysis.add(btncolorSequencePlot);
 			
-			JButton btnSearchMotifIn = new JButton("Search Motif in Genome");
-			pnlSeqAnalysis.add(btnSearchMotifIn);
-			btnSearchMotifIn.setToolTipText("Search a motif in genome files with mismatch");
-			btnSearchMotifIn.addActionListener(new ActionListener() {
+			JButton btnSearchMotif = new JButton("Search Motif in FASTA");
+			pnlSeqAnalysis.add(btnSearchMotif);
+			btnSearchMotif.setToolTipText("Search a motif in fasta files with mismatch");
+			btnSearchMotif.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
@@ -651,6 +650,7 @@ public class ScriptManager {
 					 });
 				}
 			});
+			pnlSeqAnalysis.add(btncolorSequencePlot);
 			
 			
 	}
