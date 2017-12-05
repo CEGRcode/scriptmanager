@@ -11,12 +11,28 @@ public class BEDCoord {
 	private String NAME = ".";
 	private double SCORE = 0;
 
+	private int MID = 0;
+	
 	private double[] Fstrand = null;
 	private double[] Rstrand = null;
 	
 	public BEDCoord() {
 		
 	}
+	
+	public BEDCoord(String line) {
+		String[] bed = line.split("\t");
+		if(bed.length > -1) CHROM = bed[0];
+		if(bed.length > 0) START = Integer.parseInt(bed[1]);
+		if(bed.length > 1) STOP = Integer.parseInt(bed[2]);
+		if(bed.length > 2) NAME = bed[3];
+		if(bed.length > 3) {
+			try { SCORE = Double.parseDouble(bed[4]); }
+			catch (NumberFormatException e) { SCORE = 0; }
+		}
+		if(bed.length > 4) DIR = bed[5];
+	}
+	
 	
 	public BEDCoord(String c, int sta, int sto, String di, String na) {
 		CHROM = c;
@@ -29,6 +45,18 @@ public class BEDCoord {
 	public BEDCoord(String na, double sco) {
 		NAME = na;
 		SCORE = sco;
+	}
+	
+	public void calcMid() {
+		MID = (START + STOP) / 2;
+	}
+	
+	public void setMid(int m) {
+		MID = m;
+	}
+	
+	public int getMid() {
+		return MID;
 	}
 	
 	public double[] getFStrand() {
@@ -112,6 +140,16 @@ public class BEDCoord {
 			int PeakStart2 = node2.getStart();
 			if (PeakStart1 > PeakStart2) return 1;
 			else if (PeakStart1 < PeakStart2) return -1;
+			else return 0;
+	}
+	};
+	
+	public static Comparator<BEDCoord> PeakMidpointComparator = new Comparator<BEDCoord>() {
+		public int compare(BEDCoord node1, BEDCoord node2) {
+			int PeakMid1 = (node1.getStart() + node1.getStop()) / 2;
+			int PeakMid2 = (node2.getStart() + node2.getStop()) / 2;
+			if (PeakMid1 > PeakMid2) return 1;
+			else if (PeakMid1 < PeakMid2) return -1;
 			else return 0;
 	}
 	};
