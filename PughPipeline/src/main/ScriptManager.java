@@ -31,6 +31,7 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.Coordinate_Analysis.BEDPeakAligntoRefWindow;
+import window_interface.Coordinate_Analysis.FilterBEDbyProximityWindow;
 import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
 import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
@@ -407,19 +408,39 @@ public class ScriptManager {
 		pnlPeakAnalysis.add(btnBedPeakAlignment);
 		
 		btnBedPeakAlignment.addActionListener(new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							BEDPeakAligntoRefWindow frame = new BEDPeakAligntoRefWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+            public void actionPerformed(ActionEvent e) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						BEDPeakAligntoRefWindow frame = new BEDPeakAligntoRefWindow();
+						frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				 });
-			}
-		});
+				}
+			 });
+		}
+	});
+		
+		JButton btnBedFilter = new JButton("Filter BED by Proximity");
+		btnBedFilter.setToolTipText("Filter BED file by proximity");
+		pnlPeakAnalysis.add(btnBedFilter);
+		
+		
+		btnBedFilter.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						FilterBEDbyProximityWindow frame = new FilterBEDbyProximityWindow();
+						frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			 });
+		}
+	});
 
 		
 		JPanel pnlTagAnalysis = new JPanel();

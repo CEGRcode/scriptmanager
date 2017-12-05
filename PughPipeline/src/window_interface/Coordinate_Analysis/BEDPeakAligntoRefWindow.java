@@ -35,11 +35,6 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
-
-	/**
-	 * Create the frame.
-	 */
-	
 	final DefaultListModel<String> peakList;
 	final DefaultListModel<String> refList;
 	ArrayList<File> PeakFiles = new ArrayList<File>();
