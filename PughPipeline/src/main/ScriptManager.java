@@ -509,6 +509,7 @@ public class ScriptManager {
 		pnlTagAnalysis.add(btnTagPileup);
 		
 			JButton btnHeatMap = new JButton("Heat Map");
+			btnHeatMap.setEnabled(false);
 			btnHeatMap.setToolTipText("Generate heat map using CDT files");
 			btnHeatMap.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
