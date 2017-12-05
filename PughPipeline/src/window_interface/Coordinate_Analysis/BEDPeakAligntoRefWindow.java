@@ -50,7 +50,6 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
-	private int counter = 0;
 	
 public Task task;
 	
@@ -63,6 +62,8 @@ public Task task;
         		} else {
         			setProgress(0);
         			BEDPeakAligntoRef align;
+        			int counter = 0;
+
     				for(int r = 0; r < RefFiles.size(); r++)
     				{
     					for(int p=0; p < PeakFiles.size(); p++)
