@@ -37,6 +37,7 @@ import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
 import window_interface.Sequence_Analysis.FourColorSequenceWindow;
 import window_interface.Sequence_Analysis.RandomizeFASTAWindow;
+import window_interface.Sequence_Analysis.SearchMotifPatternWindow;
 import window_interface.Sequence_Analysis.SearchMotifWindow;
 import window_interface.Tag_Analysis.AggregateDataWindow;
 import window_interface.Tag_Analysis.GeneTrackWindow;
@@ -636,6 +637,7 @@ public class ScriptManager {
 					 });
 				}
 			});
+			pnlSeqAnalysis.add(btncolorSequencePlot);
 			
 			JButton btnDnaShapeFasta = new JButton("DNA Shape from FASTA");
 			btnDnaShapeFasta.setToolTipText("Calculate intrinsic DNA shape given input FASTA file");
@@ -672,7 +674,25 @@ public class ScriptManager {
 					 });
 				}
 			});
-			pnlSeqAnalysis.add(btncolorSequencePlot);
+			
+			JButton btnSearchMotifPattern = new JButton("Search a Motif by a Pattern");
+			pnlSeqAnalysis.add(btnSearchMotifPattern);
+			btnSearchMotifPattern.setToolTipText("Search a motif (by a pattern) in fasta files with mismatch");
+			btnSearchMotifPattern.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								SearchMotifPatternWindow frame = new SearchMotifPatternWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
+			
 			
 			
 	}
