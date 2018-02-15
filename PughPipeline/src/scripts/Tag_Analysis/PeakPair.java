@@ -100,7 +100,7 @@ public class PeakPair extends JFrame {
 		String DETAIL = NAME + File.separator + "D_" + INPUT.getName().split("\\.")[0] + ".txt";
 		String SUMMARY = NAME + File.separator + "S_" + INPUT.getName().split("\\.")[0] + ".gff";
 		String ORPHAN = NAME + File.separator + "O_" + INPUT.getName().split("\\.")[0] + ".txt";
-		String PDF = NAME + File.separator + "P_" + INPUT.getName().split("\\.")[0] + ".pdf";
+		//String PDF = NAME + File.separator + "P_" + INPUT.getName().split("\\.")[0] + ".pdf";
 
 		try { DOUT = new PrintStream(new File(DETAIL)); }
 		catch (FileNotFoundException e) { e.printStackTrace(); }

@@ -38,7 +38,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	final DefaultListModel expList;
+	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
 	private File INPUT = null;
 	
@@ -104,8 +104,8 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
-      	expList = new DefaultListModel();
-		final JList listExp = new JList(expList);
+      	expList = new DefaultListModel<String>();
+		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		

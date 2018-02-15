@@ -39,7 +39,7 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
-	final DefaultListModel expList;
+	final DefaultListModel<String> expList;
 	private File OUTPUT_PATH = null;
 	List<File> BAMFiles = new ArrayList<File>();
 
@@ -98,8 +98,8 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
-      	expList = new DefaultListModel();
-		final JList listExp = new JList(expList);
+      	expList = new DefaultListModel<String>();
+		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		

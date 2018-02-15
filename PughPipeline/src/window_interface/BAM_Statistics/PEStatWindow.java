@@ -48,7 +48,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 	JButton btnRemoveBam;
 	JButton btnRun;
 	
-	final DefaultListModel expList;
+	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
 	private JTextField txtMin;
 	private JTextField txtMax;
@@ -109,8 +109,8 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
-      	expList = new DefaultListModel();
-		final JList listExp = new JList(expList);
+      	expList = new DefaultListModel<String>();
+		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		

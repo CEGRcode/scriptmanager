@@ -43,7 +43,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	final DefaultListModel expList;
+	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
 	
 	private JButton btnLoad;
@@ -69,8 +69,8 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 	private JLabel lblBinSizebp;
 	private JLabel lblSort;
 		
-	private JComboBox cmboChrom;
-	private JComboBox cmboScore;
+	private JComboBox<String> cmboChrom;
+	private JComboBox<String> cmboScore;
 	private JLabel lblScore;
 	
 	class Task extends SwingWorker<Void, Void> {
@@ -143,8 +143,8 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
-      	expList = new DefaultListModel();
-		final JList listExp = new JList(expList);
+      	expList = new DefaultListModel<String>();
+		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
 		
@@ -333,12 +333,12 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(lblSort);
         
         String[] chromSort = {"ascending", "descending"};
-        cmboChrom = new JComboBox(chromSort);
+        cmboChrom = new JComboBox<String>(chromSort);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, cmboChrom, -6, SpringLayout.NORTH, btnPeak);
         contentPane.add(cmboChrom);
         
         String[] scoreSort = {"ascending", "descending", "none"};
-        cmboScore = new JComboBox(scoreSort);
+        cmboScore = new JComboBox<String>(scoreSort);
         sl_contentPane.putConstraint(SpringLayout.WEST, cmboScore, 316, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, cmboScore, -44, SpringLayout.EAST, contentPane);
         cmboScore.setSelectedIndex(2);
