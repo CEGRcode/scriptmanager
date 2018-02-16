@@ -21,12 +21,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 @SuppressWarnings("serial")
-public class SearchMotif extends JFrame{
-	
+public class SearchMotif extends JFrame {
 	private int ALLOWED_MISMATCH;
 	private Map<String, String> IUPAC_HASH = new HashMap<>();
 	private Map<String, String> RC_HASH = new HashMap<>();
 	private String motif;
+	private String motifPattern;
 	private InputStream inputStream;
 	private File OUTPUTPATH = null;
 	private String INPUTFILE = null;
@@ -34,7 +34,7 @@ public class SearchMotif extends JFrame{
 	
 	private JTextArea textArea;
 	
-public SearchMotif(File input, String mot, int num, File output) throws IOException {
+public SearchMotif(File input, String mot, String motPattern, int num, File output) throws IOException {
 	setTitle("Motif Search Progress");
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	setBounds(150, 150, 600, 800);
@@ -48,11 +48,12 @@ public SearchMotif(File input, String mot, int num, File output) throws IOExcept
 	
 	ALLOWED_MISMATCH = num;
 	motif = mot;
+	motifPattern = motPattern;
 	inputStream = new FileInputStream(input);
 	INPUTFILE = input.getName();
 	
 	OUTPUTPATH = output;
-	String fname = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_" + input.getName().substring(0, input.getName().lastIndexOf('.')) + ".bed"; 
+	String fname = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_" + motifPattern + "_" + input.getName().substring(0, input.getName().lastIndexOf('.')) + ".bed"; 
 	if(OUTPUTPATH != null) {
 		try {OUT = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + fname)); }
 		catch (FileNotFoundException e) { e.printStackTrace(); }
@@ -95,12 +96,16 @@ public SearchMotif(File input, String mot, int num, File output) throws IOExcept
 
 	public void run() throws IOException, InterruptedException
 	{
-		System.out.println("Searching motif: " + motif + " in " + INPUTFILE);
+		
+
+		System.out.println("Motif pattern: " + motifPattern + " with " + ALLOWED_MISMATCH + " mismatch(s)");
 		System.out.println("Starting: " + getTimeStamp());
 		textArea.append("Searching motif: " + motif + " in " + INPUTFILE + "\n");
+		textArea.append("Motif pattern: " + motifPattern + " with " + ALLOWED_MISMATCH + " mismatch(s)" + "\n");
 		textArea.append("Starting: " + getTimeStamp() + "\n");
 		
 		char[] ORIG = motif.toUpperCase().toCharArray();
+		char[] PATTERN = motifPattern.toUpperCase().toCharArray();
 		List<String> MOTIF = new ArrayList<>();
 		for(int i = 0; i < ORIG.length; i++)
 		{	if(ORIG[i] == 'N')
@@ -117,8 +122,6 @@ public SearchMotif(File input, String mot, int num, File output) throws IOExcept
 				RCMOTIF.add(IUPAC_HASH.get(key));				
 			}
 		}
-//		System.out.println(MOTIF.size() + "\t" + RCMOTIF.size());
-//		for(int x = 0; x < MOTIF.size(); x++) { System.out.println(MOTIF.get(x) + "\t" + RCMOTIF.get(x)); }
 		
 		String currentChrom = "";
 		String currentLine = ""; 
@@ -127,7 +130,7 @@ public SearchMotif(File input, String mot, int num, File output) throws IOExcept
 		String ID;
 		
 	    BufferedReader lines = new BufferedReader(new InputStreamReader(inputStream), 100);
-		while(lines.ready()) {
+	    while(lines.ready()) {
 			String line = lines.readLine().trim();
 			if(line.startsWith(">")) {
 				currentChrom = line.substring(1);
@@ -139,32 +142,45 @@ public SearchMotif(File input, String mot, int num, File output) throws IOExcept
 			}
 			else {
 				currentLine = currentLine + line;
-				//System.out.println(currentLine);
 				char[] array = currentLine.toCharArray();
+				OUTER:
 				for(int x = 0; x < array.length - motif.length(); x++) {
 					char[] SEQ = currentLine.substring(x, x + ORIG.length).toCharArray();
-					//System.out.println(SEQ.length);
-					int MISMATCH = SEQ.length;
+
+					int dotsCount = (int) motifPattern.chars().filter(ch -> ch =='.').count();
+					int MISMATCH = dotsCount;
 					for(int i = 0; i < SEQ.length; i++) {
-						//System.out.print(SEQ[i]);
-						for(int j = 0; j < MOTIF.get(i).length(); j++) {
-							if(SEQ[i] == MOTIF.get(i).charAt(j) || MOTIF.get(i).charAt(j) == 'N') {
+						if(PATTERN[i] == '.')
+						{
+							if(MOTIF.get(i).indexOf(SEQ[i]) != -1 || MOTIF.get(i).indexOf('N') != -1)
 								MISMATCH--;
-							}								
 						}
-					}
-					//System.out.println();
+						else {
+							if(MOTIF.get(i).indexOf(SEQ[i])==-1) {
+								currentBP++;
+								currentEND++;
+								continue OUTER;
+								}
+							}
+						}
 					if(MISMATCH <= ALLOWED_MISMATCH) {
 						ID = currentChrom + "_" + Integer.toString(currentBP) + "_" + Integer.toString(currentEND) + "_+";
 						OUT.print(currentChrom + "\t" + currentBP + "\t" + Integer.toString(currentEND) + "\t" + ID + "\t" + Integer.toString(MISMATCH) + "\t+\n");
 					}
 					
 					//Reverse-complement now
-					MISMATCH = SEQ.length;
+					MISMATCH = SEQ.length - motifPattern.replaceAll(".", "").length();
 					for(int i = 0; i < SEQ.length; i++)	{
-						for(int j = 0; j < RCMOTIF.get(i).length(); j++) {
-							if(SEQ[i] == RCMOTIF.get(i).charAt(j) || RCMOTIF.get(i).charAt(j) == 'N')
+						if(PATTERN[i] == '.')
+						{
+							if(RCMOTIF.get(i).indexOf(SEQ[i]) != -1 || RCMOTIF.get(i).indexOf('N') != -1)
 								MISMATCH--;
+						}
+						else
+						{
+							if(RCMOTIF.get(i).indexOf(SEQ[i]) == -1) {
+								MISMATCH = MISMATCH + SEQ.length;
+							}
 						}
 					}
 					if(MISMATCH <= ALLOWED_MISMATCH) {
@@ -174,9 +190,7 @@ public SearchMotif(File input, String mot, int num, File output) throws IOExcept
 					currentBP++;
 					currentEND++;
 				}
-				//System.out.print(currentLine + "\t");
 				String tmp = currentLine.substring(currentLine.length() - motif.length());
-				//System.out.println(tmp);
 				currentLine = tmp; 
 			}
 		}
