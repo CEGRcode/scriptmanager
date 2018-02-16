@@ -24,7 +24,7 @@ import javax.swing.JTextArea;
 import util.FASTAUtilities;
 
 @SuppressWarnings("serial")
-public class FilterforPenanganateSeq extends JFrame {
+public class FilterforPIPseq extends JFrame {
 	File bamFile = null;
 	File genome = null;
 	File output = null;
@@ -34,7 +34,7 @@ public class FilterforPenanganateSeq extends JFrame {
 	
 	private JTextArea textArea;
 	
-	public FilterforPenanganateSeq(File in, File gen, File out, String s) {
+	public FilterforPIPseq(File in, File gen, File out, String s) {
 		setTitle("Permanganate-Seq Filtering Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);

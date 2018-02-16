@@ -16,7 +16,7 @@ import javax.swing.JSplitPane;
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import window_interface.BAM_Format_Converter.BAMtoGFFWindow;
 import window_interface.BAM_Format_Converter.BAMtoscIDXWindow;
-import window_interface.BAM_Format_Converter.FilterforPermanganateSeqWindow;
+import window_interface.BAM_Format_Converter.FilterforPIPseqWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
 import window_interface.BAM_Manipulation.BAMRemoveDupWindow;
 import window_interface.BAM_Manipulation.MergeBAMWindow;
@@ -198,7 +198,7 @@ public class ScriptManager {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								try {
-									FilterforPermanganateSeqWindow frame = new FilterforPermanganateSeqWindow();
+									FilterforPIPseqWindow frame = new FilterforPIPseqWindow();
 									frame.setVisible(true);
 								} catch (Exception e) {
 									e.printStackTrace();

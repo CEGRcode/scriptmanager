@@ -28,7 +28,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
-import scripts.BAM_Format_Converter.FilterforPenanganateSeq;
+import scripts.BAM_Format_Converter.FilterforPIPseq;
 import scripts.BAM_Manipulation.BAIIndexer;
 import util.FileSelection;
 import util.FASTAUtilities;
@@ -38,7 +38,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class FilterforPermanganateSeqWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
@@ -74,7 +74,7 @@ public class FilterforPermanganateSeqWindow extends JFrame implements ActionList
 	        	    File OUTPUT = null;
 	        	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_PSfilter.bam"); }
 	        	    else { OUTPUT = new File(NAME[0] + "_PSfilter.bam"); }
-	        	    FilterforPenanganateSeq filter = new FilterforPenanganateSeq(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
+	        	    FilterforPIPseq filter = new FilterforPIPseq(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
         			filter.setVisible(true);
         			filter.run();
         			
@@ -95,7 +95,7 @@ public class FilterforPermanganateSeqWindow extends JFrame implements ActionList
         }
 	}
 	
-	public FilterforPermanganateSeqWindow() {
+	public FilterforPIPseqWindow() {
 		setTitle("Filter Permanganate-Seq Reads");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
