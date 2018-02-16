@@ -96,7 +96,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	}
 	
 	public FilterforPIPseqWindow() {
-		setTitle("Filter Permanganate-Seq Reads");
+		setTitle("Filter PIP-seq Reads");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 450, 375);
