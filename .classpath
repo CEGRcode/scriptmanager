@@ -5,8 +5,8 @@
 	<classpathentry kind="lib" path="picard-tools-1.140/picard-lib.jar"/>
 	<classpathentry kind="lib" path="picard-tools-1.140/picard.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="dependecy/jcommon-1.0.21.jar"/>
-	<classpathentry kind="lib" path="dependecy/jfreechart-1.0.17.jar"/>
-	<classpathentry kind="lib" path="dependecy/jfreesvg-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.21.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.17.jar"/>
+	<classpathentry kind="lib" path="lib/jfreesvg-3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
