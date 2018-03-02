@@ -46,6 +46,7 @@ import window_interface.Tag_Analysis.PeakPairWindow;
 import window_interface.Tag_Analysis.TagPileupWindow;
 
 public class ScriptManager {
+	public static final String VERSION = "0.11";
 
 	private JFrame frmScriptManager;
 
@@ -54,7 +55,7 @@ public class ScriptManager {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v0.11");
+		frmScriptManager.setTitle("Script Manager v" + VERSION);
 		frmScriptManager.setBounds(100, 100, 475, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
