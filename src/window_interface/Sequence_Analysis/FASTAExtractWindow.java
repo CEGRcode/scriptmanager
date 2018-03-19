@@ -69,7 +69,6 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
         		} else {
         			setProgress(0);
-        			System.out.println(rdbtnBedName.isSelected());
         			FASTAExtract signal = new FASTAExtract(INPUT, BEDFiles, OUTPUT_PATH, chckbxStrand.isSelected(), rdbtnBedName.isSelected());
         			
         			signal.addPropertyChangeListener("fa", new PropertyChangeListener() {

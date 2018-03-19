@@ -42,27 +42,27 @@ public class FASTAUtilities {
      *	chr2    813184  234067  60      61 
      */
     public static boolean buildFASTAIndex(File fasta) throws IOException {  	
-    	boolean properFASTA = true;
-    	ArrayList<String> IMPROPER_FASTA = new ArrayList<String>();
-    	int counter = 0;
-
-    	String contig = "";
-    	int binaryOffset = 0;
-    	int currentOffset = 0;
-    	int contigLength = 0;
-    	int column_Length = 0;
-    	int untrimmed_Column_Length = 0;
-    	    	
-    	BufferedReader b_read = new BufferedReader(new FileReader(fasta));
-    	LineReader reader = new LineReader(b_read);
-    	PrintStream FAI = new PrintStream(fasta.getCanonicalPath() + ".fai");
-    	
-    	String strLine = "";
-    	while(!(strLine = reader.readLine()).equals("")) {
-    		//Pull parameters line
-    		int current_untrimmed_Column_Length = strLine.length();
-			int current_column_Length = strLine.trim().length();
-
+	    	boolean properFASTA = true;
+	    	ArrayList<String> IMPROPER_FASTA = new ArrayList<String>();
+	    	long counter = 0;
+	
+	    	String contig = "";
+	    	long binaryOffset = 0;
+	    	long currentOffset = 0;
+	    	long contigLength = 0;
+	    	long column_Length = 0;
+	    	long untrimmed_Column_Length = 0;
+	    	    	
+	    	BufferedReader b_read = new BufferedReader(new FileReader(fasta));
+	    	LineReader reader = new LineReader(b_read);
+	    	PrintStream FAI = new PrintStream(fasta.getCanonicalPath() + ".fai");
+	    	
+	    	String strLine = "";
+	    	while(!(strLine = reader.readLine()).equals("")) {
+	    		//Pull parameters line
+	    		long current_untrimmed_Column_Length = strLine.length();
+	    		long current_column_Length = strLine.trim().length();
+	
 			if(strLine.contains(">")) {
 				if(IMPROPER_FASTA.size() > 1) {
 					System.out.println("Unequal column size FASTA Line at:");
@@ -84,19 +84,19 @@ public class FASTAUtilities {
 				if(column_Length == 0) { column_Length = current_column_Length;	}
 				binaryOffset += current_untrimmed_Column_Length;
 				contigLength += current_column_Length;
-				
+					
 				//Check to make sure all the columns are equal. Index is invalid otherwise
 				if(current_untrimmed_Column_Length != untrimmed_Column_Length || current_untrimmed_Column_Length == 0) { IMPROPER_FASTA.add(strLine.trim());	}
 			}
 			counter++;
-    	}
+	    	}
 		FAI.println(contig + "\t" + contigLength + "\t" + currentOffset + "\t" + column_Length + "\t" + untrimmed_Column_Length);
 		b_read.close();
-    	FAI.close();
-    	
+	    	FAI.close();
+	    	
 		if(properFASTA) System.out.println("Genome Index Built");
 		else { new File(fasta.getName() + ".fai").delete(); }
-		
+			
 		return properFASTA;
     }
 }
