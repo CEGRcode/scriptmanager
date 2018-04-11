@@ -597,7 +597,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         		btnSenseColor.setForeground(JColorChooser.showDialog(btnSenseColor, "Select an Output Color", btnSenseColor.getForeground()));
         	}
         });
-        btnSenseColor.setForeground(Color.BLUE);
+        btnSenseColor.setForeground(new Color(0, 0, 255));
         sl_contentPane.putConstraint(SpringLayout.WEST, btnSenseColor, 50, SpringLayout.WEST, contentPane);
         contentPane.add(btnSenseColor);
         
@@ -607,7 +607,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         		btnAntiColor.setForeground(JColorChooser.showDialog(btnAntiColor, "Select an Output Color", btnAntiColor.getForeground()));
         	}
         });
-        btnAntiColor.setForeground(Color.RED);
+        btnAntiColor.setForeground(new Color(255, 0, 0));
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnAntiColor, 0, SpringLayout.NORTH, btnSenseColor);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnAntiColor, 75, SpringLayout.EAST, btnSenseColor);
         contentPane.add(btnAntiColor);
@@ -619,7 +619,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         	}
         });
         btnCombinedColor.setEnabled(false);
-        btnCombinedColor.setForeground(new Color(0, 100, 0));
+        btnCombinedColor.setForeground(new Color(0, 0, 0));
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnCombinedColor, 0, SpringLayout.NORTH, btnSenseColor);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnCombinedColor, 75, SpringLayout.EAST, btnAntiColor);
         contentPane.add(btnCombinedColor);
