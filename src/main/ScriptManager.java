@@ -33,6 +33,7 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.File_Utilities.MD5ChecksumWindow;
 import window_interface.Coordinate_Analysis.BEDPeakAligntoRefWindow;
 import window_interface.Coordinate_Analysis.FilterBEDbyProximityWindow;
+import window_interface.Coordinate_Analysis.RandomCoordinateWindow;
 import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
 import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
 import window_interface.Sequence_Analysis.FASTAExtractWindow;
@@ -427,42 +428,57 @@ public class ScriptManager {
 		
 		JButton btnBedPeakAlignment = new JButton("Align BED to Reference");
 		btnBedPeakAlignment.setToolTipText("Align BED file to Reference file creating CDT file");
-		pnlPeakAnalysis.add(btnBedPeakAlignment);
-		
 		btnBedPeakAlignment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						BEDPeakAligntoRefWindow frame = new BEDPeakAligntoRefWindow();
-						frame.setVisible(true);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			 });
-		}
-	});
-		
+            		EventQueue.invokeLater(new Runnable() {
+            			public void run() {
+						try {
+							BEDPeakAligntoRefWindow frame = new BEDPeakAligntoRefWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+            			}
+            		});
+            	}
+		});
+		pnlPeakAnalysis.add(btnBedPeakAlignment);
+				
 		JButton btnBedFilter = new JButton("Filter BED by Proximity");
 		btnBedFilter.setToolTipText("Filter BED file by proximity");
-		pnlPeakAnalysis.add(btnBedFilter);
-		
-		
 		btnBedFilter.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						FilterBEDbyProximityWindow frame = new FilterBEDbyProximityWindow();
-						frame.setVisible(true);
-					} catch (Exception e) {
-						e.printStackTrace();
+			public void actionPerformed(ActionEvent e) {
+	            	EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FilterBEDbyProximityWindow frame = new FilterBEDbyProximityWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			 });
-		}
-	});
+				});
+			}
+		});
+		pnlPeakAnalysis.add(btnBedFilter);	
+		
+		
+		JButton btnRandomCoordinateGeneration = new JButton("Generate Random Coordinate");
+		btnRandomCoordinateGeneration.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							RandomCoordinateWindow frame = new RandomCoordinateWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		pnlPeakAnalysis.add(btnRandomCoordinateGeneration);
 
 		
 		JPanel pnlTagAnalysis = new JPanel();
