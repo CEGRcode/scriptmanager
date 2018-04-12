@@ -8,8 +8,8 @@ import htsjdk.samtools.util.CloseableIterator;
 import java.io.File;
 import java.util.Vector;
 
-import objects.BEDCoord;
 import objects.PileupParameters;
+import objects.CoordinateObjects.BEDCoord;
 
 public class PileupExtract implements Runnable{
 	PileupParameters param;

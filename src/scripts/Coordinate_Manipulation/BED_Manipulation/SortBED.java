@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import objects.BEDCoord;
+import objects.CoordinateObjects.BEDCoord;
 import util.JTVOutput;
 
 public class SortBED {

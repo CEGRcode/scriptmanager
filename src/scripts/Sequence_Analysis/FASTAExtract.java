@@ -2,6 +2,7 @@ package scripts.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
+import objects.CoordinateObjects.BEDCoord;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -16,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.BEDCoord;
 import util.FASTAUtilities;
 
 @SuppressWarnings("serial")

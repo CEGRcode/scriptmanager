@@ -2,6 +2,7 @@ package scripts.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
+import objects.CoordinateObjects.BEDCoord;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -25,7 +26,6 @@ import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
 import charts.CompositePlot;
-import objects.BEDCoord;
 import util.DNAShapeReference;
 import util.FASTAUtilities;
 

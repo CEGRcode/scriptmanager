@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import objects.GFFCoord;
+import objects.CoordinateObjects.GFFCoord;
 import util.JTVOutput;
 
 public class SortGFF {

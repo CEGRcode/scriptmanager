@@ -138,4 +138,8 @@ public class SEStats extends JFrame {
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
 	}
+	
+	public static void main(String[] args) {
+		System.out.println("Hello World");
+	}
 }

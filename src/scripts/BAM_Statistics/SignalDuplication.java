@@ -7,6 +7,7 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
+import objects.CoordinateObjects.GFFCoord;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -30,7 +31,6 @@ import javax.swing.SpringLayout;
 import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 
-import objects.GFFCoord;
 import charts.LineChart;
 
 @SuppressWarnings("serial")

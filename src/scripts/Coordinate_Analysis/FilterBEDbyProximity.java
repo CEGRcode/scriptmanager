@@ -18,7 +18,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.BEDCoord;
+import objects.CoordinateObjects.BEDCoord;
+
 
 @SuppressWarnings({"serial"})
 public class FilterBEDbyProximity extends JFrame{

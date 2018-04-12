@@ -1,8 +1,10 @@
-package objects;
+package objects.CoordinateObjects;
 
 import java.util.Comparator;
 
-public class BEDCoord {
+import objects.CoordinateObjects.GenomicCoord;
+
+public class BEDCoord implements GenomicCoord {
 	private String CHROM = "";
 	private int START = 0;
 	private int STOP = 0;

@@ -1,15 +1,19 @@
-package objects;
+package objects.CoordinateObjects;
 
 import java.util.Comparator;
 
-public class GFFCoord {
+public class GFFCoord implements GenomicCoord {
 	private String CHROM = "";
+	private String SOURCE = ".";
+	private String FEATURE = ".";
 	private int START = 0;
 	private int STOP = 0;
-	private String DIR = "+";
-	
-	private String NAME = ".";
 	private double SCORE = 0;
+	private String DIR = "+";
+	private String FRAME = ".";
+	private String ATTRIBUTE = ".";
+	
+	public String LINE = "";
 
 	private double[] Fstrand = null;
 	private double[] Rstrand = null;
@@ -18,16 +22,33 @@ public class GFFCoord {
 		
 	}
 	
+	public GFFCoord(String line) {
+		String[] gff = line.split("\t");
+		if(gff.length > -1) CHROM = gff[0];
+		if(gff.length > 0) SOURCE = gff[1];
+		if(gff.length > 1) FEATURE = gff[2];
+		if(gff.length > 2) START = Integer.parseInt(gff[3]);
+		if(gff.length > 3) STOP = Integer.parseInt(gff[4]);
+		if(gff.length > 4) {
+			try { SCORE = Double.parseDouble(gff[5]); }
+			catch (NumberFormatException e) { SCORE = 0; }
+		}
+		if(gff.length > 5) DIR = gff[6];
+		if(gff.length > 6) FRAME = gff[7];
+		if(gff.length > 7) ATTRIBUTE = gff[8];
+		LINE = line;
+	}
+	
 	public GFFCoord(String c, int sta, int sto, String di, String na) {
 		CHROM = c;
 		START = sta;
 		STOP = sto;
 		DIR = di;
-		NAME = na;
+		ATTRIBUTE = na;
 	}
 	
 	public GFFCoord(String na, double sco) {
-		NAME = na;
+		ATTRIBUTE = na;
 		SCORE = sco;
 	}
 	
@@ -80,11 +101,11 @@ public class GFFCoord {
 	}
 	
 	public String getName() {
-		return NAME;
+		return ATTRIBUTE;
 	}
 	
 	public void setName(String na) {
-		NAME = na;
+		ATTRIBUTE = na;
 	}
 	
 	public double getScore() {
@@ -97,8 +118,7 @@ public class GFFCoord {
 	
 	public String toString() {
 		//chr1	cwpair	.	45524	45525	3067.0	.	.	cw_distance=26
-
-		String line = CHROM + "\tscriptmanager\t.\t" + START + "\t" + STOP + "\t" + SCORE + "\t" + DIR + "\t" + NAME;
+		String line = CHROM + "\t" + SOURCE + "\t" + FEATURE + "\t" + START + "\t" + STOP + "\t" + SCORE + "\t" + DIR + "\t" + FRAME + "\t" + ATTRIBUTE;
 		return line;
 	}
 	
