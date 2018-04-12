@@ -30,6 +30,7 @@ import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
+import window_interface.File_Utilities.MD5ChecksumWindow;
 import window_interface.Coordinate_Analysis.BEDPeakAligntoRefWindow;
 import window_interface.Coordinate_Analysis.FilterBEDbyProximityWindow;
 import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
@@ -56,7 +57,7 @@ public class ScriptManager {
 	private void initialize() {
 		frmScriptManager = new JFrame();
 		frmScriptManager.setTitle("Script Manager v" + VERSION);
-		frmScriptManager.setBounds(100, 100, 475, 275);
+		frmScriptManager.setBounds(100, 100, 500, 275);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
 		SpringLayout springLayout = new SpringLayout();
@@ -280,6 +281,26 @@ public class ScriptManager {
 		});
 		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
 		pnlBamConvert.add(btnBamToBed);
+		
+		JPanel pnlFileUtility = new JPanel();
+		tabbedPane.addTab("File Utilities", null, pnlFileUtility, null);
+		
+		JButton btnMD5 = new JButton("MD5 Checksum");
+		btnMD5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							MD5ChecksumWindow frame = new MD5ChecksumWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlFileUtility.add(btnMD5);
 		
 		JPanel pnlCoord_Manip = new JPanel();
 		tabbedPane.addTab("Coordinate File Manipulation", null, pnlCoord_Manip, null);
