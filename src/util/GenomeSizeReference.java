@@ -67,7 +67,7 @@ public class GenomeSizeReference {
 	
 	public static void initialize_hg19() {
 		genomeName = "hg19";
-		genomeSize = (long) 2.725521370E9;
+		genomeSize = (long) 3.095677412E9;
 		String[] chrom = {"chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chrX", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr20", "chrY", "chr19", "chr22", "chr21"};
 		chromName = new ArrayList<String>(Arrays.asList(chrom));
 		long[] size = new long[] {249250621, 243199373, 198022430, 191154276, 180915260, 171115067, 159138663, 155270560, 146364022, 141213431, 135534747, 135006516, 133851895, 115169878, 107349540, 102531392, 90354753,	81195210, 78077248, 63025520, 59373566,	59128983, 51304566, 48129895};
