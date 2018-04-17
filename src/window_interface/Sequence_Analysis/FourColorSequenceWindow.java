@@ -201,7 +201,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         		btnAColor.setForeground(JColorChooser.showDialog(btnAColor, "Select a Background Color", btnAColor.getForeground()));
         	}
         });
-        btnAColor.setForeground(new Color(254, 25, 24));
+        btnAColor.setForeground(new Color(208, 0, 0));
         contentPane.add(btnAColor);
         
         btnTColor = new JButton("T Color");
@@ -212,7 +212,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         	}
         });
         sl_contentPane.putConstraint(SpringLayout.WEST, btnTColor, 6, SpringLayout.EAST, btnAColor);
-        btnTColor.setForeground(new Color(50, 204, 60));
+        btnTColor.setForeground(new Color(0, 208, 0));
         contentPane.add(btnTColor);
         
         btnGColor = new JButton("G Color");
@@ -223,7 +223,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         	}
         });
         sl_contentPane.putConstraint(SpringLayout.WEST, btnGColor, 6, SpringLayout.EAST, btnTColor);
-        btnGColor.setForeground(new Color(252, 252, 80));
+        btnGColor.setForeground(new Color(255, 180, 0));
         contentPane.add(btnGColor);
         
         btnCColor = new JButton("C Color");
@@ -234,7 +234,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
         	}
         });
         sl_contentPane.putConstraint(SpringLayout.WEST, btnCColor, 6, SpringLayout.EAST, btnGColor);
-        btnCColor.setForeground(new Color(43, 49, 246));
+        btnCColor.setForeground(new Color(0, 0, 208));
         contentPane.add(btnCColor);
         
         btnNColor = new JButton("N Color");
