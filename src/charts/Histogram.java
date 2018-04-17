@@ -47,7 +47,10 @@ public class Histogram {
         );
         XYPlot plot = (XYPlot) chart.getPlot();
         //Set Histogram Color to Red
-        plot.getRenderer().setSeriesPaint(0, Color.red);
+        plot.getRenderer().setSeriesPaint(0, new Color(51, 51, 51));
+        plot.setBackgroundPaint(Color.white);
+        plot.setRangeGridlinePaint(Color.black);
+        plot.setDomainGridlinePaint(Color.black);
         
         //Turn off Glossy 3D on bar chart
         XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
