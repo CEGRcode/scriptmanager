@@ -96,7 +96,7 @@ public class TagPileup extends JFrame {
 			else {
 				
 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
-				if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM)); }
+				if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
 								
 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
 					JTextArea STATS = new JTextArea(); //Generate statistics object
