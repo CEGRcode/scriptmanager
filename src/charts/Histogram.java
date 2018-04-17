@@ -1,10 +1,12 @@
 package charts;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -30,6 +32,25 @@ public class Histogram {
         JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		return chartPanel;				
+	}
+	
+	public static ChartPanel createBarChart(double[] y, int[] x, File output) throws IOException {
+		final XYSeries series = new XYSeries("Frequency");
+		for(int i = 0; i < x.length; i++) {
+			series.add((double)x[i], (double)y[i]);
+		}
+		final XYSeriesCollection dataset = new XYSeriesCollection(series);
+		
+        JFreeChart chart = createChart(dataset);
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		
+		if(output != null) {
+			int width = 640;
+			int height = 480;
+			ChartUtilities.saveChartAsPNG(output, chart, width, height);
+		}
 		return chartPanel;				
 	}
 	

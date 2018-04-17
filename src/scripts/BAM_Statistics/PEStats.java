@@ -32,25 +32,27 @@ import charts.LineChart;
 
 @SuppressWarnings("serial")
 public class PEStats extends JFrame {
+	
 	Vector<File> bamFiles = null;
-	File output = null;
+	private File OUTPUT_PATH = null;
+	private boolean OUTPUT_STATUS = false;
+	PrintStream OUT = null;
+	private File OUTPNG = null;
 	private static int MIN_INSERT = 0;
 	private static int MAX_INSERT = 1000;
 	
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 
-	PrintStream OUT = null;
-	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
 	final JTabbedPane tabbedPane_Histogram;
 	final JTabbedPane tabbedPane_InsertStats;
 	final JTabbedPane tabbedPane_Duplication;
 	final JTabbedPane tabbedPane_DupStats;
-	
-	public PEStats(Vector<File> input, File o, int min, int max) {
-		setTitle("BAM File Statistics");
+		
+	public PEStats(Vector<File> input, File o, boolean out, int min, int max) {
+		setTitle("BAM File Paired-end Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
 		
@@ -79,39 +81,46 @@ public class PEStats extends JFrame {
 		tabbedPane.addTab("Duplication Stats", null, tabbedPane_DupStats, null);
 
 		bamFiles = input;
-		output = o;
+		OUTPUT_PATH = o;
+		OUTPUT_STATUS = out;
 		MIN_INSERT = min;
 		MAX_INSERT = max;
 	}
 	
 	public void run() throws IOException {
-		
-		if(output != null) {
-			try {
-				OUT = new PrintStream(output);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		//Print TimeStamp
-		String time = getTimeStamp();
-		if(OUT != null) OUT.println(time);
-		
+		//Iterate through all BAM files in Vector	
 		for(int x = 0; x < bamFiles.size(); x++) {
+			//Open Output File
+			if(OUTPUT_STATUS) {
+				String NAME = bamFiles.get(x).getName().split("\\.")[0];
+				if(OUTPUT_PATH != null) {
+					try {
+						OUT = new PrintStream(new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME + "_InsertHistogram.out"));
+						OUTPNG = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME + "_PE.png");
+					}
+					catch (FileNotFoundException e) { e.printStackTrace(); }
+					catch (IOException e) {	e.printStackTrace(); }
+				} else {
+					try {
+						OUT = new PrintStream(new File(NAME));
+						OUTPNG = new File(NAME + "_PE.png");
+					}
+					catch (FileNotFoundException e) { e.printStackTrace(); }
+				}				
+			}	
+			
+			//Print TimeStamp
+			String time = getTimeStamp();
 			JTextArea PE_STATS = new JTextArea();
 			PE_STATS.setEditable(false);
 			PE_STATS.append(time + "\n");
 			JTextArea DUP_STATS = new JTextArea();
 			DUP_STATS.setEditable(false);
 			DUP_STATS.append(time + "\n");
-			
+						
 			//Check if BAI index file exists
 			File f = new File(bamFiles.get(x) + ".bai");
 			if(f.exists() && !f.isDirectory()) {
-				if(OUT != null) OUT.println(bamFiles.get(x).getName());
-				if(OUT != null) OUT.println("Chromosome_ID\tChromosome_Size\tAligned_Reads");
 				PE_STATS.append(bamFiles.get(x).getName() + "\n");
 				PE_STATS.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\n");
 				DUP_STATS.append(bamFiles.get(x).getName() + "\n");
@@ -131,7 +140,9 @@ public class PEStats extends JFrame {
 				HashMap<Integer, Integer> ALL_COMPLEXITY = new HashMap<Integer, Integer>();
 				
 				//Variables which contain basic sequence information
-				double totalTags = 0;
+				double totalAlignedRead1 = 0;
+				double totalAlignedRead2 = 0;
+				double totalAlignedReads = 0;
 				double totalGenome = 0;
 			
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
@@ -139,9 +150,7 @@ public class PEStats extends JFrame {
 					double aligned = reader.indexing().getIndex().getMetaData(z).getAlignedRecordCount();
 
 					//Basic statistic calculations
-					if(OUT != null) OUT.println(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned);
 					PE_STATS.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\n");
-					totalTags += aligned;
 					totalGenome += seq.getSequenceLength();
 					
 					//Loop through each chromosome looking at each perfect F-R PE read
@@ -149,27 +158,33 @@ public class PEStats extends JFrame {
 					CloseableIterator<SAMRecord> iter = reader.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
 					while (iter.hasNext()) {
 						//Create the record object 
-						SAMRecord sr = iter.next();
-										
-						if(sr.getReadPairedFlag()) {
-							if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
+						SAMRecord sr = iter.next();	
+						
+						if(!sr.getReadUnmappedFlag()) { //Test for mapped read
+							if(sr.getReadPairedFlag()) { //Test for paired-end status
+								if(sr.getSecondOfPairFlag()) { totalAlignedRead2++; } //count read 2
+								else if(sr.getFirstOfPairFlag()) { totalAlignedRead1++; } // count read 1
 								//Insert size calculations
-								int distance = Math.abs(sr.getInferredInsertSize());
-								if(distance <= MAX_INSERT && distance >= MIN_INSERT) HIST[distance - MIN_INSERT]++;
-								InsertAverage += distance;
-								counter++;
-								
-								//Unique ID
-								String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
-								//Duplication rate for each chrom determined
-								if(CHROM_COMPLEXITY.isEmpty()) {
-									CHROM_COMPLEXITY.put(tagName, new Integer(1));
-								} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
-									CHROM_COMPLEXITY.put(tagName, new Integer(1));
-								} else if(CHROM_COMPLEXITY.containsKey(tagName)){
-									CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
+								if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
+									//Insert size calculations
+									int distance = Math.abs(sr.getInferredInsertSize());
+									if(distance <= MAX_INSERT && distance >= MIN_INSERT) HIST[distance - MIN_INSERT]++;
+									InsertAverage += distance;
+									counter++;
+									
+									//Unique ID
+									String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
+									//Duplication rate for each chrom determined
+									if(CHROM_COMPLEXITY.isEmpty()) {
+										CHROM_COMPLEXITY.put(tagName, new Integer(1));
+									} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
+										CHROM_COMPLEXITY.put(tagName, new Integer(1));
+									} else if(CHROM_COMPLEXITY.containsKey(tagName)){
+										CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
+									}	
 								}
-								
+							} else { //If the read is mapped but not paired-end, default to read 1
+								totalAlignedRead1++;
 							}
 						}
 					}
@@ -188,45 +203,31 @@ public class PEStats extends JFrame {
 				         }
 					}			
 				}
-				
-				if(OUT != null) OUT.println("Total Genome Size: " + totalGenome + "\tTotal Aligned Tags: " + totalTags + "\n");
-				PE_STATS.append("Total Genome Size: " + totalGenome + "\tTotal Aligned Tags: " + totalTags + "\n\n");
+				totalAlignedReads = totalAlignedRead1 + totalAlignedRead2;
+				PE_STATS.append("Total Genome Size: " + totalGenome + "\tTotal Aligned Tags: " + totalAlignedReads + "\n\n");
 				
 				//Output replicates used to make bam file
 				for( String comment : reader.getFileHeader().getComments()) {
-					if(OUT != null) OUT.println(comment);
 					PE_STATS.append(comment + "\n");
 				}
 				
 				//Output program used to align bam file
 				for (int z = 0; z < reader.getFileHeader().getProgramRecords().size(); z++) {
-					if(OUT != null) {
-						OUT.print(reader.getFileHeader().getProgramRecords().get(z).getId() + "\t");
-						OUT.println(reader.getFileHeader().getProgramRecords().get(z).getProgramVersion());
-						OUT.println(reader.getFileHeader().getProgramRecords().get(z).getCommandLine());
-					}
 					PE_STATS.append(reader.getFileHeader().getProgramRecords().get(z).getId() + "\t");
 					PE_STATS.append(reader.getFileHeader().getProgramRecords().get(z).getProgramVersion() + "\n");
 					PE_STATS.append(reader.getFileHeader().getProgramRecords().get(z).getCommandLine() + "\n");
 				}
 				reader.close();
 				bai.close();
-				
-				if(OUT != null) OUT.println();
 				PE_STATS.append("\n");
 				
 				//Insert Size statistics
 				if(counter != 0) InsertAverage /= counter;
-				if(OUT != null) {
-					OUT.println("Average Insert Size: " + InsertAverage);
-					OUT.println("Median Insert Size: " + getMedian(HIST));
-					OUT.println("Std deviation of Insert Size: " + getStdDev(HIST, InsertAverage));
-					OUT.println("Number of ReadPairs: " + counter + "\n\nHistogram\nSize (bp)\tFrequency");
-				}
 				PE_STATS.append("Average Insert Size: " + InsertAverage + "\n");
 				PE_STATS.append("Median Insert Size: " + getMedian(HIST) + "\n");
 				PE_STATS.append("Std deviation of Insert Size: " + getStdDev(HIST, InsertAverage) + "\n");
 				PE_STATS.append("Number of ReadPairs: " + counter + "\n\nHistogram\nSize (bp)\tFrequency\n");
+				if(OUT != null) { OUT.println("InsertSize (bp)\t" + bamFiles.get(x).getName()); }
 
 				int[] DOMAIN = new int[(MAX_INSERT - MIN_INSERT) + 1];
 				for(int z = 0; z < HIST.length; z++) {
@@ -263,19 +264,19 @@ public class PEStats extends JFrame {
 				DUP_STATS.setCaretPosition(0);
 				JScrollPane dup_pane = new JScrollPane(DUP_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				tabbedPane_DupStats.add(bamFiles.get(x).getName(), dup_pane);
-				
-				tabbedPane_Histogram.add(bamFiles.get(x).getName(), Histogram.createBarChart(HIST, DOMAIN));
+						
+				tabbedPane_Histogram.add(bamFiles.get(x).getName(), Histogram.createBarChart(HIST, DOMAIN, OUTPNG));
 				tabbedPane_Duplication.add(bamFiles.get(x).getName(), LineChart.createLineChart(BIN, BIN_NAME));
 				
 		        firePropertyChange("bam",x, x + 1);
-
+		        
 			} else {
 				if(OUT != null) OUT.println("BAI Index File does not exist for: " + bamFiles.get(x).getName() + "\n");
 				PE_STATS.append("BAI Index File does not exist for: " + bamFiles.get(x).getName() + "\n\n");
 				DUP_STATS.append("BAI Index File does not exist for: " + bamFiles.get(x).getName() + "\n\n");
 			}
-		}
-		if(OUT != null) OUT.close();
+			if(OUT != null) OUT.close();
+		}		
 	}
 	
 	public static double getMedian(double[] histogram) {

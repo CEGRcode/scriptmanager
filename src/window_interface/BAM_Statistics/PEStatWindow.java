@@ -33,6 +33,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.Color;
 
 
 
@@ -40,18 +43,19 @@ import java.beans.PropertyChangeListener;
 public class PEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
-		
-	private JTextField txtOutputName;
-	private JLabel lblOutputName;
 	private JCheckBox chckbxOutputStatistics;
-	JButton btnLoad;
-	JButton btnRemoveBam;
-	JButton btnRun;
+	private JButton btnLoad;
+	private JButton btnRemoveBam;
+	private JButton btnOutputDirectory;
+	private JButton btnRun;
+	private JTextField txtMin;
+	private JTextField txtMax;
+	private JLabel lblCurrentOutput;
+	private JLabel lblDefaultToLocal;
 	
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	private JTextField txtMin;
-	private JTextField txtMax;
+	private File OUTPUT_PATH = null;
 	
 	JProgressBar progressBar;
 	public Task task;
@@ -63,10 +67,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
         	try {
 				int min = Integer.parseInt(txtMin.getText());
 				int max = Integer.parseInt(txtMax.getText());	
-				PEStats stat;
-				if(chckbxOutputStatistics.isSelected()) { stat = new PEStats(BAMFiles, new File(txtOutputName.getText()), min, max); }
-				else { stat = new PEStats(BAMFiles, null, min, max); }
-				
+				PEStats stat = new PEStats(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), min, max);
 				stat.addPropertyChangeListener("bam", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 				    	int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -74,13 +75,11 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 			        	setProgress(percentComplete);
 				     }
 				 });
-				
 				stat.setVisible(true);				
 				stat.run();
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         	setProgress(100);
@@ -97,7 +96,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		setTitle("Paired-End BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 370);
+		setBounds(125, 125, 450, 380);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -116,7 +115,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		
 		btnLoad = new JButton("Load BAM Files");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
@@ -130,22 +129,14 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		});
 		contentPane.add(btnLoad);
 		
-		lblOutputName = new JLabel("Output File Name:");
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputName, 0, SpringLayout.WEST, scrollPane);
-		contentPane.add(lblOutputName);
-		
 		chckbxOutputStatistics = new JCheckBox("Output Statistics");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputName, 11, SpringLayout.SOUTH, chckbxOutputStatistics);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -51, SpringLayout.NORTH, chckbxOutputStatistics);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputStatistics, 0, SpringLayout.WEST, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxOutputStatistics, -71, SpringLayout.SOUTH, contentPane);
-		chckbxOutputStatistics.setSelected(true);
 		contentPane.add(chckbxOutputStatistics);
 		
 		btnRemoveBam = new JButton("Remove BAM");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -160,64 +151,93 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnRun, 171, SpringLayout.WEST, contentPane);
 		contentPane.add(btnRun);
 		
-		txtOutputName = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, 5, SpringLayout.SOUTH, chckbxOutputStatistics);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 123, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, txtOutputName, -6, SpringLayout.NORTH, btnRun);
-		txtOutputName.setText("output_name.txt");
-		contentPane.add(txtOutputName);
-		txtOutputName.setColumns(10);
-		
 		JLabel lblHistogramRange = new JLabel("Histogram Range:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblHistogramRange, 6, SpringLayout.SOUTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblHistogramRange, 0, SpringLayout.WEST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblHistogramRange, 201, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, lblHistogramRange);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblHistogramRange, 5, SpringLayout.WEST, contentPane);
 		contentPane.add(lblHistogramRange);
 		
 		JLabel lblMin = new JLabel("Min:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblMin, 10, SpringLayout.SOUTH, lblHistogramRange);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblMin, 0, SpringLayout.WEST, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblMin, -6, SpringLayout.NORTH, chckbxOutputStatistics);
 		contentPane.add(lblMin);
 		
 		txtMin = new JTextField();
+		txtMin.setHorizontalAlignment(SwingConstants.CENTER);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, -2, SpringLayout.NORTH, lblMin);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 31, SpringLayout.EAST, lblMin);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 6, SpringLayout.EAST, lblMin);
 		txtMin.setText("0");
 		contentPane.add(txtMin);
 		txtMin.setColumns(10);
 		
 		JLabel lblMax = new JLabel("Max:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblMax, 0, SpringLayout.NORTH, lblMin);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblMax, 114, SpringLayout.EAST, txtMin);
 		contentPane.add(lblMax);
 		
 		txtMax = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, 0, SpringLayout.EAST, txtMax);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblMax, -23, SpringLayout.WEST, txtMax);
+		txtMax.setHorizontalAlignment(SwingConstants.CENTER);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, -2, SpringLayout.NORTH, lblMin);
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtMax, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtMax, 6, SpringLayout.EAST, lblMax);
 		txtMax.setText("1000");
 		contentPane.add(txtMax);
 		txtMax.setColumns(10);
 		
 		progressBar = new JProgressBar();
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, -3, SpringLayout.NORTH, progressBar);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -18, SpringLayout.WEST, progressBar);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
 		chckbxOutputStatistics.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		        if(chckbxOutputStatistics.isSelected()) {
-		        	txtOutputName.setEnabled(true);
-		        	lblOutputName.setEnabled(true);
+		        	
+		        	btnOutputDirectory.setEnabled(true);
+		        	lblCurrentOutput.setEnabled(true);
+		        	lblDefaultToLocal.setEnabled(true);
 		        } else {
-		        	txtOutputName.setEnabled(false);
-		        	lblOutputName.setEnabled(false);		        }
+		        	btnOutputDirectory.setEnabled(false);
+		        	lblCurrentOutput.setEnabled(false);	
+		        	lblDefaultToLocal.setEnabled(false);
+		        }
 		      }
 		    });
 		
 		btnRun.setActionCommand("start");
+		
+		btnOutputDirectory = new JButton("Output Directory");
+		btnOutputDirectory.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
+    			if(OUTPUT_PATH != null) {
+    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+    			}
+        	}
+        });
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, txtMin);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 1, SpringLayout.NORTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 150, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -150, SpringLayout.EAST, contentPane);
+		contentPane.add(btnOutputDirectory);
+		btnOutputDirectory.setEnabled(false);
+
+		lblCurrentOutput = new JLabel("Current Output:");
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
+		lblCurrentOutput.setEnabled(false);
+		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblCurrentOutput);
+		
+		lblDefaultToLocal = new JLabel("Default to Local Directory");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 11, SpringLayout.EAST, lblCurrentOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, -1, SpringLayout.NORTH, lblDefaultToLocal);
+		lblDefaultToLocal.setEnabled(false);
+		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblDefaultToLocal.setBackground(Color.WHITE);
+		contentPane.add(lblDefaultToLocal);
 		btnRun.addActionListener(this);
 	}
 	
@@ -245,6 +265,13 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
+		}
+		if(status) {
+			if(!chckbxOutputStatistics.isSelected()) {
+				btnOutputDirectory.setEnabled(false);
+				lblCurrentOutput.setEnabled(false);
+				lblDefaultToLocal.setEnabled(false);
+			}
 		}
 	}
 }
