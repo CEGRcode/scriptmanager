@@ -656,6 +656,24 @@ public class ScriptManager {
 					 });
 				}
 			});
+			
+			JButton btnSearchMotif = new JButton("Search Motif in FASTA");
+			pnlSeqAnalysis.add(btnSearchMotif);
+			btnSearchMotif.setToolTipText("Search a motif in fasta files with mismatch");
+			btnSearchMotif.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								SearchMotifWindow frame = new SearchMotifWindow();
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					 });
+				}
+			});
 			pnlSeqAnalysis.add(btnDnaShapeBed);
 			
 			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
@@ -692,24 +710,6 @@ public class ScriptManager {
 				}
 			});
 			pnlSeqAnalysis.add(btnDnaShapeFasta);
-			
-			JButton btnSearchMotif = new JButton("Search Motif in FASTA");
-			pnlSeqAnalysis.add(btnSearchMotif);
-			btnSearchMotif.setToolTipText("Search a motif in fasta files with mismatch");
-			btnSearchMotif.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								SearchMotifWindow frame = new SearchMotifWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					 });
-				}
-			});
 			pnlSeqAnalysis.add(btncolorSequencePlot);
 			
 			
