@@ -15,6 +15,7 @@ import javax.swing.JSplitPane;
 
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import window_interface.BAM_Format_Converter.BAMtoGFFWindow;
+import window_interface.BAM_Format_Converter.BAMtobedGraphWindow;
 import window_interface.BAM_Format_Converter.BAMtoscIDXWindow;
 import window_interface.BAM_Format_Converter.FilterforPIPseqWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
@@ -48,7 +49,7 @@ import window_interface.Tag_Analysis.PeakPairWindow;
 import window_interface.Tag_Analysis.TagPileupWindow;
 
 public class ScriptManager {
-	public static final String VERSION = "0.11";
+	public static final String VERSION = "0.11-dev";
 
 	private JFrame frmScriptManager;
 
@@ -76,32 +77,6 @@ public class ScriptManager {
 		
 		JButton btnBAMStats = new JButton("BAM Statistics");
 		btnBAMStats.setToolTipText("Output Alignment Statistics and Parameters given an Input BAM File.\nBAM file must be sorted and BAM BAI Index must be present.");
-		pnlStat.add(btnBAMStats);
-		springLayout.putConstraint(SpringLayout.NORTH, btnBAMStats, 43, SpringLayout.SOUTH, tabbedPane);
-		springLayout.putConstraint(SpringLayout.WEST, btnBAMStats, 55, SpringLayout.WEST, frmScriptManager.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, btnBAMStats, -66, SpringLayout.SOUTH, frmScriptManager.getContentPane());
-		JButton btnPEStats = new JButton("Paired-End Statistics");
-		btnPEStats.setToolTipText("Output Alignment Statistics and Parameters given an Paired-End BAM File.\nAlso generates Insert Size Histogram.\nBAM file must be sorted and BAM BAI Index must be present.");
-		pnlStat.add(btnPEStats);
-		
-		JButton btnSignalDuplication = new JButton("Signal Duplication");
-		btnSignalDuplication.setToolTipText("Output signal duplication statistics");
-		pnlStat.add(btnSignalDuplication);
-		btnSignalDuplication.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							SignalDuplicationWindow frame = new SignalDuplicationWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		
 		btnBAMStats.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -116,7 +91,10 @@ public class ScriptManager {
 				 });
 			}
 		});
-				
+		pnlStat.add(btnBAMStats);
+		
+		JButton btnPEStats = new JButton("Paired-End Statistics");
+		btnPEStats.setToolTipText("Output Alignment Statistics and Parameters given an Paired-End BAM File.\nAlso generates Insert Size Histogram.\nBAM file must be sorted and BAM BAI Index must be present.");
 		btnPEStats.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -131,105 +109,126 @@ public class ScriptManager {
 				 });
 			}
 		});
+		pnlStat.add(btnPEStats);
 		
+		JButton btnSignalDuplication = new JButton("Signal Duplication");
+		btnSignalDuplication.setToolTipText("Output signal duplication statistics");
+		btnSignalDuplication.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SignalDuplicationWindow frame = new SignalDuplicationWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlStat.add(btnSignalDuplication);
+
 		JPanel pnlBAM_Manip = new JPanel();
 		pnlBAM_Manip.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		tabbedPane.addTab("BAM Manipulation", null, pnlBAM_Manip, null);
 		
-				JButton btnBaiIndexer = new JButton("BAM-BAI Indexer");
-				btnBaiIndexer.setToolTipText("Generates BAI Index for given BAM files");
-				pnlBAM_Manip.add(btnBaiIndexer);
-				btnBaiIndexer.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									BAIIndexerWindow frame = new BAIIndexerWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
+		JButton btnBaiIndexer = new JButton("BAM-BAI Indexer");
+		btnBaiIndexer.setToolTipText("Generates BAI Index for given BAM files");
+		btnBaiIndexer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAIIndexerWindow frame = new BAIIndexerWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				});
+			}
+		});
+		pnlBAM_Manip.add(btnBaiIndexer);
 				
-				JButton btnBamSort = new JButton("BAM File Sorter");
-				btnBamSort.setToolTipText("Sort BAM files in order to efficiently extract and manipulate.\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlBAM_Manip.add(btnBamSort);
-				btnBamSort.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									SortBAMWindow frame = new SortBAMWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
+		JButton btnBamSort = new JButton("BAM File Sorter");
+		btnBamSort.setToolTipText("Sort BAM files in order to efficiently extract and manipulate.\nRAM intensive process. If program freezes, increase JAVA heap size");
+		btnBamSort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SortBAMWindow frame = new SortBAMWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				});
+				 });
+			}
+		});
+		pnlBAM_Manip.add(btnBamSort);
+	
+		JButton btnBamRemoveDuplicates = new JButton("BAM Remove Duplicates");
+		btnBamRemoveDuplicates.setToolTipText("Removes duplicate reads in Paired-End sequencing given identical 5' read locations\nRAM intensive process. If program freezes, increase JAVA heap size");
+		btnBamRemoveDuplicates.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMRemoveDupWindow frame = new BAMRemoveDupWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlBAM_Manip.add(btnBamRemoveDuplicates);
 				
-				JButton btnBamRemoveDuplicates = new JButton("BAM Remove Duplicates");
-				btnBamRemoveDuplicates.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									BAMRemoveDupWindow frame = new BAMRemoveDupWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
+		JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
+		btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
+		btnBamReplicateMerge.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							MergeBAMWindow frame = new MergeBAMWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				});
-				btnBamRemoveDuplicates.setToolTipText("Removes duplicate reads in Paired-End sequencing given identical 5' read locations\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlBAM_Manip.add(btnBamRemoveDuplicates);
+				 });
+			}
+		});
+		pnlBAM_Manip.add(btnBamReplicateMerge);
 				
-				JButton btnBamReplicateMerge = new JButton("BAM Replicate Merge");
-				btnBamReplicateMerge.setToolTipText("Merges Multiple BAM files into single BAM file.\nSorting is Performed Automatically.\nRAM intensive process. If program freezes, increase JAVA heap size");
-				pnlBAM_Manip.add(btnBamReplicateMerge);
-				
-				JButton btnFilterForPIPseq = new JButton("Filter for PIP-seq");
-				pnlBAM_Manip.add(btnFilterForPIPseq);
-				btnFilterForPIPseq.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									FilterforPIPseqWindow frame = new FilterforPIPseqWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
+		JButton btnFilterForPIPseq = new JButton("Filter for PIP-seq");
+		btnFilterForPIPseq.setToolTipText("Filter BAM file by -1 nucleotide");
+		pnlBAM_Manip.add(btnFilterForPIPseq);
+		btnFilterForPIPseq.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FilterforPIPseqWindow frame = new FilterforPIPseqWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 						 });
 					}
 				});
-				btnFilterForPIPseq.setToolTipText("Filter BAM file by -1 nucleotide");
-				btnBamReplicateMerge.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								try {
-									MergeBAMWindow frame = new MergeBAMWindow();
-									frame.setVisible(true);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						 });
-					}
-				});
+
 		
 		JPanel pnlBamConvert = new JPanel();
 		tabbedPane.addTab("BAM Format Converter", null, pnlBamConvert, null);
 		
 		JButton btnBamToscIDX = new JButton("BAM to scIDX");
+		btnBamToscIDX.setToolTipText("Convert BAM file to scIDX file");
 		btnBamToscIDX.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -244,10 +243,10 @@ public class ScriptManager {
 				 });
 			}
 		});
-		btnBamToscIDX.setToolTipText("Convert BAM file to scIDX file.");
 		pnlBamConvert.add(btnBamToscIDX);
 				
 		JButton btnBamToGff = new JButton("BAM to GFF");
+		btnBamToGff.setToolTipText("Convert BAM file to GFF file");
 		btnBamToGff.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 						EventQueue.invokeLater(new Runnable() {
@@ -262,10 +261,10 @@ public class ScriptManager {
 						 });
 					}
 				});
-		btnBamToGff.setToolTipText("Convert BAM file to GFF file.");
 		pnlBamConvert.add(btnBamToGff);
 		
 		JButton btnBamToBed = new JButton("BAM to BED");
+		btnBamToBed.setToolTipText("Convert BAM file to BED file");
 		btnBamToBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -280,13 +279,31 @@ public class ScriptManager {
 				 });
 			}
 		});
-		btnBamToBed.setToolTipText("Convert BAM file to BED file.");
 		pnlBamConvert.add(btnBamToBed);
+		
+		JButton btnBamToBedgraph = new JButton("BAM to bedGraph");
+		btnBamToBedgraph.setToolTipText("Convert BAM file to bedGraph file");
+		btnBamToBedgraph.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtobedGraphWindow frame = new BAMtobedGraphWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlBamConvert.add(btnBamToBedgraph);
 		
 		JPanel pnlFileUtility = new JPanel();
 		tabbedPane.addTab("File Utilities", null, pnlFileUtility, null);
 		
 		JButton btnMD5 = new JButton("MD5 Checksum");
+		btnMD5.setToolTipText("Calculate MD5 checksum for files");
 		btnMD5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -311,25 +328,6 @@ public class ScriptManager {
 		
 		JButton btnExpandBedFile = new JButton("Expand BED File");
 		btnExpandBedFile.setToolTipText("Expand BED file given user-defined criteria");
-		splitPaneExpand.setLeftComponent(btnExpandBedFile);
-		
-		JButton btnExpandGffFile = new JButton("Expand GFF File");
-		btnExpandGffFile.setToolTipText("Expand GFF file given user-defined criteria");
-		splitPaneExpand.setRightComponent(btnExpandGffFile);
-		btnExpandGffFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							ExpandGFFWindow frame = new ExpandGFFWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
 		btnExpandBedFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -344,23 +342,16 @@ public class ScriptManager {
 				 });
 			}
 		});
+		splitPaneExpand.setLeftComponent(btnExpandBedFile);
 		
-		JSplitPane splitPaneConvert = new JSplitPane();
-		pnlCoord_Manip.add(splitPaneConvert);
-		
-		JButton btnBedToGFF = new JButton("Convert BED to GFF");
-		btnBedToGFF.setToolTipText("Convert BED file to GFF file");
-		splitPaneConvert.setLeftComponent(btnBedToGFF);
-		
-		JButton btnGffToBed = new JButton("Convert GFF to BED");
-		btnGffToBed.setToolTipText("Convert GFF file to BED file");
-		splitPaneConvert.setRightComponent(btnGffToBed);
-		btnGffToBed.addActionListener(new ActionListener() {
+		JButton btnExpandGffFile = new JButton("Expand GFF File");
+		btnExpandGffFile.setToolTipText("Expand GFF file given user-defined criteria");
+		btnExpandGffFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							GFFtoBEDWindow frame = new GFFtoBEDWindow();
+							ExpandGFFWindow frame = new ExpandGFFWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -369,6 +360,13 @@ public class ScriptManager {
 				 });
 			}
 		});
+		splitPaneExpand.setRightComponent(btnExpandGffFile);
+		
+		JSplitPane splitPaneConvert = new JSplitPane();
+		pnlCoord_Manip.add(splitPaneConvert);
+		
+		JButton btnBedToGFF = new JButton("Convert BED to GFF");
+		btnBedToGFF.setToolTipText("Convert BED file to GFF file");
 		btnBedToGFF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				EventQueue.invokeLater(new Runnable() {
@@ -383,23 +381,16 @@ public class ScriptManager {
 				 });
 			}
 		});
+		splitPaneConvert.setLeftComponent(btnBedToGFF);
 		
-		JSplitPane splitPaneSort = new JSplitPane();
-		pnlCoord_Manip.add(splitPaneSort);
-		
-		JButton btnBEDSort = new JButton("Sort BED by CDT");
-		btnBEDSort.setToolTipText("Sort BED file by CDT file statistics");
-		splitPaneSort.setLeftComponent(btnBEDSort);
-		
-		JButton btnSortGffFile = new JButton("Sort GFF by CDT");
-		btnSortGffFile.setToolTipText("Sort BED file by CDT file statistics");
-		splitPaneSort.setRightComponent(btnSortGffFile);
-		btnSortGffFile.addActionListener(new ActionListener() {
+		JButton btnGffToBed = new JButton("Convert GFF to BED");
+		btnGffToBed.setToolTipText("Convert GFF file to BED file");
+		btnGffToBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							SortGFFWindow frame = new SortGFFWindow();
+							GFFtoBEDWindow frame = new GFFtoBEDWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -408,6 +399,13 @@ public class ScriptManager {
 				 });
 			}
 		});
+		splitPaneConvert.setRightComponent(btnGffToBed);
+		
+		JSplitPane splitPaneSort = new JSplitPane();
+		pnlCoord_Manip.add(splitPaneSort);
+		
+		JButton btnBEDSort = new JButton("Sort BED by CDT");
+		btnBEDSort.setToolTipText("Sort BED file by CDT file statistics");
 		btnBEDSort.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -422,6 +420,25 @@ public class ScriptManager {
 				 });
 			}
 		});
+		splitPaneSort.setLeftComponent(btnBEDSort);
+		
+		JButton btnSortGffFile = new JButton("Sort GFF by CDT");
+		btnSortGffFile.setToolTipText("Sort BED file by CDT file statistics");
+		btnSortGffFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SortGFFWindow frame = new SortGFFWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		splitPaneSort.setRightComponent(btnSortGffFile);
 		
 		JPanel pnlPeakAnalysis = new JPanel();
 		tabbedPane.addTab("Coordinate File Analysis", null, pnlPeakAnalysis, null);
@@ -445,7 +462,7 @@ public class ScriptManager {
 		pnlPeakAnalysis.add(btnBedPeakAlignment);
 				
 		JButton btnBedFilter = new JButton("Filter BED by Proximity");
-		btnBedFilter.setToolTipText("Filter BED file by proximity");
+		btnBedFilter.setToolTipText("Filter BED file by proximity to nearest coordinate");
 		btnBedFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 	            	EventQueue.invokeLater(new Runnable() {
@@ -460,8 +477,7 @@ public class ScriptManager {
 				});
 			}
 		});
-		pnlPeakAnalysis.add(btnBedFilter);	
-		
+		pnlPeakAnalysis.add(btnBedFilter);
 		
 		JButton btnRandomCoordinateGeneration = new JButton("Generate Random Coordinate");
 		btnRandomCoordinateGeneration.addActionListener(new ActionListener() {
@@ -479,18 +495,12 @@ public class ScriptManager {
 			}
 		});
 		pnlPeakAnalysis.add(btnRandomCoordinateGeneration);
-
 		
 		JPanel pnlTagAnalysis = new JPanel();
 		tabbedPane.addTab("Sequence Tag Analysis", null, pnlTagAnalysis, null);
 		
 		JButton btnGenetrack = new JButton("GeneTrack");
 		btnGenetrack.setToolTipText("Genetrack peak-calling algorithm");
-		btnGenetrack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		pnlTagAnalysis.add(btnGenetrack);
 		btnGenetrack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -505,10 +515,10 @@ public class ScriptManager {
 				 });
 			}
 		});
+		pnlTagAnalysis.add(btnGenetrack);
 		
 		JButton btnPeakpairing = new JButton("Peak-Pairing");
 		btnPeakpairing.setEnabled(false);
-		pnlTagAnalysis.add(btnPeakpairing);
 		btnPeakpairing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -523,6 +533,11 @@ public class ScriptManager {
 				 });
 			}
 		});
+		pnlTagAnalysis.add(btnPeakpairing);
+		
+		JButton btnReplicateMatch = new JButton("Replicate Match");
+		btnReplicateMatch.setEnabled(false);
+		pnlTagAnalysis.add(btnReplicateMatch);
 		
 		JButton btnTagPileup = new JButton("Tag Pileup");
 		btnTagPileup.setToolTipText("Pileup 5' ends of aligned tags given BED and BAM files according to user-defined parameters");
@@ -540,179 +555,173 @@ public class ScriptManager {
 				 });
 			}
 		});
+		pnlTagAnalysis.add(btnTagPileup);		
 		
-		JButton btnReplicateMatch = new JButton("Replicate Match");
-		btnReplicateMatch.setEnabled(false);
-		pnlTagAnalysis.add(btnReplicateMatch);
-		pnlTagAnalysis.add(btnTagPileup);
-		
-			JButton btnHeatMap = new JButton("Heat Map");
-			btnHeatMap.setEnabled(false);
-			btnHeatMap.setToolTipText("Generate heat map using CDT files");
-			btnHeatMap.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								HeatMapWindow frame = new HeatMapWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+		JButton btnHeatMap = new JButton("Heat Map");
+		btnHeatMap.setEnabled(false);
+		btnHeatMap.setToolTipText("Generate heat map using CDT files");
+		btnHeatMap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							HeatMapWindow frame = new HeatMapWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			pnlTagAnalysis.add(btnHeatMap);
+					}
+				 });
+			}
+		});
+		pnlTagAnalysis.add(btnHeatMap);
 			
-			JButton btnMergeHeatPlots = new JButton("Merge Heat Plots");
-			btnMergeHeatPlots.setToolTipText("Merge Sense and Antisense png plots");
-			pnlTagAnalysis.add(btnMergeHeatPlots);
-			btnMergeHeatPlots.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								MergeHeatMapWindow frame = new MergeHeatMapWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+		JButton btnMergeHeatPlots = new JButton("Merge Heat Plots");
+		btnMergeHeatPlots.setToolTipText("Merge Sense and Antisense png plots");
+		btnMergeHeatPlots.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							MergeHeatMapWindow frame = new MergeHeatMapWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
+					}
+				 });
+			}
+		});
+		pnlTagAnalysis.add(btnMergeHeatPlots);
 			
-			JButton btnAggregateData = new JButton("Aggregate Data");
-			btnAggregateData.setToolTipText("Compile data from CDT file into matrix according to user-specified metric");
-			btnAggregateData.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								AggregateDataWindow frame = new AggregateDataWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+		JButton btnAggregateData = new JButton("Aggregate Data");
+		btnAggregateData.setToolTipText("Compile data from CDT file into matrix according to user-specified metric");
+		btnAggregateData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							AggregateDataWindow frame = new AggregateDataWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			pnlTagAnalysis.add(btnAggregateData);
+					}
+				 });
+			}
+		});
+		pnlTagAnalysis.add(btnAggregateData);
 					
-			JPanel pnlSeqAnalysis = new JPanel();
-			tabbedPane.addTab("DNA Sequence Analysis", null, pnlSeqAnalysis, null);
+		JPanel pnlSeqAnalysis = new JPanel();
+		tabbedPane.addTab("DNA Sequence Analysis", null, pnlSeqAnalysis, null);
 			
-			JButton btnFASTAExtract = new JButton("FASTA from BED");
-			btnFASTAExtract.setToolTipText("Generate FASTA file from Genome FASTA file and BED file");
-			btnFASTAExtract.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								FASTAExtractWindow frame = new FASTAExtractWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+		JButton btnFASTAExtract = new JButton("FASTA from BED");
+		btnFASTAExtract.setToolTipText("Generate FASTA file from Genome FASTA file and BED file");
+		btnFASTAExtract.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FASTAExtractWindow frame = new FASTAExtractWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			pnlSeqAnalysis.add(btnFASTAExtract);
+					}
+				 });
+			}
+		});
+		pnlSeqAnalysis.add(btnFASTAExtract);
 			
-			JButton btnRandomizeFasta = new JButton("Randomize FASTA");
-			btnRandomizeFasta.setToolTipText("Randomize FASTA sequence for each input entry");
-			btnRandomizeFasta.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								RandomizeFASTAWindow frame = new RandomizeFASTAWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+		JButton btnRandomizeFasta = new JButton("Randomize FASTA");
+		btnRandomizeFasta.setToolTipText("Randomize FASTA sequence for each input entry");
+		btnRandomizeFasta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							RandomizeFASTAWindow frame = new RandomizeFASTAWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			pnlSeqAnalysis.add(btnRandomizeFasta);
+					}
+				 });
+			}
+		});
+		pnlSeqAnalysis.add(btnRandomizeFasta);
 			
-			JButton btnDnaShapeBed = new JButton("DNA Shape from BED");
-			btnDnaShapeBed.setToolTipText("Calculate intrinsic DNA shape parameters given BED file and Genome FASTA file");
-			btnDnaShapeBed.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								DNAShapefromBEDWindow frame = new DNAShapefromBEDWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+		JButton btnSearchMotif = new JButton("Search Motif in FASTA");
+		btnSearchMotif.setToolTipText("Search a motif in fasta files with mismatch");
+		btnSearchMotif.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SearchMotifWindow frame = new SearchMotifWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			
-			JButton btnSearchMotif = new JButton("Search Motif in FASTA");
-			pnlSeqAnalysis.add(btnSearchMotif);
-			btnSearchMotif.setToolTipText("Search a motif in fasta files with mismatch");
-			btnSearchMotif.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								SearchMotifWindow frame = new SearchMotifWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+					}
+				 });
+			}
+		});
+		pnlSeqAnalysis.add(btnSearchMotif);
+
+		JButton btnDnaShapeBed = new JButton("DNA Shape from BED");
+		btnDnaShapeBed.setToolTipText("Calculate intrinsic DNA shape parameters given BED file and Genome FASTA file");
+		btnDnaShapeBed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							DNAShapefromBEDWindow frame = new DNAShapefromBEDWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			pnlSeqAnalysis.add(btnDnaShapeBed);
-			
-			JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
-			btncolorSequencePlot.setToolTipText("Generate 4Color sequence plot given FASTA file and user-defined RGB colors");
-			btncolorSequencePlot.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								FourColorSequenceWindow frame = new FourColorSequenceWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+					}
+				 });
+			}
+		});
+		pnlSeqAnalysis.add(btnDnaShapeBed);
+				
+		JButton btnDnaShapeFasta = new JButton("DNA Shape from FASTA");
+		btnDnaShapeFasta.setToolTipText("Calculate intrinsic DNA shape given input FASTA file");
+		btnDnaShapeFasta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							DNAShapefromFASTAWindow frame = new DNAShapefromFASTAWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			
-			JButton btnDnaShapeFasta = new JButton("DNA Shape from FASTA");
-			btnDnaShapeFasta.setToolTipText("Calculate intrinsic DNA shape given input FASTA file");
-			btnDnaShapeFasta.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								DNAShapefromFASTAWindow frame = new DNAShapefromFASTAWindow();
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+					}
+				 });
+			}
+		});
+		pnlSeqAnalysis.add(btnDnaShapeFasta);
+
+		JButton btncolorSequencePlot = new JButton("4Color Sequence Plot");
+		btncolorSequencePlot.setToolTipText("Generate 4Color sequence plot given FASTA file and user-defined RGB colors");
+		btncolorSequencePlot.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FourColorSequenceWindow frame = new FourColorSequenceWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					 });
-				}
-			});
-			pnlSeqAnalysis.add(btnDnaShapeFasta);
-			pnlSeqAnalysis.add(btncolorSequencePlot);
-			
-			
+					}
+				 });
+			}
+		});
+		pnlSeqAnalysis.add(btncolorSequencePlot);			
 	}
 	
 	/**
