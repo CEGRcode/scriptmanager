@@ -15,6 +15,7 @@ import javax.swing.JSplitPane;
 
 import window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import window_interface.BAM_Format_Converter.BAMtoGFFWindow;
+import window_interface.BAM_Format_Converter.BAMtobedGraphWindow;
 import window_interface.BAM_Format_Converter.BAMtoscIDXWindow;
 import window_interface.BAM_Format_Converter.FilterforPIPseqWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
@@ -279,6 +280,24 @@ public class ScriptManager {
 			}
 		});
 		pnlBamConvert.add(btnBamToBed);
+		
+		JButton btnBamToBedgraph = new JButton("BAM to bedGraph");
+		btnBamToBedgraph.setToolTipText("Convert BAM file to bedGraph file");
+		btnBamToBedgraph.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMtobedGraphWindow frame = new BAMtobedGraphWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlBamConvert.add(btnBamToBedgraph);
 		
 		JPanel pnlFileUtility = new JPanel();
 		tabbedPane.addTab("File Utilities", null, pnlFileUtility, null);
