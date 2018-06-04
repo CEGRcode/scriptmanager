@@ -37,10 +37,6 @@ import htsjdk.samtools.util.IOUtil;
 import htsjdk.samtools.util.Log;
 import htsjdk.samtools.util.ProgressLogger;
 import picard.cmdline.CommandLineProgram;
-import picard.cmdline.CommandLineProgramProperties;
-import picard.cmdline.Option;
-import picard.cmdline.StandardOptionDefinitions;
-import picard.cmdline.programgroups.SamOrBam;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,44 +47,17 @@ import java.util.List;
  *
  * @author Tim Fennell
  */
-@CommandLineProgramProperties(
-        usage = "Merges multiple SAM/BAM files into one file.",
-        usageShort = "Merges multiple SAM or BAM files into one file",
-        programGroup = SamOrBam.class
-)
 public class MergeSamFiles extends CommandLineProgram {
 	private static final Log log = Log.getInstance(MergeSamFiles.class);
-
-    @Option(shortName = "I", doc = "SAM or BAM input file", minElements = 1)
     public List<File> INPUT = new ArrayList<File>();
-
-    @Option(shortName = "O", doc = "SAM or BAM file to write merged result to")
     public File OUTPUT;
-
-    @Option(shortName = StandardOptionDefinitions.SORT_ORDER_SHORT_NAME, doc = "Sort order of output file", optional = true)
     public SAMFileHeader.SortOrder SORT_ORDER = SAMFileHeader.SortOrder.coordinate;
-
-    @Option(doc = "If true, assume that the input files are in the same sort order as the requested output sort order, even if their headers say otherwise.",
-            shortName = StandardOptionDefinitions.ASSUME_SORTED_SHORT_NAME)
     public boolean ASSUME_SORTED = false;
-
-    @Option(shortName = "MSD", doc = "Merge the sequence dictionaries", optional = true)
     public boolean MERGE_SEQUENCE_DICTIONARIES = false;
-
-    @Option(doc = "Option to create a background thread to encode, " +
-            "compress and write to disk the output file. The threaded version uses about 20% more CPU and decreases " +
-            "runtime by ~20% when writing out a compressed BAM file.")
     public boolean USE_THREADING = false;
-
-    @Option(doc = "Comment(s) to include in the merged output file's header.", optional = true, shortName = "CO")
     public List<String> COMMENT = new ArrayList<String>();
 
     private static final int PROGRESS_INTERVAL = 1000000;
-
-//    /** Required main method implementation. */
-//    public static void main(final String[] argv) {
-//        System.exit(new MergeSamFiles().instanceMain(argv));
-//    }
     
     public MergeSamFiles(List<File> in, File out) {
     	INPUT = in;
@@ -189,13 +158,4 @@ public class MergeSamFiles extends CommandLineProgram {
         out.close();
         return 0;
     }
-
-    @Override
-    protected String[] customCommandLineValidation() {
-        if (CREATE_INDEX && SORT_ORDER != SAMFileHeader.SortOrder.coordinate) {
-            return new String[]{"Can't CREATE_INDEX unless SORT_ORDER is coordinate"};
-        }
-        return null;
-    }
-
 }
