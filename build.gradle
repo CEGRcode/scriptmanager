@@ -1,0 +1,61 @@
+// gradle 4.3
+
+apply plugin: 'java'
+//apply plugin: 'checkstyle'
+//apply plugin: 'findbugs'
+//apply plugin: 'pmd'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+
+sourceSets.main.java.srcDirs = ['src']
+mainClassName = "main.ScriptManager"
+version = '0.11-dev'
+sourceCompatibility = 1.8
+
+// Gradle builds for dev
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+
+	baseName = "ScriptManager"
+
+	manifest {
+        attributes 'ScriptManager-Title': baseName,  
+        	'ScriptManager-Version': version,
+        	'Main-Class': mainClassName
+    }
+}
+
+// Create a single JAR with all dependencies bundles - for production deployment
+task fatJar(type: Jar) {
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+
+	manifest {
+        attributes 'ScriptManager-Title': 'Gradle jar of ScriptManager',  
+        	'ScriptManager-Version': version,
+        	'Main-Class': mainClassName
+    }
+    
+    baseName = 'ScriptManager' + version
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+// Get dependencies from Maven central repository
+repositories {
+    mavenCentral()
+}
+
+// Declare the dependencies for your production and test code
+dependencies {
+ 	compile 'org.slf4j:slf4j-api:1.7.13'
+	testCompile 'junit:junit:4.12'
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+ }
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}
