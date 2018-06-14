@@ -4,10 +4,10 @@ public interface GenomicCoord {
 	public String getChrom();	
 	public void setChrom(String chr);
 	
-	public int getStart();
+	public long getStart();
 	public void setStart(int sta);
 	
-	public int getStop();
+	public long getStop();
 	public void setStop(int sto);
 	
 	public double getScore();	

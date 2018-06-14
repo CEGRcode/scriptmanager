@@ -6,14 +6,14 @@ import objects.CoordinateObjects.GenomicCoord;
 
 public class BEDCoord implements GenomicCoord {
 	private String CHROM = "";
-	private int START = 0;
-	private int STOP = 0;
+	private long START = 0;
+	private long STOP = 0;
 	private String DIR = "+";
 	
 	private String NAME = ".";
 	private double SCORE = 0;
 
-	private int MID = 0;
+	private long MID = 0;
 	
 	private double[] Fstrand = null;
 	private double[] Rstrand = null;
@@ -36,12 +36,20 @@ public class BEDCoord implements GenomicCoord {
 	}
 	
 	
-	public BEDCoord(String c, int sta, int sto, String di, String na) {
+	public BEDCoord(String c, long sta, long sto, String di, String na) {
 		CHROM = c;
 		START = sta;
 		STOP = sto;
 		DIR = di;
 		NAME = na;
+	}
+	
+	public BEDCoord(String c, long sta, long sto, String di) {
+		CHROM = c;
+		START = sta;
+		STOP = sto;
+		DIR = di;
+		NAME = CHROM + "_" + START + "_" + STOP + "_" + DIR;
 	}
 	
 	public BEDCoord(String na, double sco) {
@@ -57,7 +65,7 @@ public class BEDCoord implements GenomicCoord {
 		MID = m;
 	}
 	
-	public int getMid() {
+	public long getMid() {
 		return MID;
 	}
 	
@@ -85,7 +93,7 @@ public class BEDCoord implements GenomicCoord {
 		CHROM = chr;
 	}
 	
-	public int getStart() {
+	public long getStart() {
 		return START;
 	}
 	
@@ -93,7 +101,7 @@ public class BEDCoord implements GenomicCoord {
 		START = sta;
 	}
 	
-	public int getStop() {
+	public long getStop() {
 		return STOP;
 	}
 	
@@ -138,8 +146,8 @@ public class BEDCoord implements GenomicCoord {
 		
 	public static Comparator<BEDCoord> PeakPositionComparator = new Comparator<BEDCoord>() {
 		public int compare(BEDCoord node1, BEDCoord node2) {
-			int PeakStart1 = node1.getStart();
-			int PeakStart2 = node2.getStart();
+			long PeakStart1 = node1.getStart();
+			long PeakStart2 = node2.getStart();
 			if (PeakStart1 > PeakStart2) return 1;
 			else if (PeakStart1 < PeakStart2) return -1;
 			else return 0;
@@ -148,8 +156,8 @@ public class BEDCoord implements GenomicCoord {
 	
 	public static Comparator<BEDCoord> PeakMidpointComparator = new Comparator<BEDCoord>() {
 		public int compare(BEDCoord node1, BEDCoord node2) {
-			int PeakMid1 = (node1.getStart() + node1.getStop()) / 2;
-			int PeakMid2 = (node2.getStart() + node2.getStop()) / 2;
+			long PeakMid1 = (node1.getStart() + node1.getStop()) / 2;
+			long PeakMid2 = (node2.getStart() + node2.getStop()) / 2;
 			if (PeakMid1 > PeakMid2) return 1;
 			else if (PeakMid1 < PeakMid2) return -1;
 			else return 0;

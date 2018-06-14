@@ -4,8 +4,8 @@ import java.util.Comparator;
 
 public class GenericCoord implements GenomicCoord {
 	private String CHROM = "";
-	private int START = 0;
-	private int STOP = 0;
+	private long START = 0;
+	private long STOP = 0;
 	private String DIR = "+";
 	
 	private String NAME = ".";
@@ -39,7 +39,7 @@ public class GenericCoord implements GenomicCoord {
 		CHROM = chr;
 	}
 	
-	public int getStart() {
+	public long getStart() {
 		return START;
 	}
 	
@@ -47,7 +47,7 @@ public class GenericCoord implements GenomicCoord {
 		START = sta;
 	}
 	
-	public int getStop() {
+	public long getStop() {
 		return STOP;
 	}
 	
@@ -92,8 +92,8 @@ public class GenericCoord implements GenomicCoord {
 		
 	public static Comparator<GenericCoord> PeakPositionComparator = new Comparator<GenericCoord>() {
 		public int compare(GenericCoord node1, GenericCoord node2) {
-			int PeakStart1 = node1.getStart();
-			int PeakStart2 = node2.getStart();
+			long PeakStart1 = node1.getStart();
+			long PeakStart2 = node2.getStart();
 			if (PeakStart1 > PeakStart2) return 1;
 			else if (PeakStart1 < PeakStart2) return -1;
 			else return 0;

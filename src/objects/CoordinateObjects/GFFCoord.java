@@ -6,8 +6,8 @@ public class GFFCoord implements GenomicCoord {
 	private String CHROM = "";
 	private String SOURCE = ".";
 	private String FEATURE = ".";
-	private int START = 0;
-	private int STOP = 0;
+	private long START = 0;
+	private long STOP = 0;
 	private double SCORE = 0;
 	private String DIR = "+";
 	private String FRAME = ".";
@@ -39,12 +39,20 @@ public class GFFCoord implements GenomicCoord {
 		LINE = line;
 	}
 	
-	public GFFCoord(String c, int sta, int sto, String di, String na) {
+	public GFFCoord(String c, long sta, long sto, String di, String na) {
 		CHROM = c;
 		START = sta;
 		STOP = sto;
 		DIR = di;
 		ATTRIBUTE = na;
+	}
+	
+	public GFFCoord(String c, long sta, long sto, String di) {
+		CHROM = c;
+		START = sta;
+		STOP = sto;
+		DIR = di;
+		ATTRIBUTE = CHROM + "_" + START + "_" + STOP + "_" + DIR;
 	}
 	
 	public GFFCoord(String na, double sco) {
@@ -76,7 +84,7 @@ public class GFFCoord implements GenomicCoord {
 		CHROM = chr;
 	}
 	
-	public int getStart() {
+	public long getStart() {
 		return START;
 	}
 	
@@ -84,7 +92,7 @@ public class GFFCoord implements GenomicCoord {
 		START = sta;
 	}
 	
-	public int getStop() {
+	public long getStop() {
 		return STOP;
 	}
 	
@@ -130,8 +138,8 @@ public class GFFCoord implements GenomicCoord {
 		
 	public static Comparator<GFFCoord> PeakPositionComparator = new Comparator<GFFCoord>() {
 		public int compare(GFFCoord node1, GFFCoord node2) {
-			int PeakStart1 = node1.getStart();
-			int PeakStart2 = node2.getStart();
+			long PeakStart1 = node1.getStart();
+			long PeakStart2 = node2.getStart();
 			if (PeakStart1 > PeakStart2) return 1;
 			else if (PeakStart1 < PeakStart2) return -1;
 			else return 0;

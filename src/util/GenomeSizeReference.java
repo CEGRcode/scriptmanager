@@ -54,7 +54,15 @@ public class GenomeSizeReference {
 	public long getGenomeSize() {
 		return genomeSize;
 	}
-		
+	
+	public ArrayList<String> getChrom() {
+		return chromName;
+	}
+	
+	public ArrayList<Long> getChromSize() {
+		return chromSize;
+	}
+	
 	public static void initialize_sacCer3_cegr() {
 		genomeName = "sacCer3_cegr";
 		genomeSize = 12163423;
