@@ -3,7 +3,7 @@
 
 Scripts are generically categorized within semi-descriptive tabs and are designed to be run in parallel with each other and themselves.
 
-Current scripts available (171025):
+Current scripts available (180614):
 
 **BAM Statistics:**
 
@@ -35,7 +35,14 @@ Current scripts available (171025):
   
   -BAM to BED
   
+  -BAM to bedGraph
+  
+  
+**File Utilities:**
 
+  -MD5 Checksum
+  
+  
 **Coordinate File Manipulation:**
 
   -Expand BED/GFF File
@@ -48,6 +55,12 @@ Current scripts available (171025):
 **Coordinate File Analysis:**
 
   -Align BED to Reference
+  
+  -Filter BED by Proximity
+  
+  -Genomic Coordinate Tile
+  
+  -Generate Random Coordinate
   
 
 **Sequence Tag Analysis:**
@@ -64,6 +77,8 @@ Current scripts available (171025):
   -FASTA from BED
   
   -Randomize FASTA
+  
+  -Search Motif in FASTA
   
   -DNA Shape from BED
   
