@@ -34,6 +34,7 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.File_Utilities.MD5ChecksumWindow;
 import window_interface.Coordinate_Analysis.BEDPeakAligntoRefWindow;
 import window_interface.Coordinate_Analysis.FilterBEDbyProximityWindow;
+import window_interface.Coordinate_Analysis.TileGenomeWindow;
 import window_interface.Coordinate_Analysis.RandomCoordinateWindow;
 import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
 import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
@@ -479,7 +480,26 @@ public class ScriptManager {
 		});
 		pnlPeakAnalysis.add(btnBedFilter);
 		
+		JButton btnGenomicCoordinateTile = new JButton("Genomic Coordinate Tile");
+		btnGenomicCoordinateTile.setToolTipText("Generate coordinate file that tiles across an entire genome.");
+		btnGenomicCoordinateTile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							TileGenomeWindow frame = new TileGenomeWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		pnlPeakAnalysis.add(btnGenomicCoordinateTile);
+		
 		JButton btnRandomCoordinateGeneration = new JButton("Generate Random Coordinate");
+		btnRandomCoordinateGeneration.setToolTipText("Generate random BED coordinates based on reference genome.");
 		btnRandomCoordinateGeneration.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
