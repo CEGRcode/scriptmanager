@@ -40,8 +40,8 @@ public class PileupExtract implements Runnable{
 		int SHIFT = param.getShift();
 		int STRAND = param.getStrand();
 		
-		int BEDSTART = read.getStart();
-		int BEDSTOP = read.getStop();
+		int BEDSTART = (int)read.getStart();
+		int BEDSTOP = (int)read.getStop();
 		//Correct for '-' strand BED coord so they align with '+' strand
 		if(read.getDir().equals("-")) {
 			BEDSTART++;
