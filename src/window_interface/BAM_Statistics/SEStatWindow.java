@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class SEStatWindow extends JFrame {
@@ -37,12 +38,13 @@ public class SEStatWindow extends JFrame {
 	
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
+	private File OUTPUT_PATH = null;
 
 	public SEStatWindow() {
 		setTitle("BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 312);
+		setBounds(125, 125, 450, 345);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -74,18 +76,7 @@ public class SEStatWindow extends JFrame {
 			}
 		});
 		contentPane.add(btnLoad);
-		
-		lblOutputName = new JLabel("Output File Name:");
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputName, 0, SpringLayout.WEST, scrollPane);
-		contentPane.add(lblOutputName);
-		
-		chckbxOutputStatistics = new JCheckBox("Output Statistics");
-		chckbxOutputStatistics.setSelected(true);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 199, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -6, SpringLayout.NORTH, chckbxOutputStatistics);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputStatistics, 0, SpringLayout.WEST, scrollPane);
-		contentPane.add(chckbxOutputStatistics);
-		
+					
 		JButton btnRemoveBam = new JButton("Remove BAM");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
@@ -100,45 +91,92 @@ public class SEStatWindow extends JFrame {
 		});		
 		contentPane.add(btnRemoveBam);
 		
-		JButton btnRun = new JButton("Run");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, 61, SpringLayout.SOUTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnRun, 171, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -171, SpringLayout.EAST, contentPane);
-		contentPane.add(btnRun);
-		
+		lblOutputName = new JLabel("Output File Name:");
+		lblOutputName.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputName, 0, SpringLayout.WEST, scrollPane);
+		lblOutputName.setEnabled(false);
+		contentPane.add(lblOutputName);
+
+		chckbxOutputStatistics = new JCheckBox("Output Statistics");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 199, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -6, SpringLayout.NORTH, chckbxOutputStatistics);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputStatistics, 0, SpringLayout.WEST, scrollPane);
+		contentPane.add(chckbxOutputStatistics);
+				
 		txtOutputName = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, 4, SpringLayout.SOUTH, chckbxOutputStatistics);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 16, SpringLayout.EAST, lblOutputName);
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, -15, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputName, 2, SpringLayout.NORTH, txtOutputName);
-		txtOutputName.setText("output_name.txt");
-		contentPane.add(txtOutputName);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, -2, SpringLayout.NORTH, lblOutputName);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 6, SpringLayout.EAST, lblOutputName);
+		txtOutputName.setText("output_bam stats.txt");
 		txtOutputName.setColumns(10);
+		txtOutputName.setEnabled(false);
+		contentPane.add(txtOutputName);
+				
+		JLabel lblCurrentOutput = new JLabel("Current Output:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputName, 10, SpringLayout.SOUTH, lblCurrentOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 10, SpringLayout.SOUTH, chckbxOutputStatistics);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
+		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutput.setEnabled(false);
+		contentPane.add(lblCurrentOutput);
+		
+		JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
+		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblDefaultToLocal.setBackground(Color.WHITE);
+		lblDefaultToLocal.setEnabled(false);
+		contentPane.add(lblDefaultToLocal);
+		
+		JButton btnOutput = new JButton("Output Directory");
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, 56, SpringLayout.EAST, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 6, SpringLayout.SOUTH, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
+		btnOutput.setEnabled(false);
+		btnOutput.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
+    			if(OUTPUT_PATH != null) {
+    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+    			}
+        	}
+        });
+		contentPane.add(btnOutput);
 		
 		chckbxOutputStatistics.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		        if(chckbxOutputStatistics.isSelected()) {
-		        	txtOutputName.setEditable(true);
-		        	txtOutputName.setForeground(Color.BLACK);
-		        	lblOutputName.setForeground(Color.BLACK);
-
+		        	btnOutput.setEnabled(true);
+		        	lblOutputName.setEnabled(true);
+		        	txtOutputName.setEnabled(true);
+		        	lblCurrentOutput.setEnabled(true);
+		        	lblDefaultToLocal.setEnabled(true);
 		        } else {
-		        	txtOutputName.setEditable(false);
-		        	txtOutputName.setForeground(Color.GRAY);
-		        	lblOutputName.setForeground(Color.GRAY);		        	
+		        	btnOutput.setEnabled(false);
+		        	lblOutputName.setEnabled(false);
+		        	txtOutputName.setEnabled(false);
+		        	lblCurrentOutput.setEnabled(false);
+		        	lblDefaultToLocal.setEnabled(false);   	
 		        }
 		      }
 		    });
 		
+		JButton btnRun = new JButton("Run");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, 90, SpringLayout.SOUTH, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnRun, 171, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -171, SpringLayout.EAST, contentPane);
 		btnRun.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				SEStats stat;
-				if(chckbxOutputStatistics.isSelected()) { stat = new SEStats(BAMFiles, new File(txtOutputName.getText())); }
-				else { stat = new SEStats(BAMFiles, null); }
+				if(chckbxOutputStatistics.isSelected()) { 
+					if(OUTPUT_PATH != null) { stat = new SEStats(BAMFiles, new File(OUTPUT_PATH + File.separator + txtOutputName.getText())); }
+					else { stat = new SEStats(BAMFiles, new File(txtOutputName.getText())); }
+				} else { stat = new SEStats(BAMFiles, null); }
 				stat.setVisible(true);
 				stat.run();
 			}
 		});
+		contentPane.add(btnRun);
 	}
 }
 
