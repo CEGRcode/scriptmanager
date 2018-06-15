@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import objects.PileupParameters;
 import objects.CoordinateObjects.BEDCoord;
+import util.ArrayUtilities;
 
 public class PileupExtract implements Runnable{
 	PileupParameters param;
@@ -134,8 +135,8 @@ public class PileupExtract implements Runnable{
 		iter.close();
 		
 		if(read.getDir().equals("-")) {
-			TAG_S1 = TransformArray.reverseTran(TAG_S1);
-			TAG_S2 = TransformArray.reverseTran(TAG_S2);
+			TAG_S1 = ArrayUtilities.reverseArray(TAG_S1);
+			TAG_S2 = ArrayUtilities.reverseArray(TAG_S2);
 		}
 		
 		//Perform Binning here

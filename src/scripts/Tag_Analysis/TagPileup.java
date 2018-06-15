@@ -29,7 +29,7 @@ import htsjdk.samtools.SamReaderFactory;
 import objects.PileupParameters;
 import objects.CoordinateObjects.BEDCoord;
 import scripts.Tag_Analysis.PileupScripts.PileupExtract;
-import scripts.Tag_Analysis.PileupScripts.TransformArray;
+import util.ArrayUtilities;
 import util.BAMUtilities;
 import util.JTVOutput;
 
@@ -196,11 +196,11 @@ public class TagPileup extends JFrame {
 					
 					//Transform average given transformation parameters
 					if(PARAM.getTrans() == 1) { 
-						AVG_S1 = TransformArray.smoothTran(AVG_S1, PARAM.getSmooth());
-						if(AVG_S2 != null) AVG_S2 = TransformArray.smoothTran(AVG_S2, PARAM.getSmooth());
+						AVG_S1 = ArrayUtilities.windowSmooth(AVG_S1, PARAM.getSmooth());
+						if(AVG_S2 != null) AVG_S2 = ArrayUtilities.windowSmooth(AVG_S2, PARAM.getSmooth());
 					} else if(PARAM.getTrans() == 2) {
-						AVG_S1 = TransformArray.gaussTran(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
-						if(AVG_S2 != null) AVG_S2 = TransformArray.gaussTran(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
+						AVG_S1 = ArrayUtilities.gaussSmooth(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
+						if(AVG_S2 != null) AVG_S2 = ArrayUtilities.gaussSmooth(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
 					}
 					
 					//Trim average here and output to statistics pane
