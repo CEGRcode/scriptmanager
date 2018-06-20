@@ -104,7 +104,7 @@ public class PEStats extends JFrame {
 					catch (IOException e) {	e.printStackTrace(); }
 				} else {
 					try {
-						OUT = new PrintStream(new File(NAME));
+						OUT = new PrintStream(new File(NAME + "_InsertHistogram.out"));
 						OUTPNG = new File(NAME + "_PE.png");
 					}
 					catch (FileNotFoundException e) { e.printStackTrace(); }
