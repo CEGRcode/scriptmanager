@@ -70,7 +70,7 @@ public class SEStats extends JFrame {
 			File f = new File(bamFiles.get(x) + ".bai");
 			if(f.exists() && !f.isDirectory()) {
 				if(OUT != null) OUT.println(bamFiles.get(x).getName());
-				if(OUT != null) OUT.println("Chromosome_ID\tChromosome_Size\tAligned_Reads");
+				if(OUT != null) OUT.println("Chromosome_ID\tChromosome_Size\tAligned_Reads\tUnaligned_Reads");
 				textArea.append(bamFiles.get(x).getName() + "\n");
 				textArea.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\n");
 				
@@ -85,9 +85,9 @@ public class SEStats extends JFrame {
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
 					double aligned = reader.indexing().getIndex().getMetaData(z).getAlignedRecordCount();
-					//int unaligned = reader.getIndex().getMetaData(z).getUnalignedRecordCount();
-					if(OUT != null) OUT.println(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned);
-					textArea.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\n");
+					double unaligned = reader.indexing().getIndex().getMetaData(z).getUnalignedRecordCount();
+					if(OUT != null) OUT.println(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\t" + unaligned);
+					textArea.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\t" + unaligned + "\n");
 					totalTags += aligned;
 					totalGenome += seq.getSequenceLength();
 				}
