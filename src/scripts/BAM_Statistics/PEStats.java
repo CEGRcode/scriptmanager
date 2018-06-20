@@ -36,6 +36,7 @@ public class PEStats extends JFrame {
 	Vector<File> bamFiles = null;
 	private File OUTPUT_PATH = null;
 	private boolean OUTPUT_STATUS = false;
+	private boolean DUP_STATUS = false;
 	PrintStream OUT = null;
 	private File OUTPNG = null;
 	private static int MIN_INSERT = 0;
@@ -51,7 +52,7 @@ public class PEStats extends JFrame {
 	final JTabbedPane tabbedPane_Duplication;
 	final JTabbedPane tabbedPane_DupStats;
 		
-	public PEStats(Vector<File> input, File o, boolean out, int min, int max) {
+	public PEStats(Vector<File> input, File o, boolean out, boolean dup, int min, int max) {
 		setTitle("BAM File Paired-end Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -68,23 +69,24 @@ public class PEStats extends JFrame {
 		sl_layeredPane.putConstraint(SpringLayout.EAST, tabbedPane, -6, SpringLayout.EAST, layeredPane);
 		layeredPane.add(tabbedPane);
 		
-		tabbedPane_Histogram = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Insert Histogram", null, tabbedPane_Histogram, null);
-		
-		tabbedPane_InsertStats = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("PE Insert Stats", null, tabbedPane_InsertStats, null);
-		
-		tabbedPane_Duplication = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Duplication Rate", null, tabbedPane_Duplication, null);
-		
-		tabbedPane_DupStats = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Duplication Stats", null, tabbedPane_DupStats, null);
-
 		bamFiles = input;
 		OUTPUT_PATH = o;
 		OUTPUT_STATUS = out;
+		DUP_STATUS = dup;
 		MIN_INSERT = min;
 		MAX_INSERT = max;
+		
+		tabbedPane_Histogram = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_InsertStats = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addTab("Insert Histogram", null, tabbedPane_Histogram, null);
+		tabbedPane.addTab("PE Insert Stats", null, tabbedPane_InsertStats, null);
+		
+		tabbedPane_Duplication = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_DupStats = new JTabbedPane(JTabbedPane.TOP);
+		if(DUP_STATUS) {
+			tabbedPane.addTab("Duplication Rate", null, tabbedPane_Duplication, null);
+			tabbedPane.addTab("Duplication Stats", null, tabbedPane_DupStats, null);
+		}
 	}
 	
 	public void run() throws IOException {
@@ -115,16 +117,20 @@ public class PEStats extends JFrame {
 			PE_STATS.setEditable(false);
 			PE_STATS.append(time + "\n");
 			JTextArea DUP_STATS = new JTextArea();
-			DUP_STATS.setEditable(false);
-			DUP_STATS.append(time + "\n");
+			if(DUP_STATUS) {
+				DUP_STATS.setEditable(false);
+				DUP_STATS.append(time + "\n");
+			}
 						
 			//Check if BAI index file exists
 			File f = new File(bamFiles.get(x) + ".bai");
 			if(f.exists() && !f.isDirectory()) {
 				PE_STATS.append(bamFiles.get(x).getName() + "\n");
-				PE_STATS.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\n");
-				DUP_STATS.append(bamFiles.get(x).getName() + "\n");
-				DUP_STATS.append("Duplicate Rate\tNumber of Duplicate Molecules\n");
+				PE_STATS.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\tUnaligned_Reads\n");
+				if(DUP_STATUS) {
+					DUP_STATS.append(bamFiles.get(x).getName() + "\n");
+					DUP_STATS.append("Duplicate Rate\tNumber of Duplicate Molecules\n");
+				}
 				
 				//Code to get individual chromosome stats
 				reader = factory.open(bamFiles.get(x));
@@ -148,9 +154,11 @@ public class PEStats extends JFrame {
 				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
 					double aligned = reader.indexing().getIndex().getMetaData(z).getAlignedRecordCount();
-
+					double unaligned = reader.indexing().getIndex().getMetaData(z).getUnalignedRecordCount();
+					
 					//Basic statistic calculations
-					PE_STATS.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\n");
+					System.out.println("Processing: " + seq.getSequenceName());
+					PE_STATS.append(seq.getSequenceName() + "\t" + seq.getSequenceLength() + "\t" + aligned + "\t" + unaligned + "\n");
 					totalGenome += seq.getSequenceLength();
 					
 					//Loop through each chromosome looking at each perfect F-R PE read
@@ -172,16 +180,18 @@ public class PEStats extends JFrame {
 									InsertAverage += distance;
 									counter++;
 									
-									//Unique ID
-									String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
-									//Duplication rate for each chrom determined
-									if(CHROM_COMPLEXITY.isEmpty()) {
-										CHROM_COMPLEXITY.put(tagName, new Integer(1));
-									} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
-										CHROM_COMPLEXITY.put(tagName, new Integer(1));
-									} else if(CHROM_COMPLEXITY.containsKey(tagName)){
-										CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
-									}	
+									if(DUP_STATUS) {
+										//Unique ID
+										String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
+										//Duplication rate for each chrom determined
+										if(CHROM_COMPLEXITY.isEmpty()) {
+											CHROM_COMPLEXITY.put(tagName, new Integer(1));
+										} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
+											CHROM_COMPLEXITY.put(tagName, new Integer(1));
+										} else if(CHROM_COMPLEXITY.containsKey(tagName)){
+											CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
+										}
+									}
 								}
 							} else { //If the read is mapped but not paired-end, default to read 1
 								totalAlignedRead1++;
@@ -190,18 +200,20 @@ public class PEStats extends JFrame {
 					}
 					iter.close();
 					
-					//Load each chromosome up into master duplication hashmap
-					Iterator<String> keys = CHROM_COMPLEXITY.keySet().iterator();
-					while(keys.hasNext()) {
-				         String str = (String) keys.next();
-				         if(ALL_COMPLEXITY.isEmpty()) {
-				        	 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
-				         } else if(!ALL_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
-				        	 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
-				         } else if(ALL_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
-								ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) ALL_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
-				         }
-					}			
+					if(DUP_STATUS) {
+						//Load each chromosome up into master duplication hashmap
+						Iterator<String> keys = CHROM_COMPLEXITY.keySet().iterator();
+						while(keys.hasNext()) {
+					         String str = (String) keys.next();
+					         if(ALL_COMPLEXITY.isEmpty()) {
+					        	 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					         } else if(!ALL_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
+					        	 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					         } else if(ALL_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
+									ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) ALL_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
+					         }
+						}
+					}
 				}
 				totalAlignedReads = totalAlignedRead1 + totalAlignedRead2;
 				PE_STATS.append("Total Genome Size: " + totalGenome + "\tTotal Aligned Tags: " + totalAlignedReads + "\n\n");
@@ -237,36 +249,38 @@ public class PEStats extends JFrame {
 					PE_STATS.append(bp + "\t" + HIST[z] + "\n");
 				}
 				
-				//Duplication statistics
-				double UNIQUE_MOLECULES = 0;
-				String[] BIN_NAME = initializeBIN_Names();
-				ArrayList<Double> BIN = new ArrayList<Double>();
-				initializeBINS(BIN);	
-				
-				Iterator<Integer> keys = ALL_COMPLEXITY.keySet().iterator();
-				while(keys.hasNext()) {
-			         Integer str = (Integer) keys.next();
-			         int index = getBinIndex(str.intValue());
-			         BIN.set(index, BIN.get(index) + (ALL_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));		         
-			         UNIQUE_MOLECULES += ALL_COMPLEXITY.get(str).doubleValue(); 
-				}
-				
-				for(int z = 0; z < BIN.size(); z++) {
-					DUP_STATS.append(BIN_NAME[z] + "\t" + BIN.get(z).toString() + "\n");
-				}
-				DUP_STATS.append("Unique Molecules:\n" + UNIQUE_MOLECULES);
-				
 				//Add pe stats to tabbed pane
 				PE_STATS.setCaretPosition(0);
 				JScrollPane pe_pane = new JScrollPane(PE_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				tabbedPane_InsertStats.add(bamFiles.get(x).getName(), pe_pane);
-				//Add duplication stats to tabbed pane
-				DUP_STATS.setCaretPosition(0);
-				JScrollPane dup_pane = new JScrollPane(DUP_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				tabbedPane_DupStats.add(bamFiles.get(x).getName(), dup_pane);
-						
 				tabbedPane_Histogram.add(bamFiles.get(x).getName(), Histogram.createBarChart(HIST, DOMAIN, OUTPNG));
-				tabbedPane_Duplication.add(bamFiles.get(x).getName(), LineChart.createLineChart(BIN, BIN_NAME));
+
+				if(DUP_STATUS) {
+					//Duplication statistics
+					double UNIQUE_MOLECULES = 0;
+					String[] BIN_NAME = initializeBIN_Names();
+					ArrayList<Double> BIN = new ArrayList<Double>();
+					initializeBINS(BIN);	
+					
+					Iterator<Integer> keys = ALL_COMPLEXITY.keySet().iterator();
+					while(keys.hasNext()) {
+				         Integer str = (Integer) keys.next();
+				         int index = getBinIndex(str.intValue());
+				         BIN.set(index, BIN.get(index) + (ALL_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));		         
+				         UNIQUE_MOLECULES += ALL_COMPLEXITY.get(str).doubleValue(); 
+					}
+					
+					for(int z = 0; z < BIN.size(); z++) {
+						DUP_STATS.append(BIN_NAME[z] + "\t" + BIN.get(z).toString() + "\n");
+					}
+					DUP_STATS.append("Unique Molecules:\n" + UNIQUE_MOLECULES);
+								
+					//Add duplication stats to tabbed pane
+					DUP_STATS.setCaretPosition(0);
+					JScrollPane dup_pane = new JScrollPane(DUP_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					tabbedPane_DupStats.add(bamFiles.get(x).getName(), dup_pane);
+					tabbedPane_Duplication.add(bamFiles.get(x).getName(), LineChart.createLineChart(BIN, BIN_NAME));
+				}
 				
 		        firePropertyChange("bam",x, x + 1);
 		        

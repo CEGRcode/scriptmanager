@@ -44,6 +44,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	private JCheckBox chckbxOutputStatistics;
+	private JCheckBox chckbxDup;
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnOutputDirectory;
@@ -67,7 +68,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
         	try {
 				int min = Integer.parseInt(txtMin.getText());
 				int max = Integer.parseInt(txtMax.getText());	
-				PEStats stat = new PEStats(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), min, max);
+				PEStats stat = new PEStats(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), min, max);
 				stat.addPropertyChangeListener("bam", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 				    	int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -96,7 +97,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		setTitle("Paired-End BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 380);
+		setBounds(125, 125, 450, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -184,10 +185,10 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		txtMax.setColumns(10);
 		
 		progressBar = new JProgressBar();
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -8, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, -3, SpringLayout.NORTH, progressBar);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -18, SpringLayout.WEST, progressBar);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 		
@@ -209,6 +210,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		btnRun.setActionCommand("start");
 		
 		btnOutputDirectory = new JButton("Output Directory");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 35, SpringLayout.SOUTH, txtMin);
 		btnOutputDirectory.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
     			OUTPUT_PATH = FileSelection.getOutputDir(fc);
@@ -217,7 +219,6 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
     			}
         	}
         });
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, txtMin);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 1, SpringLayout.NORTH, btnOutputDirectory);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 150, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -150, SpringLayout.EAST, contentPane);
@@ -238,6 +239,12 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
+		
+		chckbxDup = new JCheckBox("Calculate duplication statistics");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxDup, -8, SpringLayout.NORTH, chckbxOutputStatistics);
+		chckbxDup.setSelected(true);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxDup, 0, SpringLayout.WEST, scrollPane);
+		contentPane.add(chckbxDup);
 		btnRun.addActionListener(this);
 	}
 	
