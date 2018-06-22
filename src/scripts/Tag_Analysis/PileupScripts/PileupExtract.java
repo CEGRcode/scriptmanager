@@ -93,7 +93,7 @@ public class PileupExtract implements Runnable{
 							
 							if(recordStop - recordStart < param.getMinInsert() && param.getMinInsert() != -9999) { FivePrime = -1; } //Test for MIN insert size cutoff here
 							if(recordStop - recordStart > param.getMaxInsert() && param.getMaxInsert() != -9999) { FivePrime = -1; } //Test for MAX insert size cutoff here
-						}
+						} else if(param.getRead() == 3) { FivePrime = -1; } // Make sure that midpoint pileup must come from properly paired read
 	
 						//Adjust tag start to be within array reference
 						FivePrime -= (BEDSTART - QUERYWINDOW);
