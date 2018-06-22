@@ -25,6 +25,7 @@ import window_interface.BAM_Manipulation.SortBAMWindow;
 import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BAM_Statistics.SignalDuplicationWindow;
+import window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow;
 import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
@@ -129,6 +130,24 @@ public class ScriptManager {
 			}
 		});
 		pnlStat.add(btnSignalDuplication);
+		
+		JButton btnBamGenomeCorrelation = new JButton("BAM Genome Correlation");
+		btnBamGenomeCorrelation.setToolTipText("BAM Genome-Genome Correlations broadstroke for replicate comparisons");
+		btnBamGenomeCorrelation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							BAMGenomeCorrelationWindow frame = new BAMGenomeCorrelationWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		pnlStat.add(btnBamGenomeCorrelation);
 
 		JPanel pnlBAM_Manip = new JPanel();
 		pnlBAM_Manip.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
