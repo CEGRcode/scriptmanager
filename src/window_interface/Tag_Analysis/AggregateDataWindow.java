@@ -33,6 +33,8 @@ import java.beans.PropertyChangeListener;
 
 import util.FileSelection;
 import scripts.Tag_Analysis.AggregateData;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class AggregateDataWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -48,33 +50,44 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	private JButton btnConvert;
 	private JButton btnOutput;
 	private JProgressBar progressBar;
+	private JLabel lblRowStart;
+	private JLabel lblColumnStart;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
 	private JCheckBox chckbxMergeToOne;
-	private JCheckBox chckbxHeader;
 	private JComboBox<String> cmbMethod;
 
 	public Task task;
+	private JTextField txtRow;
+	private JTextField txtCol;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException {
         	setProgress(0);
-        	
-        	AggregateData parse = new AggregateData(SUMFiles, OUTPUT_PATH, chckbxMergeToOne.isSelected(), chckbxHeader.isSelected(), cmbMethod.getSelectedIndex());
-        	
-        	parse.addPropertyChangeListener("file", new PropertyChangeListener() {
-			    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-			    	int temp = (Integer) propertyChangeEvent.getNewValue();
-			    	int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
-		        	setProgress(percentComplete);
-			     }
-			 });
-        	
-    		parse.run();
-        	
-        	setProgress(100);
-			JOptionPane.showMessageDialog(null, "Data Parsed");
+        	try {
+        		if(Integer.parseInt(txtRow.getText()) < 1) {
+        			JOptionPane.showMessageDialog(null, "Invalid Start Row!!! Must be larger than 0 (1-based)");
+        		} else if(Integer.parseInt(txtCol.getText()) < 1) {
+        			JOptionPane.showMessageDialog(null, "Invalid Start Column!!! Must be larger than 0 (1-based)");
+        		} else {
+		        	AggregateData parse = new AggregateData(SUMFiles, OUTPUT_PATH, chckbxMergeToOne.isSelected(), Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), cmbMethod.getSelectedIndex());
+		        	
+		        	parse.addPropertyChangeListener("file", new PropertyChangeListener() {
+					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+					    	int temp = (Integer) propertyChangeEvent.getNewValue();
+					    	int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
+				        	setProgress(percentComplete);
+					     }
+					 });
+		        	
+		    		parse.run();
+		    		setProgress(100);
+					JOptionPane.showMessageDialog(null, "Data Parsed");
+        		}
+        	} catch(NumberFormatException nfe){
+				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			}
         	return null;
         }
         
@@ -88,7 +101,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		setTitle("Aggregate Data");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 330);
+		setBounds(125, 125, 450, 370);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -96,8 +109,8 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		contentPane.setLayout(sl_contentPane);
 	
 		JScrollPane scrollPane = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
       	expList = new DefaultListModel<String>();
@@ -106,8 +119,8 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		scrollPane.setViewportView(listExp);
 		
 		btnLoad = new JButton("Load Files");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 11, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newCDTFiles = FileSelection.getGenericFiles(fc);
@@ -135,10 +148,37 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		});		
 		contentPane.add(btnRemoveCDT);
 		
+        lblRowStart = new JLabel("Start at Row:");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblRowStart, 5, SpringLayout.WEST, contentPane);
+        contentPane.add(lblRowStart);
+        
+        txtRow = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtRow, -2, SpringLayout.NORTH, lblRowStart);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtRow, 10, SpringLayout.EAST, lblRowStart);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtRow, 70, SpringLayout.EAST, lblRowStart);
+        txtRow.setHorizontalAlignment(SwingConstants.CENTER);
+        txtRow.setText("2");
+        contentPane.add(txtRow);
+        txtRow.setColumns(10);
+        
+        lblColumnStart = new JLabel("Start at Column:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblColumnStart, 0, SpringLayout.NORTH, lblRowStart);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblColumnStart, 60, SpringLayout.EAST, txtRow);
+        contentPane.add(lblColumnStart);
+        
+        txtCol = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtCol, -2, SpringLayout.NORTH, lblColumnStart);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtCol, 10, SpringLayout.EAST, lblColumnStart);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtCol, 70, SpringLayout.EAST, lblColumnStart);
+        txtCol.setHorizontalAlignment(SwingConstants.CENTER);
+        txtCol.setText("2");
+        contentPane.add(txtCol);
+        txtCol.setColumns(10);
+		
 		btnConvert = new JButton("Parse Matrix");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -140, SpringLayout.NORTH, btnConvert);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnConvert, 165, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnConvert, -165, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -95, SpringLayout.NORTH, btnConvert);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConvert, 0, SpringLayout.SOUTH, contentPane);
 		contentPane.add(btnConvert);
 		
@@ -151,7 +191,6 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
         btnConvert.setActionCommand("start");
         
         lblCurrent = new JLabel("Current Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 68, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 5, SpringLayout.WEST, contentPane);
         lblCurrent.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrent);
@@ -163,7 +202,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
         contentPane.add(lblDefaultToLocal);
         
         btnOutput = new JButton("Output Directory");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 38, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 15, SpringLayout.SOUTH, lblColumnStart);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
     			OUTPUT_PATH = FileSelection.getOutputDir(fc);
@@ -177,6 +216,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
         contentPane.add(btnOutput);
         
         chckbxMergeToOne = new JCheckBox("Merge to one file");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 10, SpringLayout.SOUTH, chckbxMergeToOne);
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxMergeToOne, 1, SpringLayout.NORTH, btnOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxMergeToOne, 4, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, chckbxMergeToOne, -6, SpringLayout.WEST, btnOutput);
@@ -185,19 +225,16 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
         
         //String[] function = {"Sum", "Average", "Median", "Mode", "Min", "Max"};
         cmbMethod = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {"Sum", "Average", "Median", "Mode", "Min", "Max","Positional Variance"}));
-        sl_contentPane.putConstraint(SpringLayout.NORTH, cmbMethod, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, cmbMethod, 8, SpringLayout.SOUTH, scrollPane);
         contentPane.add(cmbMethod);
         
         JLabel lblMathematicalFunction = new JLabel("Aggregation Method:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblRowStart, 20, SpringLayout.SOUTH, lblMathematicalFunction);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMathematicalFunction, 12, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblMathematicalFunction, 5, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, cmbMethod, 6, SpringLayout.EAST, lblMathematicalFunction);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblMathematicalFunction, 10, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblMathematicalFunction, 0, SpringLayout.WEST, scrollPane);
         contentPane.add(lblMathematicalFunction);
         
-        chckbxHeader = new JCheckBox("Data has headers");
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxHeader, 0, SpringLayout.SOUTH, cmbMethod);
-        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxHeader, 0, SpringLayout.EAST, scrollPane);
-        contentPane.add(chckbxHeader);
         btnConvert.addActionListener(this);
 	}
 	

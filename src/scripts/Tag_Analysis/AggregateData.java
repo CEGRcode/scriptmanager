@@ -17,15 +17,17 @@ public class AggregateData extends JFrame {
 	private ArrayList<File> INPUT = null;
 	private File OUT_PATH = null;
 	private boolean MERGE = true;
-	private boolean HEADER = false;
+	private int ROWSTART = 1;
+	private int COLSTART = 1;
 	private int METRIC = 0;
 	private PrintStream OUT;
 	
-	public AggregateData(ArrayList<File> in, File out, boolean m, boolean h, int index) {
+	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
 		INPUT = in;
 		OUT_PATH = out;
 		MERGE = m;
-		HEADER = h;
+		ROWSTART = r;
+		COLSTART = c;
 		METRIC = index;
 	}
 	
@@ -45,15 +47,20 @@ public class AggregateData extends JFrame {
 				int count = 0;
 				while (scan.hasNextLine()) {
 					String line = scan.nextLine();
-					if(HEADER && count == 0) {
+					count++;
+					
+					//Skip lines until desired row start
+					while(count < ROWSTART) {
 						line = scan.nextLine();
 						count++;
 					}
+					
+					//Split array, assume first element is ID, irrespective of column start
 					String[] ID = line.split("\t");
 					idarray.add(ID[0]);
 					
 					double[] numarray = new double[ID.length];
-					for(int y = 0; y < ID.length; y++) {
+					for(int y = COLSTART - 1; y < ID.length; y++) {
 						try { numarray[y] = Double.parseDouble(ID[y]); }
 						catch(NumberFormatException nfe) { numarray[y] = Double.NaN; }
 						
@@ -125,13 +132,17 @@ public class AggregateData extends JFrame {
 		int count = 0;
 		while (scan.hasNextLine()) {
 			String line = scan.nextLine();
-			if(HEADER && count == 0) {
+			count++;
+			
+			//Skip lines until desired row start
+			while(count < ROWSTART) {
 				line = scan.nextLine();
 				count++;
 			}
+			
 			String[] ID = line.split("\t");
 			double[] numarray = new double[ID.length];
-			for(int x = 0; x < ID.length; x++) {
+			for(int x = COLSTART - 1; x < ID.length; x++) {
 				try { numarray[x] = Double.parseDouble(ID[x]); }
 				catch(NumberFormatException nfe) { numarray[x] = Double.NaN; }
 				
