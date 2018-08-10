@@ -3,7 +3,16 @@
 
 Scripts are generically categorized within semi-descriptive tabs and are designed to be run in parallel with each other and themselves.
 
-Current scripts available (180614):
+## Build Instructions
+(after cloning this repo):
+```
+> cd scriptmanager
+> gradlew build
+```
+
+The compiled JAR file will be output into the `build/libs` directory. 
+
+## Current scripts available (180614):
 
 **BAM Statistics:**
 
