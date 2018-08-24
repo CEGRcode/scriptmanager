@@ -25,7 +25,7 @@ public class MergeHeatMapPlot extends JFrame {
 	public MergeHeatMapPlot(ArrayList<File> in, File out) {
 		setTitle("Merged Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 800, 600);
+		setBounds(150, 150, 600, 800);
 		
 		newpane = new JTabbedPane(JTabbedPane.TOP);
 		this.getContentPane().add(newpane);
