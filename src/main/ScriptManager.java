@@ -1012,17 +1012,16 @@ public class ScriptManager {
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, btnHeatMap, 10, SpringLayout.WEST, pnlFigure);
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtHeatMap, 10, SpringLayout.EAST, btnHeatMap);
 		pnlFigure.add(btnHeatMap);
-		btnHeatMap.setEnabled(false);
 		
-		JTextArea txtMergeHeatPlot = new JTextArea();
-		initializeTextArea(txtMergeHeatPlot);
-		txtMergeHeatPlot.setText("Merge Sense and Antisense png plots");
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMergeHeatPlot, 10, SpringLayout.SOUTH, txtHeatMap);
-		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtMergeHeatPlot, -10, SpringLayout.EAST, pnlFigure);
-		pnlFigure.add(txtMergeHeatPlot);
+		JTextArea txtMergeHeatmap = new JTextArea();
+		initializeTextArea(txtMergeHeatmap);
+		txtMergeHeatmap.setText("Merge Sense and Antisense png heatmaps");
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMergeHeatmap, 10, SpringLayout.SOUTH, txtHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtMergeHeatmap, -10, SpringLayout.EAST, pnlFigure);
+		pnlFigure.add(txtMergeHeatmap);
 		
-		JButton btnMergeHeatPlots = new JButton("Merge Heat Plots");
-		btnMergeHeatPlots.addActionListener(new ActionListener() {
+		JButton btnMergeHeatmap = new JButton("Merge Heatmaps");
+		btnMergeHeatmap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
@@ -1036,15 +1035,15 @@ public class ScriptManager {
 				 });
 			}
 		});
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, btnMergeHeatPlots, 0, SpringLayout.NORTH, txtMergeHeatPlot);
-		sl_pnlFigure.putConstraint(SpringLayout.WEST, btnMergeHeatPlots, 10, SpringLayout.WEST, pnlFigure);
-		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtMergeHeatPlot, 10, SpringLayout.EAST, btnMergeHeatPlots);
-		pnlFigure.add(btnMergeHeatPlots);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, btnMergeHeatmap, 0, SpringLayout.NORTH, txtMergeHeatmap);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, btnMergeHeatmap, 10, SpringLayout.WEST, pnlFigure);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtMergeHeatmap, 10, SpringLayout.EAST, btnMergeHeatmap);
+		pnlFigure.add(btnMergeHeatmap);
 		
 		JTextArea txtcolorSequencePlot = new JTextArea();
 		initializeTextArea(txtcolorSequencePlot);
 		txtcolorSequencePlot.setText("Generate 4Color sequence plot given FASTA file and user-defined RGB colors");
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtcolorSequencePlot, 10, SpringLayout.SOUTH, txtMergeHeatPlot);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtcolorSequencePlot, 10, SpringLayout.SOUTH, txtMergeHeatmap);
 		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtcolorSequencePlot, -10, SpringLayout.EAST, pnlFigure);
 		pnlFigure.add(txtcolorSequencePlot);
 		
