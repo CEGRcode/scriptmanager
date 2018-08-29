@@ -7,7 +7,7 @@ Scripts are generically categorized within semi-descriptive tabs and are designe
 (after cloning this repo):
 ```
 > cd scriptmanager
-> gradlew build
+> ./gradlew build
 ```
 
 The compiled JAR file will be output into the `build/libs` directory. 
