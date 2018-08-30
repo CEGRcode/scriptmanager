@@ -62,6 +62,9 @@ public class HeatmapPlot extends JFrame {
 		pixelWidth = pWidth;
 		scaleType = scale;
 		
+		absolute = abs;
+		quantile = quant;
+		
 		OUTPUTPATH = OUT;
 	}
 	
