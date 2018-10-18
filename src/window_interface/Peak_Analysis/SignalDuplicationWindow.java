@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import scripts.Read_Analysis.SignalDuplication;
+import scripts.Peak_Analysis.SignalDuplication;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
