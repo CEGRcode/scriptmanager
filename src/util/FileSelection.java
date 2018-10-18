@@ -43,6 +43,35 @@ public class FileSelection {
 		}	
 	}
 	
+	public static File getFile(JFileChooser fc, String ext){
+		fc.setFileFilter(new ExtensionFileFilter(ext));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(false);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("File Selection");
+		File Files = null;
+		int returnVal = fc.showOpenDialog(fc);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			Files = fc.getSelectedFile();
+		}
+		return Files;
+	}
+	
+	public static File getFiles(JFileChooser fc, String ext){
+		fc.setFileFilter(new ExtensionFileFilter(ext));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
+		fc.setSelectedFile(new File(""));
+		fc.setDialogTitle("File Selection");
+		File Files = null;
+		int returnVal = fc.showOpenDialog(fc);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			Files = fc.getSelectedFile();
+		}
+		return Files;
+	}
+	
+	
 	public static File[] getBAMFiles(JFileChooser fc){
 		fc.setFileFilter(new ExtensionFileFilter("bam"));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
