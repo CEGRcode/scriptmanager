@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
-
 import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
@@ -41,6 +40,7 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.File_Utilities.MD5ChecksumWindow;
 import window_interface.Read_Analysis.AggregateDataWindow;
+import window_interface.Read_Analysis.ScalingFactorWindow;
 import window_interface.Read_Analysis.TagPileupWindow;
 import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
 import window_interface.Sequence_Analysis.DNAShapefromFASTAWindow;
@@ -839,6 +839,33 @@ public class ScriptManager {
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnAggregateData, 10, SpringLayout.WEST, pnlReadAnalysis);
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtAggregateData, 10, SpringLayout.EAST, btnAggregateData);
 		pnlReadAnalysis.add(btnAggregateData);
+		
+		JTextArea txtrNormalizationOfChipseq = new JTextArea();
+		initializeTextArea(txtrNormalizationOfChipseq);
+		txtrNormalizationOfChipseq.setText("Calculate scaling factor as either total tag normalization or normalization of ChIP-seq data with control (PMID: 22883957)");
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, txtrNormalizationOfChipseq, 10, SpringLayout.SOUTH, txtAggregateData);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.EAST, txtrNormalizationOfChipseq, -10, SpringLayout.EAST, pnlReadAnalysis);
+		pnlReadAnalysis.add(txtrNormalizationOfChipseq);
+		
+		JButton btnScale = new JButton("Calculate Scaling Factor");
+		btnScale.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ScalingFactorWindow frame = new ScalingFactorWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, btnScale, 0, SpringLayout.NORTH, txtrNormalizationOfChipseq);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnScale, 10, SpringLayout.WEST, pnlReadAnalysis);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtrNormalizationOfChipseq, 10, SpringLayout.EAST, btnScale);
+		pnlReadAnalysis.add(btnScale);
 					
 		JPanel pnlSeqAnalysis = new JPanel();
 		SpringLayout sl_pnlSeqAnalysis = new SpringLayout();
