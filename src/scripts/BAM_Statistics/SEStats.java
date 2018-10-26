@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Vector;
@@ -72,7 +73,7 @@ public class SEStats extends JFrame {
 				if(OUT != null) OUT.println(bamFiles.get(x).getName());
 				if(OUT != null) OUT.println("Chromosome_ID\tChromosome_Size\tAligned_Reads\tUnaligned_Reads");
 				textArea.append(bamFiles.get(x).getName() + "\n");
-				textArea.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\n");
+				textArea.append("Chromosome_ID\tChromosome_Size\tAligned_Reads\tUnaligned_Reads\n");
 				
 				//Code to get individual chromosome stats
 				//reader = new SamReader(bamFiles.get(x), new File(bamFiles.get(x) + ".bai"));
@@ -140,6 +141,10 @@ public class SEStats extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("Hello World");
+		System.out.print("java -cp ");
+		//Output full path of ScriptManager
+		try { System.out.print(new File(SEStats.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath()); }
+		catch (URISyntaxException e) { e.printStackTrace(); }
+		System.out.println(" scripts.BAM_Statistics.SEStats");
 	}
 }
