@@ -3,15 +3,19 @@ package scripts.Read_Analysis;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -28,7 +32,7 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
-
+import objects.CoordinateObjects.BEDCoord;
 import charts.ScalingPlotter;
 
 /**
@@ -41,6 +45,7 @@ import charts.ScalingPlotter;
 public class ScalingFactor extends JFrame {
 	
 	ArrayList<File> BAMFiles = null;
+	private File BLACKLISTFile = null;
 	private File CONTROL = null;
 	private String OUTPUTPATH = null;
 	private boolean OUTPUTSTATUS = false;
@@ -58,15 +63,15 @@ public class ScalingFactor extends JFrame {
 	private List<Float> Cgenome = new ArrayList<Float>();
 	private double CTagcount = 0;
 	
+	private HashMap<String, ArrayList<BEDCoord>> BLACKLIST = null;
 	private ArrayList<Double> SCALINGFACTORS = new ArrayList<Double>();
 	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
 	final JTabbedPane tabbedPane_CummulativeScatterplot;
 	final JTabbedPane tabbedPane_MarginalScatterplot;
-	//final JTabbedPane tabbedPane_Statistics;
 	
-	public ScalingFactor(ArrayList<File> b, File c, String out_path, boolean out, int scale, int win, double min) {
+	public ScalingFactor(ArrayList<File> b, File bl, File c, String out_path, boolean out, int scale, int win, double min) {
 		setTitle("Scaling Factor");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 800);
@@ -84,6 +89,7 @@ public class ScalingFactor extends JFrame {
 		layeredPane.add(tabbedPane);
 				
 		BAMFiles = b;
+		BLACKLISTFile = bl;
 		CONTROL = c;
 		OUTPUTPATH = out_path;
 		OUTPUTSTATUS = out;
@@ -100,6 +106,17 @@ public class ScalingFactor extends JFrame {
 	}
 	
 	public void run() throws IOException {
+		//Load blacklist HashMap if blacklist file uploaded by user
+		if(BLACKLISTFile != null) {	loadBlacklist(BLACKLISTFile); }
+		
+		//Load up the Control File once per run
+		if(scaleType != 1) {
+			System.out.println("\nLoading control genome array...");
+			initalizeGenomeMetainformation(CONTROL);
+			Cgenome = initializeList(CONTROL, false);
+			System.out.println("Array loaded");
+		}
+		
 		PrintStream OUT = null;
 		if(OUTPUTSTATUS) { OUT = new PrintStream(OUTPUTPATH + File.separator + "ScalingFactors.out"); }
 		
@@ -126,25 +143,27 @@ public class ScalingFactor extends JFrame {
 					System.out.println("Total tag ratio: " + SCALE);
 					SCALINGFACTORS.add(SCALE);
 				} else {
-					verifyFiles(SAMPLE);
-					System.out.println("\nLoading genome arrays...");
-					Sgenome = initializeList(SAMPLE, true);
-					Cgenome = initializeList(CONTROL, false);
-					System.out.println("Arrays loaded");
-					System.out.println("Sample tags: " + STagcount);
-					System.out.println("Control tags: " + CTagcount);
-					System.out.println("Bin count: " + Sgenome.size());
-					
-					if(scaleType == 2) {
-						System.out.println("\nCalculating NCIS scaling ratio...");
-						SCALE = 1 / scalingRatioByNCIS(Sgenome, Cgenome, OUTPUTPATH, FILEID, minFraction);
-						System.out.println("NCIS sample scaling ratio: " + SCALE);
-					} else if(scaleType == 3) {
-						System.out.println("\nCalculating Total tag NCIS scaling ratio...");
-						SCALE = 1 / scalingRatioByHitRatioAndNCIS(Sgenome, Cgenome, STagcount, CTagcount, OUTPUTPATH, FILEID, minFraction);
-						System.out.println("NCIS with Total Tag sample scaling ratio: " + SCALE);
+					if(verifyFiles(SAMPLE)) {
+						System.out.println("\nLoading sample genome array...");
+						Sgenome = initializeList(SAMPLE, true);
+						System.out.println("Array loaded");
+						System.out.println("Sample tags: " + STagcount);
+						System.out.println("Control tags: " + CTagcount);
+						System.out.println("Bin count: " + Sgenome.size());
+						
+						if(scaleType == 2) {
+							System.out.println("\nCalculating NCIS scaling ratio...");
+							SCALE = 1 / scalingRatioByNCIS(Sgenome, Cgenome, OUTPUTPATH, FILEID, minFraction);
+							System.out.println("NCIS sample scaling ratio: " + SCALE);
+						} else if(scaleType == 3) {
+							System.out.println("\nCalculating Total tag NCIS scaling ratio...");
+							SCALE = 1 / scalingRatioByHitRatioAndNCIS(Sgenome, Cgenome, STagcount, CTagcount, OUTPUTPATH, FILEID, minFraction);
+							System.out.println("NCIS with Total Tag sample scaling ratio: " + SCALE);
+						}
+						SCALINGFACTORS.add(SCALE);
+					} else {
+						SCALINGFACTORS.add(Double.NaN);
 					}
-					SCALINGFACTORS.add(SCALE);
 				}
 				
 				//Output scaling factor is user-specified
@@ -180,39 +199,90 @@ public class ScalingFactor extends JFrame {
 		
 		for(int x = 0; x < chromName.size(); x++) {
 			String seq = chromName.get(x);
-			long length = chromLength.get(x);
-			float[] chrom = new float[(int) (length / windowSize)];
-			//System.out.println(seq + "\t" + length + "\t" + chrom.length);
-			CloseableIterator<SAMRecord> iter = inputBAM.query(seq, 0, (int)length, false);
+			long chromSize = chromLength.get(x);
+			float[] chrom = new float[(int) (chromSize / windowSize) + 1];
+			//Blacklist filter each chromosome, set blacklisted windows to NaN
+			if(BLACKLIST != null) { chrom = maskChrom(seq, chromSize, windowSize); }
+			//Iterate through chromosome loading tags into window bin 
+			CloseableIterator<SAMRecord> iter = inputBAM.query(seq, 0, (int)chromSize, false);
 			//SAMRecords are 1-based
 			while (iter.hasNext()) {
-				//Create the record object 
-			    //SAMRecord is 1-based
 				SAMRecord sr = iter.next();
 				int FivePrime = sr.getUnclippedStart() - 1;
-				if(sr.getReadNegativeStrandFlag()) { 
-					FivePrime = sr.getUnclippedEnd();
-				}
+				if(sr.getReadNegativeStrandFlag()) { FivePrime = sr.getUnclippedEnd(); }
 				int INDEX = (FivePrime / windowSize);
 				if(sr.getReadPairedFlag()) { //If paired-end, take only read 1
 					//Read 1
-					if(sr.getFirstOfPairFlag()) {
-						TOTAL++;
-						if(INDEX < chrom.length) { chrom[INDEX]++; }
-					}
+					if(sr.getFirstOfPairFlag()) { if(INDEX < chrom.length) { chrom[INDEX]++; } }
 				} else { //If NOT paired-end, tag is always read 1
-					TOTAL++;
 					if(INDEX < chrom.length) { chrom[INDEX]++; }
 				}
 			}
 			iter.close();
 			for(int i = 0; i < chrom.length; i++) {
-				GENOME.add(chrom[i]);
+				//System.out.println(seq + "\t" + chrom[i]);
+				if(!Float.isNaN(chrom[i])) {
+					TOTAL += chrom[i];
+					GENOME.add(chrom[i]);
+				}
 			}
 		}
 		if(sample) { STagcount = TOTAL; }
 		else { CTagcount = TOTAL; }
 		return GENOME;
+	}
+	
+	public float[] maskChrom(String chrom, long chromSize, int windowSize) {
+		float[] chromArray = new float[(int) (chromSize / windowSize) + 1];
+		if(BLACKLIST.containsKey(chrom)) {
+			ArrayList<BEDCoord> blacklist = BLACKLIST.get(chrom);
+			for(int x = 0; x < blacklist.size(); x++) {
+				long START = blacklist.get(x).getStart();
+				long STOP = blacklist.get(x).getStop();
+				while(START < STOP) {
+					int index = ((int)START / windowSize);
+					if(index < chromArray.length) { chromArray[index] = Float.NaN; }
+					START += windowSize;
+				}
+			}
+		}
+		return chromArray;
+	}
+	
+	public void loadBlacklist(File BLACKFile) throws FileNotFoundException {
+		BLACKLIST = new HashMap<String, ArrayList<BEDCoord>>();
+	    Scanner scan = new Scanner(BLACKFile);
+		while (scan.hasNextLine()) {
+			String[] temp = scan.nextLine().split("\t");
+			if(temp.length > 2) {
+				if(!temp[0].contains("track") && !temp[0].contains("#")) {
+					if(Integer.parseInt(temp[1]) >= 0) {
+						int start = Integer.parseInt(temp[1]);
+						int stop = Integer.parseInt(temp[2]);
+						BEDCoord coord = new BEDCoord(temp[0], start, stop , ".");
+						if(BLACKLIST.containsKey(temp[0])) { BLACKLIST.get(temp[0]).add(coord);	}
+						else {
+							ArrayList<BEDCoord> newchrom = new ArrayList<BEDCoord>();
+							newchrom.add(coord);
+							BLACKLIST.put(temp[0], newchrom);
+						}			
+					} else {
+						System.err.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
+					}
+				}
+			}
+	    }
+		scan.close();
+		
+//		Iterator it = BLACKLIST.entrySet().iterator();
+//	    while (it.hasNext()) {
+//	        HashMap.Entry pair = (HashMap.Entry)it.next();
+//	        ArrayList<BEDCoord> temp = (ArrayList<BEDCoord>) pair.getValue();
+//	        for(int x = 0; x < temp.size(); x++) {
+//	        	System.out.println(pair.getKey() + " = " + temp.get(x).toString());
+//	        }
+//	        it.remove(); // avoids a ConcurrentModificationException
+//	    }
 	}
 	
 	public void initalizeGenomeMetainformation(File SAMPLE) throws IOException {
@@ -230,37 +300,36 @@ public class ScalingFactor extends JFrame {
 		Sbai.close();
 	}
 	
-	public void verifyFiles(File SAMPLE) throws IOException {
+	public boolean verifyFiles(File SAMPLE) throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 		SamReader Sreader = factory.open(SAMPLE);
 		SamReader Creader = factory.open(CONTROL);
 		AbstractBAMFileIndex Sbai = (AbstractBAMFileIndex) Sreader.indexing().getIndex();
 		AbstractBAMFileIndex Cbai = (AbstractBAMFileIndex) Creader.indexing().getIndex();
-		chromName = new ArrayList<String>();
-		chromLength = new ArrayList<Long>();
-		
 		if(Sbai.getNumberOfReferences() != Cbai.getNumberOfReferences()) {
+			JOptionPane.showMessageDialog(null, "Unequal number of chromosomes between sample and control!!!");
 			System.err.println("Unequal number of chromosomes between sample and control!!!!");
-			System.exit(1);
+			return false;
 		}
 		for (int z = 0; z < Sbai.getNumberOfReferences(); z++) {
 			SAMSequenceRecord Sseq = Sreader.getFileHeader().getSequence(z);
 			SAMSequenceRecord Cseq = Creader.getFileHeader().getSequence(z);
 			if(!Sseq.getSequenceName().equals(Cseq.getSequenceName())) {
+				JOptionPane.showMessageDialog(null, "Chromosome names do not match!!!\n" + Sseq.getSequenceName() + "\n" + Cseq.getSequenceName());
 				System.err.println("Chromosome names do not match!!!\n" + Sseq.getSequenceName() + "\n" + Cseq.getSequenceName());
-				System.exit(1);
+				return false;
 			}
 			if(Sseq.getSequenceLength() != Cseq.getSequenceLength()) {
+				JOptionPane.showMessageDialog(null, "Chromosome lengths do not match!!!\n" + Sseq.getSequenceName() + "\t" + Sseq.getSequenceLength() + "\n" + Cseq.getSequenceName() + "\t" + Cseq.getSequenceLength());
 				System.err.println("Chromosome lengths do not match!!!\n" + Sseq.getSequenceName() + "\t" + Sseq.getSequenceLength() + "\n" + Cseq.getSequenceName() + "\t" + Cseq.getSequenceLength());
-				System.exit(1);
+				return false;
 			}
-			chromName.add(Sseq.getSequenceName());
-			chromLength.add(new Long(Cseq.getSequenceLength()));
 		}
 		Sreader.close();
 		Creader.close();
 		Sbai.close();
 		Cbai.close();
+		return true;
 	}
 	
 	/**

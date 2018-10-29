@@ -47,6 +47,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	
 	final DefaultListModel<String> expList;
 	ArrayList<File> BAMFiles = new ArrayList<File>();
+	File BLACKLIST = null;
 	File CONTROL = null;
 	int NORM = 0;
 	private File OUTPUT_PATH = null;
@@ -73,6 +74,8 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	private JTextField txtFraction;
 		
 	public Task task;
+	private JLabel lblNoBlacklistLoaded;
+	private JButton btnRemoveBlacklistFilter;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -97,7 +100,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         		} else if(rdbtnNCIS.isSelected()) { scaleType = 2; }
         		else if(rdbtnNcisWithTotal.isSelected()) { scaleType = 3; }
         		
-       			ScalingFactor scale = new ScalingFactor(BAMFiles, CONTROL, OUTPUT_PATH.getAbsolutePath(), chckbxOutputStatistics.isSelected(), scaleType, Integer.parseInt(txtWindow.getText()), Double.parseDouble(txtFraction.getText()));
+       			ScalingFactor scale = new ScalingFactor(BAMFiles, BLACKLIST, CONTROL, OUTPUT_PATH.getAbsolutePath(), chckbxOutputStatistics.isSelected(), scaleType, Integer.parseInt(txtWindow.getText()), Double.parseDouble(txtFraction.getText()));
        			scale.addPropertyChangeListener("scale", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 				    	int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -124,7 +127,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 		setTitle("Calculate Scaling Factor");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 475);
+		setBounds(125, 125, 450, 515);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -133,7 +136,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	
 		JScrollPane scrollPane = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -230, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -295, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
 		
@@ -217,7 +220,6 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         contentPane.add(btnOutput);;
                         
         lblCurrentControl = new JLabel("Current Control:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentControl, 45, SpringLayout.SOUTH, scrollPane);
         lblCurrentControl.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentControl, 10, SpringLayout.WEST, contentPane);
         contentPane.add(lblCurrentControl);
@@ -230,7 +232,8 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         contentPane.add(lblNoControlLoaded);
         
         btnLoadControlBam = new JButton("Load Control BAM File");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadControlBam, 10, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoadControlBam, -200, SpringLayout.SOUTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentControl, 10, SpringLayout.SOUTH, btnLoadControlBam);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadControlBam, 10, SpringLayout.WEST, contentPane);
         btnLoadControlBam.setEnabled(false);
         btnLoadControlBam.addActionListener(new ActionListener() {
@@ -245,7 +248,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         contentPane.add(btnLoadControlBam);
         
         rdbtnTotalTag = new JRadioButton("Total Tag");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnTotalTag, 70, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnTotalTag, 10, SpringLayout.SOUTH, lblCurrentControl);
         sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnTotalTag, 10, SpringLayout.WEST, contentPane);
         contentPane.add(rdbtnTotalTag);
         
@@ -266,9 +269,9 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         rdbtnTotalTag.setSelected(true);
         
         lblWindow = new JLabel("Window Size (bp):");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblWindow, 10, SpringLayout.WEST, contentPane);
         lblWindow.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblWindow, 12, SpringLayout.SOUTH, rdbtnTotalTag);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblWindow, 0, SpringLayout.WEST, scrollPane);
         contentPane.add(lblWindow);
         
         txtWindow = new JTextField();
@@ -301,6 +304,44 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 1, SpringLayout.NORTH, btnOutput);
         sl_contentPane.putConstraint(SpringLayout.EAST, chckbxOutputStatistics, 0, SpringLayout.EAST, btnLoad);
         contentPane.add(chckbxOutputStatistics);
+        
+        JButton btnLoadBlacklistFilter = new JButton("Load Blacklist Filter");
+        btnLoadBlacklistFilter.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+				File newBlack = FileSelection.getFile(fc, "bed");
+				if(newBlack != null) {
+					BLACKLIST = newBlack.getAbsoluteFile();
+					lblNoBlacklistLoaded.setText(newBlack.getName());
+				}
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBlacklistFilter, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBlacklistFilter, 0, SpringLayout.WEST, scrollPane);
+        contentPane.add(btnLoadBlacklistFilter);
+        
+        JLabel lblCurrentBlacklist = new JLabel("Current Blacklist:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentBlacklist, 10, SpringLayout.SOUTH, btnLoadBlacklistFilter);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentBlacklist, 0, SpringLayout.WEST, scrollPane);
+        contentPane.add(lblCurrentBlacklist);
+        
+        lblNoBlacklistLoaded = new JLabel("No Blacklist Loaded");
+        lblNoBlacklistLoaded.setFont(new Font("Dialog", Font.PLAIN, 12));
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblNoBlacklistLoaded, 0, SpringLayout.WEST, lblDefaultToLocal);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblNoBlacklistLoaded, 0, SpringLayout.SOUTH, lblCurrentBlacklist);
+        contentPane.add(lblNoBlacklistLoaded);
+        
+        btnRemoveBlacklistFilter = new JButton("Remove Blacklist Filter");
+        btnRemoveBlacklistFilter.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		BLACKLIST = null;
+				lblNoBlacklistLoaded.setText("No Blacklist Loaded");
+        	}
+        });
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBlacklistFilter, 6, SpringLayout.SOUTH, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBlacklistFilter, 0, SpringLayout.EAST, scrollPane);
+        contentPane.add(btnRemoveBlacklistFilter);
+        
+        
         chckbxOutputStatistics.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		    	  activateOutput(chckbxOutputStatistics.isSelected());
