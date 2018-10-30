@@ -111,7 +111,7 @@ public class ScalingFactor extends JFrame {
 		
 		//Load up the Control File once per run
 		if(scaleType != 1) {
-			System.out.println("\nLoading control genome array...");
+			System.out.println(getTimeStamp() + "\nLoading control genome array...");
 			initalizeGenomeMetainformation(CONTROL);
 			Cgenome = initializeList(CONTROL, false);
 			System.out.println("Array loaded");
@@ -285,9 +285,9 @@ public class ScalingFactor extends JFrame {
 //	    }
 	}
 	
-	public void initalizeGenomeMetainformation(File SAMPLE) throws IOException {
+	public void initalizeGenomeMetainformation(File BAM) throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
-		SamReader Sreader = factory.open(SAMPLE);
+		SamReader Sreader = factory.open(BAM);
 		AbstractBAMFileIndex Sbai = (AbstractBAMFileIndex) Sreader.indexing().getIndex();
 		chromName = new ArrayList<String>();
 		chromLength = new ArrayList<Long>();
@@ -525,6 +525,11 @@ public class ScalingFactor extends JFrame {
 		table.getColumnModel().getColumn(0).setHeaderValue("Experiment");
 		table.getColumnModel().getColumn(1).setHeaderValue("Scaling Factor");
 		table.setPreferredSize(table.getPreferredSize());
+		// Allow for the selection of multiple OR individual cells across either rows or columns
+		table.setCellSelectionEnabled(true);
+		table.setColumnSelectionAllowed(true);
+		table.setRowSelectionAllowed(true);
+		
 		JScrollPane pane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 		pane.setPreferredSize(new Dimension(590, 590));

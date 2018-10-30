@@ -30,15 +30,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
-
-import scripts.Read_Analysis.ScalingFactor;
-
 import javax.swing.JRadioButton;
-
-import util.FileSelection;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
+
+import scripts.Read_Analysis.ScalingFactor;
+import util.FileSelection;
 
 @SuppressWarnings("serial")
 public class ScalingFactorWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -46,36 +44,33 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	final DefaultListModel<String> expList;
-	ArrayList<File> BAMFiles = new ArrayList<File>();
-	File BLACKLIST = null;
-	File CONTROL = null;
-	int NORM = 0;
+	private ArrayList<File> BAMFiles = new ArrayList<File>();
+	private File BLACKLIST = null;
+	private File CONTROL = null;
 	private File OUTPUT_PATH = null;
 	
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
-	private JCheckBox chckbxOutputStatistics;
-	private JButton btnOutput;
-	private JLabel lblDefaultToLocal;
-	private JLabel lblCurrent;
-	private JProgressBar progressBar;
-
-	private JRadioButton rdbtnTotalTag;
-	private JRadioButton rdbtnNCIS;
-	private JRadioButton rdbtnNcisWithTotal;
-
 	private JButton btnLoadControlBam;
+	private JButton btnRemoveBlacklistFilter;
+	private JButton btnOutput;
+	private JCheckBox chckbxOutputStatistics;
 	private JLabel lblNoControlLoaded;
 	private JLabel lblCurrentControl;
 	private JLabel lblWindow;
 	private JLabel lblMinFraction;
+	private JLabel lblDefaultToLocal;
+	private JLabel lblCurrent;
+	private JLabel lblNoBlacklistLoaded;
+	private JProgressBar progressBar;
+	private JRadioButton rdbtnTotalTag;
+	private JRadioButton rdbtnNCIS;
+	private JRadioButton rdbtnNcisWithTotal;
 	private JTextField txtWindow;
 	private JTextField txtFraction;
 		
 	public Task task;
-	private JLabel lblNoBlacklistLoaded;
-	private JButton btnRemoveBlacklistFilter;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
