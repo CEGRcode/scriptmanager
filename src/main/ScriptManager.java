@@ -40,6 +40,7 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.File_Utilities.MD5ChecksumWindow;
 import window_interface.Read_Analysis.AggregateDataWindow;
+import window_interface.Read_Analysis.ScaleMatrixWindow;
 import window_interface.Read_Analysis.ScalingFactorWindow;
 import window_interface.Read_Analysis.TagPileupWindow;
 import window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
@@ -812,11 +813,65 @@ public class ScriptManager {
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnTagPileup, 10, SpringLayout.WEST, pnlReadAnalysis);
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtTagPileup, 10, SpringLayout.EAST, btnTagPileup);
 		pnlReadAnalysis.add(btnTagPileup);		
+			
+		JTextArea txtCalculateScalingFactor = new JTextArea();
+		initializeTextArea(txtCalculateScalingFactor);
+		txtCalculateScalingFactor.setText("Calculate scaling factor as either total tag normalization or normalization of ChIP-seq data with control (PMID: 22883957)");
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, txtCalculateScalingFactor, 10, SpringLayout.SOUTH, txtTagPileup);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.EAST, txtCalculateScalingFactor, -10, SpringLayout.EAST, pnlReadAnalysis);
+		pnlReadAnalysis.add(txtCalculateScalingFactor);
+		
+		JButton btnScale = new JButton("Calculate Scaling Factor");
+		btnScale.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ScalingFactorWindow frame = new ScalingFactorWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, btnScale, 0, SpringLayout.NORTH, txtCalculateScalingFactor);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnScale, 10, SpringLayout.WEST, pnlReadAnalysis);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtCalculateScalingFactor, 10, SpringLayout.EAST, btnScale);
+		pnlReadAnalysis.add(btnScale);
+		
+		JTextArea txtApplyScalingFactor = new JTextArea();
+		initializeTextArea(txtApplyScalingFactor);
+		txtApplyScalingFactor.setText("Apply a user-specified scaling factor to tab-delimited matrix data");
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, txtApplyScalingFactor, 10, SpringLayout.SOUTH, btnScale);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.EAST, txtApplyScalingFactor, -10, SpringLayout.EAST, pnlReadAnalysis);
+		pnlReadAnalysis.add(txtApplyScalingFactor);
+		
+		JButton btnScaleMatrixData = new JButton("Scale Matrix Data");
+		btnScaleMatrixData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ScaleMatrixWindow frame = new ScaleMatrixWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				 });
+			}
+		});
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, btnScaleMatrixData, 0, SpringLayout.NORTH, txtApplyScalingFactor);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnScaleMatrixData, 10, SpringLayout.WEST, pnlReadAnalysis);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtApplyScalingFactor, 10, SpringLayout.EAST, btnScaleMatrixData);
+		pnlReadAnalysis.add(btnScaleMatrixData);
 		
 		JTextArea txtAggregateData = new JTextArea();
 		initializeTextArea(txtAggregateData);
-		txtAggregateData.setText("Compile data from CDT file into matrix according to user-specified metric");
-		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, txtAggregateData, 10, SpringLayout.SOUTH, txtTagPileup);
+		txtAggregateData.setText("Compile data from tab-delimited file into matrix according to user-specified metric");
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, txtAggregateData, 10, SpringLayout.SOUTH, txtApplyScalingFactor);
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.EAST, txtAggregateData, -10, SpringLayout.EAST, pnlReadAnalysis);
 		pnlReadAnalysis.add(txtAggregateData);
 		
@@ -839,34 +894,7 @@ public class ScriptManager {
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnAggregateData, 10, SpringLayout.WEST, pnlReadAnalysis);
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtAggregateData, 10, SpringLayout.EAST, btnAggregateData);
 		pnlReadAnalysis.add(btnAggregateData);
-		
-		JTextArea txtrNormalizationOfChipseq = new JTextArea();
-		initializeTextArea(txtrNormalizationOfChipseq);
-		txtrNormalizationOfChipseq.setText("Calculate scaling factor as either total tag normalization or normalization of ChIP-seq data with control (PMID: 22883957)");
-		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, txtrNormalizationOfChipseq, 10, SpringLayout.SOUTH, txtAggregateData);
-		sl_pnlReadAnalysis.putConstraint(SpringLayout.EAST, txtrNormalizationOfChipseq, -10, SpringLayout.EAST, pnlReadAnalysis);
-		pnlReadAnalysis.add(txtrNormalizationOfChipseq);
-		
-		JButton btnScale = new JButton("Calculate Scaling Factor");
-		btnScale.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							ScalingFactorWindow frame = new ScalingFactorWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				 });
-			}
-		});
-		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, btnScale, 0, SpringLayout.NORTH, txtrNormalizationOfChipseq);
-		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnScale, 10, SpringLayout.WEST, pnlReadAnalysis);
-		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtrNormalizationOfChipseq, 10, SpringLayout.EAST, btnScale);
-		pnlReadAnalysis.add(btnScale);
-					
+				
 		JPanel pnlSeqAnalysis = new JPanel();
 		SpringLayout sl_pnlSeqAnalysis = new SpringLayout();
 		pnlSeqAnalysis.setLayout(sl_pnlSeqAnalysis);
