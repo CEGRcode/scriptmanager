@@ -85,22 +85,34 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
         		} else if(Integer.parseInt(txtCol.getText()) < 0) {
         			JOptionPane.showMessageDialog(null, "Invalid Row Index Selected!!! Must be at least 0");
         		} else {
-	        		setProgress(0);
-	        		double SCALE = 0;
-	        		if(rdbtnUniformScaling.isSelected()) { SCALE = Double.parseDouble(txtUniform.getText()); }	        		
-	        		
-	        		for(int x = 0; x < TABFiles.size(); x++) {
-	        			if(OUTPUTPATH == null) { OUTPUTPATH = new File(System.getProperty("user.dir")); }
-	        			if(rdbtnFilespecifcScaling.isSelected()) { SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString()); }
-	        			//System.out.println(SCALE);
-	        			ScaleMatrix scale = new ScaleMatrix(TABFiles.get(x), OUTPUTPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
-	        			scale.run();
-	        			
-	        			int percentComplete = (int)(((double)(x + 1) / TABFiles.size()) * 100);
-	            		setProgress(percentComplete);
-	        		}
-		        	setProgress(100);
-	        		JOptionPane.showMessageDialog(null, "All Matrices Scaled");	
+        			//Check that all scaling numbers are valid
+        			boolean ALLNUM = true;
+        			for(int x = 0; x < TABFiles.size(); x++) {
+        				try { Double.parseDouble(expTable.getValueAt(x, 1).toString());	}
+        				catch(NumberFormatException e) {
+        					JOptionPane.showMessageDialog(null, TABFiles.get(x).getName() + " possesses an invalid scaling factor!!!");
+        					ALLNUM = false;  
+        				} 
+        			}
+        			
+        			if(ALLNUM) {
+	        			setProgress(0);
+		        		double SCALE = 0;
+		        		if(rdbtnUniformScaling.isSelected()) { SCALE = Double.parseDouble(txtUniform.getText()); }	        		
+		        		
+		        		for(int x = 0; x < TABFiles.size(); x++) {
+		        			if(OUTPUTPATH == null) { OUTPUTPATH = new File(System.getProperty("user.dir")); }
+		        			if(rdbtnFilespecifcScaling.isSelected()) { SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString()); }
+		        			//System.out.println(SCALE);
+		        			ScaleMatrix scale = new ScaleMatrix(TABFiles.get(x), OUTPUTPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
+		        			scale.run();
+		        			
+		        			int percentComplete = (int)(((double)(x + 1) / TABFiles.size()) * 100);
+		            		setProgress(percentComplete);
+		        		}
+			        	setProgress(100);
+		        		JOptionPane.showMessageDialog(null, "All Matrices Scaled");
+        			}
 	       		}
         	} catch(NumberFormatException e) {
         		JOptionPane.showMessageDialog(null, "Invalid Scaling Factor!!! Must be number");
