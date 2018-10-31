@@ -17,6 +17,7 @@ public class PileupParameters {
 	private int STDNUM = 0;
 	private int CPU = 1;
 	private int OUTTYPE = 0;
+	private File BLACKLIST = null;
 	private boolean STANDARD = false;
 	private boolean outputCOMPOSITE = false;
 	private boolean requirePE = false;
@@ -31,6 +32,14 @@ public class PileupParameters {
 	
 	public PileupParameters() {
 		
+	}
+	
+	public File getBlacklist() {
+		return BLACKLIST;
+	}
+	
+	public void setBlacklist(File black) {
+		BLACKLIST = black;
 	}
 	
 	public void setMaxInsert(int max) {
