@@ -38,6 +38,7 @@ import java.beans.PropertyChangeListener;
 
 import scripts.Figure_Generation.HeatmapPlot;
 import util.FileSelection;
+import javax.swing.JCheckBox;
 
 @SuppressWarnings("serial")
 public class HeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -67,6 +68,11 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	private JRadioButton rdbtnBilinear;
 	private JRadioButton rdbtnNearestNeighbor;
 	
+	private JCheckBox chckbxOutputHeatmap;
+	private JButton btnOutput;
+	private JLabel lblOutput;
+	private JLabel lblCurrentOutput;
+	
 	private File OUTPUTPATH = null;
 	
 	class Task extends SwingWorker<Void, Void> {
@@ -93,13 +99,13 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	    		else if(rdbtnBilinear.isSelected()) { scaletype = "bilinear"; }
 	    		else if(rdbtnNearestNeighbor.isSelected()) { scaletype = "neighbor"; }
 	        	if(OUTPUTPATH == null) { OUTPUTPATH = new File(System.getProperty("user.dir")); }
-	    		
+	        	
 	        	double absolute = Double.parseDouble(txtAbsolute.getText());
 	        	if(rdbtnPercentileValue.isSelected()) { absolute = -999; }
 	        	double quantile = Double.parseDouble(txtPercent.getText());
 	        	
 	        	//System.out.println(COLOR + "\n" + startR+ "\n" +  startC+ "\n" +  pHeight+ "\n" +  pWidth+ "\n" +  scaletype+ "\n" +  absolute+ "\n" +  quantile+ "\n" +  OUTPUTPATH);
-	        	HeatmapPlot heat = new HeatmapPlot(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH);
+	        	HeatmapPlot heat = new HeatmapPlot(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
 	        	
 	        	heat.addPropertyChangeListener("heat", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -192,7 +198,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 		
         btnGen.setActionCommand("start");
         
-        JLabel lblInputMatrixParameters = new JLabel("Input Matrix Parameters");
+        JLabel lblInputMatrixParameters = new JLabel("Input Matrix Parameters (0-based)");
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblInputMatrixParameters, 10, SpringLayout.SOUTH, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblInputMatrixParameters, 10, SpringLayout.WEST, contentPane);
         contentPane.add(lblInputMatrixParameters);
@@ -416,7 +422,8 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 		Scale.add(rdbtnNearestNeighbor);
         rdbtnTreeview.setSelected(true);
         
-        JButton btnOutput = new JButton("Output Directory");
+        btnOutput = new JButton("Output Directory");
+        btnOutput.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -45, SpringLayout.NORTH, btnGen);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
@@ -429,20 +436,22 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         sl_contentPane.putConstraint(SpringLayout.EAST, separator_1, -10, SpringLayout.EAST, contentPane);
         contentPane.add(separator_1);
         
-        JLabel lblCurrentOutput = new JLabel("Current Output:");
+        lblCurrentOutput = new JLabel("Current Output:");
+        lblCurrentOutput.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 15, SpringLayout.SOUTH, btnOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 10, SpringLayout.WEST, contentPane);
         lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrentOutput);
         
-        JLabel lblOutput = new JLabel("Default to Local Directory");
+        lblOutput = new JLabel("Default to Local Directory");
+        lblOutput.setEnabled(false);
         sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutput, 0, SpringLayout.NORTH, lblCurrentOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblOutput, 6, SpringLayout.EAST, lblCurrentOutput);
         sl_contentPane.putConstraint(SpringLayout.EAST, lblOutput, 0, SpringLayout.EAST, contentPane);
         lblOutput.setFont(new Font("Dialog", Font.PLAIN, 12));
         lblOutput.setBackground(Color.WHITE);
         contentPane.add(lblOutput);
-                
+        
         btnOutput.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	OUTPUTPATH = FileSelection.getOutputDir(fc);
@@ -451,8 +460,24 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 				}
 			}
 		});
+
+        chckbxOutputHeatmap = new JCheckBox("Output Heatmap");
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputHeatmap, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxOutputHeatmap, 0, SpringLayout.SOUTH, btnOutput);
+        contentPane.add(chckbxOutputHeatmap);
+        chckbxOutputHeatmap.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		    	  activateOutput(chckbxOutputHeatmap.isSelected());
+			      }
+			    });
         
         btnGen.addActionListener(this);
+	}
+	
+	public void activateOutput(boolean activate) {
+		btnOutput.setEnabled(activate);
+		lblOutput.setEnabled(activate);
+		lblCurrentOutput.setEnabled(activate);
 	}
 	
 	@Override
@@ -489,8 +514,11 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	        	txtAbsolute.setEnabled(true);
 	        	txtPercent.setEnabled(false);
 	        }
+			if(chckbxOutputHeatmap.isSelected()) { activateOutput(true); }
+			else { activateOutput(false); }
 		}
 	}
+
 }
 
 

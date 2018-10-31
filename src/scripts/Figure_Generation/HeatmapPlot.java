@@ -38,6 +38,7 @@ public class HeatmapPlot extends JFrame {
 	public static Color MINCOLOR = new Color(255, 255, 255);
 	public static Color MAXCOLOR = new Color(255, 0, 0);
 	
+	protected static boolean OUTPUTSTATUS = false;
 	protected static File OUTPUTPATH = null;
 	protected static String FILEID = null;	
 
@@ -46,7 +47,7 @@ public class HeatmapPlot extends JFrame {
 	
 	JTabbedPane newpane;
 
-	public HeatmapPlot(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File OUT) {
+	public HeatmapPlot(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File OUT, boolean outstatus) {
 		setTitle("Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -66,6 +67,8 @@ public class HeatmapPlot extends JFrame {
 		quantile = quant;
 		
 		OUTPUTPATH = OUT;
+		OUTPUTSTATUS = outstatus;
+		System.out.println(OUTPUTSTATUS);
 	}
 	
 	public void run() throws IOException {	
@@ -89,8 +92,9 @@ public class HeatmapPlot extends JFrame {
 				
 				System.out.println("Contrast threshold: " + COLOR_RATIO);
 				BufferedImage treeMap = generateHeatMap(newMatrix);
-				ImageIO.write(treeMap, "png", new File(OUTPUT + "_" + scaleType + ".png"));
 				picLabel = new JLabel(new ImageIcon(treeMap));
+				//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
+				if(OUTPUTSTATUS) { ImageIO.write(treeMap, "png", new File(OUTPUT + "_" + scaleType + ".png")); }
 			} else if(!scaleType.equalsIgnoreCase("treeview")) {
 				//COLOR_RATIO = 2 * getNonZeroAvg(MATRIX);
 				if(absolute != -999) { COLOR_RATIO = absolute; }
@@ -99,8 +103,10 @@ public class HeatmapPlot extends JFrame {
 				
 				BufferedImage rawMap = generateHeatMap(MATRIX);
 				BufferedImage compressedMap = resize(rawMap, pixelWidth, pixelHeight);
-				ImageIO.write(compressedMap, "png", new File(OUTPUT + "_" + scaleType + ".png"));
 				picLabel = new JLabel(new ImageIcon(compressedMap));
+				
+				//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
+				if(OUTPUTSTATUS) { ImageIO.write(compressedMap, "png", new File(OUTPUT + "_" + scaleType + ".png")); }
 			}	
 			//Output image/error to GUI
 			newpane.addTab(FILEID, new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
