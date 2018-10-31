@@ -96,7 +96,9 @@ public class TagPileup extends JFrame {
 			else {
 				
 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
-				if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
+				if(PARAM.getStandard() && PARAM.getBlacklist() != null) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead())); }
+				else if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
+				//System.out.println(PARAM.getRatio());
 								
 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
 					JTextArea STATS = new JTextArea(); //Generate statistics object
@@ -124,13 +126,14 @@ public class TagPileup extends JFrame {
 					int currentindex = 0;
 					for(int x = 0; x < CPU; x++) {
 						currentindex += subset;
-						if(CPU == 1) subset = INPUT.size();
-						else if(INPUT.size() % CPU == 0) subset = INPUT.size() / CPU;
+						if(CPU == 1) { subset = INPUT.size(); }
+						else if(INPUT.size() % CPU == 0) { subset = INPUT.size() / CPU; }
 						else {
 							int remainder = INPUT.size() % CPU;
 							if(x < remainder ) subset = (int)(((double)INPUT.size() / (double)CPU) + 1);
 							else subset = (int)(((double)INPUT.size() / (double)CPU));
 						}
+						//System.out.println("CPU: " + x + "\tInterval: " + currentindex + "\t" + subset);
 						PileupExtract extract = new PileupExtract(PARAM, BAM, INPUT, currentindex, subset);
 						parseMaster.execute(extract);
 					}

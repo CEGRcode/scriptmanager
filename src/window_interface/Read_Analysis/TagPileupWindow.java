@@ -59,6 +59,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnSenseColor;
 	private JButton btnAntiColor;
 	private JButton btnCombinedColor;
+	private JButton btnLoadBlacklistFilter;
+	private JButton btnRemoveBlacklistfilter;
 	private JRadioButton rdbtnRead1;
 	private JRadioButton rdbtnRead2;
 	private JRadioButton rdbtnAllReads;
@@ -71,15 +73,17 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JRadioButton rdbtnTabdelimited;
 	private JRadioButton rdbtnCdt;
 
-	private JLabel lblPleaseSelectWhich_1;
+	private JLabel lblSelectOutput;
 	private JLabel lblWindowSizebin;
 	private JLabel lblTagShift;
 	private JLabel lblStdDevSize;
 	private JLabel lblNumStd;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrentOutput;
-	private JLabel lblPleaseSelectOutput;
+	private JLabel lblOutputMatrixFormat;
+	private JLabel lblCurrentBlacklist;
 	private JLabel lblCpusToUse;
+	private JLabel lblNoBlacklistLoaded;
 	private JTextField txtShift;
 	private JTextField txtBin;
 	private JTextField txtSmooth;
@@ -98,6 +102,10 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	public Task task;
 	private JTextField txtMin;
 	private JTextField txtMax;
+	private JSeparator sepReadManip;
+	private JLabel lblReadManipulation;
+	
+	private File BLACKLIST = null;
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -163,8 +171,10 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        	if(chckbxOutputData.isSelected() && rdbtnTabdelimited.isSelected()) param.setOutputType(1);
 		        	else if(chckbxOutputData.isSelected() && rdbtnCdt.isSelected()) param.setOutputType(2);
 		        			        	
-		        	if(chckbxTagStandard.isSelected()) param.setStandard(true);
-		        	else param.setStandard(false);
+		        	if(chckbxTagStandard.isSelected()) {
+		        		if(BLACKLIST != null) { param.setBlacklist(BLACKLIST); }
+		        		param.setStandard(true);
+		        	} else { param.setStandard(false); }
 		        	
 		        	//SHIFT can be negative
 		        	param.setShift(Integer.parseInt(txtShift.getText()));
@@ -206,22 +216,57 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		setTitle("Tag Pileup");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 600, 920);
+		setBounds(125, 125, 600, 950);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		SpringLayout sl_contentPane = new SpringLayout();
 		contentPane.setLayout(sl_contentPane);
 	
-		JScrollPane scrollPane_BAM = new JScrollPane();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BAM, 207, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BAM, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BAM, -10, SpringLayout.EAST, contentPane);
-		contentPane.add(scrollPane_BAM);
+        JButton btnLoadBedFile = new JButton("Load BED Files");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBedFile, -1, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 10, SpringLayout.WEST, contentPane);
+        btnLoadBedFile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				if(newBEDFiles != null) {
+					for(int x = 0; x < newBEDFiles.length; x++) { 
+						BEDFiles.add(newBEDFiles[x]);
+						bedList.addElement(newBEDFiles[x].getName());
+					}
+				}
+			}
+		});  
+		contentPane.add(btnLoadBedFile);
+        
+        JScrollPane scrollPane_BED = new JScrollPane();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BED, 6, SpringLayout.SOUTH, btnLoadBedFile);
+        sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BED, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BED, 165, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BED, -10, SpringLayout.EAST, contentPane);
+        contentPane.add(scrollPane_BED);
+        
+        bedList = new DefaultListModel<String>();
+		final JList<String> listBed = new JList<>(bedList);
+		listBed.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		scrollPane_BED.setViewportView(listBed);
+        
+        JButton btnRemoveBed = new JButton("Remove BED");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBed, -1, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBed, -10, SpringLayout.EAST, contentPane);
+        btnRemoveBed.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		while(listBed.getSelectedIndex() > -1) {
+   					BEDFiles.remove(listBed.getSelectedIndex());
+   					bedList.remove(listBed.getSelectedIndex());
+   				}
+        	}
+        });
+        contentPane.add(btnRemoveBed);
 		
 		btnLoadBamFiles = new JButton("Load BAM Files");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBamFiles, 0, SpringLayout.WEST, scrollPane_BAM);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoadBamFiles, -6, SpringLayout.NORTH, scrollPane_BAM);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBamFiles, 10, SpringLayout.SOUTH, scrollPane_BED);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBamFiles, 10, SpringLayout.WEST, contentPane);
 		btnLoadBamFiles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
@@ -235,14 +280,21 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnLoadBamFiles);
 		
+		JScrollPane scrollPane_BAM = new JScrollPane();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BAM, 10, SpringLayout.SOUTH, btnLoadBamFiles);
+		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BAM, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BAM, 335, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BAM, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(scrollPane_BAM);
+		
       	expList = new DefaultListModel<String>();
 		final JList<String> listExp = new JList<>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane_BAM.setViewportView(listExp);
 		
 		btnRemoveBam = new JButton("Remove BAM");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -6, SpringLayout.NORTH, scrollPane_BAM);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane_BAM);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, btnLoadBamFiles);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listExp.getSelectedIndex() > -1) {
@@ -253,13 +305,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		});		
 		contentPane.add(btnRemoveBam);
 		
-		btnPileup = new JButton("Pile Tags");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnPileup, 250, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnPileup, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnPileup, -250, SpringLayout.EAST, contentPane);
-		contentPane.add(btnPileup);
-		
+        JLabel lblSelectRead = new JLabel("Select Read to Output:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSelectRead, 8, SpringLayout.SOUTH, scrollPane_BAM);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblSelectRead, 10, SpringLayout.WEST, contentPane);
+        lblSelectRead.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblSelectRead);
+				
 		rdbtnRead1 = new JRadioButton("Read 1");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 8, SpringLayout.SOUTH, lblSelectRead);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead1, 20, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnRead1);
 		
@@ -285,7 +338,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         OutputRead.add(rdbtnMidpoint);
         rdbtnRead1.setSelected(true);
         
-        chckbxRequireProperPe = new JCheckBox("Require Proper PE Pairing");
+        chckbxRequireProperPe = new JCheckBox("Require Proper Paired-End");
         sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRequireProperPe, 6, SpringLayout.SOUTH, rdbtnRead1);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRequireProperPe, 210, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, chckbxRequireProperPe, 400, SpringLayout.WEST, contentPane);
@@ -353,52 +406,16 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.EAST, sepReadOutput, -10, SpringLayout.EAST, contentPane);
         sepReadOutput.setForeground(Color.BLACK);
         contentPane.add(sepReadOutput);
-        
-        JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 353, SpringLayout.NORTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BAM, -5, SpringLayout.NORTH, lblPleaseSelectWhich);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich, 10, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead1, 6, SpringLayout.SOUTH, lblPleaseSelectWhich);
-        lblPleaseSelectWhich.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblPleaseSelectWhich);
-
-        lblDefaultToLocal = new JLabel("Default to Local Directory");
-        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -13, SpringLayout.EAST, contentPane);
-        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
-        lblDefaultToLocal.setBackground(Color.WHITE);
-        contentPane.add(lblDefaultToLocal);
-        
-        lblCurrentOutput = new JLabel("Current Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.EAST, lblCurrentOutput);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane_BAM);
-        lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblCurrentOutput);
-		
-        btnOutputDirectory = new JButton("Output Directory");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 8, SpringLayout.SOUTH, btnOutputDirectory);
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 188, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -221, SpringLayout.EAST, contentPane);
-        contentPane.add(btnOutputDirectory);
-        
-        progressBar = new JProgressBar();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnPileup);
-        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 99, SpringLayout.EAST, btnPileup);
-        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, contentPane);
-        progressBar.setStringPainted(true);
-        contentPane.add(progressBar);
-        
-        btnPileup.setActionCommand("start");
-        
-        lblPleaseSelectWhich_1 = new JLabel("Please Select How to Output Strands:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich_1, 8, SpringLayout.SOUTH, sepReadOutput);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectWhich_1, 10, SpringLayout.WEST, contentPane);
-        lblPleaseSelectWhich_1.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblPleaseSelectWhich_1);
+                
+        lblSelectOutput = new JLabel("Select Output Strands:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblSelectOutput, 8, SpringLayout.SOUTH, sepReadOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblSelectOutput, 10, SpringLayout.WEST, contentPane);
+        lblSelectOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblSelectOutput);
         
         rdbtnSeperate = new JRadioButton("Seperate");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSeperate, 6, SpringLayout.SOUTH, lblPleaseSelectWhich_1);
-        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnSeperate, 0, SpringLayout.EAST, lblPleaseSelectWhich);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSeperate, -3, SpringLayout.NORTH, lblSelectOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnSeperate, 30, SpringLayout.EAST, lblSelectOutput);
         rdbtnSeperate.setSelected(true);
         rdbtnSeperate.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
@@ -412,8 +429,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         contentPane.add(rdbtnSeperate);
         
         rdbtnComb = new JRadioButton("Combined");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnComb, 0, SpringLayout.NORTH, rdbtnSeperate);
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnComb, 90, SpringLayout.EAST, rdbtnSeperate);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnComb, -3, SpringLayout.NORTH, lblSelectOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnComb, 80, SpringLayout.EAST, rdbtnSeperate);
         rdbtnComb.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		    	  if(rdbtnComb.isSelected()) {
@@ -430,166 +447,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         ReadStrand.add(rdbtnComb);
         rdbtnSeperate.setSelected(true);
         
-        lblTagShift = new JLabel("Tag Shift (bp):");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblTagShift, 0, SpringLayout.WEST, scrollPane_BAM);
-        lblTagShift.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblTagShift);
-        
-        txtShift = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtShift, -1, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtShift, 10, SpringLayout.EAST, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtShift, 80, SpringLayout.EAST, lblTagShift);
-        txtShift.setHorizontalAlignment(SwingConstants.CENTER);
-        txtShift.setText("0");
-        contentPane.add(txtShift);
-        txtShift.setColumns(10);
-        
-        lblStdDevSize = new JLabel("Std Dev Size (Bin #):");
-        lblStdDevSize.setEnabled(false);
-        lblStdDevSize.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblStdDevSize);
-        
-        lblNumStd = new JLabel("# of Std Deviations:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblNumStd, 0, SpringLayout.NORTH, lblStdDevSize);
-        lblNumStd.setEnabled(false);
-        lblNumStd.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblNumStd);
-        
-        JLabel lblBinSizebp = new JLabel("Bin Size (bp):");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblBinSizebp, 0, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblBinSizebp, 26, SpringLayout.EAST, txtShift);
-        lblBinSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblBinSizebp);
-        
-        txtBin = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtBin, -1, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtBin, 10, SpringLayout.EAST, lblBinSizebp);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtBin, 80, SpringLayout.EAST, lblBinSizebp);
-        txtBin.setText("1");
-        txtBin.setHorizontalAlignment(SwingConstants.CENTER);
-        txtBin.setColumns(10);
-        contentPane.add(txtBin);
-        
-        txtStdSize = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblNumStd, 10, SpringLayout.EAST, txtStdSize);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtStdSize, -1, SpringLayout.NORTH, lblStdDevSize);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtStdSize, 10, SpringLayout.EAST, lblStdDevSize);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtStdSize, 60, SpringLayout.EAST, lblStdDevSize);
-        txtStdSize.setEnabled(false);
-        txtStdSize.setHorizontalAlignment(SwingConstants.CENTER);
-        txtStdSize.setText("5");
-        contentPane.add(txtStdSize);
-        txtStdSize.setColumns(10);
-        
-        txtNumStd = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtNumStd, -1, SpringLayout.NORTH, lblStdDevSize);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtNumStd, 10, SpringLayout.EAST, lblNumStd);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtNumStd, 60, SpringLayout.EAST, lblNumStd);
-        txtNumStd.setEnabled(false);
-        txtNumStd.setHorizontalAlignment(SwingConstants.CENTER);
-        txtNumStd.setText("3");
-        contentPane.add(txtNumStd);
-        txtNumStd.setColumns(10);
-        
-        JButton btnLoadBedFile = new JButton("Load BED Files");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBedFile, -1, SpringLayout.NORTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 10, SpringLayout.WEST, contentPane);
-		contentPane.add(btnLoadBedFile);
-        
-        chckbxOutputData = new JCheckBox("Output for Heatmap");
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputData, 0, SpringLayout.WEST, scrollPane_BAM);
-        chckbxOutputData.setSelected(true);
-        contentPane.add(chckbxOutputData);
-        
-        rdbtnNone = new JRadioButton("None");
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnNone, 0, SpringLayout.WEST, scrollPane_BAM);
-        contentPane.add(rdbtnNone);
-        
-        JLabel lblPleaseSelectComposite = new JLabel("Please Select Composite Transformation:");
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectComposite, 10, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnNone, 10, SpringLayout.SOUTH, lblPleaseSelectComposite);
-        lblPleaseSelectComposite.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblPleaseSelectComposite);
-        
-        rdbtnGaussianSmooth = new JRadioButton("Gaussian Smooth");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStdDevSize, 3, SpringLayout.NORTH, rdbtnGaussianSmooth);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblStdDevSize, 10, SpringLayout.EAST, rdbtnGaussianSmooth);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnGaussianSmooth, 5, SpringLayout.SOUTH, rdbtnNone);
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnGaussianSmooth, 0, SpringLayout.WEST, scrollPane_BAM);
-        contentPane.add(rdbtnGaussianSmooth);
-        
-        rdbtnSlidingWindow = new JRadioButton("Sliding Window");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSlidingWindow, 0, SpringLayout.NORTH, rdbtnNone);
-        sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnSlidingWindow, 0, SpringLayout.EAST, lblPleaseSelectWhich);
-        contentPane.add(rdbtnSlidingWindow);
-               
-        ButtonGroup trans = new ButtonGroup();
-        trans.add(rdbtnNone);
-        trans.add(rdbtnSlidingWindow);
-        trans.add(rdbtnGaussianSmooth);
-        rdbtnNone.setSelected(true);
-        
-        lblWindowSizebin = new JLabel("Window Size (Bin #):");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblWindowSizebin, 3, SpringLayout.NORTH, rdbtnNone);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblWindowSizebin, 10, SpringLayout.EAST, rdbtnSlidingWindow);
-        lblWindowSizebin.setEnabled(false);
-        lblWindowSizebin.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblWindowSizebin);
-        
-        txtSmooth = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtSmooth, 2, SpringLayout.NORTH, rdbtnNone);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtSmooth, 10, SpringLayout.EAST, lblWindowSizebin);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtSmooth, 80, SpringLayout.EAST, lblWindowSizebin);
-        txtSmooth.setHorizontalAlignment(SwingConstants.CENTER);
-        txtSmooth.setEnabled(false);
-        txtSmooth.setText("3");
-        contentPane.add(txtSmooth);
-        txtSmooth.setColumns(10);
-        
-        lblCpusToUse = new JLabel("CPU's to Use:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCpusToUse, 0, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 21, SpringLayout.EAST, txtBin);
-        lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblCpusToUse);
-        
-        txtCPU = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -1, SpringLayout.NORTH, lblTagShift);
-        sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 10, SpringLayout.EAST, lblCpusToUse);
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtCPU, 80, SpringLayout.EAST, lblCpusToUse);
-        txtCPU.setHorizontalAlignment(SwingConstants.CENTER);
-        txtCPU.setText("1");
-        contentPane.add(txtCPU);
-        txtCPU.setColumns(10);
-        
-        rdbtnTabdelimited = new JRadioButton("TAB-Delimited");
-        contentPane.add(rdbtnTabdelimited);
-        rdbtnCdt = new JRadioButton("CDT");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnTabdelimited, 0, SpringLayout.NORTH, rdbtnCdt);
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnTabdelimited, 40, SpringLayout.EAST, rdbtnCdt);
-        rdbtnCdt.setSelected(true);
-        contentPane.add(rdbtnCdt);
-        
-        ButtonGroup output = new ButtonGroup();
-        output.add(rdbtnTabdelimited);
-        output.add(rdbtnCdt);
-        
-        lblPleaseSelectOutput = new JLabel("Please select Output File Format:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCdt, -2, SpringLayout.NORTH, lblPleaseSelectOutput);
-        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCdt, 30, SpringLayout.EAST, lblPleaseSelectOutput);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectOutput, 6, SpringLayout.SOUTH, chckbxOutputData);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectOutput, 0, SpringLayout.WEST, scrollPane_BAM);
-        lblPleaseSelectOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-        contentPane.add(lblPleaseSelectOutput);
-        
-        chckbxTagStandard = new JCheckBox("Set Tags to Be Equal");
-        sl_contentPane.putConstraint(SpringLayout.EAST, chckbxTagStandard, 375, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxTagStandard, 10, SpringLayout.SOUTH, txtBin);
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxTagStandard, 210, SpringLayout.WEST, contentPane);
-        contentPane.add(chckbxTagStandard);
-        
         btnSenseColor = new JButton("Sense Color");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblTagShift, 10, SpringLayout.SOUTH, btnSenseColor);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnSenseColor, 35, SpringLayout.SOUTH, lblPleaseSelectWhich_1);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnSenseColor, 8, SpringLayout.SOUTH, lblSelectOutput);
         btnSenseColor.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
         		btnSenseColor.setForeground(JColorChooser.showDialog(btnSenseColor, "Select an Output Color", btnSenseColor.getForeground()));
@@ -622,94 +481,274 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.WEST, btnCombinedColor, 75, SpringLayout.EAST, btnAntiColor);
         contentPane.add(btnCombinedColor);
         
-        JScrollPane scrollPane_BED = new JScrollPane();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BED, 6, SpringLayout.SOUTH, btnLoadBedFile);
-        sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BED, 10, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BED, -5, SpringLayout.NORTH, btnLoadBamFiles);
-        sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BED, -10, SpringLayout.EAST, contentPane);
-        contentPane.add(scrollPane_BED);
+        sepReadManip = new JSeparator();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, sepReadManip, 8, SpringLayout.SOUTH, btnSenseColor);
+        sl_contentPane.putConstraint(SpringLayout.WEST, sepReadManip, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, sepReadManip, -10, SpringLayout.EAST, contentPane);
+        sepReadManip.setForeground(Color.BLACK);
+        contentPane.add(sepReadManip);
         
-        bedList = new DefaultListModel<String>();
-		final JList<String> listBed = new JList<>(bedList);
-		listBed.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		scrollPane_BED.setViewportView(listBed);
+        lblReadManipulation = new JLabel("Read Manipulation:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblReadManipulation, 8, SpringLayout.SOUTH, sepReadManip);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblReadManipulation, 0, SpringLayout.WEST, scrollPane_BAM);
+        contentPane.add(lblReadManipulation);
         
-        JButton btnRemoveBed = new JButton("Remove BED");
-        btnRemoveBed.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		while(listBed.getSelectedIndex() > -1) {
-   					BEDFiles.remove(listBed.getSelectedIndex());
-   					bedList.remove(listBed.getSelectedIndex());
-   				}
-        	}
-        });
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBed, 0, SpringLayout.EAST, scrollPane_BAM);
-        contentPane.add(btnRemoveBed);
+        lblTagShift = new JLabel("Tag Shift (bp):");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblTagShift, 10, SpringLayout.SOUTH, lblReadManipulation);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblTagShift, 0, SpringLayout.WEST, scrollPane_BAM);
+        lblTagShift.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblTagShift);
         
+        txtShift = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtShift, -1, SpringLayout.NORTH, lblTagShift);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtShift, 10, SpringLayout.EAST, lblTagShift);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtShift, 80, SpringLayout.EAST, lblTagShift);
+        txtShift.setHorizontalAlignment(SwingConstants.CENTER);
+        txtShift.setText("0");
+        contentPane.add(txtShift);
+        txtShift.setColumns(10);
+        
+        JLabel lblBinSizebp = new JLabel("Bin Size (bp):");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblBinSizebp, 0, SpringLayout.NORTH, lblTagShift);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblBinSizebp, 26, SpringLayout.EAST, txtShift);
+        lblBinSizebp.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblBinSizebp);
+        
+        txtBin = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtBin, -1, SpringLayout.NORTH, lblTagShift);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtBin, 10, SpringLayout.EAST, lblBinSizebp);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtBin, 80, SpringLayout.EAST, lblBinSizebp);
+        txtBin.setText("1");
+        txtBin.setHorizontalAlignment(SwingConstants.CENTER);
+        txtBin.setColumns(10);
+        contentPane.add(txtBin);
+        
+        lblCpusToUse = new JLabel("CPU's to Use:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCpusToUse, 0, SpringLayout.NORTH, lblTagShift);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 21, SpringLayout.EAST, txtBin);
+        lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblCpusToUse);
+                
+        txtCPU = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -1, SpringLayout.NORTH, lblTagShift);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 10, SpringLayout.EAST, lblCpusToUse);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtCPU, 80, SpringLayout.EAST, lblCpusToUse);
+        txtCPU.setHorizontalAlignment(SwingConstants.CENTER);
+        txtCPU.setText("1");
+        contentPane.add(txtCPU);
+        txtCPU.setColumns(10);
+        
+        chckbxTagStandard = new JCheckBox("Set Tags to Be Equal");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxTagStandard, 40, SpringLayout.SOUTH, lblReadManipulation);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxTagStandard, 0, SpringLayout.WEST, scrollPane_BAM);
+        contentPane.add(chckbxTagStandard);
+        
+        btnLoadBlacklistFilter = new JButton("Load Blacklist Filter");
+        btnLoadBlacklistFilter.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBlacklistFilter, -1, SpringLayout.NORTH, chckbxTagStandard);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBlacklistFilter, 6, SpringLayout.EAST, chckbxTagStandard);
+        contentPane.add(btnLoadBlacklistFilter);
+        
+        btnRemoveBlacklistfilter = new JButton("Remove BlacklistFilter");
+        btnRemoveBlacklistfilter.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBlacklistfilter, -1, SpringLayout.NORTH, chckbxTagStandard);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnRemoveBlacklistfilter, 0, SpringLayout.WEST, rdbtnComb);
+        contentPane.add(btnRemoveBlacklistfilter);
+        
+        lblCurrentBlacklist = new JLabel("Current Blacklist:");
+        lblCurrentBlacklist.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentBlacklist, 13, SpringLayout.SOUTH, chckbxTagStandard);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentBlacklist, 0, SpringLayout.WEST, scrollPane_BAM);
+        contentPane.add(lblCurrentBlacklist);
+        
+        lblNoBlacklistLoaded = new JLabel("No Blacklist Loaded");
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblNoBlacklistLoaded, -10, SpringLayout.EAST, contentPane);
+        lblNoBlacklistLoaded.setEnabled(false);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblNoBlacklistLoaded, 0, SpringLayout.NORTH, lblCurrentBlacklist);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblNoBlacklistLoaded, 6, SpringLayout.EAST, lblCurrentBlacklist);
+        lblNoBlacklistLoaded.setFont(new Font("Dialog", Font.PLAIN, 12));
+        contentPane.add(lblNoBlacklistLoaded);
+                                              
+        JSeparator sepComposite = new JSeparator();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, sepComposite, 38, SpringLayout.SOUTH, chckbxTagStandard);
+        sl_contentPane.putConstraint(SpringLayout.WEST, sepComposite, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, sepComposite, -10, SpringLayout.EAST, contentPane);
+        sepComposite.setForeground(Color.BLACK);
+        contentPane.add(sepComposite);
+                
+        JLabel lblPleaseSelectComposite = new JLabel("Composite Transformation:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectComposite, 10, SpringLayout.SOUTH, sepComposite);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblPleaseSelectComposite, 10, SpringLayout.WEST, contentPane);
+        lblPleaseSelectComposite.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblPleaseSelectComposite);
+        
+        rdbtnNone = new JRadioButton("None");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnNone, 6, SpringLayout.SOUTH, lblPleaseSelectComposite);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnNone, 10, SpringLayout.WEST, contentPane);
+        contentPane.add(rdbtnNone);
+        
+        rdbtnGaussianSmooth = new JRadioButton("Gaussian Smooth");
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnGaussianSmooth, 10, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnGaussianSmooth, 5, SpringLayout.SOUTH, rdbtnNone);
+        contentPane.add(rdbtnGaussianSmooth);
+        
+        rdbtnSlidingWindow = new JRadioButton("Sliding Window");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSlidingWindow, 0, SpringLayout.NORTH, rdbtnNone);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnSlidingWindow, 10, SpringLayout.EAST, rdbtnNone);
+        contentPane.add(rdbtnSlidingWindow);
+               
+        ButtonGroup trans = new ButtonGroup();
+        trans.add(rdbtnNone);
+        trans.add(rdbtnSlidingWindow);
+        trans.add(rdbtnGaussianSmooth);
+        rdbtnNone.setSelected(true);
+        
+        lblStdDevSize = new JLabel("Std Dev Size (Bin #):");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStdDevSize, 2, SpringLayout.NORTH, rdbtnGaussianSmooth);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblStdDevSize, 8, SpringLayout.EAST, rdbtnGaussianSmooth);
+        lblStdDevSize.setEnabled(false);
+        lblStdDevSize.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblStdDevSize);
+        
+        lblNumStd = new JLabel("# of Std Deviations:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblNumStd, 0, SpringLayout.NORTH, lblStdDevSize);
+        lblNumStd.setEnabled(false);
+        lblNumStd.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblNumStd);
+        
+        txtStdSize = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblNumStd, 10, SpringLayout.EAST, txtStdSize);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtStdSize, -1, SpringLayout.NORTH, lblStdDevSize);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtStdSize, 10, SpringLayout.EAST, lblStdDevSize);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtStdSize, 60, SpringLayout.EAST, lblStdDevSize);
+        txtStdSize.setEnabled(false);
+        txtStdSize.setHorizontalAlignment(SwingConstants.CENTER);
+        txtStdSize.setText("5");
+        contentPane.add(txtStdSize);
+        txtStdSize.setColumns(10);
+        
+        txtNumStd = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtNumStd, -1, SpringLayout.NORTH, lblStdDevSize);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtNumStd, 10, SpringLayout.EAST, lblNumStd);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtNumStd, 60, SpringLayout.EAST, lblNumStd);
+        txtNumStd.setEnabled(false);
+        txtNumStd.setHorizontalAlignment(SwingConstants.CENTER);
+        txtNumStd.setText("3");
+        contentPane.add(txtNumStd);
+        txtNumStd.setColumns(10);
+        
+        lblWindowSizebin = new JLabel("Window Size (Bin #):");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblWindowSizebin, 3, SpringLayout.NORTH, rdbtnNone);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblWindowSizebin, 10, SpringLayout.EAST, rdbtnSlidingWindow);
+        lblWindowSizebin.setEnabled(false);
+        lblWindowSizebin.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblWindowSizebin);
+        
+        txtSmooth = new JTextField();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, txtSmooth, 2, SpringLayout.NORTH, rdbtnNone);
+        sl_contentPane.putConstraint(SpringLayout.WEST, txtSmooth, 10, SpringLayout.EAST, lblWindowSizebin);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtSmooth, 80, SpringLayout.EAST, lblWindowSizebin);
+        txtSmooth.setHorizontalAlignment(SwingConstants.CENTER);
+        txtSmooth.setEnabled(false);
+        txtSmooth.setText("3");
+        contentPane.add(txtSmooth);
+        txtSmooth.setColumns(10);
+
         JSeparator sepOutput = new JSeparator();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputData, 8, SpringLayout.SOUTH, sepOutput);
         sl_contentPane.putConstraint(SpringLayout.NORTH, sepOutput, 8, SpringLayout.SOUTH, rdbtnGaussianSmooth);
         sl_contentPane.putConstraint(SpringLayout.WEST, sepOutput, 0, SpringLayout.WEST, scrollPane_BAM);
         sl_contentPane.putConstraint(SpringLayout.EAST, sepOutput, -10, SpringLayout.EAST, contentPane);
         sepOutput.setForeground(Color.BLACK);
         contentPane.add(sepOutput);
+                
+		JLabel lblOutputParameters = new JLabel("Output Parameters:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputParameters, 8, SpringLayout.SOUTH, sepOutput);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputParameters, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(lblOutputParameters);
         
-        JSeparator sepComposite = new JSeparator();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, sepComposite, 8, SpringLayout.SOUTH, chckbxTagStandard);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectComposite, 6, SpringLayout.SOUTH, sepComposite);
-        sl_contentPane.putConstraint(SpringLayout.WEST, sepComposite, 10, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, sepComposite, -10, SpringLayout.EAST, contentPane);
-        sepComposite.setForeground(Color.BLACK);
-        contentPane.add(sepComposite);
+        chckbxOutputData = new JCheckBox("Output Heatmap Matrix");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputData, 8, SpringLayout.SOUTH, lblOutputParameters);
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputData, 0, SpringLayout.WEST, scrollPane_BAM);
+        chckbxOutputData.setSelected(true);
+        contentPane.add(chckbxOutputData);
         
-        chckbxOutputCompositeData = new JCheckBox("Output for Composite");
+        rdbtnTabdelimited = new JRadioButton("TAB-Delimited");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnTabdelimited, 0, SpringLayout.NORTH, chckbxOutputData);
+        contentPane.add(rdbtnTabdelimited);
+        rdbtnCdt = new JRadioButton("CDT");
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnTabdelimited, 6, SpringLayout.EAST, rdbtnCdt);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnCdt, 0, SpringLayout.NORTH, chckbxOutputData);
+        rdbtnCdt.setSelected(true);
+        contentPane.add(rdbtnCdt);
+        
+        ButtonGroup output = new ButtonGroup();
+        output.add(rdbtnTabdelimited);
+        output.add(rdbtnCdt);
+               
+        lblOutputMatrixFormat = new JLabel("Matrix File Format:");
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputMatrixFormat, 10, SpringLayout.EAST, chckbxOutputData);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCdt, 6, SpringLayout.EAST, lblOutputMatrixFormat);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputMatrixFormat, 3, SpringLayout.NORTH, chckbxOutputData);
+        lblOutputMatrixFormat.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblOutputMatrixFormat);
+                
+        chckbxOutputCompositeData = new JCheckBox("Output Composite");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputCompositeData, 6, SpringLayout.SOUTH, chckbxOutputData);
         chckbxOutputCompositeData.setSelected(true);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputCompositeData, 10, SpringLayout.SOUTH, lblPleaseSelectOutput);
         sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputCompositeData, 0, SpringLayout.WEST, scrollPane_BAM);
         contentPane.add(chckbxOutputCompositeData);
         
         txtCompositeName = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 8, SpringLayout.SOUTH, txtCompositeName);
         sl_contentPane.putConstraint(SpringLayout.NORTH, txtCompositeName, 2, SpringLayout.NORTH, chckbxOutputCompositeData);
         sl_contentPane.putConstraint(SpringLayout.WEST, txtCompositeName, 10, SpringLayout.EAST, chckbxOutputCompositeData);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtCompositeName, 250, SpringLayout.EAST, chckbxOutputCompositeData);
         txtCompositeName.setText("composite_average.out");
         contentPane.add(txtCompositeName);
         txtCompositeName.setColumns(10);
-           
+        
+        lblDefaultToLocal = new JLabel("Default to Local Directory");
+        sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -13, SpringLayout.EAST, contentPane);
+        lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+        lblDefaultToLocal.setBackground(Color.WHITE);
+        contentPane.add(lblDefaultToLocal);
+        
+        lblCurrentOutput = new JLabel("Current Output:");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.EAST, lblCurrentOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane_BAM);
+        lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+        contentPane.add(lblCurrentOutput);
+		
+        btnOutputDirectory = new JButton("Output Directory");
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutputDirectory, -60, SpringLayout.SOUTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 8, SpringLayout.SOUTH, btnOutputDirectory);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 188, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -221, SpringLayout.EAST, contentPane);
+        contentPane.add(btnOutputDirectory);
+        
 		rdbtnRead1.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
-			        if(rdbtnRead1.isSelected()) {
-			        	rdbtnComb.setEnabled(true);
-			        	rdbtnSeperate.setEnabled(true);
-			        }
+			        if(rdbtnRead1.isSelected()) { allowReadChoice(true); }
 			      }
 			    });
         
 		rdbtnRead2.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
-			        if(rdbtnRead2.isSelected()) {
-			        	rdbtnComb.setEnabled(true);
-			        	rdbtnSeperate.setEnabled(true);
-			        }
+			        if(rdbtnRead2.isSelected()) { allowReadChoice(true); }
 			      }
 			    });
 		
 		rdbtnAllReads.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
-			        if(rdbtnAllReads.isSelected()) {
-			        	rdbtnComb.setEnabled(true);
-			        	rdbtnSeperate.setEnabled(true);
-			        }
+			        if(rdbtnAllReads.isSelected()) { allowReadChoice(true); }
 			      }
 			    });
 		
 		rdbtnMidpoint.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 			        if(rdbtnMidpoint.isSelected()) {
+			        	allowReadChoice(false);
 			        	rdbtnComb.setSelected(true);
-			        	rdbtnComb.setEnabled(false);
-			        	rdbtnSeperate.setEnabled(false);
 			        	chckbxRequireProperPe.setSelected(true);
 			        	chckbxRequireProperPe.setEnabled(false);
 			        } else if(!chckbxFilterByMin.isSelected() && !chckbxFilterByMax.isSelected()) { chckbxRequireProperPe.setEnabled(true); }
@@ -756,22 +795,16 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
         chckbxOutputData.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 			        if(chckbxOutputData.isSelected()) {
-			        	btnOutputDirectory.setEnabled(true);
-			        	lblDefaultToLocal.setEnabled(true);
-			        	lblCurrentOutput.setEnabled(true);
-			        	lblPleaseSelectOutput.setEnabled(true);
+			        	activateOutput(true);
+			        	lblOutputMatrixFormat.setEnabled(true);
 						rdbtnTabdelimited.setEnabled(true);
 						rdbtnCdt.setEnabled(true);
 
 			        } else {
-			        	lblPleaseSelectOutput.setEnabled(false);
+			        	lblOutputMatrixFormat.setEnabled(false);
 						rdbtnTabdelimited.setEnabled(false);
 						rdbtnCdt.setEnabled(false);
-						if(!chckbxOutputCompositeData.isSelected()) {
-							btnOutputDirectory.setEnabled(false);
-							lblDefaultToLocal.setEnabled(false);
-							lblCurrentOutput.setEnabled(false);
-						}
+						if(!chckbxOutputCompositeData.isSelected()) { activateOutput(false); }
 			        }
 			      }
 			    });
@@ -780,32 +813,16 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		      public void itemStateChanged(ItemEvent e) {
 			        if(chckbxOutputCompositeData.isSelected()) {
 			        	txtCompositeName.setEnabled(true);
-			        	btnOutputDirectory.setEnabled(true);
-			        	lblDefaultToLocal.setEnabled(true);
-			        	lblCurrentOutput.setEnabled(true);
+			        	activateOutput(true);
 			        } else {
 			        	txtCompositeName.setEnabled(false);
 			        	if(!chckbxOutputData.isSelected()) {
-			        		btnOutputDirectory.setEnabled(false);
-			        		lblDefaultToLocal.setEnabled(false);
-				        	lblCurrentOutput.setEnabled(false);
+			        		activateOutput(false);
 			        	}
 			        }
 			      }
 			    });
-        
-        btnLoadBedFile.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
-				if(newBEDFiles != null) {
-					for(int x = 0; x < newBEDFiles.length; x++) { 
-						BEDFiles.add(newBEDFiles[x]);
-						bedList.addElement(newBEDFiles[x].getName());
-					}
-				}
-			}
-		});   
-		
+        	
         btnOutputDirectory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				OUTPUT = FileSelection.getOutputDir(fc);
@@ -815,7 +832,63 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
         
+        chckbxTagStandard.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+			        if(chckbxTagStandard.isSelected()) { activateBlacklist(true); }
+			        else { activateBlacklist(false); }
+			      }
+			    });
+        
+        btnLoadBlacklistFilter.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+				File newBlack = FileSelection.getFile(fc, "bed");
+				if(newBlack != null) {
+					BLACKLIST = newBlack.getAbsoluteFile();
+					lblNoBlacklistLoaded.setText(newBlack.getName());
+				}
+        	}
+        });
+        
+        btnRemoveBlacklistfilter.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		BLACKLIST = null;
+				lblNoBlacklistLoaded.setText("No Blacklist Loaded");
+        	}
+        });
+        
+		btnPileup = new JButton("Pile Tags");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnPileup, 250, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnPileup, 0, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnPileup, -250, SpringLayout.EAST, contentPane);
+		contentPane.add(btnPileup);
+		
+        progressBar = new JProgressBar();
+        sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnPileup);
+        sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 99, SpringLayout.EAST, btnPileup);
+        sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, contentPane);
+        progressBar.setStringPainted(true);
+        contentPane.add(progressBar);
+        btnPileup.setActionCommand("start");
+		
         btnPileup.addActionListener(this);
+	}
+	
+	public void allowReadChoice(boolean activate) {
+    	rdbtnComb.setEnabled(activate);
+    	rdbtnSeperate.setEnabled(activate);
+	}
+	
+	public void activateOutput(boolean activate) {
+    	btnOutputDirectory.setEnabled(activate);
+    	lblDefaultToLocal.setEnabled(activate);
+    	lblCurrentOutput.setEnabled(activate);
+	}
+	
+	public void activateBlacklist(boolean activate) {
+		btnLoadBlacklistFilter.setEnabled(activate);
+		btnRemoveBlacklistfilter.setEnabled(activate);
+		lblCurrentBlacklist.setEnabled(activate);
+    	lblNoBlacklistLoaded.setEnabled(activate);
 	}
 	
 	@Override
@@ -839,12 +912,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		if(status) {
 			if(rdbtnMidpoint.isSelected()) {
 				chckbxRequireProperPe.setEnabled(false);
-				rdbtnSeperate.setEnabled(false);
-				rdbtnComb.setEnabled(false);
+				allowReadChoice(false);
 			}
-			if(chckbxFilterByMin.isSelected()  || chckbxFilterByMax.isSelected()) {
-				chckbxRequireProperPe.setEnabled(false);
-			}
+			if(chckbxFilterByMin.isSelected()  || chckbxFilterByMax.isSelected()) { chckbxRequireProperPe.setEnabled(false); }
 			if(!chckbxFilterByMin.isSelected()) { txtMin.setEnabled(false); }
 			if(!chckbxFilterByMax.isSelected()) { txtMax.setEnabled(false); }
 			if(rdbtnSeperate.isSelected()) {
@@ -881,19 +951,16 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	    		txtNumStd.setEnabled(false);
 			}
 			if(!chckbxOutputData.isSelected()) {
-				lblPleaseSelectOutput.setEnabled(false);
+				lblOutputMatrixFormat.setEnabled(false);
 				rdbtnTabdelimited.setEnabled(false);
 				rdbtnCdt.setEnabled(false);
 			}
 			if(!chckbxOutputCompositeData.isSelected()) {
 				txtCompositeName.setEnabled(false);
 			}
-			if(!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {
-				btnOutputDirectory.setEnabled(false);
-				lblCurrentOutput.setEnabled(false);
-				lblDefaultToLocal.setEnabled(false);
-			}
-			
+			if(!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) { activateOutput(false); }
+			if(chckbxTagStandard.isSelected()) { activateBlacklist(true); }
+	        else { activateBlacklist(false); }
 		}
 	}
 	
