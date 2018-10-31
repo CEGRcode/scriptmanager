@@ -166,8 +166,8 @@ public class PileupExtract implements Runnable{
 		//Perform Tag Standardization Here
 		if(param.getStandard()) {
 			for(int i = 0; i < finalF.length; i++) {
-				if(finalF != null) finalF[i] /= param.getRatio();
-				if(finalR != null) finalR[i] /= param.getRatio();
+				if(finalF != null) finalF[i] *= param.getRatio();
+				if(finalR != null) finalR[i] *= param.getRatio();
 			}
 		}
 		
