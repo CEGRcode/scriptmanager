@@ -178,7 +178,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(btnRemove);
 		
 		btnGen = new JButton("Generate");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -323, SpringLayout.NORTH, btnGen);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -340, SpringLayout.NORTH, btnGen);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
@@ -198,7 +198,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         contentPane.add(lblInputMatrixParameters);
         
         JLabel lblStartingRow = new JLabel("Starting Row:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStartingRow, 6, SpringLayout.SOUTH, lblInputMatrixParameters);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStartingRow, 10, SpringLayout.SOUTH, lblInputMatrixParameters);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblStartingRow, 25, SpringLayout.WEST, contentPane);
         contentPane.add(lblStartingRow);
         
@@ -212,7 +212,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         txtRow.setColumns(10);
         
         JLabel lblStartingColumn = new JLabel("Starting Column:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStartingColumn, 6, SpringLayout.SOUTH, lblInputMatrixParameters);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblStartingColumn, 10, SpringLayout.SOUTH, lblInputMatrixParameters);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblStartingColumn, 10, SpringLayout.EAST, txtRow);
         contentPane.add(lblStartingColumn);
         
@@ -226,9 +226,9 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         txtCol.setColumns(10);
         
         JSeparator separator = new JSeparator();
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, separator, 15, SpringLayout.SOUTH, lblStartingRow);
         sl_contentPane.putConstraint(SpringLayout.EAST, separator, -10, SpringLayout.EAST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, separator, 10, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, separator, 10, SpringLayout.SOUTH, lblStartingRow);
         separator.setForeground(Color.BLACK);
         contentPane.add(separator);
         
@@ -237,19 +237,67 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         sl_contentPane.putConstraint(SpringLayout.WEST, lblSelectColor, 15, SpringLayout.WEST, contentPane);
         contentPane.add(lblSelectColor);
         
+        JRadioButton rdbtnRed = new JRadioButton("Red");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRed, -4, SpringLayout.NORTH, lblSelectColor);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRed, 8, SpringLayout.EAST, lblSelectColor);
+        rdbtnRed.setForeground(new Color(255,0,0));
+
+        contentPane.add(rdbtnRed);
+        
+        JRadioButton rdbtnBlue = new JRadioButton("Blue");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnBlue, 0, SpringLayout.NORTH, rdbtnRed);
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnBlue, 8, SpringLayout.EAST, rdbtnRed);
+        rdbtnBlue.setForeground(new Color(0,0,255));
+
+        contentPane.add(rdbtnBlue);
+        
+        JRadioButton rdbtnCustom = new JRadioButton("Custom");
+        sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnCustom, 8, SpringLayout.EAST, rdbtnBlue);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, rdbtnCustom, 0, SpringLayout.SOUTH, rdbtnRed);
+        rdbtnCustom.setForeground(new Color(0,0,0));
+        contentPane.add(rdbtnCustom);
+                
         btnColor = new JButton("Heatmap Color");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnColor, -6, SpringLayout.NORTH, lblSelectColor);
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnColor, 10, SpringLayout.EAST, lblSelectColor);
-        btnColor.setForeground(Color.RED);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnColor, -2, SpringLayout.NORTH, rdbtnCustom);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnColor, 8, SpringLayout.EAST, rdbtnCustom);
+        btnColor.setForeground(new Color(0,0,0));
         btnColor.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
         		btnColor.setForeground(JColorChooser.showDialog(btnColor, "Select a Heatmap Color", btnColor.getForeground()));
+        		if(btnColor.getForeground().equals(new Color(255,0,0))) { rdbtnRed.setSelected(true); }
+        		else if(btnColor.getForeground().equals(new Color(0,0,255))) { rdbtnBlue.setSelected(true); }
+        		else {
+        			rdbtnCustom.setForeground(btnColor.getForeground());
+        			rdbtnCustom.setSelected(true);
+        		}
+
         	}
         });
         contentPane.add(btnColor);
         
+        ButtonGroup HeatColor = new ButtonGroup();
+        HeatColor.add(rdbtnRed);
+        HeatColor.add(rdbtnBlue);
+        HeatColor.add(rdbtnCustom);
+        rdbtnCustom.setSelected(true);
+        rdbtnRed.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+			        if(rdbtnRed.isSelected()) { btnColor.setForeground(new Color(255,0,0)); }
+			      }
+			    });
+        rdbtnBlue.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+			        if(rdbtnBlue.isSelected()) { btnColor.setForeground(new Color(0,0,255)); }
+			      }
+			    });
+        rdbtnCustom.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+			        if(rdbtnCustom.isSelected()) { btnColor.setForeground(rdbtnCustom.getForeground()); }
+			      }
+			    });
+        
         JLabel lblPixelHeight = new JLabel("Image Height:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPixelHeight, 20, SpringLayout.SOUTH, lblSelectColor);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblPixelHeight, 20, SpringLayout.SOUTH, btnColor);
         sl_contentPane.putConstraint(SpringLayout.WEST, lblPixelHeight, 0, SpringLayout.WEST, lblSelectColor);
         contentPane.add(lblPixelHeight);
         
@@ -370,7 +418,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         
         JButton btnOutput = new JButton("Output Directory");
         sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -40, SpringLayout.NORTH, btnGen);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -45, SpringLayout.NORTH, btnGen);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
         contentPane.add(btnOutput);
         
@@ -382,8 +430,8 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         contentPane.add(separator_1);
         
         JLabel lblCurrentOutput = new JLabel("Current Output:");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 45, SpringLayout.SOUTH, separator_1);
-        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 15, SpringLayout.SOUTH, btnOutput);
+        sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 10, SpringLayout.WEST, contentPane);
         lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
         contentPane.add(lblCurrentOutput);
         
@@ -394,7 +442,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         lblOutput.setFont(new Font("Dialog", Font.PLAIN, 12));
         lblOutput.setBackground(Color.WHITE);
         contentPane.add(lblOutput);
-        
+                
         btnOutput.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	OUTPUTPATH = FileSelection.getOutputDir(fc);
