@@ -16,8 +16,9 @@ public class ExpandBED {
 	    
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");
-			if(temp.length > 2) {
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
+			if(temp[0].toLowerCase().contains("track") || temp[0].startsWith("#")) { OUT.println(String.join("\t", temp)); }
+			else {
+				if(temp.length > 2) {
 					if(Integer.parseInt(temp[1]) >= 0) {
 						//Default to add to border
 						int newstart = Integer.parseInt(temp[1]) - SIZE;
@@ -25,7 +26,7 @@ public class ExpandBED {
 						if(ExCenter) { //Else expand from center
 							boolean EVEN = ((Integer.parseInt(temp[2]) - Integer.parseInt(temp[1])) % 2 == 0);
 				        	int CENTER = (int)((Integer.parseInt(temp[1]) + Integer.parseInt(temp[2])) / 2);
-				        	if(temp.length > 4) { if(!temp[5].equals("-") && !EVEN) { CENTER++; } }
+				        	if(temp.length > 5) { if(!temp[5].equals("-") && !EVEN) { CENTER++; } }
 					        newstart = CENTER - (SIZE / 2);
 					        newstop = CENTER + (SIZE / 2);
 				        }

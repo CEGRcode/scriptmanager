@@ -19,8 +19,9 @@ public class ExpandGFF {
 	    
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");
-			if(temp.length == 9) {
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
+			if(temp[0].toLowerCase().contains("track") || temp[0].startsWith("#")) { OUT.println(String.join("\t", temp)); }
+			else {
+				if(temp.length == 9) {
 					if(Integer.parseInt(temp[3]) >= 1) {
 						//Default to add to border
 						int newstart = Integer.parseInt(temp[3]) - SIZE;

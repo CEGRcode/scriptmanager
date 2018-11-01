@@ -19,8 +19,9 @@ public class GFFtoBED {
 	    
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");
-			if(temp.length == 9) {
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
+			if(temp[0].toLowerCase().contains("track") || temp[0].startsWith("#")) { OUT.println(String.join("\t", temp)); }
+			else {
+				if(temp.length == 9) {
 					String name = temp[8];
 					String score = temp[5]; //Get or make direction
 					String dir = temp[6];

@@ -17,8 +17,9 @@ public class BEDtoGFF {
 	    
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");
-			if(temp.length > 2) {
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
+			if(temp[0].toLowerCase().contains("track") || temp[0].startsWith("#")) { OUT.println(String.join("\t", temp)); }
+			else {
+				if(temp.length > 2) {
 					String name = temp[0] + "_" + temp[1] + "_" + temp[2]; //Get or make name from BED file
 					if(temp.length > 3) { name = temp[3]; }
 					String score = "0"; //Get or make direction
