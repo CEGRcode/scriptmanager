@@ -9,7 +9,7 @@ apply plugin: 'eclipse'
 
 sourceSets.main.java.srcDirs = ['src']
 mainClassName = "main.ScriptManager"
-version = '0.11-dev'
+version = '0.12'
 sourceCompatibility = 1.8
 
 // Gradle builds for dev

@@ -12,7 +12,7 @@ Scripts are generically categorized within semi-descriptive tabs and are designe
 
 The compiled JAR file will be output into the `build/libs` directory. 
 
-## Current scripts available (180614):
+## Current scripts available (181101):
 
 **BAM Statistics:**
 
@@ -20,7 +20,7 @@ The compiled JAR file will be output into the `build/libs` directory.
   
   -Paired-End Statistics
   
-  -Signal Duplication
+  -BAM Genome Correlation
   
 
 **BAM Manipulation:**
@@ -50,18 +50,14 @@ The compiled JAR file will be output into the `build/libs` directory.
 **File Utilities:**
 
   -MD5 Checksum
-  
-  
-**Coordinate File Manipulation:**
 
-  -Expand BED/GFF File
   
-  -Convert BED/GFF to GFF/BED
-  
-  -Sort BED/GFF by CDT
-  
+**Peak Calling:**
 
-**Coordinate File Analysis:**
+  -Genetrack - still highly unstable
+
+  
+**Peak Analysis:**
 
   -Align BED to Reference
   
@@ -70,13 +66,26 @@ The compiled JAR file will be output into the `build/libs` directory.
   -Genomic Coordinate Tile
   
   -Generate Random Coordinate
-  
+    
+  -Signal Duplication
 
-**Sequence Tag Analysis:**
+
+**Coordinate File Manipulation:**
+
+  -Expand BED/GFF File
+  
+  -Convert BED/GFF to GFF/BED
+  
+  -Sort BED/GFF by CDT
+ 
+
+**Sequence Read Analysis:**
 
   -Tag Pileup
   
-  -Merge Heat Plots
+  -Calculate Scaling Factor
+  
+  -Scale Matrix Data
   
   -Aggregate Data
   
@@ -92,6 +101,12 @@ The compiled JAR file will be output into the `build/libs` directory.
   -DNA Shape from BED
   
   -DNA Shape from FASTA
+
+
+  **Figure Generation:**
+
+  -Heatmap
+  
+  -Merge Heatmaps
   
   -4Color Sequence Plot
-  

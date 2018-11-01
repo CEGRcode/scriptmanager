@@ -53,7 +53,7 @@ import window_interface.Figure_Generation.HeatMapWindow;
 import window_interface.Figure_Generation.MergeHeatMapWindow;
 
 public class ScriptManager {
-	public static final String VERSION = "0.11-dev";
+	public static final String VERSION = "0.12";
 
 	private JFrame frmScriptManager;	
 	/**
