@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class GFFtoBED {
-	public static void convertBEDtoGFF(File out_path, File input) throws IOException {
+	public static void convertGFFtoBED(File out_path, File input) throws IOException {
 		//GFF:	chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
 		//BED:	chr12	605113	605120	region_0	0	+
 

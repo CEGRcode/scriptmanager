@@ -56,7 +56,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         public Void doInBackground() throws IOException {
         	setProgress(0);
         	for(int x = 0; x < BEDFiles.size(); x++) {
-				GFFtoBED.convertBEDtoGFF(OUTPUT_PATH, BEDFiles.get(x));
+				GFFtoBED.convertGFFtoBED(OUTPUT_PATH, BEDFiles.get(x));
 				int percentComplete = (int)(((double)(x + 1) / BEDFiles.size()) * 100);
         		setProgress(percentComplete);
         	}

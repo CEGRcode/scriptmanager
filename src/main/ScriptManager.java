@@ -1140,7 +1140,7 @@ public class ScriptManager {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void launchApplication() {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (Throwable e) {
@@ -1157,4 +1157,9 @@ public class ScriptManager {
 			}
 		});
 	}
+	
+	public static void main(String[] args) {
+		launchApplication()
+	}
+	
 }
