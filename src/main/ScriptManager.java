@@ -1159,7 +1159,7 @@ public class ScriptManager {
 	}
 	
 	public static void main(String[] args) {
-		launchApplication()
+		launchApplication();
 	}
 	
 }

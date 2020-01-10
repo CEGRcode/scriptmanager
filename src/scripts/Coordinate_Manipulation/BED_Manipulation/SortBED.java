@@ -1,6 +1,7 @@
 package scripts.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -64,5 +65,29 @@ public class SortBED {
 	    	OUT.println(BEDFile.get(SORT.get(x).getName()));
 	    }
 	    OUT.close();
+	}
+	
+	// This function is almost exactly copied from window/*/SortBEDWindow & window/*/SortGFFWindow & scripts/*/SortGFF...good practice to merge at some point.
+	public static Integer parseCDTFile(File CDT) throws FileNotFoundException {
+		Scanner scan = new Scanner(CDT);
+		int currentSize = -999;
+		boolean consistentSize = true;
+		int currentRow = 1;
+		while (scan.hasNextLine()) {
+			String[] temp = scan.nextLine().split("\t");
+			if(!temp[0].contains("YORF") && !temp[0].contains("NAME")) {
+				int tempsize = temp.length - 2;
+				if(currentSize == -999) { currentSize = tempsize; }
+				else if(currentSize != tempsize) {
+					System.err.println("Invalid Row at Index: " + currentRow);
+					consistentSize = false;
+					scan.close();
+				}
+				currentRow++;
+			}
+		}
+		scan.close();
+		if(consistentSize) { return currentSize; }
+		else { return -999; }
 	}
 }

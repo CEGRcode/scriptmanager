@@ -83,7 +83,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
         		} else if(rdbtnSortbyIndex.isSelected() && Integer.parseInt(txtStart.getText()) < 0) {
         			JOptionPane.showMessageDialog(null, "Start Index is smaller than 0!!!");
         		} else if(rdbtnSortbyIndex.isSelected() && Integer.parseInt(txtStop.getText()) > CDT_SIZE) {
-        			JOptionPane.showMessageDialog(null, "Start Index is smaller than 0!!!");
+        			JOptionPane.showMessageDialog(null, "Stop Index is larger than CDT row size!!!");
         		} else {
         			if(rdbtnSortbyCenter.isSelected()) {
             			START_INDEX = (CDT_SIZE / 2) - (Integer.parseInt(txtMid.getText()) / 2);
@@ -364,7 +364,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	}
     
 	
-	
+	// This function is almost exactly copied from window/*/SortBEDWindow & scripts/*/SortBED & scripts/*/SortGFF...good practice to merge at some point.
 	public boolean parseCDTFile(File CDT) throws FileNotFoundException {
 		Scanner scan = new Scanner(CDT);
 		int currentSize = -999;

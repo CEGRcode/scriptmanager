@@ -21,41 +21,48 @@ public class ExpandBEDCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the BED file to expand on")
 	private File bedFile;
 	
-	@Option(names = {"-o", "--output"}, description = "Specify output file ")
+	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with coordinate info appended)")
 	private File output;
 	@Option(names = {"-c", "--center"}, description = "expand from center (default=250)")
-	private boolean center = false;
+	private boolean center;
 	@Option(names = {"-b", "--border"}, description = "add to border")
-	private boolean border = false;
+	private boolean border;
 	@Option(names = {"-s", "--size"}, description = "num bp to expand BED file by")
 	private int SIZE = 250;
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">ExpandBEDCLI.call()" );
 		
-		if( validateInput()!=0 ){ System.err.println("invalid Input"); }
-		
-		if( output == null){
-			String new_out_dir = bedFile.getAbsoluteFile().getParent();
-			output = new File( new_out_dir );
-			System.out.println( output.isDirectory() );
-			output = new File( new_out_dir + "/expanded_output.bed" );
+		if( validateInput()!=0 ){
+			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 		}
-		
-// 		ExpandBED.expandBEDBorders(OUTPUT_PATH, bedFile, SIZE, center);
-		System.err.println("Conversion Complete");
+// 		System.err.println("center="+Boolean.toString(center)+"\nborder="+Boolean.toString(border)+"\nsize="+Integer.toString(SIZE));
+		ExpandBED.expandBEDBorders(output, bedFile, SIZE, center);
+		System.err.println("Expansion Complete");
 		
 		return(0);
 	}
 	
-	public Integer validateInput(){
+	private Integer validateInput(){
 		
-		assert SIZE < 1;
-		assert border || center;
-		assert !(border && center);
+		int return_val = 0;
+		// Define default behavior
+		if( !center && !border ){ center = true; }
+		// Check for invalid inputs
+		if( output!=null && !output.isDirectory() ){
+			System.err.println("!!!Output must be a directory! Unable to specify specific name at this time.");
+			return_val++;
+		}
+		if( border && center ){
+			System.err.println( "!!!Both border and center cannot be flagged at the same time!" );
+			return_val++;
+		}
+		if( SIZE > 0 ){
+			System.err.println( "!!!Invalid size input. Must be a positive integer greater than 0." );
+			return_val++;
+		}
 		
-		return(0);
+		return(return_val);
 	}
 	
 }

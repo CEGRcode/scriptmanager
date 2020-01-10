@@ -11,7 +11,6 @@ import java.io.File;
 
 import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
-
 /**
 	Coordinate_ManipulationCLI/BEDtoGFFCLI
 */
@@ -22,14 +21,13 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the BED file to convert")
 	private File bedFile;
 	
-	@Option(names = {"-o", "--output"}, description = "Specify output file ")
-	private File output = null;
+	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with .gff ext)")
+	private File output;
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">BEDtoGFFCLI.call()" );
 		
-		if( validateInput()!=0 ){ System.err.println("invalid Input"); }
+		if( validateInput()!=0 ){ System.err.println("Invalid input. Check usage using '-h' or '--help'"); }
 		
 		// call scripts tools
 		BEDtoGFF.convertBEDtoGFF(output, bedFile);
@@ -39,11 +37,11 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 	}
 	
 	private Integer validateInput(){
-		
 		// validation done within BEDtoGFF script
-		
+		if( output!=null && !output.isDirectory() ){
+			System.err.println("Output must be a directory! Unable to specify specific name at this time.");
+			return(1);
+		}
 		return(0);
 	}
-	
 }
-
