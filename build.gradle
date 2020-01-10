@@ -47,7 +47,9 @@ repositories {
 
 // Declare the dependencies for your production and test code
 dependencies {
- 	compile 'org.slf4j:slf4j-api:1.7.13'
+	compile 'org.slf4j:slf4j-api:1.7.13'
+	// https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.1'
 	testCompile 'junit:junit:4.12'
     compile fileTree(dir: 'lib', include: ['*.jar'])
  }
