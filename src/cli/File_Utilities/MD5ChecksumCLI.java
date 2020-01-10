@@ -24,31 +24,18 @@ import scripts.File_Utilities.MD5Checksum;
 		description = "Calculate MD5 checksum for an input file")
 public class MD5ChecksumCLI implements Callable<Integer> {
 	
-	@Parameters( index = "0", description = "The file we want to calculate the MD5checksum for")
+	@Parameters( index = "0", description = "The file we want to calculate the MD5checksum for. Alternatively use md5 <file> or md5checksum <file>")
 	private File input;
 
 	@Option(names = {"-o", "--output"}, description = "specify output filepath")
 	private File output = new File("md5checksum.txt");
 	
-// 	public MD5ChecksumCLI(){
-// 		System.out.println("MD5ChecksumCLI-constructor:");
-// 		System.out.println("bamFile = " + bamFile.toString());
-// 		System.out.println("output = " + output.toString());
-// 	}
-	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">MD5ChecksumCLI.call()" );
-// 		MD5Checksum.calculateMD5(String input);
-		
-//		if(OUTPUT_PATH == null) OUT = new PrintStream("md5checksum.txt");
-//		else OUT = new PrintStream(OUTPUT_PATH + File.separator + "md5checksum.txt");
-		PrintStream OUT = new PrintStream( output );
 		String md5hash = MD5Checksum.calculateMD5(input.getAbsolutePath());
+		PrintStream OUT = new PrintStream( output );
 		OUT.println("MD5 (" + input.getName() + ") = " + md5hash);
-		
 		return(0);
 	}
-	
 }
 
