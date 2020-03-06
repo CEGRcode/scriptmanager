@@ -98,6 +98,7 @@ public class TagPileup extends JFrame {
 			try { COMPOSITE = new PrintStream(PARAM.getOutput() + File.separator + PARAM.getCompositeFile());
 			} catch (FileNotFoundException e) {	e.printStackTrace(); }
 		}
+		int PROGRESS = 0;
 		for(int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z);	//Pull current BAM file
 			File f = new File(BAM + ".bai"); //Generate file name for BAI index file
@@ -109,7 +110,7 @@ public class TagPileup extends JFrame {
 				if(PARAM.getStandard() && PARAM.getBlacklist() != null) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead())); }
 				else if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
 				//System.out.println(PARAM.getRatio());
-								
+				
 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
 					JTextArea STATS = new JTextArea(); //Generate statistics object
 					STATS.setEditable(false); //Make it un-editable
@@ -285,7 +286,8 @@ public class TagPileup extends JFrame {
 					STATS.setCaretPosition(0);
 					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					tabbedPane_Statistics.add(BAM.getName(), newpane);
-			        firePropertyChange("tag", (z + 1) * (BED_Index + 1), ((z + 1) * (BED_Index + 1)) + 1);								
+			        firePropertyChange("tag", PROGRESS, PROGRESS + 1);
+			        PROGRESS++;
 				}
 			}
 		}		
