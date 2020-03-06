@@ -5,14 +5,19 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -68,7 +73,6 @@ public class HeatmapPlot extends JFrame {
 		
 		OUTPUTPATH = OUT;
 		OUTPUTSTATUS = outstatus;
-		System.out.println(OUTPUTSTATUS);
 	}
 	
 	public void run() throws IOException {	
@@ -333,22 +337,40 @@ public class HeatmapPlot extends JFrame {
 		return nonZero.get(index);
 	}
 	
-	public static ArrayList<double[]> loadMatrix(File input) throws FileNotFoundException {
+	public static ArrayList<double[]> loadMatrix(File input) throws UnsupportedEncodingException, IOException {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();
 		int currentRow = 0;
-		Scanner scan = new Scanner(input);
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
-			if(!temp[0].contains("YORF") && currentRow >= startROW) {
-				double[] ARRAY = new double[temp.length - startCOL];
-				for(int x = startCOL; x < temp.length; x++) {
-					ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+		if(input.getAbsoluteFile().toString().endsWith(".gz")) {
+			BufferedReader scan = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+			String line = scan.readLine();
+            while (line != null) {
+            	String[] temp = line.split("\t");
+				if(!temp[0].contains("YORF") && currentRow >= startROW) {
+					double[] ARRAY = new double[temp.length - startCOL];
+					for(int x = startCOL; x < temp.length; x++) {
+						ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+					}
+					matrix.add(ARRAY);
 				}
-				matrix.add(ARRAY);
+				currentRow++;
+                line = scan.readLine();
+            }
+            scan.close();
+		} else {
+			Scanner scan = new Scanner(input);
+			while (scan.hasNextLine()) {
+				String[] temp = scan.nextLine().split("\t");
+				if(!temp[0].contains("YORF") && currentRow >= startROW) {
+					double[] ARRAY = new double[temp.length - startCOL];
+					for(int x = startCOL; x < temp.length; x++) {
+						ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+					}
+					matrix.add(ARRAY);
+				}
+				currentRow++;
 			}
-			currentRow++;
+			scan.close();
 		}
-		scan.close();
 		return matrix;
 	}
 	
