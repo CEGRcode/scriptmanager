@@ -3,8 +3,12 @@ package scripts.Read_Analysis;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +17,7 @@ import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -44,15 +49,19 @@ public class TagPileup extends JFrame {
 	private int CPU = 1;
 	
 	PrintStream COMPOSITE = null;
-	PrintStream OUT_S1 = null;
-	PrintStream OUT_S2 = null;
+	// Generic print stream to accept PrintStream of GZIPOutputStream
+//	OutputStream OUT_S1 = null;
+//	OutputStream OUT_S2 = null;
+	Writer OUT_S1 = null;
+	Writer OUT_S2 = null;
+//	PrintStream OUT_S1 = null;
+//	PrintStream OUT_S2 = null;
 	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 	
-	//TagPileup pile = new TagPileup(INPUT, BAMFiles.get(x), OUTPUT, READ, STRAND, SHIFT, BIN);
 	public TagPileup(Vector<File> be, Vector<File> ba, PileupParameters param) {
 		setTitle("Tag Pileup Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -81,6 +90,7 @@ public class TagPileup extends JFrame {
 		PARAM = param;
 		STRAND = param.getStrand();
 		CPU = param.getCPU();
+		
 	}
 	
 	public void run() throws IOException {
@@ -108,11 +118,19 @@ public class TagPileup extends JFrame {
 
 					if(PARAM.getOutputType() != 0) {
 						if(STRAND == 0) {
-							try { OUT_S1 = new PrintStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
-							OUT_S2 = new PrintStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1));
-							} catch (FileNotFoundException e) {	e.printStackTrace(); }
+							if(PARAM.outputGZIP()) {
+								try {
+									OUT_S1 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0))), "UTF-8");
+									OUT_S2 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1))), "UTF-8");
+								} catch (FileNotFoundException e) {	e.printStackTrace(); }
+							} else {
+								try {
+									OUT_S1 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
+									OUT_S2 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1));
+								} catch (FileNotFoundException e) {	e.printStackTrace(); }
+							}
 						} else {
-							try { OUT_S1 = new PrintStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2));
+							try { OUT_S1 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2));
 							} catch (FileNotFoundException e) {	e.printStackTrace(); }
 						}
 					}
@@ -152,41 +170,41 @@ public class TagPileup extends JFrame {
 					else if(PARAM.getTrans() == 2) { OUTSTART = (PARAM.getStdSize() * PARAM.getStdNum()); }
 									
 					if(PARAM.getOutputType() == 2) {
-						if(OUT_S1 != null) OUT_S1.print("YORF\tNAME");
-						if(OUT_S2 != null) OUT_S2.print("YORF\tNAME");
+						if(OUT_S1 != null) OUT_S1.write("YORF\tNAME");
+						if(OUT_S2 != null) OUT_S2.write("YORF\tNAME");
 						double[] tempF = INPUT.get(0).getFStrand();
 											
 						for(int i = OUTSTART; i < tempF.length - OUTSTART; i++) {
 							int index = i - OUTSTART;
-							if(OUT_S1 != null) OUT_S1.print("\t" + index);
-							if(OUT_S2 != null) OUT_S2.print("\t" + index);
+							if(OUT_S1 != null) OUT_S1.write("\t" + index);
+							if(OUT_S2 != null) OUT_S2.write("\t" + index);
 						}
-						if(OUT_S1 != null) OUT_S1.println();
-						if(OUT_S2 != null) OUT_S2.println();
+						if(OUT_S1 != null) OUT_S1.write("\n");
+						if(OUT_S2 != null) OUT_S2.write("\n");
 					}
 					
 					//Output individual sites
 					for(int i = 0; i < INPUT.size(); i++) {
 						double[] tempF = INPUT.get(i).getFStrand();
 						double[] tempR = INPUT.get(i).getRStrand();
-						if(OUT_S1 != null) OUT_S1.print(INPUT.get(i).getName());
-						if(OUT_S2 != null) OUT_S2.print(INPUT.get(i).getName());
+						if(OUT_S1 != null) OUT_S1.write(INPUT.get(i).getName());
+						if(OUT_S2 != null) OUT_S2.write(INPUT.get(i).getName());
 						
 						if(PARAM.getOutputType() == 2) {
-							if(OUT_S1 != null) OUT_S1.print("\t" + INPUT.get(i).getName());
-							if(OUT_S2 != null) OUT_S2.print("\t" + INPUT.get(i).getName());
+							if(OUT_S1 != null) OUT_S1.write("\t" + INPUT.get(i).getName());
+							if(OUT_S2 != null) OUT_S2.write("\t" + INPUT.get(i).getName());
 						}
 						
 						for(int j = 0; j < tempF.length; j++) {
 							if(j >= OUTSTART && j < tempF.length - OUTSTART) {
-								if(OUT_S1 != null) OUT_S1.print("\t" + tempF[j]);
-								if(OUT_S2 != null) OUT_S2.print("\t" + tempR[j]);
+								if(OUT_S1 != null) OUT_S1.write("\t" + tempF[j]);
+								if(OUT_S2 != null) OUT_S2.write("\t" + tempR[j]);
 							}
 							AVG_S1[j] += tempF[j];
 							if(AVG_S2 != null) AVG_S2[j] += tempR[j];
 						}
-						if(OUT_S1 != null) OUT_S1.println();
-						if(OUT_S2 != null) OUT_S2.println();
+						if(OUT_S1 != null) OUT_S1.write("\n");
+						if(OUT_S2 != null) OUT_S2.write("\n");
 					}
 	
 					//Calculate average and domain here
@@ -254,12 +272,14 @@ public class TagPileup extends JFrame {
 					else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
 										
 					if(OUT_S1 != null && PARAM.getOutputType() == 2) {
-						if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0), PARAM.getSenseColor());
-						else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2), PARAM.getCombinedColor());
+						if(PARAM.outputJTV()) {
+							if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0), PARAM.getSenseColor());
+							else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2), PARAM.getCombinedColor());
+						}
 						OUT_S1.close();
 					}
 					if(OUT_S2 != null && PARAM.getOutputType() == 2){
-						JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1), PARAM.getAntiColor());
+						if(PARAM.outputJTV()) { JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1), PARAM.getAntiColor()); }
 						OUT_S2.close();
 					}
 					STATS.setCaretPosition(0);
@@ -337,15 +357,18 @@ public class TagPileup extends JFrame {
 		String[] bamname = bam.split("\\.");
 		
 		String strand = "sense";
-		if(strandnum == 1) strand = "anti";
-		else if(strandnum == 2) strand = "combined";
+		if(strandnum == 1) { strand = "anti"; }
+		else if(strandnum == 2) { strand = "combined"; }
 		String read = "read1";
-		if(PARAM.getRead() == 1) read = "read2";
-		else if(PARAM.getRead() == 2) read = "readc";
+		if(PARAM.getRead() == 1) { read = "read2"; }
+		else if(PARAM.getRead() == 2) { read = "readc"; }
 		
 		String filename = bedname[0] + "_" + bamname[0] + "_" + read + "_" + strand;
-		if(PARAM.getOutputType() == 1) filename += ".tab";
-		else filename += ".cdt";
+		if(PARAM.getOutputType() == 1) { filename += ".tab"; }
+		else { filename += ".cdt"; }
+		
+		if(PARAM.outputGZIP()) { filename += ".gz"; }
+		
 		return filename;
 	}
 		
