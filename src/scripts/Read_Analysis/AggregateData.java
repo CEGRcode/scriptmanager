@@ -46,9 +46,7 @@ public class AggregateData extends JFrame {
 				ArrayList<String> idarray = new ArrayList<String>();
 				int count = 0;
 				while (scan.hasNextLine()) {
-					String line = scan.nextLine();
-					count++;
-					
+					String line = scan.nextLine(); // Line 0
 					//Skip lines until desired row start
 					while(count < ROWSTART) {
 						line = scan.nextLine();

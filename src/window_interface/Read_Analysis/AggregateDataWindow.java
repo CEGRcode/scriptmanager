@@ -157,7 +157,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
         sl_contentPane.putConstraint(SpringLayout.WEST, txtRow, 10, SpringLayout.EAST, lblRowStart);
         sl_contentPane.putConstraint(SpringLayout.EAST, txtRow, 70, SpringLayout.EAST, lblRowStart);
         txtRow.setHorizontalAlignment(SwingConstants.CENTER);
-        txtRow.setText("2");
+        txtRow.setText("1");
         contentPane.add(txtRow);
         txtRow.setColumns(10);
         
