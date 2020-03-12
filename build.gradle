@@ -11,6 +11,7 @@ sourceSets.main.java.srcDirs = ['src']
 mainClassName = "main.ScriptManager"
 version = 'v0.12-dev'
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 // Gradle builds for dev
 jar {
