@@ -50,12 +50,8 @@ public class TagPileup extends JFrame {
 	
 	PrintStream COMPOSITE = null;
 	// Generic print stream to accept PrintStream of GZIPOutputStream
-//	OutputStream OUT_S1 = null;
-//	OutputStream OUT_S2 = null;
 	Writer OUT_S1 = null;
 	Writer OUT_S2 = null;
-//	PrintStream OUT_S1 = null;
-//	PrintStream OUT_S2 = null;
 	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
@@ -98,25 +94,36 @@ public class TagPileup extends JFrame {
 			try { COMPOSITE = new PrintStream(PARAM.getOutput() + File.separator + PARAM.getCompositeFile());
 			} catch (FileNotFoundException e) {	e.printStackTrace(); }
 		}
-		int PROGRESS = 0;
+		
+		//Check if BAI index file exists for all BAM files
+		boolean[] BAMvalid = new boolean[BAMFiles.size()];
 		for(int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z);	//Pull current BAM file
 			File f = new File(BAM + ".bai"); //Generate file name for BAI index file
-			//Check if BAI index file exists
-			if(!f.exists() || f.isDirectory()) { JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + BAM.getName()); }
-			else {
-				
+			if(!f.exists() || f.isDirectory()) {
+				BAMvalid[z] = false;
+				JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + BAM.getName());
+				System.err.println("BAI Index File does not exist for: " + BAM.getName());
+			} else { BAMvalid[z] = true; }
+		}
+		
+		int PROGRESS = 0;
+		for(int z = 0; z < BAMFiles.size(); z++) {
+			File BAM = BAMFiles.get(z);	//Pull current BAM file
+			if(BAMvalid[z]) {
 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
 				if(PARAM.getStandard() && PARAM.getBlacklist() != null) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead())); }
 				else if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
 				//System.out.println(PARAM.getRatio());
 				
 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
+					System.out.println("Processing BAM: " + BAM.getName() + "\tCoordinate: " + BEDFiles.get(BED_Index).getName());
+
 					JTextArea STATS = new JTextArea(); //Generate statistics object
 					STATS.setEditable(false); //Make it un-editable
 					STATS.append(getTimeStamp() + "\n"); //Timestamp process
 					STATS.append(BAM.getName() + "\n"); //Label stat object with what BAM file is generating it
-
+					
 					if(PARAM.getOutputType() != 0) {
 						if(STRAND == 0) {
 							if(PARAM.outputGZIP()) {
@@ -131,12 +138,18 @@ public class TagPileup extends JFrame {
 								} catch (FileNotFoundException e) {	e.printStackTrace(); }
 							}
 						} else {
-							try { OUT_S1 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2));
-							} catch (FileNotFoundException e) {	e.printStackTrace(); }
+							if(PARAM.outputGZIP()) {
+								try { OUT_S1 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2))), "UTF-8");
+								} catch (FileNotFoundException e) {	e.printStackTrace(); }
+							} else {
+								try { OUT_S1 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2));
+								} catch (FileNotFoundException e) {	e.printStackTrace(); }
+							}
 						}
 					}
 					
-					Vector<BEDCoord> INPUT = validateBED(loadCoord(BEDFiles.get(BED_Index)));
+					System.out.println("Validating BED: " + BEDFiles.get(BED_Index).getName());
+					Vector<BEDCoord> INPUT = validateBED(loadCoord(BEDFiles.get(BED_Index)), BAMFiles.get(z));
 					
 					//Split up job and send out to threads to process				
 					ExecutorService parseMaster = Executors.newFixedThreadPool(CPU);
@@ -306,7 +319,7 @@ public class TagPileup extends JFrame {
 	}
 	
 	//Validate BED coordinates exist within BAM file and satisfy BED format
-	public Vector<BEDCoord> validateBED(Vector<BEDCoord> COORD) throws IOException {
+	public Vector<BEDCoord> validateBED(Vector<BEDCoord> COORD, File BAM) throws IOException {
 		Vector<BEDCoord> FINAL = new Vector<BEDCoord>();
 		ArrayList<Integer> indexFail = new ArrayList<Integer>();
 		
@@ -319,27 +332,25 @@ public class TagPileup extends JFrame {
 			}
 		}
 		
-		for(int z = 0; z < BAMFiles.size(); z++) {
-			//Get chromosome IDs
-			SamReader inputSam = SamReaderFactory.makeDefault().open(BAMFiles.get(z));
-			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
-			ArrayList<String> chrom = new ArrayList<String>();
-			for(int x = 0; x < bai.getNumberOfReferences(); x++) {
-				chrom.add(inputSam.getFileHeader().getSequence(x).getSequenceName());
-			}
-			inputSam.close();
-			bai.close();
+		//Get chromosome IDs
+		SamReader inputSam = SamReaderFactory.makeDefault().open(BAM);
+		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
+		ArrayList<String> chrom = new ArrayList<String>();
+		for(int x = 0; x < bai.getNumberOfReferences(); x++) {
+			chrom.add(inputSam.getFileHeader().getSequence(x).getSequenceName());
+		}
+		inputSam.close();
+		bai.close();
 
-			//check for bed chrom that aren't in BAM file 
-			for(int x = 0; x < COORD.size(); x++) {
-				if(!chrom.contains(COORD.get(x).getChrom())) {
-					if(!indexFail.contains(new Integer(x))) {
-						indexFail.add(new Integer(x));
-					}
+		//check for bed chrom that aren't in BAM file 
+		for(int x = 0; x < COORD.size(); x++) {
+			if(!chrom.contains(COORD.get(x).getChrom())) {
+				if(!indexFail.contains(new Integer(x))) {
+					indexFail.add(new Integer(x));
 				}
 			}
-			
 		}
+		
 		if(indexFail.size() == COORD.size()) {
 			System.err.println("No BED Coordinates exist within BAM file!!!");
 		}
