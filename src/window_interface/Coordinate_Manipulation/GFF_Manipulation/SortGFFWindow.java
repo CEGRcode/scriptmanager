@@ -304,7 +304,9 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 					CDT_File = newCDTFile;
 					lblCDTFile.setText(CDT_File.getName());
 					
-					try { CDT_VALID = parseCDTFile(CDT_File);
+					try {
+						CDT_SIZE = parseCDTFile(CDT_File);
+						CDT_VALID = (CDT_SIZE!=-999);
 					} catch (FileNotFoundException e1) { e1.printStackTrace(); }
 					
 					if(CDT_VALID) {
@@ -365,7 +367,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
     
 	
 	// This function is almost exactly copied from window/*/SortBEDWindow & scripts/*/SortBED & scripts/*/SortGFF...good practice to merge at some point.
-	public boolean parseCDTFile(File CDT) throws FileNotFoundException {
+	public Integer parseCDTFile(File CDT) throws FileNotFoundException {
 		Scanner scan = new Scanner(CDT);
 		int currentSize = -999;
 		boolean consistentSize = true;
@@ -376,7 +378,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 				int tempsize = temp.length - 2;
 				if(currentSize == -999) { currentSize = tempsize; }
 				else if(currentSize != tempsize) {
-					JOptionPane.showMessageDialog(null, "Invalid Row at Index: " + currentRow);
+					JOptionPane.showMessageDialog(null, "Invalid Row at Index: " + currentRow);      // This is the line that is different
 					consistentSize = false;
 					scan.close();
 				}
@@ -384,9 +386,8 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 			}
 		}
 		scan.close();
-		CDT_SIZE = currentSize;
-		if(consistentSize) { return true; }
-		else { return false; }
+		if(consistentSize) { return currentSize; }
+		else { return -999; }
 	}
 }
 

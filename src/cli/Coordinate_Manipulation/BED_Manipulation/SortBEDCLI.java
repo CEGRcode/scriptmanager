@@ -34,7 +34,7 @@ public class SortBEDCLI implements Callable<Integer> {
 	private int[] index = {-999, -999};
 	
 	private int CDT_SIZE;
-	private boolean centerNotIndex;
+	private boolean byCenter = false;
 	private String OUT;
 	
 	
@@ -49,19 +49,24 @@ public class SortBEDCLI implements Callable<Integer> {
 			return(1);
 		}
 		
-		if( centerNotIndex ){
+		if( byCenter ){
 			index[0] = (CDT_SIZE / 2) - (center / 2);
 			index[1] = (CDT_SIZE / 2) + (center / 2);
 		}
 		
-// 		System.err.println("status="+Boolean.toString(centerNotIndex));
+// 		System.err.println("status="+Boolean.toString(byCenter));
 // 		System.err.println("CDT_SIZE="+Integer.toString(CDT_SIZE));
 // 		System.err.println("index="+Integer.toString(index[0]));
 // 		System.err.println("\t"+Integer.toString(index[1]));
 // 		System.err.println("OUT="+OUT);
+/*
+        String OUTPUT = txtOutput.getText();
+        if(OUTPUT_PATH != null) { OUTPUT = OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText(); }
+*/
 		
 		try{
 			SortBED.sortBEDbyCDT(OUT, bedFile, cdtReference, index[0], index[1]);
+			System.err.println("Sort Complete");
 		} catch (FileNotFoundException e) {
 			System.err.println("Check your filenames!");
 			e.printStackTrace();
@@ -73,16 +78,15 @@ public class SortBEDCLI implements Callable<Integer> {
 	
 	private Integer validateInput(){
 		
-		int return_val = 0;
-		
 		// validate CDT as file, with consistent row size, and save row_size value
 		try {
 			CDT_SIZE = SortBED.parseCDTFile(cdtReference);
 		} catch (FileNotFoundException e1) { e1.printStackTrace(); }
 		if( CDT_SIZE==-999 ) {
 			System.err.println("!!!CDT file doesn't have consistent row sizes!");
-			return_val++;
+			return(1);
 		}
+		
 		// validate output file
 		if( output==null){     //not specified
 			OUT = bedFile.getName().substring(0,bedFile.getName().length() - 4) + "_SORT";
@@ -95,41 +99,25 @@ public class SortBEDCLI implements Callable<Integer> {
 			} catch( IOException io ){ io.printStackTrace(); }
 		}
 		
-		// validate center and index sort method options
-		centerNotIndex = true;
-		// noting specified-- default behavior
-		if( center==-999 && index[0]==-999 && index[1]==-999 ) {
-			center = 100;
-		// both options specified -- bad, return invalid
-		} else if( center!=-999 && index[0]!=-999 && index[1]!=-999 ) {
-			System.err.println("!!!Must define center sorting OR index sorting, not both.");
-			return_val++;
-		// center specified
-		} else if( center!=-999 && index[0]==-999 && index[1]==-999 ) {
-			if( center<0 ){
+		// Set Center if Index not given
+		if( index[0]==-999 && index[1]==-999 ) { byCenter = true; }
+		
+		// Center Specified
+		if( byCenter ){
+			if( center==-999 ){ center = 100; }
+			else if( center<0 ){
 				System.err.println("!!!Invalid --center input, must be a positive integer value");
-				return_val++;
+				return(1);
 			}
-		// index specified
-		} else if( center==-999 && index[0]!=-999 && index[1]!=-999 ) {
-			centerNotIndex = false;
-			if( index[0]<0 ) {
-				System.err.println("!!!Invalid --index start input, must be a positive integer value");
-				return_val++;
+		// Index Specified
+		}else{
+			if( index[0]<0 || index[1]>CDT_SIZE || index[0]>index[1] ){
+				System.err.println("!!!Invalid --index value input, check that start>0, stop<CDT row size, and start<stop");
+				return(1);
 			}
-			if( index[1]>CDT_SIZE ) {
-				System.err.println("!!!Invalid --index stop input, must be smaller than the CDT row size");
-				return_val++;
-			}
-			if( index[0]>index[1] ) {
-				System.err.println("!!!Invalid --index stop must be greater than index start");
-				return_val++;
-			}
-		} else {
-			System.err.println("This line should NOT print!");
 		}
 		
-		return(return_val);
+		return(0);
 	}
 	
 }
