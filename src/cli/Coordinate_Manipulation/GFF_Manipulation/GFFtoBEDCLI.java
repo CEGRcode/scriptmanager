@@ -28,21 +28,10 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
 		
-		if( validateInput()!=0 ){ System.err.println("Invalid input. Check usage using '-h' or '--help'"); }
-		
-		// call scripts tools
+		//if( validateInput()!=0 ){ System.err.println("Invalid input. Check usage using '-h' or '--help'"); }
 		GFFtoBED.convertGFFtoBED(output, gffFile);
 		System.err.println( "Conversion Complete" );
         	
-		return(0);
-	}
-	
-	private Integer validateInput(){
-		// validation done within BEDtoGFF script
-		if( output!=null && !output.isDirectory() ){
-			System.err.println("Output must be a directory! Unable to specify specific name at this time.");
-			return(1);
-		}
 		return(0);
 	}
 }

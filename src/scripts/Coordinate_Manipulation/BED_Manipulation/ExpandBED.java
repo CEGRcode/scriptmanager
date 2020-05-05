@@ -7,12 +7,11 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ExpandBED {
-	public static void expandBEDBorders(File out_path, File input, int SIZE, boolean ExCenter) throws IOException {
-		String newName = (input.getName()).substring(0,input.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.bed";
-	    Scanner scan = new Scanner(input);
-	    PrintStream OUT = null;
-	    if(out_path == null) OUT = new PrintStream(newName);
-	    else OUT = new PrintStream(out_path + File.separator + newName);
+	public static void expandBEDBorders(File out_filepath, File input, int SIZE, boolean ExCenter) throws IOException {
+		
+		Scanner scan = new Scanner(input);
+	    PrintStream OUT = System.out;
+	    if( out_filepath != null ) OUT = new PrintStream(out_filepath);
 	    
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");

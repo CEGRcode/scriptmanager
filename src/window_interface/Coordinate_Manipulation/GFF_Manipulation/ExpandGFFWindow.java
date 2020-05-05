@@ -70,7 +70,14 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
         		} else {
 		        	setProgress(0);
 		        	for(int x = 0; x < GFFFiles.size(); x++) {
-		        		ExpandGFF.expandGFFBorders(OUTPUT_PATH, GFFFiles.get(x), SIZE, rdbtnExpandFromCenter.isSelected());
+		        		File XGFF = GFFFiles.get(x);
+		        		// Set outfilepath
+		        		String newName = (XGFF.getName()).substring(0,XGFF.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
+		        		File OUT_FILE = null;
+		        		if(OUTPUT_PATH == null) OUT_FILE = new File( newName );
+		        		else OUT_FILE = new File( OUTPUT_PATH + File.separator + newName );
+						// Execute expansion and update progress
+		        		ExpandGFF.expandGFFBorders(OUTPUT_PATH, XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
 						int percentComplete = (int)(((double)(x + 1) / GFFFiles.size()) * 100);
 		        		setProgress(percentComplete);
 		        	}
