@@ -21,7 +21,7 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 
-import scripts.BAM_Statistics.PEStats;
+import window_interface.BAM_Statistics.PEStatOutput;
 import util.FileSelection;
 
 import java.awt.Component;
@@ -68,7 +68,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
         	try {
 				int min = Integer.parseInt(txtMin.getText());
 				int max = Integer.parseInt(txtMax.getText());	
-				PEStats stat = new PEStats(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), min, max);
+				PEStatOutput stat = new PEStatOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), min, max);
 				stat.addPropertyChangeListener("bam", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 				    	int temp = (Integer) propertyChangeEvent.getNewValue();

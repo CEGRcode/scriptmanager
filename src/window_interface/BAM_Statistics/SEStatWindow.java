@@ -17,7 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
-import scripts.BAM_Statistics.SEStats;
+import window_interface.BAM_Statistics.SEStatOutput;
 import util.FileSelection;
 
 import java.awt.Color;
@@ -68,7 +68,7 @@ public class SEStatWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
 				if(newBAMFiles != null) {
-					for(int x = 0; x < newBAMFiles.length; x++) { 
+					for(int x = 0; x < newBAMFiles.length; x++) {
 						BAMFiles.add(newBAMFiles[x]);
 						expList.addElement(newBAMFiles[x].getName());
 					}
@@ -167,11 +167,11 @@ public class SEStatWindow extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -171, SpringLayout.EAST, contentPane);
 		btnRun.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				SEStats stat;
+				SEStatOutput stat;
 				if(chckbxOutputStatistics.isSelected()) { 
-					if(OUTPUT_PATH != null) { stat = new SEStats(BAMFiles, new File(OUTPUT_PATH + File.separator + txtOutputName.getText())); }
-					else { stat = new SEStats(BAMFiles, new File(txtOutputName.getText())); }
-				} else { stat = new SEStats(BAMFiles, null); }
+					if(OUTPUT_PATH != null) { stat = new SEStatOutput(BAMFiles, new File(OUTPUT_PATH + File.separator + txtOutputName.getText())); }
+					else { stat = new SEStatOutput(BAMFiles, new File(txtOutputName.getText())); }
+				} else { stat = new SEStatOutput(BAMFiles, null); }
 				stat.setVisible(true);
 				stat.run();
 			}

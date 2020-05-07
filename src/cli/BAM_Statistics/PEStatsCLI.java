@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Date;
 
-// import scripts.BAM_Statistics.SEStats;
+import scripts.BAM_Statistics.PEStats;
 
 	
 /**
@@ -34,21 +34,41 @@ public class PEStatsCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "The BAM file whose statistics we want.")
 	private File bamFile;
 
-	@Option(names = {"-o", "--output"}, description = "specify output file")
-	private File output = new File("output-bam-stats.txt");
+	@Option(names = {"-o", "--output"}, description = "specify output basename, default=\"output-bam-stats\"")
+	private File output = new File( "output-bam-stats" );
 	@Option(names = {"-n", "--min"}, description = "histogram range minimum (0 default)")
 	private int min = 0;
 	@Option(names = {"-x", "--max"}, description = "histogram range maximum (1000 default)")
-	private int max = 0;
+	private int max = 1000;
+	@Option(names = {"-s", "--summary"}, description = "write summary of insert histogram by chromosome (default false)")
+	private boolean sum = false;
 	@Option(names = {"-d", "--duplication-stats"}, description = "calculate duplication statistics if this flag is used (default false)")
-	private boolean duplication = false;
+	private boolean dup = false;
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">PEStatsCLI.call()" );
-// 		SEStats stat = new SEStats( bamFile, outputFile );
+		System.err.println( ">PEStatsCLI.call()" );
+		
+		if( validateInput()!=0 ){
+			System.err.println("Invalid input. Check usage using '-h' or '--help'");
+		}
+		
+		PEStats.getPEStats( output, bamFile, dup, min, max, null, null, sum);
+		System.err.println("Calculations Complete");
+		
 		return(0);
 	}
+	
+	private Integer validateInput(){
+		// Define default behavior
+// 		if( !out && !dup ){
+// 			//User using CLI should never get here...something wonky if they do...
+// 			System.out.println( "!!!What's the point of me? You've set both insert and dup stats to false!" );
+// 		}
+		
+		return(0);
+	}
+	
 	
 }
 	
