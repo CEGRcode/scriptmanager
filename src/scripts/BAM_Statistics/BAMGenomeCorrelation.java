@@ -9,6 +9,7 @@ import scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord;
 import scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,86 +21,72 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.swing.JFrame;
-import javax.swing.SpringLayout;
-import javax.swing.JLayeredPane;
+// import javax.swing.JFrame;
+// import javax.swing.SpringLayout;
+// import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
+// import javax.swing.JScrollPane;
+// import javax.swing.JTabbedPane;
+// import javax.swing.JTable;
 
+import window_interface.BAM_Statistics.BAMGenomeCorrelationOutput;
+import org.jfree.chart.ChartPanel;
 import charts.HeatMap;
 
 @SuppressWarnings("serial")
-public class BAMGenomeCorrelation extends JFrame {
+public class BAMGenomeCorrelation extends Component {
 	
-	Vector<File> bamFiles = null;
-	String[] fileID = null;
-	private File OUTPUT_PATH = null;
+	private Vector<File> bamFiles = null;
+	private String[] fileID = null;
+	private double[][] MATRIX;
+	private ChartPanel HEATMAP;
+	private File OUT_BASENAME = null;
 	private boolean OUTPUT_STATUS = false;
-	PrintStream OUT = null;
 	private int SHIFT;
 	private int BIN;
 	private int CPU;
 	private int READ;
+	private boolean GUI = false;
 	
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
-
-	final JLayeredPane layeredPane;
-	final JTabbedPane tabbedPane;
-		
-	public BAMGenomeCorrelation(Vector<File> input, File o, boolean out, int s, int b, int c, int r) {
-
-		setTitle("Genome Correlation");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 800, 600);
-		
-		layeredPane = new JLayeredPane();
-		getContentPane().add(layeredPane, BorderLayout.CENTER);
-		SpringLayout sl_layeredPane = new SpringLayout();
-		layeredPane.setLayout(sl_layeredPane);
-		
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		sl_layeredPane.putConstraint(SpringLayout.NORTH, tabbedPane, 6, SpringLayout.NORTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.WEST, tabbedPane, 6, SpringLayout.WEST, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -6, SpringLayout.SOUTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.EAST, tabbedPane, -6, SpringLayout.EAST, layeredPane);
-		layeredPane.add(tabbedPane);
-		
+	
+	public BAMGenomeCorrelation(Vector<File> input, File o, boolean out, int s, int b, int c, int r){
+		//Load in bamFiles
 		bamFiles = input;
 		fileID = new String[bamFiles.size()];
-		OUTPUT_PATH = o;
+		//Initialize correlation matrix
+		MATRIX = new double[bamFiles.size()][bamFiles.size()];
+		//Store the rest of the variables
+		OUT_BASENAME = o;
 		OUTPUT_STATUS = out;
 		SHIFT = s;
 		BIN = b;
 		CPU = c;
 		READ = r;
-		
 	}
-	
-	public void run() throws IOException {
+		
+	public void getBAMGenomeCorrelation(BAMGenomeCorrelationOutput gui) throws IOException {
 		System.out.println(getTimeStamp());
+		// Check BAMs first
 		if(!validateBAM()) {
 			return;
 		}
+		// Toggle GUI v CLI status
+		if( gui!=null ){ GUI = true; }
 		
 		//Open Output File
-		if(OUTPUT_STATUS) {
-			String NAME = "correlation_matrix.out";
-			if(OUTPUT_PATH != null) {
-				try { OUT = new PrintStream(new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME)); }
-				catch (FileNotFoundException e) { e.printStackTrace(); }
-				catch (IOException e) {	e.printStackTrace(); }
-			} else {
-				try { OUT = new PrintStream(new File(NAME)); }
-				catch (FileNotFoundException e) { e.printStackTrace(); }
-			}				
+		PrintStream OUT = null;
+		File OUT_PNG = null;
+		if(OUT_BASENAME!=null) {
+			try {
+				OUT = new PrintStream(new File( OUT_BASENAME + "Correlation.out"));
+				OUT_PNG = new File( OUT_BASENAME + "Correlation.png" );
+			}
+			catch (FileNotFoundException e) { e.printStackTrace(); }
+// 			catch (IOException e) {	e.printStackTrace(); }
 		}
-		
-		//Initialize correlation matrix
-		double[][] MATRIX = new double[bamFiles.size()][bamFiles.size()];
-		
+	
 		//Iterate through all BAM files in Vector
 		int counter = 0;
 		for(int x = 0; x < bamFiles.size(); x++) {				
@@ -107,7 +94,7 @@ public class BAMGenomeCorrelation extends JFrame {
 				if(x != y && (x - y) >= 1) {
 					MATRIX[x][y] = correlate(bamFiles.get(x), bamFiles.get(y));
 					MATRIX[y][x] = MATRIX[x][y];
-					firePropertyChange("bam", counter, counter + 1);
+					//gui.firePropertyChange("bam", counter, counter + 1);
 					counter++;
 				} else if(x == y) { MATRIX[x][y] = 1; }
 			}
@@ -115,29 +102,74 @@ public class BAMGenomeCorrelation extends JFrame {
 		
 		//Output correlation matrix
 		for(int x = 0; x < bamFiles.size(); x++) {
-			System.out.print(bamFiles.get(x).getName() + "\t");
 			fileID[x] = bamFiles.get(x).getName();
-			if(OUT != null) { OUT.print(bamFiles.get(x).getName() + "\t"); }
+			printBoth( OUT, bamFiles.get(x).getName() + "\t" );
 		}
-		System.out.println();
-		if(OUT != null) { OUT.println(); }
+		printBoth( OUT, "\n" );
 		for(int x = 0; x < MATRIX.length; x++) {
 			for(int y = 0; y < MATRIX.length; y++) {
-				System.out.print(MATRIX[x][y] + "\t");
-				if(OUT != null) { OUT.print(MATRIX[x][y] + "\t"); }
+				printBoth( OUT, MATRIX[x][y] + "\t");
 			}
-			System.out.println();
-			if(OUT != null) { OUT.println(); }
+			printBoth( OUT, "\n" );
 		}
 		if(OUT != null) OUT.close();
 		
-		tabbedPane.addTab("Correlation Plot", HeatMap.createCorrelationHeatmap(fileID, MATRIX));
-		tabbedPane.addTab("Correlation Data", makeTablePanel(MATRIX));
-		
-		//Make frame visible at completion of correlations
-		this.setVisible(true);
-		System.out.println(getTimeStamp());
+		HEATMAP = HeatMap.createCorrelationHeatmap(fileID, MATRIX, OUT_PNG);
 	}
+	
+	
+	
+// 	Vector<File> bamFiles = null;
+// 	String[] fileID = null;
+// 	private File OUTPUT_PATH = null;
+// 	private boolean OUTPUT_STATUS = false;
+// 	PrintStream OUT = null;
+// 	private int SHIFT;
+// 	private int BIN;
+// 	private int CPU;
+// 	private int READ;
+// 	
+// 	final JLayeredPane layeredPane;
+// 	final JTabbedPane tabbedPane;
+// 		
+// 	public BAMGenomeCorrelation(Vector<File> input, File o, boolean out, int s, int b, int c, int r) {
+// 
+// 		setTitle("Genome Correlation");
+// 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+// 		setBounds(150, 150, 800, 600);
+// 		
+// 		layeredPane = new JLayeredPane();
+// 		getContentPane().add(layeredPane, BorderLayout.CENTER);
+// 		SpringLayout sl_layeredPane = new SpringLayout();
+// 		layeredPane.setLayout(sl_layeredPane);
+// 		
+// 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+// 		sl_layeredPane.putConstraint(SpringLayout.NORTH, tabbedPane, 6, SpringLayout.NORTH, layeredPane);
+// 		sl_layeredPane.putConstraint(SpringLayout.WEST, tabbedPane, 6, SpringLayout.WEST, layeredPane);
+// 		sl_layeredPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -6, SpringLayout.SOUTH, layeredPane);
+// 		sl_layeredPane.putConstraint(SpringLayout.EAST, tabbedPane, -6, SpringLayout.EAST, layeredPane);
+// 		layeredPane.add(tabbedPane);
+// 		
+// 		bamFiles = input;
+// 		fileID = new String[bamFiles.size()];
+// 		OUTPUT_PATH = o;
+// 		OUTPUT_STATUS = out;
+// 		SHIFT = s;
+// 		BIN = b;
+// 		CPU = c;
+// 		READ = r;
+// 		
+// 	}
+	
+// 	public void run() throws IOException {
+// 		
+// 		tabbedPane.addTab("Correlation Plot", HeatMap.createCorrelationHeatmap(fileID, MATRIX));
+// 		tabbedPane.addTab("Correlation Data", makeTablePanel(MATRIX));
+// 		
+// 		//Make frame visible at completion of correlations
+// 		this.setVisible(true);
+// 		System.out.println(getTimeStamp());
+// 	}
 	
 	public double correlate(File exp1, File exp2) {
 		System.out.println("Comparing: " + exp1.getName() + "\t-\t" + exp2.getName());
@@ -221,13 +253,15 @@ public class BAMGenomeCorrelation extends JFrame {
 		//Check if BAI index file exists for all BAM files before we process any of them
 		ArrayList<String> chrName = new ArrayList<String>();
 		ArrayList<Integer> chrSize = new ArrayList<Integer>();
-		for(int x = 0; x < bamFiles.size(); x++) {				
-			File f = new File(bamFiles.get(x) + ".bai");
+		for(int x = 0; x < bamFiles.size(); x++) {	
+			File XBAM = bamFiles.get(x);			
+			File f = new File(XBAM + ".bai");
 			if(!f.exists() || f.isDirectory()) {
-				JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + bamFiles.get(x).getName());
+				if(GUI){ JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + XBAM.getName()); }
+				else{ System.err.println("BAI Index File does not exist for: " + XBAM.getName()); }
 				return false;
 			} else {
-				reader = factory.open(bamFiles.get(x));
+				reader = factory.open(XBAM);
 				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
 				if(x == 0) {
 					for (int z = 0; z < bai.getNumberOfReferences(); z++) {
@@ -235,7 +269,8 @@ public class BAMGenomeCorrelation extends JFrame {
 						chrSize.add(reader.getFileHeader().getSequence(z).getSequenceLength());
 					}
 				} else if(bai.getNumberOfReferences() != chrName.size()) {
-					JOptionPane.showMessageDialog(null, "Unequal number of chromosomes from previous: " + bamFiles.get(x).getName());
+					if(GUI){ JOptionPane.showMessageDialog(null, "Unequal number of chromosomes from previous: " + XBAM.getName()); }
+					else{ System.err.println("BAI Index File does not exist for: " + XBAM.getName()); }
 					reader.close();
 					bai.close();
 					return false;
@@ -246,7 +281,8 @@ public class BAMGenomeCorrelation extends JFrame {
 						if(!chrSize.get(z).equals(reader.getFileHeader().getSequence(z).getSequenceLength())) { MATCH = false; }
 					}
 					if(!MATCH) {
-						JOptionPane.showMessageDialog(null, "File contains chromosome size/name which does not match previous: " + bamFiles.get(x).getName());
+						if(GUI){ JOptionPane.showMessageDialog(null, "File contains chromosome size/name which does not match previous: " + XBAM.getName()); }
+						else{ System.err.println("BAI Index File does not exist for: " + XBAM.getName()); }
 						reader.close();
 						bai.close();
 						return false;
@@ -259,25 +295,30 @@ public class BAMGenomeCorrelation extends JFrame {
 		return true;
 	}
 		
-	public JScrollPane makeTablePanel(double[][] MATRIX) {
-		JTable table = new JTable(MATRIX.length, MATRIX.length);
-		table.setName("Correlation Matrix");
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		for(int i = 0; i < MATRIX.length; i++) {
-			for(int j = 0; j < MATRIX.length; j++) {
-				if(i == j) table.setValueAt(1, i, j);
-				else if((i - j) >= 1) {
-					table.setValueAt(MATRIX[i][j], i, j);
-					table.setValueAt(MATRIX[j][i], j, i);
-				}
-			}
-		}
-		for(int i = 0; i < bamFiles.size(); i++) table.getColumnModel().getColumn(i).setHeaderValue(bamFiles.get(i).getName());
-		table.setPreferredSize(table.getPreferredSize());
-		JScrollPane pane = new JScrollPane(table);
-		table.setFillsViewportHeight(true);
-		pane.setPreferredSize(new Dimension(590, 590));
-		return pane;
+// 	public JScrollPane makeTablePanel(double[][] MATRIX) {
+// 		JTable table = new JTable(MATRIX.length, MATRIX.length);
+// 		table.setName("Correlation Matrix");
+// 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+// 		for(int i = 0; i < MATRIX.length; i++) {
+// 			for(int j = 0; j < MATRIX.length; j++) {
+// 				if(i == j) table.setValueAt(1, i, j);
+// 				else if((i - j) >= 1) {
+// 					table.setValueAt(MATRIX[i][j], i, j);
+// 					table.setValueAt(MATRIX[j][i], j, i);
+// 				}
+// 			}
+// 		}
+// 		for(int i = 0; i < bamFiles.size(); i++) table.getColumnModel().getColumn(i).setHeaderValue(bamFiles.get(i).getName());
+// 		table.setPreferredSize(table.getPreferredSize());
+// 		JScrollPane pane = new JScrollPane(table);
+// 		table.setFillsViewportHeight(true);
+// 		pane.setPreferredSize(new Dimension(590, 590));
+// 		return pane;
+// 	}
+	
+	private static void printBoth( PrintStream p, String line ){
+		if(p!=null) p.print(line);
+		System.out.print(line);
 	}
 	
 	private static String getTimeStamp() {
@@ -285,4 +326,10 @@ public class BAMGenomeCorrelation extends JFrame {
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
 	}
+	
+	
+	public double[][] getMatrix(){ return(MATRIX); }
+	
+	public ChartPanel getHeatMap(){ return(HEATMAP); }
+	
 }

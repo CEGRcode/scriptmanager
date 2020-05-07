@@ -22,7 +22,7 @@ import javax.swing.JList;
 import javax.swing.SwingWorker;
 import javax.swing.JProgressBar;
 
-import scripts.BAM_Statistics.BAMGenomeCorrelation;
+import window_interface.BAM_Statistics.BAMGenomeCorrelationOutput;
 import util.FileSelection;
 
 import java.awt.Component;
@@ -90,7 +90,7 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		        	else if(rdbtnAllReads.isSelected()) { READ = 2; }
 		        	else if(rdbtnMidpoint.isSelected()) { READ = 3; }
         			
-        			BAMGenomeCorrelation corr = new BAMGenomeCorrelation(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ);
+        			BAMGenomeCorrelationOutput corr = new BAMGenomeCorrelationOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ);
         			corr.addPropertyChangeListener("bam", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 					    	int temp = (Integer) propertyChangeEvent.getNewValue();
