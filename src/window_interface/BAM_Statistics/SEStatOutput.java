@@ -21,7 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import util.CustomOutputStream;
+import objects.CustomOutputStream;
 import scripts.BAM_Statistics.SEStats;
 
 @SuppressWarnings("serial")

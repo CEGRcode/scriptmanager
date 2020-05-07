@@ -32,7 +32,7 @@ import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartPanel;
 
 import scripts.BAM_Statistics.PEStats;
-import util.CustomOutputStream;
+import objects.CustomOutputStream;
 
 @SuppressWarnings("serial")
 public class PEStatOutput extends JFrame {
