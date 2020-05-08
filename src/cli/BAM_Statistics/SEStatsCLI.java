@@ -44,6 +44,7 @@ public class SEStatsCLI implements Callable<Integer> {
 		
 		if( validateInput()!=0 ){
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
+			return(1);
 		}
 		
 		SEStats.getSEStats( output, bamFile, null );

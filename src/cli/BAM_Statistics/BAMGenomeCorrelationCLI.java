@@ -63,10 +63,11 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 		
 		if( validateInput()!=0 ){
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
+			return(1);
 		}
 		vFiles = getFileVector();
 		
-		System.out.println("blah3");
+// 		System.out.println("blah3");
 		BAMGenomeCorrelation b_coor = new BAMGenomeCorrelation( getFileVector(), output, true, tagshift, binSize, cpu, RTYPE);
 		b_coor.getBAMGenomeCorrelation(null);
 		System.err.println("Calculations Complete");
