@@ -106,13 +106,13 @@ public class HeatMapCLI implements Callable<Integer> {
 		
 		//check that hex string is formatted appropriately
 		if( color != null ){
-			Pattern hexColorPat = Pattern.compile("#?[0-9A-F]{6}");
+			Pattern hexColorPat = Pattern.compile("#?[0-9A-Fa-f]{6}");
 			Matcher m = hexColorPat.matcher( color );
 			if( !m.matches() ){
 				System.err.println("!!!Color must be formatted as a hexidecimal String!\nExpected input string format: \"#?[0-9A-F]{6}\"");
 				return(1);
 			}
-		}
+		}else{ color="#000000"; }
 		
 		//check outputbasename is valid
 		
