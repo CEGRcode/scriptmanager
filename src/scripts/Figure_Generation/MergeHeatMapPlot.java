@@ -4,64 +4,16 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class MergeHeatMapPlot extends JFrame {
-	private ArrayList<File> pngFiles = null;
-	private ArrayList<File> senseFile = null;
-	private ArrayList<File> antiFile = null;
-	private File OUTPUT_PATH = null;
+public class MergeHeatMapPlot {
 	
-	JTabbedPane newpane;
-	
-	public MergeHeatMapPlot(ArrayList<File> in, File out) {
-		setTitle("Merged Heatmap");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 600, 800);
-		
-		newpane = new JTabbedPane(JTabbedPane.TOP);
-		this.getContentPane().add(newpane);
-
-		pngFiles = in;
-		OUTPUT_PATH = out;
-	}
-	
-	public void run() throws IOException {
-		senseFile = new ArrayList<File>();
-		antiFile = new ArrayList<File>();
-		for(int x = 0; x < pngFiles.size(); x++) {
-			if(pngFiles.get(x).getName().toLowerCase().contains("sense")) {
-				senseFile.add(pngFiles.get(x));
-			} else if(pngFiles.get(x).getName().toLowerCase().contains("anti")) {
-				antiFile.add(pngFiles.get(x));
-			}
-		}
-		
-		for(int x = 0; x < senseFile.size(); x++) {
-			String name = senseFile.get(x).getName();
-			String out = name.substring(0, name.lastIndexOf("sense"));
-			int matchIndex = -999;
-			for(int y = 0; y < antiFile.size(); y++) {
-				if(antiFile.get(y).getName().contains(out)) { matchIndex = y; }
-			}
-			out = out + "merge.png";
-			if(OUTPUT_PATH != null) { out = OUTPUT_PATH.getCanonicalPath() + File.separator + out; }
-
-			if(matchIndex != -999) { mergePNG(senseFile.get(x), antiFile.get(matchIndex), new File(out)); }
-			else { mergePNG(senseFile.get(x), null, new File(out)); }
-			firePropertyChange("merge", x, x + 1);
-		}		
-	}
-	
-	public void mergePNG(File INPUT1, File INPUT2, File OUTPUT) throws IOException {
+	public static JLabel mergePNG(File INPUT1, File INPUT2, File OUTPUT) throws IOException {
 		JLabel picLabel = null;
 		if(INPUT2 == null) {
 			picLabel = new JLabel("No match for file: " + INPUT1.getName());
@@ -108,11 +60,10 @@ public class MergeHeatMapPlot extends JFrame {
 					}
 				}
 				//Output new image
-				ImageIO.write(combined, "PNG", OUTPUT);
+				if(OUTPUT!=null){ ImageIO.write(combined, "PNG", OUTPUT); }
 				picLabel = new JLabel(new ImageIcon(combined));
 			}
 		}
-		//Output image/error to GUI
-		newpane.addTab(OUTPUT.getName(), new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+		return(picLabel);
 	}
 }

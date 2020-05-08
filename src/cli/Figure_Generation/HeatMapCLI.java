@@ -80,6 +80,7 @@ public class HeatMapCLI implements Callable<Integer> {
 		HeatmapPlot script_object = new HeatmapPlot( CDT, MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth, scaleType, absolute, percentile, outbasename, true );
 		script_object.run();
 		
+		System.out.println( "Image Generated." );		
 		return(0);
 	}
 	

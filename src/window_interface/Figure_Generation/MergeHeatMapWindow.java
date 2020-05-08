@@ -28,7 +28,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Figure_Generation.MergeHeatMapPlot;
+import window_interface.Figure_Generation.MergeHeatMapOutput;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -58,7 +58,7 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
         		OUTPUTPATH = new File(System.getProperty("user.dir"));
         	}
         	
-        	MergeHeatMapPlot heat = new MergeHeatMapPlot(pngFiles, OUTPUTPATH);
+        	MergeHeatMapOutput heat = new MergeHeatMapOutput(pngFiles, OUTPUTPATH);
         	
         	heat.addPropertyChangeListener("merge", new PropertyChangeListener() {
 			    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
