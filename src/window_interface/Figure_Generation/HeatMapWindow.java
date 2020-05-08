@@ -36,7 +36,7 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Figure_Generation.HeatmapPlot;
+import window_interface.Figure_Generation.HeatMapOutput;
 import util.FileSelection;
 import javax.swing.JCheckBox;
 
@@ -105,7 +105,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	        	double quantile = Double.parseDouble(txtPercent.getText());
 	        	
 	        	//System.out.println(COLOR + "\n" + startR+ "\n" +  startC+ "\n" +  pHeight+ "\n" +  pWidth+ "\n" +  scaletype+ "\n" +  absolute+ "\n" +  quantile+ "\n" +  OUTPUTPATH);
-	        	HeatmapPlot heat = new HeatmapPlot(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
+	        	HeatMapOutput heat = new HeatMapOutput(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
 	        	
 	        	heat.addPropertyChangeListener("heat", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
