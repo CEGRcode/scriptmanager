@@ -33,7 +33,7 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.BAM_Format_Converter.BAMtoscIDX;
+import window_interface.BAM_Format_Converter.BAMtoscIDXOutput;
 import util.FileSelection;
 
 import javax.swing.JCheckBox;
@@ -93,7 +93,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		        	if(chckbxFilterByMaximum.isSelected()) { MAX = Integer.parseInt(txtMax.getText()); }
 		        	
 		        	for(int x = 0; x < BAMFiles.size(); x++) {
-		        		BAMtoscIDX convert = new BAMtoscIDX(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
+		        		BAMtoscIDXOutput convert = new BAMtoscIDXOutput(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
 		        		convert.setVisible(true);
 						convert.run();
 		        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);

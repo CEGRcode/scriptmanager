@@ -12,18 +12,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+// import javax.swing.JFrame;
+// import javax.swing.JScrollPane;
+// import javax.swing.JTextArea;
 
 @SuppressWarnings("serial")
-public class BAMtoscIDX extends JFrame {
+public class BAMtoscIDX {
 	private File BAM = null;
-	private File OUTPUTPATH = null;
 	private int STRAND = 0;
 	private String READ = "READ1";
 	
@@ -32,31 +32,38 @@ public class BAMtoscIDX extends JFrame {
 	private static int MAX_INSERT = -9999;
 	
 	private SamReader inputSam = null;
-	private PrintStream OUT = null;
+	private File OUTFILE = null;
+// 	private PrintStream OUT = null;
+	private PrintStream PS = null;
+	
+	private PrintStream oldOUT;
+	private PrintStream oldERR;
 	
 	private ArrayList<Integer> BP;
 	private ArrayList<Integer> F_OCC;
 	private ArrayList<Integer> R_OCC;
 	private ArrayList<Integer> M_OCC;
-
-	private JTextArea textArea;
 	
+// 	private JTextArea textArea;
 	private int CHROMSTOP = -999;
 	
-	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size) {
-		setTitle("BAM to scIDX Progress");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 600, 800);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
-		textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane.setViewportView(textArea);
-		
+	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;
-		OUTPUTPATH = o;
+		
+		oldOUT = System.out;
+		oldERR = System.err;
+		
+		//Set-up outputs
+		if(o!=null){
+			OUTFILE = o;
+			try{ System.setOut( new PrintStream(OUTFILE) ); }
+			catch( FileNotFoundException e ){ e.printStackTrace(); }
+		}
+		PS = ps;
+		if(ps!=null){
+			System.setErr( ps );
+		}
+		
 		STRAND = s;
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
@@ -68,61 +75,52 @@ public class BAMtoscIDX extends JFrame {
 	}
 	
 	public void run() throws IOException, InterruptedException {
-		System.out.println(getTimeStamp());
 		
-		//Open Output File
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
-		if(OUTPUTPATH != null) {
-			try { OUT = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME)); }
-			catch (FileNotFoundException e) { e.printStackTrace(); }
-			catch (IOException e) {	e.printStackTrace(); }
-		} else {
-			try { OUT = new PrintStream(new File(NAME)); }
-			catch (FileNotFoundException e) { e.printStackTrace(); }
-		}
-		
-		textArea.append(NAME + "\n");
-		textArea.append(getTimeStamp() + "\n");
+// 		System.out.println(getTimeStamp());
 		
 		//Check to Make Sure BAI-index file exists
 		File f = new File(BAM.getAbsolutePath() + ".bai");
 		if(f.exists() && !f.isDirectory()) {
-			textArea.append("-----------------------------------------\nBAM to scIDX Parameters:\n");
-			textArea.append("BAM file: " + BAM + "\n");
-			textArea.append("Output: " + NAME + "\n");
+			System.err.println("-----------------------------------------\nBAM to scIDX Parameters:");
+			System.err.println("BAM file: " + BAM);
+			if(OUTFILE!=null){ System.err.println("Output: " + OUTFILE.getName()); }
+			else{ System.err.println("Output: STDOUT"); }
 			
-			textArea.append("Require proper Mate-pair: ");
-			if(PAIR == 0) { textArea.append("no" + "\n"); }
-			else { textArea.append("yes" + "\n"); }
+			System.err.println("Require proper Mate-pair: ");
+			if(PAIR == 0) { System.err.println("no"); }
+			else { System.err.println("yes"); }
 			
-			textArea.append("Output Read: " + READ + "\n");
-			textArea.append("Minimum insert size required to output: ");
-			if(MIN_INSERT == -9999) { textArea.append("NaN\n"); }
-			else { textArea.append(MIN_INSERT + "\n"); }
-			textArea.append("Maximum insert size required to output: ");
-			if(MAX_INSERT == -9999) { textArea.append("NaN\n"); }
-			else { textArea.append(MAX_INSERT + "\n"); }
+			System.err.println("Output Read: " + READ);
+			System.err.print("Minimum insert size required to output: ");
+			if(MIN_INSERT == -9999) { System.err.println("NaN"); }
+			else { System.err.println(MIN_INSERT); }
+			System.err.print("Maximum insert size required to output: ");
+			if(MAX_INSERT == -9999) { System.err.println("NaN"); }
+			else { System.err.println(MAX_INSERT); }
 			
 			//Print Header
-			OUT.println("#" + getTimeStamp() + ";" + BAM.getName() + ";" + READ);
-			if(STRAND <= 2) { OUT.println("chrom\tindex\tforward\treverse\tvalue"); }
-			else { OUT.println("chrom\tindex\tmidpoint\tnull\tvalue"); }
+			System.out.println("#" + getTimeStamp() + ";" + BAM.getName() + ";" + READ);
+			// Here add a line as CLI command "receipt" to show command to regenerate this file
+			if(STRAND <= 2) { System.out.println("chrom\tindex\tforward\treverse\tvalue"); }
+			else { System.out.println("chrom\tindex\tmidpoint\tnull\tvalue"); }
 
 			//Begin processing reads in BAM file
 			if(STRAND <= 2) { processREADS(); }
 			else { processMIDPOINT(); }
-			
-			OUT.close();
 		} else {
-			textArea.append("BAI Index File does not exist for: " + BAM.getName() + "\n");
-			OUT.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+			System.err.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+			System.out.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
 		}
-		Thread.sleep(2000);
-		dispose();
 		
-		System.out.println(getTimeStamp());
+// 		if(OUTFILE!=null){ System.out.close(); }
+		
+		//Reset STDOUT and STDERR
+		System.setOut( oldOUT );
+		System.setOut( oldERR );
 	}
-		
+	
+// 	public void printBoth(PrintStream PS, PrintStream OUT, line ){}
+	
 	public void addTag(SAMRecord sr) {
 		//Get the start of the record 
 		int recordStart = sr.getUnclippedStart();//.getAlignmentStart();
@@ -205,13 +203,14 @@ public class BAMtoscIDX extends JFrame {
 				}
 			}
 		}
+		
 	}
 	
 	public void dumpExcess(String chrom) {
 		int trim = 9000;
 		while(trim > 0) {
 			int sum = F_OCC.get(0).intValue() + R_OCC.get(0).intValue();
-			OUT.println(chrom + "\t" + BP.get(0).intValue() + "\t" + F_OCC.get(0).intValue() + "\t" + R_OCC.get(0).intValue() + "\t" + sum);
+			System.out.println(chrom + "\t" + BP.get(0).intValue() + "\t" + F_OCC.get(0).intValue() + "\t" + R_OCC.get(0).intValue() + "\t" + sum);
 			BP.remove(0);
 			F_OCC.remove(0);
 			R_OCC.remove(0);
@@ -223,7 +222,7 @@ public class BAMtoscIDX extends JFrame {
 		int trim = (MAX_INSERT * 10) - (MAX_INSERT * 2);
 		if(MAX_INSERT * 10 < 1000) { trim = 600; }
 		while(trim > 0) {
-			OUT.println(chrom + "\t" + BP.get(0).intValue() + "\t" + M_OCC.get(0).intValue() + "\t0\t" + M_OCC.get(0).intValue());
+			System.out.println(chrom + "\t" + BP.get(0).intValue() + "\t" + M_OCC.get(0).intValue() + "\t0\t" + M_OCC.get(0).intValue());
 			//OUT.println(chrom + "\t" + BP.get(0).intValue() + "\t" + M_OCC.get(0).intValue());		
 
 			BP.remove(0);
@@ -238,8 +237,8 @@ public class BAMtoscIDX extends JFrame {
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-			System.out.println("Processing: " + seq.getSequenceName());
-			textArea.append("Processing: " + seq.getSequenceName() + "\n");
+// 			System.out.println("Processing: " + seq.getSequenceName());
+			System.err.println("Processing: " + seq.getSequenceName());
 
 			CHROMSTOP = seq.getSequenceLength();
 			BP = new ArrayList<Integer>();
@@ -281,7 +280,7 @@ public class BAMtoscIDX extends JFrame {
 			iter.close();
 			for(int z = 0; z < BP.size(); z++) {
 				int sum = F_OCC.get(z).intValue() + R_OCC.get(z).intValue();
-				OUT.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + F_OCC.get(z).intValue() + "\t" + R_OCC.get(z).intValue() + "\t" + sum);		
+				System.out.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + F_OCC.get(z).intValue() + "\t" + R_OCC.get(z).intValue() + "\t" + sum);		
 			}
 		}
 		bai.close();
@@ -293,8 +292,8 @@ public class BAMtoscIDX extends JFrame {
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-			System.out.println("Processing: " + seq.getSequenceName());
-			textArea.append("Processing: " + seq.getSequenceName() + "\n");
+// 			System.out.println("Processing: " + seq.getSequenceName());
+			PS.println("Processing: " + seq.getSequenceName());
 
 			BP = new ArrayList<Integer>();
 			M_OCC = new ArrayList<Integer>();
@@ -322,7 +321,7 @@ public class BAMtoscIDX extends JFrame {
 			}
 			iter.close();
 			for(int z = 0; z < BP.size(); z++) {
-				OUT.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + M_OCC.get(z).intValue() + "\t0\t" + M_OCC.get(z).intValue());
+				System.out.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + M_OCC.get(z).intValue() + "\t0\t" + M_OCC.get(z).intValue());
 				//OUT.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + M_OCC.get(z).intValue());		
 			}
 		}
