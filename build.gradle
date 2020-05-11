@@ -8,9 +8,12 @@ apply plugin: 'application'
 apply plugin: 'eclipse'
 
 sourceSets.main.java.srcDirs = ['src']
-mainClassName = "main.ScriptManagerCLI"
-version = '0.12'
+
+mainClassName = "main.ScriptManager"
+version = '0.12-dev'
+
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 // Gradle builds for dev
 jar {

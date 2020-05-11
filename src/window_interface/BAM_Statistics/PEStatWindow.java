@@ -242,7 +242,6 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		
 		chckbxDup = new JCheckBox("Calculate duplication statistics");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxDup, -8, SpringLayout.NORTH, chckbxOutputStatistics);
-		chckbxDup.setSelected(true);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxDup, 0, SpringLayout.WEST, scrollPane);
 		contentPane.add(chckbxDup);
 		btnRun.addActionListener(this);

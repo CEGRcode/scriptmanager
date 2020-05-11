@@ -20,6 +20,8 @@ public class PileupParameters {
 	private File BLACKLIST = null;
 	private boolean STANDARD = false;
 	private boolean outputCOMPOSITE = false;
+	private boolean outputJTV = false;
+	private boolean outputGZIP = false;
 	private boolean requirePE = false;
 	private double STANDRATIO = 1;
 	
@@ -32,6 +34,22 @@ public class PileupParameters {
 	
 	public PileupParameters() {
 		
+	}
+	
+	public boolean outputGZIP() {
+		return outputGZIP;
+	}
+	
+	public void setGZIPstatus(boolean status) {
+		outputGZIP = status;
+	}
+	
+	public boolean outputJTV() {
+		return outputJTV;
+	}
+	
+	public void setJTVstatus(boolean status) {
+		outputJTV = status;
 	}
 	
 	public File getBlacklist() {

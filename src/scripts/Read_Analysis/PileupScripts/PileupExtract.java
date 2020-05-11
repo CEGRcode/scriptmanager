@@ -41,6 +41,11 @@ public class PileupExtract implements Runnable{
 		int SHIFT = param.getShift();
 		int STRAND = param.getStrand();
 		
+		// Ugly hack to account for the fact that read 1 5' end may be outside the window of interest even though read 2 and the midpoint may be in range
+		// TODO FIX this into something more logical, probably check for read2 in region independently?
+		int MIDPOINT_ADJUST = 0;
+		if(param.getRead() == 3) { MIDPOINT_ADJUST = 300; }
+		
 		int BEDSTART = (int)read.getStart();
 		int BEDSTOP = (int)read.getStop();
 		//Correct for '-' strand BED coord so they align with '+' strand
@@ -64,7 +69,7 @@ public class PileupExtract implements Runnable{
 		if(STRAND == 0) TAG_S2 = new double[WINDOW];
 		
 		//SAMRecords are 1-based
-		CloseableIterator<SAMRecord> iter = inputSam.query(read.getChrom(), BEDSTART - QUERYWINDOW - SHIFT - 1, BEDSTOP + QUERYWINDOW + SHIFT + 1, false);
+		CloseableIterator<SAMRecord> iter = inputSam.query(read.getChrom(), BEDSTART - QUERYWINDOW - SHIFT - MIDPOINT_ADJUST - 1, BEDSTOP + QUERYWINDOW + SHIFT + MIDPOINT_ADJUST + 1, false);
 		while (iter.hasNext()) {
 			//Create the record object 
 		    //SAMRecord is 1-based
