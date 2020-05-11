@@ -5,10 +5,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.util.concurrent.Callable;
-import java.util.List;
-
 import java.io.File;
+import java.util.concurrent.Callable;
 
 import scripts.Figure_Generation.MergeHeatMapPlot;
 
@@ -16,13 +14,14 @@ import scripts.Figure_Generation.MergeHeatMapPlot;
 	Figure_GenerationCLI/MergeHeatMapCLI
 */
 @Command(name = "merge-heatmap", mixinStandardHelpOptions = true,
-		description = "Merge Sense and Antisense png heatmaps")
+		description = "Merge Sense and Antisense png heatmaps",
+		sortOptions = false)
 public class MergeHeatMapCLI implements Callable<Integer> {
 	
 	
-	@Option(names = {"-s", "--sense"}, required=true, description = "First(sense) heatmap to merge")
+	@Option(names = {"-1", "--input1"}, required=true, description = "First(sense) heatmap to merge")
 	private File senseFile = null;
-	@Option(names = {"-a", "--anti"}, description = "Second(anti) heatmap to merge")
+	@Option(names = {"-2", "--input2"}, description = "Second(anti) heatmap to merge")
 	private File antiFile = null;
 	
 	@Option(names = {"-o", "--output"}, description = "specify output file (be sure to use .png ext)")
@@ -31,8 +30,9 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
 		System.out.println( ">MergeHeatMapCLI.call()" );
-		
-		if( validateInput()!=0 ){
+		String validate = validateInput();
+		if( validate.compareTo("")!=0 ){
+			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
 		}
@@ -41,26 +41,26 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 		MergeHeatMapPlot.mergePNG( senseFile, antiFile, output );
 				
 		System.out.println( "Image Generated." );
-			
 		return(0);
 	}
 	
-	private int validateInput(){
-		
+	private String validateInput(){
+		String r = "";
 		if( senseFile==null && antiFile==null ){
-			System.err.println("!!!What are we merging? You gave two null file inputs!");
-			return(1);
+			r += "(!)What are we merging? You gave two null file inputs!";
 		}
 		
 		//check input extensions
-		
+		/* <ADD CODE HERE> */
+		//set default output filename
+// 		String out = senseFile.substring(0, name.lastIndexOf("sense"));
+		/* <ADD CODE HERE> */
 		//check outputbasename is valid
+		/* <ADD CODE HERE> */
+		//set default output filename
+		/* <ADD CODE HERE> */
 		
-		//Print warnings if not named _anti and _sense
-		
-		//Possibly print warnings when image has color values that dont match red or blue?
-		
-		return(0);
+		return(r);
 	}
 	
 }

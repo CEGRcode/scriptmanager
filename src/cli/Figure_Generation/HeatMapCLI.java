@@ -5,12 +5,10 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.awt.Color;
-
 import java.io.File;
-
-import java.util.List;
 import java.util.concurrent.Callable;
+
+import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +18,8 @@ import scripts.Figure_Generation.HeatmapPlot;
 	Figure_GenerationCLI/HeatMapCLI
 */
 @Command(name = "heatmap", mixinStandardHelpOptions = true,
-		description = "Generate heatmap using CDT files.")
+		description = "Generate heatmap using CDT files.",
+		sortOptions = false)
 public class HeatMapCLI implements Callable<Integer> {
 		
 	@Parameters( index = "0", description = "")
@@ -38,10 +37,10 @@ public class HeatMapCLI implements Callable<Integer> {
 	private int startROW = 1;
 	@Option(names = {"-l", "--start-col"}, description = "")
 	private int startCOL = 2;
-	@Option(names = {"-y", "--height"}, description = "indicate a pixel height for the heatmap (default=600)")
-	private int pixelHeight = 600;
 	@Option(names = {"-x", "--width"}, description = "indicate a pixel width for the heatmap (default=200)")
 	private int pixelWidth = 200;
+	@Option(names = {"-y", "--height"}, description = "indicate a pixel height for the heatmap (default=600)")
+	private int pixelHeight = 600;
 	@Option(names = {"-z", "--compression"}, description = "choose an image compression type: 1=Treeview, 2=Bicubic, 3=Bilinear, 4=Nearest Neighbor (default=1Treeview)")
 	private int compression = 1;
 	@Option(names = {"-a", "--absolute-threshold"}, description = "use the specified value for contrast thresholding in the heatmap (default=10)")
@@ -51,12 +50,12 @@ public class HeatMapCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "specify output basename for the outputfile ( _<compression-type>.png will be appended to the name, default=heatmapplot)")
 	private File outbasename = new File("heatmapplot");
 	
-	
 	@Override
 	public Integer call() throws Exception {
 		System.out.println( ">HeatMapCLI.call()" );
-		
-		if( validateInput()!=0 ){
+		String validate = validateInput();
+		if( validate.compareTo("")!=0 ){
+			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
 		}
@@ -67,8 +66,6 @@ public class HeatMapCLI implements Callable<Integer> {
 		else if(red){ MAXCOLOR = Color.RED; }
 		else if(blue){ MAXCOLOR = Color.BLUE; }
 		else{ MAXCOLOR = Color.decode(color); }
-		
-			
 		// Assign a scaleType based on "compression" input
 		String scaleType = null;
 		if(compression==1){ scaleType = "treeview"; }
@@ -84,52 +81,40 @@ public class HeatMapCLI implements Callable<Integer> {
 		return(0);
 	}
 	
-	
-	private int validateInput(){
-		
+	private String validateInput(){
+		String r = "";
 		// check compression is a valid input value
 		if( compression<1 || compression>4 ){
-			System.err.println("!!!Compression must be integer 1-4. Please select from the available compression types!");
-			return(1);
+			r += "(!)Compression must be integer 1-4. Please select from the available compression types.";
 		}
-		
 		//check that not more than one of -c, --red, --blue, --black is indicated
 		int color_inst = 0;
 		color_inst  = (black) ? 1 : 0;
 		color_inst += (red) ? 1 : 0;
 		color_inst += (blue) ? 1 : 0;
 		color_inst += (color!=null) ? 1 : 0;
-		if( color_inst > 1 ){
-			System.err.println( "!!! You can only use one of the color selection parameters: black(--black), red(--red), blue(--blue), color(-c)!" );
-			return(1);
-		}
-		
-		//check that hex string is formatted appropriately
+		if( color_inst > 1 ){ r += "(!)You can only use one of the color selection parameters: black(--black), red(--red), blue(--blue), color(-c)!"; }
+		//check that hex string is formatted properly
 		if( color != null ){
 			Pattern hexColorPat = Pattern.compile("#?[0-9A-Fa-f]{6}");
 			Matcher m = hexColorPat.matcher( color );
 			if( !m.matches() ){
-				System.err.println("!!!Color must be formatted as a hexidecimal String!\nExpected input string format: \"#?[0-9A-F]{6}\"");
-				return(1);
+				r += "(!)Color must be formatted as a hexidecimal String!\n\t-Expected input string format: \"#?[0-9A-F]{6}\"";
 			}
 		}else{ color="#000000"; }
-		
+		//set default output filename
+// 		String FILEID = CDT.getName().split("\\.")[0];
+// 		String OUTPUT = FILEID;
+// 		if(OUTPUTPATH != null) { OUTPUT = OUTPUTPATH.getCanonicalPath() + File.separator + FILEID; }
+		/* <ADD CODE HERE> */
 		//check outputbasename is valid
-		
+		/* <ADD CODE HERE> */
 		//check pixel ranges are valid
-// 		TODECIDE:(do we want to set a min/max?)
-		if(pixelHeight<=0){
-			System.err.println("!!!Image Height must be a positive integer value! check \"-y\" flag.\"");
-			return(1);
-		}
-		if(pixelWidth<=0){
-			System.err.println("!!!Image Width must be a positive integer value! check \"-x\" flag.\"");
-			return(1);
-		}
-		
+		if(pixelHeight<=0){ r += "(!)Cell height must be a positive integer value! check \"-y\" flag.\""; }
+		if(pixelWidth<=0) { r += "(!)Cell width must be a positive integer value! check \"-x\" flag.\""; }
 		//check start row/col are valid
+		/* <ADD CODE HERE> */
 		
-		return(0);
+		return(r);
 	}
-	
 }
