@@ -16,7 +16,7 @@ sourceCompatibility = 1.8
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 
-	archiveBaseName = "ScriptManager"
+	archiveBaseName = "ScriptManager_owlangFork"
 
 	manifest {
         attributes 'ScriptManager-Title': baseName,  
