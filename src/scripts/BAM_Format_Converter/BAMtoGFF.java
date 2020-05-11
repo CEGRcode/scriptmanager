@@ -7,7 +7,6 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,111 +14,82 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
 @SuppressWarnings("serial")
-public class BAMtoGFF extends JFrame {
+public class BAMtoGFF {
 	private File BAM = null;
-	private File OUTPUTPATH = null;
+	private File OUTFILE = null;
+	private PrintStream OUT = null;
+	private PrintStream PS = null;
+	
 	private int STRAND = 0;
 	private String READ = "READ1";
-	
 	private static int PAIR = 1;
 	private static int MIN_INSERT = -9999;
 	private static int MAX_INSERT = -9999;
 	
 	private SamReader inputSam = null;
-	private PrintStream OUT = null;
-
-	private JTextArea textArea;
 	
 	private int CHROMSTOP = -999;
 	
-	public BAMtoGFF(File b, File o, int s, int pair_status,  int min_size, int max_size) {
-		setTitle("BAM to GFF Progress");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 600, 800);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
-		textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane.setViewportView(textArea);
-		
+	public BAMtoGFF(File b, File o, int s, int pair_status,  int min_size, int max_size, PrintStream ps) {
 		BAM = b;
-		OUTPUTPATH = o;
+		OUTFILE = o;
+		PS = ps;
 		STRAND = s;
 		PAIR = pair_status;
-		
 		MIN_INSERT = min_size;
 		MAX_INSERT = max_size;
-		
 		if(STRAND == 0) { READ = "READ1"; }
 		else if(STRAND == 1) { READ = "READ2"; }
 		else if(STRAND == 2) { READ = "COMBINED"; }
 		else if(STRAND == 3) { READ = "MIDPOINT"; }
 		else if(STRAND == 4) { READ = "FRAGMENT"; }
-
 	}
 	
 	public void run() throws IOException, InterruptedException {
-		System.out.println(getTimeStamp());
-		
-		//Open Output File
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".gff";
-		if(OUTPUTPATH != null) {
-			try { OUT = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME)); }
-			catch (FileNotFoundException e) { e.printStackTrace(); }
-			catch (IOException e) {	e.printStackTrace(); }
-		} else {
-			try { OUT = new PrintStream(new File(NAME)); }
-			catch (FileNotFoundException e) { e.printStackTrace(); }
+		//Set-up Output PrintStream
+		if(OUTFILE!=null){
+			try{ OUT = new PrintStream(OUTFILE); }
+			catch( FileNotFoundException e ){ e.printStackTrace(); }
+			printPS(OUTFILE.getCanonicalPath());
+		}else{
+			printPS("STDOUT");
 		}
-				
-		textArea.append(NAME + "\n");
-		textArea.append(getTimeStamp() + "\n");
+		printPS(getTimeStamp());
 		
 		//Check to Make Sure BAI-index file exists
 		File f = new File(BAM.getAbsolutePath() + ".bai");
 		if(f.exists() && !f.isDirectory()) {
-			textArea.append("-----------------------------------------\nBAM to GFF Parameters:\n");
-			textArea.append("BAM file: " + BAM + "\n");
-			textArea.append("Output: " + NAME + "\n");
+			//Print Input Params
+			printPS("-----------------------------------------\nBAM to GFF Parameters:");
+			printPS("BAM file: " + BAM);
+			if(OUTFILE!=null){ printPS("Output: " + OUTFILE.getName()); }
+			else{ printPS("Output: STDOUT"); }
 			
-			textArea.append("Output Read: " + READ + "\n");
-			textArea.append("Require proper Mate-pair: ");
-			if(PAIR == 0) { textArea.append("no" + "\n"); }
-			else { textArea.append("yes" + "\n"); }
+			printPS("Output Read: " + READ);
+			if(PAIR == 0) { printPS( "Require proper Mate-pair: no"); }
+			else { printPS("Require proper Mate-pair: yes"); }
 
-			textArea.append("Minimum insert size required to output: ");
-			if(MIN_INSERT == -9999) { textArea.append("NaN\n"); }
-			else { textArea.append(MIN_INSERT + "\n"); }
-			textArea.append("Maximum insert size required to output: ");
-			if(MAX_INSERT == -9999) { textArea.append("NaN\n"); }
-			else { textArea.append(MAX_INSERT + "\n"); }
+			if(MIN_INSERT == -9999) { printPS("Minimum insert size required to output: NaN"); }
+			else { printPS("Minimum insert size required to output: " + MIN_INSERT); }
 			
-			//Print Header
-			OUT.print("#" + getTimeStamp() + ";" + BAM.getName() + ";" + READ);
-			if(PAIR != 0) { OUT.print(";PE_Required"); }
-			if(MIN_INSERT != -9999) { OUT.print(";Min_Insert-" + MIN_INSERT); }
-			if(MAX_INSERT != -9999) { OUT.print(";Max_Insert-" + MAX_INSERT); }
-			OUT.println();
+			if(MAX_INSERT == -9999) { printPS("Maximum insert size required to output: NaN"); }
+			else { printPS("Maximum insert size required to output: " + MAX_INSERT); }
+			
+			//Build&Print Header
+			String header = "#" + getTimeStamp() + ";" + BAM.getName() + ";" + READ;
+			if(PAIR != 0) { header += ";PE_Required"; }
+			if(MIN_INSERT != -9999) { header += ";Min_Insert-" + MIN_INSERT; }
+			if(MAX_INSERT != -9999) { header += ";Max_Insert-" + MAX_INSERT; }
+			printOUT(header);
 			
 			//Begin processing reads in BAM file
 			processREADS();
-			
-			OUT.close();
 		} else {
-			textArea.append("BAI Index File does not exist for: " + BAM.getName() + "\n");
-			OUT.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+			printPS("BAI Index File does not exist for: " + BAM.getName());
+			printOUT("BAI Index File does not exist for: " + BAM.getName());
 		}
-		Thread.sleep(2000);
-		dispose();
-		
-		System.out.println(getTimeStamp());
+		if(OUTFILE!=null){ OUT.close(); }
 	}
 	
 	public void outputRead(SAMRecord read) {
@@ -133,7 +103,7 @@ public class BAMtoGFF extends JFrame {
 		
 		if(STRAND <= 2) { 
 			if(recordStart > 0 && recordStop <= CHROMSTOP) { //Make sure we only output real reads
-				OUT.println(chrom + "\tbam2gff\t" + read.getReadName() + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadLength() + "\t" + dir + "\t.\t" + read.getReadName());
+				printOUT(chrom + "\tbam2gff\t" + read.getReadName() + "\t" + recordStart + "\t" + recordStop + "\t" + read.getReadLength() + "\t" + dir + "\t.\t" + read.getReadName());
 			}
 		} else if(STRAND == 3) { 
 			recordStop = read.getMateAlignmentStart() + read.getReadLength() - 1;
@@ -146,7 +116,7 @@ public class BAMtoGFF extends JFrame {
 			
 			if(midStart > 0 && midStop <= CHROMSTOP) { //Make sure we only output real reads
 				int size = Math.abs(read.getInferredInsertSize());
-				OUT.println(chrom + "\tbam2gff\t" + read.getReadName() + "\t" + midStart + "\t" + midStop + "\t" + size + "\t" + dir + "\t.\t" + read.getReadName());
+				printOUT(chrom + "\tbam2gff\t" + read.getReadName() + "\t" + midStart + "\t" + midStop + "\t" + size + "\t" + dir + "\t.\t" + read.getReadName());
 			}
 		} else if(STRAND == 4) { 
 			if(read.getReadNegativeStrandFlag()) {
@@ -157,7 +127,7 @@ public class BAMtoGFF extends JFrame {
 			}
 			if(recordStart > 0 && recordStop <= CHROMSTOP) { //Make sure we only output real reads
 				int size = Math.abs(read.getInferredInsertSize());
-				OUT.println(chrom + "\tbam2gff\t" + read.getReadName() + "\t" + recordStart + "\t" + recordStop + "\t" + size + "\t" + dir + "\t.\t" + read.getReadName());
+				printOUT(chrom + "\tbam2gff\t" + read.getReadName() + "\t" + recordStart + "\t" + recordStop + "\t" + size + "\t" + dir + "\t.\t" + read.getReadName());
 			}
 		}
 	}
@@ -168,8 +138,8 @@ public class BAMtoGFF extends JFrame {
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-			System.out.println("Processing: " + seq.getSequenceName());
-			textArea.append("Processing: " + seq.getSequenceName() + "\n");
+// 			System.out.println("Processing: " + seq.getSequenceName());
+			printPS("Processing: " + seq.getSequenceName());
 
 			CHROMSTOP = seq.getSequenceLength();
 			
@@ -214,7 +184,17 @@ public class BAMtoGFF extends JFrame {
 		}
 		bai.close();
 	}
-		
+	
+	private void printPS( String line ){
+		if( PS!=null ){ PS.println(line); }
+		else{ System.err.println( line ); }		
+	}
+	
+	private void printOUT( String line ){
+		if( OUT!=null ){ OUT.println(line); }
+		else{ System.out.println( line ); }		
+	}
+	
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();

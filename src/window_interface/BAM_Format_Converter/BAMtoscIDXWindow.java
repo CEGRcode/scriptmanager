@@ -33,12 +33,13 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import window_interface.BAM_Format_Converter.BAMtoscIDXOutput;
 import util.FileSelection;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import window_interface.BAM_Format_Converter.BAMtoscIDXOutput;
 
 @SuppressWarnings("serial")
 public class BAMtoscIDXWindow extends JFrame implements ActionListener, PropertyChangeListener {

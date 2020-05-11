@@ -7,63 +7,40 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-// import javax.swing.JFrame;
-// import javax.swing.JScrollPane;
-// import javax.swing.JTextArea;
-
 @SuppressWarnings("serial")
 public class BAMtoscIDX {
 	private File BAM = null;
+	private File OUTFILE = null;
+	private PrintStream OUT = null;
+	private PrintStream PS = null;
+	
 	private int STRAND = 0;
 	private String READ = "READ1";
-	
 	private static int PAIR = 1;
 	private static int MIN_INSERT = -9999;
 	private static int MAX_INSERT = -9999;
 	
 	private SamReader inputSam = null;
-	private File OUTFILE = null;
-// 	private PrintStream OUT = null;
-	private PrintStream PS = null;
-	
-	private PrintStream oldOUT;
-	private PrintStream oldERR;
 	
 	private ArrayList<Integer> BP;
 	private ArrayList<Integer> F_OCC;
 	private ArrayList<Integer> R_OCC;
 	private ArrayList<Integer> M_OCC;
 	
-// 	private JTextArea textArea;
 	private int CHROMSTOP = -999;
 	
 	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;
-		
-		oldOUT = System.out;
-		oldERR = System.err;
-		
-		//Set-up outputs
-		if(o!=null){
-			OUTFILE = o;
-			try{ System.setOut( new PrintStream(OUTFILE) ); }
-			catch( FileNotFoundException e ){ e.printStackTrace(); }
-		}
+		OUTFILE = o;
 		PS = ps;
-		if(ps!=null){
-			System.setErr( ps );
-		}
-		
 		STRAND = s;
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
@@ -75,51 +52,50 @@ public class BAMtoscIDX {
 	}
 	
 	public void run() throws IOException, InterruptedException {
-		
-// 		System.out.println(getTimeStamp());
+		//Set-up Output PrintStream
+		if(OUTFILE!=null){
+			try{ OUT = new PrintStream(OUTFILE); }
+			catch( FileNotFoundException e ){ e.printStackTrace(); }
+			printPS(OUTFILE.getCanonicalPath());
+		}else{
+			printPS("STDOUT");
+		}
+		printPS(getTimeStamp());
 		
 		//Check to Make Sure BAI-index file exists
 		File f = new File(BAM.getAbsolutePath() + ".bai");
 		if(f.exists() && !f.isDirectory()) {
-			System.err.println("-----------------------------------------\nBAM to scIDX Parameters:");
-			System.err.println("BAM file: " + BAM);
-			if(OUTFILE!=null){ System.err.println("Output: " + OUTFILE.getName()); }
-			else{ System.err.println("Output: STDOUT"); }
+			//Print Input Params
+			printPS("-----------------------------------------\nBAM to scIDX Parameters:");
+			printPS("BAM file: " + BAM);
+			if(OUTFILE!=null){ printPS("Output: " + OUTFILE.getName()); }
+			else{ printPS("Output: STDOUT"); }
 			
-			System.err.println("Require proper Mate-pair: ");
-			if(PAIR == 0) { System.err.println("no"); }
-			else { System.err.println("yes"); }
+			printPS("Output Read: " + READ);
+			if(PAIR == 0) { printPS( "Require proper Mate-pair: no"); }
+			else { printPS("Require proper Mate-pair: yes"); }
 			
-			System.err.println("Output Read: " + READ);
-			System.err.print("Minimum insert size required to output: ");
-			if(MIN_INSERT == -9999) { System.err.println("NaN"); }
-			else { System.err.println(MIN_INSERT); }
-			System.err.print("Maximum insert size required to output: ");
-			if(MAX_INSERT == -9999) { System.err.println("NaN"); }
-			else { System.err.println(MAX_INSERT); }
+			if(MIN_INSERT == -9999) { printPS("Minimum insert size required to output: NaN"); }
+			else { printPS("Minimum insert size required to output: " + MIN_INSERT); }
+			
+			if(MAX_INSERT == -9999) { printPS("Maximum insert size required to output: NaN"); }
+			else { printPS("Maximum insert size required to output: " + MAX_INSERT); }
 			
 			//Print Header
-			System.out.println("#" + getTimeStamp() + ";" + BAM.getName() + ";" + READ);
+			printOUT("#" + getTimeStamp() + ";" + BAM.getName() + ";" + READ);
 			// Here add a line as CLI command "receipt" to show command to regenerate this file
-			if(STRAND <= 2) { System.out.println("chrom\tindex\tforward\treverse\tvalue"); }
-			else { System.out.println("chrom\tindex\tmidpoint\tnull\tvalue"); }
+			if(STRAND <= 2) { printOUT("chrom\tindex\tforward\treverse\tvalue"); }
+			else { printOUT("chrom\tindex\tmidpoint\tnull\tvalue"); }
 
 			//Begin processing reads in BAM file
 			if(STRAND <= 2) { processREADS(); }
 			else { processMIDPOINT(); }
 		} else {
-			System.err.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
-			System.out.println("BAI Index File does not exist for: " + BAM.getName() + "\n");
+			printPS("BAI Index File does not exist for: " + BAM.getName());
+			printOUT("BAI Index File does not exist for: " + BAM.getName());
 		}
-		
-// 		if(OUTFILE!=null){ System.out.close(); }
-		
-		//Reset STDOUT and STDERR
-		System.setOut( oldOUT );
-		System.setOut( oldERR );
+		if(OUTFILE!=null){ OUT.close(); }
 	}
-	
-// 	public void printBoth(PrintStream PS, PrintStream OUT, line ){}
 	
 	public void addTag(SAMRecord sr) {
 		//Get the start of the record 
@@ -210,7 +186,7 @@ public class BAMtoscIDX {
 		int trim = 9000;
 		while(trim > 0) {
 			int sum = F_OCC.get(0).intValue() + R_OCC.get(0).intValue();
-			System.out.println(chrom + "\t" + BP.get(0).intValue() + "\t" + F_OCC.get(0).intValue() + "\t" + R_OCC.get(0).intValue() + "\t" + sum);
+			printOUT(chrom + "\t" + BP.get(0).intValue() + "\t" + F_OCC.get(0).intValue() + "\t" + R_OCC.get(0).intValue() + "\t" + sum);
 			BP.remove(0);
 			F_OCC.remove(0);
 			R_OCC.remove(0);
@@ -222,7 +198,7 @@ public class BAMtoscIDX {
 		int trim = (MAX_INSERT * 10) - (MAX_INSERT * 2);
 		if(MAX_INSERT * 10 < 1000) { trim = 600; }
 		while(trim > 0) {
-			System.out.println(chrom + "\t" + BP.get(0).intValue() + "\t" + M_OCC.get(0).intValue() + "\t0\t" + M_OCC.get(0).intValue());
+			printOUT(chrom + "\t" + BP.get(0).intValue() + "\t" + M_OCC.get(0).intValue() + "\t0\t" + M_OCC.get(0).intValue());
 			//OUT.println(chrom + "\t" + BP.get(0).intValue() + "\t" + M_OCC.get(0).intValue());		
 
 			BP.remove(0);
@@ -238,7 +214,7 @@ public class BAMtoscIDX {
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
 // 			System.out.println("Processing: " + seq.getSequenceName());
-			System.err.println("Processing: " + seq.getSequenceName());
+			printPS("Processing: " + seq.getSequenceName());
 
 			CHROMSTOP = seq.getSequenceLength();
 			BP = new ArrayList<Integer>();
@@ -280,7 +256,7 @@ public class BAMtoscIDX {
 			iter.close();
 			for(int z = 0; z < BP.size(); z++) {
 				int sum = F_OCC.get(z).intValue() + R_OCC.get(z).intValue();
-				System.out.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + F_OCC.get(z).intValue() + "\t" + R_OCC.get(z).intValue() + "\t" + sum);		
+				printOUT(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + F_OCC.get(z).intValue() + "\t" + R_OCC.get(z).intValue() + "\t" + sum);		
 			}
 		}
 		bai.close();
@@ -293,7 +269,7 @@ public class BAMtoscIDX {
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
 // 			System.out.println("Processing: " + seq.getSequenceName());
-			PS.println("Processing: " + seq.getSequenceName());
+			printPS("Processing: " + seq.getSequenceName());
 
 			BP = new ArrayList<Integer>();
 			M_OCC = new ArrayList<Integer>();
@@ -321,11 +297,21 @@ public class BAMtoscIDX {
 			}
 			iter.close();
 			for(int z = 0; z < BP.size(); z++) {
-				System.out.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + M_OCC.get(z).intValue() + "\t0\t" + M_OCC.get(z).intValue());
+				printOUT(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + M_OCC.get(z).intValue() + "\t0\t" + M_OCC.get(z).intValue());
 				//OUT.println(seq.getSequenceName() + "\t" + BP.get(z).intValue() + "\t" + M_OCC.get(z).intValue());		
 			}
 		}
 		bai.close();
+	}
+	
+	private void printPS( String line ){
+		if( PS!=null ){ PS.println(line); }
+		else{ System.err.println( line ); }		
+	}
+	
+	private void printOUT( String line ){
+		if( OUT!=null ){ OUT.println(line); }
+		else{ System.out.println( line ); }		
 	}
 	
 	private static String getTimeStamp() {

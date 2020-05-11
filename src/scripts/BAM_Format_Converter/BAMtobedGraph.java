@@ -7,7 +7,6 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,48 +15,33 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
 @SuppressWarnings("serial")
-public class BAMtobedGraph extends JFrame {
+public class BAMtobedGraph {
 	private File BAM = null;
-	private File OUTPUTPATH = null;
+	private File OUTBASENAME = null;
+	private PrintStream OUTF = null;
+	private PrintStream OUTR = null;
+	private PrintStream PS = null;
+	
 	private int STRAND = 0;
 	private String READ = "READ1";
-	
 	private static int PAIR = 1;
 	private static int MIN_INSERT = -9999;
 	private static int MAX_INSERT = -9999;
 	
 	private SamReader inputSam = null;
-	private PrintStream OUTF = null;
-	private PrintStream OUTR = null;
 	
 	private ArrayList<Integer> BP;
 	private ArrayList<Integer> F_OCC;
 	private ArrayList<Integer> R_OCC;
 	private ArrayList<Integer> M_OCC;
-
-	private JTextArea textArea;
 	
 	private int CHROMSTOP = -999;
 	
-	public BAMtobedGraph(File b, File o, int s, int pair_status, int min_size, int max_size) {
-		setTitle("BAM to bedGraph Progress");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 600, 800);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
-		textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane.setViewportView(textArea);
-		
+	public BAMtobedGraph(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;
-		OUTPUTPATH = o;
+		OUTBASENAME = o;
+		PS = ps;
 		STRAND = s;
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
@@ -69,54 +53,44 @@ public class BAMtobedGraph extends JFrame {
 	}
 	
 	public void run() throws IOException, InterruptedException {
-		System.out.println(getTimeStamp());
 		
 		//Open Output File
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ;
-		if(OUTPUTPATH != null) {
+		if(OUTBASENAME != null) {
 			try {
 				if(STRAND <= 2) {
-					OUTF = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME + "_forward.bedGraph"));
-					OUTR = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME + "_reverse.bedGraph"));
+					OUTF = new PrintStream(new File(OUTBASENAME.getCanonicalPath() + "_forward.bedGraph"));
+					OUTR = new PrintStream(new File(OUTBASENAME.getCanonicalPath() + "_reverse.bedGraph"));
 				} else {
-					OUTF = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME + "_midpoint.bedGraph"));
+					OUTF = new PrintStream(new File(OUTBASENAME.getCanonicalPath() + "_midpoint.bedGraph"));
 				}
 			}
 			catch (FileNotFoundException e) { e.printStackTrace(); }
 			catch (IOException e) {	e.printStackTrace(); }
 		} else {
-			try {
-				if(STRAND <= 2) {
-					OUTF = new PrintStream(new File(NAME + "_forward.bedGraph"));
-					OUTR = new PrintStream(new File(NAME + "_reverse.bedGraph"));
-				} else {
-					OUTF = new PrintStream(new File(NAME + "_midpoint.bedGraph"));
-				}
-			}
-			catch (FileNotFoundException e) { e.printStackTrace(); }
+			throw new NullPointerException();
 		}
 		
-		textArea.append(NAME + "\n");
-		textArea.append(getTimeStamp() + "\n");
+		// Print TimeStamp to STDERR/Output Window
+		printPS(OUTBASENAME.getCanonicalPath());
+		printPS(getTimeStamp());
 		
 		//Check to Make Sure BAI-index file exists
 		File f = new File(BAM.getAbsolutePath() + ".bai");
 		if(f.exists() && !f.isDirectory()) {
-			textArea.append("-----------------------------------------\nBAM to bedGraph Parameters:\n");
-			textArea.append("BAM file: " + BAM + "\n");
-			textArea.append("Output: " + NAME + "\n");
+			//Print Input Params
+			printPS("-----------------------------------------\nBAM to bedGraph Parameters:");
+			printPS("BAM file: " + BAM);
+			printPS("Output: " + OUTBASENAME.getName());
 			
-			textArea.append("Require proper Mate-pair: ");
-			if(PAIR == 0) { textArea.append("no" + "\n"); }
-			else { textArea.append("yes" + "\n"); }
+			printPS("Output Read: " + READ);
+			if(PAIR == 0) { printPS( "Require proper Mate-pair: no"); }
+			else { printPS("Require proper Mate-pair: yes"); }
 			
-			textArea.append("Output Read: " + READ + "\n");
-			textArea.append("Minimum insert size required to output: ");
-			if(MIN_INSERT == -9999) { textArea.append("NaN\n"); }
-			else { textArea.append(MIN_INSERT + "\n"); }
-			textArea.append("Maximum insert size required to output: ");
-			if(MAX_INSERT == -9999) { textArea.append("NaN\n"); }
-			else { textArea.append(MAX_INSERT + "\n"); }
+			if(MIN_INSERT == -9999) { printPS("Minimum insert size required to output: NaN"); }
+			else { printPS("Minimum insert size required to output: " + MIN_INSERT); }
+			
+			if(MAX_INSERT == -9999) { printPS("Maximum insert size required to output: NaN"); }
+			else { printPS("Maximum insert size required to output: " + MAX_INSERT); }
 			
 			//Print Header
 			if(STRAND <= 2) {
@@ -129,18 +103,13 @@ public class BAMtobedGraph extends JFrame {
 			//Begin processing reads in BAM file
 			if(STRAND <= 2) { processREADS(); }
 			else { processMIDPOINT(); }
-			
-			if(OUTF != null) { OUTF.close(); }
-			if(OUTR != null) { OUTR.close(); }
 		} else {
-			textArea.append("BAI Index File does not exist for: " + BAM.getName() + "\n");
-			if(OUTF != null) { OUTF.println("BAI Index File does not exist for: " + BAM.getName() + "\n"); }
-			if(OUTR != null) { OUTR.println("BAI Index File does not exist for: " + BAM.getName() + "\n"); }
+			printPS("BAI Index File does not exist for: " + BAM.getName());
+			if(OUTF != null) { OUTF.println("BAI Index File does not exist for: " + BAM.getName()); }
+			if(OUTR != null) { OUTR.println("BAI Index File does not exist for: " + BAM.getName()); }
 		}
-		Thread.sleep(2000);
-		dispose();
-		
-		System.out.println(getTimeStamp());
+		if(OUTF != null) { OUTF.close(); }
+		if(OUTR != null) { OUTR.close(); }
 	}
 		
 	public void addTag(SAMRecord sr) {
@@ -259,8 +228,8 @@ public class BAMtobedGraph extends JFrame {
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-			System.out.println("Processing: " + seq.getSequenceName());
-			textArea.append("Processing: " + seq.getSequenceName() + "\n");
+// 			System.out.println("Processing: " + seq.getSequenceName());
+			printPS("Processing: " + seq.getSequenceName());
 
 			CHROMSTOP = seq.getSequenceLength();
 			BP = new ArrayList<Integer>();
@@ -317,8 +286,8 @@ public class BAMtobedGraph extends JFrame {
 					
 		for(int numchrom = 0; numchrom < bai.getNumberOfReferences(); numchrom++) {
 			SAMSequenceRecord seq = inputSam.getFileHeader().getSequence(numchrom);
-			System.out.println("Processing: " + seq.getSequenceName());
-			textArea.append("Processing: " + seq.getSequenceName() + "\n");
+// 			System.out.println("Processing: " + seq.getSequenceName());
+			printPS("Processing: " + seq.getSequenceName());
 
 			BP = new ArrayList<Integer>();
 			M_OCC = new ArrayList<Integer>();
@@ -350,6 +319,11 @@ public class BAMtobedGraph extends JFrame {
 			}
 		}
 		bai.close();
+	}
+	
+	private void printPS( String line ){
+		if( PS!=null ){ PS.println(line); }
+		else{ System.err.println( line ); }		
 	}
 	
 	private static String getTimeStamp() {

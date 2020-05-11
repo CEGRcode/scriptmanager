@@ -12,10 +12,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import objects.CustomOutputStream;
-import scripts.BAM_Format_Converter.BAMtoscIDX;
+import scripts.BAM_Format_Converter.BAMtoBED;
 
 @SuppressWarnings("serial")
-public class BAMtoscIDXOutput extends JFrame {
+public class BAMtoBEDOutput extends JFrame {
 	private File BAM = null;
 	private File OUTPUTPATH = null;
 	private int STRAND = 0;
@@ -27,8 +27,8 @@ public class BAMtoscIDXOutput extends JFrame {
 
 	private JTextArea textArea;
 	
-	public BAMtoscIDXOutput(File b, File o, int s, int pair_status, int min_size, int max_size) {
-		setTitle("BAM to scIDX Progress");
+	public BAMtoBEDOutput(File b, File o, int s, int pair_status,  int min_size, int max_size) {
+		setTitle("BAM to BED Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
 		
@@ -49,6 +49,7 @@ public class BAMtoscIDXOutput extends JFrame {
 		else if(STRAND == 1) { READ = "READ2"; }
 		else if(STRAND == 2) { READ = "COMBINED"; }
 		else if(STRAND == 3) { READ = "MIDPOINT"; }
+		else if(STRAND == 4) { READ = "FRAGMENT"; }
 	}
 	
 	public void run() throws IOException, InterruptedException {
@@ -56,7 +57,7 @@ public class BAMtoscIDXOutput extends JFrame {
 		
 		//Open Output File
 		File OUT;
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
+		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
 		if(OUTPUTPATH != null) {
 			OUT = new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME);
 		} else {
@@ -66,7 +67,7 @@ public class BAMtoscIDXOutput extends JFrame {
 		//Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream( new CustomOutputStream(textArea) );
 		PS.println(NAME);
-		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, OUT, STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		BAMtoBED script_obj = new BAMtoBED(BAM, OUT, STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
 		script_obj.run();
 		
 		Thread.sleep(2000);
@@ -74,7 +75,7 @@ public class BAMtoscIDXOutput extends JFrame {
 		
 		System.err.println(getTimeStamp());
 	}
-	
+		
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();

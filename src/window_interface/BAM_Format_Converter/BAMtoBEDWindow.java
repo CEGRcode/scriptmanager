@@ -8,9 +8,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import scripts.BAM_Format_Converter.BAMtoBED;
-
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -41,6 +38,8 @@ import util.FileSelection;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import window_interface.BAM_Format_Converter.BAMtoBEDOutput;
 
 @SuppressWarnings("serial")
 public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -97,7 +96,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		        	if(chckbxFilterByMaximum.isSelected()) { MAX = Integer.parseInt(txtMax.getText()); }
 		        	
 		        	for(int x = 0; x < BAMFiles.size(); x++) {
-		        		BAMtoBED convert = new BAMtoBED(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
+		        		BAMtoBEDOutput convert = new BAMtoBEDOutput(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
 		        		convert.setVisible(true);
 		        		convert.run();
 		        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);

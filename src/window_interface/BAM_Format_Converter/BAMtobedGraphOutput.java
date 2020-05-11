@@ -12,10 +12,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import objects.CustomOutputStream;
-import scripts.BAM_Format_Converter.BAMtoscIDX;
+import scripts.BAM_Format_Converter.BAMtobedGraph;
 
 @SuppressWarnings("serial")
-public class BAMtoscIDXOutput extends JFrame {
+public class BAMtobedGraphOutput extends JFrame {
 	private File BAM = null;
 	private File OUTPUTPATH = null;
 	private int STRAND = 0;
@@ -27,8 +27,8 @@ public class BAMtoscIDXOutput extends JFrame {
 
 	private JTextArea textArea;
 	
-	public BAMtoscIDXOutput(File b, File o, int s, int pair_status, int min_size, int max_size) {
-		setTitle("BAM to scIDX Progress");
+	public BAMtobedGraphOutput(File b, File o, int s, int pair_status, int min_size, int max_size) {
+		setTitle("BAM to bedGraph Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
 		
@@ -55,18 +55,18 @@ public class BAMtoscIDXOutput extends JFrame {
 		System.err.println(getTimeStamp());
 		
 		//Open Output File
-		File OUT;
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
+		File OUTBASENAME;
+		String NAME = BAM.getName().split("\\.")[0] + "_" + READ;
 		if(OUTPUTPATH != null) {
-			OUT = new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME);
+			OUTBASENAME = new File( OUTPUTPATH.getCanonicalPath() + File.separator + NAME );
 		} else {
-			OUT = new File(NAME);
+			OUTBASENAME = new File( NAME );
 		}
 		
 		//Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream( new CustomOutputStream(textArea) );
 		PS.println(NAME);
-		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, OUT, STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		BAMtobedGraph script_obj = new BAMtobedGraph(BAM, OUTBASENAME, STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
 		script_obj.run();
 		
 		Thread.sleep(2000);

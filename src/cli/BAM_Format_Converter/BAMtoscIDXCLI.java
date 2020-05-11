@@ -8,8 +8,6 @@ import picocli.CommandLine.Parameters;
 import java.util.concurrent.Callable;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.InterruptedException;
 
 import scripts.BAM_Format_Converter.BAMtoscIDX;
 
@@ -17,7 +15,8 @@ import scripts.BAM_Format_Converter.BAMtoscIDX;
 	BAM_Format_ConverterCLI/BAMtosciIDXCLI
 */
 @Command(name = "bam-to-scidx", mixinStandardHelpOptions = true,
-		description = "Convert BAM file to scIDX file")
+		description = "Convert BAM file to scIDX file",
+		sortOptions = false)
 public class BAMtoscIDXCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
@@ -25,6 +24,8 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with .gff ext)" )
 	private File output = null;
+	@Option(names = {"-s", "--stdout"}, description = "stream output file to STDOUT (cannot be used with \"-o\" flag)" )
+	private boolean stdout = false;
 	@Option(names = {"-1", "--read1"}, description = "output read 1 (default)")
 	private boolean read1 = false;
 	@Option(names = {"-2", "--read2"}, description = "output read 2")
@@ -53,8 +54,15 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 			return(1);
 		}
 		
-		BAMtoscIDX script_obj = new BAMtoscIDX(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+		BAMtoscIDX script_obj;
+		if(stdout){
+			script_obj = new BAMtoscIDX(bamFile, null, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+		}else{
+			script_obj = new BAMtoscIDX(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+		}
 		script_obj.run();
+		
+		System.err.println("Conversion Complete");
 		
 		return(0);
 	}
@@ -75,13 +83,22 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		else if( midpoint )	{ STRAND=3; }
 		else				{ STRAND=0; }
 		// validate insert sizes
-		if( MIN_INSERT<0 && MIN_INSERT!=-9999 ){ r += "MIN_INSERT must be a positive integer value: " + Integer.toString(MIN_INSERT) + "\n"; }
-		if( MAX_INSERT<0 && MAX_INSERT!=-9999 ){ r += "MAX_INSERT must be a positive integer value: " + Integer.toString(MAX_INSERT) + "\n"; }
+		if( MIN_INSERT<0 && MIN_INSERT!=-9999 ){ r += "MIN_INSERT must be a positive integer value: " + MIN_INSERT + "\n"; }
+		if( MAX_INSERT<0 && MAX_INSERT!=-9999 ){ r += "MAX_INSERT must be a positive integer value: " + MAX_INSERT + "\n"; }
+		if( MAX_INSERT<MIN_INSERT ){ r += "MAX_INSERT must be larger/equal to MIN_INSERT: " + MIN_INSERT + "," + MAX_INSERT + "\n"; }
 		// turn pair status boolean into int
 		PAIR = matePair ? 1 : 0;
+		// check -s and -o not used together (pipe standard out vs output file)
+		if( stdout && output!=null ){ r += "(!)Cannot use -s flag with -o.\n";}
+		// set default output filename if no stdout
+		else if( output== null ){
+			if(STRAND==0){ output = new File( bamFile.getName().split("\\.")[0] + "_READ1.tab" ); }
+			else if(STRAND==1){ output = new File( bamFile.getName().split("\\.")[0] + "_READ2.tab" ); }
+			else if(STRAND==2){ output = new File( bamFile.getName().split("\\.")[0] + "_COMBINED.tab" ); }
+			else if(STRAND==3){ output = new File( bamFile.getName().split("\\.")[0] + "_MIDPOINT.tab" ); }
+			else { r += "(!)Somehow invalid STRAND!This error should never print.Check code if it does.\n"; }
+		}
 		return(r);
 	}
 	
 }
-	
-

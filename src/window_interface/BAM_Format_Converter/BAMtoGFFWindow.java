@@ -33,12 +33,13 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.BAM_Format_Converter.BAMtoGFF;
 import util.FileSelection;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import window_interface.BAM_Format_Converter.BAMtoGFFOutput;
 
 @SuppressWarnings("serial")
 public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -95,7 +96,7 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		        	if(chckbxFilterByMaximum.isSelected()) { MAX = Integer.parseInt(txtMax.getText()); }
 		        	
 		        	for(int x = 0; x < BAMFiles.size(); x++) {
-		        		BAMtoGFF convert = new BAMtoGFF(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
+		        		BAMtoGFFOutput convert = new BAMtoGFFOutput(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
 		        		convert.setVisible(true);
 		        		convert.run();
 		        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
