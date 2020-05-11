@@ -1121,7 +1121,14 @@ public class ScriptManager {
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, btncolorSequencePlot, 10, SpringLayout.WEST, pnlFigure);
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtcolorSequencePlot, 10, SpringLayout.EAST, btncolorSequencePlot);
 		pnlFigure.add(btncolorSequencePlot);
-
+		
+		//Set default tab to open to...
+		//	0=BAM_Statistics			5=Peak_Analysis
+		//	1=BAM_Manipulation			6=Coordinate_Manipulation
+		//	2=BAM_Format_Converter		7=Sequence_Analysis
+		//	3=File_Utilities			8=DNA_Sequence_Analysis
+		//	4=Peak_Calling				9=Figure_Generation
+		tabbedPane.setSelectedIndex(2);
 	}
 	
 	private void initializeTextArea(JTextArea text) {
