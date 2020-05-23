@@ -1,6 +1,7 @@
 package scripts.Read_Analysis;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,13 +20,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPOutputStream;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JLayeredPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SpringLayout;
+// import javax.swing.JFrame;
+// import javax.swing.JOptionPane;
+// import javax.swing.JScrollPane;
+// import javax.swing.JTextArea;
+// import javax.swing.JLayeredPane;
+// import javax.swing.JTabbedPane;
+// import javax.swing.SpringLayout;
+import org.jfree.chart.ChartPanel;
 
 import charts.CompositePlot;
 import htsjdk.samtools.AbstractBAMFileIndex;
@@ -35,275 +37,282 @@ import objects.PileupParameters;
 import objects.CoordinateObjects.BEDCoord;
 import scripts.Read_Analysis.PileupScripts.PileupExtract;
 import util.ArrayUtilities;
-import util.BAMUtilities;
+// import util.BAMUtilities;
 import util.JTVOutput;
 
 @SuppressWarnings("serial")
-public class TagPileup extends JFrame {
-	Vector<File> BEDFiles = null;
-	Vector<File> BAMFiles = null;
+public class TagPileup {
+	File BED = null;
+	File BAM = null;
 	
 	PileupParameters PARAM = null;
 	
 	private int STRAND = 0;
-	private int CPU = 1;
+// 	private int CPU = 1;
 	
 	PrintStream COMPOSITE = null;
 	// Generic print stream to accept PrintStream of GZIPOutputStream
 	Writer OUT_S1 = null;
 	Writer OUT_S2 = null;
 	
-	final JLayeredPane layeredPane;
-	final JTabbedPane tabbedPane;
-	final JTabbedPane tabbedPane_Scatterplot;
-	final JTabbedPane tabbedPane_Statistics;
+	PrintStream PS = null;
 	
-	public TagPileup(Vector<File> be, Vector<File> ba, PileupParameters param) {
-		setTitle("Tag Pileup Composite");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 800, 600);
-		
-		layeredPane = new JLayeredPane();
-		getContentPane().add(layeredPane, BorderLayout.CENTER);
-		SpringLayout sl_layeredPane = new SpringLayout();
-		layeredPane.setLayout(sl_layeredPane);
-		
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		sl_layeredPane.putConstraint(SpringLayout.NORTH, tabbedPane, 6, SpringLayout.NORTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.WEST, tabbedPane, 6, SpringLayout.WEST, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -6, SpringLayout.SOUTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.EAST, tabbedPane, -6, SpringLayout.EAST, layeredPane);
-		layeredPane.add(tabbedPane);
-		
-		tabbedPane_Scatterplot = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Pileup Plot", null, tabbedPane_Scatterplot, null);
-		
-		tabbedPane_Statistics = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Pileup Statistics", null, tabbedPane_Statistics, null);
-
-		BEDFiles = be;
-		BAMFiles = ba;
+	Component compositePlot = null;
+	
+// 	String outCompositeFilename;
+	String outMatrixBasename;
+	
+	boolean GUI = false;
+	
+	public TagPileup(File be, File ba, PileupParameters param, PrintStream outputwindow_ps, String outMat, boolean guiStatus) {
+		BED = be;
+		BAM = ba;
 		PARAM = param;
-		STRAND = param.getStrand();
-		CPU = param.getCPU();
-		
+// 		STRAND = param.getStrand();
+// 		CPU = param.getCPU();
+		PS = outputwindow_ps;
+// 		outCompositeFilename = outCmp;
+		outMatrixBasename = outMat;
+		GUI = guiStatus;
+		System.err.println("enter TagPileup()");
 	}
 	
 	public void run() throws IOException {
+		
+		System.err.println("enter TagPileup.run()");
+// 		//Check if BAI index file exists for all BAM files
+// 		boolean[] BAMvalid = new boolean[BAMFiles.size()];
+// 		for(int z = 0; z < BAMFiles.size(); z++) {
+// 			File BAM = BAMFiles.get(z);	//Pull current BAM file
+// 			File f = new File(BAM + ".bai"); //Generate file name for BAI index file
+// 			if(!f.exists() || f.isDirectory()) {
+// 				BAMvalid[z] = false;
+// 				JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + BAM.getName());
+// 				System.err.println("BAI Index File does not exist for: " + BAM.getName());
+// 			} else { BAMvalid[z] = true; }
+// 		}
+// 		
+// 		int PROGRESS = 0;
+// 		for(int z = 0; z < BAMFiles.size(); z++) {
+// 			File BAM = BAMFiles.get(z);	//Pull current BAM file
+// 			if(BAMvalid[z]) {
+// 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
+// 				if(PARAM.getStandard() && PARAM.getBlacklist() != null) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead())); }
+// 				else if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
+// 				//System.out.println(PARAM.getRatio());
+// 				
+// 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
+// 					System.out.println("Processing BAM: " + BAM.getName() + "\tCoordinate: " + BEDFiles.get(BED_Index).getName());
+// 
+// 					JTextArea STATS = new JTextArea(); //Generate statistics object
+// 					STATS.setEditable(false); //Make it un-editable
+// 		
+		
+		//Set-up Matrix output writers
+		int STRAND = PARAM.getStrand();
+		if(PARAM.getOutputType() != 0) {
+			if(STRAND == 0) {
+				//Set FileName
+				String NAME0;
+				String NAME1;
+				if(outMatrixBasename==null){
+					NAME0 = PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0);
+					NAME1 = PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1);
+				}else{
+					NAME0 = generateFileName(outMatrixBasename, 0);
+					NAME1 = generateFileName(outMatrixBasename, 1);
+				}
+				//Build streams
+				if(PARAM.getOutputGZIP()) {
+					OUT_S1 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream( NAME0)), "UTF-8");
+					OUT_S2 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream( NAME1)), "UTF-8");
+				} else {
+					OUT_S1 = new PrintWriter(NAME0);
+					OUT_S2 = new PrintWriter(NAME1);
+				}
+			} else {
+				//Set FileName
+				String NAME2;
+				if(outMatrixBasename==null){
+					NAME2 = PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2);
+				}else{
+					NAME2 = generateFileName(outMatrixBasename, 2);
+				}
+				if(PARAM.getOutputGZIP()) {
+					OUT_S1 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(NAME2)), "UTF-8");
+				} else {
+					OUT_S1 = new PrintWriter(NAME2);
+				}
+			}
+		}
+		
+		printPS(getTimeStamp());	//Timestamp process
+		printPS(BAM.getName());		//Label stat object with what BAM file is generating it
+		
+		//Validate and load BED coordinates
+		System.err.println("Validating BED: " + BED.getName());
+		Vector<BEDCoord> INPUT = validateBED(loadCoord(BED), BAM);
+		
+		//Split up job and send out to threads to process
+		int CPU = PARAM.getCPU();
+		ExecutorService parseMaster = Executors.newFixedThreadPool(CPU);
+		if(INPUT.size() < CPU) CPU = INPUT.size();
+		int subset = 0;
+		int currentindex = 0;
+		for(int x = 0; x < CPU; x++) {
+			currentindex += subset;
+			if(CPU == 1) { subset = INPUT.size(); }
+			else if(INPUT.size() % CPU == 0) { subset = INPUT.size() / CPU; }
+			else {
+				int remainder = INPUT.size() % CPU;
+				if(x < remainder ) subset = (int)(((double)INPUT.size() / (double)CPU) + 1);
+				else subset = (int)(((double)INPUT.size() / (double)CPU));
+			}
+			//System.out.println("CPU: " + x + "\tInterval: " + currentindex + "\t" + subset);
+			PileupExtract extract = new PileupExtract(PARAM, BAM, INPUT, currentindex, subset);
+			parseMaster.execute(extract);
+		}
+		parseMaster.shutdown();
+		while (!parseMaster.isTerminated()) {
+		}
+		
+		double[] AVG_S1 = new double[getMaxBEDSize(INPUT)];
+		double[] AVG_S2 = null;
+		if(STRAND == 0) AVG_S2 = new double[AVG_S1.length];
+		double[] DOMAIN = new double[AVG_S1.length];
+
+		//Account for the shifted oversized window produced by binning and smoothing
+		int OUTSTART = 0;
+		if(PARAM.getTrans() == 1) { OUTSTART = PARAM.getSmooth(); }
+		else if(PARAM.getTrans() == 2) { OUTSTART = (PARAM.getStdSize() * PARAM.getStdNum()); }
+		
+		//Write headers
+		if(PARAM.getOutputType() == 2) {
+			if(OUT_S1 != null) OUT_S1.write("YORF\tNAME");
+			if(OUT_S2 != null) OUT_S2.write("YORF\tNAME");
+			double[] tempF = INPUT.get(0).getFStrand();
+								
+			for(int i = OUTSTART; i < tempF.length - OUTSTART; i++) {
+				int index = i - OUTSTART;
+				if(OUT_S1 != null) OUT_S1.write("\t" + index);
+				if(OUT_S2 != null) OUT_S2.write("\t" + index);
+			}
+			if(OUT_S1 != null) OUT_S1.write("\n");
+			if(OUT_S2 != null) OUT_S2.write("\n");
+		}
+		
+		//Output individual sites
+		for(int i = 0; i < INPUT.size(); i++) {
+			double[] tempF = INPUT.get(i).getFStrand();
+			double[] tempR = INPUT.get(i).getRStrand();
+			if(OUT_S1 != null) OUT_S1.write(INPUT.get(i).getName());
+			if(OUT_S2 != null) OUT_S2.write(INPUT.get(i).getName());
+			
+			if(PARAM.getOutputType() == 2) {
+				if(OUT_S1 != null) OUT_S1.write("\t" + INPUT.get(i).getName());
+				if(OUT_S2 != null) OUT_S2.write("\t" + INPUT.get(i).getName());
+			}
+			
+			for(int j = 0; j < tempF.length; j++) {
+				//Output values outside of window overhang
+				if(j >= OUTSTART && j < tempF.length - OUTSTART) {
+					if(OUT_S1 != null) OUT_S1.write("\t" + tempF[j]);
+					if(OUT_S2 != null) OUT_S2.write("\t" + tempR[j]);
+				}
+				//Sum positions across BED coordinates
+				AVG_S1[j] += tempF[j];
+				if(AVG_S2 != null) AVG_S2[j] += tempR[j];
+			}
+			if(OUT_S1 != null) OUT_S1.write("\n");
+			if(OUT_S2 != null) OUT_S2.write("\n");
+		}
+
+		//Calculate average and domain here
+		int temp = (int) (((double)AVG_S1.length / 2.0) + 0.5);
+		for(int i = 0; i < AVG_S1.length; i++) {
+			DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin()) + 1;
+			AVG_S1[i] /= INPUT.size();
+			if(AVG_S2 != null) AVG_S2[i] /= INPUT.size();
+		}
+		
+		//Transform average given transformation parameters
+		if(PARAM.getTrans() == 1) { 
+			AVG_S1 = ArrayUtilities.windowSmooth(AVG_S1, PARAM.getSmooth());
+			if(AVG_S2 != null) AVG_S2 = ArrayUtilities.windowSmooth(AVG_S2, PARAM.getSmooth());
+		} else if(PARAM.getTrans() == 2) {
+			AVG_S1 = ArrayUtilities.gaussSmooth(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
+			if(AVG_S2 != null) AVG_S2 = ArrayUtilities.gaussSmooth(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
+		}
+		
+		//Trim average here and output to statistics pane
+		double[] AVG_S1_trim = new double[AVG_S1.length - (OUTSTART * 2)];
+		double[] AVG_S2_trim = null;
+		if(STRAND == 0) AVG_S2_trim = new double[AVG_S1_trim.length];
+		double[] DOMAIN_trim = new double[AVG_S1_trim.length];
+		for(int i = OUTSTART; i < AVG_S1.length - OUTSTART; i++) {
+			if(AVG_S2 != null) {
+				printPS(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i]);
+				AVG_S2_trim[i - OUTSTART] = AVG_S2[i];
+			}
+			else { printPS(DOMAIN[i] + "\t" + AVG_S1[i]); }
+			AVG_S1_trim[i - OUTSTART] = AVG_S1[i];
+			DOMAIN_trim[i - OUTSTART] = DOMAIN[i];
+		}
+		AVG_S1 = AVG_S1_trim;
+		AVG_S2 = AVG_S2_trim;
+		DOMAIN = DOMAIN_trim;
+		
+		//Output composite data file setup
 		if(PARAM.getOutputCompositeStatus()) {
-			try { COMPOSITE = new PrintStream(PARAM.getOutput() + File.separator + PARAM.getCompositeFile());
+			try { COMPOSITE = new PrintStream(PARAM.getCompositeFile());
 			} catch (FileNotFoundException e) {	e.printStackTrace(); }
 		}
 		
-		//Check if BAI index file exists for all BAM files
-		boolean[] BAMvalid = new boolean[BAMFiles.size()];
-		for(int z = 0; z < BAMFiles.size(); z++) {
-			File BAM = BAMFiles.get(z);	//Pull current BAM file
-			File f = new File(BAM + ".bai"); //Generate file name for BAI index file
-			if(!f.exists() || f.isDirectory()) {
-				BAMvalid[z] = false;
-				JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + BAM.getName());
-				System.err.println("BAI Index File does not exist for: " + BAM.getName());
-			} else { BAMvalid[z] = true; }
+		//Output composite data to tab-delimited file
+		if(COMPOSITE != null) {
+			for(int a = 0; a < DOMAIN.length; a++) {
+				COMPOSITE.print("\t" + DOMAIN[a]);
+			}
+			COMPOSITE.println();
+			if(STRAND == 0) {
+				COMPOSITE.print(generateFileName(BED.getName(), BAM.getName(), 0));
+				for(int a = 0; a < AVG_S1.length; a++) {
+					COMPOSITE.print("\t" + AVG_S1[a]);
+				}
+				COMPOSITE.println();
+				COMPOSITE.print(generateFileName(BED.getName(), BAM.getName(), 1));
+				for(int a = 0; a < AVG_S2.length; a++) {
+					COMPOSITE.print("\t" + AVG_S2[a]);
+				}
+				COMPOSITE.println();
+			} else {
+				COMPOSITE.print(generateFileName(BED.getName(), BAM.getName(), 2));
+				for(int a = 0; a < AVG_S1.length; a++) {
+					COMPOSITE.print("\t" + AVG_S1[a]);
+				}
+				COMPOSITE.println();
+			}			
 		}
 		
-		int PROGRESS = 0;
-		for(int z = 0; z < BAMFiles.size(); z++) {
-			File BAM = BAMFiles.get(z);	//Pull current BAM file
-			if(BAMvalid[z]) {
-				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
-				if(PARAM.getStandard() && PARAM.getBlacklist() != null) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead())); }
-				else if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
-				//System.out.println(PARAM.getRatio());
-				
-				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
-					System.out.println("Processing BAM: " + BAM.getName() + "\tCoordinate: " + BEDFiles.get(BED_Index).getName());
-
-					JTextArea STATS = new JTextArea(); //Generate statistics object
-					STATS.setEditable(false); //Make it un-editable
-					STATS.append(getTimeStamp() + "\n"); //Timestamp process
-					STATS.append(BAM.getName() + "\n"); //Label stat object with what BAM file is generating it
-					
-					if(PARAM.getOutputType() != 0) {
-						if(STRAND == 0) {
-							if(PARAM.outputGZIP()) {
-								try {
-									OUT_S1 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0))), "UTF-8");
-									OUT_S2 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1))), "UTF-8");
-								} catch (FileNotFoundException e) {	e.printStackTrace(); }
-							} else {
-								try {
-									OUT_S1 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
-									OUT_S2 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1));
-								} catch (FileNotFoundException e) {	e.printStackTrace(); }
-							}
-						} else {
-							if(PARAM.outputGZIP()) {
-								try { OUT_S1 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2))), "UTF-8");
-								} catch (FileNotFoundException e) {	e.printStackTrace(); }
-							} else {
-								try { OUT_S1 = new PrintWriter(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2));
-								} catch (FileNotFoundException e) {	e.printStackTrace(); }
-							}
-						}
-					}
-					
-					System.out.println("Validating BED: " + BEDFiles.get(BED_Index).getName());
-					Vector<BEDCoord> INPUT = validateBED(loadCoord(BEDFiles.get(BED_Index)), BAMFiles.get(z));
-					
-					//Split up job and send out to threads to process				
-					ExecutorService parseMaster = Executors.newFixedThreadPool(CPU);
-					if(INPUT.size() < CPU) CPU = INPUT.size();
-					int subset = 0;
-					int currentindex = 0;
-					for(int x = 0; x < CPU; x++) {
-						currentindex += subset;
-						if(CPU == 1) { subset = INPUT.size(); }
-						else if(INPUT.size() % CPU == 0) { subset = INPUT.size() / CPU; }
-						else {
-							int remainder = INPUT.size() % CPU;
-							if(x < remainder ) subset = (int)(((double)INPUT.size() / (double)CPU) + 1);
-							else subset = (int)(((double)INPUT.size() / (double)CPU));
-						}
-						//System.out.println("CPU: " + x + "\tInterval: " + currentindex + "\t" + subset);
-						PileupExtract extract = new PileupExtract(PARAM, BAM, INPUT, currentindex, subset);
-						parseMaster.execute(extract);
-					}
-					parseMaster.shutdown();
-					while (!parseMaster.isTerminated()) {
-					}
-					
-					double[] AVG_S1 = new double[getMaxBEDSize(INPUT)];
-					double[] AVG_S2 = null;
-					if(STRAND == 0) AVG_S2 = new double[AVG_S1.length];
-					double[] DOMAIN = new double[AVG_S1.length];
-	
-					//Account for the shifted oversized window produced by binning and smoothing
-					int OUTSTART = 0;
-					if(PARAM.getTrans() == 1) { OUTSTART = PARAM.getSmooth(); }
-					else if(PARAM.getTrans() == 2) { OUTSTART = (PARAM.getStdSize() * PARAM.getStdNum()); }
-									
-					if(PARAM.getOutputType() == 2) {
-						if(OUT_S1 != null) OUT_S1.write("YORF\tNAME");
-						if(OUT_S2 != null) OUT_S2.write("YORF\tNAME");
-						double[] tempF = INPUT.get(0).getFStrand();
-											
-						for(int i = OUTSTART; i < tempF.length - OUTSTART; i++) {
-							int index = i - OUTSTART;
-							if(OUT_S1 != null) OUT_S1.write("\t" + index);
-							if(OUT_S2 != null) OUT_S2.write("\t" + index);
-						}
-						if(OUT_S1 != null) OUT_S1.write("\n");
-						if(OUT_S2 != null) OUT_S2.write("\n");
-					}
-					
-					//Output individual sites
-					for(int i = 0; i < INPUT.size(); i++) {
-						double[] tempF = INPUT.get(i).getFStrand();
-						double[] tempR = INPUT.get(i).getRStrand();
-						if(OUT_S1 != null) OUT_S1.write(INPUT.get(i).getName());
-						if(OUT_S2 != null) OUT_S2.write(INPUT.get(i).getName());
-						
-						if(PARAM.getOutputType() == 2) {
-							if(OUT_S1 != null) OUT_S1.write("\t" + INPUT.get(i).getName());
-							if(OUT_S2 != null) OUT_S2.write("\t" + INPUT.get(i).getName());
-						}
-						
-						for(int j = 0; j < tempF.length; j++) {
-							if(j >= OUTSTART && j < tempF.length - OUTSTART) {
-								if(OUT_S1 != null) OUT_S1.write("\t" + tempF[j]);
-								if(OUT_S2 != null) OUT_S2.write("\t" + tempR[j]);
-							}
-							AVG_S1[j] += tempF[j];
-							if(AVG_S2 != null) AVG_S2[j] += tempR[j];
-						}
-						if(OUT_S1 != null) OUT_S1.write("\n");
-						if(OUT_S2 != null) OUT_S2.write("\n");
-					}
-	
-					//Calculate average and domain here
-					int temp = (int) (((double)AVG_S1.length / 2.0) + 0.5);
-					for(int i = 0; i < AVG_S1.length; i++) {
-						DOMAIN[i] = (double)((temp - (AVG_S1.length - i)) * PARAM.getBin()) + 1;
-						AVG_S1[i] /= INPUT.size();
-						if(AVG_S2 != null) AVG_S2[i] /= INPUT.size();
-					}
-					
-					//Transform average given transformation parameters
-					if(PARAM.getTrans() == 1) { 
-						AVG_S1 = ArrayUtilities.windowSmooth(AVG_S1, PARAM.getSmooth());
-						if(AVG_S2 != null) AVG_S2 = ArrayUtilities.windowSmooth(AVG_S2, PARAM.getSmooth());
-					} else if(PARAM.getTrans() == 2) {
-						AVG_S1 = ArrayUtilities.gaussSmooth(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
-						if(AVG_S2 != null) AVG_S2 = ArrayUtilities.gaussSmooth(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
-					}
-					
-					//Trim average here and output to statistics pane
-					double[] AVG_S1_trim = new double[AVG_S1.length - (OUTSTART * 2)];
-					double[] AVG_S2_trim = null;
-					if(STRAND == 0) AVG_S2_trim = new double[AVG_S1_trim.length];
-					double[] DOMAIN_trim = new double[AVG_S1_trim.length];
-					for(int i = OUTSTART; i < AVG_S1.length - OUTSTART; i++) {
-						if(AVG_S2 != null) {
-							STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\t" + AVG_S2[i] + "\n");
-							AVG_S2_trim[i - OUTSTART] = AVG_S2[i];
-						}
-						else { STATS.append(DOMAIN[i] + "\t" + AVG_S1[i] + "\n"); }
-						AVG_S1_trim[i - OUTSTART] = AVG_S1[i];
-						DOMAIN_trim[i - OUTSTART] = DOMAIN[i];
-					}
-					AVG_S1 = AVG_S1_trim;
-					AVG_S2 = AVG_S2_trim;
-					DOMAIN = DOMAIN_trim;
-					
-					//Output composite data to tab-delimited file
-					if(COMPOSITE != null) {
-						for(int a = 0; a < DOMAIN.length; a++) {
-							COMPOSITE.print("\t" + DOMAIN[a]);
-						}
-						COMPOSITE.println();
-						if(STRAND == 0) {
-							COMPOSITE.print(generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0));
-							for(int a = 0; a < AVG_S1.length; a++) {
-								COMPOSITE.print("\t" + AVG_S1[a]);
-							}
-							COMPOSITE.println();
-							COMPOSITE.print(generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1));
-							for(int a = 0; a < AVG_S2.length; a++) {
-								COMPOSITE.print("\t" + AVG_S2[a]);
-							}
-							COMPOSITE.println();
-						} else {
-							COMPOSITE.print(generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2));
-							for(int a = 0; a < AVG_S1.length; a++) {
-								COMPOSITE.print("\t" + AVG_S1[a]);
-							}
-							COMPOSITE.println();
-						}			
-					}
-					
-					if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
-					else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
-										
-					if(OUT_S1 != null && PARAM.getOutputType() == 2) {
-						if(PARAM.outputJTV()) {
-							if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0), PARAM.getSenseColor());
-							else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2), PARAM.getCombinedColor());
-						}
-						OUT_S1.close();
-					}
-					if(OUT_S2 != null && PARAM.getOutputType() == 2){
-						if(PARAM.outputJTV()) { JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1), PARAM.getAntiColor()); }
-						OUT_S2.close();
-					}
-					STATS.setCaretPosition(0);
-					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-					tabbedPane_Statistics.add(BAM.getName(), newpane);
-			        firePropertyChange("tag", PROGRESS, PROGRESS + 1);
-			        PROGRESS++;
-				}
+		//Make composite plots
+		if(GUI){
+			if(STRAND == 0){ compositePlot = CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2, BED.getName(), PARAM.getColors()); }
+			else{ compositePlot = CompositePlot.createCompositePlot(DOMAIN, AVG_S1, BED.getName(), PARAM.getColors()); }
+		}
+		
+		//Output JTV files				
+		if(OUT_S1 != null && PARAM.getOutputType() == 2) {
+			if(PARAM.getOutputJTV()) {
+				if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0), PARAM.getSenseColor());
+				else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2), PARAM.getCombinedColor());
 			}
-		}		
+			OUT_S1.close();
+		}
+		if(OUT_S2 != null && PARAM.getOutputType() == 2){
+			if(PARAM.getOutputJTV()) { JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1), PARAM.getAntiColor()); }
+			OUT_S2.close();
+		}
+		
 	}
 	
 	//Get size of largest array for composite generation
@@ -323,15 +332,6 @@ public class TagPileup extends JFrame {
 		Vector<BEDCoord> FINAL = new Vector<BEDCoord>();
 		ArrayList<Integer> indexFail = new ArrayList<Integer>();
 		
-		//check for starts smaller than the stop
-		for(int x = 0; x < COORD.size(); x++) {
-			if(COORD.get(x).getStart() > COORD.get(x).getStop()) {
-				if(!indexFail.contains(new Integer(x))) {
-					indexFail.add(new Integer(x));
-				}
-			}
-		}
-		
 		//Get chromosome IDs
 		SamReader inputSam = SamReaderFactory.makeDefault().open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
@@ -342,9 +342,11 @@ public class TagPileup extends JFrame {
 		inputSam.close();
 		bai.close();
 
-		//check for bed chrom that aren't in BAM file 
+		//check each BED coordinate...
 		for(int x = 0; x < COORD.size(); x++) {
-			if(!chrom.contains(COORD.get(x).getChrom())) {
+			//check for	(1) bed chrom that aren't in BAM file OR
+			//			(2) starts smaller than the stop
+			if( (!chrom.contains(COORD.get(x).getChrom())) || (COORD.get(x).getStart() > COORD.get(x).getStop()) ) {
 				if(!indexFail.contains(new Integer(x))) {
 					indexFail.add(new Integer(x));
 				}
@@ -369,18 +371,32 @@ public class TagPileup extends JFrame {
 		String[] bedname = bed.split("\\.");
 		String[] bamname = bam.split("\\.");
 		
-		String strand = "sense";
-		if(strandnum == 1) { strand = "anti"; }
-		else if(strandnum == 2) { strand = "combined"; }
 		String read = "read1";
 		if(PARAM.getRead() == 1) { read = "read2"; }
 		else if(PARAM.getRead() == 2) { read = "readc"; }
+		String strand = "sense";
+		if(strandnum == 1) { strand = "anti"; }
+		else if(strandnum == 2) { strand = "combined"; }
 		
 		String filename = bedname[0] + "_" + bamname[0] + "_" + read + "_" + strand;
 		if(PARAM.getOutputType() == 1) { filename += ".tab"; }
 		else { filename += ".cdt"; }
 		
-		if(PARAM.outputGZIP()) { filename += ".gz"; }
+		if(PARAM.getOutputGZIP()) { filename += ".gz"; }
+		
+		return filename;
+	}
+	
+	public String generateFileName(String basename, int strandnum) {
+		String strand = "sense";
+		if(strandnum == 1) { strand = "anti"; }
+		else if(strandnum == 2) { strand = "combined"; }
+		
+		String filename = basename + "_" + strand;
+		if(PARAM.getOutputType() == 1) { filename += ".tab"; }
+		else { filename += ".cdt"; }
+		
+		if(PARAM.getOutputGZIP()) { filename += ".gz"; }
 		
 		return filename;
 	}
@@ -408,7 +424,7 @@ public class TagPileup extends JFrame {
 						} else { COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name)); }
 
 					} else {
-						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
+						System.err.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
 					}
 				}
 			}
@@ -416,4 +432,12 @@ public class TagPileup extends JFrame {
 		scan.close();
 		return COORD;
     }
+    
+    public Component getCompositePlot(){ return(compositePlot); }
+    
+    private void printPS(String line){
+    	if(PS!=null){ PS.println(line); }
+    	else{ System.err.println(line); }
+    }
+    
 }

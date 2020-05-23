@@ -38,7 +38,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import objects.PileupParameters;
-import scripts.Read_Analysis.TagPileup;
+import window_interface.Read_Analysis.TagPileupOutput;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -168,7 +168,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        	else { param.setOutput(OUTPUT); }
 		        	
 		        	param.setOutputCompositeStatus(chckbxOutputCompositeData.isSelected()); //Outputs composite plots if check box is selected
-		        	if(chckbxOutputCompositeData.isSelected()) { param.setCompositeFile(txtCompositeName.getText()); }
+		        	if(chckbxOutputCompositeData.isSelected()) { param.setCompositeFile(OUTPUT + File.separator + txtCompositeName.getText()); }
 		        	
 		        	if(chckbxOutputData.isSelected()) {
 		        		if(rdbtnTabdelimited.isSelected()) { param.setOutputType(1); }
@@ -192,7 +192,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        	param.setStdNum(Integer.parseInt(txtNumStd.getText()));
 		        	param.setCPU(Integer.parseInt(txtCPU.getText()));
 
-		        	TagPileup pile = new TagPileup(BEDFiles, BAMFiles, param);
+		        	TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param);
 	        		
 	        		pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
