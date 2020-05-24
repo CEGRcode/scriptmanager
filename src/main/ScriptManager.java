@@ -30,6 +30,7 @@ import cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI;
 import cli.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDCLI;
 import cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI;
 
+import cli.Figure_Generation.CompositePlotCLI;
 import cli.Figure_Generation.FourColorSequenceCLI;
 import cli.Figure_Generation.HeatMapCLI;
 import cli.Figure_Generation.MergeHeatMapCLI;
@@ -152,6 +153,7 @@ class Coordinate_ManipulationCLI extends SubcommandCLI {}
 
 @Command(name = "figure-generation",
 		subcommands = {
+			CompositePlotCLI.class,
 			FourColorSequenceCLI.class,
 			HeatMapCLI.class,
 			MergeHeatMapCLI.class
