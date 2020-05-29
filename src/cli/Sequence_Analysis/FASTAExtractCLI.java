@@ -11,38 +11,87 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.util.Date;
-	
+
+import util.ExtensionFileFilter;
+import scripts.Sequence_Analysis.FASTAExtract;
+
 /**
 	Sequence_AnalysisCLI/FASTAExtractCLI
 */
 @Command(name = "fasta-extract", mixinStandardHelpOptions = true,
-		description = "Generate FASTA file from indexed Genome FASTA file and BED file. Script will generate FAI index if not present in Genome FASTA folder.")
+		description = "Generate FASTA file from indexed Genome FASTA file and BED file. Script will generate FAI index if not present in Genome FASTA folder.",
+		sortOptions = false)
 public class FASTAExtractCLI implements Callable<Integer> {
-
-	@Option(names = {"-g", "--genome"}, description = "reference genome FASTA file",
-			required = true)
-	private File genome;
-	@Option(names = {"-i", "--input"}, description = "the BED file of sequences to extract",
-			required = true)
+	
+	@Parameters( index = "0", description = "reference genome FASTA file")
+	private File genomeFile;
+	@Parameters( index = "1", description = "the BED file of sequences to extract")
+	private File bedFile;
+	
 	private File input;
 	@Option(names = {"-o", "--output"}, description = "Specify output file ")
-	private File output = new File("output.txt");
-	@Option(names = {"--bed-header"}, description = "use BED name for output FASTA header (default)")
+	private File output = null;
+	@Option(names = {"-c","--coord-header"}, description = "use genome coordinate for output FASTA header (default is to use bed file headers)")
 	private boolean bedHeader = false;
-	@Option(names = {"--coord-header"}, description = "use genome coordinate for output FASTA header")
-	private boolean coordHeader = false;
 	@Option(names = {"-f","--force"}, description = "force-strandedness (default)")
-	private boolean force = true;
-	
+	private boolean forceStrand = true;
 	
 	@Override
 	public Integer call() throws Exception {
 		System.out.println( ">FASTAExtractCLI.call()" );
-// 		SEStats stat = new SEStats( bamFile, output );		
+		String validate = validateInput();
+		if(!validate.equals("")){
+			System.err.println( validate );
+			System.err.println("Invalid input. Check usage using '-h' or '--help'");
+			return(1);
+		}
+		
+		FASTAExtract script_obj = new FASTAExtract(genomeFile, bedFile, output, forceStrand, bedHeader, null);
+		script_obj.run();
+		
+		System.err.println("Extraction Complete.");
 		return(0);
 	}
 	
+	private String validateInput() throws IOException {
+		String r = "";
+		
+		//check inputs exist
+		if(!genomeFile.exists()){
+			r += "(!)FASTA genome ref file does not exist: " + genomeFile.getName() + "\n";
+			return(r);
+		}
+		if(!bedFile.exists()){
+			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
+		if(!faFilter.accept(genomeFile)){
+			r += "(!)Is this a FASTA file? Check extension: " + genomeFile.getName() + "\n";
+		}
+		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
+			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
+		}
+		//set default output filename
+		if(output==null){
+			output = new File(ExtensionFileFilter.stripExtension(bedFile)+".fa");
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!faFilter.accept(output)){
+					r += "(!)Use FASTA extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".fa\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use FASTA extension for output filename. Try: " + output + ".fa\n"; }
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+	
+		return(r);
+	}
 }

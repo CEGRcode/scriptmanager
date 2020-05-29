@@ -24,16 +24,15 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scripts.Sequence_Analysis.FASTAExtract;
 import util.FileSelection;
-
-import javax.swing.JRadioButton;
+import window_interface.Sequence_Analysis.FASTAExtractOutput;
 
 @SuppressWarnings("serial")
 public class FASTAExtractWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -69,7 +68,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
         		} else {
         			setProgress(0);
-        			FASTAExtract signal = new FASTAExtract(INPUT, BEDFiles, OUTPUT_PATH, chckbxStrand.isSelected(), rdbtnBedName.isSelected());
+        			FASTAExtractOutput signal = new FASTAExtractOutput(INPUT, BEDFiles, OUTPUT_PATH, chckbxStrand.isSelected(), rdbtnBedName.isSelected());
         			
         			signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -267,6 +266,3 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 }
-
-
-	
