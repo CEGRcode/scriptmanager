@@ -39,7 +39,7 @@ public class RandomCoordinate {
 		    String randomName = GENOME + "_" + numSites + "SITES_" + windowSize + "bp" + EXTENSION;
 		    PrintStream OUT = null;
 		    if(OUTPUT == null) OUT = new PrintStream(randomName);
-		    else OUT = new PrintStream(OUTPUT + File.separator + randomName);
+		    else OUT = new PrintStream(OUTPUT);
 		    for(int x = 0; x < numSites; x++) {
 		    	GenericCoord temp = coord.generateRandomCoord(windowSize);
 		    	if(BEDout) {

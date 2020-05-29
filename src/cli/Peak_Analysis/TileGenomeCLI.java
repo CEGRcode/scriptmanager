@@ -8,64 +8,83 @@ import picocli.CommandLine.Parameters;
 import java.util.concurrent.Callable;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.util.Date;
 
+import util.ExtensionFileFilter;
 import scripts.Peak_Analysis.TileGenome;
 
 /**
 	Peak_AnalysisCLI/TileGenomeCLI
 */
 @Command(name = "tile-genome", mixinStandardHelpOptions = true,
-		description = "Generate a coordinate file that tiles (non-overlapping) across an entire genome.")
+		description = "Generate a coordinate file that tiles (non-overlapping) across an entire genome.",
+		sortOptions = false)
 public class TileGenomeCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "reference genome [sacCer3_cegr|hg19|hg19_contigs|mm10]")
 	private String genome;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be <genome>_<window>bp.<ext>)")
-	private File output;
-	@Option(names = {"-f", "--format"}, description = "[BED|GFF] input file format output (default=BED)")
-	private String format = "BED";
+	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be genome_tiles_<genome>_<window>bp.<ext>)")
+	private File output = null;
+	@Option(names = {"-f", "--gff"}, description = "file format output as GFF (default format as BED)")
+	private boolean formatIsBed = true;
 	@Option(names = {"-w", "--window"}, description = "window size in bp (default=200)")
 	private int window = 200;
 	
-	private boolean formatIsBed = true;
-	
 	@Override
 	public Integer call() throws Exception {
-		if( validateInputs()!=0 ){ System.err.println("Invalid input. Check usage using '-h' or '--help'"); }
-		TileGenome tg = new TileGenome(genome, window, formatIsBed, output);
-		tg.execute();
+		System.err.println( ">TileGenomeCLI.call()" );
+		String validate = validateInput();
+		if( validate.compareTo("")!=0 ){
+			System.err.println( validate );
+			System.err.println("Invalid input. Check usage using '-h' or '--help'");
+			return(1);
+		}
+		
+		TileGenome script_obj = new TileGenome(genome, window, formatIsBed, output);
+		script_obj.execute();
+		
+		System.err.println( "Genomic Tiling Complete." );
 		return(0);
 	}
 	
-	private Integer validateInputs() {
+	private String validateInput() throws IOException {
+		String r = "";
 		
-		int return_val = 0;
-		// validation of outputs only directory for now
-		if( output!=null && !output.isDirectory() ){
-			System.err.println("Output must be a directory! Unable to specify specific name at this time.");
-			return_val++;
+		//check input genomes are valid
+		if(genome.compareTo("sacCer3_cegr")==0 || genome.compareTo("hg19")==0 || genome.compareTo("hg19_contigs")==0 || genome.compareTo("mm10")==0 ){
+// 			System.err.println("Input genome is valid");
+		}else{
+			r += "(!)Invalid genome selected(" +genome+ "), please select from one of the provided genomes: sacCer3_cegr, hg19, hg19_contigs, and mm10\n";
 		}
-		// BED or GFF formats allowed
-		if( format.compareTo("GFF")==0 ){
-			formatIsBed = false;
-		} else if( format.compareTo("BED")==0){
-			formatIsBed = true;
-		} else{ 
-			System.err.println("!!!Check the format string");
-			return_val++;
+		//set default output filename
+		if(output==null){
+			String NAME = genome + "_" + window + "bp";
+			if(formatIsBed){ output = new File(NAME + ".bed"); }
+			else{ output = new File(NAME + ".gff"); }
+		//check output filename is valid
+		}else{
+			String ext = "gff";
+			if(formatIsBed){ ext = "bed"; }
+			//check ext
+			try{
+				if(ext.compareTo(ExtensionFileFilter.getExtension(output))!=0){
+					r += "(!)Use \"." + ext + "\" extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + "." + ext + "\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use \"." + ext + "\" extension for output filename. Try: " + output + "." + ext + "\n"; }
+			//check directory
+			if(output.getParent()==null){
+	// 			System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
 		}
-		// window size
+		
+		//check window size
 		if( window<1 ){
-			System.err.println("!!!Window size needs to be a positive integer");
-			return_val++;
+			r += "(!)Window size needs to be a positive integer.\n";
 		}
-		return( return_val );
+		
+		return(r);
 	}
 }

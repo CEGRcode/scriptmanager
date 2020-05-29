@@ -57,7 +57,17 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	        		} else if(Integer.parseInt(txtSize.getText()) < 1) {
 	    				JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
 	        		} else {
-	        			RandomCoordinate generate = new RandomCoordinate((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), rdbtnBed.isSelected(), OUTPUT_PATH);
+						boolean bedStatus = rdbtnBed.isSelected();
+						String randomName = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSites.getText()) + "SITES_" + Integer.parseInt(txtSize.getText()) + "bp";
+						if(bedStatus){ randomName += ".bed"; }
+						else{ randomName += ".gff"; }
+						File OUTFILE;
+						if(OUTPUT_PATH != null){
+							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
+						}else{
+							OUTFILE = new File(randomName);
+						}
+						RandomCoordinate generate = new RandomCoordinate((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
 	        			generate.execute();
 	    				JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
 	        		}
