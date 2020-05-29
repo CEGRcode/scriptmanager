@@ -32,8 +32,8 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Sequence_Analysis.DNAShapefromFASTA;
 import util.FileSelection;
+import window_interface.Sequence_Analysis.DNAShapefromFASTAOutput;
 
 @SuppressWarnings("serial")
 public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -75,7 +75,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
         			OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
         			OUTPUT_TYPE[3] = chckbxRoll.isSelected();
         			
-        			DNAShapefromFASTA signal = new DNAShapefromFASTA(FASTAFiles, OUTPUT_PATH, OUTPUT_TYPE);
+        			DNAShapefromFASTAOutput signal = new DNAShapefromFASTAOutput(FASTAFiles, OUTPUT_PATH, OUTPUT_TYPE);
         				
         			signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
