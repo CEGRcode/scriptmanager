@@ -29,8 +29,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Sequence_Analysis.FASTARandomize;
 import util.FileSelection;
+import util.ExtensionFileFilter;
+import scripts.Sequence_Analysis.RandomizeFASTA;
 
 @SuppressWarnings("serial")
 public class RandomizeFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -60,7 +61,12 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
         		setProgress(0);
         		
         		for(int x = 0; x < FASTAFiles.size(); x++) {
-        			FASTARandomize.randomizeFASTA(FASTAFiles.get(x), OUTPUT_PATH);
+					String NEWNAME = ExtensionFileFilter.stripExtension(FASTAFiles.get(x)) + "_RAND.fa";
+					File RAND;
+					if(OUTPUT_PATH != null) { RAND = new File(OUTPUT_PATH + File.separator + NEWNAME); }
+					else { RAND = new File(NEWNAME); }
+					
+        			RandomizeFASTA.randomizeFASTA(FASTAFiles.get(x), RAND);
         			int percentComplete = (int)(((double)(x + 1) / FASTAFiles.size()) * 100);
 			       	setProgress(percentComplete);
         		}
