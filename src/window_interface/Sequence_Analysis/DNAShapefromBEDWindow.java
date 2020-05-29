@@ -31,9 +31,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scripts.Sequence_Analysis.DNAShapefromBED;
 import util.FileSelection;
-
+import window_interface.Sequence_Analysis.DNAShapefromBEDOutput;
 
 @SuppressWarnings("serial")
 public class DNAShapefromBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -81,7 +80,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
         			OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
         			OUTPUT_TYPE[3] = chckbxRoll.isSelected();
         			
-        			DNAShapefromBED signal = new DNAShapefromBED(INPUT, BEDFiles, OUTPUT_PATH, OUTPUT_TYPE, chckbxStrand.isSelected());
+        			DNAShapefromBEDOutput signal = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUTPUT_PATH, OUTPUT_TYPE, chckbxStrand.isSelected());
         				
         			signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -320,6 +319,3 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 }
-
-
-	
