@@ -61,13 +61,17 @@ public class CompositePlot {
 	}
 		
 	public static JFreeChart createChart(final XYDataset dataset, String TITLE, ArrayList<Color> COLORS) {
+		return(createChart(dataset, TITLE, COLORS, true));
+	}
+	
+	public static JFreeChart createChart(final XYDataset dataset, String TITLE, ArrayList<Color> COLORS, boolean legend) {
 		//Call Chart
 		final JFreeChart chart = ChartFactory.createXYLineChart(
 				TITLE, // chart title
 				"Distance from Feature (bp)", // x axis label
 				"Score", // y axis label
 				dataset, // data
-				PlotOrientation.VERTICAL, true, // include legend
+				PlotOrientation.VERTICAL, legend, // include legend
 				true, // tooltips
 				false // urls
 				);

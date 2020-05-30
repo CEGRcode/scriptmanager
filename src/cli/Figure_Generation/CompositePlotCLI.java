@@ -41,8 +41,10 @@ public class CompositePlotCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "specify output filename, please use PNG extension\n(default=Input filename with \"_compositePlot.png\" appended to the name in working directory of ScriptManager")
 	private File output = null;
-	@Option(names = {"-t", "--title"}, description = "set title (default=composite file name)")
+	@Option(names = {"-t", "--title"}, description = "set title (default=<composite-file-name>)")
 	private String title = null;
+	@Option(names = {"-l", "--legend"}, description = "add a legend (default=no legend)")
+	private boolean legend = false;
 	@Option(names = {"-x", "--width"}, description = "indicate a pixel width for the plot (default=500)")
 	private int pixelWidth = 500;
 	@Option(names = {"-y", "--height"}, description = "indicate a pixel height for the plot (default=270)")
@@ -57,6 +59,9 @@ public class CompositePlotCLI implements Callable<Integer> {
 	
 	XYSeriesCollection xydata = null;
 	private ArrayList<Color> COLORS = new ArrayList<Color>();
+	
+	//Colors copied from response on StackOverflow:
+	// https://stackoverflow.com/questions/470690/how-to-automatically-generate-n-distinct-colors
 	String[] KELLY_COLORS_HEX = {
 		"0xFFB300", // Vivid Yellow
 		"0x803E75", // Strong Purple
@@ -85,18 +90,14 @@ public class CompositePlotCLI implements Callable<Integer> {
 	public Integer call() throws Exception {
 		System.err.println( ">CompositePlotCLI.call()" );
 		String validate = validateInput();
-		if( validate.compareTo("")!=0 ){
+		if(!validate.equals("")){
 			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
 		}
-		//Show colors (debugging purposes)
-// 		System.err.println("colors length: " + COLORS.size());
-// 		for(int i=0; i<COLORS.size(); i++){
-// 			System.err.println("element "+ i + ": " + COLORS.get(i).toString());
-// 		}		
+		
 		// Generate Composite Plot
-		JFreeChart chart = CompositePlot.createChart(xydata, title, COLORS);
+		JFreeChart chart = CompositePlot.createChart(xydata, title, COLORS, legend);
 		// Save Composite Plot
 		OutputStream OUT = new FileOutputStream(output);
 		ChartUtilities.writeChartAsPNG(OUT, chart, pixelWidth, pixelHeight);
@@ -114,23 +115,26 @@ public class CompositePlotCLI implements Callable<Integer> {
 			return(r);
 		}
 		//check input extensions
-		if("out".compareTo(ExtensionFileFilter.getExtension(compositeData))!=0){
+		if(!"out".equals(ExtensionFileFilter.getExtension(compositeData))){
 			r += "(!)Is this a \".out\" file? Check extension: " + compositeData.getName() +  "\n";
 		}
 		//set default output filename
 		if(output==null){
-			String NAME = ExtensionFileFilter.stripExtension(compositeData);
-			output = new File(NAME + "_compositePlot.png");
+			output = new File(ExtensionFileFilter.stripExtension(compositeData) + "_compositePlot.png");
 		//check output filename is valid
 		}else {
 			//check ext
 			try{
-				if("png".compareTo(ExtensionFileFilter.getExtension(output))!=0){
+				if(!"png".equals(ExtensionFileFilter.getExtension(output))){
 					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) +  ".png\n";
 				}
 			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) +  ".png\n"; }
 			//check directory
-			/* <ADD CODE HERE> */
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
 		}
 		
 		//set default title name
@@ -187,6 +191,10 @@ public class CompositePlotCLI implements Callable<Integer> {
 		Scanner scan = new Scanner(compositeData);
 		//parse x values
 		String[] tokens = scan.nextLine().split("\t");
+		if(!tokens[0].equals("")){
+			System.err.println("(!) First row of input file must have an empty first column (as x-values)");
+			return null;
+		}
 		double[] x = new double[tokens.length-1];
 		for(int i = 1; i < tokens.length; i++){
 			x[i-1] = Double.parseDouble(tokens[i]);
@@ -198,7 +206,20 @@ public class CompositePlotCLI implements Callable<Integer> {
 			tokens = scan.nextLine().split("\t");
 			//check for format consistency: number of x-values matches y-values
 			if(tokens.length-1!=x.length){
+				System.err.println("(!) Check number of x-values matches number of y-values");
 				return null;
+			}
+			//skip any rows with blank labels
+			if(tokens[0].equals("")){ 
+				for(int i = 1; i < tokens.length; i++){
+					if(x[i-1]!=Double.parseDouble(tokens[i])){
+						System.err.println(x[i-1]);
+						System.err.println(tokens[i]);
+						System.err.println("(!) Check dataseries based on same x-scale file");
+						return null;
+					}
+				}
+				continue;
 			}
 			//initialize series based on rowname column of input file
 			s = new XYSeries(tokens[0]);
@@ -211,5 +232,4 @@ public class CompositePlotCLI implements Callable<Integer> {
 		scan.close();
 		return(dataset);
 	}
-	
 }
