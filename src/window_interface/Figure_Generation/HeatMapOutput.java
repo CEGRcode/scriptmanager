@@ -67,12 +67,12 @@ public class HeatMapOutput extends JFrame {
 	public void run() throws IOException {	
 		for(int x = 0; x < SAMPLE.size(); x++) {
 			
-			String FILEID = SAMPLE.get(x).getName().split("\\.")[0];
+			String FILEID = SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png";
 			String OUTPUT = FILEID;
 			if(OUTPUTPATH != null) { OUTPUT = OUTPUTPATH.getCanonicalPath() + File.separator + FILEID; }
 			
 			//Execute script
-			HeatmapPlot script_object = new HeatmapPlot(SAMPLE.get(x), MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUTPATH, OUTPUTSTATUS );
+			HeatmapPlot script_object = new HeatmapPlot(SAMPLE.get(x), MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth, scaleType, absolute, quantile, new File(OUTPUT), OUTPUTSTATUS );
 			script_object.run();
 			JLabel picLabel = script_object.getImg();
 			

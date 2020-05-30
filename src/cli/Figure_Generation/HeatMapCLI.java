@@ -1,17 +1,21 @@
 package cli.Figure_Generation;
 
 import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.lang.NullPointerException;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import util.ExtensionFileFilter;
 import scripts.Figure_Generation.HeatmapPlot;
 
 /**
@@ -21,18 +25,12 @@ import scripts.Figure_Generation.HeatmapPlot;
 		description = "Generate heatmap using CDT files.",
 		sortOptions = false)
 public class HeatMapCLI implements Callable<Integer> {
-		
+	
 	@Parameters( index = "0", description = "")
 	private File CDT;
 	
-	@Option(names = {"-c", "--color"}, description = "For custom color: type hexadecimal string to represent colors (e.g. #FF0000 is hexadecimal for red).\n See <http://www.javascripter.net/faq/rgbtohex.htm> for some color options with their corresponding hex strings.\n")
-	private String color = null;
-	@Option(names = {"--black"}, description = "Use the color black for generating the heatmap")
-	private boolean black = false;
-	@Option(names = {"--red"}, description = "Use the color red for generating the heatmap")
-	private boolean red = false;
-	@Option(names = {"--blue"}, description = "Use the color blue for generating the heatmap")
-	private boolean blue = false;
+	@Option(names = {"-o", "--output"}, description = "specify output filename, please use PNG extension\n(default=CDT filename with \"_<compression-type>.png\" appended to the name in working directory of ScriptManager")
+	private File output = null;
 	@Option(names = {"-r", "--start-row"}, description = "")
 	private int startROW = 1;
 	@Option(names = {"-l", "--start-col"}, description = "")
@@ -47,14 +45,25 @@ public class HeatMapCLI implements Callable<Integer> {
 	private int absolute = 10;
 	@Option(names = {"-p", "--percentile-threshold"}, description = "use the specified percentile value for contrast thresholding in the heatmap (try .95 if unsure)")
 	private double percentile = -999;
-	@Option(names = {"-o", "--output"}, description = "specify output basename for the outputfile ( _<compression-type>.png will be appended to the name, default=heatmapplot)")
-	private File outbasename = new File("heatmapplot");
+	
+	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect heatmap color:%n\t@|fg(red) (select no more than one of these options)|@%n")
+	private ColorGroup color = new ColorGroup();
+	static class ColorGroup{
+		@Option(names = {"--black"}, description = "Use the color black for generating the heatmap (default)")
+		private boolean black = false;
+		@Option(names = {"--red"}, description = "Use the color red for generating the heatmap")
+		private boolean red = false;
+		@Option(names = {"--blue"}, description = "Use the color blue for generating the heatmap")
+		private boolean blue = false;
+		@Option(names = {"-c", "--color"}, description = "For custom color: type hexadecimal string to represent colors (e.g. \"FF0000\" is hexadecimal for red).\n See <http://www.javascripter.net/faq/rgbtohex.htm> for some color options with their corresponding hex strings.\n")
+		private String custom = null;
+	}
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">HeatMapCLI.call()" );
+		System.err.println( ">HeatMapCLI.call()" );
 		String validate = validateInput();
-		if( validate.compareTo("")!=0 ){
+		if(!validate.equals("")){
 			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
@@ -62,10 +71,14 @@ public class HeatMapCLI implements Callable<Integer> {
 		
 		// Assign a color from the -c, --red, --blue, and --black inputs
 		Color MAXCOLOR = null;
-		if(black){ MAXCOLOR = Color.BLACK; }
-		else if(red){ MAXCOLOR = Color.RED; }
-		else if(blue){ MAXCOLOR = Color.BLUE; }
-		else{ MAXCOLOR = Color.decode(color); }
+		if(color.black){ MAXCOLOR = Color.BLACK; }
+		else if(color.red){ MAXCOLOR = Color.RED; }
+		else if(color.blue){ MAXCOLOR = Color.BLUE; }
+		else if(color.custom!=null){
+			System.err.println("Decoding color: 0x" + color.custom);
+			MAXCOLOR = Color.decode("0x"+color.custom);
+		 }
+		else { MAXCOLOR = Color.BLACK; }
 		// Assign a scaleType based on "compression" input
 		String scaleType = null;
 		if(compression==1){ scaleType = "treeview"; }
@@ -74,41 +87,57 @@ public class HeatMapCLI implements Callable<Integer> {
 		else if(compression==4){ scaleType = "neighbor"; }
 		
 		// Generate Heatmap
-		HeatmapPlot script_object = new HeatmapPlot( CDT, MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth, scaleType, absolute, percentile, outbasename, true );
+		HeatmapPlot script_object = new HeatmapPlot( CDT, MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth, scaleType, absolute, percentile, output, true );
 		script_object.run();
 		
-		System.out.println( "Image Generated." );		
+		System.err.println("Image Generated.");		
 		return(0);
 	}
 	
-	private String validateInput(){
+	private String validateInput() throws IOException {
 		String r = "";
+		
+		//check inputs exist
+		if(!CDT.exists()){
+			r += "(!)CDT file does not exist: " + CDT.getName() +  "\n";
+			return(r);
+		}
+		//check input extensions
+		if(!"cdt".equals(ExtensionFileFilter.getExtension(CDT))){
+			r += "(!)Is this a CDT file? Check extension: " + CDT.getName() +  "\n";
+		}
+		//set default output filename
+		if(output==null){
+			String NAME = ExtensionFileFilter.stripExtension(CDT);
+			output = new File(NAME + "_heatmap.png");
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!"png".equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) +  ".png\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output +  ".png\n"; }
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+		
 		// check compression is a valid input value
 		if( compression<1 || compression>4 ){
 			r += "(!)Compression must be integer 1-4. Please select from the available compression types.";
 		}
-		//check that not more than one of -c, --red, --blue, --black is indicated
-		int color_inst = 0;
-		color_inst  = (black) ? 1 : 0;
-		color_inst += (red) ? 1 : 0;
-		color_inst += (blue) ? 1 : 0;
-		color_inst += (color!=null) ? 1 : 0;
-		if( color_inst > 1 ){ r += "(!)You can only use one of the color selection parameters: black(--black), red(--red), blue(--blue), color(-c)!"; }
 		//check that hex string is formatted properly
-		if( color != null ){
-			Pattern hexColorPat = Pattern.compile("#?[0-9A-Fa-f]{6}");
-			Matcher m = hexColorPat.matcher( color );
-			if( !m.matches() ){
-				r += "(!)Color must be formatted as a hexidecimal String!\n\t-Expected input string format: \"#?[0-9A-F]{6}\"";
+		if(color.custom != null){
+			Pattern hexColorPat = Pattern.compile("[0-9A-Fa-f]{6}");
+			Matcher m = hexColorPat.matcher( color.custom );
+			if(!m.matches()){
+				r += "(!)Color must be formatted as a hexidecimal String!\n\tExpected input string format: \"[0-9A-Fa-f]{6}\"";
 			}
-		}else{ color="#000000"; }
-		//set default output filename
-// 		String FILEID = CDT.getName().split("\\.")[0];
-// 		String OUTPUT = FILEID;
-// 		if(OUTPUTPATH != null) { OUTPUT = OUTPUTPATH.getCanonicalPath() + File.separator + FILEID; }
-		/* <ADD CODE HERE> */
-		//check outputbasename is valid
-		/* <ADD CODE HERE> */
+		}
 		//check pixel ranges are valid
 		if(pixelHeight<=0){ r += "(!)Cell height must be a positive integer value! check \"-y\" flag.\""; }
 		if(pixelWidth<=0) { r += "(!)Cell width must be a positive integer value! check \"-x\" flag.\""; }

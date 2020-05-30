@@ -5,7 +5,9 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.lang.NullPointerException;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import java.awt.Color;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import util.ExtensionFileFilter;
 import scripts.Figure_Generation.FourColorPlot;
 
 /**
@@ -23,11 +26,11 @@ import scripts.Figure_Generation.FourColorPlot;
 		sortOptions = false)
 public class FourColorSequenceCLI implements Callable<Integer> {
 	
-	@Option(names = {"-f", "--fasta"}, required=true, description = "input FASTA file of sequences to plot")
+	@Parameters( index = "0", description = "input FASTA file of sequences to plot")
 	private File fastaFile;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output file ")
-	private File output = new File("output_4color.png");
+	@Option(names = {"-o", "--output"}, description = "specify output filename, please use PNG extension\n(default=FASTA filename with \"_4color.png\" appended to the name in working directory of ScriptManager")
+	private File output = null;
 	@Option(names = {"-c", "--colors"}, arity = "4..5", description = "For custom colors: List colors to use for ATGC[N], in that order. Type hexadecimal string to represent colors, e.g. FF0000 is hexadecimal for red.\n(default=A-red,T-green,G-yellow,C-blue,N-gray, if only 4 colors specified, N will be set to gray)\n See <http://www.javascripter.net/faq/rgbtohex.htm> for some color options with their corresponding hex strings.")
 	private ArrayList<String> colors = null;
 	@Option(names = {"-x", "--pixel-width"}, description = "pixel width (default=1)")
@@ -37,9 +40,9 @@ public class FourColorSequenceCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">FourColorSequenceCLI.call()" );
+		System.err.println( ">FourColorSequenceCLI.call()" );
 		String validate = validateInput();
-		if( validate.compareTo("")!=0 ){
+		if(!validate.equals("")){
 			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
@@ -47,7 +50,7 @@ public class FourColorSequenceCLI implements Callable<Integer> {
 		// Add colors into ArrayList
 		ArrayList<Color> ATCG_COLORS = new ArrayList<Color>(5);
 		if( colors!=null ){
-			System.out.println("size:"+ Integer.toString(ATCG_COLORS.size()));
+			System.err.println("size:"+ Integer.toString(ATCG_COLORS.size()));
 			for( int c=0; c<colors.size(); c++){
 				ATCG_COLORS.add(c, Color.decode("#"+colors.get(c)) );
 			}
@@ -65,12 +68,43 @@ public class FourColorSequenceCLI implements Callable<Integer> {
 		// Generate Heatmap
 		FourColorPlot.generatePLOT(fastaFile, output, ATCG_COLORS, pixelHeight, pixelWidth);
 		
-		System.out.println( "Image Generated." );
+		System.err.println("Image Generated.");
 		return(0);
 	}
 	
-	private String validateInput(){
+	private String validateInput() throws IOException {
 		String r = "";
+		
+		//check inputs exist
+		if(!fastaFile.exists()){
+			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
+		if(!faFilter.accept(fastaFile)){
+			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
+		}
+		//set default output filename
+		if(output==null){
+			String NAME = ExtensionFileFilter.stripExtension(fastaFile);
+			output = new File(NAME + "_4color.png");
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!"png".equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".png\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output + ".png\n"; }
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+		
 		//check colors if custom
 		if( colors != null ){
 			//check that 4-5 provided
@@ -87,12 +121,6 @@ public class FourColorSequenceCLI implements Callable<Integer> {
 				}
 			}
 		}
-		//set default output filename
-// 		String[] out = fastaFile.getName().split("\\.");
-// 		new File(OUTPUTPATH + File.separator + out[0] + ".png"
-		/* <ADD CODE HERE> */
-		//check outputbasename is valid
-		/* <ADD CODE HERE> */
 		//check pixel ranges are valid
 		if(pixelHeight<1){
 			r += "(!)Image Height must be a positive integer value! check \"-y\" flag.\"";

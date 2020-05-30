@@ -41,7 +41,7 @@ public class HeatmapPlot {
 	public static Color MAXCOLOR = new Color(255, 0, 0);
 	
 	protected static boolean OUTPUTSTATUS = false;
-	protected static File OUTPUT = null;
+	protected static File OUTFILE = null;
 	protected static String FILEID = null;	
 
 	private static ArrayList<double[]> MATRIX = null;
@@ -49,7 +49,7 @@ public class HeatmapPlot {
 	
 	private JLabel picLabel = null;
 	
-	public HeatmapPlot(File in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File OUTBASENAME, boolean outstatus) {
+	public HeatmapPlot(File in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File output, boolean outstatus) {
 
 		SAMPLE = in;
 		MAXCOLOR = c;
@@ -62,7 +62,7 @@ public class HeatmapPlot {
 		absolute = abs;
 		quantile = quant;
 		
-		OUTPUT = OUTBASENAME;
+		OUTFILE = output;
 		OUTPUTSTATUS = outstatus;
 	}
 	
@@ -85,7 +85,7 @@ public class HeatmapPlot {
 			BufferedImage treeMap = generateHeatMap(newMatrix);
 			picLabel = new JLabel(new ImageIcon(treeMap));
 			//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
-			if(OUTPUTSTATUS) { ImageIO.write(treeMap, "png", new File(OUTPUT + "_" + scaleType + ".png")); }
+			if(OUTPUTSTATUS) { ImageIO.write(treeMap, "png", OUTFILE); }
 		} else if(!scaleType.equalsIgnoreCase("treeview")) {
 			//COLOR_RATIO = 2 * getNonZeroAvg(MATRIX);
 			if(absolute != -999) { COLOR_RATIO = absolute; }
@@ -97,7 +97,7 @@ public class HeatmapPlot {
 			picLabel = new JLabel(new ImageIcon(compressedMap));
 			
 			//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
-			if(OUTPUTSTATUS) { ImageIO.write(compressedMap, "png", new File(OUTPUT + "_" + scaleType + ".png")); }
+			if(OUTPUTSTATUS) { ImageIO.write(compressedMap, "png", OUTFILE); }
 		}
 		
 	}
