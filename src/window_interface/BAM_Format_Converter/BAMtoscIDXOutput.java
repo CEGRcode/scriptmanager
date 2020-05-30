@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -52,8 +50,6 @@ public class BAMtoscIDXOutput extends JFrame {
 	}
 	
 	public void run() throws IOException, InterruptedException {
-		System.err.println(getTimeStamp());
-		
 		//Open Output File
 		File OUT;
 		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
@@ -71,13 +67,5 @@ public class BAMtoscIDXOutput extends JFrame {
 		
 		Thread.sleep(2000);
 		dispose();
-		
-		System.err.println(getTimeStamp());
-	}
-	
-	private static String getTimeStamp() {
-		Date date= new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
 	}
 }

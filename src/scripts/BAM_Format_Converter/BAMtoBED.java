@@ -90,6 +90,8 @@ public class BAMtoBED {
 			printOUT("BAI Index File does not exist for: " + BAM.getName());
 		}
 		if(OUTFILE!=null){ OUT.close(); }
+		
+		printPS(getTimeStamp());
 	}
 	
 	public void outputRead(SAMRecord read) {
@@ -186,7 +188,7 @@ public class BAMtoBED {
 	
 	private void printPS( String line ){
 		if( PS!=null ){ PS.println(line); }
-		else{ System.err.println( line ); }		
+		System.err.println( line );
 	}
 	
 	private void printOUT( String line ){

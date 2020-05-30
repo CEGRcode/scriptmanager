@@ -95,6 +95,8 @@ public class BAMtoscIDX {
 			printOUT("BAI Index File does not exist for: " + BAM.getName());
 		}
 		if(OUTFILE!=null){ OUT.close(); }
+		
+		printPS(getTimeStamp());
 	}
 	
 	public void addTag(SAMRecord sr) {
@@ -306,7 +308,7 @@ public class BAMtoscIDX {
 	
 	private void printPS( String line ){
 		if( PS!=null ){ PS.println(line); }
-		else{ System.err.println( line ); }		
+		System.err.println( line );
 	}
 	
 	private void printOUT( String line ){

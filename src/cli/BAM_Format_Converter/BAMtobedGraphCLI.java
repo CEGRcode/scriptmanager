@@ -1,6 +1,7 @@
 package cli.BAM_Format_Converter;
 
 import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -8,7 +9,9 @@ import picocli.CommandLine.Parameters;
 import java.util.concurrent.Callable;
 
 import java.io.File;
+import java.io.IOException;
 
+import util.ExtensionFileFilter;
 import scripts.BAM_Format_Converter.BAMtobedGraph;
 
 /**
@@ -22,16 +25,23 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
 	private File bamFile;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with .gff ext)" )
-	private File output = null;
-	@Option(names = {"-1", "--read1"}, description = "output read 1 (default)")
-	private boolean read1 = false;
-	@Option(names = {"-2", "--read2"}, description = "output read 2")
-	private boolean read2 = false;
-	@Option(names = {"-c", "--combined"}, description = "output combined")
-	private boolean combined = false;
-	@Option(names = {"-m", "--midpoint"}, description = "output midpoint (requires PE)")
-	private boolean midpoint = false;
+	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with _<strand>.bedgraph ext)" )
+	private String outputBasename = null;
+	
+	//Read
+	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
+	ReadType readType = new ReadType();
+	static class ReadType {
+		@Option(names = {"-1", "--read1"}, description = "output read 1 (default)")
+		boolean read1 = false;
+		@Option(names = {"-2", "--read2"}, description = "output read 2")
+		boolean read2 = false;
+		@Option(names = {"-a", "--all-reads"}, description = "output combined")
+		boolean combined = false;
+		@Option(names = {"-m", "--midpoint"}, description = "output midpoint (require PE)")
+		boolean midpoint = false;
+	}
+	
 	@Option(names = {"-p", "--mate-pair"}, description = "require proper mate pair (default not required)")
 	private boolean matePair = false;
 	@Option(names = {"-n", "--min-insert"}, description = "filter by min insert size in bp")
@@ -46,50 +56,70 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 	public Integer call() throws Exception {
 		System.out.println( ">BAMtobedGraphCLI.call()" );
 		String validate = validateInput();
-		if( validate.compareTo("")!=0 ){
+		if(!validate.equals("")){
 			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
 		}
 		
-		BAMtobedGraph script_obj = new BAMtobedGraph(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+		BAMtobedGraph script_obj = new BAMtobedGraph(bamFile, outputBasename, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
 		script_obj.run();
 		
 		System.err.println("Conversion Complete");
-		
 		return(0);
 	}
 	
-	private String validateInput(){
+	private String validateInput() throws IOException {
 		String r = "";
-		// check only one strand method indicated
-		int methodCounter=0;
-		methodCounter += read1 ? 1 : 0;
-		methodCounter += read2 ? 1 : 0;
-		methodCounter += combined ? 1 : 0;
-		methodCounter += midpoint ? 1 : 0;
-		if( methodCounter>1){ r += "(!)Cannot use more than one of the four flag options [-1|-2|-c|-m]\n"; }
+		
 		// set strand method
-		if( read1 )			{ STRAND=0; }
-		else if( read2 )	{ STRAND=1; }
-		else if( combined )	{ STRAND=2; }
-		else if( midpoint )	{ STRAND=3; }
-		else				{ STRAND=0; }
+		if(readType.read1)			{ STRAND=0; }
+		else if(readType.read2)		{ STRAND=1; }
+		else if(readType.combined)	{ STRAND=2; }
+		else if(readType.midpoint)	{ STRAND=3; }
+		else						{ STRAND=0; }
+		
+		//check inputs exist
+		if(!bamFile.exists()){
+			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
+			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
+		}
+		//check BAI exists
+		File f = new File(bamFile+".bai");
+		if(!f.exists() || f.isDirectory()){
+			r += "(!)BAI Index File does not exist for: " + bamFile.getName() + "\n";
+		}
+		//set default output filename
+		if(outputBasename==null){
+			if(STRAND==0){ outputBasename = bamFile.getName().split("\\.")[0] + "_READ1"; }
+			else if(STRAND==1){ outputBasename = bamFile.getName().split("\\.")[0] + "_READ2"; }
+			else if(STRAND==2){ outputBasename = bamFile.getName().split("\\.")[0] + "_COMBINED"; }
+			else if(STRAND==3){ outputBasename = bamFile.getName().split("\\.")[0] + "_MIDPOINT"; }
+			else if(STRAND==4){ outputBasename = bamFile.getName().split("\\.")[0] + "_FRAGMENT"; }
+			else { r += "(!)Somehow invalid STRAND!This error should never print. Check code if it does.\n"; }
+		//check output filename is valid
+		}else{
+			//no check ext
+			//check directory
+			File tmpOut = new File(outputBasename);
+			if(tmpOut.getParent()==null){
+	// 			System.err.println("default to current directory");
+			} else if(!tmpOut.getParentFile().exists()){
+				r += "(!)Check output directory exists: " + tmpOut.getParent() + "\n";
+			}
+		}
+		
 		// validate insert sizes
 		if( MIN_INSERT<0 && MIN_INSERT!=-9999 ){ r += "MIN_INSERT must be a positive integer value: " + MIN_INSERT + "\n"; }
 		if( MAX_INSERT<0 && MAX_INSERT!=-9999 ){ r += "MAX_INSERT must be a positive integer value: " + MAX_INSERT + "\n"; }
 		if( MAX_INSERT<MIN_INSERT ){ r += "MAX_INSERT must be larger/equal to MIN_INSERT: " + MIN_INSERT + "," + MAX_INSERT + "\n"; }
 		// turn pair status boolean into int
 		PAIR = matePair ? 1 : 0;
-		// check -s and -o not used together (pipe standard out vs output file)
-		if( output== null ){
-			if(STRAND==0){ output = new File( bamFile.getName().split("\\.")[0] + "_READ1" ); }
-			else if(STRAND==1){ output = new File( bamFile.getName().split("\\.")[0] + "_READ2" ); }
-			else if(STRAND==2){ output = new File( bamFile.getName().split("\\.")[0] + "_COMBINED" ); }
-			else if(STRAND==3){ output = new File( bamFile.getName().split("\\.")[0] + "_MIDPOINT" ); }
-			else { r += "(!)Somehow invalid STRAND!This error should never print.Check code if it does.\n"; }
-		}
+		
 		return(r);
 	}
-	
 }

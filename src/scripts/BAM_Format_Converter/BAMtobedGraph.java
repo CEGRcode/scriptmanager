@@ -18,7 +18,7 @@ import java.util.Date;
 @SuppressWarnings("serial")
 public class BAMtobedGraph {
 	private File BAM = null;
-	private File OUTBASENAME = null;
+	private String OUTBASENAME = null;
 	private PrintStream OUTF = null;
 	private PrintStream OUTR = null;
 	private PrintStream PS = null;
@@ -38,7 +38,7 @@ public class BAMtobedGraph {
 	
 	private int CHROMSTOP = -999;
 	
-	public BAMtobedGraph(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
+	public BAMtobedGraph(File b, String o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;
 		OUTBASENAME = o;
 		PS = ps;
@@ -58,10 +58,10 @@ public class BAMtobedGraph {
 		if(OUTBASENAME != null) {
 			try {
 				if(STRAND <= 2) {
-					OUTF = new PrintStream(new File(OUTBASENAME.getCanonicalPath() + "_forward.bedGraph"));
-					OUTR = new PrintStream(new File(OUTBASENAME.getCanonicalPath() + "_reverse.bedGraph"));
+					OUTF = new PrintStream(new File(OUTBASENAME + "_forward.bedGraph"));
+					OUTR = new PrintStream(new File(OUTBASENAME + "_reverse.bedGraph"));
 				} else {
-					OUTF = new PrintStream(new File(OUTBASENAME.getCanonicalPath() + "_midpoint.bedGraph"));
+					OUTF = new PrintStream(new File(OUTBASENAME + "_midpoint.bedGraph"));
 				}
 			}
 			catch (FileNotFoundException e) { e.printStackTrace(); }
@@ -71,7 +71,7 @@ public class BAMtobedGraph {
 		}
 		
 		// Print TimeStamp to STDERR/Output Window
-		printPS(OUTBASENAME.getCanonicalPath());
+		printPS(OUTBASENAME);
 		printPS(getTimeStamp());
 		
 		//Check to Make Sure BAI-index file exists
@@ -80,7 +80,7 @@ public class BAMtobedGraph {
 			//Print Input Params
 			printPS("-----------------------------------------\nBAM to bedGraph Parameters:");
 			printPS("BAM file: " + BAM);
-			printPS("Output: " + OUTBASENAME.getName());
+			printPS("Output: " + new File(OUTBASENAME).getName());
 			
 			printPS("Output Read: " + READ);
 			if(PAIR == 0) { printPS( "Require proper Mate-pair: no"); }
@@ -110,6 +110,8 @@ public class BAMtobedGraph {
 		}
 		if(OUTF != null) { OUTF.close(); }
 		if(OUTR != null) { OUTR.close(); }
+		
+		printPS(getTimeStamp());
 	}
 		
 	public void addTag(SAMRecord sr) {
@@ -323,7 +325,7 @@ public class BAMtobedGraph {
 	
 	private void printPS( String line ){
 		if( PS!=null ){ PS.println(line); }
-		else{ System.err.println( line ); }		
+		System.err.println( line );
 	}
 	
 	private static String getTimeStamp() {
