@@ -12,15 +12,9 @@ import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import htsjdk.samtools.util.CloseableIterator;
 import htsjdk.samtools.util.IOUtil;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import util.FASTAUtilities;
 

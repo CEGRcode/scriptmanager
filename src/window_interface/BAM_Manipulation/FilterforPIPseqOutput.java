@@ -1,17 +1,5 @@
 package window_interface.BAM_Manipulation;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileWriter;
-import htsjdk.samtools.SAMFileWriterFactory;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.reference.IndexedFastaSequenceFile;
-import htsjdk.samtools.util.CloseableIterator;
-import htsjdk.samtools.util.IOUtil;
-
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
