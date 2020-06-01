@@ -24,16 +24,15 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scripts.Sequence_Analysis.FASTAExtract;
 import util.FileSelection;
-
-import javax.swing.JRadioButton;
+import scripts.Sequence_Analysis.FASTAExtract;
 
 @SuppressWarnings("serial")
 public class FASTAExtractWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -123,7 +122,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						BEDFiles.add(newBEDFiles[x]);
@@ -230,7 +229,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
         
         btnLoadGenome.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		File temp = FileSelection.getFASTAFile(fc);
+        		File temp = FileSelection.getFile(fc,"fa");
 				if(temp != null) {
 					INPUT = temp;
 					lblGenome.setText(INPUT.getName());
@@ -267,6 +266,3 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 }
-
-
-	

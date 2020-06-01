@@ -39,6 +39,7 @@ import util.FileSelection;
 @SuppressWarnings("serial")
 public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	private JProgressBar progressBar;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	private File OUTPUT_PATH = null;
@@ -50,7 +51,6 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveGFF;
 	private JButton btnConvert;
 
-	private JProgressBar progressBar;
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -116,7 +116,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getGFFFiles(fc);
+				File[] newGFFFiles = FileSelection.getFiles(fc,"gff");
 				if(newGFFFiles != null) {
 					for(int x = 0; x < newGFFFiles.length; x++) { 
 						GFFFiles.add(newGFFFiles[x]);
@@ -239,6 +239,3 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 }
-
-
-	

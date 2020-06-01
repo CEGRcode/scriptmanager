@@ -1,9 +1,5 @@
 package window_interface.Peak_Analysis;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Component;
@@ -13,22 +9,26 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
 
-import scripts.Peak_Analysis.BEDPeakAligntoRef;
 import util.FileSelection;
+import scripts.Peak_Analysis.BEDPeakAligntoRef;
 
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -125,7 +125,7 @@ public Task task;
 		
 		btnLoadPeakBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						PeakFiles.add(newBEDFiles[x]);
@@ -170,7 +170,7 @@ public Task task;
 		
 		btnLoadRefBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						RefFiles.add(newBEDFiles[x]);
