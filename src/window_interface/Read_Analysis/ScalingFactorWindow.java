@@ -233,7 +233,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         btnLoadControlBam.setEnabled(false);
         btnLoadControlBam.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File newControl = FileSelection.getFiles(fc, "bam");
+				File newControl = FileSelection.getFile(fc, "bam");
 				if(newControl != null) {
 					CONTROL = newControl.getAbsoluteFile();
 					lblNoControlLoaded.setText(newControl.getName());

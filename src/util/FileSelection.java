@@ -57,16 +57,16 @@ public class FileSelection {
 		return Files;
 	}
 	
-	public static File getFiles(JFileChooser fc, String ext){
+	public static File[] getFiles(JFileChooser fc, String ext){
 		fc.setFileFilter(new ExtensionFileFilter(ext));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
 		fc.setSelectedFile(new File(""));
 		fc.setDialogTitle("File Selection");
-		File Files = null;
+		File[] Files = null;
 		int returnVal = fc.showOpenDialog(fc);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			Files = fc.getSelectedFile();
+			Files = fc.getSelectedFiles();
 		}
 		return Files;
 	}
