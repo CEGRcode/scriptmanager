@@ -1,119 +1,142 @@
 package cli.BAM_Statistics;
 
 import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.util.Scanner;
+import java.util.Vector;
 import java.util.concurrent.Callable;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.util.Vector;
-import java.util.Date;
 
+import util.ExtensionFileFilter;
 import scripts.BAM_Statistics.BAMGenomeCorrelation;
 
-	
 /**
 	BAM_StatisticsCLI/SEStats
 */
 @Command(name = "bam-correlation", mixinStandardHelpOptions = true,
-		description="Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.")
+		description="Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.",
+		sortOptions = false)
 public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0..", description = "The BAM file whose statistics we want.")
-	private File[] bamFiles;
+	private File[] inputFiles;
 
-	@Option(names = {"-f", "--files"}, description = "Input list of BAM filenames to correlate")
-	private File file_list;
-	@Option(names = {"-o", "--output"}, description = "Specify output file ")
-	private File output = new File("correlation_matrix");
-	@Option(names = {"-1", "--read1"}, description = "correlate with read 1 (default)")
-	private boolean read1 = false;
-	@Option(names = {"-2", "--read2"}, description = "correlate with read 2")
-	private boolean read2 = false;
-	@Option(names = {"-a", "--all-reads"}, description = "correlate with all reads")
-	private boolean allreads = false;
-	@Option(names = {"-m", "--midpoint"}, description = "correlate with midpoint (requires PE)")
-	private boolean midpoint = false;
+	@Option(names = {"-f", "--files"}, description = "Input file list of BAM filepaths to correlate (formatted so each path is on its own line)")
+	private boolean fileList = false;
+	@Option(names = {"-o", "--output"}, description = "Specify output file, default is \"correlation_matrix\" or the input filename if -f flag used")
+	private File outputBasename = null;
+	
+	//Read
+	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
+	ReadType readType = new ReadType();
+	static class ReadType {
+		@Option(names = {"-1", "--read1"}, description = "output read 1 (default)")
+		boolean read1 = false;
+		@Option(names = {"-2", "--read2"}, description = "output read 2")
+		boolean read2 = false;
+		@Option(names = {"-a", "--all-reads"}, description = "output combined")
+		boolean allreads = false;
+		@Option(names = {"-m", "--midpoint"}, description = "output midpoint (require PE)")
+		boolean midpoint = false;
+	}
+	
 	@Option(names = {"-t", "--tag-shift"}, description = "tag shift in bp (default 0)")
 	private int tagshift = 0;
 	@Option(names = {"-b", "--bin-size"}, description = "bin size in bp (default 10)")
 	private int binSize = 10;
-	@Option(names = {"-cpu", "--cpu"}, description = "CPUs to use (default 1)")
+	@Option(names = {"--cpu"}, description = "CPUs to use (default 1)")
 	private int cpu = 1;
 	
-	private int RTYPE;
-	private Vector<File> vFiles;
+	private int READ = 0;
+	private Vector<File> bamFiles = new Vector<File>();
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">BAMGenomeCorrelationCLI.call()" );
-		
-		if( validateInput()!=0 ){
+		System.err.println( ">BAMGenomeCorrelationCLI.call()" );
+		String validate = validateInput();
+		if(!validate.equals("")){
+			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
 		}
-		vFiles = getFileVector();
 		
-// 		System.out.println("blah3");
-		BAMGenomeCorrelation b_coor = new BAMGenomeCorrelation( getFileVector(), output, true, tagshift, binSize, cpu, RTYPE);
-		b_coor.getBAMGenomeCorrelation(null);
+		BAMGenomeCorrelation script_obj = new BAMGenomeCorrelation( bamFiles, outputBasename, true, tagshift, binSize, cpu, READ);
+		script_obj.getBAMGenomeCorrelation(false);
+		
 		System.err.println("Calculations Complete");
-		
 		return(0);
 	}
 	
-	private Vector<File> getFileVector(){
-		Vector<File> vFiles = new Vector<File>(bamFiles.length);
-// 		System.out.println("blah0");
-		for( int i=0; i<bamFiles.length; i++){
-// 			System.out.println("blah1");
-			vFiles.add(i,bamFiles[i]);
-		}
-// 		System.out.println("blah2");
-		return( vFiles );
-	}
-	
-	private Integer validateInput(){
-		
-		//Make sure only one of the -1 -2 -a -m  flags are used
-		int corr_type;
-		corr_type  = (read1) ? 1 : 0;
-		corr_type += (read2) ? 1 : 0;
-		corr_type += (allreads) ? 1 : 0;
-		corr_type += (midpoint) ? 1 : 0;
-		if( corr_type > 1 ){
-			System.err.println( "!!! You can only use one of the correlation type tags: read1(-1), read2(-2), allreads(-a), midpoint(-m)!" );
-			return(1);
-		}
-		System.out.println("corr_type=" + Integer.toString(corr_type));
-		
-		//Assign type value after validating 
-		if(corr_type==0){ RTYPE = 0; }   //default assignment
-		else if(read1) { RTYPE = 0; }
-		else if(read2) { RTYPE = 1; }
-		else if(allreads) { RTYPE = 2; }
-		else if(midpoint) { RTYPE = 3; }
-		
-		//Check that positional file listings not used in conjunction with -f flag
+	private String validateInput() throws IOException {
+		String r = "";
 		
 		//Import files as Vector list (scan input file if -f flag used)
+		if(fileList){		//load files from input filelist
+			if(inputFiles.length>1){
+				r += "(!)Please indicate only one file with bam filepaths when using the -f flag.\n";
+				return(r);
+			}else if(!inputFiles[0].exists()){
+				r += "(!)File of list of file inputs does not exist: " + inputFiles[0].getCanonicalPath() + "\n";
+				return(r);
+			}else{
+				Scanner scan = new Scanner(inputFiles[0]);
+				while (scan.hasNextLine()) {
+					bamFiles.add(new File(scan.nextLine().trim()));
+				}
+				scan.close();
+			}
+			outputBasename = new File(ExtensionFileFilter.stripExtension(inputFiles[0]));
+		}else{		//load input files into bam vector
+			for(int x=0; x<inputFiles.length; x++){
+				bamFiles.add(inputFiles[x]);
+			}
+		}
+		//check each file in Vector
+		for(int x=0; x<bamFiles.size(); x++){
+			File BAM = bamFiles.get(x);
+			File BAI = new File(BAM+".bai");
+			//check input exists
+			if(!BAM.exists()|| BAM.isDirectory()){
+				r += "(!)BAM[" + x + "] file does not exist: " + BAM.getName() + "\n";
+			//check input extensions
+			}else if(!"bam".equals(ExtensionFileFilter.getExtension(BAM))){
+				r += "(!)Is this a BAM file? Check extension: " + BAM.getName() + "\n";
+			//check BAI exists
+			}else if(!BAI.exists() || BAI.isDirectory()){
+				r += "(!)BAI Index File does not exist for: " + BAM.getName() + "\n";
+			}
+		}
+		if(!r.equals("")){ return(r); }
+		//set default output filename
+		if(outputBasename==null){
+			outputBasename = new File("correlation_matrix");
+		//check output filename is valid
+		}else{
+			//no check ext
+			//check directory
+			if(outputBasename.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(outputBasename.getParent()).exists()){
+				r += "(!)Check output directory exists: " + outputBasename.getParent() + "\n";
+			}
+		}
 		
-		return(0);
+		//Assign type value after validating 
+		if(readType.read1)			{ READ = 0; }
+		else if(readType.read2)		{ READ = 1; }
+		else if(readType.allreads)	{ READ = 2; }
+		else if(readType.midpoint)	{ READ = 3; }
+		
+		//validate binSize, and CPU count
+		if(binSize<1){ r += "(!)Please indicate a binSize of at least 1: " + binSize + "\n"; }
+		if(cpu<1){ r += "(!)Cannot use less than 1 CPU: " + cpu + "\n"; }
+		
+		return(r);
 	}
-	
 }
-	
-
