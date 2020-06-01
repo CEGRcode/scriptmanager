@@ -6,16 +6,13 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 
+import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Vector;
-
-import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -28,9 +25,7 @@ import scripts.BAM_Statistics.SEStats;
 public class SEStatOutput extends JFrame {
 	Vector<File> bamFiles = null;
 	File output = null;
-	//SAMFileReader reader;
 	
-	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 	PrintStream OUT = null;
 	
 	private JTextArea textArea;
@@ -51,11 +46,9 @@ public class SEStatOutput extends JFrame {
 		textArea.setEditable(false);
 		scrollPane.setViewportView(textArea);
 		jtxtPrintStream = new PrintStream( new CustomOutputStream(textArea) );
-		
 	}
 	
 	public void run() {
-		
 		if(output != null) {
 			try {
 				OUT = new PrintStream(output);
@@ -63,7 +56,6 @@ public class SEStatOutput extends JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 		// Execute on each BAM file in the list
 		for(int x = 0; x < bamFiles.size(); x++) {

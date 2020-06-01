@@ -5,23 +5,12 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.Vector;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.util.Date;
-
+import util.ExtensionFileFilter;
 import scripts.BAM_Statistics.SEStats;
 	
 /**
@@ -29,7 +18,8 @@ import scripts.BAM_Statistics.SEStats;
 	//java -jar build/libs/ScriptManager-0.12.jar bam-statistics se-stat <bam.in> [-o <output.filename>]
 */
 @Command(name = "se-stat", mixinStandardHelpOptions = true,
-		description = "Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.")
+		description = "Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.",
+		sortOptions = false)
 public class SEStatsCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "The BAM file whose statistics we want.")
@@ -41,23 +31,51 @@ public class SEStatsCLI implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SEStatsCLI.call()" );
-		
-		if( validateInput()!=0 ){
+		String validate = validateInput();
+		if(!validate.equals("")){
+			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
 		}
 		
 		SEStats.getSEStats( output, bamFile, null );
-		System.err.println("Calculations Complete");
 		
+		System.err.println("Calculations Complete");
 		return(0);
 	}
 	
-	private Integer validateInput(){
-		// Define default behavior
-		return(0);
-	}
+	private String validateInput() throws IOException {
+		String r = "";
+		
+		//check inputs exist
+		if(!bamFile.exists()){
+			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
+			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
+		}
+		//check BAI exists
+		File f = new File(bamFile+".bai");
+		if(!f.exists() || f.isDirectory()){
+			r += "(!)BAI Index File does not exist for: " + bamFile.getName() + "\n";
+		}
+		//set default output filename
+		if(output==null){
+// 			output = new File("output_bam_stats.txt");		//this default name mimics the gui
+			output = new File(ExtensionFileFilter.stripExtension(bamFile) + "_stats.txt");
+		//check output filename is valid
+		}else{
+			//no check ext
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
 	
+		return(r);
+	}
 }
-	
-
