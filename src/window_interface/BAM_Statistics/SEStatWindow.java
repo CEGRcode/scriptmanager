@@ -106,7 +106,7 @@ public class SEStatWindow extends JFrame {
 		txtOutputName = new JTextField();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, -2, SpringLayout.NORTH, lblOutputName);
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 6, SpringLayout.EAST, lblOutputName);
-		txtOutputName.setText("output_bam stats.txt");
+		txtOutputName.setText("output_bam_stats.txt");
 		txtOutputName.setColumns(10);
 		txtOutputName.setEnabled(false);
 		contentPane.add(txtOutputName);
@@ -179,6 +179,3 @@ public class SEStatWindow extends JFrame {
 		contentPane.add(btnRun);
 	}
 }
-
-
-	
