@@ -8,36 +8,23 @@ import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
 
-import java.awt.BorderLayout;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-// import java.io.FileOutputStream;
-// import java.io.OutputStream;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-// import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SpringLayout;
-import javax.swing.JLayeredPane;
-import javax.swing.JTabbedPane;
-
-import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
+
 import charts.Histogram;
 import charts.LineChart;
 
 @SuppressWarnings("serial")
-public class PEStats extends JFrame {
+public class PEStats {
 	
 	public static Vector<ChartPanel> getPEStats( File out_basename, File bamFile, boolean DUP_STATUS, int MIN_INSERT, int MAX_INSERT, PrintStream PS_INSERT, PrintStream PS_DUP, boolean SUM_STATUS ){
 		System.out.println("getPEStats called");
@@ -65,7 +52,6 @@ public class PEStats extends JFrame {
 					OUT_INSERT_SUM = new PrintStream(new File( out_basename.getCanonicalPath() + "_InsertSummary.out"));
 				}
 			}
-// 			catch (FileNotFoundException e) { e.printStackTrace(); }
 			catch (IOException e) {	e.printStackTrace(); }
 		}
 		
@@ -242,8 +228,8 @@ public class PEStats extends JFrame {
 			printBoth( System.err, OUT_INSERT_SUM, "BAI Index File does not exist for: " + bamFile.getName() );
 			printBoth( PS_DUP, OUT_DUP, "BAI Index File does not exist for: " + bamFile.getName() );
 		}
-// 		if(PS_INSERT != null){ PS_INSERT.close(); }
-// 		if(PS_DUP!=null){ PS_DUP.close(); }
+		if(PS_INSERT != null){ PS_INSERT.close(); }
+		if(PS_DUP!=null){ PS_DUP.close(); }
 		
 		if(OUT_INSERT != null){ OUT_INSERT.close(); }
 		if(OUT_INSERT_SUM!=null){ OUT_INSERT_SUM.close(); }
@@ -355,5 +341,4 @@ public class PEStats extends JFrame {
 		if( p != null ){ p.println(line); }
 		if( out!=null ){ out.println(line); }
 	}
-	
 }

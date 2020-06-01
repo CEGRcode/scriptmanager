@@ -1,38 +1,23 @@
 package window_interface.BAM_Statistics;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
-import htsjdk.samtools.util.CloseableIterator;
-
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
-import javax.swing.JLayeredPane;
-import javax.swing.JTabbedPane;
 
-// import charts.Histogram;
-// import charts.LineChart;
 import org.jfree.chart.ChartPanel;
 
-import scripts.BAM_Statistics.PEStats;
 import objects.CustomOutputStream;
+import scripts.BAM_Statistics.PEStats;
 
 @SuppressWarnings("serial")
 public class PEStatOutput extends JFrame {
@@ -41,8 +26,6 @@ public class PEStatOutput extends JFrame {
 	private File OUTPUT_PATH = null;
 	private boolean OUTPUT_STATUS = false;
 	private boolean DUP_STATUS = false;
-// 	PrintStream OUT = null;
-// 	private File OUTPNG = null;
 	private static int MIN_INSERT = 0;
 	private static int MAX_INSERT = 1000;
 	
@@ -139,8 +122,5 @@ public class PEStatOutput extends JFrame {
 			
 			firePropertyChange("bam",x, x + 1);	
 		}
-		
 	}
-	
 }
-

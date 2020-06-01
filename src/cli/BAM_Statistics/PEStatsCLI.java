@@ -5,41 +5,31 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.util.Date;
-
+import util.ExtensionFileFilter;
 import scripts.BAM_Statistics.PEStats;
 
-	
 /**
 	BAM_StatisticsCLI/PEStatsCLI
 */
 @Command(name = "pe-stat", mixinStandardHelpOptions = true,
-		description="Generates Insert-size Histogram statistic (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.")
+		description="Generates Insert-size Histogram statistic (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.",
+		sortOptions = false)
 public class PEStatsCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "The BAM file whose statistics we want.")
 	private File bamFile;
 
-	@Option(names = {"-o", "--output"}, description = "specify output basename, default=\"output-bam-stats\"")
-	private File output = new File( "output-bam-stats" );
+	@Option(names = {"-o", "--output"}, description = "specify output basename, default is the BAM input filename without extension")
+	private File outputBasename = null;
+	
 	@Option(names = {"-n", "--min"}, description = "histogram range minimum (0 default)")
-	private int min = 0;
+	private int MIN_INSERT = 0;
 	@Option(names = {"-x", "--max"}, description = "histogram range maximum (1000 default)")
-	private int max = 1000;
+	private int MAX_INSERT = 1000;
 	@Option(names = {"-s", "--summary"}, description = "write summary of insert histogram by chromosome (default false)")
 	private boolean sum = false;
 	@Option(names = {"-d", "--duplication-stats"}, description = "calculate duplication statistics if this flag is used (default false)")
@@ -48,29 +38,56 @@ public class PEStatsCLI implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">PEStatsCLI.call()" );
-		
-		if( validateInput()!=0 ){
+		String validate = validateInput();
+		if(!validate.equals("")){
+			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
 		}
 		
-		PEStats.getPEStats( output, bamFile, dup, min, max, null, null, sum);
+		PEStats.getPEStats( outputBasename, bamFile, dup, MIN_INSERT, MAX_INSERT, null, null, sum);
+		
 		System.err.println("Calculations Complete");
-		
 		return(0);
 	}
 	
-	private Integer validateInput(){
-		// Define default behavior
-// 		if( !out && !dup ){
-// 			//User using CLI should never get here...something wonky if they do...
-// 			System.out.println( "!!!What's the point of me? You've set both insert and dup stats to false!" );
-// 		}
+	private String validateInput() throws IOException {
+		String r = "";
 		
-		return(0);
+		//check inputs exist
+		if(!bamFile.exists()){
+			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
+			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
+		}
+		//check BAI exists
+		File f = new File(bamFile+".bai");
+		if(!f.exists() || f.isDirectory()){
+			r += "(!)BAI Index File does not exist for: " + bamFile.getName() + "\n";
+		}
+		//set default output filename
+		if(outputBasename==null){
+// 			output = new File("output_bam_stats.txt");		//this default name mimics the gui
+			outputBasename = new File(ExtensionFileFilter.stripExtension(bamFile));
+		//check output filename is valid
+		}else{
+			//no check ext
+			//check directory
+			if(outputBasename.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(outputBasename.getParent()).exists()){
+				r += "(!)Check output directory exists: " + outputBasename.getParent() + "\n";
+			}
+		}
+		
+		//validate insert sizes
+		if(MIN_INSERT<0){ r += "(!)MIN_INSERT must be non-negative\n"; }
+		if(MAX_INSERT<0){ r += "(!)MAX_INSERT must be non-negative\n"; }
+		if(MAX_INSERT<MIN_INSERT){ r += "(!)MAX_INSERT must be greater than or equal to MIN_INSERT\n"; }
+		
+		return(r);
 	}
-	
-	
 }
-	
-
