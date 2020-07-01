@@ -5,13 +5,19 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import javax.xml.bind.DatatypeConverter;
 
 public class MD5Checksum {
 	public static String calculateMD5(String input) throws IOException, NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("MD5");
 		md.update(Files.readAllBytes(Paths.get(input)));
-		byte[] digest = md.digest();
-		return DatatypeConverter.printHexBinary(digest).toLowerCase();
+		byte byteData[] = md.digest();
+        StringBuffer hexString = new StringBuffer();
+        for(int i = 0; i < byteData.length; i++) {
+        	String hex = Integer.toHexString(0xff & byteData[i]);
+        	if(hex.length() == 1) { hexString.append('0'); }
+        	hexString.append(hex);
+        }
+        return hexString.toString();
+		
 	}
 }
