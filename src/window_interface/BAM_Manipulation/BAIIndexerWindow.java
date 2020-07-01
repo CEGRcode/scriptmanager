@@ -1,23 +1,5 @@
 package window_interface.BAM_Manipulation;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JProgressBar;
-
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -25,10 +7,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
 
-import scripts.BAM_Manipulation.BAIIndexer;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+
 import util.FileSelection;
-
+import scripts.BAM_Manipulation.BAIIndexer;
 
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -91,7 +89,7 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
+				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);

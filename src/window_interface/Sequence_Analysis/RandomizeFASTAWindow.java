@@ -1,36 +1,35 @@
 package window_interface.Sequence_Analysis;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import scripts.Sequence_Analysis.FASTARandomize;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+
 import util.FileSelection;
+import scripts.Sequence_Analysis.FASTARandomize;
 
 @SuppressWarnings("serial")
 public class RandomizeFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -103,7 +102,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newFASTAFiles = FileSelection.getFASTAFiles(fc);
+				File[] newFASTAFiles = FileSelection.getFiles(fc,"fa");
 				if(newFASTAFiles != null) {
 					for(int x = 0; x < newFASTAFiles.length; x++) { 
 						FASTAFiles.add(newFASTAFiles[x]);
@@ -197,6 +196,3 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 		}
 	}
 }
-
-
-	

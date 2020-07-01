@@ -1,12 +1,12 @@
 package window_interface.BAM_Manipulation;
 
-import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -31,10 +31,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import scripts.BAM_Manipulation.BAIIndexer;
-import scripts.BAM_Manipulation.FilterforPIPseq;
 import util.FileSelection;
 import util.FASTAUtilities;
+import scripts.BAM_Manipulation.BAIIndexer;
+import scripts.BAM_Manipulation.FilterforPIPseq;
 
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -122,7 +122,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
+				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -196,7 +196,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		btnLoadGenome = new JButton("Load Genome");
 		btnLoadGenome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File temp = FileSelection.getFASTAFile(fc);
+				File temp = FileSelection.getFile(fc,"fa");
 				if(temp != null) {
 					GENOME = temp;
 					lblReferenceGenome.setText(GENOME.getName());

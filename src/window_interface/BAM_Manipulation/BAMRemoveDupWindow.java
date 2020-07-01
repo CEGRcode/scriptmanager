@@ -1,12 +1,12 @@
 package window_interface.BAM_Manipulation;
 
-import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -15,8 +15,10 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,13 +28,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 
+import util.FileSelection;
 import scripts.BAM_Manipulation.BAIIndexer;
 import scripts.BAM_Manipulation.BAMDeDuplication;
-import util.FileSelection;
-
-import javax.swing.JCheckBox;
 
 @SuppressWarnings("serial")
 public class BAMRemoveDupWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -108,7 +107,7 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
+				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
