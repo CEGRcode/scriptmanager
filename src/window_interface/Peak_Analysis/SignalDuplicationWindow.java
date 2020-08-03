@@ -32,7 +32,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import util.FileSelection;
-
+import window_interface.Peak_Analysis.SignalDuplicationOutput;
 
 @SuppressWarnings("serial")
 public class SignalDuplicationWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -64,7 +64,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
         		} else {
         			setProgress(0);
-        			SignalDuplication signal = new SignalDuplication(INPUT, BAMFiles, Double.parseDouble(txtWindow.getText()));
+        			SignalDuplicationOutput signal = new SignalDuplicationOutput(INPUT, BAMFiles, Double.parseDouble(txtWindow.getText()));
         				
         			signal.addPropertyChangeListener("tag", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -220,6 +220,3 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 		}
 	}
 }
-
-
-	

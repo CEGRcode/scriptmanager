@@ -7,9 +7,8 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
-import objects.CoordinateObjects.GFFCoord;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,20 +21,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Vector;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SpringLayout;
-import javax.swing.JLayeredPane;
-import javax.swing.JTabbedPane;
+import org.jfree.chart.ChartPanel;
+// import org.jfree.chart.JFreeChart;
 
 import charts.LineChart;
+import objects.CoordinateObjects.GFFCoord;
 
 @SuppressWarnings("serial")
-public class SignalDuplication extends JFrame {
-	Vector<File> bamFiles = null;
+public class SignalDuplication {
+	File bamFile = null;
 	ArrayList<GFFCoord> COORD = null;
 	ArrayList<GFFCoord> GENOME = null;
 	
@@ -44,178 +39,135 @@ public class SignalDuplication extends JFrame {
 	
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
-
+	
+	File output;
 	PrintStream OUT = null;
 	
-	final JLayeredPane layeredPane;
-	final JTabbedPane tabbedPane;
-	final JTabbedPane tabbedPane_Duplication;
-	final JTabbedPane tabbedPane_DupStats;
+	ChartPanel lineChart;
 	
-	public SignalDuplication(File in, Vector<File> bam, double w) {
-		setTitle("Signal Duplication Rate");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 800, 600);
-		
-		layeredPane = new JLayeredPane();
-		getContentPane().add(layeredPane, BorderLayout.CENTER);
-		SpringLayout sl_layeredPane = new SpringLayout();
-		layeredPane.setLayout(sl_layeredPane);
-		
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		sl_layeredPane.putConstraint(SpringLayout.NORTH, tabbedPane, 6, SpringLayout.NORTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.WEST, tabbedPane, 6, SpringLayout.WEST, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -6, SpringLayout.SOUTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.EAST, tabbedPane, -6, SpringLayout.EAST, layeredPane);
-		layeredPane.add(tabbedPane);
-			
-		tabbedPane_Duplication = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Duplication Rate", null, tabbedPane_Duplication, null);
-		
-		tabbedPane_DupStats = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Duplication Stats", null, tabbedPane_DupStats, null);
-
-		bamFiles = bam;
+	public SignalDuplication(File in, File bam, double w, PrintStream out) {
+		bamFile = bam;
 		input = in;
 		WINDOW = w;
+		OUT = out;
 	}
 	
 	public void run() throws IOException {
-		//Print TimeStamp
+		
+		//Print TimeStamp & Input
 		String time = getTimeStamp();
-		if(OUT != null) OUT.println(time);
+		printOUT(time);
+		printOUT(bamFile.getName());
 		
 		//Load up GFF file into COORD
 		loadCoord();
 		Collections.sort(COORD, GFFCoord.PeakPositionComparator);
 		Collections.sort(COORD, GFFCoord.PeakChromComparator);
 		
-		for(int x = 0; x < bamFiles.size(); x++) {
-			JTextArea DUP_STATS = new JTextArea();
-			DUP_STATS.setEditable(false);
-			DUP_STATS.append(time + "\n");
-			
-			//Check if BAI index file exists
-			File f = new File(bamFiles.get(x) + ".bai");
-			if(f.exists() && !f.isDirectory()) {
-				if(OUT != null) OUT.println(bamFiles.get(x).getName());
-				if(OUT != null) OUT.println("Chromosome_ID\tChromosome_Size\tAligned_Reads");
-				DUP_STATS.append(bamFiles.get(x).getName() + "\n");
-				DUP_STATS.append("Duplicate Rate\tNumber of Duplicate Molecules\n");
-				
-				//Code to get individual chromosome stats
-				reader = factory.open(bamFiles.get(x));
-				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
-				
-				//Variables to contain duplication rates
-				HashMap<String, Integer> CHROM_COMPLEXITY = null;
-				HashMap<Integer, Integer> SIG_COMPLEXITY = new HashMap<Integer, Integer>();
-				HashMap<Integer, Integer> GEN_COMPLEXITY = new HashMap<Integer, Integer>();
-				
-				for (int z = 0; z < bai.getNumberOfReferences(); z++) {
-					SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
-									
-					//Loop through each chromosome looking at each perfect F-R PE read
-					CHROM_COMPLEXITY = new HashMap<String, Integer>();
-					CloseableIterator<SAMRecord> iter = reader.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
-					while (iter.hasNext()) {
-						//Create the record object 
-						SAMRecord sr = iter.next();
-										
-						if(sr.getReadPairedFlag()) {
-							if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
-								//Unique ID
-								String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
-								//Duplication rate for each chrom determined
-								if(CHROM_COMPLEXITY.isEmpty()) {
-									CHROM_COMPLEXITY.put(tagName, new Integer(1));
-								} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
-									CHROM_COMPLEXITY.put(tagName, new Integer(1));
-								} else if(CHROM_COMPLEXITY.containsKey(tagName)){
-									CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
-								}
+		//Code to get individual chromosome stats
+		reader = factory.open(bamFile);
+		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
+		
+		//Variables to contain duplication rates
+		HashMap<String, Integer> CHROM_COMPLEXITY = null;
+		HashMap<Integer, Integer> SIG_COMPLEXITY = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> GEN_COMPLEXITY = new HashMap<Integer, Integer>();
+		
+		for (int z = 0; z < bai.getNumberOfReferences(); z++) {
+			SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
+							
+			//Loop through each chromosome looking at each perfect F-R PE read
+			CHROM_COMPLEXITY = new HashMap<String, Integer>();
+			CloseableIterator<SAMRecord> iter = reader.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
+			while (iter.hasNext()) {
+				//Create the record object 
+				SAMRecord sr = iter.next();
 								
-							}
+				if(sr.getReadPairedFlag()) {
+					if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
+						//Unique ID
+						String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
+						//Duplication rate for each chrom determined
+						if(CHROM_COMPLEXITY.isEmpty()) {
+							CHROM_COMPLEXITY.put(tagName, new Integer(1));
+						} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
+							CHROM_COMPLEXITY.put(tagName, new Integer(1));
+						} else if(CHROM_COMPLEXITY.containsKey(tagName)){
+							CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
 						}
+						
 					}
-					iter.close();
-					
-					//Load each chromosome up into master duplication hashmap
-					Iterator<String> keys = CHROM_COMPLEXITY.keySet().iterator();
-					while(keys.hasNext()) {
-				         String str = (String) keys.next();
-						//Determine if molecule has ANY overlap with determined signal region
-						if(checkOverlap(seq.getSequenceName(), str, COORD)) { //if so, push into SIGNAL hash
-					         if(SIG_COMPLEXITY.isEmpty()) {
-					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
-					         } else if(!SIG_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
-					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
-					         } else if(SIG_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
-					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) SIG_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
-					         }
-				        } else { 	//else, push into BACKGROUND hash
-					         if(GEN_COMPLEXITY.isEmpty()) {
-					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
-					         } else if(!GEN_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
-					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
-					         } else if(GEN_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
-					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) GEN_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
-					         }
-				        }
-					}			
 				}
-				
-				reader.close();
-				bai.close();
-
-				//Duplication statistics
-				double SIG_UNIQUE_MOLECULES = 0;
-				double GEN_UNIQUE_MOLECULES = 0;
-				String[] BIN_NAME = initializeBIN_Names();
-				ArrayList<Double> S_BIN = new ArrayList<Double>();
-				ArrayList<Double> G_BIN = new ArrayList<Double>();
-				initializeBINS(S_BIN);
-				initializeBINS(G_BIN);
-				
-				Iterator<Integer> Ckeys = SIG_COMPLEXITY.keySet().iterator();
-				while(Ckeys.hasNext()) {
-			         Integer str = (Integer) Ckeys.next();
-			         int index = getBinIndex(str.intValue());
-			         S_BIN.set(index, S_BIN.get(index) + (SIG_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));
-			         SIG_UNIQUE_MOLECULES += SIG_COMPLEXITY.get(str).doubleValue(); 
-				}
-				
-				Iterator<Integer> Gkeys = GEN_COMPLEXITY.keySet().iterator();
-				while(Gkeys.hasNext()) {
-			         Integer str = (Integer) Gkeys.next();
-			         int index = getBinIndex(str.intValue());
-			         G_BIN.set(index, G_BIN.get(index) + (GEN_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));
-			         GEN_UNIQUE_MOLECULES += GEN_COMPLEXITY.get(str).doubleValue(); 
-				}
-
-				for(int z = 0; z < BIN_NAME.length; z++) {
-					DUP_STATS.append(BIN_NAME[z] + "\t" + S_BIN.get(z).toString() + "\n");
-				}
-				DUP_STATS.append("Signal Unique Molecules:\n" + SIG_UNIQUE_MOLECULES  + "\n\n");
-
-				for(int z = 0; z < BIN_NAME.length; z++) {
-					DUP_STATS.append(BIN_NAME[z] + "\t" + G_BIN.get(z).toString() + "\n");
-				}
-				DUP_STATS.append("Genomic Unique Molecules:\n" + GEN_UNIQUE_MOLECULES + "\n");
-								
-				//Add duplication stats to tabbed pane
-				DUP_STATS.setCaretPosition(0);
-				JScrollPane dup_pane = new JScrollPane(DUP_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				tabbedPane_DupStats.add(bamFiles.get(x).getName(), dup_pane);
-				tabbedPane_Duplication.add(bamFiles.get(x).getName(), LineChart.createLineChart(S_BIN, G_BIN, BIN_NAME));
-				
-		        firePropertyChange("bam",x, x + 1);
-
-			} else {
-				if(OUT != null) OUT.println("BAI Index File does not exist for: " + bamFiles.get(x).getName() + "\n");
-				DUP_STATS.append("BAI Index File does not exist for: " + bamFiles.get(x).getName() + "\n\n");
 			}
+			iter.close();
+			
+			//Load each chromosome up into master duplication hashmap
+			Iterator<String> keys = CHROM_COMPLEXITY.keySet().iterator();
+			while(keys.hasNext()) {
+				 String str = (String) keys.next();
+				//Determine if molecule has ANY overlap with determined signal region
+				if(checkOverlap(seq.getSequenceName(), str, COORD)) { //if so, push into SIGNAL hash
+					 if(SIG_COMPLEXITY.isEmpty()) {
+						 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					 } else if(!SIG_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
+						 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					 } else if(SIG_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
+						 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) SIG_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
+					 }
+				} else { 	//else, push into BACKGROUND hash
+					 if(GEN_COMPLEXITY.isEmpty()) {
+						 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					 } else if(!GEN_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
+						 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					 } else if(GEN_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
+						 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) GEN_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
+					 }
+				}
+			}			
 		}
+		
+		reader.close();
+		bai.close();
+
+		//Duplication statistics
+		double SIG_UNIQUE_MOLECULES = 0;
+		double GEN_UNIQUE_MOLECULES = 0;
+		String[] BIN_NAME = initializeBIN_Names();
+		ArrayList<Double> S_BIN = new ArrayList<Double>();
+		ArrayList<Double> G_BIN = new ArrayList<Double>();
+		initializeBINS(S_BIN);
+		initializeBINS(G_BIN);
+		
+		Iterator<Integer> Ckeys = SIG_COMPLEXITY.keySet().iterator();
+		while(Ckeys.hasNext()) {
+			 Integer str = (Integer) Ckeys.next();
+			 int index = getBinIndex(str.intValue());
+			 S_BIN.set(index, S_BIN.get(index) + (SIG_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));
+			 SIG_UNIQUE_MOLECULES += SIG_COMPLEXITY.get(str).doubleValue(); 
+		}
+		
+		Iterator<Integer> Gkeys = GEN_COMPLEXITY.keySet().iterator();
+		while(Gkeys.hasNext()) {
+			 Integer str = (Integer) Gkeys.next();
+			 int index = getBinIndex(str.intValue());
+			 G_BIN.set(index, G_BIN.get(index) + (GEN_COMPLEXITY.get(str).doubleValue() * str.doubleValue()));
+			 GEN_UNIQUE_MOLECULES += GEN_COMPLEXITY.get(str).doubleValue(); 
+		}
+		
+		printOUT("Duplicate Rate\tNumber of Duplicate Molecules");
+		for(int z = 0; z < BIN_NAME.length; z++) {
+			printOUT(BIN_NAME[z] + "\t" + S_BIN.get(z).toString());
+		}
+		printOUT("Signal Unique Molecules:\n" + SIG_UNIQUE_MOLECULES);
+		printOUT("");
+
+		for(int z = 0; z < BIN_NAME.length; z++) {
+			printOUT(BIN_NAME[z] + "\t" + G_BIN.get(z).toString());
+		}
+		printOUT("Genomic Unique Molecules:\n" + GEN_UNIQUE_MOLECULES);
+		
+		lineChart = LineChart.createLineChart(S_BIN, G_BIN, BIN_NAME);
+		
 		if(OUT != null) OUT.close();
 	}
 	
@@ -310,7 +262,7 @@ public class SignalDuplication extends JFrame {
 						if(temp[6].equals("+") || temp[6].equals(".")) { COORD.add(new GFFCoord(temp[0], Integer.parseInt(temp[3]), Integer.parseInt(temp[4]), "+", name)); }
 						else { COORD.add(new GFFCoord(temp[0], Integer.parseInt(temp[3]), Integer.parseInt(temp[4]), "-", name)); }
 					} else {
-						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
+						System.err.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
 					}
 				}
 			}
@@ -318,9 +270,15 @@ public class SignalDuplication extends JFrame {
 		scan.close();
     }
 	
+	private void printOUT(String message){
+		if(OUT!=null) OUT.println(message);
+	}
+	
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
 	}
+	
+	public Component getLineChart(){ return(lineChart); }
 }
