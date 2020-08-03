@@ -40,9 +40,10 @@ public class ExtensionFileFilter extends FileFilter{
         }
         return ext;
     }
-	
+
 	public static String stripExtension(File f) throws IOException {
 // 		String full_dir = f.getCanonicalFile().getParent();
+// 		f.getName().substring(0, f.lastIndexOf('.')) 
 		String[] name = f.getName().split("\\.");
 		String NEWNAME = name[0];
 		for(int x = 1; x < name.length-1; x++) {
@@ -50,6 +51,15 @@ public class ExtensionFileFilter extends FileFilter{
 		}
 		return(NEWNAME);
 // 		return( full_dir + File.separator + NEWNAME );
+	}
+	
+	public static String stripExtensionName(File f) throws IOException {
+		String NAME = f.getName();
+		return(NAME.substring(0, NAME.lastIndexOf('.')));
+	}
+	public static String stripExtensionPath(File f) throws IOException {
+		String NAME = f.getPath();
+		return(NAME.substring(0, NAME.lastIndexOf('.')));
 	}
 	
 	@Override
