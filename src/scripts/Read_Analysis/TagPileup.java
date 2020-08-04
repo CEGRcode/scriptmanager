@@ -20,13 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPOutputStream;
 
-// import javax.swing.JFrame;
-// import javax.swing.JOptionPane;
-// import javax.swing.JScrollPane;
-// import javax.swing.JTextArea;
-// import javax.swing.JLayeredPane;
-// import javax.swing.JTabbedPane;
-// import javax.swing.SpringLayout;
 import org.jfree.chart.ChartPanel;
 
 import charts.CompositePlot;
@@ -37,7 +30,6 @@ import objects.PileupParameters;
 import objects.CoordinateObjects.BEDCoord;
 import scripts.Read_Analysis.PileupScripts.PileupExtract;
 import util.ArrayUtilities;
-// import util.BAMUtilities;
 import util.JTVOutput;
 
 @SuppressWarnings("serial")
@@ -48,7 +40,6 @@ public class TagPileup {
 	PileupParameters PARAM = null;
 	
 	private int STRAND = 0;
-// 	private int CPU = 1;
 	
 	PrintStream COMPOSITE = null;
 	// Generic print stream to accept PrintStream of GZIPOutputStream
@@ -59,7 +50,6 @@ public class TagPileup {
 	
 	Component compositePlot = null;
 	
-// 	String outCompositeFilename;
 	String outMatrixBasename;
 	
 	boolean GUI = false;
@@ -68,46 +58,12 @@ public class TagPileup {
 		BED = be;
 		BAM = ba;
 		PARAM = param;
-// 		STRAND = param.getStrand();
-// 		CPU = param.getCPU();
 		PS = outputwindow_ps;
-// 		outCompositeFilename = outCmp;
 		outMatrixBasename = outMat;
 		GUI = guiStatus;
-		System.err.println("enter TagPileup()");
 	}
 	
 	public void run() throws IOException {
-		
-		System.err.println("enter TagPileup.run()");
-// 		//Check if BAI index file exists for all BAM files
-// 		boolean[] BAMvalid = new boolean[BAMFiles.size()];
-// 		for(int z = 0; z < BAMFiles.size(); z++) {
-// 			File BAM = BAMFiles.get(z);	//Pull current BAM file
-// 			File f = new File(BAM + ".bai"); //Generate file name for BAI index file
-// 			if(!f.exists() || f.isDirectory()) {
-// 				BAMvalid[z] = false;
-// 				JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + BAM.getName());
-// 				System.err.println("BAI Index File does not exist for: " + BAM.getName());
-// 			} else { BAMvalid[z] = true; }
-// 		}
-// 		
-// 		int PROGRESS = 0;
-// 		for(int z = 0; z < BAMFiles.size(); z++) {
-// 			File BAM = BAMFiles.get(z);	//Pull current BAM file
-// 			if(BAMvalid[z]) {
-// 				//Code to standardize tags sequenced to genome size (1 tag / 1 bp)
-// 				if(PARAM.getStandard() && PARAM.getBlacklist() != null) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead())); }
-// 				else if(PARAM.getStandard()) { PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead())); }
-// 				//System.out.println(PARAM.getRatio());
-// 				
-// 				for(int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
-// 					System.out.println("Processing BAM: " + BAM.getName() + "\tCoordinate: " + BEDFiles.get(BED_Index).getName());
-// 
-// 					JTextArea STATS = new JTextArea(); //Generate statistics object
-// 					STATS.setEditable(false); //Make it un-editable
-// 		
-		
 		//Set-up Matrix output writers
 		int STRAND = PARAM.getStrand();
 		if(PARAM.getOutputType() != 0) {
@@ -374,17 +330,8 @@ public class TagPileup {
 		String read = "read1";
 		if(PARAM.getRead() == 1) { read = "read2"; }
 		else if(PARAM.getRead() == 2) { read = "readc"; }
-		String strand = "sense";
-		if(strandnum == 1) { strand = "anti"; }
-		else if(strandnum == 2) { strand = "combined"; }
 		
-		String filename = bedname[0] + "_" + bamname[0] + "_" + read + "_" + strand;
-		if(PARAM.getOutputType() == 1) { filename += ".tab"; }
-		else { filename += ".cdt"; }
-		
-		if(PARAM.getOutputGZIP()) { filename += ".gz"; }
-		
-		return filename;
+		return(generateFileName(bedname[0] + "_" + bamname[0] + "_" + read, strandnum));
 	}
 	
 	public String generateFileName(String basename, int strandnum) {

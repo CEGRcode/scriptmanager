@@ -30,8 +30,6 @@ import scripts.Read_Analysis.TagPileup;
 		sortOptions = false)
 public class TagPileupCLI implements Callable<Integer> {
 	
-	//names = {"-r","--bed-input"}
-	//names = {"-i","--bam-input"}
 	@Parameters( index = "0", description = "The BED file with reference coordinates to pileup on.")
 	private File bedFile;
 	@Parameters( index = "1", description = "The BAM file from which we remove duplicates. Make sure its indexed!")
@@ -45,7 +43,7 @@ public class TagPileupCLI implements Callable<Integer> {
 	OutputOptions outputOptions = new OutputOptions();
 	static class OutputOptions{
 		@Option(names = {"-o", "--output-composite"}, description = "specify output file for composite values")
-		private String outputComposite = null;
+		private String outputComposite = "composite_average.out";
 		@Option(names = {"-M", "--output-matrix"}, description = "specify output basename for matrix files (files each for sense and anti will be output)",
 			arity="0..1")
 		private ArrayList<String> outputMatrix = new ArrayList<String>(Arrays.asList("no","matrix","output"));
@@ -126,58 +124,16 @@ public class TagPileupCLI implements Callable<Integer> {
 		private int MAX_INSERT = -9999;
 	}
 	
-	
-// 	a		all-reads
-// 	b		bin
-// 	c		combined
-// 	d		dry-run
-// 	e
-// 	f		blacklist-filter
-// 	g		gauss-smooth
-// 	G		gauss-val
-// 	h
-// 	i
-// 	j		output-jtv
-// 	k
-// 	l
-// 	m		midpoint
-// 	M		output-matrix
-// 	n		min-insert
-//	N		no-smooth
-// 	o		output-composite
-// 	p		require-pe
-// 	q
-// 	r		
-// 	s		shift
-// 	t		standard (set tags to be equal)
-// 	u
-// 	v
-// 	w		window-smooth
-// 	W		window-val
-// 	x		max-insert
-// 	y
-// 	z		gzip
-// 	1		read1
-// 	2		read2
-// 	--cpu
-	
-	
 	PileupParameters p;
-	
-	
 	
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">TagPileupCLI.call()" );
-		
 		p = new PileupParameters();
-		
 		String validate = validateInput();
-		if(validate.compareTo("")!=0){
+		if(!validate.equals("")){
 			System.err.println(validate);
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
-// 			CommandLine cmd = new CommandLine( this );
-// 			cmd.usage(System.out);
 			return(1);
 		}
 		
@@ -194,21 +150,17 @@ public class TagPileupCLI implements Callable<Integer> {
 		return(0);
 	}
 	
-// 	private String strNotNull(Object o ){
-// 		if(o!=null){ return( o.toString() ); }
-// 		return( "null" );
-// 	}
-	
 	private String validateInput() throws IOException {
 		String r = "";
 		
 		//check input extensions
-		if("bed".compareTo(ExtensionFileFilter.getExtension(bedFile))!=0){
+		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
 			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() +  "\n";
 		}
-		if("bam".compareTo(ExtensionFileFilter.getExtension(bamFile))!=0){
+		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
 			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() +  "\n";
 		}
+		if(!r.equals("")){ return(r); }
 		//check inputs exist
 		if(!bedFile.exists()){
 			r += "(!)BED file does not exist: " + bedFile.getCanonicalPath() +  "\n";
@@ -222,33 +174,41 @@ public class TagPileupCLI implements Callable<Integer> {
 			r += "(!)BAI Index File does not exist for: " + bamFile.getName() +  "\n";
 		}
 		
-		//set default output COMPOSITE filename
-		if(outputOptions.outputComposite==null){
-			outputOptions.outputComposite = "composite_average.out";
-// 			String readString = "read1";
-// 			if(readType.finalRead == 1) { readString = "read2"; }
-// 			else if(readType.finalRead() == 2) { readString = "readc"; }
-// 			outputOptions.outputMatrix[0] = ExtensionFileFilter.stripExtension(bedFile.getName()) + "_" + ExtensionFileFilter.stripExtension(bamFile.getName()) + "_" + readString;
+		//set default output COMPOSITE filename (done by picocli)
+		//check output COMPOSITE filename is valid
+		if(outputOptions.outputComposite!="composite_average.out"){
+			File output = new File(outputOptions.outputComposite);
+			//no check ext
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
 		}
-		//set default output MATRIX filename
+		
+		//set default output MATRIX (if output MATRIX not to be output)
 		if(outputOptions.outputMatrix.size()>1){
 			outputOptions.outputMatrix.set(0,null);
-		} else if(outputOptions.outputMatrix.size()==0){
+		//set default output MATRIX basename (allow scripts/*/TagPileup to generate ret of filename)
+		} else if(outputOptions.outputMatrix.size()==0){  //generate default basename
 			String readString = "read1";
 			if(readType.finalRead == 1) { readString = "read2"; }
 			else if(readType.finalRead == 2) { readString = "readc"; }
-			System.err.println(new File(bedFile.getName()));
-			System.err.println(new File(bamFile.getName()));
-			System.err.println(bedFile.getName());
-			System.err.println(ExtensionFileFilter.stripExtension(new File(bedFile.getName())));
 			outputOptions.outputMatrix.add( 
 				ExtensionFileFilter.stripExtension(new File(bedFile.getName())) + "_" +
 				ExtensionFileFilter.stripExtension(new File(bamFile.getName())) + "_" + readString);
-		}
-		/* <ADD CODE HERE> */ 
 		//check output filename is valid
-		/* <ADD CODE HERE> */
-		//set default output filename (set within scripts/*/TagPileup if input null filenames)
+		}else{										//check basename
+			File output = new File(outputOptions.outputMatrix.get(0));
+			//no extension check b/c basename should have no extension
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output.MATRIX directory exists: " + output.getParent() + "\n";
+			}
+		}
 		
 		//check ReadType, interpret booleans for int value
 		if(readType.read1){ readType.finalRead = 0; }
@@ -357,59 +317,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		p.setMinInsert(filterOptions.MIN_INSERT);
 		p.setMaxInsert(filterOptions.MAX_INSERT);
 		
-// 		System.out.println( "SMOOOOOTH:" );
-// 		System.out.println( "--no-smooth ==> " + strNotNull(p.getTrans()==0) );
-// 		System.out.println( "--window-smooth ==> " + strNotNull(p.getTrans()==1) );
-// 		System.out.println( "\tgetSmooth : " + strNotNull(p.getSmooth()) );
-// 		System.out.println( "--gauss-smooth ==> " + strNotNull(p.getTrans()==2) );
-// 		System.out.println( "\tgetStdSize : " + strNotNull(p.getStdSize()) );
-// 		System.out.println( "\tgetStdNum : " + strNotNull(p.getStdNum()) );
-		
-// 	--separate <sense-color> <anti-color>	indicate we want to differentiate between sense and anti-sense strand piles (default, default=blue,red)
-// 	--combined <combined-color>	indicate we want to combine sense and anti-sense strand piles and color (default=black)
-		
 		return(r);
 	}
 	
 }
-
-
-// 
-// Tag Pileup
-// 	command -i <BED1,...> [-1|-2|-a|-m] [-p] [-n <bp-insert-min>] [-x <bp-insert-max>] \
-// 	[--separate <sense-rgb> <anti-rgb>|--combined <color-rgb>] [--cpu <num-cpus>]
-// 	??????????
-// 	-o <out-path-base> [-f CDT|TAB]
-// 	
-// 	-r	BED
-// 	-i	BAM
-// 	
-// 	-1	pileup read 1 (default)
-// 	-2	pileup read 2
-// 	-a	pileup all reads
-// 	-m	pileup midpoint (require PE)
-// 	
-// 	-p,--mate-pair	require proper paired ends
-// 	-n,--min-insert	<bp-insert-min>	filter by minimum insert size in bp, require PE (default=0)
-// 	-x,--max-insert	<bp-insert-max>	filter by maximum insert size in bp, require PE (default=10000??????????????)
-// 	
-// 	--separate <sense-color> <anti-color>	indicate we want to differentiate between sense and anti-sense strand piles (default, default=blue,red)
-// 	--combined <combined-color>	indicate we want to combine sense and anti-sense strand piles and color (default=black)
-// 	
-// 	--set-tags-to-be-equal	(default=false)
-// 	--bin-size <bp-size>	bin size in bp (default=1)
-// 	--shift <bp-size>	bin size in bp (default=0)
-// 	--cpu <num-cpu>	number of CPUs to use (default=1)
-// 	
-// 	--filter-blacklist <blacklist_fn>	blacklist and something about tags being equal???????????
-// 	
-// 	Smoothing options:
-// 	--no-smoothing	default
-// 	--sliding-window <bin-window-size>	use a sliding window of the indicated number of bins
-// 	--gaussian-smooth <bin-size-sd> <bin-num-sd>	use a gaussian smoothing function with the indicated standard deviation size in number of bins and the indicated number of standard deviations (default-size=5,default-num=3)
-// 	
-// 	-o	output directory/base of composite plot and matrix files (if indicated)
-// 	-f [CDT|TAB]	output matrix file format as either CDT or TAB-delimited (default no matrix file outputted)
-
-
-
