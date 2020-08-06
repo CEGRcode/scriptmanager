@@ -58,7 +58,7 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">BAMtoGFFCLI.call()" );
+		System.err.println( ">BAMtoGFFCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );

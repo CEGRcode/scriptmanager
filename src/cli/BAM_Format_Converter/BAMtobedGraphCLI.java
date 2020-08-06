@@ -54,7 +54,7 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">BAMtobedGraphCLI.call()" );
+		System.err.println( ">BAMtobedGraphCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );

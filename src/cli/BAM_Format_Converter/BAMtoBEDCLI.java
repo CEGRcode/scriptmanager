@@ -58,7 +58,7 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">BAMtoBEDCLI.call()" );
+		System.err.println( ">BAMtoBEDCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );
