@@ -25,7 +25,7 @@ public class SortGFFCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the GFF file to sort")
 	private File gffFile;
 	@Parameters( index = "1", description = "the reference CDT file to sort the input by")
-	private File cdtReference;
+	private File cdtFile;
 	
 	@Option(names = {"-o", "--output"}, description = "specify output file basename (no .cdt/.gff extension, script will add that)")
 	private String outputBasename = null;
@@ -54,7 +54,7 @@ public class SortGFFCLI implements Callable<Integer> {
 		}
 		
 		try{
-			SortGFF.sortGFFbyCDT(outputBasename, gffFile, cdtReference, index[0], index[1]);
+			SortGFF.sortGFFbyCDT(outputBasename, gffFile, cdtFile, index[0], index[1]);
 			System.err.println("Sort Complete");
 		} catch (FileNotFoundException e) {
 			System.err.println("Check your filenames!");
@@ -72,20 +72,20 @@ public class SortGFFCLI implements Callable<Integer> {
 		if(!gffFile.exists()){
 			r += "(!)GFF file does not exist: " + gffFile.getName() + "\n";
 		}
-		if(!cdtReference.exists()){
-			r += "(!)CDT file does not exist: " + cdtReference.getName() + "\n";
+		if(!cdtFile.exists()){
+			r += "(!)CDT file does not exist: " + cdtFile.getName() + "\n";
 		}
 		if(!"".equals(r)){ return(r); }
 		//check input extensions
 		if(!"gff".equals(ExtensionFileFilter.getExtension(gffFile))){
 			r += "(!)Is this a GFF file? Check extension: " + gffFile.getName() + "\n";
 		}
-		if(!"cdt".equals(ExtensionFileFilter.getExtension(cdtReference))){
-			r += "(!)Is this a CDT file? Check extension: " + cdtReference.getName() + "\n";
+		if(!"cdt".equals(ExtensionFileFilter.getExtension(cdtFile))){
+			r += "(!)Is this a CDT file? Check extension: " + cdtFile.getName() + "\n";
 		}
 		// validate CDT as file, with consistent row size, and save row_size value
 		try {
-			CDT_SIZE = SortGFF.parseCDTFile(cdtReference);
+			CDT_SIZE = SortGFF.parseCDTFile(cdtFile);
 		}catch (FileNotFoundException e1){ e1.printStackTrace(); }
 		if(CDT_SIZE==-999){
 			r += "(!)CDT file doesn't have consistent row sizes.";
