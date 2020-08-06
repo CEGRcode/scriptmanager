@@ -76,8 +76,11 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
+		if(inputFiles==null){
+			r += "(!)Please indicate at least one file.\n";
+			return(r);
 		//Import files as Vector list (scan input file if -f flag used)
-		if(fileList){		//load files from input filelist
+		}else if(fileList){		//load files from input filelist
 			if(inputFiles.length>1){
 				r += "(!)Please indicate only one file with bam filepaths when using the -f flag.\n";
 				return(r);
