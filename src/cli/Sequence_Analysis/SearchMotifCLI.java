@@ -24,7 +24,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "The FASTA file in which to search for the motif.")
 	private File fastaFile;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output file")
+	@Option(names = {"-o", "--output"}, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
 	private File output = null;
 	@Option(names = {"-m", "--motif"}, required=true, description = "the IUPAC motif to search for")
 	private String motif;
@@ -33,7 +33,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">SearchMotifCLI.call()" );
+		System.err.println( ">SearchMotifCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );

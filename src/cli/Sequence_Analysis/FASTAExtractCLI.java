@@ -29,7 +29,7 @@ public class FASTAExtractCLI implements Callable<Integer> {
 	private File bedFile;
 	
 	private File input;
-	@Option(names = {"-o", "--output"}, description = "Specify output file ")
+	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <bedFilename>.fa)")
 	private File output = null;
 	@Option(names = {"-c","--coord-header"}, description = "use genome coordinate for output FASTA header (default is to use bed file headers)")
 	private boolean bedHeader = false;
@@ -38,7 +38,7 @@ public class FASTAExtractCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">FASTAExtractCLI.call()" );
+		System.err.println( ">FASTAExtractCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );

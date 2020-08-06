@@ -34,7 +34,7 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	@Parameters( index = "1", description = "the BED file of sequences to extract")
 	private File bedFile;
 	
-	@Option(names = {"-o", "--output-cdt"}, description = "Specify output basename (files for each shape indicated will share this base)")
+	@Option(names = {"-o", "--output"}, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
 	@Option(names = {"--avg-composite"}, description = "Save average composite")
 	private boolean avgComposite = false;
@@ -60,7 +60,7 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">DNAShapefromBEDCLI.call()" );
+		System.err.println( ">DNAShapefromBEDCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );

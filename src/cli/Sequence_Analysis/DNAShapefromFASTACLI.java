@@ -32,7 +32,7 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "FASTA sequence file")
 	private File fastaFile;
 	
-	@Option(names = {"-o", "--output-cdt"}, description = "Specify output basename (files for each shape indicated will share this base)")
+	@Option(names = {"-o", "--output"}, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
 	@Option(names = {"--avg-composite"}, description = "Save average composite")
 	private boolean avgComposite = false;
@@ -56,7 +56,7 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">DNAShapefromFASTACLI.call()" );
+		System.err.println( ">DNAShapefromFASTACLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );

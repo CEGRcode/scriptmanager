@@ -24,14 +24,14 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the FASTA file ")
 	private File fastaFile;
 
-	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with .gff ext)")
+	@Option(names = {"-o", "--output"}, description = "Specify basename for output files (default = <fastaFilename>_RAND.fa)")
 	private File output;
 	
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">RandomizeFASTACLI.call()" );
 		String validate = validateInput();
-		if( validate.compareTo("")!=0 ){
+		if(!validate.equals("")){
 			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			return(1);
