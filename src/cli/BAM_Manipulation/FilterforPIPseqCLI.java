@@ -25,10 +25,10 @@ import scripts.BAM_Manipulation.FilterforPIPseq;
 		sortOptions = false)
 public class FilterforPIPseqCLI implements Callable<Integer> {
 	
-	@Parameters( index = "0", description = "The BAM file from which we filter.")
-	private File bamFile;
-	@Parameters( index = "1", description = "The reference genome FASTA file.")
+	@Parameters( index = "0", description = "The reference genome FASTA file.")
 	private File genomeFASTA;
+	@Parameters( index = "1", description = "The BAM file from which we filter.")
+	private File bamFile;
 	
 	@Option(names = {"-o", "--output"}, description = "specify output file (default=<bamFileNoExt>_PSfilter.bam)")
 	private File output = null;
