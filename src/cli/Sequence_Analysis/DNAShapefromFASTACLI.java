@@ -68,24 +68,19 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 		DNAShapefromFASTA script_obj = new DNAShapefromFASTA(fastaFile, outputBasename, OUTPUT_TYPE, new PrintStream[]{null,null,null,null});
 		script_obj.run();
 		
-// 		// Save Composite Plot
-// 		JFreeChart chart = CompositePlot.createChart(xydata, title, COLORS);
-// 		OutputStream OUT = new FileOutputStream(output);
-// 		ChartUtilities.writeChartAsPNG(OUT, chart, pixelWidth, pixelHeight);
-		
 		// Print Composite Scores
 		try {
 			if(avgComposite){
-				PrintStream COMPOSITE = new PrintStream(new File(outputBasename + "_AVG.out"));
 				String[] headers = new String[]{"AVG_MGW","AVG_PropT","AVG_HelT","AVG_Roll"};
 				for(int t=0; t<OUTPUT_TYPE.length; t++){
+					PrintStream COMPOSITE = new PrintStream(new File(outputBasename + "_" + headers[t] + ".out"));
 					if(OUTPUT_TYPE[t]){
 						double[] AVG = script_obj.getAvg(t);
 						// position vals
 						for(int z = 0; z < AVG.length; z++) {
 							COMPOSITE.print("\t" + z);
 						}
-						COMPOSITE.print("\n"+ExtensionFileFilter.stripExtension(fastaFile)+"_AVG_"+headers[t]);
+						COMPOSITE.print("\n"+ExtensionFileFilter.stripExtension(fastaFile)+"_"+headers[t]);
 						// score vals
 						for(int z = 0; z < AVG.length; z++) {
 							COMPOSITE.print("\t" + AVG[z]);
