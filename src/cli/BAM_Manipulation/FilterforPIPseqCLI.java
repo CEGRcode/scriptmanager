@@ -37,7 +37,7 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">FilterforPIPseqCLI.call()" );
+		System.err.println( ">FilterforPIPseqCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );
