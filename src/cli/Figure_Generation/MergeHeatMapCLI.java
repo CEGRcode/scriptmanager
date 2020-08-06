@@ -21,12 +21,12 @@ import scripts.Figure_Generation.MergeHeatMapPlot;
 		sortOptions = false)
 public class MergeHeatMapCLI implements Callable<Integer> {
 	
-	@Parameters( index = "0", description = "First(sense) PNG heatmap to merge, input1.")
+	@Parameters( index = "0", description = "First(sense) PNG heatmap to merge, input1")
 	private File senseFile;
 	@Parameters( index = "1", description = "Second(anti) PNG heatmap to merge, input2")
 	private File antiFile;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output filename, please use PNG extension\n(default=Input1 filename with \"_merged.png\" appended to the name in working directory of ScriptManager")
+	@Option(names = {"-o", "--output"}, description = "specify output filename, please use PNG extension\n(default=\"<senseFile>_merged.png\" appended to the name in working directory of ScriptManager")
 	private File output = null;
 	
 	@Override
@@ -67,7 +67,7 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 		//set default output filename
 		if(output==null){
 			String NAME = ExtensionFileFilter.stripExtension(senseFile);
-			output = new File(NAME + "_mergedHM.png");
+			output = new File(NAME + "_merged.png");
 		//check output filename is valid
 		}else{
 			//check ext
