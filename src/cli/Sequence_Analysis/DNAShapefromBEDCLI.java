@@ -30,7 +30,7 @@ import scripts.Sequence_Analysis.DNAShapefromBED;
 public class DNAShapefromBEDCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "reference genome FASTA file")
-	private File genomeFile;
+	private File genomeFASTA;
 	@Parameters( index = "1", description = "the BED file of sequences to extract")
 	private File bedFile;
 	
@@ -69,7 +69,7 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		}
 		
 		// Generate Composite Plot
-		DNAShapefromBED script_obj = new DNAShapefromBED(genomeFile, bedFile, outputBasename, OUTPUT_TYPE, force, new PrintStream[]{null,null,null,null});
+		DNAShapefromBED script_obj = new DNAShapefromBED(genomeFASTA, bedFile, outputBasename, OUTPUT_TYPE, force, new PrintStream[]{null,null,null,null});
 		script_obj.run();
 		
 		// Print Composite Scores
@@ -103,17 +103,17 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		String r = "";
 		
 		//check inputs exist
-		if(!genomeFile.exists()){
-			r += "(!)FASTA file does not exist: " + genomeFile.getName() + "\n";
+		if(!genomeFASTA.exists()){
+			r += "(!)FASTA file does not exist: " + genomeFASTA.getName() + "\n";
 		}
 		if(!bedFile.exists()){
 			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
 		}
-		if(!"".equals(r)){ return(r); }
+		if(!r.equals("")){ return(r); }
 		//check input extensions
 		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if(!faFilter.accept(genomeFile)){
-			r += "(!)Is this a FASTA file? Check extension: " + genomeFile.getName() + "\n";
+		if(!faFilter.accept(genomeFASTA)){
+			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
 		}
 		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
 			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";

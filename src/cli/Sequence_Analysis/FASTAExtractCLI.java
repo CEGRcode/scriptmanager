@@ -24,7 +24,7 @@ import scripts.Sequence_Analysis.FASTAExtract;
 public class FASTAExtractCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "reference genome FASTA file")
-	private File genomeFile;
+	private File genomeFASTA;
 	@Parameters( index = "1", description = "the BED file of sequences to extract")
 	private File bedFile;
 	
@@ -46,7 +46,7 @@ public class FASTAExtractCLI implements Callable<Integer> {
 			return(1);
 		}
 		
-		FASTAExtract script_obj = new FASTAExtract(genomeFile, bedFile, output, forceStrand, bedHeader, null);
+		FASTAExtract script_obj = new FASTAExtract(genomeFASTA, bedFile, output, forceStrand, bedHeader, null);
 		script_obj.run();
 		
 		System.err.println("Extraction Complete.");
@@ -57,8 +57,8 @@ public class FASTAExtractCLI implements Callable<Integer> {
 		String r = "";
 		
 		//check inputs exist
-		if(!genomeFile.exists()){
-			r += "(!)FASTA genome ref file does not exist: " + genomeFile.getName() + "\n";
+		if(!genomeFASTA.exists()){
+			r += "(!)FASTA genome ref file does not exist: " + genomeFASTA.getName() + "\n";
 			return(r);
 		}
 		if(!bedFile.exists()){
@@ -67,8 +67,8 @@ public class FASTAExtractCLI implements Callable<Integer> {
 		}
 		//check input extensions
 		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if(!faFilter.accept(genomeFile)){
-			r += "(!)Is this a FASTA file? Check extension: " + genomeFile.getName() + "\n";
+		if(!faFilter.accept(genomeFASTA)){
+			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
 		}
 		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
 			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
