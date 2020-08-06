@@ -72,17 +72,12 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		DNAShapefromBED script_obj = new DNAShapefromBED(genomeFile, bedFile, outputBasename, OUTPUT_TYPE, force, new PrintStream[]{null,null,null,null});
 		script_obj.run();
 		
-// 		// Save Composite Plot
-// 		JFreeChart chart = CompositePlot.createChart(xydata, title, COLORS);
-// 		OutputStream OUT = new FileOutputStream(output);
-// 		ChartUtilities.writeChartAsPNG(OUT, chart, pixelWidth, pixelHeight);
-		
 		// Print Composite Scores
 		try {
 			if(avgComposite){
-				PrintStream COMPOSITE = new PrintStream(new File(outputBasename + "_AVG.out"));
 				String[] headers = new String[]{"AVG_MGW","AVG_PropT","AVG_HelT","AVG_Roll"};
 				for(int t=0; t<OUTPUT_TYPE.length; t++){
+					PrintStream COMPOSITE = new PrintStream(new File(outputBasename + "_" + headers[t] + ".out"));
 					if(OUTPUT_TYPE[t]){
 						double[] AVG = script_obj.getAvg(t);
 						// position vals
@@ -103,7 +98,6 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		System.err.println("Shapes Calculated.");
 		return(0);
 	}
-	
 	
 	private String validateInput() throws IOException {
 		String r = "";
