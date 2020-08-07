@@ -1,7 +1,13 @@
 package scripts.Read_Analysis;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.ValidationStringency;
+import htsjdk.samtools.util.CloseableIterator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -17,23 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.SpringLayout;
+import org.jfree.chart.ChartPanel;
 
-import htsjdk.samtools.AbstractBAMFileIndex;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SAMSequenceRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
-import htsjdk.samtools.util.CloseableIterator;
-import objects.CoordinateObjects.BEDCoord;
 import charts.ScalingPlotter;
+import objects.CoordinateObjects.BEDCoord;
 
 /**
  * NCIS code adapted from Mahony Lab
@@ -42,19 +35,19 @@ import charts.ScalingPlotter;
  */
 
 @SuppressWarnings("serial")
-public class ScalingFactor extends JFrame {
+public class ScalingFactor {
 	
-	ArrayList<File> BAMFiles = null;
+	private File BAMFile = null;
 	private File BLACKLISTFile = null;
 	private File CONTROL = null;
-	private String OUTPUTPATH = null;
+	private String OUTBASENAME = null;
 	private boolean OUTPUTSTATUS = false;
 	private String FILEID = null;
 	
 	private int scaleType = -1;
 	private int windowSize = 500;
 	private double minFraction = 0.75;
-
+	
 	private List<String> chromName = null;
 	private List<Long> chromLength = null;
 	
@@ -64,45 +57,22 @@ public class ScalingFactor extends JFrame {
 	private double CTagcount = 0;
 	
 	private HashMap<String, ArrayList<BEDCoord>> BLACKLIST = null;
-	private ArrayList<Double> SCALINGFACTORS = new ArrayList<Double>();
+	private double SCALE = 1;
 	
-	final JLayeredPane layeredPane;
-	final JTabbedPane tabbedPane;
-	final JTabbedPane tabbedPane_CummulativeScatterplot;
-	final JTabbedPane tabbedPane_MarginalScatterplot;
+	private ChartPanel CC_plot; //Cumulative
+	private ChartPanel M_plot; //Marginal Plot
 	
-	public ScalingFactor(ArrayList<File> b, File bl, File c, String out_path, boolean out, int scale, int win, double min) {
-		setTitle("Scaling Factor");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 800, 800);
-		
-		layeredPane = new JLayeredPane();
-		getContentPane().add(layeredPane, BorderLayout.CENTER);
-		SpringLayout sl_layeredPane = new SpringLayout();
-		layeredPane.setLayout(sl_layeredPane);
-		
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		sl_layeredPane.putConstraint(SpringLayout.NORTH, tabbedPane, 6, SpringLayout.NORTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.WEST, tabbedPane, 6, SpringLayout.WEST, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -6, SpringLayout.SOUTH, layeredPane);
-		sl_layeredPane.putConstraint(SpringLayout.EAST, tabbedPane, -6, SpringLayout.EAST, layeredPane);
-		layeredPane.add(tabbedPane);
-				
-		BAMFiles = b;
+	private String dialogMessage = null;
+	
+	public ScalingFactor(File bamFile, File bl, File c, String out_basename, boolean out, int scale, int win, double min) {
+		BAMFile = bamFile;
 		BLACKLISTFile = bl;
 		CONTROL = c;
-		OUTPUTPATH = out_path;
+		OUTBASENAME = out_basename;
 		OUTPUTSTATUS = out;
 		scaleType = scale;
 		windowSize = win;
 		minFraction = min;
-		
-		tabbedPane_CummulativeScatterplot = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_MarginalScatterplot = new JTabbedPane(JTabbedPane.TOP);		
-		if(scaleType != 1) {
-			tabbedPane.addTab("Cumulative Count Scaling Ratio", null, tabbedPane_CummulativeScatterplot, null);
-			tabbedPane.addTab("Marginal Signal/Control Ratio", null, tabbedPane_MarginalScatterplot, null);
-		}
 	}
 	
 	public void run() throws IOException {
@@ -111,85 +81,73 @@ public class ScalingFactor extends JFrame {
 		
 		//Load up the Control File once per run
 		if(scaleType != 1) {
-			System.out.println(getTimeStamp() + "\nLoading control genome array...");
+			System.err.println(getTimeStamp() + "\nLoading control genome array...");
 			initalizeGenomeMetainformation(CONTROL);
 			Cgenome = initializeList(CONTROL, false);
-			System.out.println("Array loaded");
+			System.err.println("Array loaded");
 		}
 		
-		PrintStream OUT = null;
-		if(OUTPUTSTATUS) { OUT = new PrintStream(OUTPUTPATH + File.separator + "ScalingFactors.out"); }
-		
-		for(int z = 0; z < BAMFiles.size(); z++) {
-			File SAMPLE = BAMFiles.get(z);	//Pull current BAM file
-			File f = new File(SAMPLE + ".bai"); //Generate file name for BAI index file
-			//Check if BAI index file exists
-			if(!f.exists() || f.isDirectory()) { JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + SAMPLE.getName()); }
-			else {
-				System.out.println(getTimeStamp());
-				FILEID = SAMPLE.getName();
-				System.out.println("Sample file:\t" + FILEID);
-				if(CONTROL != null) { System.out.println("Control file:\t" + CONTROL.getName()); }
+		File f = new File(BAMFile + ".bai"); //Generate file name for BAI index file
+		//Check if BAI index file exists
+		if(!f.exists() || f.isDirectory()) { 
+			dialogMessage = "BAI Index File does not exist for: " + BAMFile.getName();
+			System.err.println(dialogMessage);
+		} else {
+			System.err.println(getTimeStamp());
+			FILEID = BAMFile.getName();
+			System.err.println("Sample file:\t" + FILEID);
+			if(CONTROL != null) { System.err.println("Control file:\t" + CONTROL.getName()); }
 
-				double SCALE = 1;
-				if(scaleType == 1) {
-					initalizeGenomeMetainformation(SAMPLE);
-					Sgenome = initializeList(SAMPLE, true);
-					double genomeSize = 0;
-					for(int x = 0; x < chromLength.size(); x++) { genomeSize += chromLength.get(x); }
-					if(genomeSize != 0) { SCALE = genomeSize / STagcount; }
-					System.out.println("Sample tags: " + STagcount);
-					System.out.println("Genome size: " + genomeSize);
-					System.out.println("Total tag ratio: " + SCALE);
-					SCALINGFACTORS.add(SCALE);
+			SCALE = 1;
+			if(scaleType == 1) {
+				initalizeGenomeMetainformation(BAMFile);
+				Sgenome = initializeList(BAMFile, true);
+				double genomeSize = 0;
+				for(int x = 0; x < chromLength.size(); x++) { genomeSize += chromLength.get(x); }
+				if(genomeSize != 0) { SCALE = genomeSize / STagcount; }
+				System.err.println("Sample tags: " + STagcount);
+				System.err.println("Genome size: " + genomeSize);
+				System.err.println("Total tag ratio: " + SCALE);
+			} else {
+				if(verifyFiles()) {
+					System.err.println("\nLoading sample genome array...");
+					Sgenome = initializeList(BAMFile, true);
+					System.err.println("Array loaded");
+					System.err.println("Sample tags: " + STagcount);
+					System.err.println("Control tags: " + CTagcount);
+					System.err.println("Bin count: " + Sgenome.size());
+					
+					if(scaleType == 2) {
+						System.err.println("\nCalculating NCIS scaling ratio...");
+						SCALE = 1 / scalingRatioByNCIS(Sgenome, Cgenome, OUTBASENAME, FILEID, minFraction);
+						System.err.println("NCIS sample scaling ratio: " + SCALE);
+					} else if(scaleType == 3) {
+						System.err.println("\nCalculating Total tag NCIS scaling ratio...");
+						SCALE = 1 / scalingRatioByHitRatioAndNCIS(Sgenome, Cgenome, STagcount, CTagcount, OUTBASENAME, FILEID, minFraction);
+						System.err.println("NCIS with Total Tag sample scaling ratio: " + SCALE);
+					}
 				} else {
-					if(verifyFiles(SAMPLE)) {
-						System.out.println("\nLoading sample genome array...");
-						Sgenome = initializeList(SAMPLE, true);
-						System.out.println("Array loaded");
-						System.out.println("Sample tags: " + STagcount);
-						System.out.println("Control tags: " + CTagcount);
-						System.out.println("Bin count: " + Sgenome.size());
-						
-						if(scaleType == 2) {
-							System.out.println("\nCalculating NCIS scaling ratio...");
-							SCALE = 1 / scalingRatioByNCIS(Sgenome, Cgenome, OUTPUTPATH, FILEID, minFraction);
-							System.out.println("NCIS sample scaling ratio: " + SCALE);
-						} else if(scaleType == 3) {
-							System.out.println("\nCalculating Total tag NCIS scaling ratio...");
-							SCALE = 1 / scalingRatioByHitRatioAndNCIS(Sgenome, Cgenome, STagcount, CTagcount, OUTPUTPATH, FILEID, minFraction);
-							System.out.println("NCIS with Total Tag sample scaling ratio: " + SCALE);
-						}
-						SCALINGFACTORS.add(SCALE);
-					} else {
-						SCALINGFACTORS.add(Double.NaN);
-					}
+					SCALE = Double.NaN;
 				}
-				
-				//Output scaling factor is user-specified
-				if(OUTPUTSTATUS) {
-					OUT.println("Sample file:\t" + SAMPLE);
-					if(scaleType == 1) { OUT.println("Scaling type:\tTotalTag"); }
-					else {
-						OUT.println("Control file:\t" + CONTROL);
-						if(scaleType == 2) { OUT.println("Scaling type:\tNCIS"); }
-						else if(scaleType == 3) { OUT.println("Scaling type:\tTotalTag with NCIS"); }
-						OUT.println("Window size (bp):\t" + windowSize);
-						OUT.println("Minimum fraction:\t" + minFraction);
-					}
-					OUT.println("Scaling factor:\t" + SCALE);
-				}
-				System.out.println(getTimeStamp());
 			}
-	        firePropertyChange("scale", z, (z + 1));
-		}
-		//Close output Printstream if open
-		if(OUTPUTSTATUS) { OUT.close(); }
 		
-		//Make frame visible at completion of correlations if not already visible
-		if(!this.isVisible()) { this.setVisible(true); }
-		tabbedPane.addTab("Scaling Factor", makeTablePanel(SCALINGFACTORS));
-
+			//Output scaling factor is user-specified
+			if(OUTPUTSTATUS) {
+				PrintStream OUT = new PrintStream(new File(OUTBASENAME+"_ScalingFactors.out"));
+				OUT.println("Sample file:\t" + BAMFile);
+				if(scaleType == 1) { OUT.println("Scaling type:\tTotalTag"); }
+				else {
+					OUT.println("Control file:\t" + CONTROL);
+					if(scaleType == 2) { OUT.println("Scaling type:\tNCIS"); }
+					else if(scaleType == 3) { OUT.println("Scaling type:\tTotalTag with NCIS"); }
+					OUT.println("Window size (bp):\t" + windowSize);
+					OUT.println("Minimum fraction:\t" + minFraction);
+				}
+				OUT.println("Scaling factor:\t" + SCALE);
+				OUT.close();
+			}
+			System.err.println(getTimeStamp());
+		}
 	}
 	
 	public List<Float> initializeList(File BAM, boolean sample) {
@@ -300,28 +258,28 @@ public class ScalingFactor extends JFrame {
 		Sbai.close();
 	}
 	
-	public boolean verifyFiles(File SAMPLE) throws IOException {
+	public boolean verifyFiles() throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
-		SamReader Sreader = factory.open(SAMPLE);
+		SamReader Sreader = factory.open(BAMFile);
 		SamReader Creader = factory.open(CONTROL);
 		AbstractBAMFileIndex Sbai = (AbstractBAMFileIndex) Sreader.indexing().getIndex();
 		AbstractBAMFileIndex Cbai = (AbstractBAMFileIndex) Creader.indexing().getIndex();
 		if(Sbai.getNumberOfReferences() != Cbai.getNumberOfReferences()) {
-			JOptionPane.showMessageDialog(null, "Unequal number of chromosomes between sample and control!!!");
-			System.err.println("Unequal number of chromosomes between sample and control!!!!");
+			dialogMessage = "Unequal number of chromosomes between sample and control!!!";
+			System.err.println(dialogMessage);
 			return false;
 		}
 		for (int z = 0; z < Sbai.getNumberOfReferences(); z++) {
 			SAMSequenceRecord Sseq = Sreader.getFileHeader().getSequence(z);
 			SAMSequenceRecord Cseq = Creader.getFileHeader().getSequence(z);
 			if(!Sseq.getSequenceName().equals(Cseq.getSequenceName())) {
-				JOptionPane.showMessageDialog(null, "Chromosome names do not match!!!\n" + Sseq.getSequenceName() + "\n" + Cseq.getSequenceName());
-				System.err.println("Chromosome names do not match!!!\n" + Sseq.getSequenceName() + "\n" + Cseq.getSequenceName());
+				dialogMessage = "Chromosome names do not match!!!\n" + Sseq.getSequenceName() + "\n" + Cseq.getSequenceName();
+				System.err.println(dialogMessage);
 				return false;
 			}
 			if(Sseq.getSequenceLength() != Cseq.getSequenceLength()) {
-				JOptionPane.showMessageDialog(null, "Chromosome lengths do not match!!!\n" + Sseq.getSequenceName() + "\t" + Sseq.getSequenceLength() + "\n" + Cseq.getSequenceName() + "\t" + Cseq.getSequenceLength());
-				System.err.println("Chromosome lengths do not match!!!\n" + Sseq.getSequenceName() + "\t" + Sseq.getSequenceLength() + "\n" + Cseq.getSequenceName() + "\t" + Cseq.getSequenceLength());
+				dialogMessage = "Chromosome lengths do not match!!!\n" + Sseq.getSequenceName() + "\t" + Sseq.getSequenceLength() + "\n" + Cseq.getSequenceName() + "\t" + Cseq.getSequenceLength();
+				System.err.println(dialogMessage);
 				return false;
 			}
 		}
@@ -461,7 +419,7 @@ public class ScalingFactor extends JFrame {
 		
 	}
 	
-	public void plotGraphs(List<PairedCounts> counts, double totalAtScaling, double scalingRatio, String outpath, String fileid, String scaletype) {
+	public void plotGraphs(List<PairedCounts> counts, double totalAtScaling, double scalingRatio, String outbase, String fileid, String scaletype) {
 		//Scaling plot generation
 	 	//Cumulative ratio vs bin total
 		List<Double> bintotals=new ArrayList<Double>();
@@ -496,45 +454,29 @@ public class ScalingFactor extends JFrame {
 			}
 		}
 		//Generate images
-		tabbedPane_CummulativeScatterplot.add(fileid, ScalingPlotter.generateXYplot(bintotals, ratios, totalAtScaling, scalingRatio, fileid + " " + scaletype + " plot", "Binned Total Tag Count", "Cumulative Count Scaling Ratio"));
-		tabbedPane_MarginalScatterplot.add(fileid, ScalingPlotter.generateXYplot(bintot, mratios, totalAtScaling, scalingRatio, fileid + " " + scaletype + " plot", "Binned Total Tag Count", "Marginal Signal/Control Ratio"));
-		//Make frame visible at completion of correlations if not already visible
-		if(!this.isVisible()) { this.setVisible(true); }
+		CC_plot = ScalingPlotter.generateXYplot(bintotals, ratios, totalAtScaling, scalingRatio, fileid + " " + scaletype + " plot", "Binned Total Tag Count", "Cumulative Count Scaling Ratio");
+		M_plot = ScalingPlotter.generateXYplot(bintot, mratios, totalAtScaling, scalingRatio, fileid + " " + scaletype + " plot", "Binned Total Tag Count", "Marginal Signal/Control Ratio");
 		
 		if(OUTPUTSTATUS) {
 			//Print data points to files
 			try {
-				FileWriter Cfout = new FileWriter(outpath + File.separator + fileid + "." + scaletype + "_scaling-ccr.count");
+				FileWriter Cfout = new FileWriter(outbase + "." + scaletype + "_scaling-ccr.count");
 				for(int d=0; d<bintotals.size(); d++) { Cfout.write(bintotals.get(d)+"\t"+ratios.get(d)+"\n"); }
 				Cfout.close();
-				FileWriter Mfout = new FileWriter(outpath + File.separator + fileid + "." + scaletype + "_scaling-marginal.count");
+				FileWriter Mfout = new FileWriter(outbase + "." + scaletype + "_scaling-marginal.count");
 				for(int d=0; d<bintot.size(); d++) { Mfout.write(bintot.get(d)+"\t"+mratios.get(d)+"\n"); }
 				Mfout.close();
 			} catch (IOException e) { e.printStackTrace(); }
 		}
 	}
 	
-	public JScrollPane makeTablePanel(ArrayList<Double> SCALE) {
-		JTable table = new JTable(SCALE.size(), 2);
-		table.setName("Scaling Factors");
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		for(int i = 0; i < SCALE.size(); i++) {
-			table.setValueAt(BAMFiles.get(i).getName(), i, 0);
-			table.setValueAt(SCALE.get(i).doubleValue(), i, 1);
-		}
-		table.getColumnModel().getColumn(0).setHeaderValue("Experiment");
-		table.getColumnModel().getColumn(1).setHeaderValue("Scaling Factor");
-		table.setPreferredSize(table.getPreferredSize());
-		// Allow for the selection of multiple OR individual cells across either rows or columns
-		table.setCellSelectionEnabled(true);
-		table.setColumnSelectionAllowed(true);
-		table.setRowSelectionAllowed(true);
-		
-		JScrollPane pane = new JScrollPane(table);
-		table.setFillsViewportHeight(true);
-		pane.setPreferredSize(new Dimension(590, 590));
-		return pane;
-	}
+	public ChartPanel getCCPlot() {return(CC_plot);}
+	
+	public ChartPanel getMPlot() {return(M_plot);}
+	
+	public double getScalingFactor() {return(SCALE);}
+	
+	public String getDialogMessage() {return(dialogMessage);}
 	
 	private static String getTimeStamp() {
 		Date date= new Date();

@@ -104,7 +104,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		        			if(OUTPUTPATH == null) { OUTPUTPATH = new File(System.getProperty("user.dir")); }
 		        			if(rdbtnFilespecifcScaling.isSelected()) { SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString()); }
 		        			//System.out.println(SCALE);
-		        			ScaleMatrix scale = new ScaleMatrix(TABFiles.get(x), OUTPUTPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
+		        			String[] FILEID = TABFiles.get(x).getName().split("\\.");
+		        			File OUT = new File(OUTPUTPATH + File.separator + FILEID[0] + "_SCALE." + FILEID[FILEID.length - 1]);
+		        			ScaleMatrix scale = new ScaleMatrix(TABFiles.get(x), OUT, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
 		        			scale.run();
 		        			
 		        			int percentComplete = (int)(((double)(x + 1) / TABFiles.size()) * 100);

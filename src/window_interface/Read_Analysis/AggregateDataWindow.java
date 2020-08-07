@@ -35,6 +35,7 @@ import java.beans.PropertyChangeListener;
 
 import util.FileSelection;
 import scripts.Read_Analysis.AggregateData;
+import window_interface.Read_Analysis.AggregateDataOutput;
 
 @SuppressWarnings("serial")
 public class AggregateDataWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -71,7 +72,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
         		} else if(Integer.parseInt(txtCol.getText()) < 1) {
         			JOptionPane.showMessageDialog(null, "Invalid Start Column!!! Must be larger than 0 (1-based)");
         		} else {
-		        	AggregateData parse = new AggregateData(SUMFiles, OUTPUT_PATH, chckbxMergeToOne.isSelected(), Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), cmbMethod.getSelectedIndex());
+		        	AggregateDataOutput parse = new AggregateDataOutput(SUMFiles, OUTPUT_PATH, chckbxMergeToOne.isSelected(), Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), cmbMethod.getSelectedIndex());
 		        	
 		        	parse.addPropertyChangeListener("file", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {

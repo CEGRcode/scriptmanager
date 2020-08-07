@@ -8,12 +8,14 @@ import picocli.CommandLine.Parameters;
 import java.util.concurrent.Callable;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
 	Read_AnalysisCLI/SimilarityMatrixCLI
 */
 @Command(name = "similarity-matrix", mixinStandardHelpOptions = true,
-		description = "")
+		description = "",
+		sortOptions = false)
 public class SimilarityMatrixCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "")
@@ -24,9 +26,21 @@ public class SimilarityMatrixCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.out.println( ">SimilarityMatrixCLI.call()" );
-// 		SEStats stat = new SEStats( bamFile, output );		
+		System.err.println( ">SimilarityMatrixCLI.call()" );
+		String validate = validateInput();
+		if(!validate.equals("")){
+			System.err.println( validate );
+			System.err.println("Invalid input. Check usage using '-h' or '--help'");
+			return(1);
+		}
+		
 		return(0);
+	}
+	
+	private String validateInput() throws IOException {
+		String r = "";
+		
+		return(r);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package scripts.Read_Analysis;
+package window_interface.Read_Analysis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,10 +7,13 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+
 import util.ArrayUtilities;
+import scripts.Read_Analysis.AggregateData;
 
 @SuppressWarnings("serial")
-public class AggregateData {
+public class AggregateDataOutput extends JFrame {
 	
 	private ArrayList<File> INPUT = null;
 	private File OUT_PATH = null;
@@ -20,7 +23,7 @@ public class AggregateData {
 	private int METRIC = 0;
 	private PrintStream OUT;
 	
-	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
+	public AggregateDataOutput(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
 		INPUT = in;
 		OUT_PATH = out;
 		MERGE = m;
@@ -33,7 +36,7 @@ public class AggregateData {
 		if(!MERGE) {
 			for(int x = 0; x < INPUT.size(); x++) {
 				outputFileScore(INPUT.get(x));
-// 		        firePropertyChange("file", x, x + 1);							
+		        firePropertyChange("file", x, x + 1);								
 			}
 		} else {
 			ArrayList<ArrayList<Double>> MATRIX = new ArrayList<ArrayList<Double>>();
@@ -75,11 +78,10 @@ public class AggregateData {
 				MATRIX.add(scorearray);
 				MATRIXID.add(idarray);
 			}
-			
+
 			String name = "ALL_SCORES.out";
-			if(OUT_PATH==null) { OUT = new PrintStream(new File(name)); }
-			else if(!OUT_PATH.isDirectory()) { OUT = new PrintStream( OUT_PATH ); }
-			else { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name)); }
+			if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name)); }
+			else { OUT = new PrintStream(new File(name)); }
 
 			//Check all arrays are the same size
 			int ARRAYLENGTH = MATRIX.get(0).size();
