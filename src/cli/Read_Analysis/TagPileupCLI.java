@@ -51,9 +51,9 @@ public class TagPileupCLI implements Callable<Integer> {
 // 		private boolean jtv = false;
 		@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
 		private boolean zip = false;
-		@Option(names = {"--cdt"}, description = "output compressed output (default=true)")
+		@Option(names = {"--cdt"}, description = "output matrix in cdt format (default)")
 		private boolean cdt = false;
-		@Option(names = {"--tab"}, description = "output compressed output (default=false)")
+		@Option(names = {"--tab"}, description = "output matrix in tab format")
 		private boolean tab = false;
 	}
 	
@@ -83,7 +83,7 @@ public class TagPileupCLI implements Callable<Integer> {
 	}
 	
 	//Smooth
-	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nComposite Transformation/smoothing parameters:%n\t@|fg(red) (select no more than one of these options)|@%n")
+	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nComposite Transformation/Smoothing Options:%n\t@|fg(red) (select no more than one of these options)|@%n")
 	SmoothMethod smoothType = new SmoothMethod();
 	static class SmoothMethod {
 		@Option(names = {"-N","--no-smooth"}, description = "no smoothing applied to composite (default)")
