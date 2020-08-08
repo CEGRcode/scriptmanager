@@ -17,6 +17,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,18 +25,15 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scripts.Read_Analysis.SimilarityMatrix;
-
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-
 import util.FileSelection;
+import scripts.Read_Analysis.SimilarityMatrix;
 
 @SuppressWarnings("serial")
 public class SimilarityMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -233,6 +231,3 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 		}
 	}
 }
-
-
-	

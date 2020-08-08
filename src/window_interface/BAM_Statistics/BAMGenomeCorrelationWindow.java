@@ -1,43 +1,42 @@
 package window_interface.BAM_Statistics;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JCheckBox;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JProgressBar;
-
-import window_interface.BAM_Statistics.BAMGenomeCorrelationOutput;
-import util.FileSelection;
-
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingWorker;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import util.FileSelection;
+import window_interface.BAM_Statistics.BAMGenomeCorrelationOutput;
 
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -141,7 +140,7 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
+				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);

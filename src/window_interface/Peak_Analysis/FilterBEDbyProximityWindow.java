@@ -1,20 +1,5 @@
 package window_interface.Peak_Analysis;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.SpringLayout;
-import javax.swing.SwingWorker;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -27,8 +12,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import window_interface.Peak_Analysis.FilterBEDbyProximityOutput;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+
 import util.FileSelection;
+import window_interface.Peak_Analysis.FilterBEDbyProximityOutput;
 
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -95,7 +96,7 @@ public Task task;
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 5, SpringLayout.WEST, contentPane);
 		btnLoadBedFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGenomeFiles = FileSelection.getBEDFiles(fc);
+				File[] newGenomeFiles = FileSelection.getFiles(fc,"bed");
 				if(newGenomeFiles != null) {
 					for(int x = 0; x < newGenomeFiles.length; x++) { 
 						BEDFiles.add(newGenomeFiles[x]);
@@ -212,5 +213,6 @@ public Task task;
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
-	}	
+	}
+	
 }

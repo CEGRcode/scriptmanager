@@ -17,6 +17,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,7 +27,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 
 import scripts.BAM_Manipulation.BAMFileSort;
 import util.FileSelection;
@@ -101,7 +101,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
+				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);

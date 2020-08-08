@@ -122,7 +122,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						BEDFiles.add(newBEDFiles[x]);
@@ -229,7 +229,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
         
         btnLoadGenome.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		File temp = FileSelection.getFASTAFile(fc);
+        		File temp = FileSelection.getFile(fc,"fa");
 				if(temp != null) {
 					INPUT = temp;
 					lblGenome.setText(INPUT.getName());

@@ -1,39 +1,38 @@
 package window_interface.Coordinate_Manipulation.GFF_Manipulation;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Scanner;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.SpringLayout;
-import javax.swing.SwingWorker;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
 
-import scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+
 import util.FileSelection;
+import scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
 @SuppressWarnings("serial")
 public class SortGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -280,7 +279,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGFFFile, 10, SpringLayout.NORTH, contentPane);
 		btnLoadGFFFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File newBEDFile = FileSelection.getBEDFile(fc);
+				File newBEDFile = FileSelection.getFile(fc,"bed");
 				if(newBEDFile != null) {
 					GFF_File = newBEDFile;
 					lblGFFFile.setText(GFF_File.getName());
@@ -299,7 +298,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadCdtFile, 0, SpringLayout.WEST, rdbtnSortbyCenter);
 		btnLoadCdtFile.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		File newCDTFile = FileSelection.getCDTFile(fc);
+	    		File newCDTFile = FileSelection.getFile(fc,"cdt");
 				if(newCDTFile != null) {
 					CDT_File = newCDTFile;
 					lblCDTFile.setText(CDT_File.getName());
@@ -365,7 +364,6 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		}
 	}
     
-	
 	// This function is almost exactly copied from window/*/SortBEDWindow & scripts/*/SortBED & scripts/*/SortGFF...good practice to merge at some point.
 	public Integer parseCDTFile(File CDT) throws FileNotFoundException {
 		Scanner scan = new Scanner(CDT);
@@ -390,6 +388,3 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		else { return -999; }
 	}
 }
-
-
-	

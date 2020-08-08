@@ -30,21 +30,19 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import scripts.Read_Analysis.ScaleMatrix;
-
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.JTable;
-
 import util.FileSelection;
+import scripts.Read_Analysis.ScaleMatrix;
 
 @SuppressWarnings("serial")
 public class ScaleMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -438,6 +436,3 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	   }
 	}
 }
-
-
-	

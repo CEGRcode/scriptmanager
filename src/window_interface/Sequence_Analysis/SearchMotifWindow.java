@@ -1,19 +1,8 @@
 package window_interface.Sequence_Analysis;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.SpringLayout;
-import javax.swing.SwingWorker;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,11 +12,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextField;
-
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
 import window_interface.Sequence_Analysis.SearchMotifOutput;
@@ -135,8 +134,6 @@ public Task task;
 		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblCurrentOutput);
 		
-		
-		
 		JButton btnSearch = new JButton("Search");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnSearch, 150, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnSearch, -150, SpringLayout.EAST, contentPane);
@@ -190,7 +187,7 @@ public Task task;
 		
 		btnLoadFASTA.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGenomeFiles = FileSelection.getFASTAFiles(fc);
+				File[] newGenomeFiles = FileSelection.getFiles(fc,"fa");
 				if(newGenomeFiles != null) {
 					for(int x = 0; x < newGenomeFiles.length; x++) { 
 						GenomeFiles.add(newGenomeFiles[x]);

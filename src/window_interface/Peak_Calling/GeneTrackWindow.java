@@ -1,42 +1,39 @@
 package window_interface.Peak_Calling;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import scripts.Peak_Calling.GeneTrack;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JCheckBox;
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JLabel;
-
-import java.awt.Font;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
+import scripts.Peak_Calling.GeneTrack;
 
 @SuppressWarnings("serial")
 public class GeneTrackWindow extends JFrame implements ActionListener, PropertyChangeListener {

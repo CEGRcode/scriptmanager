@@ -1,19 +1,5 @@
 package window_interface.Peak_Analysis;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.SpringLayout;
-import javax.swing.SwingWorker;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -25,8 +11,23 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 
-import scripts.Peak_Analysis.RandomCoordinate;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+
 import util.FileSelection;
+import scripts.Peak_Analysis.RandomCoordinate;
 
 @SuppressWarnings("serial")
 public class RandomCoordinateWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -1,26 +1,5 @@
 package window_interface.BAM_Format_Converter;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JRadioButton;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -32,12 +11,32 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import scripts.BAM_Format_Converter.BAMtobedGraph;
 
 import window_interface.BAM_Format_Converter.BAMtobedGraphOutput;
 
@@ -137,7 +136,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
+				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);

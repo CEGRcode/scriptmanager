@@ -123,7 +123,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						BEDFiles.add(newBEDFiles[x]);
@@ -248,6 +248,3 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
     
 
 }
-
-
-	

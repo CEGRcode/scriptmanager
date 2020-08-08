@@ -1,28 +1,5 @@
 package window_interface.Peak_Analysis;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import scripts.Peak_Analysis.SignalDuplication;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -30,6 +7,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
 import window_interface.Peak_Analysis.SignalDuplicationOutput;
@@ -115,7 +112,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getBAMFiles(fc);
+				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) { 
 						BAMFiles.add(newBAMFiles[x]);
@@ -168,7 +165,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 
         btnLoadGFF.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		File temp = FileSelection.getGFFFile(fc);
+        		File temp = FileSelection.getFile(fc,"gff");
 				if(temp != null) {
 					INPUT = temp;
 					lblGFFFile.setText(INPUT.getName());

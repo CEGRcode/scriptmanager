@@ -1,36 +1,35 @@
 package window_interface.Coordinate_Manipulation.BED_Manipulation;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.SwingWorker;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-
-import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
-import util.FileSelection;
-
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+
+import util.FileSelection;
+import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 @SuppressWarnings("serial")
 public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -104,7 +103,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getBEDFiles(fc);
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						BEDFiles.add(newBEDFiles[x]);
@@ -199,6 +198,3 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 }
-
-
-	
