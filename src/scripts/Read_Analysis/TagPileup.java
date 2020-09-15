@@ -285,17 +285,20 @@ public class TagPileup extends JFrame {
 					if(STRAND == 0) tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
 					else tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(DOMAIN, AVG_S1, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
 										
-					if(OUT_S1 != null && PARAM.getOutputType() == 2) {
-						if(PARAM.outputJTV()) {
+					if(OUT_S1 != null) {
+						if(PARAM.outputJTV() && PARAM.getOutputType() == 2) {
 							if(STRAND == 0) JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 0), PARAM.getSenseColor());
 							else JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 2), PARAM.getCombinedColor());
 						}
 						OUT_S1.close();
 					}
-					if(OUT_S2 != null && PARAM.getOutputType() == 2){
-						if(PARAM.outputJTV()) { JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1), PARAM.getAntiColor()); }
+					if(OUT_S2 != null){
+						if(PARAM.outputJTV() && PARAM.getOutputType() == 2) {
+							JTVOutput.outputJTV(PARAM.getOutput() + File.separator + generateFileName(BEDFiles.get(BED_Index).getName(), BAM.getName(), 1), PARAM.getAntiColor());
+						}
 						OUT_S2.close();
 					}
+					
 					STATS.setCaretPosition(0);
 					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					tabbedPane_Statistics.add(BAM.getName(), newpane);
