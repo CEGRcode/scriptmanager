@@ -1,11 +1,13 @@
 package charts;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
@@ -42,6 +44,24 @@ public class LineChart {
         JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		return chartPanel;				
+	}
+	
+	public static ChartPanel createLineChart(ArrayList<Double> y, String[] x, File output) throws IOException {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		for(int i = 0; i < x.length; i++) {
+			dataset.addValue(y.get(i).doubleValue(), "Duplication Rate", x[i]);
+		}
+		
+		JFreeChart chart = createChart(dataset);
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		
+		if(output != null) {
+			int width = 640;
+			int height = 480;
+			ChartUtilities.saveChartAsPNG(output, chart, width, height);
+		}
 		return chartPanel;				
 	}
 	
