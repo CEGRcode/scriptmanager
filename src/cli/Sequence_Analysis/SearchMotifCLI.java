@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
-//import scripts.Sequence_Analysis.SearchMotif;
+import scripts.Sequence_Analysis.SearchMotif;
 
 /**
 	Sequence_AnalysisCLI/SearchMotifCLI
@@ -24,6 +24,16 @@ import util.ExtensionFileFilter;
 	exitCodeOnExecutionException = 1)
 public class SearchMotifCLI implements Callable<Integer> {
 	
+	@Parameters( index = "0", description = "The FASTA file in which to search for the motif.")
+	private File fastaFile;
+	
+	@Option(names = {"-o", "--output"}, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
+	private File output = null;
+	@Option(names = {"-m", "--motif"}, required=true, description = "the IUPAC motif to search for")
+	private String motif;
+	@Option(names = {"-n", "--mismatches"}, description = "the number of mismatches allowed (default=0)")
+	private int ALLOWED_MISMATCH = 0;
+	
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SearchMotifCLI.call()" );
@@ -34,16 +44,48 @@ public class SearchMotifCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		//SEStats.getSEStats( output, bamFile, null );
+		SearchMotif script_obj = new SearchMotif(fastaFile, motif, ALLOWED_MISMATCH, output, null);
+		script_obj.run();
 		
-		//System.err.println("Calculations Complete");
+		System.err.println("Search Complete.");
 		return(0);
 	}
 	
 	private String validateInput() throws IOException {
 		String r = "";
-		//validate input here
-		//append messages to the user to `r`
+		
+		//check inputs exist
+		if(!fastaFile.exists()){
+			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
+		if(!faFilter.accept(fastaFile)){
+			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
+		}
+		//set default output filename
+		if(output==null){
+			output = new File(motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_" + ExtensionFileFilter.stripExtension(fastaFile) + ".bed");
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!"bed".equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".bed\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use BED extension for output filename. Try: " + output + ".bed\n"; }
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+		
+		//check mismatch value
+		if(ALLOWED_MISMATCH<0){ r += "(!)Please use a non-negative integer for allowed mismatches."; }
+		
 		return(r);
 	}
 }
