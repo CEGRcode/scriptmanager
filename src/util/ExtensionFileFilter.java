@@ -42,8 +42,12 @@ public class ExtensionFileFilter extends FileFilter{
     }
 
 	public static String stripExtension(File f) throws IOException {
-		String NAME = f.getName();
-		return(NAME.substring(0, NAME.lastIndexOf('.')));
+		String[] name = f.getName().split("\\.");
+		String NEWNAME = name[0];
+		for(int x = 1; x < name.length-1; x++) {
+			NEWNAME += ("." + name[x]);
+		}
+		return(NEWNAME);
 	}
 	
 	public static String stripExtensionPath(File f) throws IOException {
