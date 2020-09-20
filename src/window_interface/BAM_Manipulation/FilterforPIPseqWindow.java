@@ -34,7 +34,7 @@ import javax.swing.SwingConstants;
 import util.FileSelection;
 import util.FASTAUtilities;
 import scripts.BAM_Manipulation.BAIIndexer;
-import scripts.BAM_Manipulation.FilterforPIPseq;
+import window_interface.BAM_Manipulation.FilterforPIPseqOutput;
 
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -73,7 +73,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	        	    File OUTPUT = null;
 	        	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_PSfilter.bam"); }
 	        	    else { OUTPUT = new File(NAME[0] + "_PSfilter.bam"); }
-	        	    FilterforPIPseq filter = new FilterforPIPseq(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
+	        	    FilterforPIPseqOutput filter = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
         			filter.setVisible(true);
         			filter.run();
         			
