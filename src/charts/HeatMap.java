@@ -1,7 +1,10 @@
 package charts;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
@@ -21,7 +24,7 @@ public class HeatMap {
 		
 	}
 	
-	public static ChartPanel createCorrelationHeatmap(String[] labels, double[][] MATRIX) {
+	public static ChartPanel createCorrelationHeatmap(String[] labels, double[][] MATRIX, File output) {
         // create a paint-scale and a legend showing it
         LookupPaintScale paintScale = new LookupPaintScale(0, 1, Color.black);       
         paintScale.add(0.0, new Color(0, 0, 255));
@@ -60,6 +63,14 @@ public class HeatMap {
         
         chart.addSubtitle(legend);
         chart.setBackgroundPaint(Color.white);
+        
+        if(output!=null){
+			int width = 640;
+			int height = 480;
+			try{ ChartUtilities.saveChartAsPNG(output, chart, width, height); }
+			catch( IOException e ){ e.printStackTrace(); }
+        }
+        
         return new ChartPanel(chart);
     }
 	
