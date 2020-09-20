@@ -3,7 +3,6 @@ package cli.BAM_Manipulation;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import objects.ToolDescriptions;
@@ -20,24 +19,9 @@ import objects.ToolDescriptions;
 public class MergeBAMCLI implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
-		System.err.println( ">MergeBAMCLI.call()" );
-		String validate = validateInput();
-		if(!validate.equals("")){
-			System.err.println( validate );
-			System.err.println("Invalid input. Check usage using '-h' or '--help'");
-			System.exit(1);
-		}
-		
-		//SEStats.getSEStats( output, bamFile, null );
-		
-		//System.err.println("Calculations Complete");
-		return(0);
-	}
-	
-	private String validateInput() throws IOException {
-		String r = "";
-		//validate input here
-		//append messages to the user to `r`
-		return(r);
+		System.err.println("***Please use the original tool for this job***\n"+
+							"\t'java -jar picard.jar MergeSamFiles'");
+		System.exit(1);
+		return(1);
 	}
 }
