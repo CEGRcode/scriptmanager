@@ -12,7 +12,7 @@ import java.util.Vector;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
-//import scripts.BAM_Statistics.SEStats;
+import scripts.BAM_Statistics.SEStats;
 	
 /**
 	BAM_StatisticsCLI/SEStatsCLI
@@ -25,6 +25,12 @@ import util.ExtensionFileFilter;
 	exitCodeOnExecutionException = 1)
 public class SEStatsCLI implements Callable<Integer> {
 	
+	@Parameters( index = "0", description = "The BAM file whose statistics we want.")
+	private File bamFile;
+	
+	@Option(names = {"-o", "--output"}, description = "Specify output file ")
+	private File output;
+	
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SEStatsCLI.call()" );
@@ -35,16 +41,44 @@ public class SEStatsCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		//SEStats.getSEStats( output, bamFile, null );
+		SEStats.getSEStats( output, bamFile, null );
 		
-		//System.err.println("Calculations Complete");
+		System.err.println("Calculations Complete");
 		return(0);
 	}
 	
 	private String validateInput() throws IOException {
 		String r = "";
-		//validate input here
-		//append messages to the user to `r`
+		
+		//check inputs exist
+		if(!bamFile.exists()){
+			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
+			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
+		}
+		//check BAI exists
+		File f = new File(bamFile+".bai");
+		if(!f.exists() || f.isDirectory()){
+			r += "(!)BAI Index File does not exist for: " + bamFile.getName() + "\n";
+		}
+		//set default output filename
+		if(output==null){
+// 			output = new File("output_bam_stats.txt");		//this default name mimics the gui
+			output = new File(ExtensionFileFilter.stripExtension(bamFile) + "_stats.txt");
+		//check output filename is valid
+		}else{
+			//no check ext
+			//check directory
+			if(output.getParent()==null){
+// 				System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+	
 		return(r);
 	}
 }
