@@ -7,12 +7,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JFrame;
-
 import util.ArrayUtilities;
+import util.ExtensionFileFilter;
 
 @SuppressWarnings("serial")
-public class AggregateData extends JFrame {
+public class AggregateData {
 	
 	private ArrayList<File> INPUT = null;
 	private File OUT_PATH = null;
@@ -21,6 +20,7 @@ public class AggregateData extends JFrame {
 	private int COLSTART = 1;
 	private int METRIC = 0;
 	private PrintStream OUT;
+	private String endMessage = "";
 	
 	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
 		INPUT = in;
@@ -33,9 +33,13 @@ public class AggregateData extends JFrame {
 	
 	public void run() throws IOException {
 		if(!MERGE) {
-			for(int x = 0; x < INPUT.size(); x++) {
-				outputFileScore(INPUT.get(x));
-		        firePropertyChange("file", x, x + 1);								
+			if( !OUT_PATH.isDirectory() && INPUT.size()==1 ){
+				outputFileScore(INPUT.get(0), new PrintStream(OUT_PATH));
+			} else {
+				for(int x = 0; x < INPUT.size(); x++) {
+					outputFileScore(INPUT.get(x));
+// 					firePropertyChange("file", x, x + 1);							
+				}
 			}
 		} else {
 			ArrayList<ArrayList<Double>> MATRIX = new ArrayList<ArrayList<Double>>();
@@ -77,10 +81,11 @@ public class AggregateData extends JFrame {
 				MATRIX.add(scorearray);
 				MATRIXID.add(idarray);
 			}
-
+			
 			String name = "ALL_SCORES.out";
-			if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name)); }
-			else { OUT = new PrintStream(new File(name)); }
+			if(OUT_PATH==null) { OUT = new PrintStream(new File(name)); }
+			else if(!OUT_PATH.isDirectory()) { OUT = new PrintStream( OUT_PATH ); }
+			else { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name)); }
 
 			//Check all arrays are the same size
 			int ARRAYLENGTH = MATRIX.get(0).size();
@@ -88,9 +93,12 @@ public class AggregateData extends JFrame {
 			for(int x = 0; x < MATRIX.size(); x++) {
 				if(MATRIX.get(x).size() != ARRAYLENGTH || MATRIXID.get(x).size() != ARRAYLENGTH) {
 					ALLSAME = false;
-					OUT.println("Different number of rows between:\n" + INPUT.get(0).getName() + "\n" + INPUT.get(x).getName());
+					endMessage = "Different number of rows between:\n" + INPUT.get(0).getName() + "\n" + INPUT.get(x).getName();
+					return;
 				}
 			}
+			
+			System.err.println(getMessage());
 			
 			if(ALLSAME) {
 				for(int x = 0; x < INPUT.size(); x++) { OUT.print("\t" + INPUT.get(x).getName()); }
@@ -102,22 +110,25 @@ public class AggregateData extends JFrame {
 				}
 			}
 			OUT.close();
-
-			
 		}
+		endMessage = "Data Parsed";
 	}
 
+	public String getMessage(){
+		return(endMessage);
+	}
+	
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
-		String[] name = IN.getName().split("\\.");
-		String NEWNAME = "";
-		for(int x = 0; x < name.length - 1; x++) {
-			if(x == name.length - 2) { NEWNAME += (name[x]); }
-			else { NEWNAME += (name[x] + "."); }
-		}
+		String NEWNAME = ExtensionFileFilter.stripExtension(IN);
 		
 		if(OUT_PATH != null) { OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_SCORES.out"));
 		} else { OUT = new PrintStream(new File(NEWNAME + "_SCORES.out")); }
-
+		
+		outputFileScore(IN,OUT);
+	}
+	
+	
+	public void outputFileScore(File IN, PrintStream OUT) throws FileNotFoundException, IOException {
 		if(METRIC == 0) { OUT.println("\tSum"); }
 		else if(METRIC == 1) { OUT.println("\tAverage"); }
 		else if(METRIC == 2) { OUT.println("\tMedian"); }
