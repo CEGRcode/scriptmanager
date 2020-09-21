@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import objects.ToolDescriptions;
-//import scripts.File_Utilities.MD5Checksum;
+import scripts.File_Utilities.MD5Checksum;
 
 /**
 	File_UtilitiesCLI/MD5ChecksumCLI
@@ -27,26 +27,18 @@ import objects.ToolDescriptions;
 	exitCodeOnExecutionException = 1)
 public class MD5ChecksumCLI implements Callable<Integer> {
 	
+	@Parameters( index = "0", description = "The file we want to calculate the MD5checksum for. Alternatively use md5 <file> or md5checksum <file>")
+	private File input;
+
+	@Option(names = {"-o", "--output"}, description = "specify output filepath")
+	private File output = new File("md5checksum.txt");
+	
 	@Override
 	public Integer call() throws Exception {
-		System.err.println( ">MD5ChecksumCLI.call()" );
-		String validate = validateInput();
-		if(!validate.equals("")){
-			System.err.println( validate );
-			System.err.println("Invalid input. Check usage using '-h' or '--help'");
-			System.exit(1);
-		}
-		
-		//SEStats.getSEStats( output, bamFile, null );
-		
-		//System.err.println("Calculations Complete");
+		String md5hash = MD5Checksum.calculateMD5(input.getAbsolutePath());
+		PrintStream OUT = new PrintStream( output );
+		OUT.println("MD5 (" + input.getName() + ") = " + md5hash);
 		return(0);
 	}
-	
-	private String validateInput() throws IOException {
-		String r = "";
-		//validate input here
-		//append messages to the user to `r`
-		return(r);
-	}
 }
+
