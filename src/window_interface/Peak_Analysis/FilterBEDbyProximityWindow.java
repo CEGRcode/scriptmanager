@@ -29,7 +29,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.Peak_Analysis.FilterBEDbyProximity;
+import window_interface.Peak_Analysis.FilterBEDbyProximityOutput;
 
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -59,9 +59,9 @@ public Task task;
     				JOptionPane.showMessageDialog(null, "Invalid Cutoff Value Entered!!!");
         		} else {
         			setProgress(0);
-        			FilterBEDbyProximity filter;
+        			FilterBEDbyProximityOutput filter;
     				for(int gfile = 0; gfile < BEDFiles.size(); gfile++) {
-    					filter = new FilterBEDbyProximity(BEDFiles.get(gfile), Integer.parseInt(txtCutoff.getText()), OUTPUT_PATH);	
+    					filter = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), Integer.parseInt(txtCutoff.getText()), OUTPUT_PATH);	
     					filter.setVisible(true);
     					filter.run();
         	        	int percentComplete = (int)(((double)(gfile + 1) / (BEDFiles.size())) * 100);
