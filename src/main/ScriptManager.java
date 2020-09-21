@@ -202,7 +202,7 @@ class Peak_CallingCLI extends SubcommandCLI {}
 			AggregateDataCLI.class,
 			ScaleMatrixCLI.class,
 			ScalingFactorCLI.class,
-			SimilarityMatrixCLI.class,
+// 			SimilarityMatrixCLI.class,
 			TagPileupCLI.class
 		},
 		description = "Includes tools like AggregateDataCLI, ScaleMatrixCLI, ScalingFactorCLI, SimilarityMatrixCLI, and TagPileupCLI.")

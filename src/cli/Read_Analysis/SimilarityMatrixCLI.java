@@ -42,6 +42,8 @@ public class SimilarityMatrixCLI implements Callable<Integer> {
 		String r = "";
 		//validate input here
 		//append messages to the user to `r`
+		r += "(!)This tool is deactivated to reflect the GUI.";
+		
 		return(r);
 	}
 }
