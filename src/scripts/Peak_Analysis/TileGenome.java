@@ -29,8 +29,8 @@ public class TileGenome {
 	    
 	    String fileName = GENOME + "_" + windowSize + "bp" + EXTENSION;
 		PrintStream OUT = null;
-		if(OUTPUT == null) OUT = new PrintStream(fileName);
-	    else OUT = new PrintStream(OUTPUT + File.separator + fileName);
+		if(OUTPUT == null) OUT = new PrintStream(new File(fileName));
+	    else OUT = new PrintStream(OUTPUT);
 		
 		for(int x = 0; x < coord.getChrom().size(); x++) {
 			String CHROM = coord.getChrom().get(x);

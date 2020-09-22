@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
-//import scripts.Peak_Analysis.TileGenome;
+import scripts.Peak_Analysis.TileGenome;
 
 /**
 	Peak_AnalysisCLI/TileGenomeCLI
@@ -24,6 +24,16 @@ import util.ExtensionFileFilter;
 	exitCodeOnExecutionException = 1)
 public class TileGenomeCLI implements Callable<Integer> {
 	
+	@Parameters( index = "0", description = "reference genome [sacCer3_cegr|hg19|hg19_contigs|mm10]")
+	private String genomeName;
+	
+	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be genome_tiles_<genomeName>_<window>bp.<ext>")
+	private File output = null;
+	@Option(names = {"-f", "--gff"}, description = "file format output as GFF (default format as BED)")
+	private boolean formatIsBed = true;
+	@Option(names = {"-w", "--window"}, description = "window size in bp (default=200)")
+	private int window = 200;
+	
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">TileGenomeCLI.call()" );
@@ -34,16 +44,48 @@ public class TileGenomeCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		//SEStats.getSEStats( output, bamFile, null );
+		TileGenome script_obj = new TileGenome(genomeName, window, formatIsBed, output);
+		script_obj.execute();
 		
-		//System.err.println("Calculations Complete");
+		System.err.println( "Genomic Tiling Complete." );
 		return(0);
 	}
 	
 	private String validateInput() throws IOException {
 		String r = "";
-		//validate input here
-		//append messages to the user to `r`
+		
+		//check input genomes are valid
+		if(genomeName.equals("sacCer3_cegr") || genomeName.equals("hg19") || genomeName.equals("hg19_contigs") || genomeName.equals("mm10") ){
+// 			System.err.println("Input genome is valid");
+		}else{
+			r += "(!)Invalid genomeName selected(" +genomeName+ "), please select from one of the provided genomes: sacCer3_cegr, hg19, hg19_contigs, and mm10\n";
+		}
+		String ext = "gff";
+		if(formatIsBed){ ext = "bed"; }
+		//set default output filename
+		if(output==null){
+			output = new File(genomeName + "_" + window + "bp." + ext);
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!ext.equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use \"." + ext.toUpperCase() + "\" extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + "." + ext + "\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use \"." + ext.toUpperCase() + "\" extension for output filename. Try: " + output + "." + ext + "\n"; }
+			//check directory
+			if(output.getParent()==null){
+	// 			System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+		
+		//check window size
+		if( window<1 ){
+			r += "(!)Window size needs to be a positive integer.\n";
+		}
+		
 		return(r);
 	}
 }
