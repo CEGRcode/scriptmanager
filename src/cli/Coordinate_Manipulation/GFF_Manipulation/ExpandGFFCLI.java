@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
-//import scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
+import scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 
 /**
 	Coordinate_ManipulationCLI/ExpandGFFCLI
@@ -25,6 +25,26 @@ import util.ExtensionFileFilter;
 	exitCodeOnExecutionException = 1)
 public class ExpandGFFCLI implements Callable<Integer> {
 	
+	@Parameters( index = "0", description = "the GFF file to expand on")
+	private File gffFile;
+	
+	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with coordinate info appended)")
+	private File output = null;
+	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
+	private boolean stdout = false;
+	
+	@ArgGroup(validate = false, heading = "%nType of Expansion%n")
+	ExpandType expandType = new ExpandType();
+	static class ExpandType {
+		@Option(names = {"-c", "--center"}, description = "expand from center (default, at 250bp)")
+		private int center = -999;
+		@Option(names = {"-b", "--border"}, description = "add to border")
+		private int border = -999;
+	}
+	
+	private boolean byCenter = true;
+	private int SIZE = 250;
+	
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ExpandGFFCLI.call()" );
@@ -35,16 +55,66 @@ public class ExpandGFFCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		//SEStats.getSEStats( output, bamFile, null );
+		ExpandGFF.expandGFFBorders(output, gffFile, SIZE, byCenter);
 		
-		//System.err.println("Calculations Complete");
+		System.err.println("Expansion Complete");
 		return(0);
 	}
 	
 	private String validateInput() throws IOException {
 		String r = "";
-		//validate input here
-		//append messages to the user to `r`
+		
+		//check inputs exist
+		if(!gffFile.exists()){
+			r += "(!)GFF file does not exist: " + gffFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		if(!"gff".equals(ExtensionFileFilter.getExtension(gffFile))){
+			r += "(!)Is this a GFF file? Check extension: " + gffFile.getName() + "\n";
+		}
+		
+		// Define default behavior
+		if(expandType.center==-999 && expandType.border==-999){
+			SIZE = 250;
+			byCenter = true;
+		}else if(expandType.border==-999){
+			SIZE = expandType.center;
+			byCenter = false;
+		}else if(expandType.center==-999){
+			SIZE = expandType.border;
+			byCenter = false;
+		}else{
+			r += "(!) Both center and border are flagged. This should have been caught by Picocli.";
+		}
+		//check size of expansion is valid
+		if(SIZE<=0){
+			r += "(!) Invalid size input. Must be a positive integer greater than 0.";
+		}
+		
+		//set default output filename
+		if(output==null && !stdout){
+			if(byCenter){ output = new File(ExtensionFileFilter.stripExtension(gffFile) + "_" + Integer.toString(SIZE) + "bp.gff"); }
+			else{ output = new File(ExtensionFileFilter.stripExtension(gffFile) + "_border_" + Integer.toString(SIZE) + "bp.gff"); }
+		//check stdout and output not both selected
+		}else if(stdout){
+			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!"gff".equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use GFF extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".gff\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use GFF extension for output filename. Try: " + output + ".gff\n"; }
+			//check directory
+			if(output.getParent()==null){
+	// 			System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+		
 		return(r);
 	}
 }
