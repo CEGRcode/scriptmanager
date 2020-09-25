@@ -55,7 +55,14 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
         public Void doInBackground() throws IOException {
         	setProgress(0);
         	for(int x = 0; x < BEDFiles.size(); x++) {
-				BEDtoGFF.convertBEDtoGFF(OUTPUT_PATH, BEDFiles.get(x));
+        		File XBED = BEDFiles.get(x);
+        		// Set outfilepath
+        		String gffName = (XBED.getName()).substring(0,XBED.getName().length() - 4) + ".gff";
+        		File OUT_FILE = null;
+        		if(OUTPUT_PATH == null) OUT_FILE = new File( gffName );
+        		else OUT_FILE = new File( OUTPUT_PATH + File.separator + gffName );
+        		// Execute conversion and update progress
+				BEDtoGFF.convertBEDtoGFF(OUTPUT_PATH, XBED);
 				int percentComplete = (int)(((double)(x + 1) / BEDFiles.size()) * 100);
         		setProgress(percentComplete);
         	}

@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
-//import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
+import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
 	Coordinate_ManipulationCLI/BEDtoGFFCLI
@@ -24,6 +24,14 @@ import util.ExtensionFileFilter;
 	exitCodeOnExecutionException = 1)
 public class BEDtoGFFCLI implements Callable<Integer> {
 	
+	@Parameters( index = "0", description = "the BED file to convert")
+	private File bedFile;
+	
+	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with .gff ext)")
+	private File output = null;
+	@Option(names = {"-s", "--stdout"}, description = "output gff to STDOUT")
+	private boolean stdout = false;
+	
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BEDtoGFFCLI.call()" );
@@ -34,16 +42,46 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		//SEStats.getSEStats( output, bamFile, null );
+		BEDtoGFF.convertBEDtoGFF(output, bedFile);
 		
-		//System.err.println("Calculations Complete");
+		System.err.println("Conversion Complete");
 		return(0);
 	}
 	
 	private String validateInput() throws IOException {
 		String r = "";
-		//validate input here
-		//append messages to the user to `r`
+		
+		//check inputs exist
+		if(!bedFile.exists()){
+			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
+			return(r);
+		}
+		//check input extensions
+		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
+			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
+		}
+		//set default output filename
+		if(output==null && !stdout){
+			output = new File(ExtensionFileFilter.stripExtension(bedFile) + ".gff");
+		//check stdout and output not both selected
+		}else if(stdout){
+			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!"gff".equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".bed\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use BED extension for output filename. Try: " + output + ".youroutputextensionhere\n"; }
+			//check directory
+			if(output.getParent()==null){
+	// 			System.err.println("default to current directory");
+			} else if(!new File(output.getParent()).exists()){
+				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			}
+		}
+		
 		return(r);
 	}
 }
