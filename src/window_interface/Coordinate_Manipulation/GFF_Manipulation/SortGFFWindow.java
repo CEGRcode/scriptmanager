@@ -279,7 +279,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGFFFile, 10, SpringLayout.NORTH, contentPane);
 		btnLoadGFFFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File newBEDFile = FileSelection.getFile(fc,"bed");
+				File newBEDFile = FileSelection.getFile(fc,"gff");
 				if(newBEDFile != null) {
 					GFF_File = newBEDFile;
 					lblGFFFile.setText(GFF_File.getName());
