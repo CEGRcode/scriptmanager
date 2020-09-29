@@ -1,6 +1,7 @@
 package scripts.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -36,12 +37,11 @@ public class SortBED {
 		
 		//Output sorted CDT File
 		String newCDT = outname + ".cdt";
-		PrintStream OUT = null;
-	    OUT = new PrintStream(newCDT);
-	    OUT.println(CDTHeader);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(CDTFile.get(SORT.get(x).getName()));
-	    }
+		PrintStream OUT = new PrintStream(newCDT);
+		OUT.println(CDTHeader);
+		for(int x = 0; x < SORT.size(); x++) {
+			OUT.println(CDTFile.get(SORT.get(x).getName()));
+		}
 	    OUT.close();
 		CDTFile = null; //Free up memory by getting CDT file out of memory
 		JTVOutput.outputJTV(outname, "green");
@@ -58,11 +58,12 @@ public class SortBED {
 		}
 		scan.close();
 		//Output sorted BED File
-		String newBED = outname +".bed";    
-	    OUT = new PrintStream(newBED);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(BEDFile.get(SORT.get(x).getName()));
-	    }
-	    OUT.close();
+		String newBED = outname +".bed";	
+		OUT = new PrintStream(newBED);
+		for(int x = 0; x < SORT.size(); x++) {
+			OUT.println(BEDFile.get(SORT.get(x).getName()));
+		}
+		OUT.close();
 	}
+	
 }
