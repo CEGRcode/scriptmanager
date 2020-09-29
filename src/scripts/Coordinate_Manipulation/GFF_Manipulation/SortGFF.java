@@ -1,6 +1,7 @@
 package scripts.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -37,10 +38,10 @@ public class SortGFF {
 		//Output sorted CDT File
 		String newCDT = outname + ".cdt";
 		PrintStream OUT = new PrintStream(newCDT);
-	    OUT.println(CDTHeader);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(CDTFile.get(SORT.get(x).getName()));
-	    }
+		OUT.println(CDTHeader);
+		for(int x = 0; x < SORT.size(); x++) {
+			OUT.println(CDTFile.get(SORT.get(x).getName()));
+		}
 	    OUT.close();
 		CDTFile = null; //Free up memory by getting CDT file out of memory
 		JTVOutput.outputJTV(outname, "green");
@@ -50,18 +51,19 @@ public class SortGFF {
 		scan = new Scanner(gff);
 		while (scan.hasNextLine()) {
 			String line = scan.nextLine();
-			String ID = line.split("\t")[8];
+			String ID = line.split("\t")[8].split(";")[0];
 			if(!ID.contains("YORF") && !ID.contains("NAME")) {
 				GFFFile.put(ID, line);
 			}
 		}
 		scan.close();
 		//Output sorted GFF File
-		String newGFF = outname +".gff";    
-	    OUT = new PrintStream(newGFF);
-	    for(int x = 0; x < SORT.size(); x++) {
-	    	OUT.println(GFFFile.get(SORT.get(x).getName()));
-	    }
-	    OUT.close();
+		String newGFF = outname +".gff";	
+		OUT = new PrintStream(newGFF);
+		for(int x = 0; x < SORT.size(); x++) {
+			OUT.println(GFFFile.get(SORT.get(x).getName()));
+		}
+		OUT.close();
 	}
+	
 }
