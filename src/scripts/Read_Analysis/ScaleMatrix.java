@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 public class ScaleMatrix {
 	
 	private File MATRIX = null;
-	private File OUTPUTPATH = null;
+	private File OUTFILE = null;
 	private double SCALE = 0;
 
 	private int ROWINDEX = 0;
@@ -20,7 +20,7 @@ public class ScaleMatrix {
 	
 	public ScaleMatrix(File m, File o, double s, int r, int c) {
 		MATRIX = m;
-		OUTPUTPATH = o;
+		OUTFILE = o;
 		SCALE = s;
 		
 		ROWINDEX = r;
@@ -29,14 +29,13 @@ public class ScaleMatrix {
 	
 	public void run() throws IOException {
 		//Open output file
-		String[] FILEID = MATRIX.getName().split("\\.");
-		PrintStream OUT = new PrintStream(OUTPUTPATH + File.separator + FILEID[0] + "_SCALE." + FILEID[FILEID.length - 1]);
+		PrintStream OUT = new PrintStream(OUTFILE);
 		
-		System.out.println(getTimeStamp());
-		System.out.println("Processing file:\t" + MATRIX.getName());
-		System.out.println("Scaling factor:\t" + SCALE);
-		System.out.println("Starting row index:\t" + ROWINDEX);
-		System.out.println("Starting column index:\t" + COLINDEX);
+		System.err.println(getTimeStamp());
+		System.err.println("Processing file:\t" + MATRIX.getName());
+		System.err.println("Scaling factor:\t" + SCALE);
+		System.err.println("Starting row index:\t" + ROWINDEX);
+		System.err.println("Starting column index:\t" + COLINDEX);
 		
 		try {
 			//Parse, scale, and output tab-delimited matrix on the fly
@@ -54,7 +53,7 @@ public class ScaleMatrix {
 					OUT.println();
 				}			
 				counter++;
-				if(counter % 1000 == 0) { System.out.println("Rows processed: " + counter); }
+				if(counter % 1000 == 0) { System.err.println("Rows processed: " + counter); }
 		    }
 			SCAN.close();
 		} catch(NumberFormatException e) {

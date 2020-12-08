@@ -7,13 +7,12 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class BEDtoGFF {
-	public static void convertBEDtoGFF(File out_path, File input) throws IOException {
+	public static void convertBEDtoGFF(File out_filepath, File input) throws IOException {
 		//chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
-	    String gffName = (input.getName()).substring(0,input.getName().length() - 4) + ".gff";
-	    Scanner scan = new Scanner(input);
-	    PrintStream OUT = null;
-	    if(out_path == null) OUT = new PrintStream(gffName);
-	    else OUT = new PrintStream(out_path + File.separator + gffName);
+		
+		Scanner scan = new Scanner(input);
+	    PrintStream OUT = System.out;
+	    if( out_filepath != null ) OUT = new PrintStream(out_filepath);
 	    
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");

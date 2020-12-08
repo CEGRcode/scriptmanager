@@ -1,0 +1,119 @@
+package cli.BAM_Manipulation;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+
+import java.lang.NullPointerException;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import objects.ToolDescriptions;
+import util.FASTAUtilities;
+import util.ExtensionFileFilter;
+import scripts.BAM_Manipulation.FilterforPIPseq;
+
+/**
+	BAM_ManipulatioCLIn/FilterforPIPseqCLI
+*/
+@Command(name = "filter-pip-seq", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.filter_pip_seq_description + "\n" +
+				"Note this program does not index the resulting BAM file and user must use appropriate samtools command to generate BAI.",
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
+public class FilterforPIPseqCLI implements Callable<Integer> {
+	
+	@Parameters( index = "0", description = "The reference genome FASTA file.")
+	private File genomeFASTA;
+	@Parameters( index = "1", description = "The BAM file from which we filter.")
+	private File bamFile;
+	
+	@Option(names = {"-o", "--output"}, description = "specify output file (default=<bamFileNoExt>_PSfilter.bam)")
+	private File output = null;
+	@Option(names = {"-f", "--filter"}, description = "filter by upstream sequence, works only for single-nucleotide A,T,C, or G. (default seq ='T')")
+	private String filterString = "T";
+	
+	@Override
+	public Integer call() throws Exception {
+		System.err.println( ">FilterforPIPseqCLI.call()" );
+		String validate = validateInput();
+		if(!validate.equals("")){
+			System.err.println( validate );
+			System.err.println("Invalid input. Check usage using '-h' or '--help'");
+			System.exit(1);
+		}
+		
+		FilterforPIPseq script_obj = new FilterforPIPseq(bamFile, genomeFASTA, output, filterString, null);
+		script_obj.run();
+		
+		System.err.println( "BAM Generated." );
+		return(0);
+	}
+	
+	//validateInput outline
+	private String validateInput() throws IOException {
+		String r = "";
+		
+		//check inputs exist
+		if(!bamFile.exists()){
+			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
+		}
+		if(!genomeFASTA.exists()){
+			r += "(!)FASTA file does not exist: " + genomeFASTA.getName() + "\n";
+		}
+		if(!r.equals("")){ return(r); }
+		//check input extensions
+		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
+		if(!faFilter.accept(genomeFASTA)){
+			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
+		}
+		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
+			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
+		}
+		//check BAI exists
+		File f = new File(bamFile+".bai");
+		if(!f.exists() || f.isDirectory()){
+			r += "(!)BAI Index File does not exist for: " + bamFile.getName() + "\n";
+		}
+		//check FAI exists (generate if not)
+		File FAI = new File(genomeFASTA + ".fai");
+		if(!FAI.exists() || FAI.isDirectory()) {
+			System.err.println("FASTA Index file not found.\nGenerating new one...\n");
+			boolean FASTA_INDEX = FASTAUtilities.buildFASTAIndex(genomeFASTA);
+			if(!FASTA_INDEX){ r += "FASTA Index failed to build."; }
+		}
+		//set default output filename
+		if(output==null){
+			output = new File(ExtensionFileFilter.stripExtension(bamFile) + "_PSfilter.bam");
+		//check output filename is valid
+		}else{
+			//check ext
+			try{
+				if(!"bam".equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use BAM extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) +  ".bam\n";
+				}
+			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use BAM extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) +  ".bam\n"; }
+			//check directory
+				if(output.getParent()==null){
+// 					System.err.println("default to current directory");
+				} else if(!new File(output.getParent()).exists()){
+					r += "(!)Check output directory exists: " + output.getParent() + "\n";
+				}
+		}
+		
+		//check filter string is valid ATCG
+		Pattern seqPat = Pattern.compile("[ATCG]");
+		Matcher m = seqPat.matcher( filterString );
+		if( !m.matches() ){
+			r += "(!)Filter string must be formatted as a nucleotide sequence.\n" + filterString +
+				" is not a valid nucleotide sequence.\nExpected input string format: \"[ATCG]\"";
+		}
+		
+		return(r);
+	}
+}

@@ -73,17 +73,17 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
         		} else {
 		        	AggregateData parse = new AggregateData(SUMFiles, OUTPUT_PATH, chckbxMergeToOne.isSelected(), Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), cmbMethod.getSelectedIndex());
 		        	
-		        	parse.addPropertyChangeListener("file", new PropertyChangeListener() {
-					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-					    	int temp = (Integer) propertyChangeEvent.getNewValue();
-					    	int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
-				        	setProgress(percentComplete);
-					     }
-					 });
+// 		        	parse.addPropertyChangeListener("file", new PropertyChangeListener() {
+// 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+// 					    	int temp = (Integer) propertyChangeEvent.getNewValue();
+// 					    	int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
+// 				        	setProgress(percentComplete);
+// 					     }
+// 					 });
 		        	
 		    		parse.run();
 		    		setProgress(100);
-					JOptionPane.showMessageDialog(null, "Data Parsed");
+					JOptionPane.showMessageDialog(null, parse.getMessage());
         		}
         	} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");

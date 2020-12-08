@@ -11,6 +11,44 @@ import java.util.Set;
 import java.util.Vector;
 
 public class CDTUtilities {
+	
+	private File FILENAME;
+	private int SIZE;
+	private boolean consistentSize;
+	private String invalidMessage;
+	
+	// This function is almost exactly copied from window/*/SortBEDWindow & scripts/*/SortBED & scripts/*/SortGFF...good practice to merge at some point.
+	public void parseCDT(File CDT) throws FileNotFoundException {
+		FILENAME = CDT;
+		SIZE = -999;
+		consistentSize = true;
+		invalidMessage = "";
+		
+		Scanner scan = new Scanner(CDT);
+		int currentRow = 1;
+		while (scan.hasNextLine()) {
+			String[] temp = scan.nextLine().split("\t");
+			if(!temp[0].contains("YORF") && !temp[0].contains("NAME")) {
+				int tempsize = temp.length - 2;
+				if(SIZE == -999) { SIZE = tempsize; }
+				else if(SIZE != tempsize) {
+					invalidMessage = "Invalid Row at Index: " + currentRow;
+					consistentSize = false;
+					break;
+				}
+				currentRow++;
+			}
+		}
+		scan.close();
+	}
+	
+	public boolean isValid(){ return consistentSize; }
+	
+	public int getSize(){ return SIZE; }
+	
+	public String getInvalidMessage(){ return invalidMessage; }
+	
+	
 	public static Vector<double[]> loadCDT(File input) throws FileNotFoundException {
 		Vector<double[]> matrix = new Vector<double[]>();
 		Scanner scan = new Scanner(input);

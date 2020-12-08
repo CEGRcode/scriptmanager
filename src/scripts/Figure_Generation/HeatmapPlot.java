@@ -21,15 +21,12 @@ import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-public class HeatmapPlot extends JFrame {
+public class HeatmapPlot {
 
-	protected static ArrayList<File> SAMPLE = null;
+	protected static File SAMPLE = null;
 	
 	protected static int startROW = 1;
 	protected static int startCOL = 2;	
@@ -44,21 +41,15 @@ public class HeatmapPlot extends JFrame {
 	public static Color MAXCOLOR = new Color(255, 0, 0);
 	
 	protected static boolean OUTPUTSTATUS = false;
-	protected static File OUTPUTPATH = null;
+	protected static File OUTFILE = null;
 	protected static String FILEID = null;	
 
 	private static ArrayList<double[]> MATRIX = null;
-	public static double COLOR_RATIO = 1;	
+	public static double COLOR_RATIO = 1;
 	
-	JTabbedPane newpane;
-
-	public HeatmapPlot(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File OUT, boolean outstatus) {
-		setTitle("Heatmap");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 600, 800);
-		
-		newpane = new JTabbedPane(JTabbedPane.TOP);
-		this.getContentPane().add(newpane);
+	private JLabel picLabel = null;
+	
+	public HeatmapPlot(File in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File output, boolean outstatus) {
 
 		SAMPLE = in;
 		MAXCOLOR = c;
@@ -71,53 +62,44 @@ public class HeatmapPlot extends JFrame {
 		absolute = abs;
 		quantile = quant;
 		
-		OUTPUTPATH = OUT;
+		OUTFILE = output;
 		OUTPUTSTATUS = outstatus;
 	}
 	
-	public void run() throws IOException {	
-		for(int x = 0; x < SAMPLE.size(); x++) {
-			JLabel picLabel = null;
+	public void run() throws IOException {
+		
+		String FILEID = SAMPLE.getName().split("\\.")[0];
 
-			String FILEID = SAMPLE.get(x).getName().split("\\.")[0];
-			String OUTPUT = FILEID;
-			if(OUTPUTPATH != null) { OUTPUT = OUTPUTPATH.getCanonicalPath() + File.separator + FILEID; }
-
-			System.out.println("Loading Matrix file: " + FILEID);
-			MATRIX = loadMatrix(SAMPLE.get(x));
-			System.out.println("Matrix file loaded.");
-			System.out.println("Rows detected: " + MATRIX.size());
-			System.out.println("Columns detected: " + MATRIX.get(0).length);
+		System.out.println("Loading Matrix file: " + FILEID);
+		MATRIX = loadMatrix(SAMPLE);
+		System.out.println("Matrix file loaded.");
+		System.out.println("Rows detected: " + MATRIX.size());
+		System.out.println("Columns detected: " + MATRIX.get(0).length);
+		
+		if(scaleType.equalsIgnoreCase("treeview")) {
+			ArrayList<double[]> newMatrix = rebinMatrix(MATRIX);
+			if(absolute != -999) { COLOR_RATIO = absolute; }
+			else { COLOR_RATIO = getQuantile(newMatrix, quantile); }
 			
-			if(scaleType.equalsIgnoreCase("treeview")) {
-				ArrayList<double[]> newMatrix = rebinMatrix(MATRIX);
-				if(absolute != -999) { COLOR_RATIO = absolute; }
-				else { COLOR_RATIO = getQuantile(newMatrix, quantile); }
-				
-				System.out.println("Contrast threshold: " + COLOR_RATIO);
-				BufferedImage treeMap = generateHeatMap(newMatrix);
-				picLabel = new JLabel(new ImageIcon(treeMap));
-				//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
-				if(OUTPUTSTATUS) { ImageIO.write(treeMap, "png", new File(OUTPUT + "_" + scaleType + ".png")); }
-			} else if(!scaleType.equalsIgnoreCase("treeview")) {
-				//COLOR_RATIO = 2 * getNonZeroAvg(MATRIX);
-				if(absolute != -999) { COLOR_RATIO = absolute; }
-				else { COLOR_RATIO = getQuantile(MATRIX, quantile); }
-				System.out.println("Contrast threshold: " + COLOR_RATIO);
-				
-				BufferedImage rawMap = generateHeatMap(MATRIX);
-				BufferedImage compressedMap = resize(rawMap, pixelWidth, pixelHeight);
-				picLabel = new JLabel(new ImageIcon(compressedMap));
-				
-				//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
-				if(OUTPUTSTATUS) { ImageIO.write(compressedMap, "png", new File(OUTPUT + "_" + scaleType + ".png")); }
-			}	
-			//Output image/error to GUI
-			newpane.addTab(FILEID, new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-			firePropertyChange("heat", x, x + 1);
+			System.out.println("Contrast threshold: " + COLOR_RATIO);
+			BufferedImage treeMap = generateHeatMap(newMatrix);
+			picLabel = new JLabel(new ImageIcon(treeMap));
+			//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
+			if(OUTPUTSTATUS) { ImageIO.write(treeMap, "png", OUTFILE); }
+		} else if(!scaleType.equalsIgnoreCase("treeview")) {
+			//COLOR_RATIO = 2 * getNonZeroAvg(MATRIX);
+			if(absolute != -999) { COLOR_RATIO = absolute; }
+			else { COLOR_RATIO = getQuantile(MATRIX, quantile); }
+			System.out.println("Contrast threshold: " + COLOR_RATIO);
+			
+			BufferedImage rawMap = generateHeatMap(MATRIX);
+			BufferedImage compressedMap = resize(rawMap, pixelWidth, pixelHeight);
+			picLabel = new JLabel(new ImageIcon(compressedMap));
+			
+			//Don't output PNG if OUTPUTSTATUS is false, which is the flag for not outputing figures
+			if(OUTPUTSTATUS) { ImageIO.write(compressedMap, "png", OUTFILE); }
 		}
-		System.out.println("Program Complete");
-		System.out.println(getTimeStamp());
+		
 	}
 
 	public static BufferedImage generateHeatMap(ArrayList<double[]> matrix) throws FileNotFoundException {
@@ -372,6 +354,10 @@ public class HeatmapPlot extends JFrame {
 			scan.close();
 		}
 		return matrix;
+	}
+	
+	public JLabel getImg(){
+		return(picLabel);
 	}
 	
 	private static String getTimeStamp() {

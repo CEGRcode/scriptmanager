@@ -7,15 +7,13 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ExpandGFF {
-	public static void expandGFFBorders(File out_path, File input, int SIZE, boolean ExCenter) throws IOException {
+	public static void expandGFFBorders(File out_filepath, File input, int SIZE, boolean ExCenter) throws IOException {
 		//GFF:	chr22  TeleGene enhancer  10000000  10001000  500 +  .  touch1
 		//GFF:	chr12	bed2gff	chr12_384641_384659_+	384642	384659	42.6	+	.	chr12_384641_384659_+;
-
-		String newName = (input.getName()).substring(0,input.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
-	    Scanner scan = new Scanner(input);
-	    PrintStream OUT = null;
-	    if(out_path == null) OUT = new PrintStream(newName);
-	    else OUT = new PrintStream(out_path + File.separator + newName);
+		
+		Scanner scan = new Scanner(input);
+	    PrintStream OUT = System.out;
+	    if( out_filepath != null ) OUT = new PrintStream(out_filepath);
 	    
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");

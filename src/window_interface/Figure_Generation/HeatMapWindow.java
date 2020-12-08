@@ -38,7 +38,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.Figure_Generation.HeatmapPlot;
+import window_interface.Figure_Generation.HeatMapOutput;
 
 @SuppressWarnings("serial")
 public class HeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -105,7 +105,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	        	double quantile = Double.parseDouble(txtPercent.getText());
 	        	
 	        	//System.out.println(COLOR + "\n" + startR+ "\n" +  startC+ "\n" +  pHeight+ "\n" +  pWidth+ "\n" +  scaletype+ "\n" +  absolute+ "\n" +  quantile+ "\n" +  OUTPUTPATH);
-	        	HeatmapPlot heat = new HeatmapPlot(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
+	        	HeatMapOutput heat = new HeatMapOutput(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
 	        	
 	        	heat.addPropertyChangeListener("heat", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {

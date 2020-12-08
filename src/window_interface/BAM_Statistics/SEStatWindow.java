@@ -24,7 +24,7 @@ import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.BAM_Statistics.SEStats;
+import window_interface.BAM_Statistics.SEStatOutput;
 
 @SuppressWarnings("serial")
 public class SEStatWindow extends JFrame {
@@ -67,7 +67,7 @@ public class SEStatWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
-					for(int x = 0; x < newBAMFiles.length; x++) { 
+					for(int x = 0; x < newBAMFiles.length; x++) {
 						BAMFiles.add(newBAMFiles[x]);
 						expList.addElement(newBAMFiles[x].getName());
 					}
@@ -105,7 +105,7 @@ public class SEStatWindow extends JFrame {
 		txtOutputName = new JTextField();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, -2, SpringLayout.NORTH, lblOutputName);
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 6, SpringLayout.EAST, lblOutputName);
-		txtOutputName.setText("output_bam stats.txt");
+		txtOutputName.setText("output_bam_stats.txt");
 		txtOutputName.setColumns(10);
 		txtOutputName.setEnabled(false);
 		contentPane.add(txtOutputName);
@@ -166,11 +166,11 @@ public class SEStatWindow extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -171, SpringLayout.EAST, contentPane);
 		btnRun.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				SEStats stat;
+				SEStatOutput stat;
 				if(chckbxOutputStatistics.isSelected()) { 
-					if(OUTPUT_PATH != null) { stat = new SEStats(BAMFiles, new File(OUTPUT_PATH + File.separator + txtOutputName.getText())); }
-					else { stat = new SEStats(BAMFiles, new File(txtOutputName.getText())); }
-				} else { stat = new SEStats(BAMFiles, null); }
+					if(OUTPUT_PATH != null) { stat = new SEStatOutput(BAMFiles, new File(OUTPUT_PATH + File.separator + txtOutputName.getText())); }
+					else { stat = new SEStatOutput(BAMFiles, new File(txtOutputName.getText())); }
+				} else { stat = new SEStatOutput(BAMFiles, null); }
 				stat.setVisible(true);
 				stat.run();
 			}
@@ -178,6 +178,3 @@ public class SEStatWindow extends JFrame {
 		contentPane.add(btnRun);
 	}
 }
-
-
-	

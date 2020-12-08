@@ -36,7 +36,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.Read_Analysis.ScalingFactor;
+import scripts.Read_Analysis.ScalingFactorOutput;
 
 @SuppressWarnings("serial")
 public class ScalingFactorWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -95,7 +95,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
         		} else if(rdbtnNCIS.isSelected()) { scaleType = 2; }
         		else if(rdbtnNcisWithTotal.isSelected()) { scaleType = 3; }
         		
-       			ScalingFactor scale = new ScalingFactor(BAMFiles, BLACKLIST, CONTROL, OUTPUT_PATH.getAbsolutePath(), chckbxOutputStatistics.isSelected(), scaleType, Integer.parseInt(txtWindow.getText()), Double.parseDouble(txtFraction.getText()));
+       			ScalingFactorOutput scale = new ScalingFactorOutput(BAMFiles, BLACKLIST, CONTROL, OUTPUT_PATH.getAbsolutePath(), chckbxOutputStatistics.isSelected(), scaleType, Integer.parseInt(txtWindow.getText()), Double.parseDouble(txtFraction.getText()));
        			scale.addPropertyChangeListener("scale", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 				    	int temp = (Integer) propertyChangeEvent.getNewValue();

@@ -31,6 +31,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import util.CDTUtilities;
 import util.FileSelection;
 import scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
@@ -74,42 +75,42 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	private JLabel lblIndexStop;
 	
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws IOException {
-        	try {
-        		if(rdbtnSortbyCenter.isSelected() && Integer.parseInt(txtMid.getText()) > CDT_SIZE) {
-        			JOptionPane.showMessageDialog(null, "Sort Size is larger than CDT File!!!");
-        		} else if(rdbtnSortbyIndex.isSelected() && Integer.parseInt(txtStart.getText()) < 0) {
-        			JOptionPane.showMessageDialog(null, "Start Index is smaller than 0!!!");
-        		} else if(rdbtnSortbyIndex.isSelected() && Integer.parseInt(txtStop.getText()) > CDT_SIZE) {
-        			JOptionPane.showMessageDialog(null, "Start Index is smaller than 0!!!");
-        		} else {
-        			if(rdbtnSortbyCenter.isSelected()) {
-            			START_INDEX = (CDT_SIZE / 2) - (Integer.parseInt(txtMid.getText()) / 2);
-            			STOP_INDEX = (CDT_SIZE / 2) + (Integer.parseInt(txtMid.getText()) / 2);
-            		} else {
-            			START_INDEX = Integer.parseInt(txtStart.getText());
-            			STOP_INDEX = Integer.parseInt(txtStop.getText());
-            		}
-        			
-        			String OUTPUT = txtOutput.getText();
-        			if(OUTPUT_PATH != null) { OUTPUT = OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText(); }
-        			
-		        	setProgress(0);
-		        	SortGFF.sortGFFbyCDT(OUTPUT, GFF_File, CDT_File, START_INDEX, STOP_INDEX);
+		@Override
+		public Void doInBackground() throws IOException {
+			try {
+				if(rdbtnSortbyCenter.isSelected() && Integer.parseInt(txtMid.getText()) > CDT_SIZE) {
+					JOptionPane.showMessageDialog(null, "Sort Size is larger than CDT File!!!");
+				} else if(rdbtnSortbyIndex.isSelected() && Integer.parseInt(txtStart.getText()) < 0) {
+					JOptionPane.showMessageDialog(null, "Start Index is smaller than 0!!!");
+				} else if(rdbtnSortbyIndex.isSelected() && Integer.parseInt(txtStop.getText()) > CDT_SIZE) {
+					JOptionPane.showMessageDialog(null, "Stop Index is larger than CDT row size!!!");
+				} else {
+					if(rdbtnSortbyCenter.isSelected()) {
+						START_INDEX = (CDT_SIZE / 2) - (Integer.parseInt(txtMid.getText()) / 2);
+						STOP_INDEX = (CDT_SIZE / 2) + (Integer.parseInt(txtMid.getText()) / 2);
+					} else {
+						START_INDEX = Integer.parseInt(txtStart.getText());
+						STOP_INDEX = Integer.parseInt(txtStop.getText());
+					}
+					
+					String OUTPUT = txtOutput.getText();
+					if(OUTPUT_PATH != null) { OUTPUT = OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText(); }
+					
+					setProgress(0);
+					SortGFF.sortGFFbyCDT(OUTPUT, GFF_File, CDT_File, START_INDEX, STOP_INDEX);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Sort Complete");
-        		}
-        	} catch(NumberFormatException nfe){
+				}
+			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			}
 			return null;
-        }
-        
-        public void done() {
-        	massXable(contentPane, true);
-            setCursor(null); //turn off the wait cursor
-        }
+		}
+		
+		public void done() {
+			massXable(contentPane, true);
+			setCursor(null); //turn off the wait cursor
+		}
 	}
 	
 	public SortGFFWindow() {
@@ -191,7 +192,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
         contentPane.add(lblSizeOfExpansion);
         
         txtOutput = new JTextField();
-        sl_contentPane.putConstraint(SpringLayout.EAST, txtOutput, 0, SpringLayout.EAST, progressBar);
+        sl_contentPane.putConstraint(SpringLayout.EAST, txtOutput, -15, SpringLayout.EAST, contentPane);
         txtOutput.setEnabled(false);
         contentPane.add(txtOutput);
         txtOutput.setColumns(10);
@@ -279,9 +280,9 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGFFFile, 10, SpringLayout.NORTH, contentPane);
 		btnLoadGFFFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File newBEDFile = FileSelection.getFile(fc,"gff");
-				if(newBEDFile != null) {
-					GFF_File = newBEDFile;
+				File newGFFFile = FileSelection.getFile(fc,"gff");
+				if(newGFFFile != null) {
+					GFF_File = newGFFFile;
 					lblGFFFile.setText(GFF_File.getName());
 					txtOutput.setEnabled(true);
 				    String sortName = (GFF_File.getName()).substring(0, GFF_File.getName().length() - 4) + "_SORT";
@@ -300,11 +301,19 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	    	public void actionPerformed(ActionEvent e) {
 	    		File newCDTFile = FileSelection.getFile(fc,"cdt");
 				if(newCDTFile != null) {
-					CDT_File = newCDTFile;
-					lblCDTFile.setText(CDT_File.getName());
-					
-					try { CDT_VALID = parseCDTFile(CDT_File);
+					try {
+						CDT_File = newCDTFile;
+						lblCDTFile.setText(CDT_File.getName());
+						
+						CDTUtilities cdt_obj = new CDTUtilities();
+						cdt_obj.parseCDT(CDT_File);
+						CDT_SIZE = cdt_obj.getSize();
+						CDT_VALID = cdt_obj.isValid();
+						String message = cdt_obj.getInvalidMessage();
+						System.err.println(CDT_File.getCanonicalPath() + ": " + message);
+						if(!message.equals("")) { JOptionPane.showMessageDialog(null, message);}
 					} catch (FileNotFoundException e1) { e1.printStackTrace(); }
+					catch (IOException e2) { e2.printStackTrace(); }
 					
 					if(CDT_VALID) {
 						lblColumnCount.setText("Column Count: " + CDT_SIZE);
@@ -360,29 +369,5 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 				lblIndexStop.setEnabled(true);
 			}
 		}
-	}
-    
-	public boolean parseCDTFile(File CDT) throws FileNotFoundException {
-		Scanner scan = new Scanner(CDT);
-		int currentSize = -999;
-		boolean consistentSize = true;
-		int currentRow = 1;
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
-			if(!temp[0].contains("YORF") && !temp[0].contains("NAME")) {
-				int tempsize = temp.length - 2;
-				if(currentSize == -999) { currentSize = tempsize; }
-				else if(currentSize != tempsize) {
-					JOptionPane.showMessageDialog(null, "Invalid Row at Index: " + currentRow);
-					consistentSize = false;
-					scan.close();
-				}
-				currentRow++;
-			}
-		}
-		scan.close();
-		CDT_SIZE = currentSize;
-		if(consistentSize) { return true; }
-		else { return false; }
 	}
 }

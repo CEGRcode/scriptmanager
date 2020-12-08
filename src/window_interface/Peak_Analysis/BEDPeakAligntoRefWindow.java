@@ -28,7 +28,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.Peak_Analysis.BEDPeakAligntoRef;
+import window_interface.Peak_Analysis.BEDPeakAligntoRefOutput;
 
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -52,7 +52,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
 	
-public Task task;
+	public Task task;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -62,23 +62,22 @@ public Task task;
         			JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
         		} else {
         			setProgress(0);
-        			BEDPeakAligntoRef align;
+        			BEDPeakAligntoRefOutput align;
         			int counter = 0;
 
     				for(int r = 0; r < RefFiles.size(); r++)
     				{
     					for(int p=0; p < PeakFiles.size(); p++)
     					{
-    						align = new BEDPeakAligntoRef(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH);	
-        	        			align.setVisible(true);
-        	        			align.run();
-        	        			counter++;
+							align = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH);	
+							align.setVisible(true);
+							align.run();
+							counter++;
 						int percentComplete = (int)(((double)(counter) / (PeakFiles.size()*RefFiles.size())) * 100);
 					    setProgress(percentComplete);	
     					}	
     			}
     				JOptionPane.showMessageDialog(null, "Alignment Complete");
-					
         		}
         	} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");

@@ -29,7 +29,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.Sequence_Analysis.SearchMotif;
+import window_interface.Sequence_Analysis.SearchMotifOutput;
 
 @SuppressWarnings("serial")
 public class SearchMotifWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -64,9 +64,9 @@ public Task task;
     				JOptionPane.showMessageDialog(null, "Invalid Number of Mismatches Entered!!!");
         		} else {
         			setProgress(0);
-        			SearchMotif search;
+        			SearchMotifOutput search;
     				for(int gfile = 0; gfile < GenomeFiles.size(); gfile++) {
-    						search = new SearchMotif(GenomeFiles.get(gfile), txtMotif.getText(), Integer.parseInt(txtMismatch.getText()), OUTPUT_PATH);	
+    						search = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(), Integer.parseInt(txtMismatch.getText()), OUTPUT_PATH);	
     						search.setVisible(true);
     						search.run();
         	        		counter++;

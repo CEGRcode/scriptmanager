@@ -36,7 +36,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.BAM_Statistics.BAMGenomeCorrelation;
+import window_interface.BAM_Statistics.BAMGenomeCorrelationOutput;
 
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -89,7 +89,7 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		        	else if(rdbtnAllReads.isSelected()) { READ = 2; }
 		        	else if(rdbtnMidpoint.isSelected()) { READ = 3; }
         			
-        			BAMGenomeCorrelation corr = new BAMGenomeCorrelation(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ);
+        			BAMGenomeCorrelationOutput corr = new BAMGenomeCorrelationOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ);
         			corr.addPropertyChangeListener("bam", new PropertyChangeListener() {
 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 					    	int temp = (Integer) propertyChangeEvent.getNewValue();

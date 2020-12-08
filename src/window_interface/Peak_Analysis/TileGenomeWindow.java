@@ -53,7 +53,17 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	        		} else if(Integer.parseInt(txtSize.getText()) < 1) {
 	    				JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
 	        		} else {
-	        			TileGenome generate = new TileGenome((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), rdbtnBed.isSelected(), OUTPUT_PATH);
+	        			boolean bedStatus = rdbtnBed.isSelected();
+						String randomName = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp";
+						if(bedStatus){ randomName += ".bed"; }
+						else{ randomName += ".gff"; }
+						File OUTFILE;
+						if(OUTPUT_PATH != null){
+							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
+						}else{
+							OUTFILE = new File(randomName);
+						}
+	        			TileGenome generate = new TileGenome((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
 	        			generate.execute();
 	    				JOptionPane.showMessageDialog(null, "Genomic Tiling Complete");
 	        		}

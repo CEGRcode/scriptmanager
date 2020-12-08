@@ -1,6 +1,5 @@
 package scripts.Peak_Analysis;
 
-import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,77 +13,43 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import objects.CoordinateObjects.BEDCoord;
 
-
 @SuppressWarnings({"serial"})
-public class FilterBEDbyProximity extends JFrame{
+public class FilterBEDbyProximity{
 	
 	private int CUTOFF;
 	private InputStream inputStream;
-	private File OUTPUTPATH = null;
-	private String INPUTFILE = null;
+	private String INPUTNAME = null;
 	private PrintStream OUT_Filter = null;
 	private PrintStream OUT_Cluster = null;
+	private PrintStream PS = null;
 	
-	private JTextArea textArea;
-	
-	public FilterBEDbyProximity(File input, int cutoff, File output) throws IOException {
-		setTitle("BED File Filter Progress");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(150, 150, 600, 800);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
-		textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane.setViewportView(textArea);
-		
+	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps) throws IOException {
 		CUTOFF = cutoff;
+		PS = ps;
 		inputStream = new FileInputStream(input);
-		INPUTFILE = input.getName();
-		
-		OUTPUTPATH = output;
-		String fname_f = INPUTFILE.substring(0, input.getName().lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp-FILTER" + ".bed"; 
-		String fname_c = INPUTFILE.substring(0, input.getName().lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp-CLUSTER" + ".bed";
-		
-		if(OUTPUTPATH != null) 
-		{
-			try
-			{
-				OUT_Filter = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + fname_f)); 
-				OUT_Cluster = new PrintStream(new File(OUTPUTPATH.getCanonicalPath() + File.separator + fname_c)); 
-				
+		INPUTNAME = input.getName();
+		try{
+			if(outputBase == null) {
+				outputBase = INPUTNAME.substring(0, input.getName().lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
 			}
-			catch (FileNotFoundException e) { e.printStackTrace(); }} 
-		else
-		{
-			try 
-			{
-				OUT_Filter = new PrintStream(new File(fname_f)); 
-				OUT_Cluster = new PrintStream(new File(fname_c));
-			}
-			catch (FileNotFoundException e) { e.printStackTrace(); }
-		}
+			OUT_Filter = new PrintStream(new File(outputBase + "-FILTER" + ".bed")); 
+			OUT_Cluster = new PrintStream(new File(outputBase + "-CLUSTER" + ".bed"));
+		}catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
 	
 	public void run() throws IOException, InterruptedException
 	{
-		System.out.println("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTFILE);
-		System.out.println("Starting: " + getTimeStamp());
-		textArea.append("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTFILE + "\n");
-		textArea.append("Starting: " + getTimeStamp() + "\n");
-		
+		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTNAME);
+		printPS("Starting: " + getTimeStamp());
 		
 	    BufferedReader lines = new BufferedReader(new InputStreamReader(inputStream), 100);
 	    List<BEDCoord> bedArray = new ArrayList<BEDCoord>();
 	    List<Integer> failArray = new ArrayList<Integer>();
-
+		
+		//load bed coords into bedArray
 	    String line;
 		while((line = lines.readLine()) != null) {
 			bedArray.add(new BEDCoord(line));
@@ -94,7 +59,9 @@ public class FilterBEDbyProximity extends JFrame{
 		Collections.sort(bedArray, BEDCoord.PeakMidpointComparator);
 		Collections.sort(bedArray, BEDCoord.PeakChromComparator);
 		
+		//Check each coord pair for proximity
 		for(int i = 0; i < bedArray.size(); i++) {
+			//check coords behind
 			int INDEX = i - 1;
 			if(INDEX >= 0) {
 				while((bedArray.get(i).getChrom().equals(bedArray.get(INDEX).getChrom())) && (Math.abs(bedArray.get(i).getMid() - bedArray.get(INDEX).getMid()) <= CUTOFF)) 
@@ -102,7 +69,7 @@ public class FilterBEDbyProximity extends JFrame{
 					if(bedArray.get(i).getScore() > bedArray.get(INDEX).getScore()) 
 					{
 						failArray.set(INDEX, new Integer(1));
-					} 
+					}
 					else if((bedArray.get(i).getScore() == bedArray.get(INDEX).getScore()) && (bedArray.get(INDEX).getMid() > bedArray.get(i).getMid()))
 					{
 						failArray.set(INDEX, new Integer(1));
@@ -111,31 +78,33 @@ public class FilterBEDbyProximity extends JFrame{
 						failArray.set(i, new Integer(1));
 					}
 					INDEX--;
-					if(INDEX < 0) { break; }
+					if(INDEX < 0) { break; } // To avoid redundant pair-wise checks
 				}
 			}
+			//check coords in front
 			INDEX = i + 1;
 	        if(INDEX < bedArray.size()) {
 	        	while((bedArray.get(i).getChrom().equals(bedArray.get(INDEX).getChrom())) && (Math.abs(bedArray.get(i).getMid() - bedArray.get(INDEX).getMid()) <= CUTOFF)) {
-		                if(bedArray.get(i).getScore() > bedArray.get(INDEX).getScore())
-		                {
-		                	failArray.set(INDEX, new Integer(1));
-	                	}
-		                else if((bedArray.get(i).getScore() == bedArray.get(INDEX).getScore()) && (bedArray.get(INDEX).getMid() > bedArray.get(i).getMid()))
-		                {
-		                	failArray.set(INDEX, new Integer(1));
-	                    }
-		                else
-		                {
-		                	failArray.set(i, new Integer(1));
-	                	}
-		                INDEX++;
-		                if(INDEX == bedArray.size()) {break; }
+	        		
+	        		if(bedArray.get(i).getScore() > bedArray.get(INDEX).getScore())
+	        		{
+	        			failArray.set(INDEX, new Integer(1));
+	        		}
+	        		else if((bedArray.get(i).getScore() == bedArray.get(INDEX).getScore()) && (bedArray.get(INDEX).getMid() > bedArray.get(i).getMid()))
+	        		{
+	        			failArray.set(INDEX, new Integer(1));
+	        		}
+	        		else
+	        		{
+	        			failArray.set(i, new Integer(1));
+	        		}
+	        		INDEX++;
+	        		if(INDEX == bedArray.size()){ break; } // To avoid redundant pair-wise checks
 	        	}
 	        }
-	}
+		}
 		
-		
+		//print bed coords to respective files based on fail array
 		for(int x = 0; x < bedArray.size(); x++) {
 			if(failArray.get(x).intValue() == 0) {
 				OUT_Filter.println(bedArray.get(x).toString()); 
@@ -145,20 +114,19 @@ public class FilterBEDbyProximity extends JFrame{
 		}
 		OUT_Filter.close();
 		OUT_Cluster.close();
-			
-		inputStream.close();
-		System.out.println("Completing: " + getTimeStamp());
-		textArea.append("Completing: " + getTimeStamp() + "\n");
 		
-		Thread.sleep(1000);
-		dispose();
+		inputStream.close();
+		printPS("Completing: " + getTimeStamp());
 	}
-	
 
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
 	}
-
+	
+	private void printPS(String message){
+		if(PS!=null) PS.println(message);
+		System.err.println(message);
+	}
 }

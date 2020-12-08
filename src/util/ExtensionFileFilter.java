@@ -1,6 +1,7 @@
 package util;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -30,7 +31,7 @@ public class ExtensionFileFilter extends FileFilter{
 		return false;
 	}
 	
-	public String getExtension(File f) {
+	public static String getExtension(File f) {
         String ext = null;
         String s = f.getName();
         int i = s.lastIndexOf('.');
@@ -40,6 +41,20 @@ public class ExtensionFileFilter extends FileFilter{
         return ext;
     }
 
+	public static String stripExtension(File f) throws IOException {
+		String[] name = f.getName().split("\\.");
+		String NEWNAME = name[0];
+		for(int x = 1; x < name.length-1; x++) {
+			NEWNAME += ("." + name[x]);
+		}
+		return(NEWNAME);
+	}
+	
+	public static String stripExtensionPath(File f) throws IOException {
+		String NAME = f.getCanonicalPath();
+		return(NAME.substring(0, NAME.lastIndexOf('.')));
+	}
+	
 	@Override
 	public String getDescription() {
 		return null;

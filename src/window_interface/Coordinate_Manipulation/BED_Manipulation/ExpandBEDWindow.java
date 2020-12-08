@@ -70,7 +70,14 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
         		} else {
 		        	setProgress(0);
 		        	for(int x = 0; x < BEDFiles.size(); x++) {
-						ExpandBED.expandBEDBorders(OUTPUT_PATH, BEDFiles.get(x), SIZE, rdbtnExpandFromCenter.isSelected());
+		        		File XBED = BEDFiles.get(x);
+		        		// Set outfilepath
+		        		String newName = (XBED.getName()).substring(0,XBED.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.bed";
+		        		File OUT_FILE = null;
+		        		if(OUTPUT_PATH == null) OUT_FILE = new File( newName );
+		        		else OUT_FILE = new File( OUTPUT_PATH + File.separator + newName );
+						// Execute expansion and update progress
+						ExpandBED.expandBEDBorders(OUT_FILE, XBED, SIZE, rdbtnExpandFromCenter.isSelected());
 						int percentComplete = (int)(((double)(x + 1) / BEDFiles.size()) * 100);
 		        		setProgress(percentComplete);
 		        	}
