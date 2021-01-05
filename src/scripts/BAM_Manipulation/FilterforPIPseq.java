@@ -24,9 +24,9 @@ public class FilterforPIPseq {
 	File genome = null;
 	File output = null;
 	String SEQ = "";
-	
-	private PrintStream PS;
-	
+
+	private PrintStream PS = null;
+
 	public FilterforPIPseq(File in, File gen, File out, String s, PrintStream ps) {
 		bamFile = in;
 		genome = gen;
@@ -34,27 +34,28 @@ public class FilterforPIPseq {
 		SEQ = s.toUpperCase();
 		PS = ps;
 	}
-	
+
 	public void run() throws IOException, InterruptedException {
 		IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(genome);
-		
+
 		IOUtil.assertFileIsReadable(bamFile);
 		IOUtil.assertFileIsWritable(output);
 		final SamReader reader = SamReaderFactory.makeDefault().open(bamFile);
 		reader.getFileHeader().setSortOrder(SAMFileHeader.SortOrder.coordinate);
 		final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, output);
-		
+
 		printBoth(bamFile.getName()); //output file name to textarea
-		
+
 		//Code to get individual chromosome stats
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
 		for (int z = 0; z < bai.getNumberOfReferences(); z++) {
 			SAMSequenceRecord seq = reader.getFileHeader().getSequence(z);
+
 			printBoth(seq.getSequenceName());
-					
+
 			CloseableIterator<SAMRecord> iter = reader.query(seq.getSequenceName(), 0, seq.getSequenceLength(), false);
 			while (iter.hasNext()) {
-				//Create the record object 
+				//Create the record object
 				SAMRecord sr = iter.next();
 				if(sr.getReadPairedFlag()) {
 					if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) {
@@ -70,7 +71,7 @@ public class FilterforPIPseq {
 							}
 						}
 						//System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
-						if(filter.toUpperCase().equals(SEQ)) { writer.addAlignment(sr); }							
+						if(filter.toUpperCase().equals(SEQ)) { writer.addAlignment(sr); }
 					}
 				} else {
 					String filter = "";
@@ -83,7 +84,7 @@ public class FilterforPIPseq {
 						filter = FASTAUtilities.RevComplement(filter);
 					}
 					//System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" + sr.getUnclippedStart() + "\t" + sr.getUnclippedEnd() + "\t" + sr.getReadNegativeStrandFlag() + "\t" + filter);
-					if(filter.toUpperCase().equals(SEQ)) { writer.addAlignment(sr); }		
+					if(filter.toUpperCase().equals(SEQ)) { writer.addAlignment(sr); }
 				}
 			}
 			iter.close();
@@ -93,7 +94,7 @@ public class FilterforPIPseq {
 		reader.close();
 		bai.close();
 	}
-	
+
 	private void printBoth(String message){
 		if(PS!=null){ PS.println(message); }
 		System.err.println(message);

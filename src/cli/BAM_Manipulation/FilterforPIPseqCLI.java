@@ -107,7 +107,7 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 		}
 		
 		//check filter string is valid ATCG
-		Pattern seqPat = Pattern.compile("[ATCG]");
+		Pattern seqPat = Pattern.compile("[ATCG]+");
 		Matcher m = seqPat.matcher( filterString );
 		if( !m.matches() ){
 			r += "(!)Filter string must be formatted as a nucleotide sequence.\n" + filterString +
