@@ -149,6 +149,10 @@ public class AggregateDataCLI implements Callable<Integer> {
 		else if(aggr.max) { aggType = 5; }
 		else if(aggr.var) { aggType = 6; }
 		
+		//validate row&column start indexes
+		if(startROW<0){ r += "(!)Row start must not be less than zero\n"; }
+		if(startCOL<0){ r += "(!)Column start must not be less than zero\n"; }
+				
 		return(r);
 	}
 }
