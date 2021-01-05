@@ -86,6 +86,8 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 		else if(readType.midpoint)	{ STRAND=3; }
 		else if(readType.fragment)	{ STRAND=4; }
 		else						{ STRAND=0; }
+		// set PE defaults
+		if(STRAND==3 || STRAND==4) { matePair=true; }
 		
 		//check inputs exist
 		if(!bamFile.exists()){
@@ -131,7 +133,7 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 		// validate insert sizes
 		if( MIN_INSERT<0 && MIN_INSERT!=-9999 ){ r += "MIN_INSERT must be a positive integer value: " + MIN_INSERT + "\n"; }
 		if( MAX_INSERT<0 && MAX_INSERT!=-9999 ){ r += "MAX_INSERT must be a positive integer value: " + MAX_INSERT + "\n"; }
-		if( MAX_INSERT<MIN_INSERT ){ r += "MAX_INSERT must be larger/equal to MIN_INSERT: " + MIN_INSERT + "," + MAX_INSERT + "\n"; }
+		if( MAX_INSERT<MIN_INSERT && MIN_INSERT!=-9999 && MAX_INSERT!=-9999){ r += "MAX_INSERT must be larger/equal to MIN_INSERT: " + MIN_INSERT + "," + MAX_INSERT + "\n"; }
 		// turn pair status boolean into int
 		PAIR = matePair ? 1 : 0;
 		
