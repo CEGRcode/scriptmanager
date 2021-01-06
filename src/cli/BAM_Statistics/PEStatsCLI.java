@@ -1,6 +1,5 @@
 package cli.BAM_Statistics;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;

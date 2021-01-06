@@ -36,9 +36,6 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.BAM_Format_Converter.BAMtobedGraph;
-
-import window_interface.BAM_Format_Converter.BAMtobedGraphOutput;
 
 @SuppressWarnings("serial")
 public class BAMtobedGraphWindow extends JFrame implements ActionListener, PropertyChangeListener {

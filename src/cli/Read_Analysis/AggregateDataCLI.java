@@ -1,6 +1,5 @@
 package cli.Read_Analysis;
 
-import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
 import scripts.Read_Analysis.AggregateData;
 
 /**

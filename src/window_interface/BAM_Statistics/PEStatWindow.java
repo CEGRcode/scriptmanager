@@ -34,7 +34,6 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import window_interface.BAM_Statistics.PEStatOutput;
 
 @SuppressWarnings("serial")
 public class PEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {

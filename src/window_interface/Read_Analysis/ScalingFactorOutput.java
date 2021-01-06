@@ -1,12 +1,9 @@
-package scripts.Read_Analysis;
+package window_interface.Read_Analysis;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -17,7 +14,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SpringLayout;
 
-import objects.CoordinateObjects.BEDCoord;
 import util.ExtensionFileFilter;
 import scripts.Read_Analysis.ScalingFactor;
 

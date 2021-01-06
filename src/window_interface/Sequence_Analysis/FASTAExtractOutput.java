@@ -1,8 +1,6 @@
 package window_interface.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
-import htsjdk.samtools.reference.IndexedFastaSequenceFile;
-import objects.CoordinateObjects.BEDCoord;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -16,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import objects.CustomOutputStream;
-import util.FASTAUtilities;
 import scripts.Sequence_Analysis.FASTAExtract;
 
 @SuppressWarnings("serial")

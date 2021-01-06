@@ -3,11 +3,7 @@ package main;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.concurrent.Callable;
-
-import main.ScriptManagerGUI;
 
 import cli.BAM_Format_Converter.BAMtoBEDCLI;
 import cli.BAM_Format_Converter.BAMtobedGraphCLI;
@@ -91,8 +87,10 @@ public class ScriptManager implements Callable<Integer> {
 	public static void main(String[] args) {
 		CommandLine cmd = new CommandLine( new ScriptManager() );
 		int exitCode = cmd.execute(args);
-// 		System.out.println("main:Exit code = " + exitCode);
-// 		System.exit(exitCode);
+		if(exitCode != 0) {
+			System.out.println("main:Exit code = " + exitCode);
+			System.exit(exitCode);
+		}
 	}
 }
 

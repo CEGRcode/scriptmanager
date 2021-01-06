@@ -28,7 +28,6 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import window_interface.Figure_Generation.MergeHeatMapOutput;
 
 @SuppressWarnings("serial")
 public class MergeHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {

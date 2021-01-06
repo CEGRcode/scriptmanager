@@ -1195,7 +1195,7 @@ public class ScriptManagerGUI {
 		//	2=BAM_Format_Converter		7=Sequence_Analysis
 		//	3=File_Utilities			8=DNA_Sequence_Analysis
 		//	4=Peak_Calling				9=Figure_Generation
-		tabbedPane.setSelectedIndex(2);
+		tabbedPane.setSelectedIndex(0);
 	}
 	
 	private void initializeTextArea(JTextArea text) {

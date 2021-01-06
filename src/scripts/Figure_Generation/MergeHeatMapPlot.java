@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class MergeHeatMapPlot {

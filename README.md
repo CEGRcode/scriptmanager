@@ -12,7 +12,7 @@ Scripts are generically categorized within semi-descriptive tabs and are designe
 
 The compiled JAR file will be output into the `build/libs` directory. 
 
-## Current scripts available (181101):
+## Current scripts available (210106):
 
 **BAM Statistics:**
 

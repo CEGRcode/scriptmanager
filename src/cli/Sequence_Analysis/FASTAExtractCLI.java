@@ -1,16 +1,12 @@
 package cli.Sequence_Analysis;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;

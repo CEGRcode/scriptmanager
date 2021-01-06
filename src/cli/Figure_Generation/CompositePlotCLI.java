@@ -1,6 +1,5 @@
 package cli.Figure_Generation;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -19,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.data.xy.XYSeries;
@@ -27,7 +25,6 @@ import org.jfree.data.xy.XYSeries;
 import charts.CompositePlot;
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
-import scripts.Figure_Generation.MergeHeatMapPlot;
 
 /**
 	Figure_GenerationCLI/CompositePlotCLI
@@ -193,6 +190,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 		//parse x values
 		String[] tokens = scan.nextLine().split("\t");
 		if(!tokens[0].equals("")){
+			scan.close();
 			System.err.println("(!) First row of input file must have an empty first column (as x-values)");
 			return null;
 		}
@@ -208,6 +206,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 			//check for format consistency: number of x-values matches y-values
 			if(tokens.length-1!=x.length){
 				System.err.println("(!) Check number of x-values matches number of y-values");
+				scan.close();
 				return null;
 			}
 			//skip any rows with blank labels
@@ -217,6 +216,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 						System.err.println(x[i-1]);
 						System.err.println(tokens[i]);
 						System.err.println("(!) Check dataseries based on same x-scale file");
+						scan.close();
 						return null;
 					}
 				}

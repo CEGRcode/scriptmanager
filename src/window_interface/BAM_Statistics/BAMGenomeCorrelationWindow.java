@@ -36,7 +36,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import window_interface.BAM_Statistics.BAMGenomeCorrelationOutput;
 
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -1,24 +1,12 @@
 package cli.Peak_Analysis;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.NullPointerException;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
 
 import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-//import scripts.Peak_Analysis.SignalDuplication;
 	
 /**
 	Peak_AnalysisCLI/SignalDuplicationCLI

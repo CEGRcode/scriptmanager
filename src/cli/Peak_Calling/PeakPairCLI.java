@@ -1,13 +1,9 @@
 package cli.Peak_Calling;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
 
-import java.io.File;
 import java.io.IOException;
 
 import objects.ToolDescriptions;

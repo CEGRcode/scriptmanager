@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Vector;
 
 public class SEStats {
 	

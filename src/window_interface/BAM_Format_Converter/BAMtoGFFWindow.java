@@ -36,7 +36,6 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import window_interface.BAM_Format_Converter.BAMtoGFFOutput;
 
 @SuppressWarnings("serial")
 public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {

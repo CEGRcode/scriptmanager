@@ -34,7 +34,6 @@ import javax.swing.SwingConstants;
 import util.FileSelection;
 import util.FASTAUtilities;
 import scripts.BAM_Manipulation.BAIIndexer;
-import window_interface.BAM_Manipulation.FilterforPIPseqOutput;
 
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {

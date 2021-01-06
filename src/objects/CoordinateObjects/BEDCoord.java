@@ -2,8 +2,6 @@ package objects.CoordinateObjects;
 
 import java.util.Comparator;
 
-import objects.CoordinateObjects.GenomicCoord;
-
 public class BEDCoord implements GenomicCoord {
 	private String CHROM = "";
 	private long START = 0;

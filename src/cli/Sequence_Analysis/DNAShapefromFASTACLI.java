@@ -1,6 +1,5 @@
 package cli.Sequence_Analysis;
 
-import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -11,12 +10,7 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
-
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;

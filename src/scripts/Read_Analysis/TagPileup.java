@@ -1,6 +1,5 @@
 package scripts.Read_Analysis;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,8 +18,6 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPOutputStream;
-
-import org.jfree.chart.ChartPanel;
 
 import charts.CompositePlot;
 import htsjdk.samtools.AbstractBAMFileIndex;
