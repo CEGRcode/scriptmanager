@@ -128,11 +128,11 @@ public class SignalDuplication extends JFrame {
 								String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
 								//Duplication rate for each chrom determined
 								if(CHROM_COMPLEXITY.isEmpty()) {
-									CHROM_COMPLEXITY.put(tagName, new Integer(1));
+									CHROM_COMPLEXITY.put(tagName, Integer.valueOf(1));
 								} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
-									CHROM_COMPLEXITY.put(tagName, new Integer(1));
+									CHROM_COMPLEXITY.put(tagName, Integer.valueOf(1));
 								} else if(CHROM_COMPLEXITY.containsKey(tagName)){
-									CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
+									CHROM_COMPLEXITY.put(tagName, Integer.valueOf(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
 								}
 								
 							}
@@ -147,19 +147,19 @@ public class SignalDuplication extends JFrame {
 						//Determine if molecule has ANY overlap with determined signal region
 						if(checkOverlap(seq.getSequenceName(), str, COORD)) { //if so, push into SIGNAL hash
 					         if(SIG_COMPLEXITY.isEmpty()) {
-					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(1));
 					         } else if(!SIG_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
-					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(1));
 					         } else if(SIG_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
-					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) SIG_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
+					        	 SIG_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(((Integer) SIG_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
 					         }
 				        } else { 	//else, push into BACKGROUND hash
 					         if(GEN_COMPLEXITY.isEmpty()) {
-					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(1));
 					         } else if(!GEN_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
-					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(1));
 					         } else if(GEN_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
-					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) GEN_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
+					        	 GEN_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(((Integer) GEN_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
 					         }
 				        }
 					}			
@@ -239,20 +239,20 @@ public class SignalDuplication extends JFrame {
 	}
 	
 	public static void initializeBINS(ArrayList<Double> BIN) {
-		BIN.add(new Double(0)); // Bin 1
-		BIN.add(new Double(0)); // Bin 2-10
-		BIN.add(new Double(0)); // Bin 11-25
-		BIN.add(new Double(0)); // Bin 26-50
-		BIN.add(new Double(0)); // Bin 51-75
-		BIN.add(new Double(0)); // Bin 76-100
-		BIN.add(new Double(0)); // Bin 101-125
-		BIN.add(new Double(0)); // Bin 126-150
-		BIN.add(new Double(0)); // Bin 151-250
-		BIN.add(new Double(0)); // Bin 251-500
-		BIN.add(new Double(0)); // Bin 501-1,000
-		BIN.add(new Double(0)); // Bin 1,001-5,000
-		BIN.add(new Double(0)); // Bin 5,001-10,000
-		BIN.add(new Double(0)); // Bin 10,000+
+		BIN.add(Double.valueOf(0)); // Bin 1
+		BIN.add(Double.valueOf(0)); // Bin 2-10
+		BIN.add(Double.valueOf(0)); // Bin 11-25
+		BIN.add(Double.valueOf(0)); // Bin 26-50
+		BIN.add(Double.valueOf(0)); // Bin 51-75
+		BIN.add(Double.valueOf(0)); // Bin 76-100
+		BIN.add(Double.valueOf(0)); // Bin 101-125
+		BIN.add(Double.valueOf(0)); // Bin 126-150
+		BIN.add(Double.valueOf(0)); // Bin 151-250
+		BIN.add(Double.valueOf(0)); // Bin 251-500
+		BIN.add(Double.valueOf(0)); // Bin 501-1,000
+		BIN.add(Double.valueOf(0)); // Bin 1,001-5,000
+		BIN.add(Double.valueOf(0)); // Bin 5,001-10,000
+		BIN.add(Double.valueOf(0)); // Bin 10,000+
 	}
 	
 	public static String[] initializeBIN_Names() {

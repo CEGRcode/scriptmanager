@@ -302,8 +302,8 @@ public class TagPileup {
 			//check for	(1) bed chrom that aren't in BAM file OR
 			//			(2) starts smaller than the stop
 			if( (!chrom.contains(COORD.get(x).getChrom())) || (COORD.get(x).getStart() > COORD.get(x).getStop()) ) {
-				if(!indexFail.contains(new Integer(x))) {
-					indexFail.add(new Integer(x));
+				if(!indexFail.contains(Integer.valueOf(x))) {
+					indexFail.add(Integer.valueOf(x));
 				}
 			}
 		}
@@ -314,7 +314,7 @@ public class TagPileup {
 		
 		//Create new input file without failed indexes to more efficiently use CPUs
 		for(int x = 0; x < COORD.size(); x++) {
-			if(!indexFail.contains(new Integer(x))) {
+			if(!indexFail.contains(Integer.valueOf(x))) {
 				FINAL.add(COORD.get(x));
 			}
 		}

@@ -252,7 +252,7 @@ public class ScalingFactor {
 		for (int z = 0; z < Sbai.getNumberOfReferences(); z++) {
 			SAMSequenceRecord Sseq = Sreader.getFileHeader().getSequence(z);
 			chromName.add(Sseq.getSequenceName());
-			chromLength.add(new Long(Sseq.getSequenceLength()));
+			chromLength.add(Long.valueOf(Sseq.getSequenceLength()));
 		}
 		Sreader.close();
 		Sbai.close();

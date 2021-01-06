@@ -308,7 +308,7 @@ public class HeatmapPlot {
 		ArrayList<Double> nonZero = new ArrayList<Double>();
 		for(int x = 0; x < matrix.size(); x++) {
 			for(int y = 0; y < matrix.get(x).length; y++) {
-				if(matrix.get(x)[y] != 0) { nonZero.add(new Double(matrix.get(x)[y])); }
+				if(matrix.get(x)[y] != 0) { nonZero.add(Double.valueOf(matrix.get(x)[y])); }
 			}
 		}
 		Collections.sort(nonZero);

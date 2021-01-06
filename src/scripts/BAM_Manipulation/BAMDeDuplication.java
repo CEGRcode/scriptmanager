@@ -62,10 +62,10 @@ public class BAMDeDuplication extends JFrame {
 							//Duplication rate for each chrom determined
 							if(CHROM_COMPLEXITY.isEmpty()) {
 								writer.addAlignment(sr);
-								CHROM_COMPLEXITY.put(tagName, new Integer(1));
+								CHROM_COMPLEXITY.put(tagName, Integer.valueOf(1));
 							} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
 								writer.addAlignment(sr);
-								CHROM_COMPLEXITY.put(tagName, new Integer(1));
+								CHROM_COMPLEXITY.put(tagName, Integer.valueOf(1));
 							}
 						}
 					}

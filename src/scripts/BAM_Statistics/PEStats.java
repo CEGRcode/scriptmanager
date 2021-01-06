@@ -127,11 +127,11 @@ public class PEStats {
 									String tagName = sr.getAlignmentStart() + "_" + sr.getMateAlignmentStart() + "_" + sr.getInferredInsertSize();
 									//Duplication rate for each chrom determined
 									if(CHROM_COMPLEXITY.isEmpty()) {
-										CHROM_COMPLEXITY.put(tagName, new Integer(1));
+										CHROM_COMPLEXITY.put(tagName, Integer.valueOf(1));
 									} else if(!CHROM_COMPLEXITY.containsKey(tagName)) {
-										CHROM_COMPLEXITY.put(tagName, new Integer(1));
+										CHROM_COMPLEXITY.put(tagName, Integer.valueOf(1));
 									} else if(CHROM_COMPLEXITY.containsKey(tagName)){
-										CHROM_COMPLEXITY.put(tagName, new Integer(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
+										CHROM_COMPLEXITY.put(tagName, Integer.valueOf(((Integer) CHROM_COMPLEXITY.get(tagName)).intValue() + 1));
 									}
 								}
 							}
@@ -148,11 +148,11 @@ public class PEStats {
 					while(keys.hasNext()) {
 						 String str = (String) keys.next();
 						 if(ALL_COMPLEXITY.isEmpty()) {
-							 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+							 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(1));
 						 } else if(!ALL_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))) {
-							 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(1));
+							 ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(1));
 						 } else if(ALL_COMPLEXITY.containsKey(CHROM_COMPLEXITY.get(str))){
-								ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), new Integer(((Integer) ALL_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
+								ALL_COMPLEXITY.put(CHROM_COMPLEXITY.get(str), Integer.valueOf(((Integer) ALL_COMPLEXITY.get(CHROM_COMPLEXITY.get(str))).intValue() + 1));
 						 }
 					}
 				}
@@ -295,20 +295,20 @@ public class PEStats {
 	}
 	
 	public static void initializeBINS(ArrayList<Double> BIN) {
-		BIN.add(new Double(0)); // Bin 1
-		BIN.add(new Double(0)); // Bin 2-10
-		BIN.add(new Double(0)); // Bin 11-25
-		BIN.add(new Double(0)); // Bin 26-50
-		BIN.add(new Double(0)); // Bin 51-75
-		BIN.add(new Double(0)); // Bin 76-100
-		BIN.add(new Double(0)); // Bin 101-125
-		BIN.add(new Double(0)); // Bin 126-150
-		BIN.add(new Double(0)); // Bin 151-250
-		BIN.add(new Double(0)); // Bin 251-500
-		BIN.add(new Double(0)); // Bin 501-1,000
-		BIN.add(new Double(0)); // Bin 1,001-5,000
-		BIN.add(new Double(0)); // Bin 5,001-10,000
-		BIN.add(new Double(0)); // Bin 10,000+
+		BIN.add(Double.valueOf(0)); // Bin 1
+		BIN.add(Double.valueOf(0)); // Bin 2-10
+		BIN.add(Double.valueOf(0)); // Bin 11-25
+		BIN.add(Double.valueOf(0)); // Bin 26-50
+		BIN.add(Double.valueOf(0)); // Bin 51-75
+		BIN.add(Double.valueOf(0)); // Bin 76-100
+		BIN.add(Double.valueOf(0)); // Bin 101-125
+		BIN.add(Double.valueOf(0)); // Bin 126-150
+		BIN.add(Double.valueOf(0)); // Bin 151-250
+		BIN.add(Double.valueOf(0)); // Bin 251-500
+		BIN.add(Double.valueOf(0)); // Bin 501-1,000
+		BIN.add(Double.valueOf(0)); // Bin 1,001-5,000
+		BIN.add(Double.valueOf(0)); // Bin 5,001-10,000
+		BIN.add(Double.valueOf(0)); // Bin 10,000+
 	}
 	
 	public static String[] initializeBIN_Names() {

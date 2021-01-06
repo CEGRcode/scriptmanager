@@ -121,12 +121,12 @@ public class BAMtobedGraph {
 				
 		//Make sure we only add tags that have valid starts
 		if(recordStart > 0 && recordStart <= CHROMSTOP) {
-			if(BP.contains(new Integer(recordStart))) {
-				int index = BP.indexOf(new Integer(recordStart));
+			if(BP.contains(Integer.valueOf(recordStart))) {
+				int index = BP.indexOf(Integer.valueOf(recordStart));
 				if(sr.getReadNegativeStrandFlag()) {
-					R_OCC.set(index, new Integer(R_OCC.get(index).intValue() + 1));
+					R_OCC.set(index, Integer.valueOf(R_OCC.get(index).intValue() + 1));
 				} else {
-					F_OCC.set(index, new Integer(F_OCC.get(index).intValue() + 1));
+					F_OCC.set(index, Integer.valueOf(F_OCC.get(index).intValue() + 1));
 				}
 			} else {
 				//Sometimes the start coordinate will be out of order due to (-) strand correction
@@ -138,22 +138,22 @@ public class BAMtobedGraph {
 					}
 				}
 				if(index < BP.size() - 1) {
-					BP.add(index + 1, new Integer(recordStart));
+					BP.add(index + 1, Integer.valueOf(recordStart));
 					if(sr.getReadNegativeStrandFlag()) {
-						R_OCC.add(index + 1, new Integer(1));
-						F_OCC.add(index + 1, new Integer(0));
+						R_OCC.add(index + 1, Integer.valueOf(1));
+						F_OCC.add(index + 1, Integer.valueOf(0));
 					} else {
-						F_OCC.add(index + 1, new Integer(1));
-						R_OCC.add(index + 1, new Integer(0));
+						F_OCC.add(index + 1, Integer.valueOf(1));
+						R_OCC.add(index + 1, Integer.valueOf(0));
 					}
 				} else {
-					BP.add(new Integer(recordStart));
+					BP.add(Integer.valueOf(recordStart));
 					if(sr.getReadNegativeStrandFlag()) {
-						R_OCC.add(new Integer(1));
-						F_OCC.add(new Integer(0));
+						R_OCC.add(Integer.valueOf(1));
+						F_OCC.add(Integer.valueOf(0));
 					} else {
-						F_OCC.add(new Integer(1));
-						R_OCC.add(new Integer(0));
+						F_OCC.add(Integer.valueOf(1));
+						R_OCC.add(Integer.valueOf(0));
 					}
 				}
 			}
@@ -174,9 +174,9 @@ public class BAMtobedGraph {
 		
 		//Make sure we only add tags that have valid midpoints
 		if(recordMid > 0 && recordMid <= CHROMSTOP) {
-			if(BP.contains(new Integer(recordMid))) {
-				int index = BP.indexOf(new Integer(recordMid));
-				M_OCC.set(index, new Integer(M_OCC.get(index).intValue() + 1));
+			if(BP.contains(Integer.valueOf(recordMid))) {
+				int index = BP.indexOf(Integer.valueOf(recordMid));
+				M_OCC.set(index, Integer.valueOf(M_OCC.get(index).intValue() + 1));
 			} else {
 				//Sometimes the start coordinate will be out of order due to (-) strand correction
 				//Need to efficiently identify where to place it relative to the other bps
@@ -187,11 +187,11 @@ public class BAMtobedGraph {
 					}
 				}
 				if(index < BP.size() - 1) {
-					BP.add(index + 1, new Integer(recordMid));
-					M_OCC.add(index + 1, new Integer(1));
+					BP.add(index + 1, Integer.valueOf(recordMid));
+					M_OCC.add(index + 1, Integer.valueOf(1));
 				} else {
-					BP.add(new Integer(recordMid));
-					M_OCC.add(new Integer(1));
+					BP.add(Integer.valueOf(recordMid));
+					M_OCC.add(Integer.valueOf(1));
 				}
 			}
 		}
