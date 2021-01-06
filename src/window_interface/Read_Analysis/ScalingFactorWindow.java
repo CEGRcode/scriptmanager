@@ -36,7 +36,6 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import scripts.Read_Analysis.ScalingFactorOutput;
 
 @SuppressWarnings("serial")
 public class ScalingFactorWindow extends JFrame implements ActionListener, PropertyChangeListener {
