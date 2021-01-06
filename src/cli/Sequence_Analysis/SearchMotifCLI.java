@@ -6,6 +6,8 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,6 +83,14 @@ public class SearchMotifCLI implements Callable<Integer> {
 			} else if(!new File(output.getParent()).exists()){
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}
+		}
+		
+		//check filter string is valid ATCG
+		Pattern seqPat = Pattern.compile("[ATCG]+");
+		Matcher m = seqPat.matcher( motif );
+		if( !m.matches() ){
+			r += "(!)Motif string must be formatted as a nucleotide sequence.\n" + motif +
+				" is not a valid nucleotide sequence.\nExpected input string format: \"[ATCG]\"";
 		}
 		
 		//check mismatch value

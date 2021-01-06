@@ -70,8 +70,8 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 		}else{
 			//check ext
 			try{
-				if(!"gff".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use GFF extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".gff\n";
+				if(!"bed".equals(ExtensionFileFilter.getExtension(output))){
+					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".bed\n";
 				}
 			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use GFF extension for output filename. Try: " + output + ".gff\n"; }
 			//check directory

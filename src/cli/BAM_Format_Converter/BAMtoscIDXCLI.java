@@ -83,6 +83,8 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		else if(readType.combined)	{ STRAND=2; }
 		else if(readType.midpoint)	{ STRAND=3; }
 		else						{ STRAND=0; }
+		// set PE defaults
+		if(STRAND==3) { matePair=true; }
 		
 		//check inputs exist
 		if(!bamFile.exists()){
@@ -128,7 +130,7 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		// validate insert sizes
 		if( MIN_INSERT<0 && MIN_INSERT!=-9999 ){ r += "MIN_INSERT must be a positive integer value: " + MIN_INSERT + "\n"; }
 		if( MAX_INSERT<0 && MAX_INSERT!=-9999 ){ r += "MAX_INSERT must be a positive integer value: " + MAX_INSERT + "\n"; }
-		if( MAX_INSERT<MIN_INSERT ){ r += "MAX_INSERT must be larger/equal to MIN_INSERT: " + MIN_INSERT + "," + MAX_INSERT + "\n"; }
+		if( MAX_INSERT<MIN_INSERT && MIN_INSERT!=-9999 && MAX_INSERT!=-9999){ r += "MAX_INSERT must be larger/equal to MIN_INSERT: " + MIN_INSERT + "," + MAX_INSERT + "\n"; }
 		// turn pair status boolean into int
 		PAIR = matePair ? 1 : 0;
 		

@@ -104,7 +104,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 		// Save Composite Plot
 		OutputStream OUT = new FileOutputStream(output);
 		ChartUtilities.writeChartAsPNG(OUT, chart, pixelWidth, pixelHeight);
-				
+		
 		System.err.println( "Image Generated." );
 		return(0);
 	}
@@ -140,8 +140,6 @@ public class CompositePlotCLI implements Callable<Integer> {
 			}
 		}
 		
-		//set default title name
-		if(title!=null){ title = compositeData.getName(); }
 		//check pixel ranges are valid
 		if(pixelHeight<=0){ r += "(!)Cell height must be a positive integer value! check \"-y\" flag.\""; }
 		if(pixelWidth<=0) { r += "(!)Cell width must be a positive integer value! check \"-x\" flag.\""; }
