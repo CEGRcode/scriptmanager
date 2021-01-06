@@ -3,21 +3,9 @@ package window_interface.Read_Analysis;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-// import java.io.Writer;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Scanner;
 import java.util.Vector;
-// import java.util.concurrent.ExecutorService;
-// import java.util.concurrent.Executors;
-// import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -27,19 +15,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
 
-import org.jfree.chart.JFreeChart;
-import charts.CompositePlot;
-import htsjdk.samtools.AbstractBAMFileIndex;
-// import htsjdk.samtools.SamReader;
-// import htsjdk.samtools.SamReaderFactory;
 import objects.PileupParameters;
-import objects.CoordinateObjects.BEDCoord;
 import objects.CustomOutputStream;
-// import scripts.Read_Analysis.PileupScripts.PileupExtract;
 import scripts.Read_Analysis.TagPileup;
-import util.ArrayUtilities;
 import util.BAMUtilities;
-import util.JTVOutput;
 
 @SuppressWarnings("serial")
 public class TagPileupOutput extends JFrame {

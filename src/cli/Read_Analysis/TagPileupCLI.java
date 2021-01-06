@@ -1,12 +1,10 @@
 package cli.Read_Analysis;
 
-import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.awt.Color;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;

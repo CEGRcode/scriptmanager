@@ -39,7 +39,6 @@ import javax.swing.border.EmptyBorder;
 
 import objects.PileupParameters;
 import util.FileSelection;
-import window_interface.Read_Analysis.TagPileupOutput;
 
 @SuppressWarnings("serial")
 public class TagPileupWindow extends JFrame implements ActionListener, PropertyChangeListener {

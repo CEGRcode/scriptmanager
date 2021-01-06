@@ -24,7 +24,6 @@ import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
-import window_interface.BAM_Statistics.SEStatOutput;
 
 @SuppressWarnings("serial")
 public class SEStatWindow extends JFrame {

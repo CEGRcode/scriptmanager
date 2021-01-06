@@ -1,6 +1,5 @@
 package cli.BAM_Statistics;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -8,7 +7,6 @@ import picocli.CommandLine.Parameters;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
-import java.util.Vector;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;

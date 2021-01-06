@@ -65,7 +65,6 @@ public class BAMtobedGraph {
 				}
 			}
 			catch (FileNotFoundException e) { e.printStackTrace(); }
-			catch (IOException e) {	e.printStackTrace(); }
 		} else {
 			throw new NullPointerException();
 		}

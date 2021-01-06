@@ -1,7 +1,5 @@
 package window_interface.Sequence_Analysis;
 
-import htsjdk.samtools.SAMException;
-
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileNotFoundException;

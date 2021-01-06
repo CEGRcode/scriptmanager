@@ -1,6 +1,5 @@
 package cli.BAM_Format_Converter;
 
-import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

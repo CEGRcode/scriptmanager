@@ -17,10 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
-
 import util.FASTAUtilities;
 import charts.CompositePlot;
 import util.DNAShapeReference;

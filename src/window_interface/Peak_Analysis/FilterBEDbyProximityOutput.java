@@ -2,7 +2,6 @@ package window_interface.Peak_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 

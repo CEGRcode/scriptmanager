@@ -1,9 +1,5 @@
 package scripts.Sequence_Analysis;
 
-// import htsjdk.samtools.SAMException;
-// import htsjdk.samtools.reference.IndexedFastaSequenceFile;
-// import objects.CoordinateObjects.BEDCoord;
-
 import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,15 +7,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-// import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
 
 import charts.CompositePlot;
 import util.DNAShapeReference;
