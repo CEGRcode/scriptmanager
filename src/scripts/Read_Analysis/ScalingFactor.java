@@ -34,7 +34,6 @@ import objects.CoordinateObjects.BEDCoord;
  * NCIS algorithm from Liang & Keles (BMC Bioinformatics 2012)
  */
 
-@SuppressWarnings("serial")
 public class ScalingFactor {
 	
 	private File BAMFile = null;

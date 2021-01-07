@@ -23,7 +23,6 @@ import org.jfree.chart.ChartPanel;
 import charts.Histogram;
 import charts.LineChart;
 
-@SuppressWarnings("serial")
 public class PEStats {
 	
 	public static Vector<ChartPanel> getPEStats( File out_basename, File bamFile, boolean DUP_STATUS, int MIN_INSERT, int MAX_INSERT, PrintStream PS_INSERT, PrintStream PS_DUP, boolean SUM_STATUS ){

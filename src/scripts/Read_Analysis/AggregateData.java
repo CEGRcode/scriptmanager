@@ -10,7 +10,6 @@ import java.util.Scanner;
 import util.ArrayUtilities;
 import util.ExtensionFileFilter;
 
-@SuppressWarnings("serial")
 public class AggregateData {
 	
 	private ArrayList<File> INPUT = null;

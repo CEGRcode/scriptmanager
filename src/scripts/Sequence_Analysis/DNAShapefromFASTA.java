@@ -15,7 +15,6 @@ import java.util.Scanner;
 import charts.CompositePlot;
 import util.DNAShapeReference;
 
-@SuppressWarnings("serial")
 public class DNAShapefromFASTA {
 	private String OUTBASENAME = null;
 	private boolean[] OUTPUT_TYPE = null;

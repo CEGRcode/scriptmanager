@@ -14,7 +14,6 @@ import java.util.Scanner;
 
 import util.FASTAUtilities;
 
-@SuppressWarnings("serial")
 public class FASTAExtract {
 	private File GENOME = null;
 	private File OUTFILE = null;

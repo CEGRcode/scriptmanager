@@ -18,7 +18,6 @@ import java.io.PrintStream;
 
 import util.FASTAUtilities;
 
-@SuppressWarnings("serial")
 public class FilterforPIPseq {
 	File bamFile = null;
 	File genome = null;

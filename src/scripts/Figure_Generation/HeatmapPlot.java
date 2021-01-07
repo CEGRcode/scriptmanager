@@ -21,7 +21,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-@SuppressWarnings("serial")
 public class HeatmapPlot {
 
 	protected static File SAMPLE = null;

@@ -29,7 +29,6 @@ import scripts.Read_Analysis.PileupScripts.PileupExtract;
 import util.ArrayUtilities;
 import util.JTVOutput;
 
-@SuppressWarnings("serial")
 public class TagPileup {
 	File BED = null;
 	File BAM = null;

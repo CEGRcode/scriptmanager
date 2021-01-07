@@ -21,7 +21,6 @@ import util.FASTAUtilities;
 import charts.CompositePlot;
 import util.DNAShapeReference;
 
-@SuppressWarnings("serial")
 public class DNAShapefromBED {
 	private File GENOME = null;
 	private String OUTBASENAME = null;

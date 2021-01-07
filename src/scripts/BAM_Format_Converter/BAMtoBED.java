@@ -14,7 +14,6 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@SuppressWarnings("serial")
 public class BAMtoBED {
 	private File BAM = null;
 	private File OUTFILE = null;

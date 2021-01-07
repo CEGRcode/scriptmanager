@@ -16,7 +16,6 @@ import java.util.List;
 
 import objects.CoordinateObjects.BEDCoord;
 
-@SuppressWarnings({"serial"})
 public class FilterBEDbyProximity{
 	
 	private int CUTOFF;

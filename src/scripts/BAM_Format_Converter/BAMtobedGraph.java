@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-@SuppressWarnings("serial")
 public class BAMtobedGraph {
 	private File BAM = null;
 	private String OUTBASENAME = null;

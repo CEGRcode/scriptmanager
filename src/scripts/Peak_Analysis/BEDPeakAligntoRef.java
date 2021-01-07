@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("serial")
 public class BEDPeakAligntoRef {
 	private String peakPath = null;
 	private String refPath = null;

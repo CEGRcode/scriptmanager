@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-@SuppressWarnings("serial")
 public class BAMtoscIDX {
 	private File BAM = null;
 	private File OUTFILE = null;

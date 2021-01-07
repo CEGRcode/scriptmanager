@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import java.io.File;
 import java.io.IOException;
 
-@SuppressWarnings("serial")
 public class MergeHeatMapPlot {
 	
 	public static JLabel mergePNG(File INPUT1, File INPUT2, File OUTPUT) throws IOException {
