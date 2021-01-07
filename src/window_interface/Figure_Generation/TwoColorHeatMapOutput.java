@@ -12,10 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import scripts.Figure_Generation.HeatmapPlot;
+import scripts.Figure_Generation.TwoColorHeatMap;
 
 @SuppressWarnings("serial")
-public class HeatMapOutput extends JFrame {
+public class TwoColorHeatMapOutput extends JFrame {
 
 	protected static ArrayList<File> SAMPLE = null;
 	
@@ -39,7 +39,7 @@ public class HeatMapOutput extends JFrame {
 	
 	JTabbedPane newpane;
 
-	public HeatMapOutput(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File OUT, boolean outstatus) {
+	public TwoColorHeatMapOutput(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File OUT, boolean outstatus) {
 		setTitle("Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -71,7 +71,7 @@ public class HeatMapOutput extends JFrame {
 			if(OUTPUTPATH != null) { OUTPUT = OUTPUTPATH.getCanonicalPath() + File.separator + FILEID; }
 			
 			//Execute script
-			HeatmapPlot script_object = new HeatmapPlot(SAMPLE.get(x), MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth, scaleType, absolute, quantile, new File(OUTPUT), OUTPUTSTATUS );
+			TwoColorHeatMap script_object = new TwoColorHeatMap(SAMPLE.get(x), MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth, scaleType, absolute, quantile, new File(OUTPUT), OUTPUTSTATUS );
 			script_object.run();
 			JLabel picLabel = script_object.getImg();
 			

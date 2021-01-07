@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-public class HeatmapPlot {
+public class TwoColorHeatMap {
 
 	protected static File SAMPLE = null;
 	
@@ -46,7 +46,7 @@ public class HeatmapPlot {
 	
 	private JLabel picLabel = null;
 	
-	public HeatmapPlot(File in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File output, boolean outstatus) {
+	public TwoColorHeatMap(File in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs, double quant, File output, boolean outstatus) {
 
 		SAMPLE = in;
 		MAXCOLOR = c;

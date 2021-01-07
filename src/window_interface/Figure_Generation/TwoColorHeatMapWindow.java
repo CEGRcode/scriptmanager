@@ -40,7 +40,7 @@ import javax.swing.border.EmptyBorder;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
-public class HeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class TwoColorHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
@@ -103,8 +103,7 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	        	if(rdbtnPercentileValue.isSelected()) { absolute = -999; }
 	        	double quantile = Double.parseDouble(txtPercent.getText());
 	        	
-	        	//System.out.println(COLOR + "\n" + startR+ "\n" +  startC+ "\n" +  pHeight+ "\n" +  pWidth+ "\n" +  scaletype+ "\n" +  absolute+ "\n" +  quantile+ "\n" +  OUTPUTPATH);
-	        	HeatMapOutput heat = new HeatMapOutput(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
+	        	TwoColorHeatMapOutput heat = new TwoColorHeatMapOutput(txtFiles, COLOR, startR, startC, pHeight, pWidth, scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
 	        	
 	        	heat.addPropertyChangeListener("heat", new PropertyChangeListener() {
 				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -131,8 +130,8 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
         }
 	}
 	
-	public HeatMapWindow() {
-		setTitle("Heatmap Generator");
+	public TwoColorHeatMapWindow() {
+		setTitle("Two Color Heatmap Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 450, 600);
@@ -519,6 +518,3 @@ public class HeatMapWindow extends JFrame implements ActionListener, PropertyCha
 	}
 
 }
-
-
-	
