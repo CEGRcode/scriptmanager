@@ -21,7 +21,6 @@ public class FASTAExtractOutput extends JFrame {
 	private File GENOME = null;
 	private File OUTPUTPATH = null;
 	private ArrayList<File> BED = null;
-	private PrintStream OUT = null;
 	private boolean STRAND = true;
 	private boolean HEADER = true;
 	private boolean INDEX = true;

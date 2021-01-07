@@ -36,8 +36,6 @@ public class TagPileup {
 	
 	PileupParameters PARAM = null;
 	
-	private int STRAND = 0;
-	
 	PrintStream COMPOSITE = null;
 	// Generic print stream to accept PrintStream of GZIPOutputStream
 	Writer OUT_S1 = null;

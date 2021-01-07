@@ -33,9 +33,8 @@ public class HeatMapOutput extends JFrame {
 	
 	protected static boolean OUTPUTSTATUS = false;
 	protected static File OUTPUTPATH = null;
-	protected static String FILEID = null;	
-
-	private static ArrayList<double[]> MATRIX = null;
+	protected static String FILEID = null;
+	
 	public static double COLOR_RATIO = 1;	
 	
 	JTabbedPane newpane;

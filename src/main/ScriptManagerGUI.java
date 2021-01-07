@@ -1232,8 +1232,4 @@ public class ScriptManagerGUI {
 		});
 	}
 	
-	public static void main(String[] args) {
-		launchApplication();
-	}
-	
 }

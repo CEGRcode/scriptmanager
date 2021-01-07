@@ -17,7 +17,6 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	private File PEAK = null;
 	private File REF = null;
 	private File OUTFILE = null;
-	private PrintStream OUT = null;
 
 	private JTextArea textArea;
 		

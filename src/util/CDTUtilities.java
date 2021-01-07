@@ -12,14 +12,12 @@ import java.util.Vector;
 
 public class CDTUtilities {
 	
-	private File FILENAME;
 	private int SIZE;
 	private boolean consistentSize;
 	private String invalidMessage;
 	
 	// This function is almost exactly copied from window/*/SortBEDWindow & scripts/*/SortBED & scripts/*/SortGFF...good practice to merge at some point.
 	public void parseCDT(File CDT) throws FileNotFoundException {
-		FILENAME = CDT;
 		SIZE = -999;
 		consistentSize = true;
 		invalidMessage = "";

@@ -20,7 +20,6 @@ import java.util.Map;
 public class BEDPeakAligntoRef {
 	private String peakPath = null;
 	private String refPath = null;
-	private File OUTFILE = null;
 	private PrintStream OUT = null;
 	private PrintStream PS = null;
 	

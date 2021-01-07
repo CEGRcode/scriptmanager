@@ -77,18 +77,17 @@ public class BAMGenomeCorrelation extends Component {
 				OUT_PNG = new File( OUT_BASENAME + ".png" );
 			}
 			catch (FileNotFoundException e) { e.printStackTrace(); }
-// 			catch (IOException e) {	e.printStackTrace(); }
 		}
 	
 		//Iterate through all BAM files in Vector
-		int counter = 0;
+//		int counter = 0;
 		for(int x = 0; x < bamFiles.size(); x++) {				
 			for(int y = 0; y < bamFiles.size(); y++) {
 				if(x != y && (x - y) >= 1) {
 					MATRIX[x][y] = correlate(bamFiles.get(x), bamFiles.get(y));
 					MATRIX[y][x] = MATRIX[x][y];
-					//gui.firePropertyChange("bam", counter, counter + 1);
-					counter++;
+//					gui.firePropertyChange("bam", counter, counter + 1);
+//					counter++;
 				} else if(x == y) { MATRIX[x][y] = 1; }
 			}
 		}
