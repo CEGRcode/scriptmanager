@@ -76,8 +76,8 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		        		File OUT_FILE = null;
 		        		if(OUTPUT_PATH == null) OUT_FILE = new File( newName );
 		        		else OUT_FILE = new File( OUTPUT_PATH + File.separator + newName );
-						// Execute expansion and update progress
-		        		ExpandGFF.expandGFFBorders(OUTPUT_PATH, XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
+					// Execute expansion and update progress
+		        		ExpandGFF.expandGFFBorders(OUT_FILE, XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
 						int percentComplete = (int)(((double)(x + 1) / GFFFiles.size()) * 100);
 		        		setProgress(percentComplete);
 		        	}

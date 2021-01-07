@@ -70,7 +70,7 @@ import cli.Sequence_Analysis.SearchMotifCLI;
 			Read_AnalysisCLI.class,
 			Sequence_AnalysisCLI.class
 		},
-		version = "ScriptManager-v0.13-dev",
+		version = "ScriptManager-v0.13",
 		mixinStandardHelpOptions = true,
 		description = "Choose a tool directory from below to see more command-line tool options.",
 		exitCodeOnInvalidInput = 1,
