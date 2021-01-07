@@ -62,7 +62,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 				if(OUTPUT_PATH == null) OUT_FILE = new File( bedName );
 				else OUT_FILE = new File( OUTPUT_PATH + File.separator + bedName );
 				// Execute conversion and update progress
-	    		GFFtoBED.convertGFFtoBED(OUTPUT_PATH, XGFF);
+	    		GFFtoBED.convertGFFtoBED(OUT_FILE, XGFF);
 				int percentComplete = (int)(((double)(x + 1) / BEDFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
