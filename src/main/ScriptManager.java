@@ -47,7 +47,7 @@ import cli.Peak_Calling.PeakPairCLI;
 import cli.Read_Analysis.AggregateDataCLI;
 import cli.Read_Analysis.ScaleMatrixCLI;
 import cli.Read_Analysis.ScalingFactorCLI;
-import cli.Read_Analysis.SimilarityMatrixCLI;
+//import cli.Read_Analysis.SimilarsityMatrixCLI;
 import cli.Read_Analysis.TagPileupCLI;
 
 import cli.Sequence_Analysis.DNAShapefromBEDCLI;

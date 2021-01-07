@@ -27,7 +27,6 @@ public class FASTAExtractCLI implements Callable<Integer> {
 	@Parameters( index = "1", description = "the BED file of sequences to extract")
 	private File bedFile;
 	
-	private File input;
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <bedFilename>.fa)")
 	private File output = null;
 	@Option(names = {"-c","--coord-header"}, description = "use genome coordinate for output FASTA header (default is to use bed file headers)")
