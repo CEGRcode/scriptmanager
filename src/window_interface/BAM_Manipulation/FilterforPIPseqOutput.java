@@ -50,6 +50,7 @@ public class FilterforPIPseqOutput extends JFrame {
 		if(!FAI.exists() || FAI.isDirectory()) {
 			PS.println("FASTA Index file not found.\nGenerating new one...");
 			boolean tempBool = FASTAUtilities.buildFASTAIndex(genome);
+			if(!tempBool) {System.err.println("Invalid Genome FASTA.");}
 		}
 	
 		//Check if BAI index file exists

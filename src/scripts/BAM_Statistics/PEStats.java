@@ -29,8 +29,8 @@ public class PEStats {
 		System.out.println("getPEStats called");
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 		
-		// Output Vecotr of Charts to be returned
-		Vector<ChartPanel> charts = new Vector(2);
+		// Output Vector of Charts to be returned
+		Vector<ChartPanel> charts = new Vector<ChartPanel>(2);
 				
 		// Output files to be saved
 		PrintStream OUT_INSERT = null;
