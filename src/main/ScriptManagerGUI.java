@@ -52,6 +52,7 @@ import window_interface.Sequence_Analysis.RandomizeFASTAWindow;
 import window_interface.Sequence_Analysis.SearchMotifWindow;
 import window_interface.Figure_Generation.FourColorSequenceWindow;
 import window_interface.Figure_Generation.TwoColorHeatMapWindow;
+import window_interface.Figure_Generation.ThreeColorHeatMapWindow;
 import window_interface.Figure_Generation.MergeHeatMapWindow;
 
 public class ScriptManagerGUI {
@@ -1174,12 +1175,46 @@ public class ScriptManagerGUI {
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtTwoColorHeatMap, 10, SpringLayout.EAST, btnTwoColorHeatMap);
 		pnlFigure.add(btnTwoColorHeatMap);
 
+// 		>ThreeColorHeatMap
+		JTextArea txtThreeColorHeatMap = new JTextArea();
+		initializeTextArea(txtThreeColorHeatMap);
+		txtThreeColorHeatMap.setText(ToolDescriptions.threecolorheatmap_description);
+		sl_pnlFigure
+				.putConstraint(SpringLayout.NORTH, txtThreeColorHeatMap, 10, SpringLayout.SOUTH,
+				txtTwoColorHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtThreeColorHeatMap, 10, SpringLayout.SOUTH,
+				btnTwoColorHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtThreeColorHeatMap, -10, SpringLayout.EAST, pnlFigure);
+		pnlFigure.add(txtThreeColorHeatMap);
+
+		JButton btnThreeColorHeatMap = new JButton("Three Color Heat Map");
+		btnThreeColorHeatMap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ThreeColorHeatMapWindow frame = new ThreeColorHeatMapWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, btnThreeColorHeatMap, 0, SpringLayout.NORTH,
+				txtThreeColorHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, btnThreeColorHeatMap, 10, SpringLayout.WEST, pnlFigure);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtThreeColorHeatMap, 10, SpringLayout.EAST,
+				btnThreeColorHeatMap);
+		pnlFigure.add(btnThreeColorHeatMap);
+
 		// >MergeHeatMap
 		JTextArea txtMergeHeatmap = new JTextArea();
 		initializeTextArea(txtMergeHeatmap);
 		txtMergeHeatmap.setText(ToolDescriptions.merge_heatmap_description);
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMergeHeatmap, 10, SpringLayout.SOUTH, txtTwoColorHeatMap);
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMergeHeatmap, 10, SpringLayout.SOUTH, btnTwoColorHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMergeHeatmap, 10, SpringLayout.SOUTH, txtThreeColorHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMergeHeatmap, 10, SpringLayout.SOUTH, btnThreeColorHeatMap);
 		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtMergeHeatmap, -10, SpringLayout.EAST, pnlFigure);
 		pnlFigure.add(txtMergeHeatmap);
 

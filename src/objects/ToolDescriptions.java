@@ -58,6 +58,7 @@ public class ToolDescriptions {
 	
 	// Figure Generation
 	public static final String heatmap_description = "Generate heat map using CDT files.";
+	public static final String threecolorheatmap_description = "Generate heat map with middling values.";
 	public static final String merge_heatmap_description = "Merge Sense and Antisense png heatmaps.";
 	public static final String four_color_description = "Generate 4Color sequence plot given FASTA file and user-defined RGB colors.";
 	public static final String composite_description = "Generate a Composite Plot PNG from composite data like the output in TagPileup";
