@@ -21,6 +21,7 @@ import scripts.Sequence_Analysis.DNAShapefromBED;
 */
 @Command(name = "dna-shape-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.dna_shape_from_bed_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

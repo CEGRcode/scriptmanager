@@ -18,6 +18,7 @@ import scripts.BAM_Statistics.SEStats;
 */
 @Command(name = "se-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.se_stat_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

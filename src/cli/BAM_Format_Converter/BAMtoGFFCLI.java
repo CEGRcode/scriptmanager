@@ -19,6 +19,7 @@ import scripts.BAM_Format_Converter.BAMtoGFF;
 */
 @Command(name = "bam-to-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_gff_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

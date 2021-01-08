@@ -18,6 +18,7 @@ import scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 */
 @Command(name = "gff-to-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.gff_to_bed_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

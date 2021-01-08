@@ -21,6 +21,7 @@ import scripts.Sequence_Analysis.DNAShapefromFASTA;
 */
 @Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.dna_shape_from_fasta_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

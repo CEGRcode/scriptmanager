@@ -16,7 +16,13 @@ import scripts.Figure_Generation.MergeHeatMapPlot;
 /**
  * Figure_GenerationCLI/MergeHeatMapCLI
  */
-@Command(name = "merge-heatmap", mixinStandardHelpOptions = true, description = ToolDescriptions.merge_heatmap_description, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "merge-heatmap",
+	mixinStandardHelpOptions = true,
+	description = ToolDescriptions.merge_heatmap_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class MergeHeatMapCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "First(sense) PNG heatmap to merge, input1")

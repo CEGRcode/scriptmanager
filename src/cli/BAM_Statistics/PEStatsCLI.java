@@ -17,6 +17,7 @@ import scripts.BAM_Statistics.PEStats;
 */
 @Command(name = "pe-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.pe_stat_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

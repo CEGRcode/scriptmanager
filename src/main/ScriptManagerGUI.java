@@ -56,8 +56,6 @@ import window_interface.Figure_Generation.ThreeColorHeatMapWindow;
 import window_interface.Figure_Generation.MergeHeatMapWindow;
 
 public class ScriptManagerGUI {
-	public static final String VERSION = "0.13-dev";
-
 	private JFrame frmScriptManager;
 
 	/**
@@ -65,7 +63,7 @@ public class ScriptManagerGUI {
 	 */
 	private void initialize() {
 		frmScriptManager = new JFrame();
-		frmScriptManager.setTitle("Script Manager v" + VERSION);
+		frmScriptManager.setTitle("Script Manager v" + ToolDescriptions.VERSION);
 		frmScriptManager.setBounds(100, 100, 600, 350);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);

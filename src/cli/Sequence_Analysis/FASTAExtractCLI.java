@@ -17,6 +17,7 @@ import scripts.Sequence_Analysis.FASTAExtract;
 */
 @Command(name = "fasta-extract", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.fasta_extract_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

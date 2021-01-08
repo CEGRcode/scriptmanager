@@ -20,6 +20,7 @@ import scripts.Sequence_Analysis.SearchMotif;
 */
 @Command(name = "search-motif", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.search_motif_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

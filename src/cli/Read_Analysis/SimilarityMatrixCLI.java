@@ -4,6 +4,8 @@ import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
 
+import objects.ToolDescriptions;
+
 import java.io.IOException;
 
 /**
@@ -11,6 +13,7 @@ import java.io.IOException;
 */
 @Command(name = "similarity-matrix", mixinStandardHelpOptions = true,
 	description = "",
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

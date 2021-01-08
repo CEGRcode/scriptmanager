@@ -21,6 +21,7 @@ import scripts.BAM_Statistics.BAMGenomeCorrelation;
 */
 @Command(name = "bam-correlation", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_correlation_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

@@ -21,7 +21,13 @@ import scripts.Figure_Generation.TwoColorHeatMap;
 /**
  * Figure_GenerationCLI/TwoColorHeatMapCLI
  */
-@Command(name = "heatmap", mixinStandardHelpOptions = true, description = ToolDescriptions.heatmap_description, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "heatmap",
+	mixinStandardHelpOptions = true,
+	description = ToolDescriptions.heatmap_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class TwoColorHeatMapCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "")

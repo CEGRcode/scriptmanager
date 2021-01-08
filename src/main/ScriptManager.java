@@ -5,6 +5,8 @@ import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
 
+import objects.ToolDescriptions;
+
 import cli.BAM_Format_Converter.BAMtoBEDCLI;
 import cli.BAM_Format_Converter.BAMtobedGraphCLI;
 import cli.BAM_Format_Converter.BAMtoGFFCLI;
@@ -59,7 +61,7 @@ import cli.Sequence_Analysis.SearchMotifCLI;
 
 
 @Command(name = "script-manager",
-		subcommands = {
+	subcommands = {
 			BAM_Format_ConverterCLI.class,
 			BAM_ManipulationCLI.class,
 			BAM_StatisticsCLI.class,
@@ -70,12 +72,12 @@ import cli.Sequence_Analysis.SearchMotifCLI;
 			Peak_CallingCLI.class,
 			Read_AnalysisCLI.class,
 			Sequence_AnalysisCLI.class
-		},
-		version = "ScriptManager-v0.13-dev",
-		mixinStandardHelpOptions = true,
-		description = "Choose a tool directory from below to see more command-line tool options.",
-		exitCodeOnInvalidInput = 1,
-		exitCodeOnExecutionException = 1)
+	},
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	mixinStandardHelpOptions = true,
+	description = "Choose a tool directory from below to see more command-line tool options.",
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class ScriptManager implements Callable<Integer> {
 	
 	@Override
@@ -98,6 +100,7 @@ public class ScriptManager implements Callable<Integer> {
 
 
 @Command(mixinStandardHelpOptions = true,
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
 		exitCodeOnInvalidInput = 1,
 		exitCodeOnExecutionException = 1)
 abstract class SubcommandCLI implements Callable<Integer>{

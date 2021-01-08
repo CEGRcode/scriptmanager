@@ -18,6 +18,7 @@ import scripts.Peak_Analysis.BEDPeakAligntoRef;
 */
 @Command(name = "peak-align-ref", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_align_ref_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

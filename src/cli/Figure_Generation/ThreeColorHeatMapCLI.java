@@ -23,10 +23,11 @@ import scripts.Figure_Generation.ThreeColorHeatMap;
  * Figure_GenerationCLI/ThreeColorHeatMapCLI
  */
 @Command(name = "three-color", mixinStandardHelpOptions = true,
-		description = ToolDescriptions.threecolorheatmap_description,
-		sortOptions = false,
-		exitCodeOnInvalidInput = 1,
-		exitCodeOnExecutionException = 1)
+	description = ToolDescriptions.threecolorheatmap_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class ThreeColorHeatMapCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "")

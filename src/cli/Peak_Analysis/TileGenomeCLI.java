@@ -18,6 +18,7 @@ import scripts.Peak_Analysis.TileGenome;
 */
 @Command(name = "tile-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tile_genome_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

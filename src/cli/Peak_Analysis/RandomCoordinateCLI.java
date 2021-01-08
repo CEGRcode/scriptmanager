@@ -18,6 +18,7 @@ import scripts.Peak_Analysis.RandomCoordinate;
 */
 @Command(name = "rand-coord", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.rand_coord_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

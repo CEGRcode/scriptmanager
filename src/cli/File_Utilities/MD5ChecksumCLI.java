@@ -17,6 +17,7 @@ import scripts.File_Utilities.MD5Checksum;
 */
 @Command(name = "md5checksum", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.md5checksum_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class MD5ChecksumCLI implements Callable<Integer> {

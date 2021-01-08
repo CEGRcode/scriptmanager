@@ -22,6 +22,7 @@ import scripts.BAM_Manipulation.FilterforPIPseq;
 @Command(name = "filter-pip-seq", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.filter_pip_seq_description + "\n" +
 				"Note this program does not index the resulting BAM file and user must use appropriate samtools command to generate BAI.",
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

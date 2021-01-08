@@ -18,6 +18,7 @@ import scripts.Sequence_Analysis.RandomizeFASTA;
 */
 @Command(name = "randomize-fasta", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.randomize_fasta_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

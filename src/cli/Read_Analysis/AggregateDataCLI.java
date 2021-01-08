@@ -19,6 +19,7 @@ import scripts.Read_Analysis.AggregateData;
 */
 @Command(name = "aggregate-data", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.aggregate_data_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

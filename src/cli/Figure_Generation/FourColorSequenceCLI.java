@@ -21,7 +21,12 @@ import scripts.Figure_Generation.FourColorPlot;
 /**
  * Figure_GenerationCLI/FourColorSequenceCLI
  */
-@Command(name = "four-color", mixinStandardHelpOptions = true, description = ToolDescriptions.four_color_description, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "four-color", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.four_color_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class FourColorSequenceCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "input FASTA file of sequences to plot")

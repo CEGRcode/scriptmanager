@@ -23,6 +23,7 @@ import scripts.Read_Analysis.TagPileup;
 */
 @Command(name = "tag-pileup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tag_pileup_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	descriptionHeading = "%nDescription:%n%n",
 	parameterListHeading = "%nParameters:%n",
 	optionListHeading = "%nGeneral Options:%n",

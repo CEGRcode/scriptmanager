@@ -12,6 +12,7 @@ import objects.ToolDescriptions;
 */
 @Command(name = "gene-track", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.gene_track_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

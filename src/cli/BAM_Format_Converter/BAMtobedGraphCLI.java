@@ -19,6 +19,7 @@ import scripts.BAM_Format_Converter.BAMtobedGraph;
 */
 @Command(name = "bam-to-bedgraph", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_bedgraph_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

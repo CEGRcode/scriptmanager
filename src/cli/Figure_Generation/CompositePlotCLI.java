@@ -29,7 +29,12 @@ import util.ExtensionFileFilter;
 /**
  * Figure_GenerationCLI/CompositePlotCLI
  */
-@Command(name = "composite-plot", mixinStandardHelpOptions = true, description = ToolDescriptions.composite_description, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "composite-plot", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.composite_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class CompositePlotCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "Composite data to plot. (formatted like TagPileup composite output)")
