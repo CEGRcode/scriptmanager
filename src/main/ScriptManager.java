@@ -31,6 +31,7 @@ import cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI;
 import cli.Figure_Generation.CompositePlotCLI;
 import cli.Figure_Generation.FourColorSequenceCLI;
 import cli.Figure_Generation.TwoColorHeatMapCLI;
+import cli.Figure_Generation.ThreeColorHeatMapCLI;
 import cli.Figure_Generation.MergeHeatMapCLI;
 
 import cli.File_Utilities.MD5ChecksumCLI;
@@ -161,6 +162,7 @@ class Coordinate_ManipulationCLI extends SubcommandCLI {}
 			CompositePlotCLI.class,
 			FourColorSequenceCLI.class,
 			TwoColorHeatMapCLI.class,
+			ThreeColorHeatMapCLI.class,
 			MergeHeatMapCLI.class
 		},
 		description = "Includes tools like FourColorSequenceCLI, HeatMapCLI, and MergeHeatMapCLI.")

@@ -131,7 +131,6 @@ public class ThreeColorHeatMap {
 			}
 		} else if (!scaleType.equalsIgnoreCase("treeview")) {
 			// COLOR_RATIO = 2 * getNonZeroAvg(MATRIX);
-			System.out.println("NOT TREEVIEW");
 			double[] COLOR_RATIO;
 			if (excludeZeros) {
 				COLOR_RATIO = getQuantile_nonZero(MATRIX, MINVAL, MIDVAL, MAXVAL);
@@ -149,13 +148,11 @@ public class ThreeColorHeatMap {
 			}
 
 			if (MAXVAL < MIDVAL) {
-				System.err.println("The maximum threshold cannot be less than the middle threshold.\n"
+				throw new OptionException("The maximum threshold cannot be less than the middle threshold.\n"
 						+ "Skipping heatmap for " + SAMPLE);
-				return;
 			} else if (MIDVAL < MINVAL) {
-				System.err.println("The middle threshold cannot be less than the minimum threshold.\n"
+				throw new OptionException("The middle threshold cannot be less than the minimum threshold.\n"
 						+ "Skipping heatmap for " + SAMPLE);
-				return;
 			}
 
 			System.out.println("Contrast thresholds: " + MINVAL + "(min)\t" + MIDVAL + "(mid)\t" + MAXVAL + "(max)\n");
