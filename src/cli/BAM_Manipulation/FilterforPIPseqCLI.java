@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import objects.CustomExceptions.FASTAException;
 import objects.ToolDescriptions;
 import util.FASTAUtilities;
 import util.ExtensionFileFilter;
@@ -48,8 +49,12 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		FilterforPIPseq script_obj = new FilterforPIPseq(bamFile, genomeFASTA, output, filterString, null);
-		script_obj.run();
+		try {
+			FilterforPIPseq script_obj = new FilterforPIPseq(bamFile, genomeFASTA, output, filterString, null);
+			script_obj.run();
+		} catch (FASTAException e) {
+			System.err.println(e.getMessage() + "\n");
+		}
 		
 		System.err.println( "BAM Generated." );
 		return(0);
@@ -84,8 +89,12 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 		File FAI = new File(genomeFASTA + ".fai");
 		if(!FAI.exists() || FAI.isDirectory()) {
 			System.err.println("FASTA Index file not found.\nGenerating new one...\n");
-			boolean FASTA_INDEX = FASTAUtilities.buildFASTAIndex(genomeFASTA);
-			if(!FASTA_INDEX){ r += "FASTA Index failed to build."; }
+			try {
+				FASTAUtilities.buildFASTAIndex(genomeFASTA);
+			} catch (FASTAException e) {
+				r += e.getMessage();
+			}
+			
 		}
 		//set default output filename
 		if(output==null){

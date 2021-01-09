@@ -17,8 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import util.FASTAUtilities;
 import charts.CompositePlot;
+import objects.CustomExceptions.FASTAException;
+import util.FASTAUtilities;
 import util.DNAShapeReference;
 
 public class DNAShapefromBED {
@@ -49,7 +50,7 @@ public class DNAShapefromBED {
 	Component chart_H = null;
 	Component chart_R = null;
 	
-	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps) {
+	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps) throws IOException, FASTAException {
 		GENOME = gen;
 		BED = b;
 		OUTBASENAME = out;
@@ -57,17 +58,16 @@ public class DNAShapefromBED {
 		STRAND = str;
 		PS = ps;
 		
+		File FAI = new File(GENOME + ".fai");
+		//Check if FAI index file exists
+		if(!FAI.exists() || FAI.isDirectory()) {
+			FASTAUtilities.buildFASTAIndex(GENOME);
+		}
+		
 		STRUCTURE = DNAShapeReference.InitializeStructure();
 	}
 	
 	public void run() throws IOException, InterruptedException {
-		File FAI = new File(GENOME + ".fai");
-		//Check if FAI index file exists
-		if(!FAI.exists() || FAI.isDirectory()) {
-			INDEX = FASTAUtilities.buildFASTAIndex(GENOME);
-			if(!INDEX){ return; }
-		}
-		
 		try{
 			IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
 			

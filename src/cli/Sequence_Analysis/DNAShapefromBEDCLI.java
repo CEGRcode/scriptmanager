@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import objects.CustomExceptions.FASTAException;
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.DNAShapefromBED;
@@ -66,12 +67,12 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		// Generate Composite Plot
-		DNAShapefromBED script_obj = new DNAShapefromBED(genomeFASTA, bedFile, outputBasename, OUTPUT_TYPE, forceStrand, new PrintStream[]{null,null,null,null});
-		script_obj.run();
-		
 		// Print Composite Scores
 		try {
+			// Generate Composite Plot
+			DNAShapefromBED script_obj = new DNAShapefromBED(genomeFASTA, bedFile, outputBasename, OUTPUT_TYPE, forceStrand, new PrintStream[]{null,null,null,null});
+			script_obj.run();
+			
 			if(avgComposite){
 				String[] headers = new String[]{"AVG_MGW","AVG_PropT","AVG_HelT","AVG_Roll"};
 				for(int t=0; t<OUTPUT_TYPE.length; t++){
@@ -91,6 +92,8 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 					}
 				}
 			}
+		} catch (FASTAException e) {
+			System.err.println(e.getMessage() + "\n");
 		}catch(FileNotFoundException e){ e.printStackTrace(); }
 		
 		System.err.println("Shapes Calculated.");
@@ -100,7 +103,8 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
-		//check inputs exist
+		//validate genome
+		
 		if(!genomeFASTA.exists()){
 			r += "(!)FASTA file does not exist: " + genomeFASTA.getName() + "\n";
 		}

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import objects.CustomExceptions.FASTAException;
 import util.FASTAUtilities;
 
 public class FilterforPIPseq {
@@ -26,12 +27,18 @@ public class FilterforPIPseq {
 
 	private PrintStream PS = null;
 
-	public FilterforPIPseq(File in, File gen, File out, String s, PrintStream ps) {
+	public FilterforPIPseq(File in, File gen, File out, String s, PrintStream ps) throws IOException, FASTAException {
 		bamFile = in;
 		genome = gen;
 		output = out;
 		SEQ = s.toUpperCase();
 		PS = ps;
+
+		File FAI = new File(genome + ".fai");
+		//Check if FAI index file exists
+		if(!FAI.exists() || FAI.isDirectory()) {
+			FASTAUtilities.buildFASTAIndex(genome);
+		}
 	}
 
 	public void run() throws IOException, InterruptedException {

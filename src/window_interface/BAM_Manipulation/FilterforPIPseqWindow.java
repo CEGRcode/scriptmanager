@@ -31,8 +31,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import objects.CustomExceptions.FASTAException;
 import util.FileSelection;
-import util.FASTAUtilities;
 import scripts.BAM_Manipulation.BAIIndexer;
 
 @SuppressWarnings("serial")
@@ -64,9 +64,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	if(!FASTAUtilities.parseStringforInvalideNuc(txtSeq.getText())) {
-        		JOptionPane.showMessageDialog(null, "Invalid Sequence to filter by!!!");
-        	} else {
+			try {
 	        	for(int x = 0; x < BAMFiles.size(); x++) {
 	        		String[] NAME = BAMFiles.get(x).getName().split("\\.");
 	        	    File OUTPUT = null;
@@ -83,7 +81,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	        	}
 	        	setProgress(100);
 				JOptionPane.showMessageDialog(null, "Permanganate-Seq Filtering Complete");
-        	}
+			} catch (FASTAException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			}
         	return null;
         }
         

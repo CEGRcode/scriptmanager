@@ -10,8 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import util.FASTAUtilities;
 import objects.CustomOutputStream;
+import objects.CustomExceptions.FASTAException;
 import scripts.BAM_Manipulation.FilterforPIPseq;
 
 @SuppressWarnings("serial")
@@ -41,18 +41,10 @@ public class FilterforPIPseqOutput extends JFrame {
 		SEQ = s.toUpperCase();
 	}
 	
-	public void run() throws IOException, InterruptedException {
+	public void run() throws IOException, InterruptedException, FASTAException {
 		
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));	
-		
-		File FAI = new File(genome + ".fai");
-		//Check if FAI index file exists
-		if(!FAI.exists() || FAI.isDirectory()) {
-			PS.println("FASTA Index file not found.\nGenerating new one...");
-			boolean tempBool = FASTAUtilities.buildFASTAIndex(genome);
-			if(!tempBool) {System.err.println("Invalid Genome FASTA.");}
-		}
-	
+
 		//Check if BAI index file exists
 		File f = new File(bamFile + ".bai");
 		if(f.exists() && !f.isDirectory()) {

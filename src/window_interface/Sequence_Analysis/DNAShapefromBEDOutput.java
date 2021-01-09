@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
 import objects.CustomOutputStream;
+import objects.CustomExceptions.FASTAException;
 import scripts.Sequence_Analysis.DNAShapefromBED;
 
 @SuppressWarnings("serial")
@@ -64,7 +65,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 		STRAND = str;
 	}
 	
-	public void run() throws IOException, InterruptedException {
+	public void run() throws IOException, InterruptedException, FASTAException {
 		try{
 			//Move through each BED File
 			for(int x = 0; x < BED.size(); x++) {

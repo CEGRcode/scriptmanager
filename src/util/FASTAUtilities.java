@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import objects.CustomExceptions.FASTAException;
+
 public class FASTAUtilities {
 	public static String RevComplement(String SEQ) {
 		SEQ = SEQ.toUpperCase();
@@ -41,8 +43,7 @@ public class FASTAUtilities {
      *	chr1    230218  6       60      61 
      *	chr2    813184  234067  60      61 
      */
-    public static boolean buildFASTAIndex(File fasta) throws IOException {  	
-	    	boolean properFASTA = true;
+    public static void buildFASTAIndex(File fasta) throws IOException, FASTAException {
 	    	ArrayList<String> IMPROPER_FASTA = new ArrayList<String>();
 	    	long counter = 0;
 	
@@ -67,8 +68,9 @@ public class FASTAUtilities {
 				if(IMPROPER_FASTA.size() > 1) {
 					System.out.println("Unequal column size FASTA Line at:");
 					for(int z = 0; z < IMPROPER_FASTA.size(); z++) {	System.out.println(contig + "\t" + IMPROPER_FASTA.get(z));	}
-					properFASTA = false;
-					break;
+					FAI.close();
+					new File(fasta.getName() + ".fai").delete();
+					throw new FASTAException(fasta);
 				}
 				if(counter > 0) { FAI.println(contig + "\t" + contigLength + "\t" + currentOffset + "\t" + column_Length + "\t" + untrimmed_Column_Length);	}
 				//Reset parameters for new contig
@@ -94,9 +96,7 @@ public class FASTAUtilities {
 		b_read.close();
 	    	FAI.close();
 	    	
-		if(properFASTA) System.out.println("Genome Index Built");
-		else { new File(fasta.getName() + ".fai").delete(); }
-			
-		return properFASTA;
+		System.out.println("Genome Index Built");
+		return;
     }
 }

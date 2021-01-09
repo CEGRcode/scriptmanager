@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import objects.CustomExceptions.FASTAException;
 import util.FASTAUtilities;
 
 public class FASTAExtract {
@@ -22,15 +23,20 @@ public class FASTAExtract {
 	private PrintStream PS = null;
 	private boolean STRAND = true;
 	private boolean HEADER = true;
-	private boolean INDEX = true;
 	
-	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps) {
+	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps) throws IOException, FASTAException {
 		GENOME = gen;
 		BED = b;
 		OUTFILE = out;
 		STRAND = str;
 		HEADER = head;
 		PS = ps;
+
+		File FAI = new File(GENOME + ".fai");
+		//Check if FAI index file exists
+		if(!FAI.exists() || FAI.isDirectory()) {
+			FASTAUtilities.buildFASTAIndex(GENOME);
+		}
 	}
 	
 	public void run() throws IOException, InterruptedException {
@@ -39,13 +45,6 @@ public class FASTAExtract {
 		System.out.println("STRAND:" + STRAND);
 		System.out.println("COORD:" + HEADER);
 		
-		File FAI = new File(GENOME + ".fai");
-		//Check if FAI index file exists
-		if(!FAI.exists() || FAI.isDirectory()) {
-			PS.println("FASTA Index file not found.\nGenerating new one...\n");
-			INDEX = FASTAUtilities.buildFASTAIndex(GENOME);
-		}		
-		if(INDEX) {
 			try{			
 				IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
 				PS.println("Proccessing File: " + BED.getName());
@@ -74,9 +73,7 @@ public class FASTAExtract {
 			} catch(SAMException e) {
 				PS.println(e.getMessage());
 			}
-		} else {
-			PS.println("Genome FASTA file contains invalid lines!!!");
-		}
+		
 	}
 		
     public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {

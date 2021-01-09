@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
+import objects.CustomExceptions.FASTAException;
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.FASTAExtract;
@@ -45,8 +46,12 @@ public class FASTAExtractCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		FASTAExtract script_obj = new FASTAExtract(genomeFASTA, bedFile, output, forceStrand, bedHeader, null);
-		script_obj.run();
+		try {
+			FASTAExtract script_obj = new FASTAExtract(genomeFASTA, bedFile, output, forceStrand, bedHeader, null);
+			script_obj.run();
+		} catch (FASTAException e) {
+			System.err.println(e.getMessage() + "\n");
+		}
 		
 		System.err.println("Extraction Complete.");
 		return(0);
