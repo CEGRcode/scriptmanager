@@ -9,8 +9,12 @@ import java.util.Scanner;
 
 public class RandomizeFASTA {
 
-	public static File randomizeFASTA(File FASTA, File RANDOUT) throws IOException {
+	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed) throws IOException {
 		Random randnum = new Random();
+		if( seed != null) {
+			System.err.println("Set Seed=" + seed);
+			randnum.setSeed(seed);
+		}
 		PrintStream OUT = new PrintStream(RANDOUT);
 		Scanner scan = new Scanner(FASTA);
 		while (scan.hasNextLine()) {
@@ -28,7 +32,6 @@ public class RandomizeFASTA {
 					SEQ_ARRAY.remove(randIndex);
 				}
 				OUT.println();
-
 			} else {
 				OUT.println("ERROR - NOT FASTA FORMAT");
 				System.err.println("ERROR - NOT FASTA FORMAT");

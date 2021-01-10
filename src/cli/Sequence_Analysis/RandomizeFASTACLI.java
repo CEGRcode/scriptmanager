@@ -26,6 +26,8 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	@Option(names = { "-o",
 			"--output" }, description = "Specify basename for output files (default = <fastaFilename>_RAND.fa)")
 	private File output;
+	@Option(names = {"-s", "--seed"}, description = "specify an integer seed for reproducible outputs")
+	private Integer seed = null;
 
 	@Override
 	public Integer call() throws Exception {
@@ -37,7 +39,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		RandomizeFASTA.randomizeFASTA(fastaFile, output);
+		RandomizeFASTA.randomizeFASTA(fastaFile, output, seed);
 
 		System.err.println("Randomization Complete.");
 		return (0);
