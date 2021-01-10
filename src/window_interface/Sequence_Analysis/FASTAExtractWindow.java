@@ -42,7 +42,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 	final DefaultListModel<String> expList;
 	ArrayList<File> BEDFiles = new ArrayList<File>();
 	private File INPUT = null;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBed;
@@ -68,7 +68,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
 				} else {
 					setProgress(0);
-					FASTAExtractOutput signal = new FASTAExtractOutput(INPUT, BEDFiles, OUTPUT_PATH,
+					FASTAExtractOutput signal = new FASTAExtractOutput(INPUT, BEDFiles, OUT_DIR,
 							chckbxStrand.isSelected(), rdbtnBedName.isSelected());
 
 					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
@@ -195,9 +195,9 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

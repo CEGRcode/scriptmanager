@@ -42,7 +42,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 	final DefaultListModel<String> expList;
 	ArrayList<File> BEDFiles = new ArrayList<File>();
 	private File INPUT = null;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBed;
@@ -81,7 +81,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 					OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
-					DNAShapefromBEDOutput signal = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUTPUT_PATH, OUTPUT_TYPE,
+					DNAShapefromBEDOutput signal = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUT_DIR, OUTPUT_TYPE,
 							chckbxStrand.isSelected());
 
 					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
@@ -207,9 +207,9 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

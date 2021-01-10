@@ -39,7 +39,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 
 	final DefaultListModel<String> expList;
 	ArrayList<File> FASTAFiles = new ArrayList<File>();
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -62,8 +62,8 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 				for (int x = 0; x < FASTAFiles.size(); x++) {
 					String NEWNAME = ExtensionFileFilter.stripExtension(FASTAFiles.get(x)) + "_RAND.fa";
 					File RAND;
-					if (OUTPUT_PATH != null) {
-						RAND = new File(OUTPUT_PATH + File.separator + NEWNAME);
+					if (OUT_DIR != null) {
+						RAND = new File(OUT_DIR + File.separator + NEWNAME);
 					} else {
 						RAND = new File(NEWNAME);
 					}
@@ -168,9 +168,9 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

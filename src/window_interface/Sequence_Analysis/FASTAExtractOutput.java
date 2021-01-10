@@ -50,32 +50,32 @@ public class FASTAExtractOutput extends JFrame {
 
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 
-			try {
-				for (int x = 0; x < BED.size(); x++) {
+		try {
+			for (int x = 0; x < BED.size(); x++) {
 
-					// Open Output File
-					File OUTFILE;
-					String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
-					if (OUT_DIR != null) {
-						OUTFILE = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
-					} else {
-						OUTFILE = new File(NAME);
-					}
-					PS.println("Proccessing File: " + BED.get(x).getName());
-
-					// Execute Script object
-					FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS);
-					script_obj.run();
-
-					firePropertyChange("fa", x, x + 1);
+				// Open Output File
+				File OUTFILE;
+				String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
+				if (OUT_DIR != null) {
+					OUTFILE = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
+				} else {
+					OUTFILE = new File(NAME);
 				}
-				PS.println("Extraction Complete");
-			} catch (IllegalArgumentException e) {
-				PS.println(e.getMessage());
-			} catch (FileNotFoundException e) {
-				PS.println(e.getMessage());
-			} catch (SAMException e) {
-				PS.println(e.getMessage());
+				PS.println("Proccessing File: " + BED.get(x).getName());
+
+				// Execute Script object
+				FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS);
+				script_obj.run();
+
+				firePropertyChange("fa", x, x + 1);
 			}
+			PS.println("Extraction Complete");
+		} catch (IllegalArgumentException e) {
+			PS.println(e.getMessage());
+		} catch (FileNotFoundException e) {
+			PS.println(e.getMessage());
+		} catch (SAMException e) {
+			PS.println(e.getMessage());
+		}
 	}
 }

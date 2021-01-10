@@ -37,7 +37,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 
 	final DefaultListModel<String> genomeList;
 	ArrayList<File> GenomeFiles = new ArrayList<File>();
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	private int counter = 0;
 
 	private JPanel contentPane;
@@ -65,7 +65,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 					SearchMotifOutput search;
 					for (int gfile = 0; gfile < GenomeFiles.size(); gfile++) {
 						search = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(),
-								Integer.parseInt(txtMismatch.getText()), OUTPUT_PATH);
+								Integer.parseInt(txtMismatch.getText()), OUT_DIR);
 						search.setVisible(true);
 						search.run();
 						counter++;
@@ -116,9 +116,9 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -150, SpringLayout.EAST, contentPane);
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblNewLabel.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblNewLabel.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

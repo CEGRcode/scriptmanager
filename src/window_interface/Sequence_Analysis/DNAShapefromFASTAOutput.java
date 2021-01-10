@@ -19,7 +19,7 @@ import scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 @SuppressWarnings("serial")
 public class DNAShapefromFASTAOutput extends JFrame {
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private ArrayList<File> FASTA = null;
 
@@ -28,7 +28,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 
-	public DNAShapefromFASTAOutput(ArrayList<File> fa, File out, boolean[] type) {
+	public DNAShapefromFASTAOutput(ArrayList<File> fa, File out_dir, boolean[] type) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -52,7 +52,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 		tabbedPane.addTab("DNA Shape Statistics", null, tabbedPane_Statistics, null);
 
 		FASTA = fa;
-		OUTPUTPATH = out;
+		OUT_DIR = out_dir;
 		OUTPUT_TYPE = type;
 	}
 
@@ -88,8 +88,8 @@ public class DNAShapefromFASTAOutput extends JFrame {
 			// Open Output File
 			String BASENAME = FASTA.get(x).getName().split("\\.")[0];
 			try {
-				if (OUTPUTPATH != null) {
-					BASENAME = OUTPUTPATH.getCanonicalPath() + File.separator + BASENAME;
+				if (OUT_DIR != null) {
+					BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
