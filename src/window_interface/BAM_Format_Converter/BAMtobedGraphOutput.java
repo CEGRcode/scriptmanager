@@ -15,7 +15,7 @@ import scripts.BAM_Format_Converter.BAMtobedGraph;
 @SuppressWarnings("serial")
 public class BAMtobedGraphOutput extends JFrame {
 	private File BAM = null;
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 	private int STRAND = 0;
 	private String READ = "READ1";
 
@@ -25,7 +25,7 @@ public class BAMtobedGraphOutput extends JFrame {
 
 	private JTextArea textArea;
 
-	public BAMtobedGraphOutput(File b, File o, int s, int pair_status, int min_size, int max_size) {
+	public BAMtobedGraphOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to bedGraph Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -38,7 +38,7 @@ public class BAMtobedGraphOutput extends JFrame {
 		scrollPane.setViewportView(textArea);
 
 		BAM = b;
-		OUTPUTPATH = o;
+		OUT_DIR = out_dir;
 		STRAND = s;
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
@@ -57,8 +57,8 @@ public class BAMtobedGraphOutput extends JFrame {
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
 		String OUTBASENAME = BAM.getName().split("\\.")[0] + "_" + READ;
-		if (OUTPUTPATH != null) {
-			OUTBASENAME = OUTPUTPATH.getCanonicalPath() + File.separator + OUTBASENAME;
+		if (OUT_DIR != null) {
+			OUTBASENAME = OUT_DIR.getCanonicalPath() + File.separator + OUTBASENAME;
 		}
 
 		// Call script here, pass in ps and OUT

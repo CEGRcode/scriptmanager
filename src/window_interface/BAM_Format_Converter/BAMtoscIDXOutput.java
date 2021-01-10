@@ -15,7 +15,7 @@ import scripts.BAM_Format_Converter.BAMtoscIDX;
 @SuppressWarnings("serial")
 public class BAMtoscIDXOutput extends JFrame {
 	private File BAM = null;
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 	private int STRAND = 0;
 	private String READ = "READ1";
 
@@ -25,7 +25,7 @@ public class BAMtoscIDXOutput extends JFrame {
 
 	private JTextArea textArea;
 
-	public BAMtoscIDXOutput(File b, File o, int s, int pair_status, int min_size, int max_size) {
+	public BAMtoscIDXOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to scIDX Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -38,7 +38,7 @@ public class BAMtoscIDXOutput extends JFrame {
 		scrollPane.setViewportView(textArea);
 
 		BAM = b;
-		OUTPUTPATH = o;
+		OUT_DIR = out_dir;
 		STRAND = s;
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
@@ -56,18 +56,15 @@ public class BAMtoscIDXOutput extends JFrame {
 
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
-		File OUT;
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
-		if (OUTPUTPATH != null) {
-			OUT = new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME);
-		} else {
-			OUT = new File(NAME);
+		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".tab";
+		if (OUT_DIR != null) {
+			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
 
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		PS.println(NAME);
-		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, OUT, STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		PS.println(OUTPUT);
+		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
 		script_obj.run();
 
 		Thread.sleep(2000);

@@ -15,7 +15,7 @@ import scripts.BAM_Format_Converter.BAMtoBED;
 @SuppressWarnings("serial")
 public class BAMtoBEDOutput extends JFrame {
 	private File BAM = null;
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 	private int STRAND = 0;
 	private String READ = "READ1";
 
@@ -25,7 +25,7 @@ public class BAMtoBEDOutput extends JFrame {
 
 	private JTextArea textArea;
 
-	public BAMtoBEDOutput(File b, File o, int s, int pair_status, int min_size, int max_size) {
+	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to BED Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -38,7 +38,7 @@ public class BAMtoBEDOutput extends JFrame {
 		scrollPane.setViewportView(textArea);
 
 		BAM = b;
-		OUTPUTPATH = o;
+		OUT_DIR = out_dir;
 		STRAND = s;
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
@@ -58,18 +58,15 @@ public class BAMtoBEDOutput extends JFrame {
 
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
-		File OUT;
-		String NAME = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
-		if (OUTPUTPATH != null) {
-			OUT = new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME);
-		} else {
-			OUT = new File(NAME);
+		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
+		if (OUT_DIR != null) {
+			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
 
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		PS.println(NAME);
-		BAMtoBED script_obj = new BAMtoBED(BAM, OUT, STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		PS.println(OUTPUT);
+		BAMtoBED script_obj = new BAMtoBED(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
 		script_obj.run();
 
 		Thread.sleep(2000);

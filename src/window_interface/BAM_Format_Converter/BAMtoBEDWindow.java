@@ -44,7 +44,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	private File OUTPUT = null;
+	private File OUT_DIR = null;
 	private int STRAND = 0;
 
 	private JButton btnIndex;
@@ -108,7 +108,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 					}
 
 					for (int x = 0; x < BAMFiles.size(); x++) {
-						BAMtoBEDOutput convert = new BAMtoBEDOutput(BAMFiles.get(x), OUTPUT, STRAND, PAIR, MIN, MAX);
+						BAMtoBEDOutput convert = new BAMtoBEDOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX);
 						convert.setVisible(true);
 						convert.run();
 						int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
@@ -344,9 +344,9 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT = FileSelection.getOutputDir(fc);
-				if (OUTPUT != null) {
-					lblDefaultToLocal.setText(OUTPUT.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

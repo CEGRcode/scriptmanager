@@ -44,7 +44,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	private File OUTPUT = null;
+	private File OUT_DIR = null;
 	private int STRAND = 0;
 
 	private JButton btnIndex;
@@ -105,7 +105,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 					}
 
 					for (int x = 0; x < BAMFiles.size(); x++) {
-						BAMtobedGraphOutput convert = new BAMtobedGraphOutput(BAMFiles.get(x), OUTPUT, STRAND, PAIR,
+						BAMtobedGraphOutput convert = new BAMtobedGraphOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR,
 								MIN, MAX);
 						convert.setVisible(true);
 						convert.run();
@@ -324,9 +324,9 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT = FileSelection.getOutputDir(fc);
-				if (OUTPUT != null) {
-					lblDefaultToLocal.setText(OUTPUT.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
