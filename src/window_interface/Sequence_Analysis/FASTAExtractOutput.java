@@ -20,15 +20,14 @@ import scripts.Sequence_Analysis.FASTAExtract;
 @SuppressWarnings("serial")
 public class FASTAExtractOutput extends JFrame {
 	private File GENOME = null;
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 	private ArrayList<File> BED = null;
 	private boolean STRAND = true;
 	private boolean HEADER = true;
-	private boolean INDEX = true;
 
 	private JTextArea textArea;
 
-	public FASTAExtractOutput(File gen, ArrayList<File> b, File out, boolean str, boolean head) {
+	public FASTAExtractOutput(File gen, ArrayList<File> b, File out_dir, boolean str, boolean head) {
 		setTitle("FASTA Extraction Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -42,7 +41,7 @@ public class FASTAExtractOutput extends JFrame {
 
 		GENOME = gen;
 		BED = b;
-		OUTPUTPATH = out;
+		OUT_DIR = out_dir;
 		STRAND = str;
 		HEADER = head;
 	}
@@ -51,19 +50,17 @@ public class FASTAExtractOutput extends JFrame {
 
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 
-		if (INDEX) {
 			try {
 				for (int x = 0; x < BED.size(); x++) {
 
 					// Open Output File
 					File OUTFILE;
 					String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
-					if (OUTPUTPATH != null) {
-						OUTFILE = new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME);
+					if (OUT_DIR != null) {
+						OUTFILE = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 					} else {
 						OUTFILE = new File(NAME);
 					}
-
 					PS.println("Proccessing File: " + BED.get(x).getName());
 
 					// Execute Script object
@@ -80,8 +77,5 @@ public class FASTAExtractOutput extends JFrame {
 			} catch (SAMException e) {
 				PS.println(e.getMessage());
 			}
-		} else {
-			PS.println("Genome FASTA file contains invalid lines!!!");
-		}
 	}
 }

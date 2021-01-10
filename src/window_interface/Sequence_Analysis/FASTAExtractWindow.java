@@ -45,7 +45,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 	private File OUTPUT_PATH = null;
 
 	private JButton btnLoad;
-	private JButton btnRemoveBam;
+	private JButton btnRemoveBed;
 	private JButton btnCalculate;
 	private JButton btnOutput;
 	private JLabel lblGenome;
@@ -65,7 +65,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 				if (INPUT == null) {
 					JOptionPane.showMessageDialog(null, "Genomic File Not Loaded!!!");
 				} else if (BEDFiles.size() < 1) {
-					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
+					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
 				} else {
 					setProgress(0);
 					FASTAExtractOutput signal = new FASTAExtractOutput(INPUT, BEDFiles, OUTPUT_PATH,
@@ -136,10 +136,10 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		});
 		contentPane.add(btnLoad);
 
-		btnRemoveBam = new JButton("Remove BED");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, 0, SpringLayout.SOUTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
-		btnRemoveBam.addActionListener(new ActionListener() {
+		btnRemoveBed = new JButton("Remove BED");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBed, 0, SpringLayout.SOUTH, btnLoad);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBed, -10, SpringLayout.EAST, contentPane);
+		btnRemoveBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while (listExp.getSelectedIndex() > -1) {
 					BEDFiles.remove(listExp.getSelectedIndex());
@@ -147,7 +147,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 				}
 			}
 		});
-		contentPane.add(btnRemoveBam);
+		contentPane.add(btnRemoveBed);
 
 		btnCalculate = new JButton("Calculate");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -71, SpringLayout.NORTH, btnCalculate);
@@ -205,7 +205,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 
 		chckbxStrand = new JCheckBox("Force Strandedness");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxStrand, 1, SpringLayout.NORTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxStrand, -17, SpringLayout.WEST, btnRemoveBam);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxStrand, -17, SpringLayout.WEST, btnRemoveBed);
 		chckbxStrand.setSelected(true);
 		contentPane.add(chckbxStrand);
 

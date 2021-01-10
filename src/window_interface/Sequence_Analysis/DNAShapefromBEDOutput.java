@@ -24,7 +24,7 @@ import scripts.Sequence_Analysis.DNAShapefromBED;
 @SuppressWarnings("serial")
 public class DNAShapefromBEDOutput extends JFrame {
 	private File GENOME = null;
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private ArrayList<File> BED = null;
 
@@ -35,7 +35,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 
-	public DNAShapefromBEDOutput(File gen, ArrayList<File> b, File out, boolean[] type, boolean str) {
+	public DNAShapefromBEDOutput(File gen, ArrayList<File> b, File out_dir, boolean[] type, boolean str) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -60,7 +60,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 
 		GENOME = gen;
 		BED = b;
-		OUTPUTPATH = out;
+		OUT_DIR = out_dir;
 		OUTPUT_TYPE = type;
 		STRAND = str;
 	}
@@ -99,8 +99,8 @@ public class DNAShapefromBEDOutput extends JFrame {
 				// Open Output File
 				String BASENAME = BED.get(x).getName().split("\\.")[0];
 				try {
-					if (OUTPUTPATH != null) {
-						BASENAME = OUTPUTPATH.getCanonicalPath() + File.separator + BASENAME;
+					if (OUT_DIR != null) {
+						BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 					}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
@@ -147,7 +147,6 @@ public class DNAShapefromBEDOutput extends JFrame {
 							JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					tabbedPane_Statistics.add("Roll", Rollpane);
 				}
-
 				firePropertyChange("fa", x, x + 1);
 			}
 		} catch (IllegalArgumentException e) {

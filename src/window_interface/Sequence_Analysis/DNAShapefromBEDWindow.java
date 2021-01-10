@@ -45,7 +45,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 	private File OUTPUT_PATH = null;
 
 	private JButton btnLoad;
-	private JButton btnRemoveBam;
+	private JButton btnRemoveBed;
 	private JButton btnCalculate;
 	private JButton btnOutput;
 	private JLabel lblGenome;
@@ -69,7 +69,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 				if (INPUT == null) {
 					JOptionPane.showMessageDialog(null, "Genomic File Not Loaded!!!");
 				} else if (BEDFiles.size() < 1) {
-					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
+					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
 				} else if (!chckbxMinorGrooveWidth.isSelected() && !chckbxRoll.isSelected()
 						&& !chckbxHelicalTwist.isSelected() && !chckbxPropellerTwist.isSelected()) {
 					JOptionPane.showMessageDialog(null, "No Structural Predictions Selected!!!");
@@ -149,11 +149,11 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		});
 		contentPane.add(btnLoad);
 
-		btnRemoveBam = new JButton("Remove BED");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -16, SpringLayout.NORTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -10, SpringLayout.EAST, contentPane);
-		btnRemoveBam.addActionListener(new ActionListener() {
+		btnRemoveBed = new JButton("Remove BED");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBed, -16, SpringLayout.NORTH, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBed);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBed, -10, SpringLayout.EAST, contentPane);
+		btnRemoveBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while (listExp.getSelectedIndex() > -1) {
 					BEDFiles.remove(listExp.getSelectedIndex());
@@ -161,7 +161,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 				}
 			}
 		});
-		contentPane.add(btnRemoveBam);
+		contentPane.add(btnRemoveBed);
 
 		btnCalculate = new JButton("Calculate");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -116, SpringLayout.NORTH, btnCalculate);
@@ -217,7 +217,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 
 		chckbxStrand = new JCheckBox("Force Strandedness");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxStrand, 1, SpringLayout.NORTH, btnLoad);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxStrand, -17, SpringLayout.WEST, btnRemoveBam);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxStrand, -17, SpringLayout.WEST, btnRemoveBed);
 		chckbxStrand.setSelected(true);
 		contentPane.add(chckbxStrand);
 
