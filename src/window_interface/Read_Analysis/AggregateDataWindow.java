@@ -41,7 +41,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	final DefaultListModel<String> expList;
 	ArrayList<File> SUMFiles = new ArrayList<File>();
 
@@ -71,21 +71,20 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 				} else if (Integer.parseInt(txtCol.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Start Column!!! Must be larger than 0 (1-based)");
 				} else {
-					AggregateData parse = new AggregateData(SUMFiles, OUTPUT_PATH, chckbxMergeToOne.isSelected(),
+					AggregateData script_obj = new AggregateData(SUMFiles, OUT_DIR, chckbxMergeToOne.isSelected(),
 							Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()),
 							cmbMethod.getSelectedIndex());
+					script_obj.run();
 
-// 		        	parse.addPropertyChangeListener("file", new PropertyChangeListener() {
-// 					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-// 					    	int temp = (Integer) propertyChangeEvent.getNewValue();
-// 					    	int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
-// 				        	setProgress(percentComplete);
-// 					     }
+// 					parse.addPropertyChangeListener("file", new PropertyChangeListener() {
+// 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+// 							int temp = (Integer) propertyChangeEvent.getNewValue();
+// 							int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
+// 							setProgress(percentComplete);
+// 						}
 // 					 });
-
-					parse.run();
 					setProgress(100);
-					JOptionPane.showMessageDialog(null, parse.getMessage());
+					JOptionPane.showMessageDialog(null, script_obj.getMessage());
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
@@ -207,9 +206,9 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 15, SpringLayout.SOUTH, lblColumnStart);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

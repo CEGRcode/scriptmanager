@@ -42,7 +42,7 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 
 	final DefaultListModel<String> expList;
 	ArrayList<File> TABFiles = new ArrayList<File>();
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -67,7 +67,7 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 				setProgress(0);
 
 				for (int x = 0; x < TABFiles.size(); x++) {
-					SimilarityMatrix matrix = new SimilarityMatrix(TABFiles.get(x), OUTPUT_PATH,
+					SimilarityMatrix matrix = new SimilarityMatrix(TABFiles.get(x), OUT_DIR,
 							comboBox.getSelectedIndex(), rdbtnCorrelateColumns.isSelected());
 					matrix.run();
 
@@ -171,9 +171,9 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -135, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

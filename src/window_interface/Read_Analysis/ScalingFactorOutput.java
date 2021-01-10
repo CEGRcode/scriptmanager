@@ -28,9 +28,8 @@ public class ScalingFactorOutput extends JFrame {
 	ArrayList<File> BAMFiles = null;
 	private File BLACKLISTFile = null;
 	private File CONTROL = null;
-	private String OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	private boolean OUTPUTSTATUS = false;
-	private String FILEID = null;
 
 	private int scaleType = -1;
 	private int windowSize = 500;
@@ -43,7 +42,7 @@ public class ScalingFactorOutput extends JFrame {
 	final JTabbedPane tabbedPane_CummulativeScatterplot;
 	final JTabbedPane tabbedPane_MarginalScatterplot;
 
-	public ScalingFactorOutput(ArrayList<File> b, File bl, File c, String out_path, boolean out, int scale, int win,
+	public ScalingFactorOutput(ArrayList<File> b, File bl, File c, File out_dir, boolean out, int scale, int win,
 			double min) {
 		setTitle("Scaling Factor");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -64,7 +63,7 @@ public class ScalingFactorOutput extends JFrame {
 		BAMFiles = b;
 		BLACKLISTFile = bl;
 		CONTROL = c;
-		OUTPUT_PATH = out_path;
+		OUT_DIR = out_dir;
 		OUTPUTSTATUS = out;
 		scaleType = scale;
 		windowSize = win;
@@ -79,27 +78,15 @@ public class ScalingFactorOutput extends JFrame {
 	}
 
 	public void run() throws IOException {
-// 		//Load blacklist HashMap if blacklist file uploaded by user
-// 		if(BLACKLISTFile != null) {	loadBlacklist(BLACKLISTFile); }
-// 		
-// 		//Load up the Control File once per run
-// 		if(scaleType != 1) {
-// 			System.out.println(getTimeStamp() + "\nLoading control genome array...");
-// 			initalizeGenomeMetainformation(CONTROL);
-// 			Cgenome = initializeList(CONTROL, false);
-// 			System.out.println("Array loaded");
-// 		}
-// 		
-// 		PrintStream OUT = null;
-// 		if(OUTPUTSTATUS) { OUT = new PrintStream(new File(OUTFILE)); }
-
 		for (int z = 0; z < BAMFiles.size(); z++) {
 			File SAMPLE = BAMFiles.get(z); // Pull current BAM file
-			FILEID = SAMPLE.getName();
 
-			String BASENAME = OUTPUT_PATH + File.separator + ExtensionFileFilter.stripExtension(SAMPLE);
+			String OUTBASE = ExtensionFileFilter.stripExtension(SAMPLE);
+			if(OUT_DIR != null) {
+				OUTBASE = OUT_DIR.getAbsolutePath() + File.separator + OUTBASE;
+			}
 
-			ScalingFactor script_obj = new ScalingFactor(SAMPLE, BLACKLISTFile, CONTROL, BASENAME, OUTPUTSTATUS,
+			ScalingFactor script_obj = new ScalingFactor(SAMPLE, BLACKLISTFile, CONTROL, OUTBASE, OUTPUTSTATUS,
 					scaleType, windowSize, minFraction);
 			script_obj.run();
 
@@ -109,12 +96,12 @@ public class ScalingFactorOutput extends JFrame {
 				JOptionPane.showMessageDialog(null, script_obj.getDialogMessage());
 			} else if (scaleType == 2) {
 				// Generate images
-				tabbedPane_CummulativeScatterplot.add(FILEID, script_obj.getCCPlot());
-				tabbedPane_MarginalScatterplot.add(FILEID, script_obj.getMPlot());
+				tabbedPane_CummulativeScatterplot.add(SAMPLE.getName(), script_obj.getCCPlot());
+				tabbedPane_MarginalScatterplot.add(SAMPLE.getName(), script_obj.getMPlot());
 			} else if (scaleType == 3) {
 				// Generate images
-				tabbedPane_CummulativeScatterplot.add(FILEID, script_obj.getCCPlot());
-				tabbedPane_MarginalScatterplot.add(FILEID, script_obj.getMPlot());
+				tabbedPane_CummulativeScatterplot.add(SAMPLE.getName(), script_obj.getCCPlot());
+				tabbedPane_MarginalScatterplot.add(SAMPLE.getName(), script_obj.getMPlot());
 			}
 			firePropertyChange("scale", z, (z + 1));
 		}

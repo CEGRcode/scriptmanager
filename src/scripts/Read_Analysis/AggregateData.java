@@ -32,13 +32,16 @@ public class AggregateData {
 
 	public void run() throws IOException {
 		if (!MERGE) {
-			if (!OUT_PATH.isDirectory() && INPUT.size() == 1) {
-				outputFileScore(INPUT.get(0), new PrintStream(OUT_PATH));
-			} else {
+			if (OUT_PATH == null || OUT_PATH.isDirectory()) {
+				System.err.println(INPUT.get(0));
 				for (int x = 0; x < INPUT.size(); x++) {
 					outputFileScore(INPUT.get(x));
-// 					firePropertyChange("file", x, x + 1);							
+// 					firePropertyChange("file", x, x + 1);
 				}
+			} else if (INPUT.size() == 1) {
+				outputFileScore(INPUT.get(0));
+			} else {
+				System.err.println("Cannot accept non-directory filename with multi-file input when merge is not flaggeds.");
 			}
 		} else {
 			ArrayList<ArrayList<Double>> MATRIX = new ArrayList<ArrayList<Double>>();
@@ -67,7 +70,6 @@ public class AggregateData {
 						} catch (NumberFormatException nfe) {
 							numarray[y] = Double.NaN;
 						}
-
 					}
 					if (METRIC == 0) {
 						scorearray.add(ArrayUtilities.getSum(numarray));
@@ -85,7 +87,6 @@ public class AggregateData {
 						scorearray.add(ArrayUtilities.getPositionalVariance(numarray));
 					}
 					count++;
-
 				}
 				scan.close();
 				MATRIX.add(scorearray);
@@ -139,13 +140,11 @@ public class AggregateData {
 
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
 		String NEWNAME = ExtensionFileFilter.stripExtension(IN);
-
 		if (OUT_PATH != null) {
-			OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + NEWNAME + "_SCORES.out"));
+			OUT = new PrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + "_SCORES.out"));
 		} else {
 			OUT = new PrintStream(new File(NEWNAME + "_SCORES.out"));
 		}
-
 		outputFileScore(IN, OUT);
 	}
 
@@ -186,7 +185,6 @@ public class AggregateData {
 				} catch (NumberFormatException nfe) {
 					numarray[x] = Double.NaN;
 				}
-
 			}
 			if (METRIC == 0) {
 				OUT.println(ID[0] + "\t" + ArrayUtilities.getSum(numarray));

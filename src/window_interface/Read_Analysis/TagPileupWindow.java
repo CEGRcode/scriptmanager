@@ -49,7 +49,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	Vector<File> BAMFiles = new Vector<File>();
 	final DefaultListModel<String> bedList;
 	Vector<File> BEDFiles = new Vector<File>();
-	private File OUTPUT = null;
+	private File OUT_DIR = null;
 
 	private JButton btnPileup;
 	private JButton btnLoadBamFiles;
@@ -186,17 +186,17 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 						param.setOutputType(0);
 					}
 					if (!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {
-						param.setOutput(null);
-					} else if (OUTPUT == null) {
-						param.setOutput(new File(System.getProperty("user.dir")));
+						param.setOutputDirectory(null);
+					} else if (OUT_DIR == null) {
+						param.setOutputDirectory(new File(System.getProperty("user.dir")));
 					} else {
-						param.setOutput(OUTPUT);
+						param.setOutputDirectory(OUT_DIR);
 					}
 
 					param.setOutputCompositeStatus(chckbxOutputCompositeData.isSelected()); // Outputs composite plots
 																							// if check box is selected
 					if (chckbxOutputCompositeData.isSelected()) {
-						param.setCompositeFile(OUTPUT + File.separator + txtCompositeName.getText());
+						param.setCompositeFile(OUT_DIR + File.separator + txtCompositeName.getText());
 					}
 
 					if (chckbxOutputData.isSelected()) {
@@ -941,9 +941,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT = FileSelection.getOutputDir(fc);
-				if (OUTPUT != null) {
-					lblDefaultToLocal.setText(OUTPUT.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

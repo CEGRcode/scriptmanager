@@ -46,7 +46,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	private ArrayList<File> BAMFiles = new ArrayList<File>();
 	private File BLACKLIST = null;
 	private File CONTROL = null;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -86,10 +86,6 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 			} else {
 				setProgress(0);
 
-				if (OUTPUT_PATH == null) {
-					OUTPUT_PATH = new File(System.getProperty("user.dir"));
-				}
-
 				int scaleType = 0;
 				if (rdbtnTotalTag.isSelected()) {
 					scaleType = 1;
@@ -101,7 +97,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 				}
 
 				ScalingFactorOutput scale = new ScalingFactorOutput(BAMFiles, BLACKLIST, CONTROL,
-						OUTPUT_PATH.getAbsolutePath(), chckbxOutputStatistics.isSelected(), scaleType,
+						OUT_DIR, chckbxOutputStatistics.isSelected(), scaleType,
 						Integer.parseInt(txtWindow.getText()), Double.parseDouble(txtFraction.getText()));
 				scale.addPropertyChangeListener("scale", new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -213,9 +209,9 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -135, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

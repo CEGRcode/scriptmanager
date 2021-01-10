@@ -66,15 +66,16 @@ public class TagPileupOutput extends JFrame {
 		BEDFiles = be;
 		BAMFiles = ba;
 		PARAM = param;
-// 		STRAND = param.getStrand();
-// 		CPU = param.getCPU();
-
 	}
 
 	public void run() throws IOException {
 		if (PARAM.getOutputCompositeStatus()) {
 			try {
-				COMPOSITE = new PrintStream(PARAM.getOutput() + File.separator + PARAM.getCompositeFile());
+				if(PARAM.getOutputDirectory()!=null) {
+					COMPOSITE = new PrintStream(PARAM.getOutputDirectory() + File.separator + PARAM.getCompositeFile());
+				} else {
+					COMPOSITE = new PrintStream(PARAM.getCompositeFile());
+				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -105,7 +106,6 @@ public class TagPileupOutput extends JFrame {
 				} else if (PARAM.getStandard()) {
 					PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead()));
 				}
-				// System.out.println(PARAM.getRatio());
 
 				for (int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
 					System.err.println(
@@ -115,11 +115,8 @@ public class TagPileupOutput extends JFrame {
 					STATS.setEditable(false); // Make it un-editable
 					PrintStream ps = new PrintStream(new CustomOutputStream(STATS));
 
-					// Here we add script object: 1BAM x 1BED
-					System.err.println("make script object...");
 					TagPileup script_obj = new TagPileup(BEDFiles.get(BED_Index), BAM, PARAM, ps, null, true);
 					script_obj.run();
-					System.err.println("script object made...");
 
 					tabbedPane_Scatterplot.add(BAM.getName(), script_obj.getCompositePlot());
 

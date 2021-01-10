@@ -67,8 +67,8 @@ public class TagPileup {
 				String NAME0;
 				String NAME1;
 				if (outMatrixBasename == null) {
-					NAME0 = PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0);
-					NAME1 = PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1);
+					NAME0 = PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0);
+					NAME1 = PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1);
 				} else {
 					NAME0 = generateFileName(outMatrixBasename, 0);
 					NAME1 = generateFileName(outMatrixBasename, 1);
@@ -85,7 +85,7 @@ public class TagPileup {
 				// Set FileName
 				String NAME2;
 				if (outMatrixBasename == null) {
-					NAME2 = PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2);
+					NAME2 = PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2);
 				} else {
 					NAME2 = generateFileName(outMatrixBasename, 2);
 				}
@@ -293,11 +293,11 @@ public class TagPileup {
 			if (PARAM.getOutputJTV() && PARAM.getOutputType() == 2) {
 				if (STRAND == 0)
 					JTVOutput.outputJTV(
-							PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0),
+							PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0),
 							PARAM.getSenseColor());
 				else
 					JTVOutput.outputJTV(
-							PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2),
+							PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2),
 							PARAM.getCombinedColor());
 			}
 			OUT_S1.close();
@@ -305,7 +305,7 @@ public class TagPileup {
 		if (OUT_S2 != null) {
 			if (PARAM.getOutputJTV() && PARAM.getOutputType() == 2) {
 				JTVOutput.outputJTV(
-						PARAM.getOutput() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1),
+						PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1),
 						PARAM.getAntiColor());
 			}
 			OUT_S2.close();

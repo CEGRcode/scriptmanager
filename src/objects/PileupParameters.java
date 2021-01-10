@@ -190,10 +190,10 @@ public class PileupParameters {
 		OUTTYPE = newtype;
 	}
 	
-	public File getOutput() {
+	public File getOutputDirectory() {
 		return OUTPUT;
 	}
-	public void setOutput(File oUTPUT) {
+	public void setOutputDirectory(File oUTPUT) {
 		OUTPUT = oUTPUT;
 	}
 

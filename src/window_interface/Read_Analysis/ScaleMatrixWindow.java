@@ -41,6 +41,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import util.ExtensionFileFilter;
 import util.FileSelection;
 import scripts.Read_Analysis.ScaleMatrix;
 
@@ -50,7 +51,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	ArrayList<File> TABFiles = new ArrayList<File>();
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -103,17 +104,18 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 						}
 
 						for (int x = 0; x < TABFiles.size(); x++) {
-							if (OUTPUTPATH == null) {
-								OUTPUTPATH = new File(System.getProperty("user.dir"));
-							}
 							if (rdbtnFilespecifcScaling.isSelected()) {
 								SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString());
 							}
-							// System.out.println(SCALE);
-							String[] FILEID = TABFiles.get(x).getName().split("\\.");
-							File OUT = new File(
-									OUTPUTPATH + File.separator + FILEID[0] + "_SCALE." + FILEID[FILEID.length - 1]);
-							ScaleMatrix scale = new ScaleMatrix(TABFiles.get(x), OUT, SCALE,
+
+							File XTAB = TABFiles.get(x);
+							String OUTPUT = ExtensionFileFilter.stripExtension(XTAB) + "_SCALE."
+									+ ExtensionFileFilter.getExtension(XTAB);
+							if (OUT_DIR != null) {
+								OUTPUT = OUT_DIR + File.separator + OUTPUT;
+							}
+
+							ScaleMatrix scale = new ScaleMatrix(XTAB, new File(OUTPUT), SCALE,
 									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
 							scale.run();
 
@@ -242,9 +244,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -135, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUTPATH = FileSelection.getOutputDir(fc);
-				if (OUTPUTPATH != null) {
-					lblDefaultToLocal.setText(OUTPUTPATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
