@@ -169,8 +169,6 @@ public class AggregateData {
 		int count = 0;
 		while (scan.hasNextLine()) {
 			String line = scan.nextLine();
-			count++;
-
 			// Skip lines until desired row start
 			while (count < ROWSTART) {
 				line = scan.nextLine();
