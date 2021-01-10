@@ -32,7 +32,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 	public static Color MAXCOLOR = new Color(255, 0, 0);
 
 	protected static boolean OUTPUTSTATUS = false;
-	protected static File OUTPUTPATH = null;
+	protected static File OUT_DIR = null;
 	protected static String FILEID = null;
 
 	public static double COLOR_RATIO = 1;
@@ -40,7 +40,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 	JTabbedPane newpane;
 
 	public TwoColorHeatMapOutput(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth,
-			String scale, double abs, double quant, File OUT, boolean outstatus) {
+			String scale, double abs, double quant, File out_dir, boolean outstatus) {
 		setTitle("Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -59,18 +59,16 @@ public class TwoColorHeatMapOutput extends JFrame {
 		absolute = abs;
 		quantile = quant;
 
-		OUTPUTPATH = OUT;
+		OUT_DIR = out_dir;
 		OUTPUTSTATUS = outstatus;
 		System.out.println(OUTPUTSTATUS);
 	}
 
 	public void run() throws IOException {
 		for (int x = 0; x < SAMPLE.size(); x++) {
-
-			String FILEID = SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png";
-			String OUTPUT = FILEID;
-			if (OUTPUTPATH != null) {
-				OUTPUT = OUTPUTPATH.getCanonicalPath() + File.separator + FILEID;
+			String OUTPUT = SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png";
+			if (OUT_DIR != null) {
+				OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 			}
 
 			// Execute script

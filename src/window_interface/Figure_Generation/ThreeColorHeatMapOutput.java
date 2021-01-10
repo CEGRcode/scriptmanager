@@ -89,11 +89,9 @@ public class ThreeColorHeatMapOutput extends JFrame {
 	public void run() throws IOException {
 		String postRunDialog = "";
 		for (int x = 0; x < SAMPLE.size(); x++) {
-
-			String FILEID = SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png";
-			String OUTPUT = FILEID;
+			String OUTPUT = SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png";
 			if (OUT_DIR != null) {
-				OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + FILEID;
+				OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 			}
 			// Execute script
 			try {

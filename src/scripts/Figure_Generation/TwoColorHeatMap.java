@@ -65,10 +65,7 @@ public class TwoColorHeatMap {
 	}
 
 	public void run() throws IOException {
-
-		String FILEID = SAMPLE.getName().split("\\.")[0];
-
-		System.out.println("Loading Matrix file: " + FILEID);
+		System.out.println("Loading Matrix file: " + OUTFILE.getName());
 		MATRIX = loadMatrix(SAMPLE);
 		System.out.println("Matrix file loaded.");
 		System.out.println("Rows detected: " + MATRIX.size());

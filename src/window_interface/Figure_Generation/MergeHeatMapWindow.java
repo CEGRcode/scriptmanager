@@ -36,7 +36,7 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 
 	final DefaultListModel<String> expList;
 	ArrayList<File> pngFiles = new ArrayList<File>();
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemovePNG;
@@ -52,11 +52,8 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		@Override
 		public Void doInBackground() throws IOException {
 			setProgress(0);
-			if (OUTPUTPATH == null) {
-				OUTPUTPATH = new File(System.getProperty("user.dir"));
-			}
 
-			MergeHeatMapOutput heat = new MergeHeatMapOutput(pngFiles, OUTPUTPATH);
+			MergeHeatMapOutput heat = new MergeHeatMapOutput(pngFiles, OUT_DIR);
 
 			heat.addPropertyChangeListener("merge", new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -167,9 +164,9 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUTPATH = FileSelection.getOutputDir(fc);
-				if (OUTPUTPATH != null) {
-					lblDefaultToLocal.setText(OUTPUTPATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

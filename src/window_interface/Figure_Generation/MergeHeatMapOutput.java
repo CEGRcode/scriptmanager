@@ -18,11 +18,11 @@ public class MergeHeatMapOutput extends JFrame {
 	private ArrayList<File> pngFiles = null;
 	private ArrayList<File> senseFile = null;
 	private ArrayList<File> antiFile = null;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	JTabbedPane newpane;
 
-	public MergeHeatMapOutput(ArrayList<File> in, File out) {
+	public MergeHeatMapOutput(ArrayList<File> in, File out_dir) {
 		setTitle("Merged Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -31,7 +31,7 @@ public class MergeHeatMapOutput extends JFrame {
 		this.getContentPane().add(newpane);
 
 		pngFiles = in;
-		OUTPUT_PATH = out;
+		OUT_DIR = out_dir;
 	}
 
 	public void run() throws IOException {
@@ -54,20 +54,19 @@ public class MergeHeatMapOutput extends JFrame {
 					matchIndex = y;
 				}
 			}
-			out = out + "merge.png";
-			if (OUTPUT_PATH != null) {
-				out = OUTPUT_PATH.getCanonicalPath() + File.separator + out;
+			String OUTPUT = out + "merge.png";
+			if (OUT_DIR != null) {
+				OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + out;
 			}
 
 			// Store results in JFrame window
-			File OUT = new File(out);
 			if (matchIndex != -999) {
 				// Execute script
-				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), antiFile.get(matchIndex), OUT);
-				addImage(OUT.getName(), pic);
+				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), antiFile.get(matchIndex), new File(OUTPUT));
+				addImage(OUTPUT, pic);
 			} else {
-				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), null, OUT);
-				addImage(OUT.getName(), pic);
+				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), null, new File(OUTPUT));
+				addImage(OUTPUT, pic);
 			}
 			firePropertyChange("merge", x, x + 1);
 		}

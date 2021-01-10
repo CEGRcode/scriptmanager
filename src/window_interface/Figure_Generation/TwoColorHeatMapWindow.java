@@ -72,7 +72,7 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 	private JLabel lblOutput;
 	private JLabel lblCurrentOutput;
 
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -114,8 +114,8 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 				} else if (rdbtnNearestNeighbor.isSelected()) {
 					scaletype = "neighbor";
 				}
-				if (OUTPUTPATH == null) {
-					OUTPUTPATH = new File(System.getProperty("user.dir"));
+				if (OUT_DIR == null) {
+					OUT_DIR = new File(System.getProperty("user.dir"));
 				}
 
 				double absolute = Double.parseDouble(txtAbsolute.getText());
@@ -125,7 +125,7 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 				double quantile = Double.parseDouble(txtPercent.getText());
 
 				TwoColorHeatMapOutput heat = new TwoColorHeatMapOutput(txtFiles, COLOR, startR, startC, pHeight, pWidth,
-						scaletype, absolute, quantile, OUTPUTPATH, chckbxOutputHeatmap.isSelected());
+						scaletype, absolute, quantile, OUT_DIR, chckbxOutputHeatmap.isSelected());
 
 				heat.addPropertyChangeListener("heat", new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -488,9 +488,9 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUTPATH = FileSelection.getOutputDir(fc);
-				if (OUTPUTPATH != null) {
-					lblOutput.setText(OUTPUTPATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblOutput.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

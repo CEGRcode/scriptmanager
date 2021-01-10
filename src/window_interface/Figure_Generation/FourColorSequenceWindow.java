@@ -42,7 +42,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 
 	final DefaultListModel<String> expList;
 	Vector<File> fastaFiles = new Vector<File>();
-	private File OUTPUTPATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -81,13 +81,12 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 					COLORS.add(btnCColor.getForeground());
 					COLORS.add(btnNColor.getForeground());
 
-					if (OUTPUTPATH == null) {
-						OUTPUTPATH = new File(System.getProperty("user.dir"));
-					}
 					for (int x = 0; x < fastaFiles.size(); x++) {
-						String[] out = fastaFiles.get(x).getName().split("\\.");
-						FourColorPlot.generatePLOT(fastaFiles.get(x),
-								new File(OUTPUTPATH + File.separator + out[0] + ".png"), COLORS,
+						String OUTPUT = fastaFiles.get(x).getName().split("\\.")[0] + ".png";
+						if(OUT_DIR != null) {
+							OUTPUT = OUT_DIR + File.separator + OUTPUT;
+						}
+						FourColorPlot.generatePLOT(fastaFiles.get(x), new File(OUTPUT), COLORS,
 								Integer.parseInt(txtHeight.getText()), Integer.parseInt(txtWidth.getText()));
 						int percentComplete = (int) (((double) (x + 1) / fastaFiles.size()) * 100);
 						setProgress(percentComplete);
@@ -284,9 +283,9 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUTPATH = FileSelection.getOutputDir(fc);
-				if (OUTPUTPATH != null) {
-					lblDefaultToLocal.setText(OUTPUTPATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

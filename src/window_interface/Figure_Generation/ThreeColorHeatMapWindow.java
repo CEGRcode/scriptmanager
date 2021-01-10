@@ -149,9 +149,6 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 				} else if (rdbtnNearestNeighbor.isSelected()) {
 					scaletype = "neighbor";
 				}
-				if (OUT_DIR == null) {
-					OUT_DIR = new File(System.getProperty("user.dir"));
-				}
 
 				double q_min = Double.parseDouble(txtAbsoluteMin.getText());
 				double q_mid = Double.parseDouble(txtAbsoluteMid.getText());

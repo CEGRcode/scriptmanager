@@ -48,7 +48,6 @@ public class ThreeColorHeatMap {
 
 	protected static boolean OUTPUTSTATUS = false;
 	protected static File OUTFILE = null;
-	protected static String FILEID = null;
 
 	private static ArrayList<double[]> MATRIX = null;
 	public static double COLOR_RATIO = 1;
@@ -85,10 +84,7 @@ public class ThreeColorHeatMap {
 	}
 
 	public void run() throws IOException, OptionException {
-
-		String FILEID = SAMPLE.getName().split("\\.")[0];
-
-		System.out.println("Loading Matrix file: " + FILEID);
+		System.out.println("Loading Matrix file: " + OUTFILE.getName());
 		MATRIX = loadMatrix(SAMPLE);
 		System.out.println("Matrix file loaded.");
 		System.out.println("Rows detected: " + MATRIX.size());
