@@ -23,8 +23,9 @@ public class FASTAExtract {
 	private PrintStream PS = null;
 	private boolean STRAND = true;
 	private boolean HEADER = true;
-	
-	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps) throws IOException, FASTAException {
+
+	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps)
+			throws IOException, FASTAException {
 		GENOME = gen;
 		BED = b;
 		OUTFILE = out;
@@ -33,69 +34,82 @@ public class FASTAExtract {
 		PS = ps;
 
 		File FAI = new File(GENOME + ".fai");
-		//Check if FAI index file exists
-		if(!FAI.exists() || FAI.isDirectory()) {
+		// Check if FAI index file exists
+		if (!FAI.exists() || FAI.isDirectory()) {
 			FASTAUtilities.buildFASTAIndex(GENOME);
 		}
 	}
-	
+
 	public void run() throws IOException, InterruptedException {
-		
-		if(PS==null) PS = System.err;
+
+		if (PS == null)
+			PS = System.err;
 		System.out.println("STRAND:" + STRAND);
 		System.out.println("COORD:" + HEADER);
-		
-			try{			
-				IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
-				PS.println("Proccessing File: " + BED.getName());
-				//Open Output File
-				OUT = new PrintStream(OUTFILE);
-				
-				ArrayList<BEDCoord> BED_Coord = loadCoord(BED);
-				
-				for(int y = 0; y < BED_Coord.size(); y++) {
-					try {
-						String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(), BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases());
-						if(STRAND && BED_Coord.get(y).getDir().equals("-")) {
-							seq = FASTAUtilities.RevComplement(seq);
-						}
-						OUT.println(">" + BED_Coord.get(y).getName() + "\n" + seq);
-					} catch (SAMException e) {
-						PS.println("INVALID COORDINATE: " + BED_Coord.get(y).toString());
+
+		try {
+			IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
+			PS.println("Proccessing File: " + BED.getName());
+			// Open Output File
+			OUT = new PrintStream(OUTFILE);
+
+			ArrayList<BEDCoord> BED_Coord = loadCoord(BED);
+
+			for (int y = 0; y < BED_Coord.size(); y++) {
+				try {
+					String seq = new String(QUERY.getSubsequenceAt(BED_Coord.get(y).getChrom(),
+							BED_Coord.get(y).getStart() + 1, BED_Coord.get(y).getStop()).getBases());
+					if (STRAND && BED_Coord.get(y).getDir().equals("-")) {
+						seq = FASTAUtilities.RevComplement(seq);
 					}
+					OUT.println(">" + BED_Coord.get(y).getName() + "\n" + seq);
+				} catch (SAMException e) {
+					PS.println("INVALID COORDINATE: " + BED_Coord.get(y).toString());
 				}
-				OUT.close();
-				QUERY.close();
-			} catch(IllegalArgumentException e) {
-				PS.println(e.getMessage());
-			} catch(FileNotFoundException e) {
-				PS.println(e.getMessage());
-			} catch(SAMException e) {
-				PS.println(e.getMessage());
 			}
-		
+			OUT.close();
+			QUERY.close();
+		} catch (IllegalArgumentException e) {
+			PS.println(e.getMessage());
+		} catch (FileNotFoundException e) {
+			PS.println(e.getMessage());
+		} catch (SAMException e) {
+			PS.println(e.getMessage());
+		}
+
 	}
-		
-    public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
+
+	public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
 		Scanner scan = new Scanner(INPUT);
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");
-			if(temp.length > 2) { 
-				if(!temp[0].contains("track") && !temp[0].contains("#")) {
+			if (temp.length > 2) {
+				if (!temp[0].contains("track") && !temp[0].contains("#")) {
 					String name = "";
-										
-					if(!HEADER) { //create genomic coordinate name if requested
-						if(temp.length > 5) { name = temp[0] + ":" + temp[1] + "-" + temp[2] + "(" + temp[5] + ")"; }
-						else { name = temp[0] + ":" + temp[1] + "-" + temp[2] + "(.)"; }
-					} else { //else create name based on BED file name or create one if non-existent
-						if(temp.length > 3) { name = temp[3]; }
-						else { name = temp[0] + ":" + temp[1] + "-" + temp[2] + "(" + temp[5] + ")"; }
+
+					if (!HEADER) { // create genomic coordinate name if requested
+						if (temp.length > 5) {
+							name = temp[0] + ":" + temp[1] + "-" + temp[2] + "(" + temp[5] + ")";
+						} else {
+							name = temp[0] + ":" + temp[1] + "-" + temp[2] + "(.)";
+						}
+					} else { // else create name based on BED file name or create one if non-existent
+						if (temp.length > 3) {
+							name = temp[3];
+						} else {
+							name = temp[0] + ":" + temp[1] + "-" + temp[2] + "(" + temp[5] + ")";
+						}
 					}
-					
-					if(Integer.parseInt(temp[1]) >= 0) {
-						if(temp[5].equals("+")) { COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name)); }
-						else { COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "-", name)); }
+
+					if (Integer.parseInt(temp[1]) >= 0) {
+						if (temp[5].equals("+")) {
+							COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+",
+									name));
+						} else {
+							COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "-",
+									name));
+						}
 					} else {
 						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
 					}
@@ -104,5 +118,5 @@ public class FASTAExtract {
 		}
 		scan.close();
 		return COORD;
-    }
+	}
 }

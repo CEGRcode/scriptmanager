@@ -20,38 +20,38 @@ public class FilterforPIPseqOutput extends JFrame {
 	File genome = null;
 	File output = null;
 	String SEQ = "";
-	
+
 	private JTextArea textArea;
-	
+
 	public FilterforPIPseqOutput(File in, File gen, File out, String s) {
 		setTitle("Permanganate-Seq Filtering Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
+
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		scrollPane.setViewportView(textArea);
-		
+
 		bamFile = in;
 		genome = gen;
 		output = out;
 		SEQ = s.toUpperCase();
 	}
-	
-	public void run() throws IOException, InterruptedException, FASTAException {
-		
-		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));	
 
-		//Check if BAI index file exists
+	public void run() throws IOException, InterruptedException, FASTAException {
+
+		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
+
+		// Check if BAI index file exists
 		File f = new File(bamFile + ".bai");
-		if(f.exists() && !f.isDirectory()) {
-			
+		if (f.exists() && !f.isDirectory()) {
+
 			FilterforPIPseq script_obj = new FilterforPIPseq(bamFile, genome, output, SEQ, PS);
 			script_obj.run();
-			
+
 			Thread.sleep(2000);
 			dispose();
 		} else {

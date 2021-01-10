@@ -25,59 +25,59 @@ public class FASTAExtractOutput extends JFrame {
 	private boolean STRAND = true;
 	private boolean HEADER = true;
 	private boolean INDEX = true;
-	
+
 	private JTextArea textArea;
-	
+
 	public FASTAExtractOutput(File gen, ArrayList<File> b, File out, boolean str, boolean head) {
 		setTitle("FASTA Extraction Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
+
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		scrollPane.setViewportView(textArea);
-		
+
 		GENOME = gen;
 		BED = b;
 		OUTPUTPATH = out;
 		STRAND = str;
 		HEADER = head;
 	}
-	
+
 	public void run() throws IOException, InterruptedException, FASTAException {
-		
+
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		
-		if(INDEX) {
-			try{
-				for(int x = 0; x < BED.size(); x++) {
-					
-					//Open Output File
+
+		if (INDEX) {
+			try {
+				for (int x = 0; x < BED.size(); x++) {
+
+					// Open Output File
 					File OUTFILE;
 					String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
-					if(OUTPUTPATH != null) {
+					if (OUTPUTPATH != null) {
 						OUTFILE = new File(OUTPUTPATH.getCanonicalPath() + File.separator + NAME);
 					} else {
 						OUTFILE = new File(NAME);
 					}
-					
+
 					PS.println("Proccessing File: " + BED.get(x).getName());
-					
-					//Execute Script object
+
+					// Execute Script object
 					FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS);
 					script_obj.run();
-					
-			        firePropertyChange("fa",x, x + 1);	
+
+					firePropertyChange("fa", x, x + 1);
 				}
 				PS.println("Extraction Complete");
-			} catch(IllegalArgumentException e) {
+			} catch (IllegalArgumentException e) {
 				PS.println(e.getMessage());
-			} catch(FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				PS.println(e.getMessage());
-			} catch(SAMException e) {
+			} catch (SAMException e) {
 				PS.println(e.getMessage());
 			}
 		} else {

@@ -18,74 +18,74 @@ import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
-	Sequence_AnalysisCLI/DNAShapefromBEDCLI
-*/
-@Command(name = "dna-shape-bed", mixinStandardHelpOptions = true,
-	description = ToolDescriptions.dna_shape_from_bed_description,
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
-	sortOptions = false,
-	exitCodeOnInvalidInput = 1,
-	exitCodeOnExecutionException = 1)
+ * Sequence_AnalysisCLI/DNAShapefromBEDCLI
+ */
+@Command(name = "dna-shape-bed", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_bed_description, version = "ScriptManager "
+		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
 public class DNAShapefromBEDCLI implements Callable<Integer> {
-	
-	@Parameters( index = "0", description = "reference genome FASTA file")
+
+	@Parameters(index = "0", description = "reference genome FASTA file")
 	private File genomeFASTA;
-	@Parameters( index = "1", description = "the BED file of sequences to extract")
+	@Parameters(index = "1", description = "the BED file of sequences to extract")
 	private File bedFile;
-	
-	@Option(names = {"-o", "--output"}, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
+
+	@Option(names = { "-o",
+			"--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
-	@Option(names = {"--avg-composite"}, description = "Save average composite")
+	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;
-	@Option(names = {"-n","--no-force"}, description = "don't force-strandedness (default is to force strandedness)")
+	@Option(names = { "-n", "--no-force" }, description = "don't force-strandedness (default is to force strandedness)")
 	private boolean forceStrand = true;
-	
+
 	@ArgGroup(validate = false, heading = "Shape Options%n")
 	ShapeType shape = new ShapeType();
-	static class ShapeType{
-		@Option(names = {"-g","--groove"}, description = "output minor groove width")
+
+	static class ShapeType {
+		@Option(names = { "-g", "--groove" }, description = "output minor groove width")
 		private boolean groove = false;
-		@Option(names = {"-r","--roll"}, description = "output roll")
+		@Option(names = { "-r", "--roll" }, description = "output roll")
 		private boolean roll = false;
-		@Option(names = {"-p","--propeller"}, description = "output propeller twist")
+		@Option(names = { "-p", "--propeller" }, description = "output propeller twist")
 		private boolean propeller = false;
-		@Option(names = {"-l","--helical"}, description = "output helical twist")
+		@Option(names = { "-l", "--helical" }, description = "output helical twist")
 		private boolean helical = false;
-		@Option(names = {"-a","--all"}, description = "output groove, roll, propeller twist, and helical twist (equivalent to -grpl).")
+		@Option(names = { "-a",
+				"--all" }, description = "output groove, roll, propeller twist, and helical twist (equivalent to -grpl).")
 		private boolean all = false;
 	}
-	
-	private boolean[] OUTPUT_TYPE = new boolean[]{false,false,false,false};
-	
+
+	private boolean[] OUTPUT_TYPE = new boolean[] { false, false, false, false };
+
 	@Override
 	public Integer call() throws Exception {
-		System.err.println( ">DNAShapefromBEDCLI.call()" );
+		System.err.println(">DNAShapefromBEDCLI.call()");
 		String validate = validateInput();
-		if(!validate.equals("")){
-			System.err.println( validate );
+		if (!validate.equals("")) {
+			System.err.println(validate);
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			System.exit(1);
 		}
-		
+
 		// Print Composite Scores
 		try {
 			// Generate Composite Plot
-			DNAShapefromBED script_obj = new DNAShapefromBED(genomeFASTA, bedFile, outputBasename, OUTPUT_TYPE, forceStrand, new PrintStream[]{null,null,null,null});
+			DNAShapefromBED script_obj = new DNAShapefromBED(genomeFASTA, bedFile, outputBasename, OUTPUT_TYPE,
+					forceStrand, new PrintStream[] { null, null, null, null });
 			script_obj.run();
-			
-			if(avgComposite){
-				String[] headers = new String[]{"AVG_MGW","AVG_PropT","AVG_HelT","AVG_Roll"};
-				for(int t=0; t<OUTPUT_TYPE.length; t++){
-					if(OUTPUT_TYPE[t]){
+
+			if (avgComposite) {
+				String[] headers = new String[] { "AVG_MGW", "AVG_PropT", "AVG_HelT", "AVG_Roll" };
+				for (int t = 0; t < OUTPUT_TYPE.length; t++) {
+					if (OUTPUT_TYPE[t]) {
 						PrintStream COMPOSITE = new PrintStream(new File(outputBasename + "_" + headers[t] + ".out"));
 						double[] AVG = script_obj.getAvg(t);
 						// position vals
-						for(int z = 0; z < AVG.length; z++) {
+						for (int z = 0; z < AVG.length; z++) {
 							COMPOSITE.print("\t" + z);
 						}
-						COMPOSITE.print("\n"+ExtensionFileFilter.stripExtension(bedFile)+"_"+headers[t]);
+						COMPOSITE.print("\n" + ExtensionFileFilter.stripExtension(bedFile) + "_" + headers[t]);
 						// score vals
-						for(int z = 0; z < AVG.length; z++) {
+						for (int z = 0; z < AVG.length; z++) {
 							COMPOSITE.print("\t" + AVG[z]);
 						}
 						COMPOSITE.println();
@@ -94,61 +94,75 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 			}
 		} catch (FASTAException e) {
 			System.err.println(e.getMessage() + "\n");
-		}catch(FileNotFoundException e){ e.printStackTrace(); }
-		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		System.err.println("Shapes Calculated.");
-		return(0);
+		return (0);
 	}
-	
+
 	private String validateInput() throws IOException {
 		String r = "";
-		
-		//validate genome
-		
-		if(!genomeFASTA.exists()){
+
+		// validate genome
+
+		if (!genomeFASTA.exists()) {
 			r += "(!)FASTA file does not exist: " + genomeFASTA.getName() + "\n";
 		}
-		if(!bedFile.exists()){
+		if (!bedFile.exists()) {
 			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
 		}
-		if(!r.equals("")){ return(r); }
-		//check input extensions
+		if (!r.equals("")) {
+			return (r);
+		}
+		// check input extensions
 		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if(!faFilter.accept(genomeFASTA)){
+		if (!faFilter.accept(genomeFASTA)) {
 			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
 		}
-		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
+		if (!"bed".equals(ExtensionFileFilter.getExtension(bedFile))) {
 			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
 		}
-		//set default output filename
-		if(outputBasename==null){
+		// set default output filename
+		if (outputBasename == null) {
 			outputBasename = ExtensionFileFilter.stripExtension(bedFile);
-		//check output filename is valid
-		}else{
+			// check output filename is valid
+		} else {
 			String outParent = new File(outputBasename).getParent();
-			//no extension check
-			//check directory
-			if(outParent==null){
+			// no extension check
+			// check directory
+			if (outParent == null) {
 // 				System.err.println("default to current directory");
-			} else if(!new File(outParent).exists()){
+			} else if (!new File(outParent).exists()) {
 				r += "(!)Check output directory exists: " + outParent + "\n";
 			}
 		}
-		
-		//Check & set output_type
-		if(!(shape.groove || shape.propeller || shape.helical || shape.roll || shape.all)){
+
+		// Check & set output_type
+		if (!(shape.groove || shape.propeller || shape.helical || shape.roll || shape.all)) {
 			r += "(!)Please select at least one of the shape flags.\n";
-		}else if((shape.groove||shape.propeller||shape.helical||shape.roll) && shape.all){
+		} else if ((shape.groove || shape.propeller || shape.helical || shape.roll) && shape.all) {
 			r += "(!)Please avoid mixing the \"-a\" flag with the other shape flags.\n";
 		}
-		
-		if(shape.groove){ OUTPUT_TYPE[0] = true; }
-		if(shape.propeller){ OUTPUT_TYPE[1] = true; }
-		if(shape.helical){ OUTPUT_TYPE[2] = true; }
-		if(shape.roll){ OUTPUT_TYPE[3] = true; }
-		
-		if(shape.all){ OUTPUT_TYPE = new boolean[]{true, true, true, true}; }
-		
-		return(r);
+
+		if (shape.groove) {
+			OUTPUT_TYPE[0] = true;
+		}
+		if (shape.propeller) {
+			OUTPUT_TYPE[1] = true;
+		}
+		if (shape.helical) {
+			OUTPUT_TYPE[2] = true;
+		}
+		if (shape.roll) {
+			OUTPUT_TYPE[3] = true;
+		}
+
+		if (shape.all) {
+			OUTPUT_TYPE = new boolean[] { true, true, true, true };
+		}
+
+		return (r);
 	}
 }
