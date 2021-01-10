@@ -36,7 +36,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	final DefaultListModel<String> expList;
 	Vector<File> BEDFiles = new Vector<File>();
 	
@@ -57,12 +57,13 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 			for(int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
 				// Set outfilepath
-				String bedName = (XGFF.getName()).substring(0,XGFF.getName().length() - 4) + ".bed";
-				File OUT_FILE = null;
-				if(OUTPUT_PATH == null) OUT_FILE = new File( bedName );
-				else OUT_FILE = new File( OUTPUT_PATH + File.separator + bedName );
+				String OUTPUT = (XGFF.getName()).substring(0,XGFF.getName().length() - 4) + ".bed";
+				if(OUT_DIR!=null) {
+					OUTPUT = OUT_DIR + File.separator + OUTPUT;
+				}
+				
 				// Execute conversion and update progress
-	    		GFFtoBED.convertGFFtoBED(OUT_FILE, XGFF);
+				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF);
 				int percentComplete = (int)(((double)(x + 1) / BEDFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
@@ -158,9 +159,9 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
         btnOutput = new JButton("Output Directory");
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+        		OUT_DIR = FileSelection.getOutputDir(fc);
+    			if(OUT_DIR != null) {
+    				lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
     			}
         	}
         });

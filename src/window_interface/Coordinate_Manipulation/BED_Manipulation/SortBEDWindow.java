@@ -39,7 +39,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	private static File OUTPUT_PATH = null;
+	private static File OUT_DIR = null;
 	private File BED_File = null;
 	private File CDT_File = null;
 	
@@ -93,7 +93,9 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 					}
 					
 					String OUTPUT = txtOutput.getText();
-					if(OUTPUT_PATH != null) { OUTPUT = OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText(); }
+					if(OUT_DIR != null) {
+						OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
+					}
 					
 					setProgress(0);
 					SortBED.sortBEDbyCDT(OUTPUT, BED_File, CDT_File, START_INDEX, STOP_INDEX);
@@ -155,9 +157,9 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+        		OUT_DIR = FileSelection.getOutputDir(fc);
+    			if(OUT_DIR != null) {
+    				lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
     			}
         	}
         });

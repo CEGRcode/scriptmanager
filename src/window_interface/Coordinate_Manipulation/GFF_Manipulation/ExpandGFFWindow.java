@@ -42,7 +42,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	private JProgressBar progressBar;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	private static int SIZE = -999;
 	final DefaultListModel<String> expList;
 	Vector<File> GFFFiles = new Vector<File>();
@@ -71,13 +71,15 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		        	setProgress(0);
 		        	for(int x = 0; x < GFFFiles.size(); x++) {
 		        		File XGFF = GFFFiles.get(x);
-		        		// Set outfilepath
-		        		String newName = (XGFF.getName()).substring(0,XGFF.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
-		        		File OUT_FILE = null;
-		        		if(OUTPUT_PATH == null) OUT_FILE = new File( newName );
-		        		else OUT_FILE = new File( OUTPUT_PATH + File.separator + newName );
+
+						// Set outfilepath
+						String OUTPUT = (XGFF.getName()).substring(0,XGFF.getName().length() - 4) + "_" + Integer.toString(SIZE) +"bp.gff";
+						if(OUT_DIR != null) {
+							OUTPUT = OUT_DIR + File.separator + OUTPUT;
+						}
+						
 						// Execute expansion and update progress
-		        		ExpandGFF.expandGFFBorders(OUT_FILE, XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
+						ExpandGFF.expandGFFBorders(new File(OUTPUT), XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
 						int percentComplete = (int)(((double)(x + 1) / GFFFiles.size()) * 100);
 		        		setProgress(percentComplete);
 		        	}
@@ -177,9 +179,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -157, SpringLayout.EAST, contentPane);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+        		OUT_DIR = FileSelection.getOutputDir(fc);
+    			if(OUT_DIR != null) {
+    				lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
     			}
         	}
         });
