@@ -3,6 +3,10 @@
 
 Scripts are generically categorized within semi-descriptive tabs and are designed to be run in parallel with each other and themselves.
 
+
+### Tutorial to using basic plotting capabilities of ScriptManager
+Open **ScriptManager-Tutorial.docx** available in root directory
+
 ## Build Instructions
 (after cloning this repo):
 ```
