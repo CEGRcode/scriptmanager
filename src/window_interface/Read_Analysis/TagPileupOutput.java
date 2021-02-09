@@ -27,14 +27,6 @@ public class TagPileupOutput extends JFrame {
 	
 	PileupParameters PARAM = null;
 	
-// 	private int STRAND = 0;
-// 	private int CPU = 1;
-	
-	PrintStream COMPOSITE = null;
-	// Generic print stream to accept PrintStream of GZIPOutputStream
-// 	Writer OUT_S1 = null;
-// 	Writer OUT_S2 = null;
-	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
 	final JTabbedPane tabbedPane_Scatterplot;
@@ -66,17 +58,9 @@ public class TagPileupOutput extends JFrame {
 		BEDFiles = be;
 		BAMFiles = ba;
 		PARAM = param;
-// 		STRAND = param.getStrand();
-// 		CPU = param.getCPU();
-		
 	}
 	
 	public void run() throws IOException {
-		if(PARAM.getOutputCompositeStatus()) {
-			try { COMPOSITE = new PrintStream(PARAM.getOutput() + File.separator + PARAM.getCompositeFile());
-			} catch (FileNotFoundException e) {	e.printStackTrace(); }
-		}
-		
 		//Check if BAI index file exists for all BAM files
 		boolean[] BAMvalid = new boolean[BAMFiles.size()];
 		for(int z = 0; z < BAMFiles.size(); z++) {
