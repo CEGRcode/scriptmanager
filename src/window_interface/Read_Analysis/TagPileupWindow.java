@@ -49,7 +49,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	Vector<File> BAMFiles = new Vector<File>();
 	final DefaultListModel<String> bedList;
 	Vector<File> BEDFiles = new Vector<File>();
-	private File OUTPUT = null;
+	private File OUTPUT = new File(System.getProperty("user.dir"));
 	
 	private JButton btnPileup;
 	private JButton btnLoadBamFiles;
@@ -163,7 +163,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		        			        	
 		        	if(!chckbxOutputData.isSelected()) { param.setOutputType(0); }
 		        	if(!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {	param.setOutput(null); }
-		        	else if(OUTPUT == null) { param.setOutput(new File(System.getProperty("user.dir"))); }
 		        	else { param.setOutput(OUTPUT); }
 		        	
 		        	param.setOutputCompositeStatus(chckbxOutputCompositeData.isSelected()); //Outputs composite plots if check box is selected
