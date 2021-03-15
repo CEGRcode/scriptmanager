@@ -54,19 +54,19 @@ public class MergeHeatMapOutput extends JFrame {
 					matchIndex = y;
 				}
 			}
-			String OUTPUT = out + "merge.png";
+			File OUTPUT = new File(out + "merge.png");
 			if (OUT_DIR != null) {
-				OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + out;
+				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT.getName());
 			}
 
 			// Store results in JFrame window
 			if (matchIndex != -999) {
 				// Execute script
-				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), antiFile.get(matchIndex), new File(OUTPUT));
-				addImage(OUTPUT, pic);
+				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), antiFile.get(matchIndex), OUTPUT);
+				addImage(OUTPUT.getName(), pic);
 			} else {
-				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), null, new File(OUTPUT));
-				addImage(OUTPUT, pic);
+				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), null, OUTPUT);
+				addImage(OUTPUT.getName(), pic);
 			}
 			firePropertyChange("merge", x, x + 1);
 		}
