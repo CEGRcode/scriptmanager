@@ -33,7 +33,6 @@ public class TwoColorHeatMapOutput extends JFrame {
 
 	protected static boolean OUTPUTSTATUS = false;
 	protected static File OUT_DIR = null;
-	protected static String FILEID = null;
 
 	public static double COLOR_RATIO = 1;
 
@@ -66,19 +65,19 @@ public class TwoColorHeatMapOutput extends JFrame {
 
 	public void run() throws IOException {
 		for (int x = 0; x < SAMPLE.size(); x++) {
-			String OUTPUT = SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png";
+			File OUTPUT = new File(SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png");
 			if (OUT_DIR != null) {
-				OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
+				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT.getName());
 			}
 
 			// Execute script
 			TwoColorHeatMap script_object = new TwoColorHeatMap(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
-					pixelHeight, pixelWidth, scaleType, absolute, quantile, new File(OUTPUT), OUTPUTSTATUS);
+					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, OUTPUTSTATUS);
 			script_object.run();
 			JLabel picLabel = script_object.getImg();
 
 			// Output image/error to GUI
-			newpane.addTab(FILEID, new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+			newpane.addTab(OUTPUT.getName(), new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 			firePropertyChange("heat", x, x + 1);
 		}

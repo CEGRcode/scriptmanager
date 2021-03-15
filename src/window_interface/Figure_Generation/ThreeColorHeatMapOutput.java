@@ -41,7 +41,6 @@ public class ThreeColorHeatMapOutput extends JFrame {
 
 	protected static boolean OUTPUTSTATUS = false;
 	protected static File OUT_DIR = null;
-	protected static String FILEID = null;
 
 	public static double COLOR_RATIO = 1;
 
@@ -89,9 +88,9 @@ public class ThreeColorHeatMapOutput extends JFrame {
 	public void run() throws IOException {
 		String postRunDialog = "";
 		for (int x = 0; x < SAMPLE.size(); x++) {
-			String OUTPUT = SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png";
+			File OUTPUT = new File(SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png");
 			if (OUT_DIR != null) {
-				OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
+				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT);
 			}
 			// Execute script
 			try {
@@ -99,10 +98,10 @@ public class ThreeColorHeatMapOutput extends JFrame {
 						MINCOLOR, MIDCOLOR, MAXCOLOR, NANCOLOR,
 						startROW, startCOL, pixelHeight, pixelWidth, scaleType,
 						percentileMin, percentileMid, percentileMax,
-						MAXVAL, MIDVAL, MINVAL, excludeZeros, new File(OUTPUT), OUTPUTSTATUS);
+						MAXVAL, MIDVAL, MINVAL, excludeZeros, OUTPUT, OUTPUTSTATUS);
 				script_object.run();
 				// Output image/error to GUI
-				newpane.addTab(FILEID, new JScrollPane(script_object.getImg(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				newpane.addTab(OUTPUT.getName(), new JScrollPane(script_object.getImg(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 						JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 			} catch (OptionException e) {
 				postRunDialog += e.getMessage() + "\n";
