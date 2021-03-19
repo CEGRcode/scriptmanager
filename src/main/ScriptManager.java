@@ -37,6 +37,8 @@ import cli.Figure_Generation.ThreeColorHeatMapCLI;
 import cli.Figure_Generation.MergeHeatMapCLI;
 
 import cli.File_Utilities.MD5ChecksumCLI;
+import cli.File_Utilities.ConvertBEDChrNamesCLI;
+import cli.File_Utilities.ConvertGFFChrNamesCLI;
 
 import cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import cli.Peak_Analysis.FilterBEDbyProximityCLI;
@@ -50,7 +52,7 @@ import cli.Peak_Calling.PeakPairCLI;
 import cli.Read_Analysis.AggregateDataCLI;
 import cli.Read_Analysis.ScaleMatrixCLI;
 import cli.Read_Analysis.ScalingFactorCLI;
-//import cli.Read_Analysis.SimilarsityMatrixCLI;
+//import cli.Read_Analysis.SimilarityMatrixCLI;
 import cli.Read_Analysis.TagPileupCLI;
 
 import cli.Sequence_Analysis.DNAShapefromBEDCLI;
@@ -59,9 +61,8 @@ import cli.Sequence_Analysis.FASTAExtractCLI;
 import cli.Sequence_Analysis.RandomizeFASTACLI;
 import cli.Sequence_Analysis.SearchMotifCLI;
 
-
 @Command(name = "script-manager",
-	subcommands = {
+		subcommands = {
 			BAM_Format_ConverterCLI.class,
 			BAM_ManipulationCLI.class,
 			BAM_StatisticsCLI.class,
@@ -72,14 +73,14 @@ import cli.Sequence_Analysis.SearchMotifCLI;
 			Peak_CallingCLI.class,
 			Read_AnalysisCLI.class,
 			Sequence_AnalysisCLI.class
-	},
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
-	mixinStandardHelpOptions = true,
-	description = "Choose a tool directory from below to see more command-line tool options.",
-	exitCodeOnInvalidInput = 1,
-	exitCodeOnExecutionException = 1)
+		},
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
+		description = "Choose a tool directory from below to see more command-line tool options.",
+		exitCodeOnInvalidInput = 1,
+		exitCodeOnExecutionException = 1)
 public class ScriptManager implements Callable<Integer> {
-	
+
 	@Override
 	public Integer call(){
 		System.out.println( "Use '-h' or '--help' for command-line usage guide" );
@@ -87,7 +88,7 @@ public class ScriptManager implements Callable<Integer> {
 		gui.launchApplication();
 		return(0);
 	}
-	
+
 	public static void main(String[] args) {
 		CommandLine cmd = new CommandLine( new ScriptManager() );
 		int exitCode = cmd.execute(args);
@@ -98,13 +99,11 @@ public class ScriptManager implements Callable<Integer> {
 	}
 }
 
-
 @Command(mixinStandardHelpOptions = true,
 		version = "ScriptManager "+ ToolDescriptions.VERSION,
 		exitCodeOnInvalidInput = 1,
 		exitCodeOnExecutionException = 1)
 abstract class SubcommandCLI implements Callable<Integer>{
-	
 	@Override
 	public Integer call(){
 		CommandLine cmd = new CommandLine( this );
@@ -174,7 +173,9 @@ class Figure_GenerationCLI extends SubcommandCLI {}
 
 @Command(name = "file-utilities",
 		subcommands = {
-			MD5ChecksumCLI.class	
+			MD5ChecksumCLI.class,
+			ConvertBEDChrNamesCLI.class,
+			ConvertGFFChrNamesCLI.class
 		},
 		description = "Includes the tool MD5Checksum.")
 class File_UtilitiesCLI extends SubcommandCLI {}
