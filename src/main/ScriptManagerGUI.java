@@ -41,6 +41,8 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.File_Utilities.MD5ChecksumWindow;
+import window_interface.File_Utilities.ConvertBEDChrNamesWindow;
+import window_interface.File_Utilities.ConvertGFFChrNamesWindow;
 import window_interface.Read_Analysis.AggregateDataWindow;
 import window_interface.Read_Analysis.ScaleMatrixWindow;
 import window_interface.Read_Analysis.ScalingFactorWindow;
@@ -481,6 +483,62 @@ public class ScriptManagerGUI {
 		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, btnMD5, 10, SpringLayout.WEST, pnlFileUtility);
 		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, txtMD5, 10, SpringLayout.EAST, btnMD5);
 		pnlFileUtility.add(btnMD5);
+		
+		// >ConvertBEDChrNames
+		JTextArea txtConvertBEDChrNames = new JTextArea();
+		initializeTextArea(txtConvertBEDChrNames);
+		txtConvertBEDChrNames.setText(ToolDescriptions.convertBEDChrNamesDescription);
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, txtConvertBEDChrNames, 10, SpringLayout.SOUTH, btnMD5);
+		sl_pnlFileUtility.putConstraint(SpringLayout.EAST, txtConvertBEDChrNames, -10, SpringLayout.EAST, pnlFileUtility);
+		pnlFileUtility.add(txtConvertBEDChrNames);
+		
+		JButton btnConvertBEDChrNames = new JButton("Convert BED Chr Names");
+		btnConvertBEDChrNames.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ConvertBEDChrNamesWindow frame = new ConvertBEDChrNamesWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, btnConvertBEDChrNames, 0, SpringLayout.NORTH, txtConvertBEDChrNames);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, btnConvertBEDChrNames, 10, SpringLayout.WEST, pnlFileUtility);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, txtConvertBEDChrNames, 10, SpringLayout.EAST, btnConvertBEDChrNames);
+		pnlFileUtility.add(btnConvertBEDChrNames);
+
+		// >ConvertGFFChrNames
+		JTextArea txtConvertGFFChrNames = new JTextArea();
+		initializeTextArea(txtConvertGFFChrNames);
+		txtConvertGFFChrNames.setText(ToolDescriptions.convertGFFChrNamesDescription);
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, txtConvertGFFChrNames, 10, SpringLayout.SOUTH, txtConvertBEDChrNames);
+		sl_pnlFileUtility.putConstraint(SpringLayout.EAST, txtConvertGFFChrNames, -10, SpringLayout.EAST, pnlFileUtility);
+		pnlFileUtility.add(txtConvertGFFChrNames);
+		
+		JButton btnConvertGFFChrNames = new JButton("Convert GFF Chr Names");
+		btnConvertGFFChrNames.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ConvertGFFChrNamesWindow frame = new ConvertGFFChrNamesWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, btnConvertGFFChrNames, 0, SpringLayout.NORTH, txtConvertGFFChrNames);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, btnConvertGFFChrNames, 10, SpringLayout.WEST, pnlFileUtility);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, txtConvertGFFChrNames, 10, SpringLayout.EAST, btnConvertGFFChrNames);
+		pnlFileUtility.add(btnConvertGFFChrNames);
 
 		// >>>>>>>> Peak_Calling <<<<<<<<
 		JPanel pnlPeakCalling = new JPanel();
