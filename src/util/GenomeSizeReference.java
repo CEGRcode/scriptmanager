@@ -20,21 +20,13 @@ public class GenomeSizeReference {
 	}
 	
 	public GenomeSizeReference(String build) {
-		if(build.equals("sacCer3_cegr")) {
-			initialize_sacCer3_cegr();
-		} else if(build.equals("hg19")) {
-			initialize_hg19();
-		} else if(build.equals("hg19_contigs")) {
-			initialize_hg19_contig();
-		} else if(build.equals("mm10")) {
-			initialize_mm10();
-		} else {
-			System.err.println("Non-existent genome build!\n");
-		}
+		setGenome(build);
 	}
 	
 	public void setGenome(String build) {
-		if(build.equals("sacCer3_cegr")) {
+		if (build.equals("sacCer3")) {
+			initialize_sacCer3();
+		} else if(build.equals("sacCer3_cegr")) {
 			initialize_sacCer3_cegr();
 		} else if(build.equals("hg19")) {
 			initialize_hg19();
@@ -61,6 +53,20 @@ public class GenomeSizeReference {
 	
 	public ArrayList<Long> getChromSize() {
 		return chromSize;
+	}
+	
+	public static void initialize_sacCer3() {
+		genomeName = "sacCer3";
+		genomeSize = 12163423;
+		String[] chrom = { "chrI", "chrII", "chrIII", "chrIV", "chrV", "chrVI", "chrVII", "chrVIII", "chrIX", "chrX",
+				"chrXI", "chrXII", "chrXIII", "chrXIV", "chrXV", "chrXVI", "chrM", "2-micron" };
+		chromName = new ArrayList<String>(Arrays.asList(chrom));
+		long[] size = new long[] { 230218, 813184, 316620, 1531933, 576874, 270161, 1090940, 562643, 439888, 745751,
+				666816, 1078177, 924431, 784333, 1091291, 948066, 85779, 6318 };
+		chromSize = new ArrayList<Long>();
+		for (int x = 0; x < size.length; x++) {
+			chromSize.add(Long.valueOf(size[x]));
+		}
 	}
 	
 	public static void initialize_sacCer3_cegr() {
