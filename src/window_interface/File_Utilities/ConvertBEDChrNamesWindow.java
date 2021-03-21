@@ -16,6 +16,7 @@ import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,6 +50,7 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 
 	private JRadioButton rdbtnA2R;
 	private JRadioButton rdbtnR2A;
+	private JCheckBox chckbxChrmt;
 
 	private JProgressBar progressBar;
 	public Task task;
@@ -77,11 +79,11 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 					OUT_FILE = new File(NAME);
 				else
 					OUT_FILE = new File(OUT_DIR + File.separator + NAME);
-				// Execute conversion and update progress
+				// Execute conversion and update progresss
 				if (rdbtnA2R.isSelected()) {
-					ConvertChrNames.convert_ArabictoRoman(XBED, OUT_FILE);
+					ConvertChrNames.convert_ArabictoRoman(XBED, OUT_FILE, chckbxChrmt.isSelected());
 				} else {
-					ConvertChrNames.convert_RomantoArabic(XBED, OUT_FILE);
+					ConvertChrNames.convert_RomantoArabic(XBED, OUT_FILE, chckbxChrmt.isSelected());
 				}
 				// Update progress bar
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
@@ -102,7 +104,7 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		setTitle("Convert Yeast Reference Genome for BED Files");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 340);
+		setBounds(125, 125, 450, 360);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -177,10 +179,14 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		ConvertDirection.add(rdbtnA2R);
 		ConvertDirection.add(rdbtnR2A);
 		rdbtnA2R.setSelected(true);
+		
+		chckbxChrmt = new JCheckBox("Use \"chrmt\" instead of default \"chrM\"");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxChrmt, 10, SpringLayout.SOUTH, rdbtnA2R);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxChrmt, 0, SpringLayout.WEST, rdbtnA2R);
+		contentPane.add(chckbxChrmt);
 
 		btnOutput = new JButton("Output Directory");
-		// btnOutput.setEnabled(false);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 6, SpringLayout.SOUTH, rdbtnA2R);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, -85, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
@@ -193,10 +199,10 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		contentPane.add(lblCurrentOutput);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 0, SpringLayout.NORTH, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, 0, SpringLayout.SOUTH, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.NORTH, lblCurrentOutput);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 0, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 0, SpringLayout.EAST, lblCurrentOutput);
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
 

@@ -31,6 +31,9 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 
 	@Option(names = {"-a", "--to-arabic"}, description = "switch converter to output arabic numeral chromsome names (default outputs roman numeral chrnames)")
 	private boolean toArabic = false;
+	
+	@Option(names = {"-m", "--chrmt"}, description = "converter will map \"chrM\" --> \"chrmt\" (default with no flag is \"chrmt\" --> \"chrM\")")
+	private boolean useChrmt = false;
 
 	@Override
 	public Integer call() throws Exception {
@@ -43,8 +46,8 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 		}
 
 		// load conversion hashmap
-		if(toArabic) ConvertChrNames.convert_RomantoArabic(coordFile,output);
-		else ConvertChrNames.convert_ArabictoRoman(coordFile,output);
+		if(toArabic) ConvertChrNames.convert_RomantoArabic(coordFile,output,useChrmt);
+		else ConvertChrNames.convert_ArabictoRoman(coordFile,output,useChrmt);
 
 		System.err.println("Conversion Complete");
 		return(0);

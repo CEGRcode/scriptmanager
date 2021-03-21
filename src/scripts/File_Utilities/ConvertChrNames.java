@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class ConvertChrNames {
 
-	public static HashMap<String, String> getR2A() {
+	public static HashMap<String, String> getR2A(boolean useChrmt) {
 		HashMap<String,String> R2A = new HashMap<String, String>();
 		R2A.put("chrXVI", "chr16");
 		R2A.put("chrXV", "chr15");
@@ -27,10 +27,15 @@ public class ConvertChrNames {
 		R2A.put("chrIII", "chr3");
 		R2A.put("chrII", "chr2");
 		R2A.put("chrI", "chr1");
+		if( useChrmt) {
+			R2A.put("chrM", "chrmt");
+		}else {
+			R2A.put("chrmt", "chrM");
+		}
 		return (R2A);
 	}
 
-	public static HashMap<String, String> getA2R() {
+	public static HashMap<String, String> getA2R(boolean useChrmt) {
 		HashMap<String,String> A2R = new HashMap<String, String>();
 		A2R.put("chr16", "chrXVI");
 		A2R.put("chr15", "chrXV");
@@ -48,16 +53,21 @@ public class ConvertChrNames {
 		A2R.put("chr3", "chrIII");
 		A2R.put("chr2", "chrII");
 		A2R.put("chr1", "chrI");
+		if( useChrmt) {
+			A2R.put("chrM", "chrmt");
+		}else {
+			A2R.put("chrmt", "chrM");
+		}
 		return (A2R);
 	}
 
 	// Coordinate File wrappers
-	public static void convert_RomantoArabic(File input, File out_filepath) throws IOException {
-		convertCoordinateFile(out_filepath, getR2A(), input);
+	public static void convert_RomantoArabic(File input, File out_filepath, boolean useChrmt) throws IOException {
+		convertCoordinateFile(out_filepath, getR2A(useChrmt), input);
 	}
 
-	public static void convert_ArabictoRoman(File input, File out_filepath) throws IOException {
-		convertCoordinateFile(out_filepath, getA2R(), input);
+	public static void convert_ArabictoRoman(File input, File out_filepath, boolean useChrmt) throws IOException {
+		convertCoordinateFile(out_filepath, getA2R(useChrmt), input);
 	}
 
 	public static void convertCoordinateFile(File out_filepath, HashMap<String, String> chrMap, File input)
