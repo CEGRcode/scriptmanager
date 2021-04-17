@@ -49,8 +49,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	Vector<File> BAMFiles = new Vector<File>();
 	final DefaultListModel<String> bedList;
 	Vector<File> BEDFiles = new Vector<File>();
-	private File OUT_DIR = null;
-
+	private File OUT_DIR = new File(System.getProperty("user.dir"));
+	
 	private JButton btnPileup;
 	private JButton btnLoadBamFiles;
 	private JButton btnRemoveBam;
@@ -119,27 +119,21 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				} else if (rdbtnGaussianSmooth.isSelected() && Integer.parseInt(txtStdSize.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Standard Deviation Size!!! Must be larger than 0 bp");
 				} else if (rdbtnGaussianSmooth.isSelected() && Integer.parseInt(txtNumStd.getText()) < 1) {
-					JOptionPane.showMessageDialog(null,
-							"Invalid Number of Standard Deviations!!! Must be larger than 0");
+					JOptionPane.showMessageDialog(null, "Invalid Number of Standard Deviations!!! Must be larger than 0");
 				} else if (Integer.parseInt(txtCPU.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Number of CPU's!!! Must use at least 1");
 				} else if (chckbxFilterByMin.isSelected() && Integer.parseInt(txtMin.getText()) < 0) {
-					JOptionPane.showMessageDialog(null,
-							"Invalid Minimum Insert Size!!! Must be greater than or equal to 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Minimum Insert Size!!! Must be greater than or equal to 0 bp");
 				} else if (chckbxFilterByMax.isSelected() && Integer.parseInt(txtMax.getText()) < 0) {
-					JOptionPane.showMessageDialog(null,
-							"Invalid Maximum Insert Size!!! Must be greater than or equal to 0 bp");
-				} else if (chckbxFilterByMin.isSelected() && chckbxFilterByMax.isSelected()
-						&& Integer.parseInt(txtMax.getText()) < Integer.parseInt(txtMin.getText())) {
-					JOptionPane.showMessageDialog(null,
-							"Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!");
+					JOptionPane.showMessageDialog(null, "Invalid Maximum Insert Size!!! Must be greater than or equal to 0 bp");
+				dev} else if (chckbxFilterByMin.isSelected() && chckbxFilterByMax.isSelected() && Integer.parseInt(txtMax.getText()) < Integer.parseInt(txtMin.getText())) {
+					JOptionPane.showMessageDialog(null, "Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!");
 				} else if (BEDFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
 				} else if (BAMFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
 				} else {
 					setProgress(0);
-
 					// Load up parameters for the pileup into single object
 					PileupParameters param = new PileupParameters();
 					if (rdbtnSeperate.isSelected()) {
@@ -151,72 +145,40 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 						param.setCombinedColor(btnCombinedColor.getForeground());
 					}
 
-					if (rdbtnRead1.isSelected()) {
-						param.setRead(0);
-					} else if (rdbtnRead2.isSelected()) {
-						param.setRead(1);
-					} else if (rdbtnAllReads.isSelected()) {
-						param.setRead(2);
-					} else if (rdbtnMidpoint.isSelected()) {
-						param.setRead(3);
-					}
+					if (rdbtnRead1.isSelected()) { param.setRead(0); }
+					else if (rdbtnRead2.isSelected()) { param.setRead(1); }
+					else if (rdbtnAllReads.isSelected()) { param.setRead(2); }
+					else if (rdbtnMidpoint.isSelected()) { param.setRead(3); }
 
-					if (chckbxRequireProperPe.isSelected()) {
-						param.setPErequire(true);
-					} else {
-						param.setPErequire(false);
-					}
+					if (chckbxRequireProperPe.isSelected()) { param.setPErequire(true); }
+					else { param.setPErequire(false); }
 
-					if (chckbxFilterByMin.isSelected()) {
-						param.setMinInsert(Integer.parseInt(txtMin.getText()));
-					}
-					if (chckbxFilterByMax.isSelected()) {
-						param.setMaxInsert(Integer.parseInt(txtMax.getText()));
-					}
+					if (chckbxFilterByMin.isSelected()) { param.setMinInsert(Integer.parseInt(txtMin.getText())); }
+					if (chckbxFilterByMax.isSelected()) { param.setMaxInsert(Integer.parseInt(txtMax.getText())); }
 
-					if (rdbtnNone.isSelected()) {
-						param.setTrans(0);
-					} else if (rdbtnSlidingWindow.isSelected()) {
-						param.setTrans(1);
-					} else if (rdbtnGaussianSmooth.isSelected()) {
-						param.setTrans(2);
-					}
+					if (rdbtnNone.isSelected()) { param.setTrans(0); }
+					else if (rdbtnSlidingWindow.isSelected()) { param.setTrans(1); }
+					else if (rdbtnGaussianSmooth.isSelected()) { param.setTrans(2); }
 
-					if (!chckbxOutputData.isSelected()) {
-						param.setOutputType(0);
-					}
-					if (!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {
-						param.setOutputDirectory(null);
-					} else if (OUT_DIR == null) {
-						param.setOutputDirectory(new File(System.getProperty("user.dir")));
-					} else {
-						param.setOutputDirectory(OUT_DIR);
-					}
+					if (!chckbxOutputData.isSelected()) { param.setOutputType(0); }
 
-					param.setOutputCompositeStatus(chckbxOutputCompositeData.isSelected()); // Outputs composite plots
-																							// if check box is selected
-					if (chckbxOutputCompositeData.isSelected()) {
-						param.setCompositeFile(OUT_DIR + File.separator + txtCompositeName.getText());
-					}
+					if(!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {	param.setOutputDirectory(null); }
+					else { param.setOutputDirectory(OUT_DIR); }
+
+					param.setOutputCompositeStatus(chckbxOutputCompositeData.isSelected()); //Outputs composite plots if check box is selected
+					if(chckbxOutputCompositeData.isSelected()) { param.setCompositeFile(OUT_DIR + File.separator + txtCompositeName.getText()); }
 
 					if (chckbxOutputData.isSelected()) {
-						if (rdbtnTabdelimited.isSelected()) {
-							param.setOutputType(1);
-						} else if (rdbtnCdt.isSelected()) {
+						if (rdbtnTabdelimited.isSelected()) { param.setOutputType(1); }
+						else if (rdbtnCdt.isSelected()) {
 							param.setOutputType(2);
-							if (chckbxOutputJtv.isSelected()) {
-								param.setJTVstatus(true);
-							}
+							if (chckbxOutputJtv.isSelected()) { param.setJTVstatus(true); }
 						}
-						if (chckbxOutputGzip.isSelected()) {
-							param.setGZIPstatus(true);
-						}
+						if (chckbxOutputGzip.isSelected()) { param.setGZIPstatus(true); }
 					}
 
 					if (chckbxTagStandard.isSelected()) {
-						if (BLACKLIST != null) {
-							param.setBlacklist(BLACKLIST);
-						}
+						if (BLACKLIST != null) { param.setBlacklist(BLACKLIST); }
 						param.setStandard(true);
 					} else {
 						param.setStandard(false);
@@ -239,6 +201,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 							setProgress(percentComplete);
 						}
 					});
+
 
 					pile.setVisible(true);
 					pile.run();
@@ -1109,3 +1072,4 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 }
+
