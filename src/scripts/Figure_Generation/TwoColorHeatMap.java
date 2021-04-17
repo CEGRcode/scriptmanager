@@ -78,7 +78,7 @@ public class TwoColorHeatMap {
 			} else {
 				COLOR_RATIO = getQuantile(newMatrix, quantile);
 			}
-
+		
 			System.out.println("Contrast threshold: " + COLOR_RATIO);
 			BufferedImage treeMap = generateHeatMap(newMatrix);
 			picLabel = new JLabel(new ImageIcon(treeMap));
@@ -297,7 +297,6 @@ public class TwoColorHeatMap {
 			double[] newRow = new double[c];
 			for (int j = 0; j < C; j += (C / c)) {
 				double AVG = 0, count = 0;
-				;
 				for (int x = i; x < i + (R / r); x++) {
 					for (int y = j; y < j + (C / c); y++) {
 						AVG += oldmatrix.get(x)[y];
@@ -376,7 +375,11 @@ public class TwoColorHeatMap {
 				if (!temp[0].contains("YORF") && currentRow >= startROW) {
 					double[] ARRAY = new double[temp.length - startCOL];
 					for (int x = startCOL; x < temp.length; x++) {
-						ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						try {
+							ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						} catch (NumberFormatException nfe) {
+							ARRAY[x - startCOL] = Double.NaN;
+						}
 					}
 					matrix.add(ARRAY);
 				}
@@ -391,7 +394,11 @@ public class TwoColorHeatMap {
 				if (!temp[0].contains("YORF") && currentRow >= startROW) {
 					double[] ARRAY = new double[temp.length - startCOL];
 					for (int x = startCOL; x < temp.length; x++) {
-						ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						try {
+							ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						} catch (NumberFormatException nfe) {
+							ARRAY[x - startCOL] = Double.NaN;
+						}
 					}
 					matrix.add(ARRAY);
 				}

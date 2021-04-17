@@ -373,7 +373,6 @@ public class ThreeColorHeatMap {
 			double[] newRow = new double[c];
 			for (int j = 0; j < C; j += (C / c)) {
 				double AVG = 0, count = 0;
-				;
 				for (int x = i; x < i + (R / r); x++) {
 					for (int y = j; y < j + (C / c); y++) {
 						AVG += oldmatrix.get(x)[y];
@@ -429,7 +428,7 @@ public class ThreeColorHeatMap {
 		ArrayList<Double> nonZero = new ArrayList<Double>();
 		for (int x = 0; x < matrix.size(); x++) {
 			for (int y = 0; y < matrix.get(x).length; y++) {
-				if (matrix.get(x)[y] != 0) {
+				if (matrix.get(x)[y] != 0 && !Double.isNaN(matrix.get(x)[y])) {
 					nonZero.add(Double.valueOf(matrix.get(x)[y]));
 				}
 			}
@@ -479,7 +478,11 @@ public class ThreeColorHeatMap {
 				if (!temp[0].contains("YORF") && currentRow >= startROW) {
 					double[] ARRAY = new double[temp.length - startCOL];
 					for (int x = startCOL; x < temp.length; x++) {
-						ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						try {
+							ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						} catch (NumberFormatException nfe) {
+							ARRAY[x - startCOL] = Double.NaN;
+						}
 					}
 					matrix.add(ARRAY);
 				}
@@ -494,7 +497,11 @@ public class ThreeColorHeatMap {
 				if (!temp[0].contains("YORF") && currentRow >= startROW) {
 					double[] ARRAY = new double[temp.length - startCOL];
 					for (int x = startCOL; x < temp.length; x++) {
-						ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						try {
+							ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+						} catch (NumberFormatException nfe) {
+							ARRAY[x - startCOL] = Double.NaN;
+						}
 					}
 					matrix.add(ARRAY);
 				}
