@@ -71,12 +71,12 @@ public class FilterforPIPseq {
 						if (!sr.getReadNegativeStrandFlag()) {
 							if (sr.getUnclippedStart() - 1 > 0) {
 								filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(),
-										sr.getUnclippedStart() - 1, sr.getUnclippedStart() - 1).getBases());
+										sr.getUnclippedStart() - SEQ.length(), sr.getUnclippedStart() - 1).getBases());
 							}
 						} else {
 							if (sr.getUnclippedEnd() + 1 <= seq.getSequenceLength()) {
 								filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(),
-										sr.getUnclippedEnd() + 1, sr.getUnclippedEnd() + 1).getBases());
+										sr.getUnclippedEnd() + 1, sr.getUnclippedEnd() + SEQ.length()).getBases());
 								filter = FASTAUtilities.RevComplement(filter);
 							}
 						}
@@ -91,11 +91,11 @@ public class FilterforPIPseq {
 					String filter = "";
 					// if on the positive strand
 					if (!sr.getReadNegativeStrandFlag()) {
-						filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedStart() - 1,
-								sr.getUnclippedStart() - 1).getBases());
+						filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(),
+								sr.getUnclippedStart() - SEQ.length(), sr.getUnclippedStart() - 1).getBases());
 					} else {
 						filter = new String(QUERY.getSubsequenceAt(seq.getSequenceName(), sr.getUnclippedEnd() + 1,
-								sr.getUnclippedEnd() + 1).getBases());
+								sr.getUnclippedEnd() + SEQ.length()).getBases());
 						filter = FASTAUtilities.RevComplement(filter);
 					}
 					// System.out.println(sr.getReadString() + "\t" + seq.getSequenceName() + "\t" +
