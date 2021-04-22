@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import util.BAMUtilities;
 import util.ExtensionFileFilter;
@@ -263,7 +264,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		p.setOutputCompositeStatus(true);
 		
 		//Set COMPOSITE file
-		p.setCompositeFile(outputOptions.outputComposite);
+		p.setCompositePrintStream(new PrintStream(outputOptions.outputComposite));
 		
 		//Set READ
 		p.setRead(readType.finalRead);

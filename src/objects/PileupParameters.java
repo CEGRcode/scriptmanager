@@ -3,12 +3,13 @@ package objects;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+import java.io.PrintStream;
 
 public class PileupParameters {
 	//Directory to save matrix and composite into
 	private File OUTPUT = null;
 	//Composite values file if output
-	private String COMPOSITE = null;
+	private PrintStream COMPOSITE = null;
 	
 	//Read type:
 	//  0=read1, 1=read2, 2=allreads, 3=midpoint
@@ -126,10 +127,10 @@ public class PileupParameters {
 		requirePE = status;
 	}
 	
-	public String getCompositeFile() {
+	public PrintStream getCompositePrintStream() {
 		return COMPOSITE;
 	}
-	public void setCompositeFile(String comp) {
+	public void setCompositePrintStream(PrintStream comp) {
 		COMPOSITE = comp;
 	}
 	

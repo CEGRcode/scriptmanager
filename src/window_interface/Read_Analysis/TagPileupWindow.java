@@ -12,7 +12,9 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -166,7 +168,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					else { param.setOutputDirectory(OUT_DIR); }
 
 					param.setOutputCompositeStatus(chckbxOutputCompositeData.isSelected()); //Outputs composite plots if check box is selected
-					if(chckbxOutputCompositeData.isSelected()) { param.setCompositeFile(OUT_DIR + File.separator + txtCompositeName.getText()); }
+					if(chckbxOutputCompositeData.isSelected()) {
+						try {
+							param.setCompositePrintStream(new PrintStream(OUT_DIR + File.separator + txtCompositeName.getText()));
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						}
+					}
 
 					if (chckbxOutputData.isSelected()) {
 						if (rdbtnTabdelimited.isSelected()) { param.setOutputType(1); }

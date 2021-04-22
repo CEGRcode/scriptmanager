@@ -2,7 +2,6 @@ package window_interface.Read_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Vector;
@@ -63,14 +62,6 @@ public class TagPileupOutput extends JFrame {
 	}
 
 	public void run() throws IOException {
-		if (PARAM.getOutputCompositeStatus()) {
-			try {
-				COMPOSITE = new PrintStream(PARAM.getCompositeFile());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-
 		// Check if BAI index file exists for all BAM files
 		boolean[] BAMvalid = new boolean[BAMFiles.size()];
 		for (int z = 0; z < BAMFiles.size(); z++) {

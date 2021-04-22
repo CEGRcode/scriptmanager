@@ -242,13 +242,7 @@ public class TagPileup {
 		DOMAIN = DOMAIN_trim;
 
 		// Output composite data file setup
-		if (PARAM.getOutputCompositeStatus()) {
-			try {
-				COMPOSITE = new PrintStream(PARAM.getCompositeFile());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
+		COMPOSITE = PARAM.getCompositePrintStream();
 
 		// Output composite data to tab-delimited file
 		if (COMPOSITE != null) {
