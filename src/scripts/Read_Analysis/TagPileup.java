@@ -1,6 +1,5 @@
 package scripts.Read_Analysis;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -43,8 +42,6 @@ public class TagPileup {
 	Writer OUT_S2 = null;
 
 	PrintStream PS = null;
-
-	Component compositePlot = null;
 
 	String outMatrixBasename;
 
@@ -424,10 +421,6 @@ public class TagPileup {
 		}
 		scan.close();
 		return COORD;
-	}
-
-	public Component getCompositePlot() {
-		return (compositePlot);
 	}
 
 	private void printPS(String line) {
