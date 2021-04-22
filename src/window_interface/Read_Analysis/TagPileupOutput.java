@@ -15,6 +15,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
 
+import charts.CompositePlot;
 import objects.PileupParameters;
 import objects.CustomOutputStream;
 import scripts.Read_Analysis.TagPileup;
@@ -104,10 +105,15 @@ public class TagPileupOutput extends JFrame {
 					STATS.setEditable(false); // Make it un-editable
 					PrintStream ps = new PrintStream(new CustomOutputStream(STATS));
 
-					TagPileup script_obj = new TagPileup(BEDFiles.get(BED_Index), BAM, PARAM, ps, null, true);
+					TagPileup script_obj = new TagPileup(BEDFiles.get(BED_Index), BAM, PARAM, ps, null);
 					script_obj.run();
 
-					tabbedPane_Scatterplot.add(BAM.getName(), script_obj.getCompositePlot());
+					// Make composite plots
+					if (PARAM.getStrand() == 0) {
+						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, script_obj.AVG_S2, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
+					} else {
+						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
+					}
 
 					STATS.setCaretPosition(0);
 					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,

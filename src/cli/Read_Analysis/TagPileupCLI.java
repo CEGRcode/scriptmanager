@@ -139,7 +139,7 @@ public class TagPileupCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		TagPileup script_obj = new TagPileup(bedFile, bamFile, p, null, outputOptions.outputMatrix.get(0), false);
+		TagPileup script_obj = new TagPileup(bedFile, bamFile, p, null, outputOptions.outputMatrix.get(0));
 		script_obj.run();
 		
 		System.err.println( "Calculations complete" );

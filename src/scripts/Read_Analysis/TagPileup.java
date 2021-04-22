@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPOutputStream;
 
-import charts.CompositePlot;
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
@@ -34,6 +33,9 @@ public class TagPileup {
 	File BAM = null;
 
 	PileupParameters PARAM = null;
+	public double[] DOMAIN = null;
+	public double[] AVG_S1 = null;
+	public double[] AVG_S2 = null;
 
 	PrintStream COMPOSITE = null;
 	// Generic print stream to accept PrintStream of GZIPOutputStream
@@ -46,16 +48,12 @@ public class TagPileup {
 
 	String outMatrixBasename;
 
-	boolean GUI = false;
-
-	public TagPileup(File be, File ba, PileupParameters param, PrintStream outputwindow_ps, String outMat,
-			boolean guiStatus) {
+	public TagPileup(File be, File ba, PileupParameters param, PrintStream outputwindow_ps, String outMat) {
 		BED = be;
 		BAM = ba;
 		PARAM = param;
 		PS = outputwindow_ps;
 		outMatrixBasename = outMat;
-		GUI = guiStatus;
 	}
 
 	public void run() throws IOException {
@@ -133,11 +131,11 @@ public class TagPileup {
 		while (!parseMaster.isTerminated()) {
 		}
 
-		double[] AVG_S1 = new double[getMaxBEDSize(INPUT)];
-		double[] AVG_S2 = null;
+		DOMAIN = new double[getMaxBEDSize(INPUT)];
+		AVG_S1 = new double[DOMAIN.length];
+		AVG_S2 = null;
 		if (STRAND == 0)
-			AVG_S2 = new double[AVG_S1.length];
-		double[] DOMAIN = new double[AVG_S1.length];
+			AVG_S2 = new double[DOMAIN.length];
 
 		// Account for the shifted oversized window produced by binning and smoothing
 		int OUTSTART = 0;
@@ -275,16 +273,6 @@ public class TagPileup {
 					COMPOSITE.print("\t" + AVG_S1[a]);
 				}
 				COMPOSITE.println();
-			}
-		}
-
-		// Make composite plots
-		if (GUI) {
-			if (STRAND == 0) {
-				compositePlot = CompositePlot.createCompositePlot(DOMAIN, AVG_S1, AVG_S2, BED.getName(),
-						PARAM.getColors());
-			} else {
-				compositePlot = CompositePlot.createCompositePlot(DOMAIN, AVG_S1, BED.getName(), PARAM.getColors());
 			}
 		}
 
