@@ -27,7 +27,6 @@ import charts.LineChart;
 public class PEStats {
 	
 	public static Vector<ChartPanel> getPEStats( File out_basename, File bamFile, boolean DUP_STATUS, int MIN_INSERT, int MAX_INSERT, PrintStream PS_INSERT, PrintStream PS_DUP, boolean SUM_STATUS ){
-		System.out.println("getPEStats called");
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 		
 		// Output Vecotr of Charts to be returned
@@ -40,6 +39,7 @@ public class PEStats {
 		PrintStream OUT_DUP = null;
 		File OUT_DUPPNG = null;
 		
+		// Set output PrintStreams and PNG file objects
 		if( out_basename!=null ) {
 			try {
 				OUT_INSERT = new PrintStream(new File( out_basename.getCanonicalPath() + "_InsertHistogram.out"));
@@ -60,9 +60,7 @@ public class PEStats {
 		printBoth( null, OUT_INSERT_SUM, time );
 		printBoth( PS_INSERT, OUT_INSERT, time );
 		printBoth( PS_DUP, OUT_DUP, time );
-		
-		if(PS_DUP!=null){ PS_DUP.println("YO!"); }
-		
+
 		//Check if BAI index file exists
 		File f = new File(bamFile + ".bai");
 		if(f.exists() && !f.isDirectory()) {
@@ -77,6 +75,7 @@ public class PEStats {
 			//Code to get individual chromosome stats
 			SamReader reader = factory.open(bamFile);
 			AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
+			System.out.println(bamFile);
 			
 			//Variables to keep track of insert size histogram
 			double InsertAverage = 0;
@@ -197,13 +196,13 @@ public class PEStats {
 			try{
 				charts.add( 0, Histogram.createBarChart(HIST, DOMAIN, OUT_INSPNG) );
 			}catch( IOException e ){ e.printStackTrace(); }
-			
+
+			//Duplication statistics
 			if(DUP_STATUS) {
-				//Duplication statistics
 				double UNIQUE_MOLECULES = 0;
 				String[] BIN_NAME = initializeBIN_Names();
 				ArrayList<Double> BIN = new ArrayList<Double>();
-				initializeBINS(BIN);	
+				initializeBINS(BIN);
 				
 				Iterator<Integer> keys = ALL_COMPLEXITY.keySet().iterator();
 				while(keys.hasNext()) {
@@ -223,14 +222,13 @@ public class PEStats {
 					charts.add( 1, LineChart.createLineChart(BIN, BIN_NAME, OUT_DUPPNG) );
 				}catch( IOException e ){ e.printStackTrace(); }
 			}
-			
 		} else {
+			charts.add(0, new ChartPanel(null));
+			charts.add(1, new ChartPanel(null));
 			printBoth( PS_INSERT, OUT_INSERT, "BAI Index File does not exist for: " + bamFile.getName() );
 			printBoth( System.err, OUT_INSERT_SUM, "BAI Index File does not exist for: " + bamFile.getName() );
 			printBoth( PS_DUP, OUT_DUP, "BAI Index File does not exist for: " + bamFile.getName() );
 		}
-		if(PS_INSERT != null){ PS_INSERT.close(); }
-		if(PS_DUP!=null){ PS_DUP.close(); }
 		
 		if(OUT_INSERT != null){ OUT_INSERT.close(); }
 		if(OUT_INSERT_SUM!=null){ OUT_INSERT_SUM.close(); }

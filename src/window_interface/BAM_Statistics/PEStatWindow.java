@@ -52,7 +52,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 	
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	private File OUTPUT_PATH = null;
+	private File OUTPUT_PATH = new File(System.getProperty("user.dir"));
 	
 	JProgressBar progressBar;
 	public Task task;
@@ -72,7 +72,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 			        	setProgress(percentComplete);
 				     }
 				 });
-				stat.setVisible(true);				
+				stat.setVisible(true);
 				stat.run();
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
