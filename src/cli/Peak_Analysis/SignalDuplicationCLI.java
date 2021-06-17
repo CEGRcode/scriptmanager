@@ -13,6 +13,7 @@ import objects.ToolDescriptions;
 */
 @Command(name = "signal-dup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.signal_dup_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

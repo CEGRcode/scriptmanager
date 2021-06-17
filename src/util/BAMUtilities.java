@@ -77,7 +77,7 @@ public class BAMUtilities {
 		for (int z = 0; z < inputBAI.getNumberOfReferences(); z++) {
 			SAMSequenceRecord rec = inputBAM.getFileHeader().getSequence(z);
 			chromName.add(rec.getSequenceName());
-			chromLength.add(new Long(rec.getSequenceLength()));
+			chromLength.add(Long.valueOf(rec.getSequenceLength()));
 			totalGenome += rec.getSequenceLength();
 		}
 		inputBAM.close();

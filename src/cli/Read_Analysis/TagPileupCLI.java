@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import util.BAMUtilities;
 import util.ExtensionFileFilter;
@@ -23,6 +24,7 @@ import scripts.Read_Analysis.TagPileup;
 */
 @Command(name = "tag-pileup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tag_pileup_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	descriptionHeading = "%nDescription:%n%n",
 	parameterListHeading = "%nParameters:%n",
 	optionListHeading = "%nGeneral Options:%n",
@@ -138,7 +140,7 @@ public class TagPileupCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		TagPileup script_obj = new TagPileup(bedFile, bamFile, p, null, outputOptions.outputMatrix.get(0), false);
+		TagPileup script_obj = new TagPileup(bedFile, bamFile, p, null, outputOptions.outputMatrix.get(0));
 		script_obj.run();
 		
 		System.err.println( "Calculations complete" );
@@ -262,7 +264,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		p.setOutputCompositeStatus(true);
 		
 		//Set COMPOSITE file
-		p.setCompositeFile(outputOptions.outputComposite);
+		p.setCompositePrintStream(new PrintStream(outputOptions.outputComposite));
 		
 		//Set READ
 		p.setRead(readType.finalRead);

@@ -18,6 +18,7 @@ import scripts.Read_Analysis.ScaleMatrix;
 */
 @Command(name = "scale-matrix", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scale_matrix_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

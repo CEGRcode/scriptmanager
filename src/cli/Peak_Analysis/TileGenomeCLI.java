@@ -18,12 +18,13 @@ import scripts.Peak_Analysis.TileGenome;
 */
 @Command(name = "tile-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tile_genome_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class TileGenomeCLI implements Callable<Integer> {
 	
-	@Parameters( index = "0", description = "reference genome [sacCer3_cegr|hg19|hg19_contigs|mm10]")
+	@Parameters( index = "0", description = "reference genome [sacCer3|sacCer3_cegr|hg19|hg19_contigs|mm10]")
 	private String genomeName;
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be genome_tiles_<genomeName>_<window>bp.<ext>")
@@ -53,12 +54,6 @@ public class TileGenomeCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
-		//check input genomes are valid
-		if(genomeName.equals("sacCer3_cegr") || genomeName.equals("hg19") || genomeName.equals("hg19_contigs") || genomeName.equals("mm10") ){
-// 			System.err.println("Input genome is valid");
-		}else{
-			r += "(!)Invalid genomeName selected(" +genomeName+ "), please select from one of the provided genomes: sacCer3_cegr, hg19, hg19_contigs, and mm10\n";
-		}
 		String ext = "gff";
 		if(formatIsBed){ ext = "bed"; }
 		//set default output filename

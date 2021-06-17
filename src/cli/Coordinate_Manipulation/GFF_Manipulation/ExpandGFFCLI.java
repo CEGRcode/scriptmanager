@@ -19,6 +19,7 @@ import scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 */
 @Command(name = "expand-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_gff_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

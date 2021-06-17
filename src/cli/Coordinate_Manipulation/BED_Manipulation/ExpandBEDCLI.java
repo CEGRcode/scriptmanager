@@ -19,6 +19,7 @@ import scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 */
 @Command(name = "expand-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_bed_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

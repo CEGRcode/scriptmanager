@@ -19,6 +19,7 @@ import scripts.BAM_Format_Converter.BAMtoscIDX;
 */
 @Command(name = "bam-to-scidx", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_scidx_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

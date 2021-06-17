@@ -19,6 +19,7 @@ import scripts.BAM_Format_Converter.BAMtoBED;
 */
 @Command(name = "bam-to-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_bed_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

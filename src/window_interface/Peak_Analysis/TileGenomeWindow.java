@@ -37,7 +37,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	private JTextField txtSize;
 	private JRadioButton rdbtnGff;
 	private JRadioButton rdbtnBed;
-	private String[] genomeBuilds = { "sacCer3_cegr", "hg19", "hg19_contigs", "mm10" };
+	private String[] genomeBuilds = { "sacCer3", "sacCer3_cegr", "hg19", "hg19_contigs", "mm10" };
 	private JComboBox<String> cmbGenome;
 
 	private File OUTPUT_PATH = null;

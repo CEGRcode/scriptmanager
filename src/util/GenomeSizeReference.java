@@ -20,21 +20,13 @@ public class GenomeSizeReference {
 	}
 	
 	public GenomeSizeReference(String build) {
-		if(build.equals("sacCer3_cegr")) {
-			initialize_sacCer3_cegr();
-		} else if(build.equals("hg19")) {
-			initialize_hg19();
-		} else if(build.equals("hg19_contigs")) {
-			initialize_hg19_contig();
-		} else if(build.equals("mm10")) {
-			initialize_mm10();
-		} else {
-			System.err.println("Non-existent genome build!\n");
-		}
+		setGenome(build);
 	}
 	
 	public void setGenome(String build) {
-		if(build.equals("sacCer3_cegr")) {
+		if (build.equals("sacCer3")) {
+			initialize_sacCer3();
+		} else if(build.equals("sacCer3_cegr")) {
 			initialize_sacCer3_cegr();
 		} else if(build.equals("hg19")) {
 			initialize_hg19();
@@ -63,6 +55,20 @@ public class GenomeSizeReference {
 		return chromSize;
 	}
 	
+	public static void initialize_sacCer3() {
+		genomeName = "sacCer3";
+		genomeSize = 12163423;
+		String[] chrom = { "chrI", "chrII", "chrIII", "chrIV", "chrV", "chrVI", "chrVII", "chrVIII", "chrIX", "chrX",
+				"chrXI", "chrXII", "chrXIII", "chrXIV", "chrXV", "chrXVI", "chrM", "2-micron" };
+		chromName = new ArrayList<String>(Arrays.asList(chrom));
+		long[] size = new long[] { 230218, 813184, 316620, 1531933, 576874, 270161, 1090940, 562643, 439888, 745751,
+				666816, 1078177, 924431, 784333, 1091291, 948066, 85779, 6318 };
+		chromSize = new ArrayList<Long>();
+		for (int x = 0; x < size.length; x++) {
+			chromSize.add(Long.valueOf(size[x]));
+		}
+	}
+	
 	public static void initialize_sacCer3_cegr() {
 		genomeName = "sacCer3_cegr";
 		genomeSize = 12163423;
@@ -70,7 +76,7 @@ public class GenomeSizeReference {
 		chromName = new ArrayList<String>(Arrays.asList(chrom));
 		long[] size = new long[] {230218, 813184, 316620, 1531933, 576874, 270161, 1090940, 562643, 439888, 745751, 666816, 1078177, 924431, 784333, 1091291, 948066, 85779, 6318};
 		chromSize = new ArrayList<Long>();
-		for(int x = 0; x < size.length; x++) { chromSize.add(new Long(size[x])); }
+		for(int x = 0; x < size.length; x++) { chromSize.add(Long.valueOf(size[x])); }
 	}
 	
 	public static void initialize_hg19() {
@@ -80,7 +86,7 @@ public class GenomeSizeReference {
 		chromName = new ArrayList<String>(Arrays.asList(chrom));
 		long[] size = new long[] {249250621, 243199373, 198022430, 191154276, 180915260, 171115067, 159138663, 155270560, 146364022, 141213431, 135534747, 135006516, 133851895, 115169878, 107349540, 102531392, 90354753,	81195210, 78077248, 63025520, 59373566,	59128983, 51304566, 48129895};
 		chromSize = new ArrayList<Long>();
-		for(int x = 0; x < size.length; x++) { chromSize.add(new Long(size[x])); }
+		for(int x = 0; x < size.length; x++) { chromSize.add(Long.valueOf(size[x])); }
 	}
 	
 	public static void initialize_hg19_contig() {
@@ -98,7 +104,7 @@ public class GenomeSizeReference {
 			4928567, 4833398, 4795371, 4683263, 4622290, 4611984, 4610396, 1680828, 590426, 547496, 211173, 191469, 189789, 187035, 186861, 186858, 182896, 180455,	179693, 179198, 174588, 172545, 172294, 172149, 169874, 166566, 164239, 161802, 161147, 159169, 155397, 137718, 129120, 128374,
 			106433, 92689, 90085, 81310, 45941,45867, 43691, 43523, 43341, 42152, 41934, 41933, 41001, 40652, 40531, 40103, 39939, 39929, 39786, 38914, 38502, 38154, 37498, 37175, 36651, 36422, 36148, 34474, 33824, 27682, 27386, 19913, 16571, 15008, 4262};
 		chromSize = new ArrayList<Long>();
-		for(int x = 0; x < size.length; x++) { chromSize.add(new Long(size[x])); }
+		for(int x = 0; x < size.length; x++) { chromSize.add(Long.valueOf(size[x])); }
 	}
 	
 	public static void initialize_mm10() {
@@ -108,7 +114,7 @@ public class GenomeSizeReference {
 		chromName = new ArrayList<String>(Arrays.asList(chrom));
 		long[] size = new long[] { 195471971, 182113224, 160039680, 156508116, 151834684, 149736546, 145441459, 129401213, 124595110, 130694993, 122082543, 120129022, 120421639, 124902244, 104043685, 98207768, 94987271, 90702639, 61431566, 171031299, 91744698};
 		chromSize = new ArrayList<Long>();
-		for(int x = 0; x < size.length; x++) { chromSize.add(new Long(size[x])); }
+		for(int x = 0; x < size.length; x++) { chromSize.add(Long.valueOf(size[x])); }
 	}
 
 	public GenericCoord generateRandomCoord(int WINDOW) {

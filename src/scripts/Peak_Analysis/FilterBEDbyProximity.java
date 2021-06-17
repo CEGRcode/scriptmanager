@@ -16,7 +16,6 @@ import java.util.List;
 
 import objects.CoordinateObjects.BEDCoord;
 
-@SuppressWarnings({"serial"})
 public class FilterBEDbyProximity{
 	
 	private int CUTOFF;
@@ -54,7 +53,7 @@ public class FilterBEDbyProximity{
 		while((line = lines.readLine()) != null) {
 			bedArray.add(new BEDCoord(line));
 			bedArray.get(bedArray.size() - 1).calcMid();
-			failArray.add(new Integer(0));
+			failArray.add(Integer.valueOf(0));
 		}
 		Collections.sort(bedArray, BEDCoord.PeakMidpointComparator);
 		Collections.sort(bedArray, BEDCoord.PeakChromComparator);
@@ -68,14 +67,14 @@ public class FilterBEDbyProximity{
 				{
 					if(bedArray.get(i).getScore() > bedArray.get(INDEX).getScore()) 
 					{
-						failArray.set(INDEX, new Integer(1));
+						failArray.set(INDEX, Integer.valueOf(1));
 					}
 					else if((bedArray.get(i).getScore() == bedArray.get(INDEX).getScore()) && (bedArray.get(INDEX).getMid() > bedArray.get(i).getMid()))
 					{
-						failArray.set(INDEX, new Integer(1));
+						failArray.set(INDEX, Integer.valueOf(1));
 					}
 					else {
-						failArray.set(i, new Integer(1));
+						failArray.set(i, Integer.valueOf(1));
 					}
 					INDEX--;
 					if(INDEX < 0) { break; } // To avoid redundant pair-wise checks
@@ -88,15 +87,15 @@ public class FilterBEDbyProximity{
 	        		
 	        		if(bedArray.get(i).getScore() > bedArray.get(INDEX).getScore())
 	        		{
-	        			failArray.set(INDEX, new Integer(1));
+	        			failArray.set(INDEX, Integer.valueOf(1));
 	        		}
 	        		else if((bedArray.get(i).getScore() == bedArray.get(INDEX).getScore()) && (bedArray.get(INDEX).getMid() > bedArray.get(i).getMid()))
 	        		{
-	        			failArray.set(INDEX, new Integer(1));
+	        			failArray.set(INDEX, Integer.valueOf(1));
 	        		}
 	        		else
 	        		{
-	        			failArray.set(i, new Integer(1));
+	        			failArray.set(i, Integer.valueOf(1));
 	        		}
 	        		INDEX++;
 	        		if(INDEX == bedArray.size()){ break; } // To avoid redundant pair-wise checks

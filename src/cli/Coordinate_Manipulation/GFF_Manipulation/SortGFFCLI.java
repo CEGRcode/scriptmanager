@@ -20,6 +20,7 @@ import scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 */
 @Command(name = "sort-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_gff_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

@@ -19,6 +19,7 @@ import scripts.Read_Analysis.ScalingFactor;
 */
 @Command(name = "scaling-factor", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scaling_factor_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

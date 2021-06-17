@@ -13,6 +13,7 @@ import objects.ToolDescriptions;
 	description = ToolDescriptions.sort_bam_description + "\n"+
 		"@|bold **Please run the samtools tool directly:**|@ \n"+
 		"@|bold,yellow 'samtools sort -o <output.bam> <input.bam>'|@",
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class SortBAMCLI implements Callable<Integer> {

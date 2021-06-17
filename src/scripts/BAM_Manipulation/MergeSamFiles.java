@@ -49,113 +49,117 @@ import java.util.List;
  */
 public class MergeSamFiles extends CommandLineProgram {
 	private static final Log log = Log.getInstance(MergeSamFiles.class);
-    public List<File> INPUT = new ArrayList<File>();
-    public File OUTPUT;
-    public SAMFileHeader.SortOrder SORT_ORDER = SAMFileHeader.SortOrder.coordinate;
-    public boolean ASSUME_SORTED = false;
-    public boolean MERGE_SEQUENCE_DICTIONARIES = false;
-    public boolean USE_THREADING = false;
-    public List<String> COMMENT = new ArrayList<String>();
+	public List<File> INPUT = new ArrayList<File>();
+	public File OUTPUT;
+	public SAMFileHeader.SortOrder SORT_ORDER = SAMFileHeader.SortOrder.coordinate;
+	public boolean ASSUME_SORTED = false;
+	public boolean MERGE_SEQUENCE_DICTIONARIES = false;
+	public boolean USE_THREADING = false;
+	public List<String> COMMENT = new ArrayList<String>();
 
-    private static final int PROGRESS_INTERVAL = 1000000;
-    
-    public MergeSamFiles(List<File> in, File out) {
-    	INPUT = in;
-    	OUTPUT = out;
-    }
-    
-    public MergeSamFiles(List<File> in, File out, boolean thread) {
-    	INPUT = in;
-    	OUTPUT = out;
-    	USE_THREADING = thread;
-    }
-    
-    public int run() {
-    	doWork();
-    	return 0;
-    }
+	private static final int PROGRESS_INTERVAL = 1000000;
 
-    /** Combines multiple SAM/BAM files into one. */
-    protected int doWork() {
-        boolean matchedSortOrders = true;
-       // ASSUME_SORTED = true;
-        
-     // Open the files for reading and writing
-        final List<SamReader> readers = new ArrayList<SamReader>();
-        final List<SAMFileHeader> headers = new ArrayList<SAMFileHeader>();
-        {
-            SAMSequenceDictionary dict = null; // Used to try and reduce redundant SDs in memory
+	public MergeSamFiles(List<File> in, File out) {
+		INPUT = in;
+		OUTPUT = out;
+	}
 
-            for (final File inFile : INPUT) {
-                IOUtil.assertFileIsReadable(inFile);
-                final SamReader in = SamReaderFactory.makeDefault().referenceSequence(REFERENCE_SEQUENCE).open(inFile);
-                readers.add(in);
-                headers.add(in.getFileHeader());
+	public MergeSamFiles(List<File> in, File out, boolean thread) {
+		INPUT = in;
+		OUTPUT = out;
+		USE_THREADING = thread;
+	}
 
-                // A slightly hackish attempt to keep memory consumption down when merging multiple files with
-                // large sequence dictionaries (10,000s of sequences). If the dictionaries are identical, then
-                // replace the duplicate copies with a single dictionary to reduce the memory footprint. 
-                if (dict == null) {
-                    dict = in.getFileHeader().getSequenceDictionary();
-                }
-                else if (dict.equals(in.getFileHeader().getSequenceDictionary())) {
-                    in.getFileHeader().setSequenceDictionary(dict);
-                }
-                matchedSortOrders = matchedSortOrders && in.getFileHeader().getSortOrder() == SORT_ORDER;
-            }
-        }
+	public int run() {
+		doWork();
+		return 0;
+	}
 
-        // If all the input sort orders match the output sort order then just merge them and
-        // write on the fly, otherwise setup to merge and sort before writing out the final file
-        IOUtil.assertFileIsWritable(OUTPUT);
-        final boolean presorted;
-        final SAMFileHeader.SortOrder headerMergerSortOrder;
-        final boolean mergingSamRecordIteratorAssumeSorted;
+	/** Combines multiple SAM/BAM files into one. */
+	protected int doWork() {
+		boolean matchedSortOrders = true;
+		// ASSUME_SORTED = true;
 
-        if (matchedSortOrders || SORT_ORDER == SAMFileHeader.SortOrder.unsorted || ASSUME_SORTED) {
-            log.info("Input files are in same order as output so sorting to temp directory is not needed.");
-            headerMergerSortOrder = SORT_ORDER;
-            mergingSamRecordIteratorAssumeSorted = ASSUME_SORTED;
-            presorted = true;
-        }
-        else {
-            log.info("Sorting input files using temp directory " + TMP_DIR);
-            headerMergerSortOrder = SAMFileHeader.SortOrder.unsorted;
-            mergingSamRecordIteratorAssumeSorted = false;
-            presorted = false;
-        }
-        
-        final SamFileHeaderMerger headerMerger = new SamFileHeaderMerger(headerMergerSortOrder, headers, MERGE_SEQUENCE_DICTIONARIES);
-        final MergingSamRecordIterator iterator = new MergingSamRecordIterator(headerMerger, readers, mergingSamRecordIteratorAssumeSorted);
-        final SAMFileHeader header = headerMerger.getMergedHeader();
-        for (final String comment : COMMENT) {
-            header.addComment(comment);
-        }
-        
-        //Unique to this build
-        for (final File inFile : INPUT) {
-        	header.addComment("@CO\tReplicate:" + inFile.getName());
-        }
+		// Open the files for reading and writing
+		final List<SamReader> readers = new ArrayList<SamReader>();
+		final List<SAMFileHeader> headers = new ArrayList<SAMFileHeader>();
+		{
+			SAMSequenceDictionary dict = null; // Used to try and reduce redundant SDs in memory
 
-        header.setSortOrder(SORT_ORDER);
-        final SAMFileWriterFactory samFileWriterFactory = new SAMFileWriterFactory();
-        if (USE_THREADING) {
-            samFileWriterFactory.setUseAsyncIo(true);
-        }
-        final SAMFileWriter out = samFileWriterFactory.makeSAMOrBAMWriter(header, presorted, OUTPUT);
+			for (final File inFile : INPUT) {
+				IOUtil.assertFileIsReadable(inFile);
+				final SamReader in = SamReaderFactory.makeDefault().referenceSequence(REFERENCE_SEQUENCE).open(inFile);
+				readers.add(in);
+				headers.add(in.getFileHeader());
 
-        
-        // Lastly loop through and write out the records
-        final ProgressLogger progress = new ProgressLogger(log, PROGRESS_INTERVAL);
-        while (iterator.hasNext()) {
-            final SAMRecord record = iterator.next();
-            out.addAlignment(record);
-            progress.record(record);
-        }
+				// A slightly hackish attempt to keep memory consumption down when merging
+				// multiple files with
+				// large sequence dictionaries (10,000s of sequences). If the dictionaries are
+				// identical, then
+				// replace the duplicate copies with a single dictionary to reduce the memory
+				// footprint.
+				if (dict == null) {
+					dict = in.getFileHeader().getSequenceDictionary();
+				} else if (dict.equals(in.getFileHeader().getSequenceDictionary())) {
+					in.getFileHeader().setSequenceDictionary(dict);
+				}
+				matchedSortOrders = matchedSortOrders && in.getFileHeader().getSortOrder() == SORT_ORDER;
+			}
+		}
 
-        log.info("Finished reading inputs.");
-        iterator.close();
-        out.close();
-        return 0;
-    }
+		// If all the input sort orders match the output sort order then just merge them
+		// and
+		// write on the fly, otherwise setup to merge and sort before writing out the
+		// final file
+		IOUtil.assertFileIsWritable(OUTPUT);
+		final boolean presorted;
+		final SAMFileHeader.SortOrder headerMergerSortOrder;
+		final boolean mergingSamRecordIteratorAssumeSorted;
+
+		if (matchedSortOrders || SORT_ORDER == SAMFileHeader.SortOrder.unsorted || ASSUME_SORTED) {
+			log.info("Input files are in same order as output so sorting to temp directory is not needed.");
+			headerMergerSortOrder = SORT_ORDER;
+			mergingSamRecordIteratorAssumeSorted = ASSUME_SORTED;
+			presorted = true;
+		} else {
+			log.info("Sorting input files using temp directory " + TMP_DIR);
+			headerMergerSortOrder = SAMFileHeader.SortOrder.unsorted;
+			mergingSamRecordIteratorAssumeSorted = false;
+			presorted = false;
+		}
+
+		final SamFileHeaderMerger headerMerger = new SamFileHeaderMerger(headerMergerSortOrder, headers,
+				MERGE_SEQUENCE_DICTIONARIES);
+		final MergingSamRecordIterator iterator = new MergingSamRecordIterator(headerMerger, readers,
+				mergingSamRecordIteratorAssumeSorted);
+		final SAMFileHeader header = headerMerger.getMergedHeader();
+		for (final String comment : COMMENT) {
+			header.addComment(comment);
+		}
+
+		// Unique to this build
+		for (final File inFile : INPUT) {
+			header.addComment("@CO\tReplicate:" + inFile.getName());
+		}
+
+		header.setSortOrder(SORT_ORDER);
+		final SAMFileWriterFactory samFileWriterFactory = new SAMFileWriterFactory();
+		if (USE_THREADING) {
+			samFileWriterFactory.setUseAsyncIo(true);
+		}
+		final SAMFileWriter out = samFileWriterFactory.makeSAMOrBAMWriter(header, presorted, OUTPUT);
+
+		// Lastly loop through and write out the records
+		final ProgressLogger progress = new ProgressLogger(log, PROGRESS_INTERVAL);
+		while (iterator.hasNext()) {
+			final SAMRecord record = iterator.next();
+			out.addAlignment(record);
+			progress.record(record);
+		}
+
+		log.info("Finished reading inputs.");
+		iterator.close();
+		out.close();
+		return 0;
+	}
 }

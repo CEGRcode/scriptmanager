@@ -14,6 +14,7 @@ import objects.ToolDescriptions;
 		"@|bold **Please run the picard/samtools tools directly:**|@ \n"+
 		"@|bold,yellow 'java -jar picard.jar MarkDuplicates I=<in.bam> O=<marked.bam>\n"+
 		"samtools view -F 1024 <marked.bam> > <out.bam>'|@",
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMRemoveDupCLI implements Callable<Integer> {

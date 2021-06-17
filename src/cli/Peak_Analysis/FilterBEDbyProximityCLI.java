@@ -18,6 +18,7 @@ import scripts.Peak_Analysis.FilterBEDbyProximity;
 */
 @Command(name = "filter-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.filter_bed_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

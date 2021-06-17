@@ -20,6 +20,7 @@ import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 */
 @Command(name = "sort-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_bed_description,
+	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

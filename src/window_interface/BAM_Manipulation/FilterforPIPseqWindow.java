@@ -31,15 +31,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import objects.CustomExceptions.FASTAException;
 import util.FileSelection;
-import util.FASTAUtilities;
 import scripts.BAM_Manipulation.BAIIndexer;
 
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
-	
+
 	final DefaultListModel<String> expList;
 	private File OUTPUT_PATH = null;
 	private File GENOME = null;
@@ -61,38 +61,44 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	private JTextField txtSeq;
 
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws Exception {
-        	setProgress(0);
-        	if(!FASTAUtilities.parseStringforInvalideNuc(txtSeq.getText())) {
-        		JOptionPane.showMessageDialog(null, "Invalid Sequence to filter by!!!");
-        	} else {
-	        	for(int x = 0; x < BAMFiles.size(); x++) {
-	        		String[] NAME = BAMFiles.get(x).getName().split("\\.");
-	        	    File OUTPUT = null;
-	        	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_PSfilter.bam"); }
-	        	    else { OUTPUT = new File(NAME[0] + "_PSfilter.bam"); }
-	        	    FilterforPIPseqOutput filter = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
-        			filter.setVisible(true);
-        			filter.run();
-        			
-	        	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
-	        	    
-	        	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-	        		setProgress(percentComplete);
-	        	}
-	        	setProgress(100);
+		@Override
+		public Void doInBackground() throws Exception {
+			setProgress(0);
+			try {
+				for (int x = 0; x < BAMFiles.size(); x++) {
+					String[] NAME = BAMFiles.get(x).getName().split("\\.");
+					File OUTPUT = null;
+					if (OUTPUT_PATH != null) {
+						OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_PSfilter.bam");
+					} else {
+						OUTPUT = new File(NAME[0] + "_PSfilter.bam");
+					}
+					FilterforPIPseqOutput filter = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT,
+							txtSeq.getText());
+					filter.setVisible(true);
+					filter.run();
+
+					if (chckbxGenerateBaiIndex.isSelected()) {
+						BAIIndexer.generateIndex(OUTPUT);
+					}
+
+					int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
+					setProgress(percentComplete);
+				}
+				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Permanganate-Seq Filtering Complete");
-        	}
-        	return null;
-        }
-        
-        public void done() {
-        	massXable(contentPane, true);
-            setCursor(null); //turn off the wait cursor
-        }
+			} catch (FASTAException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			}
+			return null;
+		}
+
+		public void done() {
+			massXable(contentPane, true);
+			setCursor(null); // turn off the wait cursor
+		}
 	}
-	
+
 	public FilterforPIPseqWindow() {
 		setTitle("Filter PIP-seq Reads");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -103,27 +109,26 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		setContentPane(contentPane);
 		SpringLayout sl_contentPane = new SpringLayout();
 		contentPane.setLayout(sl_contentPane);
-		
 
 		JScrollPane scrollPane = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 71, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
-		
-      	expList = new DefaultListModel<String>();
+
+		expList = new DefaultListModel<String>();
 		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
-		
+
 		btnLoad = new JButton("Load BAM Files");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
-				if(newBAMFiles != null) {
-					for(int x = 0; x < newBAMFiles.length; x++) { 
+			public void actionPerformed(ActionEvent e) {
+				File[] newBAMFiles = FileSelection.getFiles(fc, "bam");
+				if (newBAMFiles != null) {
+					for (int x = 0; x < newBAMFiles.length; x++) {
 						BAMFiles.add(newBAMFiles[x]);
 						expList.addElement(newBAMFiles[x].getName());
 					}
@@ -131,42 +136,42 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 			}
 		});
 		contentPane.add(btnLoad);
-		
+
 		btnRemoveBam = new JButton("Remove BAM");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRemoveBam, -6, SpringLayout.NORTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane);
 		btnRemoveBam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				while(listExp.getSelectedIndex() > -1) {
+				while (listExp.getSelectedIndex() > -1) {
 					BAMFiles.remove(listExp.getSelectedIndex());
 					expList.remove(listExp.getSelectedIndex());
 				}
 			}
-		});		
+		});
 		contentPane.add(btnRemoveBam);
-		
+
 		btnFilter = new JButton("Filter");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnFilter, 160, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnFilter, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnFilter, -160, SpringLayout.EAST, contentPane);
 		contentPane.add(btnFilter);
-        
+
 		btnFilter.setActionCommand("start");
-        btnFilter.addActionListener(this);
-        
+		btnFilter.addActionListener(this);
+
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnFilter);
 		sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 40, SpringLayout.EAST, btnFilter);
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, contentPane);
-        progressBar.setStringPainted(true);
+		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
-		
+
 		btnOutput = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -55, SpringLayout.SOUTH, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if(OUTPUT_PATH != null) {
+				if (OUTPUT_PATH != null) {
 					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
 				}
 			}
@@ -174,29 +179,29 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 146, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -146, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
-		
+
 		lblCurrent = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrent, -30, SpringLayout.SOUTH, contentPane);
 		lblCurrent.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblCurrent);
-		
+
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrent);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
-		
+
 		chckbxGenerateBaiIndex = new JCheckBox("Generate BAI Index for new BAM file");
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiIndex, 0, SpringLayout.WEST, scrollPane);
 		chckbxGenerateBaiIndex.setSelected(true);
 		contentPane.add(chckbxGenerateBaiIndex);
-		
+
 		btnLoadGenome = new JButton("Load Genome");
 		btnLoadGenome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File temp = FileSelection.getFile(fc,"fa");
-				if(temp != null) {
+				File temp = FileSelection.getFile(fc, "fa");
+				if (temp != null) {
 					GENOME = temp;
 					lblReferenceGenome.setText(GENOME.getName());
 				}
@@ -205,17 +210,17 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGenome, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadGenome, 5, SpringLayout.WEST, contentPane);
 		contentPane.add(btnLoadGenome);
-		
+
 		lblReferenceGenome = new JLabel("Reference Genome");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblReferenceGenome, 5, SpringLayout.NORTH, btnLoadGenome);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblReferenceGenome, 6, SpringLayout.EAST, btnLoadGenome);
 		contentPane.add(lblReferenceGenome);
-		
+
 		lblFilterByUpstream = new JLabel("Filter by Upstream Sequence:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblFilterByUpstream, 6, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblFilterByUpstream, 0, SpringLayout.WEST, scrollPane);
 		contentPane.add(lblFilterByUpstream);
-		
+
 		txtSeq = new JTextField();
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtSeq, 150, SpringLayout.EAST, lblCurrent);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiIndex, 10, SpringLayout.SOUTH, txtSeq);
@@ -231,26 +236,28 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
-    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
 	}
-	
+
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
-	}
-	
-	public void massXable(Container con, boolean status) {
-		for(Component c : con.getComponents()) {
-			c.setEnabled(status);
-			if(c instanceof Container) { massXable((Container)c, status); }
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
 		}
 	}
-	
+
+	public void massXable(Container con, boolean status) {
+		for (Component c : con.getComponents()) {
+			c.setEnabled(status);
+			if (c instanceof Container) {
+				massXable((Container) c, status);
+			}
+		}
+	}
+
 }

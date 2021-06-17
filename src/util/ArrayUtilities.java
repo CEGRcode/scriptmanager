@@ -156,7 +156,7 @@ public class ArrayUtilities {
 		for(int x = 0; x < array.length; x++) {
 			if(!Double.isNaN(array[x])) {
 				for(int z = 0; z < array[x]; z++) {
-					ref.add(new Double(x));
+					ref.add(Double.valueOf(x));
 					AVG += x;
 					N++;
 				}

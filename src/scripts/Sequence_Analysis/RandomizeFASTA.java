@@ -8,34 +8,39 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class RandomizeFASTA {
-	
-	public static File randomizeFASTA(File FASTA, File RANDOUT) throws IOException {
+
+	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed) throws IOException {
 		Random randnum = new Random();
+		if( seed != null) {
+			System.err.println("Set Seed=" + seed);
+			randnum.setSeed(seed);
+		}
 		PrintStream OUT = new PrintStream(RANDOUT);
 		Scanner scan = new Scanner(FASTA);
 		while (scan.hasNextLine()) {
 			String HEADER = scan.nextLine();
 			OUT.println(HEADER);
-			if(HEADER.contains(">")) {
+			if (HEADER.contains(">")) {
 				String[] SEQ = scan.nextLine().split("");
 				ArrayList<String> SEQ_ARRAY = new ArrayList<String>();
-				for(int x = 0; x < SEQ.length; x++) { SEQ_ARRAY.add(SEQ[x]); }
-				for(int x = 0; x < SEQ.length; x++) {
+				for (int x = 0; x < SEQ.length; x++) {
+					SEQ_ARRAY.add(SEQ[x]);
+				}
+				for (int x = 0; x < SEQ.length; x++) {
 					int randIndex = randnum.nextInt(SEQ_ARRAY.size());
 					OUT.print(SEQ_ARRAY.get(randIndex));
 					SEQ_ARRAY.remove(randIndex);
 				}
 				OUT.println();
-				
 			} else {
 				OUT.println("ERROR - NOT FASTA FORMAT");
 				System.err.println("ERROR - NOT FASTA FORMAT");
 			}
 		}
-		
+
 		OUT.close();
 		scan.close();
 		return RANDOUT;
 	}
-		
+
 }
