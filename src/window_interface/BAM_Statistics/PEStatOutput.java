@@ -23,7 +23,7 @@ import scripts.BAM_Statistics.PEStats;
 public class PEStatOutput extends JFrame {
 	
 	Vector<File> bamFiles = null;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	private boolean OUTPUT_STATUS = false;
 	private boolean DUP_STATUS = false;
 	private static int MIN_INSERT = 0;
@@ -54,7 +54,7 @@ public class PEStatOutput extends JFrame {
 		layeredPane.add(tabbedPane);
 		
 		bamFiles = input;
-		OUTPUT_PATH = o;
+		OUT_DIR = o;
 		OUTPUT_STATUS = out;
 		DUP_STATUS = dup;
 		MIN_INSERT = min;
@@ -76,17 +76,17 @@ public class PEStatOutput extends JFrame {
 	public void run() throws IOException {
 		//Iterate through all BAM files in Vector	
 		for(int x = 0; x < bamFiles.size(); x++) {
-			
 			// Construct Basename
-			File NAME = null;
+			File OUT_BASENAME = null;
 			if(OUTPUT_STATUS){
 				try{
-					NAME = new File( bamFiles.get(x).getName().split("\\.")[0] );
-					if(OUTPUT_PATH != null){ NAME = new File( OUTPUT_PATH.getCanonicalPath() + File.separator + NAME.getCanonicalPath() ); }
+					if(OUT_DIR == null) { OUT_BASENAME = new File(bamFiles.get(x).getName().split("\\.")[0]); }
+					else { OUT_BASENAME = new File( OUT_DIR.getCanonicalPath() + File.separator + bamFiles.get(x).getName().split("\\.")[0] ); }
 				}
 				catch (FileNotFoundException e) { e.printStackTrace(); }
 // 				catch (IOException e) {	e.printStackTrace(); }
 			}
+			
 			// Initialize PrintStream and TextArea for PE stats (insert sizes)
 			PrintStream ps_insert = null;
 			JTextArea PE_STATS = new JTextArea();
@@ -99,9 +99,9 @@ public class PEStatOutput extends JFrame {
 				DUP_STATS.setEditable(false);
 				ps_dup = new PrintStream(new CustomOutputStream( DUP_STATS ));
 			}
-			
+
 			//Call public static method from scripts
-			Vector<ChartPanel> charts = PEStats.getPEStats( NAME, bamFiles.get(x), DUP_STATUS, MIN_INSERT, MAX_INSERT, ps_insert, ps_dup, false );
+			Vector<ChartPanel> charts = PEStats.getPEStats( OUT_BASENAME, bamFiles.get(x), DUP_STATUS, MIN_INSERT, MAX_INSERT, ps_insert, ps_dup, false );
 			
 			//Add pe stats to tabbed pane
 			PE_STATS.setCaretPosition(0);
@@ -117,7 +117,7 @@ public class PEStatOutput extends JFrame {
 				tabbedPane_Duplication.add(bamFiles.get(x).getName(), charts.get(1));
 			}
 			
-			ps_dup.close();
+			if(ps_dup!=null) { ps_dup.close(); }
 			ps_insert.close();
 			
 			firePropertyChange("bam",x, x + 1);	
