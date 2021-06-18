@@ -50,8 +50,6 @@ public class TagPileupCLI implements Callable<Integer> {
 		@Option(names = {"-M", "--output-matrix"}, description = "specify output basename for matrix files (files each for sense and anti will be output)",
 			arity="0..1")
 		private ArrayList<String> outputMatrix = new ArrayList<String>(Arrays.asList("no","matrix","output"));
-// 		@Option(names = {"-j", "--output-jtv"}, description = "output JTV file (default=false)")
-// 		private boolean jtv = false;
 		@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
 		private boolean zip = false;
 		@Option(names = {"--cdt"}, description = "output matrix in cdt format (default)")
@@ -304,7 +302,6 @@ public class TagPileupCLI implements Callable<Integer> {
 		p.setPErequire(filterOptions.requirePE);
 		
 		//Set output statuses
-		p.setJTVstatus(false);	//not available for CLI
 		p.setGZIPstatus(outputOptions.zip);
 		
 		//Set Ratio (code to standardize tags sequenced to genome size (1 tag / 1 bp))

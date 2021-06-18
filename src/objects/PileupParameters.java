@@ -35,7 +35,6 @@ public class PileupParameters {
 	private File BLACKLIST = null;
 	private boolean STANDARD = false;
 	private boolean outputCOMPOSITE = false;  //Output composite values
-	private boolean outputJTV = false;
 	private boolean outputGZIP = false;
 	private boolean requirePE = false;
 	private double STANDRATIO = 1;
@@ -68,7 +67,6 @@ public class PileupParameters {
 		System.out.println( "private File BLACKLIST = " + BLACKLIST );
 		System.out.println( "private boolean STANDARD = " + STANDARD );
 		System.out.println( "private boolean outputCOMPOSITE = " + outputCOMPOSITE );
-		System.out.println( "private boolean outputJTV = " + outputJTV );
 		System.out.println( "private boolean outputGZIP = " + outputGZIP );
 		System.out.println( "private boolean requirePE = " + requirePE );
 		System.out.println( "private double STANDRATIO = " + STANDRATIO );
@@ -90,13 +88,6 @@ public class PileupParameters {
 	}
 	public void setGZIPstatus(boolean status) {
 		outputGZIP = status;
-	}
-	
-	public boolean getOutputJTV() {
-		return outputJTV;
-	}
-	public void setJTVstatus(boolean status) {
-		outputJTV = status;
 	}
 	
 	public File getBlacklist() {
@@ -303,9 +294,7 @@ public class PileupParameters {
 		if(MIN_INSERT!=-9999){ cliCommand += " -n " + MIN_INSERT; }
 		//Add MAX_INSERT
 		if(MAX_INSERT!=-9999){ cliCommand += " -x " + MAX_INSERT; }
-		
-		//Add outputJTV
-		if(outputJTV==true){ cliCommand += " -j"; }
+
 		//Add outputGZIP
 		if(outputGZIP==true){ cliCommand += " -z"; }
 		

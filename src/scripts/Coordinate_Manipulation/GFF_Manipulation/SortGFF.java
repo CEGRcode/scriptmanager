@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import objects.CoordinateObjects.GFFCoord;
-import util.JTVOutput;
 
 public class SortGFF {
 	public static void sortGFFbyCDT(String outname, File gff, File cdt, int START_INDEX, int STOP_INDEX)
@@ -46,7 +45,6 @@ public class SortGFF {
 		}
 		OUT.close();
 		CDTFile = null; // Free up memory by getting CDT file out of memory
-		JTVOutput.outputJTV(outname, "green");
 
 		// Match to gff file after
 		HashMap<String, String> GFFFile = new HashMap<String, String>();
