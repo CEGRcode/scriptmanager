@@ -711,6 +711,12 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 			}
 		}
 		if (status) {
+			if (rdbtnMinPercentileValue.isSelected()) {
+				activateMinPercent(true);
+			}
+			if (rdbtnMinAbsoluteValue.isSelected()) {
+				activateMinPercent(false);
+			}
 			if (rdbtnMidPercentileValue.isSelected()) {
 				activateMidPercent(true);
 			}
