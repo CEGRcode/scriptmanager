@@ -19,7 +19,7 @@ import window_interface.BAM_Statistics.PEStatWindow;
 import window_interface.BAM_Statistics.SEStatWindow;
 import window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
 import window_interface.BAM_Manipulation.BAIIndexerWindow;
-import window_interface.BAM_Manipulation.BAMRemoveDupWindow;
+import window_interface.BAM_Manipulation.BAMMarkDupWindow;
 import window_interface.BAM_Manipulation.FilterforPIPseqWindow;
 import window_interface.BAM_Manipulation.MergeBAMWindow;
 import window_interface.BAM_Manipulation.SortBAMWindow;
@@ -240,20 +240,20 @@ public class ScriptManagerGUI {
 		pnlBamManip.add(btnBamSort);
 
 		// >BAMRemoveDup
-		JTextArea txtBamRemoveDuplicates = new JTextArea();
-		initializeTextArea(txtBamRemoveDuplicates);
-		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtBamRemoveDuplicates, 10, SpringLayout.SOUTH, txtBamSort);
-		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtBamRemoveDuplicates, -10, SpringLayout.EAST, pnlBamManip);
-		txtBamRemoveDuplicates.setText(ToolDescriptions.remove_duplicates_description);
-		pnlBamManip.add(txtBamRemoveDuplicates);
+		JTextArea txtMarkDuplicates = new JTextArea();
+		initializeTextArea(txtMarkDuplicates);
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtMarkDuplicates, 10, SpringLayout.SOUTH, txtBamSort);
+		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtMarkDuplicates, -10, SpringLayout.EAST, pnlBamManip);
+		txtMarkDuplicates.setText(ToolDescriptions.remove_duplicates_description);
+		pnlBamManip.add(txtMarkDuplicates);
 
-		JButton btnBamRemoveDuplicates = new JButton("BAM Remove Duplicates");
-		btnBamRemoveDuplicates.addActionListener(new ActionListener() {
+		JButton btnMarkDuplicates = new JButton("BAM MarkDuplicates");
+		btnMarkDuplicates.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							BAMRemoveDupWindow frame = new BAMRemoveDupWindow();
+							BAMMarkDupWindow frame = new BAMMarkDupWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -262,18 +262,15 @@ public class ScriptManagerGUI {
 				});
 			}
 		});
-		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, btnBamRemoveDuplicates, 0, SpringLayout.NORTH,
-				txtBamRemoveDuplicates);
-		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnBamRemoveDuplicates, 10, SpringLayout.WEST, pnlBamManip);
-		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtBamRemoveDuplicates, 10, SpringLayout.EAST,
-				btnBamRemoveDuplicates);
-		pnlBamManip.add(btnBamRemoveDuplicates);
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, btnMarkDuplicates, 0, SpringLayout.NORTH,	txtMarkDuplicates);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnMarkDuplicates, 10, SpringLayout.WEST, pnlBamManip);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtMarkDuplicates, 10, SpringLayout.EAST, btnMarkDuplicates);
+		pnlBamManip.add(btnMarkDuplicates);
 
 		// >BAMReplicateMerge
 		JTextArea txtBamReplicateMerge = new JTextArea();
 		initializeTextArea(txtBamReplicateMerge);
-		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtBamReplicateMerge, 10, SpringLayout.SOUTH,
-				txtBamRemoveDuplicates);
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtBamReplicateMerge, 10, SpringLayout.SOUTH, txtMarkDuplicates);
 		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtBamReplicateMerge, -10, SpringLayout.EAST, pnlBamManip);
 		txtBamReplicateMerge.setText(ToolDescriptions.merge_bam_description);
 		pnlBamManip.add(txtBamReplicateMerge);
@@ -1211,7 +1208,7 @@ public class ScriptManagerGUI {
 		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtTwoColorHeatMap, -10, SpringLayout.EAST, pnlFigure);
 		pnlFigure.add(txtTwoColorHeatMap);
 
-		JButton btnTwoColorHeatMap = new JButton("Two-Color Heat Map (Original Heat Map)");
+		JButton btnTwoColorHeatMap = new JButton("Two-Color Heat Map");
 		btnTwoColorHeatMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				EventQueue.invokeLater(new Runnable() {
@@ -1350,7 +1347,7 @@ public class ScriptManagerGUI {
 	/**
 	 * Launch the application.
 	 */
-	public static void launchApplication() {
+	public void launchApplication() {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (Throwable e) {

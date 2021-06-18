@@ -31,10 +31,10 @@ import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
 import scripts.BAM_Manipulation.BAIIndexer;
-import scripts.BAM_Manipulation.BAMDeDuplication;
+import scripts.BAM_Manipulation.BAMMarkDuplicates;
 
 @SuppressWarnings("serial")
-public class BAMRemoveDupWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class BAMMarkDupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
@@ -52,6 +52,7 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 	private JLabel label;
 	private JLabel lblDefaultToLocal;
 	private JCheckBox chckbxGenerateBaiIndex;
+	private JCheckBox chckbxRemoveDuplicates;
 
 	class Task extends SwingWorker<Void, Void> {
         @Override
@@ -60,17 +61,25 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
         	for(int x = 0; x < BAMFiles.size(); x++) {
         		String[] NAME = BAMFiles.get(x).getName().split("\\.");
         	    File OUTPUT = null;
-        	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam"); }
-        	    else { OUTPUT = new File(NAME[0] + "_dedup.bam"); }
-        	    BAMDeDuplication dedup = new BAMDeDuplication(BAMFiles.get(x), OUTPUT);
+        	    File METRICS = null;
+        	    if(OUTPUT_PATH != null) {
+        	    	OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam");
+        	    	METRICS = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.metrics");
+        	    } else {
+        	    	OUTPUT = new File(NAME[0] + "_dedup.bam");
+        	    	METRICS = new File(NAME[0] + "_dedup.metrics");
+        	    }
+        	    
+        	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
         	    dedup.run();
+        	    
         	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
         	    
         	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
         	setProgress(100);
-			JOptionPane.showMessageDialog(null, "De-Duplication Complete");
+			JOptionPane.showMessageDialog(null, "Mark Duplicates Complete");
         	return null;
         }
         
@@ -80,11 +89,11 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
         }
 	}
 	
-	public BAMRemoveDupWindow() {
-		setTitle("BAM Remove Duplicate Reads");
+	public BAMMarkDupWindow() {
+		setTitle("BAM MarkDuplicates (picard)");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 330);
+		setBounds(125, 125, 450, 360);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -132,7 +141,7 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 		});		
 		contentPane.add(btnRemoveBam);
 		
-		btnSort = new JButton("De-Duplicate");
+		btnSort = new JButton("Mark Duplicates");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnSort, 160, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnSort, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnSort, -160, SpringLayout.EAST, contentPane);
@@ -149,7 +158,7 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 		contentPane.add(progressBar);
 		
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -42, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -72, SpringLayout.NORTH, btnOutput);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUTPUT_PATH = FileSelection.getOutputDir(fc);
@@ -176,10 +185,16 @@ public class BAMRemoveDupWindow extends JFrame implements ActionListener, Proper
 		contentPane.add(lblDefaultToLocal);
 		
 		chckbxGenerateBaiIndex = new JCheckBox("Generate BAI Index for new BAM file");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiIndex, 40, SpringLayout.SOUTH, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiIndex, 5, SpringLayout.WEST, contentPane);
 		chckbxGenerateBaiIndex.setSelected(true);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiIndex, 11, SpringLayout.SOUTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiIndex, 0, SpringLayout.WEST, scrollPane);
 		contentPane.add(chckbxGenerateBaiIndex);
+		
+		chckbxRemoveDuplicates = new JCheckBox("Remove Duplicates");
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRemoveDuplicates, 0, SpringLayout.WEST, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxRemoveDuplicates, -6, SpringLayout.NORTH, chckbxGenerateBaiIndex);
+		chckbxRemoveDuplicates.setSelected(true);
+		contentPane.add(chckbxRemoveDuplicates);
 	}
 
 	@Override
