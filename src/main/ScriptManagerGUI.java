@@ -56,6 +56,7 @@ import window_interface.Figure_Generation.FourColorSequenceWindow;
 import window_interface.Figure_Generation.TwoColorHeatMapWindow;
 import window_interface.Figure_Generation.ThreeColorHeatMapWindow;
 import window_interface.Figure_Generation.MergeHeatMapWindow;
+import window_interface.Figure_Generation.LabelHeatMapWindow;
 
 public class ScriptManagerGUI {
 	private JFrame frmScriptManager;
@@ -1294,12 +1295,43 @@ public class ScriptManagerGUI {
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtMergeHeatmap, 10, SpringLayout.EAST, btnMergeHeatmap);
 		pnlFigure.add(btnMergeHeatmap);
 
+		// >LabelHeatMap
+		JTextArea txtLabelHeatMap = new JTextArea();
+		initializeTextArea(txtLabelHeatMap);
+		txtLabelHeatMap.setText(ToolDescriptions.label_heatmap_description);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtLabelHeatMap, 10, SpringLayout.SOUTH, txtMergeHeatmap);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtLabelHeatMap, 10, SpringLayout.SOUTH, btnMergeHeatmap);
+		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtLabelHeatMap, -10, SpringLayout.EAST, pnlFigure);
+		pnlFigure.add(txtLabelHeatMap);
+
+		JButton btnLabelHeatMap = new JButton("Label HeatMap");
+		btnLabelHeatMap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							LabelHeatMapWindow frame = new LabelHeatMapWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, btnLabelHeatMap, 0, SpringLayout.NORTH,
+				txtLabelHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, btnLabelHeatMap, 10, SpringLayout.WEST, pnlFigure);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtLabelHeatMap, 10, SpringLayout.EAST,
+				btnLabelHeatMap);
+		pnlFigure.add(btnLabelHeatMap);
+
 		// >FourColorPlot
 		JTextArea txtcolorSequencePlot = new JTextArea();
 		initializeTextArea(txtcolorSequencePlot);
 		txtcolorSequencePlot.setText(ToolDescriptions.four_color_description);
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtcolorSequencePlot, 10, SpringLayout.SOUTH, txtMergeHeatmap);
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtcolorSequencePlot, 10, SpringLayout.SOUTH, btnMergeHeatmap);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtcolorSequencePlot, 10, SpringLayout.SOUTH, txtLabelHeatMap);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtcolorSequencePlot, 10, SpringLayout.SOUTH, btnLabelHeatMap);
 		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtcolorSequencePlot, -10, SpringLayout.EAST, pnlFigure);
 		pnlFigure.add(txtcolorSequencePlot);
 
