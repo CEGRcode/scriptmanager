@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -137,13 +138,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					setProgress(0);
 					// Load up parameters for the pileup into single object
 					PileupParameters param = new PileupParameters();
+					ArrayList<Color> colors = new ArrayList<Color>();
 					if (rdbtnSeperate.isSelected()) {
 						param.setStrand(0);
-						param.setSenseColor(btnSenseColor.getForeground());
-						param.setAntiColor(btnAntiColor.getForeground());
+						colors.add(btnSenseColor.getForeground());
+						colors.add(btnAntiColor.getForeground());
 					} else if (rdbtnComb.isSelected()) {
 						param.setStrand(1);
-						param.setCombinedColor(btnCombinedColor.getForeground());
+						colors.add(btnCombinedColor.getForeground());
 					}
 
 					if (rdbtnRead1.isSelected()) { param.setRead(0); }
@@ -198,7 +200,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					param.setStdNum(Integer.parseInt(txtNumStd.getText()));
 					param.setCPU(Integer.parseInt(txtCPU.getText()));
 
-					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param);
+					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
 
 					pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
