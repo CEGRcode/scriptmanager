@@ -175,7 +175,7 @@ public class ThreeColorHeatMap {
 		BufferedImage im = new BufferedImage(pixwidth, pixheight, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = im.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(new Color(255, 255, 255));
+		g2.setColor(new Color(255, 255, 255, 0));
 		g2.fillRect(0, 0, pixwidth, pixheight);
 
 		int count = 0;
@@ -196,7 +196,8 @@ public class ThreeColorHeatMap {
 					int red = (int) (MAXCOLOR.getRed() * sVal + MIDCOLOR.getRed() * (1 - sVal));
 					int green = (int) (MAXCOLOR.getGreen() * sVal + MIDCOLOR.getGreen() * (1 - sVal));
 					int blue = (int) (MAXCOLOR.getBlue() * sVal + MIDCOLOR.getBlue() * (1 - sVal));
-					g.setColor(new Color(red, green, blue));
+					int alpha = (int) (MAXCOLOR.getAlpha() * sVal + MIDCOLOR.getAlpha() * (1 - sVal));
+					g.setColor(new Color(red, green, blue, alpha));
 				} else if (IDj < MIDVAL) {
 					double v = (MIDVAL - IDj) / LOWER_RATIO;
 					double sVal = v > 1 ? 1 : v;
@@ -206,7 +207,8 @@ public class ThreeColorHeatMap {
 					int red = (int) (MINCOLOR.getRed() * sVal + MIDCOLOR.getRed() * (1 - sVal));
 					int green = (int) (MINCOLOR.getGreen() * sVal + MIDCOLOR.getGreen() * (1 - sVal));
 					int blue = (int) (MINCOLOR.getBlue() * sVal + MIDCOLOR.getBlue() * (1 - sVal));
-					g.setColor(new Color(red, green, blue));
+					int alpha = (int) (MINCOLOR.getAlpha() * sVal + MIDCOLOR.getAlpha() * (1 - sVal));
+					g.setColor(new Color(red, green, blue, alpha));
 				} else {
 					g.setColor(MIDCOLOR);
 				}
