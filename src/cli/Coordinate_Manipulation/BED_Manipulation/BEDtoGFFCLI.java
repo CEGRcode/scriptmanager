@@ -56,10 +56,6 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
-		}
 		//set default output filename
 		if(output==null && !stdout){
 			output = new File(ExtensionFileFilter.stripExtension(bedFile) + ".gff");
@@ -68,12 +64,6 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
 		//check output filename is valid
 		}else{
-			//check ext
-			try{
-				if(!"gff".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".bed\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use BED extension for output filename. Try: " + output + ".youroutputextensionhere\n"; }
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");
