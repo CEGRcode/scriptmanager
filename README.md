@@ -10,11 +10,28 @@ Open **ScriptManager-Tutorial.docx** available in root directory
 ## Build Instructions
 (after cloning this repo):
 ```
-> cd scriptmanager
-> ./gradlew build
+$ cd scriptmanager
+$ ./gradlew build
 ```
 
 The compiled JAR file will be output into the `build/libs` directory. 
+
+## Running ScriptManager
+
+To run the GUI verson of ScriptManager, you can double click the compiled JAR file or run the followinug command in the terminal
+```
+$ java -jar /path/to/jarfile
+```
+
+Running the CLI version of ScriptManager is similar to running the GUI. To view the list of command options, use the `-h` flag.
+```
+$ java -jar /path/to/jarfile -h
+```
+
+**Example:**
+```
+$ java -jar /path/to/jarfile coordinate-manipulation bed-to-gff BEDFILE.bed -o OUTPUT.gff
+```
 
 ## Current scripts available (210106):
 
