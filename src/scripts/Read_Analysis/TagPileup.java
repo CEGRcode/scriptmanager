@@ -191,11 +191,12 @@ public class TagPileup {
 				if (AVG_S2 != null)
 					AVG_S2[j] += tempR[j];
 			}
-			if (OUT_S1 != null)
-				OUT_S1.write("\n");
-			if (OUT_S2 != null)
-				OUT_S2.write("\n");
+			if (OUT_S1 != null) OUT_S1.write("\n");
+			if (OUT_S2 != null) OUT_S2.write("\n");
 		}
+
+		if (OUT_S1 != null) OUT_S1.close();
+		if (OUT_S2 != null) OUT_S2.close();
 
 		// Calculate average and domain here
 		int temp = (int) (((double) AVG_S1.length / 2.0) + 0.5);
