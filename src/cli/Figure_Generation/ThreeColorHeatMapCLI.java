@@ -76,7 +76,7 @@ public class ThreeColorHeatMapCLI implements Callable<Integer> {
 	@Option(names = {"-0", "--include-zeros"}, description = "used with `-p` flag, indicating exclusion of zero values when calculating percentile thresholds")
 	private boolean includeZeros = false;
 
-	@ArgGroup(multiplicity = "0..1", heading = "%nSelect heatmap colors:%n")
+	@ArgGroup(multiplicity = "0..1", exclusive=false, heading = "%nSelect heatmap colors:%n")
 	private ColorGroup color = new ColorGroup();
 	static class ColorGroup {
 		@Option(names = {"-cn", "--color-min"}, description = "Color indicating minimum values (default=YELLOW) For custom color: type hexadecimal string to represent colors (e.g. \"FF0000\" is hexadecimal for red).\n See <http://www.javascripter.net/faq/rgbtohex.htm> for some color options with their corresponding hex strings.\n")
@@ -88,7 +88,20 @@ public class ThreeColorHeatMapCLI implements Callable<Integer> {
 		@Option(names = {"-ca", "--color-nan"}, description = "Color indicating not-a-number values (default=GRAY) For custom color: type hexadecimal string to represent colors (e.g. \"FF0000\" is hexadecimal for red).\n See <http://www.javascripter.net/faq/rgbtohex.htm> for some color options with their corresponding hex strings.\n")
 		private String nan = null;
 	}
-
+	
+	@ArgGroup(multiplicity = "0..1", exclusive=false, heading = "%nSelect transparency of heatmap colors (alpha channel):%n")
+	private AlphaGroup alpha = new AlphaGroup();
+	static class AlphaGroup {
+		@Option(names = {"-tn", "--transparent-min"}, description = "Value indicating transparency of minimum values, 0 to 255 (default=255)\n")
+		private int min = 255;
+		@Option(names = {"-td", "--transparent-mid"}, description = "Value indicating transparency of middle values, 0 to 255  (default=255)\n")
+		private int mid = 255;
+		@Option(names = {"-tx", "--transparent-max"}, description = "Value indicating transparency of maximum values, 0 to 255  (default=255)\n")
+		private int max = 255;
+		@Option(names = {"-ta", "--transparent-nan"}, description = "Value indicating transparency of not-a-number values, 0 to 255  (default=255)\n")
+		private int nan = 255;
+	}
+	
 	String scaleType = "treeview";
 	//Colors from JavaTreeview microarray software
 	Color CMAX = new Color(254,255,0,255);
@@ -217,6 +230,16 @@ public class ThreeColorHeatMapCLI implements Callable<Integer> {
 			System.err.println("Decoding NaN color: 0x" + color.nan);
 			CNAN = Color.decode("0x" + color.nan);
 		}
+		// check that Alpha channel/transparency values are formatted properly and decode/assign colors
+		if (alpha.max<0 || alpha.max>255) { r += "(!)Alpha/transparency value for higher values (max) must be a numeric 0 to 255\n"; }
+		else { CMAX = new Color(CMAX.getRed(), CMAX.getGreen(), CMAX.getBlue(), alpha.max); }
+		if (alpha.mid<0 || alpha.mid>255) { r += "(!)Alpha/transparency value for middling values (mid) must be a numeric 0 to 255\n"; }
+		else { CMID = new Color(CMID.getRed(), CMID.getGreen(), CMID.getBlue(), alpha.mid); }
+		if (alpha.min<0 || alpha.min>255) { r += "(!)Alpha/transparency value for lower values(min) must be a numeric 0 to 255\n"; }
+		else { CMIN = new Color(CMIN.getRed(), CMIN.getGreen(), CMIN.getBlue(), alpha.min); }
+		if (alpha.nan<0 || alpha.nan>255) { r += "(!)Alpha/transparency value for invalid/non-numeric values(NaN) must be a numeric 0 to 255\n"; }
+		else { CNAN = new Color(CNAN.getRed(), CNAN.getGreen(), CNAN.getBlue(), alpha.nan); }
+		
 		// assign vals for contrast thresholds and set bools
 		if(maxGroup.percentile!=null) {
 			MAX = maxGroup.percentile;

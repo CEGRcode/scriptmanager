@@ -56,7 +56,6 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 
 	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect heatmap color:%n\t@|fg(red) (select no more than one of these options)|@%n")
 	private ColorGroup color = new ColorGroup();
-
 	static class ColorGroup {
 		@Option(names = { "--black" }, description = "Use the color black for generating the heatmap (default)")
 		private boolean black = false;
@@ -68,6 +67,9 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 				"--color" }, description = "For custom color: type hexadecimal string to represent colors (e.g. \"FF0000\" is hexadecimal for red).\n See <http://www.javascripter.net/faq/rgbtohex.htm> for some color options with their corresponding hex strings.\n")
 		private String custom = null;
 	}
+	@Option(names = { "-t",
+				"--transparent" }, description = "Value indicating transparency of heatmap, 0 to 255  (default=255)\\n")
+	private int alpha = 255;
 
 	String scaleType = "treeview";
 	Color MAXCOLOR = Color.BLACK;
@@ -140,14 +142,7 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 		if (compression < 1 || compression > 4) {
 			r += "(!)Compression must be integer 1-4. Please select from the available compression types.";
 		}
-		// check that hex string is formatted properly
-		if (color.custom != null) {
-			Pattern hexColorPat = Pattern.compile("[0-9A-Fa-f]{6}");
-			Matcher m = hexColorPat.matcher(color.custom);
-			if (!m.matches()) {
-				r += "(!)Color must be formatted as a hexidecimal String!\n\tExpected input string format: \"[0-9A-Fa-f]{6}\"";
-			}
-		}
+
 		// check scaling is valid input
 		if (absolute == -999 && percentile == -999) {
 			absolute = 10;
@@ -169,8 +164,16 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 			MAXCOLOR = Color.BLUE;
 		} else if (color.custom != null) {
 			System.err.println("Decoding color: 0x" + color.custom);
-			MAXCOLOR = Color.decode("0x" + color.custom);
+			// check that hex string is formatted properly
+			Pattern hexColorPat = Pattern.compile("[0-9A-Fa-f]{6}");
+			Matcher m = hexColorPat.matcher(color.custom);
+			if (!m.matches()) {
+				r += "(!)Color must be formatted as a hexidecimal String!\n\tExpected input string format: \"[0-9A-Fa-f]{6}\"";
+			} else { MAXCOLOR = Color.decode("0x" + color.custom); }
 		}
+		// check that Alpha channel/transparency values are formatted properly and decode/assign colors
+		if (alpha<0 || alpha>255) { r += "(!)Alpha/transparency value for higher values (max) must be a numeric 0 to 255\n"; }
+		else { MAXCOLOR = new Color(MAXCOLOR.getRed(), MAXCOLOR.getGreen(), MAXCOLOR.getBlue(), alpha); }
 
 		return (r);
 	}
