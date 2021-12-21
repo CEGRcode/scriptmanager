@@ -163,8 +163,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					else if (rdbtnSlidingWindow.isSelected()) { param.setTrans(1); }
 					else if (rdbtnGaussianSmooth.isSelected()) { param.setTrans(2); }
 
-					if (!chckbxOutputData.isSelected()) { param.setOutputType(0); }
-
 					if(!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {	param.setOutputDirectory(null); }
 					else { param.setOutputDirectory(OUT_DIR); }
 
@@ -179,11 +177,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 					if (chckbxOutputData.isSelected()) {
 						if (rdbtnTabdelimited.isSelected()) { param.setOutputType(1); }
-						else if (rdbtnCdt.isSelected()) {
-							param.setOutputType(2);
-						}
+						else if (rdbtnCdt.isSelected()) { param.setOutputType(2); }
 						if (chckbxOutputGzip.isSelected()) { param.setGZIPstatus(true); }
-					}
+					} else { param.setOutputType(0); }
 
 					if (chckbxTagStandard.isSelected()) {
 						if (BLACKLIST != null) { param.setBlacklist(BLACKLIST); }
