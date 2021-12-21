@@ -1,9 +1,11 @@
 package window_interface.Read_Analysis;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -25,6 +27,7 @@ public class TagPileupOutput extends JFrame {
 	Vector<File> BEDFiles = null;
 	Vector<File> BAMFiles = null;
 
+	ArrayList<Color> COLORS;
 	PileupParameters PARAM = null;
 	PrintStream COMPOSITE = null;
 
@@ -33,7 +36,7 @@ public class TagPileupOutput extends JFrame {
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 
-	public TagPileupOutput(Vector<File> be, Vector<File> ba, PileupParameters param) {
+	public TagPileupOutput(Vector<File> be, Vector<File> ba, PileupParameters param, ArrayList<Color> colors) {
 		setTitle("Tag Pileup Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -59,6 +62,7 @@ public class TagPileupOutput extends JFrame {
 		BEDFiles = be;
 		BAMFiles = ba;
 		PARAM = param;
+		COLORS = colors;
 	}
 
 	public void run() throws IOException {
@@ -82,15 +86,13 @@ public class TagPileupOutput extends JFrame {
 			if (BAMvalid[z]) {
 				// Code to standardize tags sequenced to genome size (1 tag / 1 bp)
 				if (PARAM.getStandard() && PARAM.getBlacklist() != null) {
-					PARAM.setRatio(
-							BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead()));
+					PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getBlacklist(), PARAM.getRead()));
 				} else if (PARAM.getStandard()) {
 					PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead()));
 				}
 
 				for (int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
-					System.err.println(
-							"Processing BAM: " + BAM.getName() + "\tCoordinate: " + BEDFiles.get(BED_Index).getName());
+					System.err.println( "Processing BAM: " + BAM.getName() + "\tCoordinate: " + BEDFiles.get(BED_Index).getName());
 
 					JTextArea STATS = new JTextArea(); // Generate statistics object
 					STATS.setEditable(false); // Make it un-editable
@@ -101,9 +103,9 @@ public class TagPileupOutput extends JFrame {
 
 					// Make composite plots
 					if (PARAM.getStrand() == 0) {
-						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, script_obj.AVG_S2, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
+						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, script_obj.AVG_S2, BEDFiles.get(BED_Index).getName(), COLORS));
 					} else {
-						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, BEDFiles.get(BED_Index).getName(), PARAM.getColors()));
+						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, BEDFiles.get(BED_Index).getName(), COLORS));
 					}
 
 					STATS.setCaretPosition(0);

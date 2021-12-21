@@ -25,7 +25,6 @@ import objects.PileupParameters;
 import objects.CoordinateObjects.BEDCoord;
 import scripts.Read_Analysis.PileupScripts.PileupExtract;
 import util.ArrayUtilities;
-import util.JTVOutput;
 
 public class TagPileup {
 	File BED = null;
@@ -192,11 +191,12 @@ public class TagPileup {
 				if (AVG_S2 != null)
 					AVG_S2[j] += tempR[j];
 			}
-			if (OUT_S1 != null)
-				OUT_S1.write("\n");
-			if (OUT_S2 != null)
-				OUT_S2.write("\n");
+			if (OUT_S1 != null) OUT_S1.write("\n");
+			if (OUT_S2 != null) OUT_S2.write("\n");
 		}
+
+		if (OUT_S1 != null) OUT_S1.close();
+		if (OUT_S2 != null) OUT_S2.close();
 
 		// Calculate average and domain here
 		int temp = (int) (((double) AVG_S1.length / 2.0) + 0.5);
@@ -265,29 +265,6 @@ public class TagPileup {
 				}
 				COMPOSITE.println();
 			}
-		}
-
-		// Output JTV files
-		if (OUT_S1 != null) {
-			if (PARAM.getOutputJTV() && PARAM.getOutputType() == 2) {
-				if (STRAND == 0)
-					JTVOutput.outputJTV(
-							PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0),
-							PARAM.getSenseColor());
-				else
-					JTVOutput.outputJTV(
-							PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2),
-							PARAM.getCombinedColor());
-			}
-			OUT_S1.close();
-		}
-		if (OUT_S2 != null) {
-			if (PARAM.getOutputJTV() && PARAM.getOutputType() == 2) {
-				JTVOutput.outputJTV(
-						PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1),
-						PARAM.getAntiColor());
-			}
-			OUT_S2.close();
 		}
 
 	}

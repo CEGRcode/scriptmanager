@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import objects.CoordinateObjects.BEDCoord;
-import util.JTVOutput;
 
 public class SortBED {
 	public static void sortBEDbyCDT(String outname, File bed, File cdt, int START_INDEX, int STOP_INDEX)
@@ -46,7 +45,6 @@ public class SortBED {
 		}
 		OUT.close();
 		CDTFile = null; // Free up memory by getting CDT file out of memory
-		JTVOutput.outputJTV(outname, "green");
 
 		// Match to bed file after
 		HashMap<String, String> BEDFile = new HashMap<String, String>();

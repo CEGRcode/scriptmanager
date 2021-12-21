@@ -1,8 +1,6 @@
 package objects;
 
-import java.awt.Color;
 import java.io.File;
-import java.util.ArrayList;
 import java.io.PrintStream;
 
 public class PileupParameters {
@@ -35,21 +33,12 @@ public class PileupParameters {
 	private File BLACKLIST = null;
 	private boolean STANDARD = false;
 	private boolean outputCOMPOSITE = false;  //Output composite values
-	private boolean outputJTV = false;
 	private boolean outputGZIP = false;
 	private boolean requirePE = false;
 	private double STANDRATIO = 1;
 	
 	private int MIN_INSERT = -9999;
 	private int MAX_INSERT = -9999;
-	
-	private Color Sense = null;
-	private Color Anti = null;
-	private Color Combined = null;
-	
-	public PileupParameters() {
-		
-	}
 	
 	public void printAll(){
 		System.out.println( "<><><><><><><><><><><><><><><><><><><><>" );
@@ -68,7 +57,6 @@ public class PileupParameters {
 		System.out.println( "private File BLACKLIST = " + BLACKLIST );
 		System.out.println( "private boolean STANDARD = " + STANDARD );
 		System.out.println( "private boolean outputCOMPOSITE = " + outputCOMPOSITE );
-		System.out.println( "private boolean outputJTV = " + outputJTV );
 		System.out.println( "private boolean outputGZIP = " + outputGZIP );
 		System.out.println( "private boolean requirePE = " + requirePE );
 		System.out.println( "private double STANDRATIO = " + STANDRATIO );
@@ -76,12 +64,6 @@ public class PileupParameters {
 		System.out.println( "private int MIN_INSERT = " + MIN_INSERT );
 		System.out.println( "private int MAX_INSERT = " + MAX_INSERT );
 		System.out.println();
-		System.out.println( "private Color Sense = " + Sense );
-		System.out.println( "private Color Anti = " + Anti );
-		System.out.println( "private Color Combined = " + Combined );
-// 		System.out.println( "" +  );
-// 		System.out.println( "" +  );
-// 		System.out.println( "" +  );
 		System.out.println( "<><><><><><><><><><><><><><><><><><><><>" );
 	}
 	
@@ -90,13 +72,6 @@ public class PileupParameters {
 	}
 	public void setGZIPstatus(boolean status) {
 		outputGZIP = status;
-	}
-	
-	public boolean getOutputJTV() {
-		return outputJTV;
-	}
-	public void setJTVstatus(boolean status) {
-		outputJTV = status;
 	}
 	
 	public File getBlacklist() {
@@ -139,35 +114,6 @@ public class PileupParameters {
 	}
 	public void setOutputCompositeStatus(boolean out) {
 		outputCOMPOSITE = out;
-	}
-	
-	public ArrayList<Color> getColors() {
-		ArrayList<Color> ALL = new ArrayList<Color>();
-		if(Sense != null) ALL.add(Sense);
-		if(Anti != null) ALL.add(Anti);
-		if(Combined != null) ALL.add(Combined);
-		return ALL;
-	}
-	
-	public Color getSenseColor() {
-		return Sense;
-	}
-	public void setSenseColor(Color s) {
-		Sense = s;
-	}
-	
-	public Color getAntiColor() {
-		return Anti;
-	}
-	public void setAntiColor(Color a) {
-		Anti = a;
-	}
-	
-	public Color getCombinedColor() {
-		return Combined;
-	}
-	public void setCombinedColor(Color c) {
-		Combined = c;
 	}
 	
 	public double getRatio() {
@@ -303,19 +249,12 @@ public class PileupParameters {
 		if(MIN_INSERT!=-9999){ cliCommand += " -n " + MIN_INSERT; }
 		//Add MAX_INSERT
 		if(MAX_INSERT!=-9999){ cliCommand += " -x " + MAX_INSERT; }
-		
-		//Add outputJTV
-		if(outputJTV==true){ cliCommand += " -j"; }
+
 		//Add outputGZIP
 		if(outputGZIP==true){ cliCommand += " -z"; }
 		
 		//Add CPU
 		if(CPU!=1){ cliCommand += " --cpu " + CPU; }
-		
-// 		System.out.println( "private File OUTPUT = " + OUTPUT );
-// 		System.out.println( "private String COMPOSITE = " + COMPOSITE );
-// 		System.out.println( "private int OUTTYPE = " + OUTTYPE );
-// 		System.out.println( "private boolean outputCOMPOSITE = " + outputCOMPOSITE );
 		
 		return(cliCommand);
 	}

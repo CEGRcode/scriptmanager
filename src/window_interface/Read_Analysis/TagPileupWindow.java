@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -98,7 +99,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JCheckBox chckbxRequireProperPe;
 	private JCheckBox chckbxFilterByMin;
 	private JCheckBox chckbxFilterByMax;
-	private JCheckBox chckbxOutputJtv;
 	private JCheckBox chckbxOutputGzip;
 
 	JProgressBar progressBar;
@@ -138,13 +138,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					setProgress(0);
 					// Load up parameters for the pileup into single object
 					PileupParameters param = new PileupParameters();
+					ArrayList<Color> colors = new ArrayList<Color>();
 					if (rdbtnSeperate.isSelected()) {
 						param.setStrand(0);
-						param.setSenseColor(btnSenseColor.getForeground());
-						param.setAntiColor(btnAntiColor.getForeground());
+						colors.add(btnSenseColor.getForeground());
+						colors.add(btnAntiColor.getForeground());
 					} else if (rdbtnComb.isSelected()) {
 						param.setStrand(1);
-						param.setCombinedColor(btnCombinedColor.getForeground());
+						colors.add(btnCombinedColor.getForeground());
 					}
 
 					if (rdbtnRead1.isSelected()) { param.setRead(0); }
@@ -162,8 +163,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					else if (rdbtnSlidingWindow.isSelected()) { param.setTrans(1); }
 					else if (rdbtnGaussianSmooth.isSelected()) { param.setTrans(2); }
 
-					if (!chckbxOutputData.isSelected()) { param.setOutputType(0); }
-
 					if(!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {	param.setOutputDirectory(null); }
 					else { param.setOutputDirectory(OUT_DIR); }
 
@@ -178,12 +177,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 					if (chckbxOutputData.isSelected()) {
 						if (rdbtnTabdelimited.isSelected()) { param.setOutputType(1); }
-						else if (rdbtnCdt.isSelected()) {
-							param.setOutputType(2);
-							if (chckbxOutputJtv.isSelected()) { param.setJTVstatus(true); }
-						}
+						else if (rdbtnCdt.isSelected()) { param.setOutputType(2); }
 						if (chckbxOutputGzip.isSelected()) { param.setGZIPstatus(true); }
-					}
+					} else { param.setOutputType(0); }
 
 					if (chckbxTagStandard.isSelected()) {
 						if (BLACKLIST != null) { param.setBlacklist(BLACKLIST); }
@@ -200,7 +196,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					param.setStdNum(Integer.parseInt(txtNumStd.getText()));
 					param.setCPU(Integer.parseInt(txtCPU.getText()));
 
-					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param);
+					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
 
 					pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -719,14 +715,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		output.add(rdbtnCdt);
 		rdbtnCdt.setSelected(true);
 
-		chckbxOutputJtv = new JCheckBox("Output JTV");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputJtv, 0, SpringLayout.NORTH, rdbtnCdt);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputJtv, 10, SpringLayout.EAST, rdbtnCdt);
-		contentPane.add(chckbxOutputJtv);
-
 		chckbxOutputGzip = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputGzip, 0, SpringLayout.NORTH, chckbxOutputData);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputGzip, 10, SpringLayout.EAST, chckbxOutputJtv);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputGzip, 0, SpringLayout.NORTH, rdbtnCdt);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputGzip, 10, SpringLayout.EAST, rdbtnCdt);
 		contentPane.add(chckbxOutputGzip);
 
 		lblOutputMatrixFormat = new JLabel("Matrix File Format:");
@@ -859,39 +850,15 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					lblOutputMatrixFormat.setEnabled(true);
 					rdbtnTabdelimited.setEnabled(true);
 					rdbtnCdt.setEnabled(true);
-					if (rdbtnCdt.isSelected()) {
-						chckbxOutputJtv.setEnabled(true);
-					}
 					chckbxOutputGzip.setEnabled(true);
 				} else {
 					lblOutputMatrixFormat.setEnabled(false);
 					rdbtnTabdelimited.setEnabled(false);
 					rdbtnCdt.setEnabled(false);
-					chckbxOutputJtv.setEnabled(false);
 					chckbxOutputGzip.setEnabled(false);
 					if (!chckbxOutputCompositeData.isSelected()) {
 						activateOutput(false);
 					}
-				}
-			}
-		});
-
-		rdbtnTabdelimited.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (rdbtnTabdelimited.isSelected()) {
-					chckbxOutputJtv.setEnabled(false);
-				} else {
-					chckbxOutputJtv.setEnabled(true);
-				}
-			}
-		});
-
-		rdbtnCdt.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (rdbtnCdt.isSelected()) {
-					chckbxOutputJtv.setEnabled(true);
-				} else {
-					chckbxOutputJtv.setEnabled(false);
 				}
 			}
 		});
@@ -1050,11 +1017,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				lblOutputMatrixFormat.setEnabled(false);
 				rdbtnTabdelimited.setEnabled(false);
 				rdbtnCdt.setEnabled(false);
-				chckbxOutputJtv.setEnabled(false);
 				chckbxOutputGzip.setEnabled(false);
-			}
-			if (rdbtnTabdelimited.isSelected()) {
-				chckbxOutputJtv.setEnabled(false);
 			}
 			if (!chckbxOutputCompositeData.isSelected()) {
 				txtCompositeName.setEnabled(false);
