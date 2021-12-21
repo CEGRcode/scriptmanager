@@ -35,6 +35,7 @@ import cli.Figure_Generation.FourColorSequenceCLI;
 import cli.Figure_Generation.TwoColorHeatMapCLI;
 import cli.Figure_Generation.ThreeColorHeatMapCLI;
 import cli.Figure_Generation.MergeHeatMapCLI;
+import cli.Figure_Generation.LabelHeatMapCLI;
 
 import cli.File_Utilities.MD5ChecksumCLI;
 import cli.File_Utilities.ConvertBEDChrNamesCLI;
@@ -165,7 +166,8 @@ class Coordinate_ManipulationCLI extends SubcommandCLI {}
 			FourColorSequenceCLI.class,
 			TwoColorHeatMapCLI.class,
 			ThreeColorHeatMapCLI.class,
-			MergeHeatMapCLI.class
+			MergeHeatMapCLI.class,
+			LabelHeatMapCLI.class
 		},
 		description = "Includes tools like FourColorSequenceCLI, HeatMapCLI, and MergeHeatMapCLI.")
 class Figure_GenerationCLI extends SubcommandCLI {}

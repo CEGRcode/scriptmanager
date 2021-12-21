@@ -65,4 +65,6 @@ public class ToolDescriptions {
 	public static final String merge_heatmap_description = "Merge Sense and Antisense png heatmaps.";
 	public static final String four_color_description = "Generate 4Color sequence plot given FASTA file and user-defined RGB colors.";
 	public static final String composite_description = "Generate a Composite Plot PNG from composite data like the output in TagPileup";
+	public static final String label_heatmap_description = "Create an SVG label for heatmap inputs";
+
 }
