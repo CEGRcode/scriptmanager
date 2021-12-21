@@ -120,7 +120,7 @@ public class TwoColorHeatMap {
 		BufferedImage im = new BufferedImage(pixwidth, pixheight, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = im.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(new Color(255, 255, 255));
+		g2.setColor(new Color(255, 255, 255, 0));
 		g2.fillRect(0, 0, pixwidth, pixheight);
 
 		int count = 0;
@@ -134,7 +134,8 @@ public class TwoColorHeatMap {
 					int red = (int) (MAXCOLOR.getRed() * sVal + MINCOLOR.getRed() * (1 - sVal));
 					int green = (int) (MAXCOLOR.getGreen() * sVal + MINCOLOR.getGreen() * (1 - sVal));
 					int blue = (int) (MAXCOLOR.getBlue() * sVal + MINCOLOR.getBlue() * (1 - sVal));
-					g.setColor(new Color(red, green, blue));
+					int alpha = (int) (MAXCOLOR.getAlpha() * sVal + MINCOLOR.getAlpha() * (1 - sVal));
+					g.setColor(new Color(red, green, blue, alpha));
 				} else {
 					g.setColor(Color.WHITE);
 				}
