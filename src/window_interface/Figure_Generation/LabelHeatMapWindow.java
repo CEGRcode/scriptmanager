@@ -75,27 +75,7 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 			setProgress(0);
 
 			try {
-//				if (txtFiles.size() < 1) {
-//					JOptionPane.showMessageDialog(null, "No files loaded!!!");
-//				} else if (Integer.parseInt(txtRow.getText()) < 0) {
-//					JOptionPane.showMessageDialog(null,
-//							"Invalid Starting Row!!! Must be greater than 0, 0-based indexing");
-//				} else if (Integer.parseInt(txtCol.getText()) < 0) {
-//					JOptionPane.showMessageDialog(null,
-//							"Invalid Starting Column!!! Must be greater than 0, 0-based indexing");
-//				} else if (Integer.parseInt(txtHeight.getText()) < 1) {
-//					JOptionPane.showMessageDialog(null, "Invalid Image Height!!! Must be greater than 0");
-//				} else if (Integer.parseInt(txtWidth.getText()) < 1) {
-//					JOptionPane.showMessageDialog(null, "Invalid Image Width!!! Must be greater than 0");
-//				} else if (rdbtnAbsoluteValue.isSelected() && Double.parseDouble(txtAbsolute.getText()) <= 0) {
-//					JOptionPane.showMessageDialog(null,
-//							"Invalid absolute contrast threshold value entered!!! Must be larger than 0");
-//				} else if (rdbtnPercentileValue.isSelected() && (Double.parseDouble(txtPercent.getText()) <= 0
-//						|| Double.parseDouble(txtPercent.getText()) > 1)) {
-//					JOptionPane.showMessageDialog(null,
-//							"Invalid quantile contrast threshold value entered!!! Must be larger than 0-1");
-//				}
-//
+				// Parse inputs from window fields
 				Color color = btnColor.getForeground();
 				int borderWidth = Integer.parseInt(txtBorderWidth.getText());
 				int xTickHeight = Integer.parseInt(txtXTickHeight.getText());
@@ -105,7 +85,7 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 				String xlabel = txtXLabel.getText();
 				String ylabel = txtYLabel.getText();
 				int fontSize = Integer.parseInt(txtFontSize.getText());
-
+				// Make script object and run
 				LabelHeatMapOutput out_win = new LabelHeatMapOutput(txtFiles, OUT_DIR, color,
 						borderWidth, xTickHeight, fontSize,
 						llabel, mlabel, rlabel,
@@ -118,11 +98,11 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 						setProgress(percentComplete);
 					}
 				});
-
 				out_win.setVisible(true);
 				out_win.run();
 
 				setProgress(100);
+				JOptionPane.showMessageDialog(null, "Generation Complete");
 				return null;
 			}
 			catch (NumberFormatException nfe) {
