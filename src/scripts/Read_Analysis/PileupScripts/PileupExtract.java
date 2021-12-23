@@ -48,11 +48,6 @@ public class PileupExtract implements Runnable{
 		
 		int BEDSTART = (int)read.getStart();
 		int BEDSTOP = (int)read.getStop();
-		//Correct for '-' strand BED coord so they align with '+' strand
-		if(read.getDir().equals("-")) {
-			BEDSTART++;
-			BEDSTOP++;
-		}
 		
 		//Correct Window Size for proper transformations
 		int WINDOW = (BEDSTOP - BEDSTART) + ((param.getBin() / 2) * 2);
