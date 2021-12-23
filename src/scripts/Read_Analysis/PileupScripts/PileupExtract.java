@@ -81,7 +81,7 @@ public class PileupExtract implements Runnable{
 					if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 || (sr.getFirstOfPairFlag() && param.getRead() == 3)) {
 						int FivePrime = sr.getUnclippedStart() - 1;
 						if(sr.getReadNegativeStrandFlag()) { 
-							FivePrime = sr.getUnclippedEnd();
+							FivePrime = sr.getUnclippedEnd() - 1;
 							FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
 						} else { FivePrime += SHIFT; }
 						
@@ -119,7 +119,7 @@ public class PileupExtract implements Runnable{
 			} else if(param.getRead() == 0 || param.getRead() == 2) { //Also outputs if not paired-end since by default it is read-1
 				int FivePrime = sr.getUnclippedStart() - 1;
 				if(sr.getReadNegativeStrandFlag()) { 
-					FivePrime = sr.getUnclippedEnd();
+					FivePrime = sr.getUnclippedEnd() - 1;
 					FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
 				} else { FivePrime += SHIFT; }
 				FivePrime -= (BEDSTART - QUERYWINDOW);
