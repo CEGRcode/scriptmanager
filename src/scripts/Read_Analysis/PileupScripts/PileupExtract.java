@@ -48,11 +48,6 @@ public class PileupExtract implements Runnable{
 		
 		int BEDSTART = (int)read.getStart();
 		int BEDSTOP = (int)read.getStop();
-		//Correct for '-' strand BED coord so they align with '+' strand
-		if(read.getDir().equals("-")) {
-			BEDSTART++;
-			BEDSTOP++;
-		}
 		
 		//Correct Window Size for proper transformations
 		int WINDOW = (BEDSTOP - BEDSTART) + ((param.getBin() / 2) * 2);
@@ -81,24 +76,29 @@ public class PileupExtract implements Runnable{
 					if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 || (sr.getFirstOfPairFlag() && param.getRead() == 3)) {
 						int FivePrime = sr.getUnclippedStart() - 1;
 						if(sr.getReadNegativeStrandFlag()) { 
-							FivePrime = sr.getUnclippedEnd();
+							FivePrime = sr.getUnclippedEnd() - 1;
 							FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
 						} else { FivePrime += SHIFT; }
 						
 						if(sr.getProperPairFlag()) { //prevent cases where non-properly paired Read1 gets to this point
-							int recordStart = sr.getUnclippedStart() - 1;
-							int recordStop = sr.getMateAlignmentStart() + sr.getReadLength() - 1;
-							if(sr.getMateAlignmentStart() - 1 < recordStart) {
-								recordStart = sr.getMateAlignmentStart() - 1;
-								recordStop = sr.getUnclippedEnd();
+							//Find midpoint if read flag == 3
+							if(param.getRead() == 3) {
+								if(sr.getInferredInsertSize()>0) {
+									FivePrime = sr.getAlignmentStart() - 1 + (sr.getInferredInsertSize() / 2);
+								} else if(sr.getInferredInsertSize()<0) {
+									FivePrime = sr.getMateAlignmentStart() - 1 - (sr.getInferredInsertSize() / 2);
+								} else {
+									//Most aligners will flag records with an insert size of zero as improper pairs
+									System.err.println("This statement should never print (insert size=0 when finding midpoint in PileupExtract)");
+									continue;
+								}
+								// Correction to ensure that even insert size mark reoriented for negative strands
+								if(sr.getInferredInsertSize() % 2 == 0 && read.getDir().equals("-") ) { FivePrime--; }
 							}
-							
-							//Find midpoint is read flag == 3
-							if(param.getRead() == 3) { FivePrime = (recordStart + recordStop) / 2; }
-							
-							if(recordStop - recordStart < param.getMinInsert() && param.getMinInsert() != -9999) { FivePrime = -1; } //Test for MIN insert size cutoff here
-							if(recordStop - recordStart > param.getMaxInsert() && param.getMaxInsert() != -9999) { FivePrime = -1; } //Test for MAX insert size cutoff here
-						} else if(param.getRead() == 3) { FivePrime = -1; } // Make sure that midpoint pileup must come from properly paired read
+							// Apply insert size filters
+							if(Math.abs(sr.getInferredInsertSize()) < param.getMinInsert() && param.getMinInsert() != -9999) { continue; } //Test for MIN insert size cutoff here
+							if(Math.abs(sr.getInferredInsertSize()) > param.getMaxInsert() && param.getMaxInsert() != -9999) { continue; } //Test for MAX insert size cutoff here
+						} else if(param.getRead() == 3) { continue; } // Make sure that midpoint pileup must come from properly paired read
 	
 						//Adjust tag start to be within array reference
 						FivePrime -= (BEDSTART - QUERYWINDOW);
@@ -119,7 +119,7 @@ public class PileupExtract implements Runnable{
 			} else if(param.getRead() == 0 || param.getRead() == 2) { //Also outputs if not paired-end since by default it is read-1
 				int FivePrime = sr.getUnclippedStart() - 1;
 				if(sr.getReadNegativeStrandFlag()) { 
-					FivePrime = sr.getUnclippedEnd();
+					FivePrime = sr.getUnclippedEnd() - 1;
 					FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
 				} else { FivePrime += SHIFT; }
 				FivePrime -= (BEDSTART - QUERYWINDOW);
