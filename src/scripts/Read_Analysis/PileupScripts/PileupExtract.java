@@ -35,7 +35,7 @@ public class PileupExtract implements Runnable{
 		subsetsize = length;
 	}
 	
-	public void extract(BEDCoord read) {
+	public void extract(BEDCoord coord) {
 		double[] TAG_S1 = null;
 		double[] TAG_S2 = null;
 		int SHIFT = param.getShift();
@@ -46,8 +46,8 @@ public class PileupExtract implements Runnable{
 		int MIDPOINT_ADJUST = 0;
 		if(param.getRead() == 3) { MIDPOINT_ADJUST = 300; }
 		
-		int BEDSTART = (int)read.getStart();
-		int BEDSTOP = (int)read.getStop();
+		int BEDSTART = (int)coord.getStart();
+		int BEDSTOP = (int)coord.getStop();
 		
 		//Correct Window Size for proper transformations
 		int WINDOW = (BEDSTOP - BEDSTART) + ((param.getBin() / 2) * 2);
@@ -64,7 +64,7 @@ public class PileupExtract implements Runnable{
 		if(STRAND == 0) TAG_S2 = new double[WINDOW];
 		
 		//SAMRecords are 1-based
-		CloseableIterator<SAMRecord> iter = inputSam.query(read.getChrom(), BEDSTART - QUERYWINDOW - SHIFT - MIDPOINT_ADJUST - 1, BEDSTOP + QUERYWINDOW + SHIFT + MIDPOINT_ADJUST + 1, false);
+		CloseableIterator<SAMRecord> iter = inputSam.query(coord.getChrom(), BEDSTART - QUERYWINDOW - SHIFT - MIDPOINT_ADJUST - 1, BEDSTOP + QUERYWINDOW + SHIFT + MIDPOINT_ADJUST + 1, false);
 		while (iter.hasNext()) {
 			//Create the record object 
 		    //SAMRecord is 1-based
@@ -74,26 +74,26 @@ public class PileupExtract implements Runnable{
 				if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
 					//Read 1 and want Read 1, Read 2 and want Read 2, want any read, Read 1 and want midpoint
 					if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 || (sr.getFirstOfPairFlag() && param.getRead() == 3)) {
-						int FivePrime = sr.getUnclippedStart() - 1;
+						int mark = sr.getUnclippedStart() - 1;
 						if(sr.getReadNegativeStrandFlag()) { 
-							FivePrime = sr.getUnclippedEnd() - 1;
-							FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
-						} else { FivePrime += SHIFT; }
+							mark = sr.getUnclippedEnd() - 1;
+							mark -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
+						} else { mark += SHIFT; }
 						
 						if(sr.getProperPairFlag()) { //prevent cases where non-properly paired Read1 gets to this point
 							//Find midpoint if read flag == 3
 							if(param.getRead() == 3) {
 								if(sr.getInferredInsertSize()>0) {
-									FivePrime = sr.getAlignmentStart() - 1 + (sr.getInferredInsertSize() / 2);
+									mark = sr.getAlignmentStart() - 1 + (sr.getInferredInsertSize() / 2);
 								} else if(sr.getInferredInsertSize()<0) {
-									FivePrime = sr.getMateAlignmentStart() - 1 - (sr.getInferredInsertSize() / 2);
+									mark = sr.getMateAlignmentStart() - 1 - (sr.getInferredInsertSize() / 2);
 								} else {
 									//Most aligners will flag records with an insert size of zero as improper pairs
 									System.err.println("This statement should never print (insert size=0 when finding midpoint in PileupExtract)");
 									continue;
 								}
 								// Correction to ensure that even insert size mark reoriented for negative strands
-								if(sr.getInferredInsertSize() % 2 == 0 && read.getDir().equals("-") ) { FivePrime--; }
+								if(sr.getInferredInsertSize() % 2 == 0 && coord.getDir().equals("-") ) { mark--; }
 							}
 							// Apply insert size filters
 							if(Math.abs(sr.getInferredInsertSize()) < param.getMinInsert() && param.getMinInsert() != -9999) { continue; } //Test for MIN insert size cutoff here
@@ -101,45 +101,45 @@ public class PileupExtract implements Runnable{
 						} else if(param.getRead() == 3) { continue; } // Make sure that midpoint pileup must come from properly paired read
 	
 						//Adjust tag start to be within array reference
-						FivePrime -= (BEDSTART - QUERYWINDOW);
+						mark -= (BEDSTART - QUERYWINDOW);
 						
 	                    //Increment Final Array keeping track of pileup
-						if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
+						if(mark >= 0 && mark < TAG_S1.length) {
 							if(STRAND == 0) {
-								if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S2[FivePrime] += 1; }
-					        	else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S2[FivePrime] += 1; }
-					        	else if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S1[FivePrime] += 1; }
-					        	else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S1[FivePrime] += 1;}
+								if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S2[mark] += 1; }
+					        	else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S2[mark] += 1; }
+					        	else if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S1[mark] += 1; }
+					        	else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S1[mark] += 1;}
 							} else {
-								TAG_S1[FivePrime] += 1;
+								TAG_S1[mark] += 1;
 							}
 						}
 					}
 				}
 			} else if(param.getRead() == 0 || param.getRead() == 2) { //Also outputs if not paired-end since by default it is read-1
-				int FivePrime = sr.getUnclippedStart() - 1;
+				int mark = sr.getUnclippedStart() - 1;
 				if(sr.getReadNegativeStrandFlag()) { 
-					FivePrime = sr.getUnclippedEnd() - 1;
-					FivePrime -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
-				} else { FivePrime += SHIFT; }
-				FivePrime -= (BEDSTART - QUERYWINDOW);
+					mark = sr.getUnclippedEnd() - 1;
+					mark -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
+				} else { mark += SHIFT; }
+				mark -= (BEDSTART - QUERYWINDOW);
 				
 				//Increment Final Array keeping track of pileup
-				if(FivePrime >= 0 && FivePrime < TAG_S1.length) {
+				if(mark >= 0 && mark < TAG_S1.length) {
 					if(STRAND == 0) {
-						if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S2[FivePrime] += 1; }
-						else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S2[FivePrime] += 1; }
-						else if(!sr.getReadNegativeStrandFlag() && read.getDir().equals("+")) { TAG_S1[FivePrime] += 1; }
-						else if(sr.getReadNegativeStrandFlag() && read.getDir().equals("-")) { TAG_S1[FivePrime] += 1;}
+						if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S2[mark] += 1; }
+						else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S2[mark] += 1; }
+						else if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S1[mark] += 1; }
+						else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S1[mark] += 1;}
 					} else {
-						TAG_S1[FivePrime] += 1;
+						TAG_S1[mark] += 1;
 					}
 				}
 			}
 		}
 		iter.close();
 		
-		if(read.getDir().equals("-")) {
+		if(coord.getDir().equals("-")) {
 			TAG_S1 = ArrayUtilities.reverseArray(TAG_S1);
 			TAG_S2 = ArrayUtilities.reverseArray(TAG_S2);
 		}
@@ -176,7 +176,7 @@ public class PileupExtract implements Runnable{
 			}
 		}
 		
-		read.setFstrand(finalF);
-		read.setRstrand(finalR);
+		coord.setFstrand(finalF);
+		coord.setRstrand(finalR);
 	}
 }
