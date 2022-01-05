@@ -58,6 +58,18 @@ public class TagPileupCLI implements Callable<Integer> {
 		private boolean tab = false;
 	}
 	
+	//Aspect
+	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Aspect of Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
+	AspectType aspectType = new AspectType();
+	static class AspectType {
+		@Option(names = {"-5", "--five-prime"}, description = "pileup of 5' end of read(default)")
+		boolean fiveprime = false;
+		@Option(names = {"-3", "--three-prime"}, description = "pileup of 3' end of read")
+		boolean threeprime = false;
+		@Option(names = {"-m", "--midpoint"}, description = "pileup fragment midpoints (require PE, combined)")
+		boolean midpoint = false;
+	}
+
 	//Read
 	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
 	ReadType readType = new ReadType();
@@ -68,9 +80,6 @@ public class TagPileupCLI implements Callable<Integer> {
 		boolean read2 = false;
 		@Option(names = {"-a", "--all-reads"}, description = "pileup all reads")
 		boolean allreads = false;
-		@Option(names = {"-m", "--midpoint"}, description = "pile midpoint (require PE and combined, -p --combined)")
-		boolean midpoint = false;
-		int finalRead = 0;
 	}
 	
 	//Strand
@@ -148,11 +157,15 @@ public class TagPileupCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
+		// Set ASPECT
+		if(aspectType.fiveprime) { p.setAspect(0); }
+		else if(aspectType.threeprime) { p.setAspect(1); }
+		else if(aspectType.midpoint) { p.setAspect(2); }
+
 		// Set READ
 		if(readType.read1){ p.setRead(0); }
 		else if(readType.read2){ p.setRead(1); }
 		else if(readType.allreads){ p.setRead(2); }
-		else if(readType.midpoint){ p.setRead(3); }
 		
 		//check input extensions
 		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
@@ -195,7 +208,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		
 		//set require PE for appropriate flags
 		p.setPErequire(filterOptions.requirePE);
-		if( filterOptions.MIN_INSERT!=-9999 || filterOptions.MAX_INSERT!=-9999 || p.getRead() == 3) { p.setPErequire(true); }
+		if( filterOptions.MIN_INSERT!=-9999 || filterOptions.MAX_INSERT!=-9999 || p.getAspect()==2) { p.setPErequire(true); }
 		
 		//validate shift, binSize, and CPUs
 		if(calcOptions.shift<0){  r += "(!)Invalid shift! Must be non-negative, shift=" + calcOptions.shift + "\n"; }
@@ -243,7 +256,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		
 		//Set STRAND
 		p.setStrand(0);
-		if(combStatus || p.getRead() == 3) { p.setStrand(1); }
+		if(combStatus || p.getAspect() == 2) { p.setStrand(1); }
 		
 		//Set smooth type and parameters
 		if(smoothType.noSmooth){			//default behavior

@@ -9,8 +9,11 @@ public class PileupParameters {
 	//Composite values file if output
 	private PrintStream COMPOSITE = null;
 	
+	//Read aspect:
+	//  0=5prime end, 1=3prime end, 2=midpoint
+	private int ASPECT = 0;
 	//Read type:
-	//  0=read1, 1=read2, 2=allreads, 3=midpoint
+	//  0=read1, 1=read2, 2=allreads
 	private int READ = 0;
 	
 	//Strand type:
@@ -45,6 +48,7 @@ public class PileupParameters {
 		System.out.println( "private File OUTPUT = " + OUTPUT );
 		System.out.println( "private String COMPOSITE = " + COMPOSITE );
 		System.out.println( "private int READ = " + READ );
+		System.out.println( "private int ASPECT = " + ASPECT );
 		System.out.println( "private int STRAND = " + STRAND );
 		System.out.println( "private int TRANS = " + TRANS );
 		System.out.println( "private int SHIFT = " + SHIFT );
@@ -142,6 +146,13 @@ public class PileupParameters {
 	}
 	public void setOutputDirectory(File oUTPUT) {
 		OUTPUT = oUTPUT;
+	}
+
+	public int getAspect() {
+		return ASPECT;
+	}
+	public void setAspect(int aSPECT) {
+		ASPECT = aSPECT;
 	}
 
 	public int getRead() {

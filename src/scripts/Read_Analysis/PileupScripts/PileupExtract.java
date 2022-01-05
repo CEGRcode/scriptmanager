@@ -44,7 +44,7 @@ public class PileupExtract implements Runnable{
 		// Ugly hack to account for the fact that read 1 5' end may be outside the window of interest even though read 2 and the midpoint may be in range
 		// TODO FIX this into something more logical, probably check for read2 in region independently?
 		int MIDPOINT_ADJUST = 0;
-		if(param.getRead() == 3) { MIDPOINT_ADJUST = 300; }
+		if(param.getAspect() == 2) { MIDPOINT_ADJUST = 300; }
 		
 		int BEDSTART = (int)coord.getStart();
 		int BEDSTOP = (int)coord.getStop();
@@ -63,26 +63,25 @@ public class PileupExtract implements Runnable{
 		TAG_S1 = new double[WINDOW];
 		if(STRAND == 0) TAG_S2 = new double[WINDOW];
 		
-		//SAMRecords are 1-based
+		//SAMRecords are 1-based and inclusive
 		CloseableIterator<SAMRecord> iter = inputSam.query(coord.getChrom(), BEDSTART - QUERYWINDOW - SHIFT - MIDPOINT_ADJUST - 1, BEDSTOP + QUERYWINDOW + SHIFT + MIDPOINT_ADJUST + 1, false);
 		while (iter.hasNext()) {
 			//Create the record object 
-		    //SAMRecord is 1-based
 			SAMRecord sr = iter.next();
 			
 			if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 				if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
-					//Read 1 and want Read 1, Read 2 and want Read 2, want any read, Read 1 and want midpoint
-					if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 || (sr.getFirstOfPairFlag() && param.getRead() == 3)) {
+					// (Aspect=5/3prime and (Read 1 and want Read 1, Read 2 and want Read 2, want any read)) or Read 1 and want midpoint
+					if(((param.getAspect() == 0 || param.getAspect() == 1) && ((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 )) || (sr.getFirstOfPairFlag() && param.getAspect() == 2)) {
+						// Set marker (left side default, right side if positive strand and 5 prime or negative strand and 3 prime
 						int mark = sr.getUnclippedStart() - 1;
-						if(sr.getReadNegativeStrandFlag()) { 
+						if((param.getAspect() == 0 && sr.getReadNegativeStrandFlag()) || (param.getAspect() == 1 && !sr.getReadNegativeStrandFlag())) {
 							mark = sr.getUnclippedEnd() - 1;
-							mark -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
-						} else { mark += SHIFT; }
+						}
 						
 						if(sr.getProperPairFlag()) { //prevent cases where non-properly paired Read1 gets to this point
-							//Find midpoint if read flag == 3
-							if(param.getRead() == 3) {
+							//Find midpoint if aspect flag == 2
+							if(param.getAspect() == 2) {
 								if(sr.getInferredInsertSize()>0) {
 									mark = sr.getAlignmentStart() - 1 + (sr.getInferredInsertSize() / 2);
 								} else if(sr.getInferredInsertSize()<0) {
@@ -98,12 +97,16 @@ public class PileupExtract implements Runnable{
 							// Apply insert size filters
 							if(Math.abs(sr.getInferredInsertSize()) < param.getMinInsert() && param.getMinInsert() != -9999) { continue; } //Test for MIN insert size cutoff here
 							if(Math.abs(sr.getInferredInsertSize()) > param.getMaxInsert() && param.getMaxInsert() != -9999) { continue; } //Test for MAX insert size cutoff here
-						} else if(param.getRead() == 3) { continue; } // Make sure that midpoint pileup must come from properly paired read
+						} else if(param.getAspect() == 2) { continue; }		// Make sure that midpoint pileup must come from properly paired read
 	
+						// Shift as needed
+						if(sr.getReadNegativeStrandFlag()) { mark -= SHIFT; }
+						else { mark += SHIFT; }
+
 						//Adjust tag start to be within array reference
 						mark -= (BEDSTART - QUERYWINDOW);
 						
-	                    //Increment Final Array keeping track of pileup
+						//Increment Final Array keeping track of pileup
 						if(mark >= 0 && mark < TAG_S1.length) {
 							if(STRAND == 0) {
 								if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S2[mark] += 1; }
@@ -116,12 +119,17 @@ public class PileupExtract implements Runnable{
 						}
 					}
 				}
-			} else if(param.getRead() == 0 || param.getRead() == 2) { //Also outputs if not paired-end since by default it is read-1
+			} else if((param.getRead() == 0 || param.getRead() == 2) && (param.getAspect() == 0 || param.getAspect() == 1)) { //Also outputs if not paired-end since by default it is read-1 (and 5' or 3' end)
+				// Set marker (left side default, right side if positive strand and 5 prime or negative strand and 3 prime
 				int mark = sr.getUnclippedStart() - 1;
-				if(sr.getReadNegativeStrandFlag()) { 
+				if((param.getAspect() == 0 && sr.getReadNegativeStrandFlag()) || (param.getAspect() == 1 && !sr.getReadNegativeStrandFlag())) {
 					mark = sr.getUnclippedEnd() - 1;
-					mark -= SHIFT; //SHIFT DATA HERE IF NECCESSARY
-				} else { mark += SHIFT; }
+				}
+				// Shift as needed
+				if(sr.getReadNegativeStrandFlag()) { mark -= SHIFT; }
+				else { mark += SHIFT; }
+
+				//Adjust tag start to be within array reference
 				mark -= (BEDSTART - QUERYWINDOW);
 				
 				//Increment Final Array keeping track of pileup
