@@ -148,15 +148,11 @@ public class TagPileupCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
-		//check ReadType, interpret booleans for int value
-		if(readType.read1){ readType.finalRead = 0; }
-		else if(readType.read2){ readType.finalRead = 1; }
-		else if(readType.allreads){ readType.finalRead = 2; }
-		else if(readType.midpoint){
-			readType.finalRead = 3;
-			filterOptions.requirePE = true;
-			combStatus = true;
-		}
+		// Set READ
+		if(readType.read1){ p.setRead(0); }
+		else if(readType.read2){ p.setRead(1); }
+		else if(readType.allreads){ p.setRead(2); }
+		else if(readType.midpoint){ p.setRead(3); }
 		
 		//check input extensions
 		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
@@ -192,38 +188,14 @@ public class TagPileupCLI implements Callable<Integer> {
 			}
 		}
 		
-		//set default output MATRIX (if output MATRIX not to be output)
-		if(outputOptions.outputMatrix.size()>1){
-			outputOptions.outputMatrix.set(0,null);
-		//set default output MATRIX basename (allow scripts/*/TagPileup to generate ret of filename)
-		} else if(outputOptions.outputMatrix.size()==0){  //generate default basename
-			String readString = "read1";
-			if(readType.finalRead == 1) { readString = "read2"; }
-			else if(readType.finalRead == 2) { readString = "allreads"; }
-			else if(readType.finalRead == 3) { readString = "midpoint"; }
-			outputOptions.outputMatrix.add( 
-				ExtensionFileFilter.stripExtension(new File(bedFile.getName())) + "_" +
-				ExtensionFileFilter.stripExtension(new File(bamFile.getName())) + "_" + readString);
-		//check output filename is valid
-		}else{										//check basename
-			File output = new File(outputOptions.outputMatrix.get(0));
-			//no extension check b/c basename should have no extension
-			//check directory
-			if(output.getParent()==null){
-// 				System.err.println("default to current directory");
-			} else if(!new File(output.getParent()).exists()){
-				r += "(!)Check output.MATRIX directory exists: " + output.getParent() + "\n";
-			}
-		}
-		
 		//validate smooth params
 		if(smoothType.winVals!=-9999 && smoothType.winVals<1){ r += "(!)Invalid Smoothing Window Size. Must be larger than 0 bins, winSize=" + smoothType.winVals + "\n"; }
 		if(smoothType.gaussVals[0]!=-9999 && smoothType.gaussVals[0]<1){ r += "(!)Invalid Standard Deviation Size. Must be larger than 0 bins, stdSize=" + smoothType.gaussVals[0] + "\n"; }
 		if(smoothType.gaussVals[1]!=-9999 && smoothType.gaussVals[1]<1){ r += "(!)Invalid Number of Standard Deviations. Must be larger than 0 standard deviations, stdNum=" + smoothType.gaussVals[1] + "\n"; }
 		
 		//set require PE for appropriate flags
-		if( filterOptions.MIN_INSERT!=-9999 || filterOptions.MAX_INSERT!=-9999){ filterOptions.requirePE = true; }
-		if( readType.midpoint ){ filterOptions.requirePE = true; }
+		p.setPErequire(filterOptions.requirePE);
+		if( filterOptions.MIN_INSERT!=-9999 || filterOptions.MAX_INSERT!=-9999 || p.getRead() == 3) { p.setPErequire(true); }
 		
 		//validate shift, binSize, and CPUs
 		if(calcOptions.shift<0){  r += "(!)Invalid shift! Must be non-negative, shift=" + calcOptions.shift + "\n"; }
@@ -237,38 +209,41 @@ public class TagPileupCLI implements Callable<Integer> {
 			r += "(!)MAX_INSERT must be larger/equal to MIN_INSERT: " + filterOptions.MIN_INSERT + "," + filterOptions.MAX_INSERT + "\n";
 		}
 		
-		// LOAD UP PileupParameters OBJECT!
-				
-		//Set OUTPUT
-		if(outputOptions.outputMatrix.size()<=1){
-			p.setOutputType(2);														//default behavior
-			//check output type
-			if(outputOptions.cdt && outputOptions.tab) {							//both set? write error
-				r += "(!)Cannot flag both --cdt and --tab. Please choose one.";
-			} else if(outputOptions.tab){											//set tab
-				p.setOutputType(1);
-			}
-		}else{
-			outputOptions.outputMatrix.set(0,null);
-			p.setOutputType(0);   //no matrix output
-			if(outputOptions.cdt){
-				p.setOutputType(2);
-				outputOptions.outputMatrix.set(0,null);
-			} else if(outputOptions.tab) {
-				p.setOutputType(1);
-				outputOptions.outputMatrix.set(0,null);
+		// No Matrix Output
+		if(outputOptions.outputMatrix.size() > 1){
+			p.setOutputType(0);
+			if(outputOptions.cdt || outputOptions.tab) { r += "(!)Cannot flag --cdt or --tab without -M."; }
+		// Output Matrix
+		} else {
+			// Determine output type
+			p.setOutputType(2);
+			if(outputOptions.cdt && outputOptions.tab) { r += "(!)Cannot flag both --cdt and --tab. Please choose one."; }
+			else if(outputOptions.tab) { p.setOutputType(1); }
+			// No matrix basename specified
+			if(outputOptions.outputMatrix.size() == 0) {
+				outputOptions.outputMatrix.add(null);
+				if(p.getOutputDirectory() == null) {
+					p.setOutputDirectory(new File(System.getProperty("user.dir")));
+				}
+			// Validate matrix specified basename
+			} else if(outputOptions.outputMatrix.size() == 1) {
+				File output = new File(outputOptions.outputMatrix.get(0));
+				// Check parent directory is non-null and exists
+				if(output.getParent()!=null){
+					if(!new File(output.getParent()).exists()) {
+						r += "(!)Check output.MATRIX directory exists: " + output.getParent() + "\n";
+					}
+				}
 			}
 		}
-		p.setOutputCompositeStatus(true);
 		
 		//Set COMPOSITE file
+		p.setOutputCompositeStatus(true);
 		p.setCompositePrintStream(new PrintStream(outputOptions.outputComposite));
 		
-		//Set READ
-		p.setRead(readType.finalRead);
 		//Set STRAND
 		p.setStrand(0);
-		if(combStatus) { p.setStrand(1); }
+		if(combStatus || p.getRead() == 3) { p.setStrand(1); }
 		
 		//Set smooth type and parameters
 		if(smoothType.noSmooth){			//default behavior
@@ -297,9 +272,6 @@ public class TagPileupCLI implements Callable<Integer> {
 		//Set BLACKLIST & STANDARD
 		p.setBlacklist(filterOptions.blacklistFilter);
 		p.setStandard(calcOptions.tagsEqual);
-		
-		//Set PE requirement
-		p.setPErequire(filterOptions.requirePE);
 		
 		//Set output statuses
 		p.setGZIPstatus(outputOptions.zip);
