@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
+import objects.GradientButton;
 import objects.ToolDescriptions;
 
 import window_interface.BAM_Statistics.PEStatWindow;
@@ -60,6 +62,7 @@ import window_interface.Figure_Generation.LabelHeatMapWindow;
 
 public class ScriptManagerGUI {
 	private JFrame frmScriptManager;
+	Color picardColor = new Color(255,102,0);
 
 	/**
 	 * Initialize the contents of the frame.
@@ -248,7 +251,8 @@ public class ScriptManagerGUI {
 		txtMarkDuplicates.setText(ToolDescriptions.remove_duplicates_description);
 		pnlBamManip.add(txtMarkDuplicates);
 
-		JButton btnMarkDuplicates = new JButton("BAM MarkDuplicates");
+		JButton btnMarkDuplicates = new GradientButton("BAM MarkDuplicates");
+		btnMarkDuplicates.setBackground(picardColor);
 		btnMarkDuplicates.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
