@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -49,7 +49,7 @@ public class Histogram {
 		if(output != null) {
 			int width = 640;
 			int height = 480;
-			ChartUtilities.saveChartAsPNG(output, chart, width, height);
+			ChartUtils.saveChartAsPNG(output, chart, width, height);
 		}
 		return chartPanel;				
 	}

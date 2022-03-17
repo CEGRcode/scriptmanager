@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.data.xy.XYSeries;
 
@@ -100,7 +100,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 		JFreeChart chart = CompositePlot.createChart(xydata, title, COLORS, legend);
 		// Save Composite Plot
 		OutputStream OUT = new FileOutputStream(output);
-		ChartUtilities.writeChartAsPNG(OUT, chart, pixelWidth, pixelHeight);
+		ChartUtils.writeChartAsPNG(OUT, chart, pixelWidth, pixelHeight);
 
 		System.err.println("Image Generated.");
 		return (0);

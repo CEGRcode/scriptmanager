@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
@@ -60,7 +60,7 @@ public class LineChart {
 		if(output != null) {
 			int width = 640;
 			int height = 480;
-			ChartUtilities.saveChartAsPNG(output, chart, width, height);
+			ChartUtils.saveChartAsPNG(output, chart, width, height);
 		}
 		return chartPanel;				
 	}
