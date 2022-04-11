@@ -71,8 +71,8 @@ public class PileupExtract implements Runnable{
 			
 			if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 				if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
-					// (Aspect=5/3prime and (Read 1 and want Read 1, Read 2 and want Read 2, want any read)) or Read 1 and want midpoint
-					if(((param.getAspect() == 0 || param.getAspect() == 1) && ((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 )) || (sr.getFirstOfPairFlag() && param.getAspect() == 2)) {
+					// (Aspect=5/3prime and (Read 1 and want Read 1, Read 2 and want Read 2, want any read)) or (Read 1 and want midpoint) or (Read 1 and want fragment)
+					if(((param.getAspect() == 0 || param.getAspect() == 1) && ((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2 )) || (sr.getFirstOfPairFlag() && param.getAspect() == 2) || (sr.getFirstOfPairFlag() && param.getAspect() == 3)) {
 						// Set marker (left side default, right side if positive strand and 5 prime or negative strand and 3 prime
 						int mark = sr.getUnclippedStart() - 1;
 						if((param.getAspect() == 0 && sr.getReadNegativeStrandFlag()) || (param.getAspect() == 1 && !sr.getReadNegativeStrandFlag())) {
@@ -93,12 +93,20 @@ public class PileupExtract implements Runnable{
 								}
 								// Correction to ensure that even insert size mark reoriented for negative strands
 								if(sr.getInferredInsertSize() % 2 == 0 && coord.getDir().equals("-") ) { mark--; }
+							} else if(param.getAspect() == 3) {
+								if(sr.getInferredInsertSize()>0) { mark = sr.getAlignmentStart() - 1; }
+								else if(sr.getInferredInsertSize()<0) { mark = sr.getMateAlignmentStart() - 1; }
+								else {
+									//Most aligners will flag records with an insert size of zero as improper pairs
+									System.err.println("This statement should never print (insert size=0 when finding fragment start in PileupExtract)");
+									continue;
+								}
 							}
 							// Apply insert size filters
 							if(Math.abs(sr.getInferredInsertSize()) < param.getMinInsert() && param.getMinInsert() != -9999) { continue; } //Test for MIN insert size cutoff here
 							if(Math.abs(sr.getInferredInsertSize()) > param.getMaxInsert() && param.getMaxInsert() != -9999) { continue; } //Test for MAX insert size cutoff here
-						} else if(param.getAspect() == 2) { continue; }		// Make sure that midpoint pileup must come from properly paired read
-	
+						} else if(param.getAspect() < 1) { continue; }		// Make sure that midpoint/fragment pileup must come from properly paired read
+
 						// Shift as needed
 						if(sr.getReadNegativeStrandFlag()) { mark -= SHIFT; }
 						else { mark += SHIFT; }
@@ -107,14 +115,30 @@ public class PileupExtract implements Runnable{
 						mark -= (BEDSTART - QUERYWINDOW);
 						
 						//Increment Final Array keeping track of pileup
-						if(mark >= 0 && mark < TAG_S1.length) {
-							if(STRAND == 0) {
-								if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S2[mark] += 1; }
-					        	else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S2[mark] += 1; }
-					        	else if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S1[mark] += 1; }
-					        	else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S1[mark] += 1;}
-							} else {
-								TAG_S1[mark] += 1;
+						if(param.getAspect() < 3) {
+							if(mark >= 0 && mark < TAG_S1.length) {
+								if(STRAND == 0) {
+									if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S2[mark] += 1; }
+						        	else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S2[mark] += 1; }
+						        	else if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S1[mark] += 1; }
+						        	else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S1[mark] += 1;}
+								} else {
+									TAG_S1[mark] += 1;
+								}
+							}
+						} else {
+							int markStop = Math.min(mark + Math.abs(sr.getInferredInsertSize()), TAG_S1.length);
+							for(int m = mark; m < markStop; m++) {
+								if(m >= 0 && m < TAG_S1.length) {
+									if(STRAND == 0) {
+										if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S2[m] += 1; }
+										else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S2[m] += 1; }
+										else if(!sr.getReadNegativeStrandFlag() && coord.getDir().equals("+")) { TAG_S1[m] += 1; }
+										else if(sr.getReadNegativeStrandFlag() && coord.getDir().equals("-")) { TAG_S1[m] += 1;}
+									} else {
+										TAG_S1[m] += 1;
+									}
+								}
 							}
 						}
 					}

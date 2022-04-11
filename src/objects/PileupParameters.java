@@ -10,7 +10,7 @@ public class PileupParameters {
 	private PrintStream COMPOSITE = null;
 	
 	//Read aspect:
-	//  0=5prime end, 1=3prime end, 2=midpoint
+	//  0=5prime end, 1=3prime end, 2=midpoint, 3=fullfragment
 	private int ASPECT = 0;
 	//Read type:
 	//  0=read1, 1=read2, 2=allreads

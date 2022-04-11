@@ -66,6 +66,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JRadioButton rdbtnFivePrime;
 	private JRadioButton rdbtnThreePrime;
 	private JRadioButton rdbtnMidpoint;
+	private JRadioButton rdbtnFragment;
 	private JRadioButton rdbtnRead1;
 	private JRadioButton rdbtnRead2;
 	private JRadioButton rdbtnAllReads;
@@ -153,6 +154,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					if (rdbtnFivePrime.isSelected()) { param.setAspect(0); }
 					else if (rdbtnThreePrime.isSelected()) { param.setAspect(1); }
 					else if (rdbtnMidpoint.isSelected()) { param.setAspect(2); }
+					else if (rdbtnFragment.isSelected()) { param.setAspect(3); }
 
 					if (rdbtnRead1.isSelected()) { param.setRead(0); }
 					else if (rdbtnRead2.isSelected()) { param.setRead(1); }
@@ -344,10 +346,17 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnMidpoint, 10, SpringLayout.EAST, rdbtnThreePrime);
 		contentPane.add(rdbtnMidpoint);
 
+		rdbtnFragment = new JRadioButton("Full Fragment (Require PE)");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnFragment, 0, SpringLayout.NORTH, rdbtnFivePrime);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnFragment, 10, SpringLayout.EAST, rdbtnMidpoint);
+		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnFragment, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(rdbtnFragment);
+
 		ButtonGroup AspectRead = new ButtonGroup();
 		AspectRead.add(rdbtnFivePrime);
 		AspectRead.add(rdbtnThreePrime);
 		AspectRead.add(rdbtnMidpoint);
+		AspectRead.add(rdbtnFragment);
 		rdbtnFivePrime.setSelected(true);
 		
 		JLabel lblOutputRead = new JLabel("Select Read to Output:");
@@ -798,6 +807,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnFivePrime.isSelected()) {
 					allowReadChoice(true);
+					allowStrandChoice(true);
 				}
 			}
 		});
@@ -806,6 +816,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnThreePrime.isSelected()) {
 					allowReadChoice(true);
+					allowStrandChoice(true);
 				}
 			}
 		});
@@ -814,7 +825,21 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnMidpoint.isSelected()) {
 					allowReadChoice(false);
+					allowStrandChoice(false);
 					rdbtnComb.setSelected(true);
+					chckbxRequireProperPe.setSelected(true);
+					chckbxRequireProperPe.setEnabled(false);
+				} else if (!chckbxFilterByMin.isSelected() && !chckbxFilterByMax.isSelected()) {
+					chckbxRequireProperPe.setEnabled(true);
+				}
+			}
+		});
+
+		rdbtnFragment.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (rdbtnFragment.isSelected()) {
+					allowReadChoice(false);
+					allowStrandChoice(false);
 					chckbxRequireProperPe.setSelected(true);
 					chckbxRequireProperPe.setEnabled(false);
 				} else if (!chckbxFilterByMin.isSelected() && !chckbxFilterByMax.isSelected()) {
@@ -948,11 +973,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		btnPileup.addActionListener(this);
 	}
 
-	public void allowReadChoice(boolean activate) {
-		// Allow Strand choice
+	public void allowStrandChoice(boolean activate) {
 		rdbtnComb.setEnabled(activate);
 		rdbtnSeperate.setEnabled(activate);
-		// Allow Read type choice
+	}
+	
+	public void allowReadChoice(boolean activate) {
 		rdbtnRead1.setEnabled(activate);
 		rdbtnRead2.setEnabled(activate);
 		rdbtnAllReads.setEnabled(activate);

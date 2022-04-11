@@ -338,6 +338,8 @@ public class TagPileup {
 			read = "3readc";
 		} else if (PARAM.getAspect() == 2) {
 			read = "midpoint";
+		} else if (PARAM.getAspect() == 3) {
+			read = "fragment";
 		}
 
 		return (generateFileName(bedname[0] + "_" + bamname[0] + "_" + read, strandnum));
