@@ -840,6 +840,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				if (rdbtnFragment.isSelected()) {
 					allowReadChoice(false);
 					allowStrandChoice(false);
+					rdbtnComb.setSelected(true);
 					chckbxRequireProperPe.setSelected(true);
 					chckbxRequireProperPe.setEnabled(false);
 				} else if (!chckbxFilterByMin.isSelected() && !chckbxFilterByMax.isSelected()) {
