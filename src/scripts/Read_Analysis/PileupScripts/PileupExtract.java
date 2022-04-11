@@ -105,7 +105,7 @@ public class PileupExtract implements Runnable{
 							// Apply insert size filters
 							if(Math.abs(sr.getInferredInsertSize()) < param.getMinInsert() && param.getMinInsert() != -9999) { continue; } //Test for MIN insert size cutoff here
 							if(Math.abs(sr.getInferredInsertSize()) > param.getMaxInsert() && param.getMaxInsert() != -9999) { continue; } //Test for MAX insert size cutoff here
-						} else if(param.getAspect() < 1) { continue; }		// Make sure that midpoint/fragment pileup must come from properly paired read
+						} else if(param.getAspect() == 2 || param.getAspect() == 3) { continue; }		// Make sure that midpoint and fragment pileup must come from properly paired read
 
 						// Shift as needed
 						if(sr.getReadNegativeStrandFlag()) { mark -= SHIFT; }
