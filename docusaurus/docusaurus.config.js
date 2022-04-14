@@ -1,11 +1,12 @@
 module.exports = {
   title: 'ScriptManager',
   tagline: 'Toolbox for analyzing your genomic datasets',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  url: 'https://github.io/CEGRcode',
+  baseUrl: '/scriptmanager/',
   onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //ico file was here
-  organizationName: 'Pugh Lab', // Usually your GitHub org/user name.
+  organizationName: 'CEGRcode', // Usually your GitHub org/user name.
   projectName: 'scriptmanager', // Usually your repo name.
   themeConfig: {
     navbar: {
