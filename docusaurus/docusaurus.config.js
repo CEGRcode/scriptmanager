@@ -126,7 +126,7 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/owlang/scriptmanager',
+              href: 'https://github.com/CEGRcode/scriptmanager',
             },
           ],
         },
