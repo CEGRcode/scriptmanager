@@ -65,8 +65,8 @@ The lab standard for strand colors is ‘Sense’ == blue and ‘Anti’ == red
 
 [color-hex-url]:http://www.javascripter.net/faq/rgbtohex.htm
 
-[cdt-format]:file-format.md
-[png-format]:file-format.md
+[cdt-format]:file-formats.md
+[png-format]:file-formats.md
 
 [default-nucleosome]:../static/md-img/default_nucleosome.png
 [blue-nucleosome]:../static/md-img/blue_nucleosome.png

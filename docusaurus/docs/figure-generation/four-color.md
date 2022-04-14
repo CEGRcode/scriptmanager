@@ -40,5 +40,5 @@ Expects a [FASTA][fasta-format] formatted file with many sequences to stack up w
 
 [fasta-extract]:sequence-analysis/fasta-extract.md
 
-[fasta-format]:file-format.md
-[png-format]:file-format.md
+[fasta-format]:file-formats.md
+[png-format]:file-formats.md

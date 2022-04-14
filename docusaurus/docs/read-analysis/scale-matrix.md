@@ -42,4 +42,4 @@ This tool takes a single matrix file for input.
 | `-r, --start-row` |  |
 | `-l, --start-col` |  |
 
-[file-format]:file-format.md
+[file-format]:file-formats.md

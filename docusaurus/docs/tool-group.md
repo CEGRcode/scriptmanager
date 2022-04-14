@@ -122,7 +122,7 @@ _Sequence Analysis tools description_
 | [`dna-shape-bed`][dna-shape-bed] | [BED][bed-format] + [FASTA(genome)][fasta-format] | [CDT][cdt-format] | Calculate intrinsic DNA shape parameters given BED file and Genome FASTA file. Based on Roh's lab [DNAshape server data][Roh_paper]. |
 | [`dna-shape-fasta`][dna-shape-fasta] | [FASTA][fasta-format] | [CDT][cdt-format] | Calculate intrinsic DNA shape parameters given input FASTA files. Based on Roh's lab [DNAshape server data][Roh_paper]. |
 
-[Roh_paper]:www.pubmed.gov
+[Roh_paper]:https://pubmed.ncbi.nlm.nih.gov/23703209
 
 
 [bam-to-bedgraph]:bam-format-converter/bam-to-bedgraph.md
@@ -171,7 +171,6 @@ _Sequence Analysis tools description_
 [fasta-extract]:sequence-analysis/fasta-extract.md
 [randomize-fasta]:sequence-analysis/randomize-fasta.md
 [search-motif]:sequence-analysis/search-motif.md
-
 
 [bai-format]:file-formats.md
 [bam-format]:file-formats.md

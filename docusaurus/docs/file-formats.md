@@ -246,14 +246,14 @@ Related Tools:
 [md5checksum]:file-utilities/md5checksum.md
 [merge-bam]:bam-manipulation/merge-bam.md
 [merge-heatmap]:figure-generation/merge-heatmap.md
-[pe-stat]:bam-statistics/pe-stats.md
+[pe-stat]:bam-statistics/pe-stat.md
 [peak-align-ref]:peak-analysis/peak-align-ref.md
 [rand-coord]:peak-analysis/rand-coord.md
 [randomize-fasta]:sequence-analysis/randomize-fasta.md
 [remove-duplicates]:bam-manipulation/remove-duplicates.md
 [scale-matrix]:read-analysis/scale-matrix.md
 [scaling-factor]:read-analysis/scaling-factor.md
-[se-stat]:bam-statistics/se-stats.md
+[se-stat]:bam-statistics/se-stat.md
 [search-motif]:sequence-analysis/search-motif.md
 [signal-dup]:peak-analysis/signal-dup.md
 [sort-bam]:bam-manipulation/sort-bam.md

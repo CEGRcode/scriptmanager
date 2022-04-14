@@ -25,5 +25,5 @@ Expects two [PNG][png-format] like the output from the [heatmap tool][heatmap]
 | ------ | ----------- |
 | `-o, --output=<output>` | specify output filename, please use PNG extension (`<senseFile>_merged.png` appended to the name in working directory of ScriptManager |
 
-[cdt-format]:file-format.md
-[png-format]:file-format.md
+[cdt-format]:file-formats.md
+[png-format]:file-formats.md

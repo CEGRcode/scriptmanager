@@ -106,4 +106,4 @@ The help documentation is very useful so at any point in constructing your comma
 
 [github-repo]:https://github.com/CEGRcode/scriptmanager
 
-[cli]:commandline.md
+[cli]:command-line.md

@@ -49,4 +49,4 @@ This tool takes a single BAM file for input. As with other tools, this tool requ
 
 
 [Liang_2012]:https://pubmed.ncbi.nlm.nih.gov/22883957/
-[file-format]:file-format.md
+[file-format]:file-formats.md
