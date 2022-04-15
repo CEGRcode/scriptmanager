@@ -1,8 +1,8 @@
 module.exports = {
   title: 'ScriptManager',
   tagline: 'Toolbox for analyzing your genomic datasets',
-  url: 'https://github.io/CEGRcode',
-  baseUrl: '/',
+  url: 'https://github.com/CEGRcode',
+  baseUrl: '/scriptmanager/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //ico file was here
