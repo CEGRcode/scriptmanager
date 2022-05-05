@@ -2,7 +2,7 @@ module.exports = {
   someSidebar: {
     ScriptManager: ['quick-start','command-line','tool-group','threebasicplots-exo',],
     References: ['file-formats','tool-index',],
-    Docusaurus: ['doc1', 'doc2', 'doc3', 'mdx',],
+    "Developer Notes": ['DeveloperDocumentation/general-guidelines','DeveloperDocumentation/testing'],
   },
   toolSidebar: {
     "BAM Format Converter": [
