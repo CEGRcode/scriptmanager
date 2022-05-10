@@ -1,0 +1,220 @@
+<tool id="script_manager_heatmap" name="script-manager heatmap plot" version="0.1.0">
+    <description>generates heatmap plot</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <requirements>
+	    <requirement type="package" version="8.0.112">openjdk</requirement>
+	    <requirement type="package" version="1.9">samtools</requirement>
+    </requirements>
+
+
+    <command detect_errors="aggressive">
+        <![CDATA[
+        #set output_dir = $output_heatmap.files_path
+        mkdir -p $output_dir
+        && cp $input_bed 'tmp.bed'
+        && cp $input_bam 'tmp2.bam'
+        && samtools index tmp2.bam tmp2.bam.bai
+        && python $__tool_directory__/sleep.py
+        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar  read-analysis tag-pileup 
+        'tmp.bed'
+        'tmp2.bam'
+        -M pileup
+        #if str($level_options.level) == "advance" and str($level_options.read) == "read_1"  :
+            --read1
+        #end if
+        #if str($level_options.level) == "advance" and str($level_options.read) == "read_2"  :
+            --read2
+        #end if 
+        #if str($level_options.level) == "advance" and str($level_options.read) == "both"  :
+            --all-reads
+        #end if 
+        #if str($level_options.level) == "advance" and str($level_options.read) == "midpoint"  :
+            --midpoint
+        #end if 
+
+
+        #if str($level_options.level) == "advance" : 
+            #if str($level_options.smoothing_options.smoothing) == "window_smooth_value":
+                -W '$level_options.smoothing_options.window_size'
+            #end if
+            #if str($level_options.smoothing_options.smoothing) == "gauss_smooth_value":
+                -G '$level_options.smoothing_options.half_window'
+                   '$level_options.smoothing_options.std'
+            #end if
+            -s '$level_options.shift'
+            -b '$level_options.bin_size_output'
+            --cpu $level_options.cpus
+            -n '$level_options.min_insert'
+            -x '$level_options.max_insert'
+        #end if
+        -o 'composite_data.out'
+        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar figure-generation heatmap 'pileup_sense.cdt'
+        -o 'sense.png'
+        #if str($figure_options.figure) == "define" :
+            -x '$figure_options.pixel_width'
+            -y '$figure_options.pixel_height'
+            -a '$figure_options.abs_threshold'
+            -p '$figure_options.percent_threshold'
+
+             #if str($figure_options.sense_color_options.sense_color) == "sense_tab" :
+                 -c '$figure_options.sense_color_options.sense_tab_value'
+             #end if
+             #if str($figure_options.sense_color_options.sense_color) == "sense_hex" :
+                 -c '$figure_options.sense_color_options.sense_hex_value'
+             #end if
+        #else:
+            -c  '0000FF'
+        #end if
+        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar figure-generation heatmap 'pileup_anti.cdt' 
+        -o  'anti.png'
+        #if str($figure_options.figure) == "define" :
+            -x '$figure_options.pixel_width'
+            -y '$figure_options.pixel_height'
+            -a '$figure_options.abs_threshold'
+            -p '$figure_options.percent_threshold'
+             
+             #if str($figure_options.antisense_color_options.antisense_color) == "antisense_tab" :
+                 -c '$figure_options.antisense_color_options.antisense_tab_value'
+             #end if
+             #if str($figure_options.antisense_color_options.antisense_color) == "antisense_hex" :
+                 -c '$figure_options.antisense_color_options.antisense_hex_value'
+             #end if
+        #else:
+            -c  'FF0000'
+        #end if
+
+        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar figure-generation merge-heatmap 'sense.png' 'anti.png' -o 'merge.png'
+        && mv merge.png '$output_heatmap'
+        ]]>
+    </command>
+    <inputs>
+        <param name="input_bed" type="data" format="bed"      label="input bed file" />
+        <param name="input_bam" type="data" format ="bam"     label="input bam file" />
+        <conditional name="level_options"> 
+            
+            <param name="level" type="select" label="use bioinformatic default or advance options"> 
+                <option value="default" selected = "True" >default options</option> 
+                <option value="advance" >advance options</option> 
+            </param> 
+
+            <when value="default"> 
+                <!-- do nothing here -->
+            </when> 
+                   
+            <when value="advance">
+                <param name="read" type="select" label="Options for accounting tags in tag-pileup plot"> 
+                    <option value="read_1" selected = "true" >5' end of read 1</option> 
+                    <option value="read_2" >3' end of read 2 </option> 
+                    <option value="both" >both 5' end of read 1 and 3' end of read 2</option> 
+                    <option value="midpoint" >midpoint of 5' end of read 1 and 3' end of read 2 (under development)</option> 
+                </param> 
+
+                <param name="shift"           type="integer" value="0"      label="set a shift in bp" /> 
+                <param name="bin_size_output" type="integer" value="1"      label="bin size for output file" /> 
+                <param name="cpus"            type="integer" value="1"      label="number of cpus to use" /> 
+                <param name="min_insert"      type="integer" value="0"      label="min insert size to consider" /> 
+                <param name="max_insert"      type="integer" value="1000"   label="max insert size to consider" /> 
+                
+                <conditional name="smoothing_options">
+                    <param name="smoothing" type="select" label="Options for smoothing the tags"> 
+                        <option value="no_smooth" selected = "true" >no smoothing</option> 
+                        <option value="window_smooth_value" >window slide smoothing </option> 
+                        <option value="gauss_smooth_value" >gaussian smoothing</option> 
+                    </param> 
+
+                    <when value="no_smooth"> 
+                        <!-- do nothing here -->
+                    </when> 
+                
+                   <when value="window_smooth_value">
+                       <param name="window_size" type="integer" min="1" value="3"      label="window size for smoothing in bp" /> 
+                   </when> 
+
+                   <when value="gauss_smooth_value"> 
+                       <param name="std"         type="integer" min="1" value ="3"     label="standard deviation (std), unit: bp" /> 
+                       <param name="half_window" type="integer" min="1" value ="5"     label="half size of smoothing window, unit: std" /> 
+    </when> 
+
+               </conditional>
+           </when> 
+
+       </conditional>
+
+
+
+        <conditional name="figure_options">
+            <param name="figure" type="select" label="use figure properties default or define figure properties"> 
+                <option value="default" selected = "true" >use deafult figure properties</option> 
+                <option value="define" >define figure properties </option> 
+            </param> 
+
+            <when value="default"> 
+                <!-- do nothing here -->
+            </when> 
+                
+            <when value="define">
+                <param name="pixel_width"       type="integer" value="200"   label="width  of figure in pixel" /> 
+                <param name="pixel_height"      type="integer" value="600"   label="height of figure in pixel" />
+                <param name="abs_threshold"     type="integer" value="10"    label="use the specified value for contrast thresholding" />
+                <param name="percent_threshold" type="float"   value="0.95"  label="use the specified percenttile for contrast thresholding" />
+                  
+                <conditional name="sense_color_options">
+                    <param name="sense_color" type="select" label="select color for sense strand">
+                        <option value="sense_tab" selected="True">select color</option>
+                        <option value="sense_hex" >specify hexadecimal color code</option>
+                    </param>
+                    <when value="sense_tab">
+                        <param name="sense_tab_value" type="select" label="Color">
+                            <expand macro="color_selector_default_blue" />
+                        </param>
+                    </when>
+                    <when value="sense_hex">
+                        <param name="sense_hex_value" type="text" value="0000FF" label="Hexadecimal code" />
+                    </when>
+                </conditional>
+
+                <conditional name="antisense_color_options">
+                    <param name="antisense_color" type="select" label="select color for antisense strand">
+                        <option value="antisense_tab" selected="True">select color</option>
+                        <option value="antisense_hex" >specify hexadecimal color code</option>
+                    </param>
+                    <when value="antisense_tab">
+                        <param name="antisense_tab_value" type="select" label="Color">
+                            <expand macro="color_selector_default_red" />
+                        </param>
+                    </when>
+                    <when value="antisense_hex">
+                        <param name="antisense_hex_value" type="text" value="FF0000" label="Hexadecimal code" />
+                    </when>
+                </conditional>
+
+            </when> 
+                   
+       </conditional> 
+
+
+        
+    </inputs>
+
+    <outputs>
+        <data name="output_heatmap" format="png" label="${tool.name} (out file) on ${on_string}" >
+        </data>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+**What it does**
+
+
+
+
+    </help>
+    <expand macro="citations_two" />
+</tool>
+
+
+
+
+

@@ -1,0 +1,41 @@
+<tool id="bam_statistics_pe_stats" name="bam statistics PE" version="1.0.0">
+    <description> Generates Insert-size Histogram statistics </description>
+    <requirements>
+        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <requirement type="package" version="1.7">samtools</requirement>
+    </requirements>
+    <command>
+	<![CDATA[
+            cp $input tmp.bam
+            && samtools index tmp.bam
+            && java -jar $__tool_directory__/ScriptManager-v0.13-dev.jar bam-statistics pe-stat tmp.bam  -o output_file 2>&1
+            && cp output_file_PE.png $output_png
+            && cp output_file_InsertHistogram.out $output_txt
+        ]]>
+    </command>
+    <inputs>
+        <param name="input" type="data" format="bam" label="input file in bam format"/>
+    </inputs>
+    <outputs>
+        <data name="output_png" type="data" format="png" label=" ${tool.name} on ${on_string} in png format"/>
+        <data name="output_txt" type="data" format="txt" label=" ${tool.name} on ${on_string} in txt format"/>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+**What it does**
+Generates Insert-size Histogram statistics
+
+   </help>
+   <citations>
+	   <citation type="bibtex">
+                @ARTICLE{Audrey_Ali,
+                author = {Audrey Adjekai Sackey, Ali Nematbakhsh},
+                title = {None},
+                year = {None},
+                eprint = {None},
+                url = {https://www.biotech.cornell.edu/core-facilities-brc/facilities/epigenomics-facility}
+		}
+		 </citation>
+   </citations>
+</tool>

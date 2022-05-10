@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<macros>
+    <token name="@WRAPPER_VERSION@">1.0</token>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package">samtools</requirement>
+        </requirements>
+    </xml>
+    <xml name="color_selector_default_red">
+        <option value="FF0000" selected="True">red</option>
+        <option value="00FF00">green</option>
+        <option value="0000FF">blue</option>
+        <option value="FFFF00">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000">black</option>
+    </xml>
+   <xml name="color_selector_default_green">
+        <option value="FF0000" >red</option>
+        <option value="00FF00" selected="True">green</option>
+        <option value="0000FF">blue</option>
+        <option value="FFFF00">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000">black</option>
+    </xml>
+    <xml name="color_selector_default_yellow">
+        <option value="FF0000">red</option>
+        <option value="00FF00">green</option>
+        <option value="0000FF">blue</option>
+        <option value="FFFF00" selected="True" >yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000">black</option>
+    </xml>
+    <xml name="color_selector_default_blue">
+        <option value="FF0000" >red</option>
+        <option value="00FF00">green</option>
+        <option value="0000FF" selected="True">blue</option>
+        <option value="FFFF00">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000">black</option>
+    </xml>
+    <xml name="color_selector_default_gray">
+        <option value="FF0000" >red</option>
+        <option value="00FF00">green</option>
+        <option value="0000FF">blue</option>
+        <option value="FFFF00">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080" selected="True">gray</option>
+        <option value="000000">black</option>
+    </xml>
+
+    <xml name="stdio">
+        <stdio>
+            <exit_code range="1:"/>
+            <exit_code range=":-1"/>
+            <regex match="Error:"/>
+            <regex match="Exception:"/>
+        </stdio>
+    </xml>
+    <xml name="citations">
+        <citations>
+            <citation type="bibtex">
+                @unpublished{None,
+                author = {Greg Von Kuster},
+                title = {None},
+                year = {None},
+                eprint = {None},
+                url = {http://www.huck.psu.edu/content/research/independent-centers-excellence/center-for-eukaryotic-gene-regulation}
+            }</citation>
+        </citations>
+    </xml>    
+    <xml name="citations_two">
+        <citations>
+            <citation type="bibtex">
+                @unpublished{None,
+                author = {Ali Nematbakhsh},
+                title = {None},
+                year = {None},
+                eprint = {None},
+                url = {https://www.cegr.psu.edu/}
+            }</citation>
+        </citations>
+    </xml>
+       <xml name="citations_three">
+        <citations>
+            <citation type="bibtex">
+                @unpublished{None,
+                author = {Ali Nematbakhsh, William Kai Ming Lai},
+                title = {None},
+                year = {None},
+                eprint = {None},
+                url = {http://pughlab.mbg.cornell.edu/}
+            }</citation>
+        </citations>
+    </xml>
+
+</macros>

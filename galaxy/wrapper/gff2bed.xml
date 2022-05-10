@@ -1,0 +1,34 @@
+<tool id="gff2bed" name="Converts file extension from gff to bed" version="2.0.2">
+<description>from one extension to another</description>
+<requirements>
+    <requirement type="package" version="11.0.11">openjdk</requirement>
+</requirements>
+<command>
+<![CDATA[
+
+java -jar $__tool_directory__/ScriptManager-v0.13-dev.jar coordinate-manipulation gff-to-bed '${input}' -o '${output}' 2>&1
+]]>
+</command>
+<inputs>
+     <param name="input" type="data" format="gff" label="input file in gff format"/>
+     </inputs>
+<outputs>
+    <data name="output" type="data" format="bed" label="output file in bed format"/>
+</outputs>
+<help>
+**What it does**
+
+This tool converts a file extension from gff to bed
+
+-----
+**Example**
+
+Input File::
+input_file.gff
+
+Converting to gff returns this::
+output_file.bed
+
+
+    </help>
+</tool>
