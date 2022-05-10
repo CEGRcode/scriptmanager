@@ -1,8 +1,8 @@
 <h1> About scriptmanager-galaxy_tools </h1>
-XML wrappers for Scriptmanager software package
+XML wrappers for Scriptmanager software package. The goal is to wrap all (30+) custom tools in scriptmanager so they can be published to the Galaxy ToolShed.
 
 
-The compiled jar file ScriptManager-v0.13-dev.jar is included in the file directory. 
+The compiled jar file ScriptManager-v0.13-dev.jar should be included in the file directory. 
 
 
 1. `Bam_statistics` tool generates Insert-size Histogram statistics
@@ -65,3 +65,4 @@ sudo git clone https://github.com/CEGRcode/scriptmanager-galaxy_tools.git
 
 
 
+Thank you to Ali Nematbakhsh(https://github.com/AliNemat) and Audrey Sackey(https://github.com/Adjekai) for their initial work in writing these wrappers.
