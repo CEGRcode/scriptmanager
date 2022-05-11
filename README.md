@@ -1,4 +1,7 @@
 # scriptmanager
+
+Expanded Documentation at https://pughlab.mbg.cornell.edu/scriptmanager/
+
 ### GUI pipeline containing useful NGS analysis scripts.
 
 Scripts are generically categorized within semi-descriptive tabs and are designed to be run in parallel with each other and themselves.
