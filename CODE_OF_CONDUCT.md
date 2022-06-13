@@ -1,4 +1,4 @@
-PEGR Project Code of Conduct
+ScriptManager Project Code of Conduct
 ==============================
 
 This code of conduct outlines our expectations for participants within the
