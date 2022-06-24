@@ -22,7 +22,7 @@ module.exports = {
     "Figure Generation": [
           'figure-generation/heatmap', 'figure-generation/merge-heatmap',
           'figure-generation/composite-plot', 'figure-generation/four-color',],
-    "File Utilities": ['file-utilities/md5checksum',],
+    "File Utilities": ['file-utilities/md5checksum','file-utilities/chrname-converter'],
     "Peak Analysis": [
           'peak-analysis/peak-align-ref', 'peak-analysis/filter-bed', 'peak-analysis/tile-genome',
           'peak-analysis/rand-coord',     'peak-analysis/signal-dup',],
