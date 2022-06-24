@@ -1,3 +1,8 @@
+---
+id: code-of-conduct
+title: Community Code of Conduct
+sidebar_label: Code of Conduct
+---
 ScriptManager Project Code of Conduct
 ==============================
 

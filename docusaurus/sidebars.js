@@ -3,6 +3,7 @@ module.exports = {
     ScriptManager: ['quick-start','command-line','tool-group','threebasicplots-exo',],
     References: ['file-formats','tool-index',],
     Contributing: ['Contributing/developer-guidelines','Contributing/testing'],
+    Community: ['Community/code-of-conduct'],
   },
   toolSidebar: {
     "BAM Format Converter": [
