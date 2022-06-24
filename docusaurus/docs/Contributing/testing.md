@@ -5,12 +5,13 @@ sidebar_label: "Testing"
 ---
 
 ## Automatic CLI Testing
-Github Actions
+Github Actions deployment
+
+<TODO\>
 
 
 ## Automatic GUI Testing
-
-
+<TODO\>
 
 ## JFree tools
 
@@ -33,10 +34,10 @@ The following tools need to be explicitly tested when making updates to the JFre
 
 
 ## Picard Tools
-- [ ]
+- [ ] Mark Duplicates
 
 
 
 ## HTSJDK Tools (not Picard)
 
-- [ ]
+- [ ] _

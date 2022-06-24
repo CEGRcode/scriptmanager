@@ -1,5 +1,5 @@
 ---
-id: general-guidelines
+id: developer-guidelines
 title: General Developer Notes
 sidebar_label: General Developer Notes
 ---
@@ -31,7 +31,7 @@ While there are plenty of developer tools available for Java developers, this pa
 We write exclusively in Java or Java-compiled languages without any operating-system specific packages (to maintain portability across machines).
 
 ### SDK Man
-Olivia recommends installing Java using [SDKMan][sdkman] for convenient flipping between Java versions. While ScriptManager is currently developed to the Java 8 SE standard, it is good practice to check for forward and backward compatibility between Java versions. We are constantly monitoring new Java releases and by developing according to a standard that is consistent across Java versions makes our lives easier down the road when the Java version standard is incremented.
+Olivia recommends installing Java using [SDKMan][sdkman] for convenient flipping between Java versions. While ScriptManager is currently developed to the Java 8 SE standard, it is good practice to check for forward and backward compatibility between Java versions. We are constantly monitoring new Java releases and developing according to a standard that is consistent across Java versions makes our lives easier down the road when the Java version standard is incremented.
 
 ### Integrated Development Environment (IDE) - Eclipse
 We recommend using [Eclipse][eclipse] to write Java code for ScriptManager because it supports both [Gradle][gradle] (see below) and [WindowBuilder][window-builder] for convenient building of JAR files and graphical interface development.
@@ -59,7 +59,7 @@ There exists at least one window object for every tool. They are organized by to
 The main package includes the main class that parses subcommands to call the various CLI classes or initialize the main GUI (JFrame) class.
 
 ### cli
-The structure of these classes is generally very simple. The [Picocli][picocli-docs]
+The structure of these classes is generally very simple. See [__Picocli documentation__][picocli] and check existing CLI class examples for more info.
 
 ### scripts
 It is important that these classes do not extend JFrame. Since they can used by cli classes, we need to make sure there are no screen-rendering elements that would throw errors if run from the command line. This set of classes isolate out the job of taking inputs and performing the computations.
@@ -68,7 +68,7 @@ It is important that these classes do not extend JFrame. Since they can used by 
 These classes are for making chart objects that visually display the data. They can be displayed on the monitor or saved as image files by the various tool objects.
 
 ### objects
-The most used class is the `ToolDescriptions.java` which statically stores all the tool descriptions as Strings for easy updates and changes to the descriptions. It also stores the version so
+The most used class is the `ToolDescriptions.java` which statically stores all the tool descriptions as Strings for easy updates and changes to the descriptions. It also stores the ScriptManager version so make sure that this is incremented appropriately.
 
 ### util
 These include classes with generic methods that are used across multiple tools.
