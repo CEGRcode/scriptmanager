@@ -21,4 +21,4 @@ Clicking "Generate" will execute the script to write `.svg` files, each with one
 
 ## Command Line Interface
 
-[png-format]:file-formats
+[png-format]:/docs/file-formats

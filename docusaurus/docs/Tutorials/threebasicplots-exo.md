@@ -159,8 +159,8 @@ Within the [Github repository][github-repo], there is (will be) also an [example
 
 ```
 
-[open-sm]:../static/figs-ex-chipexo/open-sm.png
-[gui-expandbed]:../static/figs-ex-chipexo/gui-expandbed.png
+[open-sm]:/../static/figs-ex-chipexo/open-sm.png
+[gui-expandbed]:/../static/figs-ex-chipexo/gui-expandbed.png
 
 [testdata-reb1-bed]:https://github.com/CEGRcode/2018-Rossi_GenomeResearch/blob/master/Fig1_Reb1/A.Reb1_Rhee_primary_sites_975.bed
 [testdata-reb1-bam]:https://github.com/CEGRcode/2018-Rossi_GenomeResearch/blob/master/Fig1_Reb1/A.Reb1_Rhee_primary_sites_975.bam
@@ -169,10 +169,10 @@ Within the [Github repository][github-repo], there is (will be) also an [example
 [github-repo]:https://www.github.com/CEGRcode/scriptmanager
 [ex-chipexo-bash]:https://www.github.com/CEGRcode/scriptmanager
 
-[bam-indexer]:bam-manipulation/bam-indexer.md
-[expand-bed]:coordinate-manipulation/expand-bed.md
-[tag-pileup]:read-analysis/tag-pileup.md
-[heatmap]:figure-generation/heatmap.md
-[merge-heatmap]:figure-generation/merge-heatmap.md
-[fasta-extract]:sequence-analysis/fasta-extract.md
-[four-color]:figure-generation/four-color.md
+[bam-indexer]:/docs/bam-manipulation/bam-indexer.md
+[expand-bed]:/docs/coordinate-manipulation/expand-bed.md
+[tag-pileup]:/docs/read-analysis/tag-pileup.md
+[heatmap]:/docs/figure-generation/heatmap.md
+[merge-heatmap]:/docs/figure-generation/merge-heatmap.md
+[fasta-extract]:/docs/sequence-analysis/fasta-extract.md
+[four-color]:/docs/figure-generation/four-color.md

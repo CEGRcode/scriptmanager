@@ -98,8 +98,8 @@ Expects two [PNG][png-format] like the output from the [heatmap tool][heatmap]. 
 
 
 
-[cdt-format]:file-formats
-[png-format]:file-formats
+[cdt-format]:/docs/file-formats
+[png-format]:/docs/file-formats
 
-[heatmap]:figure-generation/heatmap.md
-[chip-exo-tutorial]:threebasicplots-exo.md
+[heatmap]:/docs/figure-generation/heatmap.md
+[chip-exo-tutorial]:/docs/Tutorials/threebasicplots-exo.md

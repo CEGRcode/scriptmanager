@@ -1,7 +1,7 @@
 ---
 id: bed-to-gff
 title: Convert BED to GFF
-sidebar_label: bed-to-gff
+sidebar_label: BED to GFF
 ---
 
 Converts [BED file][bed-format]  to [GFF file][gff-format]
@@ -23,5 +23,5 @@ This tool takes a single [BED file][bed-format] for input.
 | -o, --output | specify output directory (default name will be same as original with .gff ext) |
 | -s, --stdout | output gff to STDOUT |
 
-[bed-format]:file-formats.md
-[gff-format]:file-formats.md
+[bed-format]:/docs/file-formats
+[gff-format]:/docs/file-formats

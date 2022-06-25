@@ -176,8 +176,8 @@ Expects a [CDT][cdt-format] formatted matrix file of values to generate heatmap 
 [color-hex-url]:http://www.javascripter.net/faq/rgbtohex.htm
 [treeview-paper]:https://pubmed.ncbi.nlm.nih.gov/15180930/
 
-[tag-pileup]:read-analysis/tagpileup
-[peak-align-ref]:peak-analysis/peak-align-ref
+[tag-pileup]:/docs/read-analysis/tag-pileup
+[peak-align-ref]:/docs/peak-analysis/peak-align-ref
 
-[cdt-format]:file-formats
-[png-format]:file-formats
+[cdt-format]:/docs/file-formats
+[png-format]:/docs/file-formats
