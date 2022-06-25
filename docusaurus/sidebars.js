@@ -21,7 +21,8 @@ module.exports = {
           'coordinate-manipulation/sort-bed',   'coordinate-manipulation/sort-gff',],
     "Figure Generation": [
           'figure-generation/heatmap', 'figure-generation/merge-heatmap',
-          'figure-generation/composite-plot', 'figure-generation/four-color',],
+          'figure-generation/composite-plot', 'figure-generation/four-color',
+          'figure-generation/heatmap-labeler'],
     "File Utilities": ['file-utilities/md5checksum','file-utilities/chrname-converter'],
     "Peak Analysis": [
           'peak-analysis/peak-align-ref', 'peak-analysis/filter-bed', 'peak-analysis/tile-genome',
