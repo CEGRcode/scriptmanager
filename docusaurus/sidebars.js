@@ -1,6 +1,7 @@
 module.exports = {
   someSidebar: {
-    ScriptManager: ['quick-start','command-line','tool-group','threebasicplots-exo',],
+    Guides: ['Guides/quick-start','Guides/command-line','Guides/tool-group',],
+    Tutorials: ['Tutorials/threebasicplots-exo',],
     References: ['file-formats','tool-index',],
     Contributing: ['Contributing/developer-guidelines','Contributing/testing'],
     Community: ['Community/code-of-conduct'],

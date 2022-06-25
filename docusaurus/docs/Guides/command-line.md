@@ -143,13 +143,21 @@ Template:
 
 Example:
 
-`java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -o intermediate.bed`\
-`java -jar ScriptManager.jar read-analysis tag-pileup intermediate.bed data.bam -o RESULTS.composite`
+```bash
+java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -o intermediate.bed
+java -jar ScriptManager.jar read-analysis tag-pileup intermediate.bed data.bam -o RESULTS.composite
+```
 
+```bash
+java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c \
+  | java -jar ScriptManager.jar read-analysis tag-pileup - data.bam -o RESULTS.composite
+```
 
-`java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c | java -jar ScriptManager.jar read-analysis tag-pileup - data.bam -o RESULTS.composite`
-
-`java -jar ScriptManager.jar read-analysis tag-pileup <(java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c) data.bam -o RESULTS.composite`
+```bash
+java -jar ScriptManager.jar read-analysis tag-pileup \
+  <(java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c) \
+  data.bam -o RESULTS.composite
+```
 
 Advantages:
 1. Save on disk space (fewer intermediate files)

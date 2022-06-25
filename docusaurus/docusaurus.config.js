@@ -43,6 +43,8 @@ const config = {
           // path: 'docs',
           remarkPlugins: [math],
           rehypePlugins: [katex],
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
         },
 //        blog: {
 //          showReadingTime: true,
@@ -64,15 +66,15 @@ const config = {
       navbar: {
         title: 'ScriptManager',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'ScriptManager Logo',
           src: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //svg file was here
         },
         items: [
           {
             type: 'doc',
-            docId: 'quick-start',
+            docId: 'Guides/quick-start',
             position: 'left',
-            label: 'Getting Started',
+            label: 'General',
           },
           {
             type: 'doc',

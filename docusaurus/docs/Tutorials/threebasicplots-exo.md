@@ -1,7 +1,7 @@
 ---
 id: threebasicplots-exo
-title: "Example: ChIP-exo three basic plots"
-sidebar_label: "Example: ChIP-exo three basic plots"
+title: "ChIP-exo: three basic plots"
+sidebar_label: "ChIP-exo: three basic plots"
 ---
 
 _Generating 3 basic sequence-specific ChIP-exo plots: composite, heatmap, and four-color plots_
