@@ -46,7 +46,7 @@ The following files will be paired off for merging:<br />
 unpaired: `SampleC_sense_treeview.png`
 
 :::caution
-Make sure you are merging PNG files with the same pixel-dimensions.
+Make sure you are merging PNG files with the same pixel-dimensions. ScriptManager will terminate the process if it encounters a pair of images with unequal dimensions and report it to the user in a pop-up window.
 :::
 
 ### Details of color-averaging strategy
@@ -63,11 +63,16 @@ $A_i = (\textcolor{red}{r_a},\textcolor{green}{g_a},\textcolor{blue}{b_a})$.
 
 We define the __merged `.png` heatmap__ ($P_{merge}$) pixel matrix as follows:
 $$
-\forall M_i \in P_{merge},\newline
+\forall M_i \in P_{merge},\\
 M_i = (\frac{\textcolor{red}{r_s} + \textcolor{red}{r_a}}{2},
   \frac{\textcolor{green}{g_s} + \textcolor{green}{g_a}}{2},
   \frac{\textcolor{blue}{b_s} + \textcolor{blue}{b_a}}{2})
 $$
+
+:::note
+See from the above specifications $P_{sense}$ and $P_{anti}$ could be swapped around with no effect on the merged output. In other words, the tool is not doing anything fancy or ChIP-exo specific and is agnostic to the specifics of the input outside of the dimensions and the `.png` format. Should the need arise, you could co-opt the command line interface for merge heatmap to bypass the file naming enforcement strategy employed by the graphical interface to merge any pair of `.png` files with the same dimensions.
+:::
+
 
 ## Command Line Interface
 Usage:
@@ -93,8 +98,8 @@ Expects two [PNG][png-format] like the output from the [heatmap tool][heatmap]. 
 
 
 
-[cdt-format]:file-format.md
-[png-format]:file-format.md
+[cdt-format]:file-formats
+[png-format]:file-formats
 
 [heatmap]:figure-generation/heatmap.md
 [chip-exo-tutorial]:threebasicplots-exo.md

@@ -19,7 +19,6 @@ Any file with a `.png` extension may be loaded into the Label Heatmap tool. When
 Clicking "Generate" will execute the script to write `.svg` files, each with one of the `.png` files embedded and annotated by the user-specifications. The output files will be named like the input files with the `_label.svg` suffix replacing the `.png` extension.
 
 
-### Command Line Interface
+## Command Line Interface
 
-[cdt-format]:file-format.md
-[png-format]:file-format.md
+[png-format]:file-formats
