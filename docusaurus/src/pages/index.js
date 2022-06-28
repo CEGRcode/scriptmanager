@@ -5,6 +5,9 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 const features = [
   {
@@ -18,6 +21,47 @@ const features = [
     link: "docs/Tutorials/threebasicplots-exo"
   },
   {
+    title: 'ChIP-exo',
+    imageUrl: 'img/ChIP-exo.jpg',
+    description: (
+      <>
+        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution analysis of base-pair resolution assays like ChIP-exo"
+      </>
+    ),
+  },
+  {
+    title: 'ChIP-exo',
+    imageUrl: 'img/ChIP-exo.jpg',
+    description: (
+      <>
+        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution analysis of base-pair resolution assays like ChIP-exo"
+      </>
+    ),
+  },
+];
+
+const Genomic = [
+  {
+    title: 'Genomic Features',
+    imageUrl: 'img/Genomic Features.jpg',
+    description: (
+      <>
+        Genomic Features: "Visualize genomic features such as the relative positional relationship of all kinds of annotations such as peak coordinate files, transcription start sites (TSS), or anything that is represented by a genomic coordinate interval."
+      </>
+    ),
+    link:""
+  },
+  {
+    title: 'Genomic Features',
+    imageUrl: 'img/Genomic Features.jpg',
+    description: (
+      <>
+        Genomic Features: "Visualize genomic features such as the relative positional relationship of all kinds of annotations such as peak coordinate files, transcription start sites (TSS), or anything that is represented by a genomic coordinate interval."
+      </>
+    ),
+    links:""
+  },
+  {
     title: 'Genomic Features',
     imageUrl: 'img/Genomic Features.jpg',
     description: (
@@ -26,12 +70,35 @@ const features = [
       </>
     ),
   },
+];
+
+const ATACseq= [
   {
     title: 'ATAC-seq',
     imageUrl: 'img/ATAC-seq.jpg',
     description: (
       <>
-        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like ATAC-seq with optional filters for mono-nucleosomal fragments"
+          ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like ATAC-seq with optional filters for mono-nucleosomal fragments"
+      </>
+    ),
+    link:""
+  },
+  {
+    title: 'ATAC-seq',
+    imageUrl: 'img/ATAC-seq.jpg',
+    description: (
+      <>
+          ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like ATAC-seq with optional filters for mono-nucleosomal fragments"
+      </>
+    ),
+    links:""
+  },
+  {
+    title: 'ATAC-seq',
+    imageUrl: 'img/ATAC-seq.jpg',
+    description: (
+      <>
+          ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like ATAC-seq with optional filters for mono-nucleosomal fragments"
       </>
     ),
   },
@@ -92,17 +159,48 @@ function Home() {
       </header>
       <main>
         <h1 className="text--center" style={{marginTop:80+'px'}}>Plotting Samples</h1>
-        {features && features.length > 0 && (
-          <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        <Tabs class="tabs">
+          <TabItem value="ChIP-exo" label="ChIP-exo" default>
+                {features && features.length > 0 && (
+                <section className={styles.features}>
+                  <div className="container">
+                    <div className="row">
+                      {features.map((props, idx) => (
+                        <Feature key={idx} {...props} />
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              )}
+          </TabItem>
+          <TabItem value="Genomic Features" label="Genomic Features">
+          {Genomic && Genomic.length > 0 && (
+                <section className={styles.features}>
+                  <div className="container">
+                    <div className="row">
+                      {Genomic.map((props, idx) => (
+                        <Feature key={idx} {...props} />
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              )}
+          </TabItem>
+          <TabItem value="ATAC-seq" label="ATAC-seq">
+          {ATACseq && ATACseq.length > 0 && (
+                <section className={styles.features}>
+                  <div className="container">
+                    <div className="row">
+                      {ATACseq.map((props, idx) => (
+                        <Feature key={idx} {...props} />
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              )}
+          </TabItem>
+      </Tabs>
+
       </main>
     </Layout>
   );

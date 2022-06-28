@@ -11,6 +11,11 @@
  */
 
 /* You can override the default Infima variables here. */
+.tabs{
+display: block;
+text-align: center;
+margin-top: 50px;
+}
 :root {
   --ifm-color-primary: #8497b0;
   --ifm-color-primary-dark: #7187a4;
@@ -30,7 +35,7 @@
 }
 
 .header-github-link:hover {
-  opacity: 0.6;
+opacity: 0.6;
  color:  #8497b0;
 }
 
