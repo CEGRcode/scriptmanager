@@ -14,7 +14,7 @@ const config = {
   baseUrl: '/scriptmanager/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //ico file was here
+  favicon: 'img/SM_favicon.png', //ico file was here
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -67,7 +67,7 @@ const config = {
         title: 'ScriptManager',
         logo: {
           alt: 'ScriptManager Logo',
-          src: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //svg file was here
+          src: 'img/SM_favicon.png', //svg file was here
         },
         items: [
           {
@@ -84,7 +84,7 @@ const config = {
           },
           {
             href: 'https://github.com/CEGRcode/scriptmanager',
-            label: 'GitHub',
+            className: "header-github-link",
             position: 'right',
           },
         ],
