@@ -72,7 +72,7 @@ const Genomic = [
   },
 ];
 
-const ATACseq= [
+const Atacseq= [
   {
     title: 'ATAC-seq',
     imageUrl: 'img/ATAC-seq.jpg',
@@ -187,11 +187,11 @@ function Home() {
               )}
           </TabItem>
           <TabItem value="ATAC-seq" label="ATAC-seq">
-          {ATACseq && ATACseq.length > 0 && (
+          {Atacseq && Atacseq.length > 0 && (
                 <section className={styles.features}>
                   <div className="container">
                     <div className="row">
-                      {ATACseq.map((props, idx) => (
+                      {Atacseq.map((props, idx) => (
                         <Feature key={idx} {...props} />
                       ))}
                     </div>
