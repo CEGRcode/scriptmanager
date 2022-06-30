@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
@@ -15,8 +15,8 @@ import org.jfree.chart.renderer.xy.XYBlockRenderer;
 import org.jfree.chart.title.PaintScaleLegend;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYZDataset;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.RectangleInsets;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.chart.ui.RectangleInsets;
 
 public class HeatMap {
 	
@@ -67,7 +67,7 @@ public class HeatMap {
         if(output!=null){
 			int width = 640;
 			int height = 480;
-			try{ ChartUtilities.saveChartAsPNG(output, chart, width, height); }
+			try{ ChartUtils.saveChartAsPNG(output, chart, width, height); }
 			catch( IOException e ){ e.printStackTrace(); }
         }
         

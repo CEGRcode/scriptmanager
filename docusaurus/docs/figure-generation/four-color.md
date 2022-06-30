@@ -38,7 +38,7 @@ Expects a [FASTA][fasta-format] formatted file with many sequences to stack up w
 
 [color-hex-url]:http://www.javascripter.net/faq/rgbtohex.htm
 
-[fasta-extract]:sequence-analysis/fasta-extract.md
+[fasta-extract]:/docs/sequence-analysis/fasta-extract.md
 
-[fasta-format]:file-format.md
-[png-format]:file-format.md
+[fasta-format]:/docs/file-formats.md
+[png-format]:/docs/file-formats.md

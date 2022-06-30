@@ -1,164 +1,161 @@
-module.exports = {
+// @ts-check
+// Note: type annotations allow type checking and IDEs autocompletion
+
+const math = require('remark-math');
+const katex = require('rehype-katex');
+const lightCodeTheme = require('prism-react-renderer/themes/github');
+const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+
+/** @type {import('@docusaurus/types').Config} */
+const config = {
   title: 'ScriptManager',
   tagline: 'Toolbox for analyzing your genomic datasets',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  url: 'https://github.com/CEGRcode',
+  baseUrl: '/scriptmanager/',
   onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //ico file was here
-  organizationName: 'Pugh Lab', // Usually your GitHub org/user name.
+
+  // GitHub pages deployment config.
+  // If you aren't using GitHub pages, you don't need these.
+  organizationName: 'CEGRcode', // Usually your GitHub org/user name.
   projectName: 'scriptmanager', // Usually your repo name.
-  themeConfig: {
-    navbar: {
-      title: 'ScriptManager',
-      logo: {
-        alt: 'My Site Logo',
-        src: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //svg file was here
-      },
-      items: [
-        {
-          to: 'docs/',
-          activeBasePath: 'docs',
-          label: 'Docs',
-          position: 'left',
-        },
-        {
-          to: 'docs/read-analysis/tag-pileup',
-          label: 'Tools',
-          position: 'left'
-        },
-        // {
-        //   to: 'docs/bam-format-converter/bam-to-scidx',
-        //   label: 'BAM Format Converter',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/bam-manipulation/sort-bam',
-        //   label: 'BAM Manipulation',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/bam-statistics/se-stat',
-        //   label: 'BAM Statistics',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/coordinate-manipulation/expand-bed',
-        //   label: 'Coordinate Manipulation',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/figure-generation/heatmap',
-        //   label: 'Figure Generation',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/file-utilities/md5checksum',
-        //   label: 'File Utilities',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/peak-analysis/peak-align-ref',
-        //   label: 'Peak Analysis',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/read-analysis/tag-pileup',
-        //   label: 'Read Analysis',
-        //   position: 'left'
-        // },
-        // {
-        //   to: 'docs/sequence-analysis/fasta-extract',
-        //   label: 'Sequence Analysis',
-        //   position: 'left'
-        // },
-        {
-          to: 'blog',
-          label: 'Blog',
-          position: 'left'
-        },
-        {
-          href: 'https://github.com/owlang/scriptmanager',
-          label: 'GitHub',
-          position: 'right',
-        },
-      ],
-    },
-    footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Style Guide',
-              to: 'docs/',
-            },
-            {
-              label: 'Tool Index (A-Z)',
-              to: 'docs/tool-index',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: 'blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/owlang/scriptmanager',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-    },
+
+  // Even if you don't use internalization, you can use this field to set useful
+  // metadata like html lang. For example, if your site is Chinese, you may want
+  // to replace "en" with "zh-Hans".
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
   },
+
   presets: [
     [
-      '@docusaurus/preset-classic',
-      {
+      'classic',
+      /** @type {import('@docusaurus/preset-classic').Options} */
+      ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+          // Remove this to remove the "edit this page" links.
+          //editUrl:
+            //'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          // path: 'docs',
+          remarkPlugins: [math],
+          rehypePlugins: [katex],
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
         },
-        tools: {
-            sidebarPath: require.resolve('./sidebars.js'),
-            // Please change this to your repo.
-            editUrl:
-              'https://github.com/facebook/docusaurus/edit/master/website/',
-          },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
-        },
+//        blog: {
+//          showReadingTime: true,
+//          // Please change this to your repo.
+//          // Remove this to remove the "edit this page" links.
+//          //editUrl:
+//            //'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+//        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
-      },
+      }),
     ],
   ],
+
+  themeConfig:
+    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+    ({
+      navbar: {
+        title: 'ScriptManager',
+        logo: {
+          alt: 'ScriptManager Logo',
+          src: 'img/ScriptManagerTempLogo_AgencyFBfont.png', //svg file was here
+        },
+        items: [
+          {
+            type: 'doc',
+            docId: 'Guides/quick-start',
+            position: 'left',
+            label: 'General',
+          },
+          {
+            type: 'doc',
+            docId: 'read-analysis/tag-pileup',
+            position: 'left',
+            label: 'Tools',
+          },
+          {
+            href: 'https://github.com/CEGRcode/scriptmanager',
+            label: 'GitHub',
+            position: 'right',
+          },
+        ],
+      },
+      footer: {
+        style: 'dark',
+        links: [
+          {
+            title: 'Docs',
+            items: [
+              {
+                label: 'Tool Index (A-Z)',
+                to: '/docs/tool-index',
+              },
+              {
+                label: 'File Formats',
+                to: '/docs/file-formats',
+              },
+            ],
+          },
+          {
+            title: 'Community',
+            items: [
+              {
+                label: 'Pugh Lab',
+                href: 'https://pughlab.mbg.cornell.edu',
+              },
+              {
+                label: 'Lai Lab',
+                href: 'https://williamkmlai.github.io',
+              },
+            ],
+          },
+          {
+            title: 'Other Tools We Develop',
+            items: [
+              {
+                label: 'ScriptManager',
+                href: 'https://github.com/CEGRcode/scriptmanager',
+              },
+              {
+                label: 'PEGR',
+                href: 'https://github.com/seqcode/pegr',
+              },
+              {
+                label: 'STENCIL',
+                href: 'https://github.com/CEGRcode/stencil',
+              },
+              {
+                label: 'GenoPipe',
+                href: 'https://github.com/CEGRcode/GenoPipe',
+              },
+            ],
+          },
+        ],
+        copyright: `Copyright © ${new Date().getFullYear()} ScriptManager. Built with Docusaurus.`,
+      },
+      prism: {
+        theme: lightCodeTheme,
+        darkTheme: darkCodeTheme,
+      },
+    }),
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+      crossorigin: 'anonymous',
+    },
+  ],
 };
+
+module.exports = config;

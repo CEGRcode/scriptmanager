@@ -1,8 +1,10 @@
 module.exports = {
   someSidebar: {
-    ScriptManager: ['quick-start','command-line','tool-group','threebasicplots-exo',],
+    Guides: ['Guides/quick-start','Guides/command-line','Guides/tool-group',],
+    Tutorials: ['Tutorials/threebasicplots-exo',],
     References: ['file-formats','tool-index',],
-    Docusaurus: ['doc1', 'doc2', 'doc3', 'mdx',],
+    Contributing: ['Contributing/developer-guidelines','Contributing/testing'],
+    Community: ['Community/code-of-conduct'],
   },
   toolSidebar: {
     "BAM Format Converter": [
@@ -20,8 +22,9 @@ module.exports = {
           'coordinate-manipulation/sort-bed',   'coordinate-manipulation/sort-gff',],
     "Figure Generation": [
           'figure-generation/heatmap', 'figure-generation/merge-heatmap',
-          'figure-generation/composite-plot', 'figure-generation/four-color',],
-    "File Utilities": ['file-utilities/md5checksum',],
+          'figure-generation/composite-plot', 'figure-generation/four-color',
+          'figure-generation/heatmap-labeler'],
+    "File Utilities": ['file-utilities/md5checksum','file-utilities/chrname-converter'],
     "Peak Analysis": [
           'peak-analysis/peak-align-ref', 'peak-analysis/filter-bed', 'peak-analysis/tile-genome',
           'peak-analysis/rand-coord',     'peak-analysis/signal-dup',],

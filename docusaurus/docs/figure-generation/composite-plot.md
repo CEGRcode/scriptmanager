@@ -41,4 +41,4 @@ Expects a file format like the TagPileup's composite output
 
 [color-hex-url]:http://www.javascripter.net/faq/rgbtohex.htm
 
-[png-format]:file-format.md
+[png-format]:file-formats.md

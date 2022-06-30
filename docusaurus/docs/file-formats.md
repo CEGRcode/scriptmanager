@@ -4,13 +4,13 @@ title: File Formats
 sidebar_label: File Formats
 ---
 
-A variety of standard file formats including BAM/GFF/BED/CDT are used by the ScriptManager tools along with some custom file formats. Below is some info on the expected formats and specifications of the files used by ScriptManager.
+A variety of standard file formats including BAM, GFF, BED, and [CDT][cdt-format] are used by the ScriptManager tools along with some custom file formats. The purpose of this guide is to help users find tools in ScriptManager based on the format their data exists in.
 
-|  |
-| ------------- | ------------- | ------------- |
-| [BAM][bam-format] | [CDT][cdt-format] | [GFF][gff-format] |
-| [BED][bed-format] | [FASTA][fasta-format] | [PNG][png-format] |
-
+### Read More
+While this page includes a little info on each of the file formats, there are other resources on the internet that provide detailed descriptions and context that will better inform users looking for more explanation on the data formats (see links below).
+- [UCSC file formats guide][ucsc-file-formats]
+- [ENCODE file formats guide][encode-file-formats]
+- [Deeptools file formats guide][encode-file-formats]
 
 ## BAM
 
@@ -60,7 +60,7 @@ Related Tools:
 | [`tag-pileup`][tag-pileup] |  |
 
 
-## bedgraph
+## bedGraph
 
 Related Tools:
 
@@ -126,7 +126,7 @@ Related Tools:
 
 ## Matrix format (custom for these tools)
 
-The output from [TagPileup][read-analysis] is the format for the matrix format
+The output from [TagPileup][tag-pileup] is the format for the matrix format
 
 Related Tools:
 
@@ -159,8 +159,6 @@ Related Tools:
 | ------------- | ------------- |
 | [`bam-to-scidx`][bam-to-scidx] |  |
 
-[bam-specs]:https://samtools.github.io/hts-specs/
-[gff-specs]:https://useast.ensembl.org/info/website/upload/gff3.html
 
 
 ## TXT
@@ -215,49 +213,55 @@ Related Tools:
 [`tag-pileup`][tag-pileup]
 [`tile-genome`][tile-genome]
 
-[bam-format]:file-formats.md
-[bed-format]:file-formats.md
-[bedgraph-format]:file-formats.md
-[gff-format]:file-formats.md
-[fasta-format]:file-formats.md
-[cdt-format]:file-formats.md
-[png-format]:file-formats.md
-[scidx-format]:file-formats.md
+[deeptools-file-formats]:https://deeptools.readthedocs.io/en/develop/content/help_glossary.html#file-formats
+[encode-file-formats]:https://www.encodeproject.org/help/file-formats/
+[ucsc-file-formats]:https://genome.ucsc.edu/FAQ/FAQformat.html
+[bam-specs]:https://samtools.github.io/hts-specs/
+[gff-specs]:https://useast.ensembl.org/info/website/upload/gff3.html
 
-[aggregate-data]:read-analysis/aggregate-data.md
-[bam-correlation]:bam-statistics/bam-correlation.md
-[bam-indexer]:bam-manipulation/bam-indexer.md
-[bam-to-bedgraph]:bam-format-converter/bam-to-bedgraph.md
-[bam-to-bed]:bam-format-converter/bam-to-bed.md
-[bam-to-gff]:bam-format-converter/bam-to-gff.md
-[bam-to-scidx]:bam-format-converter/bam-to-scidx.md
-[bed-to-gff]:coordinate-manipulation/bed-to-gff.md
-[composite]:figure-generation/composite-plot.md
-[dna-shape-bed]:sequence-analysis/dna-shape-bed.md
-[dna-shape-fasta]:sequence-analysis/dna-shape-fasta.md
-[expand-bed]:coordinate-manipulation/expand-bed.md
-[expand-gff]:coordinate-manipulation/expand-gff.md
-[fasta-extract]:sequence-analysis/fasta-extract.md
-[filter-bed]:peak-analysis/filter-bed.md
-[filter-pip-seq]:bam-manipulation/filter-pip-seq.md
-[four-color]:figure-generation/four-color.md
-[gff-to-bed]:coordinate-manipulation/gff-to-bed.md
-[heatmap]:figure-generation/heatmap.md
-[md5checksum]:file-utilities/md5checksum.md
-[merge-bam]:bam-manipulation/merge-bam.md
-[merge-heatmap]:figure-generation/merge-heatmap.md
-[pe-stat]:bam-statistics/pe-stats.md
-[peak-align-ref]:peak-analysis/peak-align-ref.md
-[rand-coord]:peak-analysis/rand-coord.md
-[randomize-fasta]:sequence-analysis/randomize-fasta.md
-[remove-duplicates]:bam-manipulation/remove-duplicates.md
-[scale-matrix]:read-analysis/scale-matrix.md
-[scaling-factor]:read-analysis/scaling-factor.md
-[se-stat]:bam-statistics/se-stats.md
-[search-motif]:sequence-analysis/search-motif.md
-[signal-dup]:peak-analysis/signal-dup.md
-[sort-bam]:bam-manipulation/sort-bam.md
-[sort-bed]:coordinate-manipulation/sort-bed.md
-[sort-gff]:coordinate-manipulation/sort-gff.md
-[tag-pileup]:read-analysis/tag-pileup.md
-[tile-genome]:peak-analysis/tile-genome.md
+[bam-format]:file-formats#bam
+[bed-format]:file-formats#bed
+[bedgraph-format]:file-formats#bedgraph
+[gff-format]:file-formats#gff
+[fasta-format]:file-formats#fasta
+[cdt-format]:file-formats#cdt
+[png-format]:file-formats#png
+[scidx-format]:file-formats#scidx
+
+[aggregate-data]:read-analysis/aggregate-data
+[bam-correlation]:bam-statistics/bam-correlation
+[bam-indexer]:bam-manipulation/bam-indexer
+[bam-to-bedgraph]:bam-format-converter/bam-to-bedgraph
+[bam-to-bed]:bam-format-converter/bam-to-bed
+[bam-to-gff]:bam-format-converter/bam-to-gff
+[bam-to-scidx]:bam-format-converter/bam-to-scidx
+[bed-to-gff]:coordinate-manipulation/bed-to-gff
+[composite]:figure-generation/composite-plot
+[dna-shape-bed]:sequence-analysis/dna-shape-bed
+[dna-shape-fasta]:sequence-analysis/dna-shape-fasta
+[expand-bed]:coordinate-manipulation/expand-bed
+[expand-gff]:coordinate-manipulation/expand-gff
+[fasta-extract]:sequence-analysis/fasta-extract
+[filter-bed]:peak-analysis/filter-bed
+[filter-pip-seq]:bam-manipulation/filter-pip-seq
+[four-color]:figure-generation/four-color
+[gff-to-bed]:coordinate-manipulation/gff-to-bed
+[heatmap]:figure-generation/heatmap
+[md5checksum]:file-utilities/md5checksum
+[merge-bam]:bam-manipulation/merge-bam
+[merge-heatmap]:figure-generation/merge-heatmap
+[pe-stat]:bam-statistics/pe-stat
+[peak-align-ref]:peak-analysis/peak-align-ref
+[rand-coord]:peak-analysis/rand-coord
+[randomize-fasta]:sequence-analysis/randomize-fasta
+[remove-duplicates]:bam-manipulation/remove-duplicates
+[scale-matrix]:read-analysis/scale-matrix
+[scaling-factor]:read-analysis/scaling-factor
+[se-stat]:bam-statistics/se-stat
+[search-motif]:sequence-analysis/search-motif
+[signal-dup]:peak-analysis/signal-dup
+[sort-bam]:bam-manipulation/sort-bam
+[sort-bed]:coordinate-manipulation/sort-bed
+[sort-gff]:coordinate-manipulation/sort-gff
+[tag-pileup]:read-analysis/tag-pileup
+[tile-genome]:peak-analysis/tile-genome

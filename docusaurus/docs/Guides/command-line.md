@@ -30,7 +30,7 @@ For more information on CLI usage, see *Command Line Overview*.
 | | [bam-to-gff](https://github.com/CEGRcode/scriptmanager/wiki/BAM-Format-Converter#bam-to-gff) |
 | | [bam-to-scidx](https://github.com/CEGRcode/scriptmanager/wiki/BAM-Format-Converter#bam-to-scidx) |
 | **bam-manipulation** | [bam-indexer\*](https://github.com/CEGRcode/scriptmanager/wiki/BAM-Manipulation#bam-indexer) |
-| | [remove-duplicates\*](github.com/CEGRcode/scriptmanager/wiki/BAM-Manipulation#remove-duplicates) |
+| | [remove-duplicates\*](https://github.com/CEGRcode/scriptmanager/wiki/BAM-Manipulation#remove-duplicates) |
 | | [filter-pip-seq](https://github.com/CEGRcode/scriptmanager/wiki/BAM-Manipulation#filter-pip-seq) |
 | | [merge-bam\*](https://github.com/CEGRcode/scriptmanager/wiki/BAM-Manipulation#merge-bam) |
 | | [sort-bam\*](https://github.com/CEGRcode/scriptmanager/wiki/BAM-Manipulation#sort-bam) |
@@ -143,13 +143,21 @@ Template:
 
 Example:
 
-`java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -o intermediate.bed`\
-`java -jar ScriptManager.jar read-analysis tag-pileup intermediate.bed data.bam -o RESULTS.composite`
+```bash
+java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -o intermediate.bed
+java -jar ScriptManager.jar read-analysis tag-pileup intermediate.bed data.bam -o RESULTS.composite
+```
 
+```bash
+java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c \
+  | java -jar ScriptManager.jar read-analysis tag-pileup - data.bam -o RESULTS.composite
+```
 
-`java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c | java -jar ScriptManager.jar read-analysis tag-pileup - data.bam -o RESULTS.composite`
-
-`java -jar ScriptManager.jar read-analysis tag-pileup <(java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c) data.bam -o RESULTS.composite`
+```bash
+java -jar ScriptManager.jar read-analysis tag-pileup \
+  <(java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c) \
+  data.bam -o RESULTS.composite
+```
 
 Advantages:
 1. Save on disk space (fewer intermediate files)
