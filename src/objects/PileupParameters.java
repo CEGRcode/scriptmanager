@@ -31,6 +31,7 @@ public class PileupParameters {
 	
 	private int SHIFT = 0;
 	private int BIN = 1;
+	private int TAGEXTEND = 0;
 	private int CPU = 1;
 	private int OUTTYPE = 0;			//0=no output, 1=TAB, 2=CDT
 	private File BLACKLIST = null;
@@ -53,6 +54,7 @@ public class PileupParameters {
 		System.out.println( "private int TRANS = " + TRANS );
 		System.out.println( "private int SHIFT = " + SHIFT );
 		System.out.println( "private int BIN = " + BIN );
+		System.out.println( "private int TAGEXTEND = " + TAGEXTEND );
 		System.out.println( "private int SMOOTH = " + SMOOTH );
 		System.out.println( "private int STDSIZE = " + STDSIZE );
 		System.out.println( "private int STDNUM = " + STDNUM );
@@ -188,6 +190,13 @@ public class PileupParameters {
 	}
 	public void setBin(int bIN) {
 		BIN = bIN;
+	}
+
+	public int getTagExtend() {
+		return TAGEXTEND;
+	}
+	public void setTagExtend(int tAGEXTEND) {
+		TAGEXTEND = tAGEXTEND;
 	}
 
 	public int getSmooth() {
