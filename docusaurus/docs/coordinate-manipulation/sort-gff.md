@@ -4,7 +4,11 @@ title: Sort GFF by CDT
 sidebar_label: sort-gff
 ---
 
+![sort-gff](/../static/icons/CoordinateManipulation/SortGFF_sqaure.svg)
+
 Sort a CDT file and its corresponding GFF file by the total score in the CDT file across the specified interval
+
+<img src={require('/../static/md-img/Coordinate Manipulation/SortGFFbyCDT.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

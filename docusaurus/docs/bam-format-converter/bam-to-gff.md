@@ -3,8 +3,10 @@ id: bam-to-gff
 title: BAM to GFF
 sidebar_label: bam-to-gff
 ---
-
+![bam-to-gff](/../static/icons/bam-format-converter/BAM-Format-Converter:BAMtoGFF.svg)
 Convert BAM file to GFF file
+
+<img src={require('/../static/md-img/BAMFormatConverter/BAM-Format-Converter_BAMtoGFF.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

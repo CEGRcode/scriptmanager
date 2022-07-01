@@ -3,8 +3,16 @@ id: bam-to-bed
 title: BAM to BED
 sidebar_label: bam-to-bed
 ---
+import { ToolIcon } from "@site/src/components/ToolIcon";
+<ToolIcon>children</ToolIcon>
 
+<!-- <img src={image} alt="" style={{width:70+'%'}}/> -->
+![bam-to-bed](/../static/icons/bam-format-converter/BAM-FormatConverter:BAMtoBED.svg)
 Convert BAM file to BED file
+
+
+
+<img src={require('/../static/md-img/BAMFormatConverter/BAM-FormatConverter_BAMtoBED.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash
@@ -41,3 +49,4 @@ These filter options are shared across all the BAM Format Converter tools.
 | `-a, --all-reads` | output combined |
 | `-m, --midpoint` | output midpoint (require PE) |
 | `-f, --fragment` | output fragment (requires PE) |
+

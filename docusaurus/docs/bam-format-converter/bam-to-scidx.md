@@ -3,8 +3,10 @@ id: bam-to-scidx
 title: BAM to scIDX
 sidebar_label: bam-to-scidx
 ---
-
+![bam-to-scidx](/../static/icons/bam-format-converter/BAM-format-converter:BAMtoscIDX.svg)
 Convert BAM file to scIDX file
+
+<img src={require('/../static/md-img/BAMFormatConverter/BAM-format-converter:BAMtobedgraph.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

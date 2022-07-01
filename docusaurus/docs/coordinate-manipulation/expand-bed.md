@@ -5,6 +5,8 @@ sidebar_label: Expand BED
 author: Olivia Lang
 ---
 
+![ExpandBED](/../static/icons/CoordinateManipulation/ExpandBED_square.svg)
+
 Expands input BED file by adding positions to the border or around the center.
 
 ![ExpandBED_center_500bp](/../static/md-img/ExpandBED_center_500bp.png)
@@ -29,6 +31,7 @@ Depending on the strategy selected, the "Size of Expansion" (in bp) can mean dif
 ### Output format
 For each input BED file, a new BED file is created with the original filename and the `.bed` file extension replaced with the `*_<sizeofexpansion>bp.bed` suffix.
 
+<img src={require('/../static/md-img/Coordinate Manipulation/ExpandBED.png').default} style={{width:70+'%'}}/> 
 
 ## Command Line Interface
 

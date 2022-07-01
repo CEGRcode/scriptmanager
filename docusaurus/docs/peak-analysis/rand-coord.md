@@ -4,7 +4,11 @@ title: Generate Random Coordinate
 sidebar_label: rand-coord
 ---
 
+![rand-coord](/../static/icons/PeakAnalysis/GenerateRandomCoordinate_square.svg)
+
 Generate a coordinate file that tiles (non-overlapping) across an entire genome.
+
+<img src={require('/../static/md-img/PeakAnalysis/GenerateRandomCoordinate.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

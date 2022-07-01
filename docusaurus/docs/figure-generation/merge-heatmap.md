@@ -4,6 +4,8 @@ title: Merge Heatmap
 sidebar_label: Merge Heatmap
 ---
 
+![Merge Heatmap](/../static/icons/FigureGeneration/MergeHeatmaps_square.svg)
+
 export const Highlight = ({children, color}) => (
   <span
     style={{
@@ -22,7 +24,7 @@ This tool merges two PNG files into a third PNG file that is an average of each 
 
 Typical use of this tool is for merging <Highlight color="blue">blue(sense)</Highlight> and <Highlight color="red">red(anti-sense)</Highlight> [__two-color heatmap plots__][heatmap] plots for [__ChIP-exo analysis__][chip-exo-tutorial].
 
-[ToolWindow]
+<img src={require('/../static/md-img/FigureGeneration/MergeHeatmap.png').default} style={{width:70+'%'}}/> 
 
 Any file with a `.png` extension may be loaded into the Merge Heatmap tool. When a batch of files have been loaded, the user can click "Merge" which will execute the script which will run the script to pair off samples based on their filenames and merge each pair into a new file with the `*_merge.png` suffix.
 

@@ -3,6 +3,9 @@ id: heatmap
 title: Two-color Heatmap
 sidebar_label: Two-color heatmap
 ---
+
+![Two-colorheatmap](/../static/icons/FigureGeneration/TwoColorHeatmap_square.svg)
+
 export const Highlight = ({children, color}) => (
   <span
     style={{
@@ -39,7 +42,7 @@ $
 
 This tool is typically used for visualizing the matrix output of [__Tag Pileup__][tag-pileup] to look at the raw tag coverage of any biochemical sequencing assay (ChIP-exo, ATAC-seq, PROcap, etc.). But there are many other tools in ScriptmManager like [__Align BED to Reference__][peak-align-ref] that produce output that can be visualized by this tool. Any tab-delimited text file can be used (many third party tools use such outputs) so long as the appropriate start row and start column are specified to skip over header columns and rows.
 
-[ToolWindow]
+<img src={require('/../static/md-img/FigureGeneration/Twocolorheatmap.png').default} style={{width:70+'%'}}/> 
 
 ### File inputs
 This script does not restrict selection of file inputs because a variety of file extensions may be parsed out for the numeric matrix. The tool supports bulk selection and processing of files.

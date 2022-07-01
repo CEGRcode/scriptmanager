@@ -4,6 +4,8 @@ title: MD5 Checksum
 sidebar_label: MD5 Checksum
 ---
 
+![MD5Checksum](/../static/icons/FileUtilities/MD5Checksum_square.svg)
+
 A common quality control and security step that everyone should use when downloading files from another source is to compare [MD5 checksum][md5sum-original] values to ensure that the file that was downloaded exactly matches the reported MD5checksum value for the file.
 
 MD5 is one of several methodologies (message digest function, others including the hash function [SHA-1][sha1sum-link]) for calculating a near-unique alphanumeric code for a file. MD5sum values also need to be generated for submissions to public data repositories such as NCBI's [Gene Expression Omnibus (GEO)][submission-reqs-geo] and [Sequence Read Archive(SRA)][submission-reqs-sra] and EBI's [European Nucleotide Archive (ENA)][submission-reqs-ena].

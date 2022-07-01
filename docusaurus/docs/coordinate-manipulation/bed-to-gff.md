@@ -4,7 +4,11 @@ title: Convert BED to GFF
 sidebar_label: BED to GFF
 ---
 
+![BEDtoGFF](/../static/icons/CoordinateManipulation/BED-to-GFF_square.svg)
+
 Converts [BED file][bed-format]  to [GFF file][gff-format]
+
+<img src={require('/../static/md-img/Coordinate Manipulation/ConvertBEDtoGFF.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

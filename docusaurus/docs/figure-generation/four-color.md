@@ -4,6 +4,8 @@ title: Four Color
 sidebar_label: four-color
 ---
 
+![four-color](/../static/icons/FigureGeneration/FourColorSequencePlot_square.svg)
+
 Usage:
 ```bash
 java -jar ScriptManager.jar figure-generation four-color [-hV] [-o=<output>]
@@ -14,6 +16,8 @@ java -jar ScriptManager.jar figure-generation four-color [-hV] [-o=<output>]
 Description:
 
 Generate 4Color sequence plot given FASTA file and user-defined RGB colors.
+
+<img src={require('/../static/md-img/FigureGeneration/four-color.png').default} style={{width:70+'%'}}/> 
 
 ### Positional Input
 

@@ -4,8 +4,11 @@ title: Expand GFF File
 sidebar_label: expand-gff
 ---
 
+![expand-gff](/../static/icons/CoordinateManipulation/ExpandGFF_square.svg)
 
 Expands input GFF file by adding positions to the border or around the center
+
+<img src={require('/../static/md-img/Coordinate Manipulation/ExpandGFF.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

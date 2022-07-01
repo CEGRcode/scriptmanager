@@ -4,7 +4,11 @@ title: Single-End Statistics
 sidebar_label: se-stat
 ---
 
+![se-stat](/../static/icons/BAMStatistics/Single-endstatistics_square.svg)
+
 _Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files._
+
+<img src={require('/../static/md-img/BAMStatistics/Single-EndStatistics.png').default} style={{width:70+'%'}}/> 
 
 ## Command Line (se-stat)
 

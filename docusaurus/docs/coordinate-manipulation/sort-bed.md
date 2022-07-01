@@ -4,7 +4,11 @@ title: Sort BED by CDT
 sidebar_label: sort-bed
 ---
 
+![sort-bed](/../static/icons/CoordinateManipulation/SortBED_square.svg)
+
 Sort a CDT file and its corresponding BED file by the total score in the CDT file across the specified interval
+
+<img src={require('/../static/md-img/Coordinate Manipulation/SortBEDbyCDT.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

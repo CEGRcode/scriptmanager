@@ -4,7 +4,11 @@ title: Scale Matrix
 sidebar_label: scale-matrix
 ---
 
+![scale-matrix](/../static/icons/ReadAnalysis/ScaleMatrix_square.svg)
+
 Apply a user-specified scaling factor to tab-delimited matrix data
+
+<img src={require('/../static/md-img/ReadAnalysis/scale-matrix.png').default} style={{width:70+'%'}}/> 
 
 
 Usage:
