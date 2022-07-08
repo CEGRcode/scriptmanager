@@ -8,7 +8,7 @@ import styles from "./styles.module.css";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-const features = [
+const chipexo = [
   /*{
     title: "ChIP-exo",
     imageUrl: "img/ChIP-exo.jpg",
@@ -67,10 +67,7 @@ const Genomic = [
     imageUrl: "img/12141_Motif_1_bound_50bp.png",
     description: (
       <>
-        Genomic Features: "Visualize genomic features such as the relative
-        positional relationship of all kinds of annotations such as peak
-        coordinate files, transcription start sites (TSS), or anything that is
-        represented by a genomic coordinate interval."
+        Visualize genomic patterns such as nucleotide enrichment across a set of protein-bound sites (called a "four-color plot").
       </>
     ),
     /*label: "View tutorial",*/
@@ -110,8 +107,7 @@ const Atacseq = [
     imageUrl: "img/ENCFF534DCE_InsertHistogram.png",
     description: (
       <>
-        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like
-        ATAC-seq with optional filters for mono-nucleosomal fragments"
+        Perform quality checks of genomics data like calculating fragment insert size histograms for ATACseq data.
       </>
     ),
     /*label: "View tutorial",*/
@@ -196,11 +192,11 @@ function Home() {
       </header>
       <main>
         <h1 className="text--center" style={{ marginTop: 80 + "px" }}>
-          Plotting Samples
+          Figure Gallery
         </h1>
         <Tabs class="tabs">
           <TabItem value="ChIP-exo" label="ChIP-exo" default>
-            {features && features.length > 0 && (
+            {chipexo && chipexo.length > 0 && (
               <section className={styles.features}>
                 <div className="container">
                   <div
@@ -210,7 +206,7 @@ function Home() {
                       justifyContent: "center",
                     }}
                   >
-                    {features.map((props, idx) => (
+                    {chipexo.map((props, idx) => (
                       <Feature2 key={idx} {...props} />
                     ))}
                   </div>
