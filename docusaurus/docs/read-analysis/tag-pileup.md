@@ -4,8 +4,12 @@ title: Tag Pileup
 sidebar_label: tag-pileup
 ---
 
+![tag-pileup](/../static/icons/ReadAnalysis/TagPileup_square.svg)
+
+
 Pileup 5' ends of aligned tags given BED and BAM files according to user-defined parameters
 
+<img src={require('/../static/md-img/ReadAnalysis/tag-pileup.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

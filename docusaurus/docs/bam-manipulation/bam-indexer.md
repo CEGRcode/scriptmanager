@@ -3,13 +3,13 @@ id: bam-indexer
 title: BAM Indexer
 sidebar_label: BAM Indexer
 ---
-
+![bam-indexer](/../static/icons/bam-manipulation/BamManipulation:BAMIndexer.svg)
 
 For most tools using BAM inputs (both within and without ScriptManager), a BAM index file (`.bai`) file is required so that the tool can efficiently query the file for alignment records. _Read more in the [Picard documentation][picard-index]_.
 
 ScriptManager's [TagPileup][tag-pileup], [Merge BAM replicates][merge-bam], [BAM Correlation][bam-correlation], and BAM Format Converter tools ([bam-to-bed][bam-to-bed], [bam-to-gff][bam-to-gff], [bam-to-bedgraph][bam-to-bedgraph], and [bam-to-scidx][bam-to-scidx]) are some example tools that require a `.bai` file.
 
-![BAIIndexerWindow](/../static/md-img/BAIIndexerWindow.png)
+![BAIIndexerWindow](/../static/md-img/BAMManipulation/BAIIndexerWindow.png)
 
 After clicking "Index", ScriptManager will index all of the loaded index files and save them to the "Output Directory" location with the `.bai` extension. Output files follow convention in naming the `.bai` file. If you are indexing the file `sample123.bam`, then the index file will be called `sample123.bam.bai`.
 

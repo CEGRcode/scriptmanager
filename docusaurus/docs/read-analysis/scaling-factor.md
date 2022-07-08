@@ -4,7 +4,11 @@ title: Scaling Factor
 sidebar_label: scaling-factor
 ---
 
+![scaling-factor](/../static/icons/ReadAnalysis/CalculateScalingFactor_square.svg)
+
 Calculate the factor as either total tag normalization or normalization of ChIP-seq data with control (PMID:22883957)
+
+<img src={require('/../static/md-img/ReadAnalysis/scaling-factor.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

@@ -4,8 +4,12 @@ title: DNA Shape from FASTA File
 sidebar_label: dna-shape-fasta
 ---
 
+![dna-shape-fasta](/../static/icons/SequenceAnalysis/DNAShapefromFASTA_square.svg)
+
 Calculate intrinsic DNA shape parameters given input FASTA files. Based on
 Roh's lab DNAshape server data
+
+<img src={require('/../static/md-img/SequenceAnalysis/DNAShapefromFASTAFile.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

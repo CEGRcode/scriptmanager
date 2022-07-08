@@ -4,10 +4,12 @@ title: Paired-End Statistics
 sidebar_label: pe-stat
 ---
 
+![pe-stat](/../static/icons/BAMStatistics/Paired-endstatistics_square.svg)
+
 
 _Generates Insert-size Histogram statistic (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File._
 
-
+<img src={require('/../static/md-img/BAMStatistics/Paired-EndStatistics.png').default} style={{width:70+'%'}}/> 
 
 ## Command Line (pe-stat)
 

@@ -4,7 +4,11 @@ title: DNA Shape from BED File
 sidebar_label: dna-shape-bed
 ---
 
+![dna-shape-bed](/../static/icons/SequenceAnalysis/DNAShapefromBED_square.svg)
+
 Calculate intrinsic DNA shape parameters given BED file and Genome FASTA file.
+
+<img src={require('/../static/md-img/SequenceAnalysis/DNA ShapefromBEDFile.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

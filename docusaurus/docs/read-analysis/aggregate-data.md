@@ -4,9 +4,12 @@ title: Aggregate Data
 sidebar_label: aggregate-data
 ---
 
+![aggregate-data](/../static/icons/ReadAnalysis/AggregateData_square.svg)
+
 Compile data from tab-delimited file into matrix according to user-specified
 metric.
 
+<img src={require('/../static/md-img/ReadAnalysis/aggregate-data.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

@@ -4,8 +4,12 @@ title: Filter BED by Proximity
 sidebar_label: filter-bed
 ---
 
+![filter-bed](/../static/icons/PeakAnalysis/FilterBEDbyProximity.svg)
+
 Filter BED file using user-specified exclusion zone using the score column to
 determine which peak to retain.
+
+<img src={require('/../static/md-img/PeakAnalysis/filter-bed.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

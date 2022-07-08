@@ -4,7 +4,11 @@ title: Randomize FASTA
 sidebar_label: randomize-fasta
 ---
 
+![randomize-fasta](/../static/icons/SequenceAnalysis/RandomizeFASTA_square.svg)
+
 Randomizes FASTA sequence for each input entry
+
+<img src={require('/../static/md-img/SequenceAnalysis/RandomizeFASTA.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

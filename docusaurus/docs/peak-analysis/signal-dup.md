@@ -6,6 +6,8 @@ sidebar_label: signal-dup
 
 Calculate duplication statistics at user-specified regions.
 
+<img src={require('/../static/md-img/PeakAnalysis/signal-dup.png').default} style={{width:70+'%'}}/> 
+
 Usage:
 ```bash
 java -jar ScriptManager.jar peak-analysis signal-dup [-hV] [-o=<output>]

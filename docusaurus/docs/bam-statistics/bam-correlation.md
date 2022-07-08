@@ -4,8 +4,11 @@ title: BAM Correlation
 sidebar_label: bam-correlation
 ---
 
+![bam-correlation](/../static/icons/BAMStatistics/BAMCorrelation_square.svg)
 
 _Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File._
+
+<img src={require('/../static/md-img/BAMStatistics/BAMCorrelation.png').default} style={{width:70+'%'}}/> 
 
 ## Command Line (bam-correlation)
 

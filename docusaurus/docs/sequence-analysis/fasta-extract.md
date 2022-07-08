@@ -4,7 +4,11 @@ title: Extract FASTA
 sidebar_label: fasta-extract
 ---
 
+![fasta-extract](/../static/icons/SequenceAnalysis/FASTAfromBED_square.svg)
+
 Generate FASTA file from indexed Genome FASTA file and BED file. Script will generate FAI index if not present in Genome FASTA folder.
+
+<img src={require('/../static/md-img/SequenceAnalysis/ExtractFASTA.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash

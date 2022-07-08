@@ -3,8 +3,10 @@ id: bam-to-bedgraph
 title: BAM to bedGraph
 sidebar_label: bam-to-bedgraph
 ---
-
+![bam-to-bedgraph](/../static/icons/bam-format-converter/BAM-format-converter:BAMtobedgraph.svg)
 Convert BAM file to bedGraph file
+
+<img src={require('/../static/md-img/BAMFormatConverter/BAM-format-converter:BAMtobedgraph.png').default} style={{width:70+'%'}}/> 
 
 Usage:
 ```bash
