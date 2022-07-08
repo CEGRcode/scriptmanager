@@ -4,8 +4,6 @@ title: Two-color Heatmap
 sidebar_label: Two-color heatmap
 ---
 
-import ToolIcon from '@site/src/components/ToolIcon';
-
 ![Two-colorheatmap](/../static/icons/FigureGeneration/TwoColorHeatmap_square.svg)
 
 export const Highlight = ({children, color}) => (

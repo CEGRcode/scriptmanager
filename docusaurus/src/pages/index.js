@@ -48,6 +48,34 @@ const features = [
 ];
 
 const Genomic = [
+  /*{
+    title: "Genomic Features",
+    imageUrl: "img/Genomic Features.jpg",
+    description: (
+      <>
+        Genomic Features: "Visualize genomic features such as the relative
+        positional relationship of all kinds of annotations such as peak
+        coordinate files, transcription start sites (TSS), or anything that is
+        represented by a genomic coordinate interval."
+      </>
+    ),
+    label: "View tutorial",
+    href: "",
+  },*/
+  {
+    /*title: "Genomic Features",*/
+    imageUrl: "img/12141_Motif_1_bound_50bp.png",
+    description: (
+      <>
+        Genomic Features: "Visualize genomic features such as the relative
+        positional relationship of all kinds of annotations such as peak
+        coordinate files, transcription start sites (TSS), or anything that is
+        represented by a genomic coordinate interval."
+      </>
+    ),
+    /*label: "View tutorial",*/
+    /*href: "",*/
+  } /*,
   {
     title: "Genomic Features",
     imageUrl: "img/Genomic Features.jpg",
@@ -61,39 +89,11 @@ const Genomic = [
     ),
     label: "View tutorial",
     href: "",
-  },
-  {
-    title: "Genomic Features",
-    imageUrl: "img/Genomic Features.jpg",
-    description: (
-      <>
-        Genomic Features: "Visualize genomic features such as the relative
-        positional relationship of all kinds of annotations such as peak
-        coordinate files, transcription start sites (TSS), or anything that is
-        represented by a genomic coordinate interval."
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },
-  {
-    title: "Genomic Features",
-    imageUrl: "img/Genomic Features.jpg",
-    description: (
-      <>
-        Genomic Features: "Visualize genomic features such as the relative
-        positional relationship of all kinds of annotations such as peak
-        coordinate files, transcription start sites (TSS), or anything that is
-        represented by a genomic coordinate interval."
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },
+  },*/,
 ];
 
 const Atacseq = [
-  {
+  /*{
     title: "ATAC-seq",
     imageUrl: "img/ATAC-seq.jpg",
     description: (
@@ -104,8 +104,20 @@ const Atacseq = [
     ),
     label: "View tutorial",
     href: "",
-  },
+  },*/
   {
+    /*title: "ATAC-seq",*/
+    imageUrl: "img/ENCFF534DCE_InsertHistogram.png",
+    description: (
+      <>
+        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like
+        ATAC-seq with optional filters for mono-nucleosomal fragments"
+      </>
+    ),
+    /*label: "View tutorial",*/
+    /*href: "",*/
+  },
+  /*{
     title: "ATAC-seq",
     imageUrl: "img/ATAC-seq.jpg",
     description: (
@@ -116,19 +128,7 @@ const Atacseq = [
     ),
     label: "View tutorial",
     href: "",
-  },
-  {
-    title: "ATAC-seq",
-    imageUrl: "img/ATAC-seq.jpg",
-    description: (
-      <>
-        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like
-        ATAC-seq with optional filters for mono-nucleosomal fragments"
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },
+  },*/
 ];
 
 /*----- Funtion fore the ChIP-exo tab which only has 2 diagrams  ------*/
@@ -146,7 +146,7 @@ function Feature2({ imageUrl }) {
 function Feature({ imageUrl, title, description, label, href }) {
   const imgUrl = useBaseUrl(imageUrl);
   return (
-    <div className={clsx("col col--4", styles.feature)}>
+    <div className={clsx("col col--6", styles.feature)}>
       {imgUrl && (
         <div className="text--center">
           <img className={styles.featureImage} src={imgUrl} alt={title} />
@@ -156,21 +156,6 @@ function Feature({ imageUrl, title, description, label, href }) {
       <p className="text--left" style={{ padding: 10 + "px" }}>
         {description}
       </p>
-      <a className="" href={href} style={{ padding: 10 + "px" }}>
-        {label}
-        <svg
-          width="13.5"
-          height="13.5"
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          class="iconExternalLink_node_modules-@docusaurus-theme-classic-lib-next-theme-IconExternalLink-styles-module"
-        >
-          <path
-            fill="currentColor"
-            d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"
-          ></path>
-        </svg>
-      </a>
     </div>
   );
 }
@@ -265,7 +250,13 @@ function Home() {
             {Genomic && Genomic.length > 0 && (
               <section className={styles.features}>
                 <div className="container">
-                  <div className="row">
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
                     {Genomic.map((props, idx) => (
                       <Feature key={idx} {...props} />
                     ))}
@@ -278,7 +269,13 @@ function Home() {
             {Atacseq && Atacseq.length > 0 && (
               <section className={styles.features}>
                 <div className="container">
-                  <div className="row">
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
                     {Atacseq.map((props, idx) => (
                       <Feature key={idx} {...props} />
                     ))}
