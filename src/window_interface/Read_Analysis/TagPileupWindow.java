@@ -83,6 +83,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JLabel lblTagShift;
 	private JLabel lblStdDevSize;
 	private JLabel lblNumStd;
+	private JLabel lblTagExtend;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrentOutput;
 	private JLabel lblOutputMatrixFormat;
@@ -94,6 +95,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JTextField txtSmooth;
 	private JTextField txtStdSize;
 	private JTextField txtNumStd;
+	private JTextField txtTagExtend;
 	private JTextField txtCPU;
 	private JTextField txtCompositeName;
 	private JCheckBox chckbxOutputData;
@@ -201,6 +203,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					param.setSmooth(Integer.parseInt(txtSmooth.getText()));
 					param.setStdSize(Integer.parseInt(txtStdSize.getText()));
 					param.setStdNum(Integer.parseInt(txtNumStd.getText()));
+					param.setTagExtend(Integer.parseInt(txtTagExtend.getText()));
 					param.setCPU(Integer.parseInt(txtCPU.getText()));
 
 					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
@@ -579,26 +582,24 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		txtBin.setColumns(10);
 		contentPane.add(txtBin);
 
-		lblCpusToUse = new JLabel("CPU's to Use:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCpusToUse, 0, SpringLayout.NORTH, lblTagShift);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 10, SpringLayout.EAST, txtBin);
-		lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblCpusToUse);
-
-		txtCPU = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -1, SpringLayout.NORTH, lblTagShift);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 10, SpringLayout.EAST, lblCpusToUse);
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtCPU, 70, SpringLayout.EAST, lblCpusToUse);
-		txtCPU.setHorizontalAlignment(SwingConstants.CENTER);
-		txtCPU.setText("1");
-		contentPane.add(txtCPU);
-		txtCPU.setColumns(10);
-
 		chckbxTagStandard = new JCheckBox("Set Tags to Be Equal");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxTagStandard, 40, SpringLayout.SOUTH,
-				lblReadManipulation);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxTagStandard, 40, SpringLayout.SOUTH, lblReadManipulation);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxTagStandard, 10, SpringLayout.EAST, scrollPane_BAM);
 		contentPane.add(chckbxTagStandard);
+
+		lblTagExtend = new JLabel("Tag Extend (bp):");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblTagExtend, 0, SpringLayout.NORTH, lblTagShift);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblTagExtend, 10, SpringLayout.EAST, txtBin);
+		contentPane.add(lblTagExtend);
+
+		txtTagExtend = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtTagExtend, -1, SpringLayout.NORTH, lblTagExtend);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtTagExtend, 10, SpringLayout.EAST, lblTagExtend);
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtTagExtend, 70, SpringLayout.EAST, lblTagExtend);
+		txtTagExtend.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTagExtend.setText("0");
+		contentPane.add(txtTagExtend);
+		txtTagExtend.setColumns(10);
 
 		btnLoadBlacklistFilter = new JButton("Load Blacklist Filter");
 		btnLoadBlacklistFilter.setEnabled(false);
@@ -726,13 +727,23 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sepOutput.setForeground(Color.BLACK);
 		contentPane.add(sepOutput);
 
-		JLabel lblOutputParameters = new JLabel("Output Parameters:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputParameters, 8, SpringLayout.SOUTH, sepOutput);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputParameters, 10, SpringLayout.WEST, contentPane);
-		contentPane.add(lblOutputParameters);
+		lblCpusToUse = new JLabel("CPU's to Use:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCpusToUse, 15, SpringLayout.SOUTH, scrollPane_BAM);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 0, SpringLayout.WEST, scrollPane_BAM);
+		lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblCpusToUse);
+
+		txtCPU = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -1, SpringLayout.NORTH, lblCpusToUse);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 10, SpringLayout.EAST, lblCpusToUse);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 70, SpringLayout.EAST, lblCpusToUse);
+		txtCPU.setHorizontalAlignment(SwingConstants.CENTER);
+		txtCPU.setText("1");
+		contentPane.add(txtCPU);
+		txtCPU.setColumns(10);
 
 		chckbxOutputData = new JCheckBox("Output Heatmap Matrix");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputData, 8, SpringLayout.SOUTH, lblOutputParameters);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputData, 8, SpringLayout.SOUTH, lblCpusToUse);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputData, 0, SpringLayout.WEST, scrollPane_BAM);
 		chckbxOutputData.setSelected(true);
 		contentPane.add(chckbxOutputData);
