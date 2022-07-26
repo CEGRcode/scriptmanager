@@ -96,14 +96,18 @@ The help documentation is very useful so at any point in constructing your comma
     * version of ScriptManager you're running (use the `-V` flag)
     * Java version and OS you ran the command on
 
+
 ## Additional Resources
 * Detailed tool documentation
 * File format specifications
 * Javadoc
 
+## Citing Us
+If you use ScriptManager in your work, you can use the [Lang et al (2022)][pearc-paper] publication or use ScriptManager's unique [RRID:**SCR_021797**][rrid-link].
 
 
+[pearc-paper]:https://dl.acm.org/doi/abs/10.1145/3491418.3535161
+[rrid-link]:https://scicrunch.org/resources/data/record/nlx_144509-1/SCR_021797/resolver?q=SCR_021797%2A&l=SCR_021797%2A&i=rrid:scr_021797
 
 [github-repo]:https://github.com/CEGRcode/scriptmanager
-
 [cli]:command-line.md
