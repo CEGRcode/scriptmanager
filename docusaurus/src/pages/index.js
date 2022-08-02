@@ -67,7 +67,8 @@ const Genomic = [
     imageUrl: "img/12141_Motif_1_bound_50bp.png",
     description: (
       <>
-        Visualize genomic patterns such as nucleotide enrichment across a set of protein-bound sites (called a "four-color plot").
+        Visualize genomic patterns such as nucleotide enrichment across a set of
+        protein-bound sites (called a "four-color plot").
       </>
     ),
     /*label: "View tutorial",*/
@@ -107,7 +108,8 @@ const Atacseq = [
     imageUrl: "img/ENCFF534DCE_InsertHistogram.png",
     description: (
       <>
-        Perform quality checks of genomics data like calculating fragment insert size histograms for ATACseq data.
+        Perform quality checks of genomics data like calculating fragment insert
+        size histograms for ATACseq data.
       </>
     ),
     /*label: "View tutorial",*/
@@ -168,6 +170,9 @@ function Home() {
         <div className="container">
           <div className={styles.backgroundImg}>
             <img src="img/DNAlayer.png"></img>
+          </div>
+          <div className={styles.backgroundImg2}>
+            <img src="img/SMdarkmode.jpg"></img>
           </div>
           <div className="row">
             <div className={clsx("col col-6", styles.leftcol)}>

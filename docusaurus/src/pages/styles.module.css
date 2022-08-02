@@ -23,16 +23,37 @@
   z-index:-10;
   opacity: 0.6;
 }
+.backgroundImg2{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0; 
+  z-index:-10;
+  opacity: 0;
+}
 .leftcol{
 padding: 130px 0;
-/*background-color: pink;*/
 }
 .userinterface{
 
   width:100%;
 
 }
+[data-theme='dark'] .heroBanner {
+  background: linear-gradient(to right, #081013, #0b1418, #0e181c, #0f1b20, #101f25);
+  color:white;
+}
 
+[data-theme='dark'] .backgroundImg{
+opacity: 0;
+}
+[data-theme='dark'] .backgroundImg2{
+  opacity: 0.8;
+}
+[data-theme='dark'] .getStarted{
+  background: #323845;
+  color: white;
+}
 
 @media screen and (max-width: 996px) {
   .heroBanner {
@@ -40,6 +61,9 @@ padding: 130px 0;
     height:500px;
   }
   .backgroundImg{
+    width: 150%;
+  }
+  .backgroundImg2{
     width: 150%;
   }
   .userinterface{
@@ -81,3 +105,4 @@ margin-bottom: 40px;
 .feature2Image{
   max-height: 420px;
 }
+

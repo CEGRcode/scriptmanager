@@ -27,6 +27,7 @@ margin-top: 50px;
   --ifm-code-font-size: 95%;
 }
 
+
 .docusaurus-highlight-code-line {
   background-color: rgb(72, 77, 91);
   display: block;
@@ -46,4 +47,9 @@ opacity: 0.6;
   display: flex;
   height: 24px;
   width: 24px;
+}
+
+[data-theme='dark'] .header-github-link:before{
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABhElEQVRIidWVPS8EURSGz8xSbLN0soVCx0oE8RMka202xOop/QrBJoRSqSNKhYJCp9ZuCEuj8FkQDdXuo5g7MTl7dj5KbzOZOe/znjsnd+6I/Hd5cUUgJyJzIrIsIlMiMuyYFxG5EpEzETn1PK+duTNQBu5I1gNQzRLsAZtAJ0V4qA6wB8ROJGzQyBCs1UgKrypgGqgBTSOsBdSBUfW80iu8j2CeUfW7Wh6YdNc8MAEMuFpOMbchpxssGqscSTHSIYOrhXU/4q0r9l6C7ZikLxFpqWc6SwS4VqtYShEesguKbVqmd2UqZGhQUOxHWIuOyDfYtNL7P2+FPiqTvd1szav7ty4HcKBe8wkYS0oGSsCzYk8sY8XYbj/ANlAy/OPAjvNorVgNfP6+2HXgPALsG/4jIxjgFch3NXDQLNAGvoEicOGAYo83sLSaNNMNZ9xN8PlG+GFseATeIjiCb4DLGF9Ux1hnUAxcJji4ev6t3CI+gTXS/AuMgBwwE1OvAoOZg/+VfgGfx/ODcHa2TgAAAABJRU5ErkJggg==")
+    no-repeat;
 }
