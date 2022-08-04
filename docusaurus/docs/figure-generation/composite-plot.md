@@ -4,7 +4,10 @@ title: Composite Plot
 sidebar_label: composite-plot
 ---
 
+![Composite Plot](/../static/icons/FigureGeneration/Composite-plot.svg)
+
 Usage:
+
 ```bash
 java -jar ScriptManager.jar figure-generation composite-plot [-hlV] [-o=<output>]
 [-t=<title>] [-x=<pixelWidth>] [-y=<pixelHeight>] [-c=<colors>...]...
@@ -19,26 +22,21 @@ Generate a Composite Plot PNG from composite data like the output in TagPileup
 
 Expects a file format like the TagPileup's composite output
 
-
 ### Output Options
 
-| Option | Description |
-| ------ | ----------- |
-| `-o, --output=<output>` | specify output filename, please use PNG extension (default=Input filename with "_compositePlot.png" appended to the name in working directory of ScriptManager |
-
+| Option                  | Description                                                                                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-o, --output=<output>` | specify output filename, please use PNG extension (default=Input filename with "\_compositePlot.png" appended to the name in working directory of ScriptManager |
 
 ### Plot Design Options
 
-| Option | Description |
-| ------ | ----------- |
-| `-t, --title=<title>` | set title (default uses input file name) |
-| `-l, --legend` | add a legend (default=no legend) |
-| `-x, --width=<pixelWidth>` | indicate a pixel width for the plot (default=500) |
-| `-y, --height=<pixelHeight>` | indicate a pixel height for the plot (default=270) |
+| Option                            | Description                                                                                                                                                                                                                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-t, --title=<title>`             | set title (default uses input file name)                                                                                                                                                                                                                                            |
+| `-l, --legend`                    | add a legend (default=no legend)                                                                                                                                                                                                                                                    |
+| `-x, --width=<pixelWidth>`        | indicate a pixel width for the plot (default=500)                                                                                                                                                                                                                                   |
+| `-y, --height=<pixelHeight>`      | indicate a pixel height for the plot (default=270)                                                                                                                                                                                                                                  |
 | `-c, --custom-colors=<colors>...` | indicate colors to use for each series. Must indicate a number of colors that matches number of dataseries default behavior: if one series input, use black if two series input, use blue(sense) and red(anti) if greater than two series, cycle through a set of 20 preset colors. |
 
-
-
-[color-hex-url]:http://www.javascripter.net/faq/rgbtohex.htm
-
-[png-format]:file-formats.md
+[color-hex-url]: http://www.javascripter.net/faq/rgbtohex.htm
+[png-format]: file-formats.md
