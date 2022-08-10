@@ -199,9 +199,24 @@ Expects a [CDT][cdt-format] formatted matrix file of values to generate heatmap 
 | `--blue`               | Use the color blue for generating the heatmap                                                                                                                                                                       |
 | `-c, --color=<custom>` | For custom color: type hexadecimal string to represent colors (e.g. "FF0000" is hexadecimal for red). See http://www.javascripter.net/faq/rgbtohex.htm for some color options with their corresponding hex strings. |
 
-[color-hex-url]: http://www.javascripter.net/faq/rgbtohex.htm
-[treeview-paper]: https://pubmed.ncbi.nlm.nih.gov/15180930/
-[tag-pileup]: /docs/read-analysis/tag-pileup
-[peak-align-ref]: /docs/peak-analysis/peak-align-ref
-[cdt-format]: /docs/file-formats
-[png-format]: /docs/file-formats
+
+Default colors are set for these tools so that no color needs to be specified for the program to execute. The following is an example of heatmap's default execution (uses black).
+
+`java -jar ScriptManager.jar figure-generation heatmap nucleosomes.cdt `
+
+
+There are also preset color flags are available for the user to choose from (blue).
+
+`java -jar ScriptManager.jar figure-generation heatmap nucleosomes.cdt --blue`
+
+However if you want to use a color outside the preset values, you can indicate RGB colors using _hexstrings_. You can read more about color customizations [here][color-guide].
+
+`java -jar ScriptManager.jar figure-generation heatmap nucleosomes.cdt -c 9400D3`
+
+[color-hex-url]:http://www.javascripter.net/faq/rgbtohex.htm
+[treeview-paper]:https://pubmed.ncbi.nlm.nih.gov/15180930/
+[tag-pileup]:/docs/read-analysis/tag-pileup
+[peak-align-ref]:/docs/peak-analysis/peak-align-ref
+[cdt-format]:/docs/file-formats
+[png-format]:/docs/file-formats
+[color-guide]:/docs/Guides/color-guide

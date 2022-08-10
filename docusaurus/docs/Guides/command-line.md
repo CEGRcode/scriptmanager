@@ -93,27 +93,6 @@ refer the user to the appropriate tool.
 At any point in building a command, if you get stuck or are unsure of your options, use the `-h` flag to show options. This can list the available subcommands or parameter and argument options.
 
 
-## Color Customization
-
-Some tools allow you to customize colors used in the output, specifically among the `figure-generation` tools.
-
-E.g. `composite`, `heatmap`, and `four-color`
-
-Default colors are set for these tools so that no color needs to be specified for the program to execute. The following is an example of heatmap's default execution.
-
-`java -jar ScriptManager.jar figure-generation heatmap nucleosomes.cdt `
-
-In the case of `heatmap`, there are also preset color flags are available for the user to choose from.
-
-`java -jar ScriptManager.jar figure-generation heatmap nucleosomes.cdt --blue`
-
-However if you want to use a color outside the preset values, you can indicate RGB colors using _hexstrings_. These are a sequence of 6 characters, where each pair of characters represent an Red, Green, and Blue value, 0-255 each). The help documentation points the user to [this url](http://www.javascripter.net/faq/rgbtohex.htm) for users to browse colors and get the appropriate hexstring.
-
-_Note user should not use the pound symbol `#` in front of the hexidecimal because it renders the token invisible to bash and thus, ScriptManager too_
-
-`java -jar ScriptManager.jar figure-generation heatmap nucleosomes.cdt -c 9400D3`
-
-
 ## Output Options
 
 ### Default filename
