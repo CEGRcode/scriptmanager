@@ -8,10 +8,9 @@ import styles from "./styles.module.css";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-const chipexo = [
+const ChipexoInfo = [
   /*{
     title: "ChIP-exo",
-    imageUrl: "img/ChIP-exo.jpg",
     description: (
       <>
         ChIP-exo: "ScriptManager supports strand-specific base-pair resolution
@@ -22,46 +21,14 @@ const chipexo = [
     href: "docs/Tutorials/threebasicplots-exo",
   },*/
   {
-    /*title: "ChIP-exo",*/
-    imageUrl: "img/ChIP-exo2.jpg",
-    /*description: (
-      <>
-        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution
-        analysis of base-pair resolution assays like ChIP-exo"
-      </>
-    ),*/
-    /*label: "View tutorial",
-    href: "docs/Tutorials/threebasicplots-exo",*/
+    imageUrl: "img/ChIP-exo_heatmap.jpg",
   },
   {
-    /*title: "ChIP-exo",*/
-    imageUrl: "img/composite.jpg",
-    /*description: (
-      <>
-        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution
-        analysis of base-pair resolution assays like ChIP-exo"
-      </>
-    ),*/
-    /*label: "View tutorial",
-    href: "docs/Tutorials/threebasicplots-exo",*/
+    imageUrl: "img/ChIP-exo_composite.jpg",
   },
 ];
 
-const Genomic = [
-  /*{
-    title: "Genomic Features",
-    imageUrl: "img/Genomic Features.jpg",
-    description: (
-      <>
-        Genomic Features: "Visualize genomic features such as the relative
-        positional relationship of all kinds of annotations such as peak
-        coordinate files, transcription start sites (TSS), or anything that is
-        represented by a genomic coordinate interval."
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/
+const GenomicInfo = [
   {
     /*title: "Genomic Features",*/
     imageUrl: "img/12141_Motif_1_bound_50bp.png",
@@ -73,36 +40,10 @@ const Genomic = [
     ),
     /*label: "View tutorial",*/
     /*href: "",*/
-  } /*,
-  {
-    title: "Genomic Features",
-    imageUrl: "img/Genomic Features.jpg",
-    description: (
-      <>
-        Genomic Features: "Visualize genomic features such as the relative
-        positional relationship of all kinds of annotations such as peak
-        coordinate files, transcription start sites (TSS), or anything that is
-        represented by a genomic coordinate interval."
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/,
+  },
 ];
 
-const Atacseq = [
-  /*{
-    title: "ATAC-seq",
-    imageUrl: "img/ATAC-seq.jpg",
-    description: (
-      <>
-        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like
-        ATAC-seq with optional filters for mono-nucleosomal fragments"
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/
+const AtacseqInfo = [
   {
     /*title: "ATAC-seq",*/
     imageUrl: "img/ENCFF534DCE_InsertHistogram.png",
@@ -115,18 +56,6 @@ const Atacseq = [
     /*label: "View tutorial",*/
     /*href: "",*/
   },
-  /*{
-    title: "ATAC-seq",
-    imageUrl: "img/ATAC-seq.jpg",
-    description: (
-      <>
-        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like
-        ATAC-seq with optional filters for mono-nucleosomal fragments"
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/
 ];
 
 /*----- Funtion fore the ChIP-exo tab which only has 2 diagrams  ------*/
@@ -171,8 +100,8 @@ function Home() {
           <div className={styles.backgroundImg}>
             <img src="img/DNAlayer.png"></img>
           </div>
-          <div className={styles.backgroundImg2}>
-            <img src="img/SMdarkmode.jpg"></img>
+          <div className={styles.backgroundImgDarkMode}>
+            <img src="img/DNAlayer_darkmode.jpg"></img>
           </div>
           <div className="row">
             <div className={clsx("col col-6", styles.leftcol)}>
@@ -201,7 +130,7 @@ function Home() {
         </h1>
         <Tabs class="tabs">
           <TabItem value="ChIP-exo" label="ChIP-exo" default>
-            {chipexo && chipexo.length > 0 && (
+            {ChipexoInfo && ChipexoInfo.length > 0 && (
               <section className={styles.features}>
                 <div className="container">
                   <div
@@ -211,7 +140,7 @@ function Home() {
                       justifyContent: "center",
                     }}
                   >
-                    {chipexo.map((props, idx) => (
+                    {ChipexoInfo.map((props, idx) => (
                       <Feature2 key={idx} {...props} />
                     ))}
                   </div>
@@ -248,7 +177,7 @@ function Home() {
             )}
           </TabItem>
           <TabItem value="Genomic Features" label="Genomic Features">
-            {Genomic && Genomic.length > 0 && (
+            {GenomicInfo && GenomicInfo.length > 0 && (
               <section className={styles.features}>
                 <div className="container">
                   <div
@@ -258,7 +187,7 @@ function Home() {
                       justifyContent: "center",
                     }}
                   >
-                    {Genomic.map((props, idx) => (
+                    {GenomicInfo.map((props, idx) => (
                       <Feature key={idx} {...props} />
                     ))}
                   </div>
@@ -267,7 +196,7 @@ function Home() {
             )}
           </TabItem>
           <TabItem value="ATAC-seq" label="ATAC-seq">
-            {Atacseq && Atacseq.length > 0 && (
+            {AtacseqInfo && AtacseqInfo.length > 0 && (
               <section className={styles.features}>
                 <div className="container">
                   <div
@@ -277,7 +206,7 @@ function Home() {
                       justifyContent: "center",
                     }}
                   >
-                    {Atacseq.map((props, idx) => (
+                    {AtacseqInfo.map((props, idx) => (
                       <Feature key={idx} {...props} />
                     ))}
                   </div>
