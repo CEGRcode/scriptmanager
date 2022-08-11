@@ -1,12 +1,17 @@
 ---
 id: signal-dup
-title: Signal Duplication
-sidebar_label: signal-dup
+title: Signal Duplication (suspended)
+sidebar_label: Signal Duplication (suspended)
 ---
+:::warning
+Signal Duplication is still under development and not yet actively supported.
+:::
 
 Calculate duplication statistics at user-specified regions.
 
-<img src={require('/../static/md-img/PeakAnalysis/signal-dup.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/PeakAnalysis/signal-dup.png').default} style={{width:70+'%'}}/>
+
+## Command Line Interface
 
 Usage:
 ```bash

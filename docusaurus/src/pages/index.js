@@ -8,154 +8,147 @@ import styles from "./styles.module.css";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-const chipexo = [
-  /*{
-    title: "ChIP-exo",
-    imageUrl: "img/ChIP-exo.jpg",
-    description: (
-      <>
-        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution
-        analysis of base-pair resolution assays like ChIP-exo"
-      </>
-    ),
-    label: "View tutorial",
-    href: "docs/Tutorials/threebasicplots-exo",
-  },*/
-  {
-    /*title: "ChIP-exo",*/
-    imageUrl: "img/ChIP-exo2.jpg",
-    /*description: (
-      <>
-        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution
-        analysis of base-pair resolution assays like ChIP-exo"
-      </>
-    ),*/
-    /*label: "View tutorial",
-    href: "docs/Tutorials/threebasicplots-exo",*/
-  },
-  {
-    /*title: "ChIP-exo",*/
-    imageUrl: "img/composite.jpg",
-    /*description: (
-      <>
-        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution
-        analysis of base-pair resolution assays like ChIP-exo"
-      </>
-    ),*/
-    /*label: "View tutorial",
-    href: "docs/Tutorials/threebasicplots-exo",*/
-  },
-];
+/* Initialize gallery information stored as Javascript objects */
 
-const Genomic = [
-  /*{
-    title: "Genomic Features",
-    imageUrl: "img/Genomic Features.jpg",
-    description: (
-      <>
-        Genomic Features: "Visualize genomic features such as the relative
-        positional relationship of all kinds of annotations such as peak
-        coordinate files, transcription start sites (TSS), or anything that is
-        represented by a genomic coordinate interval."
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/
-  {
-    /*title: "Genomic Features",*/
-    imageUrl: "img/12141_Motif_1_bound_50bp.png",
-    description: (
-      <>
-        Visualize genomic patterns such as nucleotide enrichment across a set of protein-bound sites (called a "four-color plot").
-      </>
-    ),
-    /*label: "View tutorial",*/
-    /*href: "",*/
-  } /*,
-  {
-    title: "Genomic Features",
-    imageUrl: "img/Genomic Features.jpg",
-    description: (
-      <>
-        Genomic Features: "Visualize genomic features such as the relative
-        positional relationship of all kinds of annotations such as peak
-        coordinate files, transcription start sites (TSS), or anything that is
-        represented by a genomic coordinate interval."
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/,
-];
+// Create a default information object to ensure  all required fields are filled
+const DefaultInfo = {
+  title: "Assay Name",
+  imageList: [
+    {
+      url: "img/SM_favicon.png",
+    },
+  ],
+  description: (
+    <>
+    Describe utility of scriptmanager for assay-specific figure examples.
+    </>
+  ),
+  label: "Get Started",
+  href: "docs/",
+};
 
-const Atacseq = [
-  /*{
-    title: "ATAC-seq",
-    imageUrl: "img/ATAC-seq.jpg",
-    description: (
-      <>
-        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like
-        ATAC-seq with optional filters for mono-nucleosomal fragments"
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/
-  {
-    /*title: "ATAC-seq",*/
-    imageUrl: "img/ENCFF534DCE_InsertHistogram.png",
-    description: (
-      <>
-        Perform quality checks of genomics data like calculating fragment insert size histograms for ATACseq data.
-      </>
-    ),
-    /*label: "View tutorial",*/
-    /*href: "",*/
-  },
-  /*{
-    title: "ATAC-seq",
-    imageUrl: "img/ATAC-seq.jpg",
-    description: (
-      <>
-        ATAC-seq: "Pileup Next Generation Sequencing (NGS) data from assays like
-        ATAC-seq with optional filters for mono-nucleosomal fragments"
-      </>
-    ),
-    label: "View tutorial",
-    href: "",
-  },*/
-];
+// Create an Javascript object for the ChIPexo gallery tab
+const ChipexoInfo = {
+  ...DefaultInfo,
+  title: "ChIP-exo",
+  imageList: [
+    {
+      url: "img/ChIP-exo_heatmap.jpg",
+    },
+    {
+      url: "img/ChIP-exo_composite.jpg",
+    },
+  ],
+  description: (
+    <>
+    ScriptManager supports strand-specific base-pair resolution analysis of base-pair resolution assays like
+    ChIP-exo. Shown here are examples of the two-color merged heatmap (left) and composite plot (right)
+    analyses of real ChIP-exo data.
+    </>
+  ),
+  label: "View tutorial",
+  href: "docs/Tutorials/threebasicplots-exo",
+};
 
-/*----- Funtion fore the ChIP-exo tab which only has 2 diagrams  ------*/
-function Feature2({ imageUrl }) {
-  const imgUrl = useBaseUrl(imageUrl);
+// Create an Javascript object for the Genomic Features gallery tab
+const GenomicInfo = {
+  ...DefaultInfo,
+  title: "Genomic Features",
+  imageList: [
+    {
+      url: "img/12141_Motif_1_bound_50bp.png",
+    },
+  ],
+  description: (
+    <>
+      Visualize genomic patterns such as a figure called a "Four Color Sequence Plot"
+      which shows nucleotide enrichment across a set of protein-bound sites .
+    </>
+  ),
+};
+
+// Create an Javascript object for the ATAC-seq gallery tab
+const AtacseqInfo = {
+  ...DefaultInfo,
+  title: "ATAC-seq",
+  imageUrl: "img/ENCFF534DCE_InsertHistogram.png",
+  imageList: [
+    {
+      url: "img/ENCFF534DCE_InsertHistogram.png",
+    },
+  ],
+  description: (
+    <>
+      Perform quality checks of genomics data like calculating fragment insert
+      size histograms for ATACseq data.
+    </>
+  ),
+};
+
+// Format list of images/figures for a single tab in GalleryTabContent
+function DisplayImageElement({ url }) {
+  const imgUrl = useBaseUrl(url);
   return (
-    <div className={("", styles.feature2)}>
-      <div className="text--center">
-        <img className={styles.feature2Image} src={imgUrl} />
-      </div>
-    </div>
+    // <div className={("", styles.galleryImageMargins)}>
+        <img className={styles.galleryImage} src={imgUrl} />
+    // </div>
   );
 }
 
-function Feature({ imageUrl, title, description, label, href }) {
-  const imgUrl = useBaseUrl(imageUrl);
+// Create and format content for a tab in the gallery section
+//  -standardizes formatting of gallery
+function GalleryTabContent(props) {
   return (
-    <div className={clsx("col col--6", styles.feature)}>
-      {imgUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
+    <section className={styles.features}>
+      <div className="container">
+        <div
+          className="row"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div className={clsx("col col--6", styles.feature)}>
+            <div
+              className=""
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {props.imageList?.map((props, idx) => (
+                <DisplayImageElement key={idx} {...props} />
+              ))}
+            </div>
+            <p className="text--left" style={{ padding: 10 + "px" }}>
+              {props.description} <br></br>
+              <a href={props.href}>
+                {props.label} &nbsp;
+                <svg
+                  width="13.5"
+                  height="13.5"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  class="iconExternalLink_node_modules-@docusaurus-theme-classic-lib-next-theme-IconExternalLink-styles-module"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"
+                  ></path>
+                </svg>
+                &nbsp;
+              </a>
+            </p>
+          </div>
         </div>
-      )}
-      <h3 className="text--center">{title}</h3>
-      <p className="text--left" style={{ padding: 10 + "px" }}>
-        {description}
-      </p>
-    </div>
+      </div>
+    </section>
   );
 }
 
+// Main function to create homepage
+//   header: create homepage hero banner (light and dark modes)
+//   main: create tabbed figure gallery grouped by different sequencing assay types
 function Home() {
   const context = useDocusaurusContext();
   const { siteConfig = {} } = context;
@@ -168,6 +161,9 @@ function Home() {
         <div className="container">
           <div className={styles.backgroundImg}>
             <img src="img/DNAlayer.png"></img>
+          </div>
+          <div className={styles.backgroundImgDarkMode}>
+            <img src="img/DNAlayer_darkmode.jpg"></img>
           </div>
           <div className="row">
             <div className={clsx("col col-6", styles.leftcol)}>
@@ -195,90 +191,14 @@ function Home() {
           Figure Gallery
         </h1>
         <Tabs class="tabs">
-          <TabItem value="ChIP-exo" label="ChIP-exo" default>
-            {chipexo && chipexo.length > 0 && (
-              <section className={styles.features}>
-                <div className="container">
-                  <div
-                    className=""
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {chipexo.map((props, idx) => (
-                      <Feature2 key={idx} {...props} />
-                    ))}
-                  </div>
-                  <div className="row">
-                    <div className="col col--2"></div>
-                    <div className="col col--8">
-                      <p>
-                        ScriptManager supports strand-specific base-pair
-                        resolution analysis of base-pair resolution assays like
-                        ChIP-exo. Shown here are examples of the two-color
-                        merged heatmap (left) and composite plot (right)
-                        analyses of real ChIP-exo data
-                      </p>
-                      <a href="docs/Tutorials/threebasicplots-exo">
-                        View tutorial
-                        <svg
-                          width="13.5"
-                          height="13.5"
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          class="iconExternalLink_node_modules-@docusaurus-theme-classic-lib-next-theme-IconExternalLink-styles-module"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"
-                          ></path>
-                        </svg>
-                      </a>
-                    </div>
-                    <div className="col col--2"></div>
-                  </div>
-                </div>
-              </section>
-            )}
+        <TabItem value={ChipexoInfo.title} label={ChipexoInfo.title} default >
+            <GalleryTabContent {...ChipexoInfo} />
           </TabItem>
-          <TabItem value="Genomic Features" label="Genomic Features">
-            {Genomic && Genomic.length > 0 && (
-              <section className={styles.features}>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {Genomic.map((props, idx) => (
-                      <Feature key={idx} {...props} />
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
+          <TabItem value={GenomicInfo.title} label={GenomicInfo.title} >
+            <GalleryTabContent {...GenomicInfo} />
           </TabItem>
-          <TabItem value="ATAC-seq" label="ATAC-seq">
-            {Atacseq && Atacseq.length > 0 && (
-              <section className={styles.features}>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {Atacseq.map((props, idx) => (
-                      <Feature key={idx} {...props} />
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
+          <TabItem value={AtacseqInfo.title} label={AtacseqInfo.title} >
+            <GalleryTabContent {...AtacseqInfo} />
           </TabItem>
         </Tabs>
       </main>

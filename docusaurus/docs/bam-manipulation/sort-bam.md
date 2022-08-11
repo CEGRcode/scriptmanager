@@ -1,14 +1,19 @@
 ---
 id: sort-bam
 title: Sort BAM
-sidebar_label: sort-bam
+sidebar_label: Sort BAM
 ---
 ![sort-bam](/../static/icons/bam-manipulation/BamManipulation:SortBAM.svg)
 
+Sort BAM files in order to efficiently extract and manipulate. RAM intensive process. If program freezes, increase JAVA heap size.
 
-![sort-bam](/../static/md-img/BAMManipulation/BamManipulation_SortBAM.png)
+<img src={require('/../static/md-img/BAMManipulation/SortBAM.png').default} style={{width:70+'%'}}/>
 
-CommandLine tools already exist for this function. This tool only exists as a GUI wrapper in ScriptManager.
+Many bioinformatic files require sorting BAM files so that they can be efficiently parsed. It is good practice to keep your BAM files sorted.
+
+
+## Command Line Interface (Picard and Samtools)
+_CommandLine tools already exist for this function. This tool only exists as a GUI wrapper in ScriptManager._
 
 Please see the [Samtools sort tool][samtools-sort] or the [Picard SortSam tool][picard-sort].
 

@@ -1,1 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 259 259"><defs><style>.cls-1{stroke:#040000;fill:url(#未命名的渐变_7);}.cls-1,.cls-2{stroke-miterlimit:10;}.cls-2{fill:none;stroke:#070606;stroke-width:3px;}</style><linearGradient id="未命名的渐变_7" x1="43.95" y1="129.5" x2="209.91" y2="129.5" gradientUnits="userSpaceOnUse"><stop offset="0.07" stop-color="#eee939"/><stop offset="0.14" stop-color="#c0bb2e"/><stop offset="0.31" stop-color="#5c5715"/><stop offset="0.43" stop-color="#1d1806"/><stop offset="0.48" stop-color="#040000"/><stop offset="0.52" stop-color="#060a0c"/><stop offset="0.59" stop-color="#0b242d"/><stop offset="0.68" stop-color="#144f63"/><stop offset="0.8" stop-color="#208aac"/><stop offset="0.86" stop-color="#27abd5"/></linearGradient></defs><g id="Layer_2" data-name="Layer 2"><g id="Two_Color_Heatmap" data-name="Two Color Heatmap"><rect class="cls-1" x="43.95" y="46.52" width="165.96" height="165.96"/></g><g id="Three_Color_Heatmap" data-name="Three Color Heatmap"><rect id="square" class="cls-2" x="1.5" y="1.5" width="256" height="256" rx="20"/></g></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 103 103" style="enable-background:new 0 0 103 103;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;stroke:#070606;stroke-width:3;stroke-miterlimit:10;}
+	.st1{fill:url(#SVGID_1_);stroke:#040000;stroke-miterlimit:10;}
+</style>
+<g id="Three_Color_Heatmap">
+	<path id="square" class="st0" d="M9.3,1.5h84.4c4.3,0,7.8,3.5,7.8,7.8v84.4c0,4.3-3.5,7.8-7.8,7.8H9.3c-4.3,0-7.8-3.5-7.8-7.8V9.3
+		C1.5,5,5,1.5,9.3,1.5z"/>
+</g>
+<g id="Two_Color_Heatmap">
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="19.0859" y1="52.3898" x2="83.9141" y2="52.3898" gradientTransform="matrix(1 0 0 -1 0 103.8898)">
+		<stop  offset="7.000000e-02" style="stop-color:#EEE939"/>
+		<stop  offset="0.14" style="stop-color:#C0BB2E"/>
+		<stop  offset="0.31" style="stop-color:#5C5715"/>
+		<stop  offset="0.43" style="stop-color:#1D1806"/>
+		<stop  offset="0.48" style="stop-color:#040000"/>
+		<stop  offset="0.52" style="stop-color:#060A0C"/>
+		<stop  offset="0.59" style="stop-color:#0B242D"/>
+		<stop  offset="0.68" style="stop-color:#144F63"/>
+		<stop  offset="0.8" style="stop-color:#208AAC"/>
+		<stop  offset="0.86" style="stop-color:#27ABD5"/>
+	</linearGradient>
+	<rect x="19.1" y="19.1" class="st1" width="64.8" height="64.8"/>
+</g>
+</svg>

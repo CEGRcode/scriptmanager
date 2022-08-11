@@ -19,42 +19,39 @@ const PesterDataTable = ({
   columns,
   data,
   getHeaderProps = defaultPropGetter,
-  getColumnProps = defaultPropGetter
+  getColumnProps = defaultPropGetter,
 }) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useSortBy
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(
+      {
+        columns,
+        data,
+      },
+      useSortBy
+    );
 
   // Render the UI for your table
   return (
     <table {...getTableProps()}>
       <thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <th
                 // Return an array of prop objects and react-table will merge them appropriately
                 {...column.getHeaderProps([
                   {
-                    className: column.className
+                    className: column.className,
                   },
                   getHeaderProps(column),
                   getColumnProps(column),
-                  column.getSortByToggleProps()
+                  column.getSortByToggleProps(),
                 ])}
               >
                 {column.render("Header")}
-                <span>{column.isSorted ? (column.isSortedDesc ? ' ▼' : ' ▲') : ''}</span>
+                <span>
+                  {column.isSorted ? (column.isSortedDesc ? " ▼" : " ▲") : ""}
+                </span>
               </th>
             ))}
           </tr>
@@ -65,15 +62,15 @@ const PesterDataTable = ({
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
+              {row.cells.map((cell) => {
                 return (
                   <td
                     {...cell.getCellProps([
                       {
                         className: cell.column.className,
-                        style: cell.column.style
+                        style: cell.column.style,
                       },
-                      getColumnProps(cell.column)
+                      getColumnProps(cell.column),
                     ])}
                   >
                     {cell.render("Cell")}
