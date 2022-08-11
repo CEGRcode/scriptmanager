@@ -1,8 +1,14 @@
 ---
 id: similarity-matrix
 title: Similarity Matrix (suspended)
-sidebar_label: similarity-matrix
+sidebar_label: Similarity Matrix (suspended)
 ---
+
+:::warning
+Similarity Matrix is still under development and not yet actively supported.
+:::
+
+## Command Line Interface
 
 Usage:
 ```bash
