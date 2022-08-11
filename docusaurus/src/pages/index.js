@@ -8,82 +8,166 @@ import styles from "./styles.module.css";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-const ChipexoInfo = [
-  /*{
-    title: "ChIP-exo",
+const DefaultInfo = [
+  {
+    title: "Assay Name",
+    imageList: [
+      {
+        url: "img/SM_favicon.png",
+      },
+    ],
     description: (
       <>
-        ChIP-exo: "ScriptManager supports strand-specific base-pair resolution
-        analysis of base-pair resolution assays like ChIP-exo"
+      Describe utility of scriptmanager for assay-specific figure examples.
       </>
     ),
-    label: "View tutorial",
-    href: "docs/Tutorials/threebasicplots-exo",
-  },*/
-  {
-    imageUrl: "img/ChIP-exo_heatmap.jpg",
-  },
-  {
-    imageUrl: "img/ChIP-exo_composite.jpg",
-  },
+    label: "__",
+    href: "docs/Guides/quick-start",
+  }
 ];
+
+
+const ChipexoInfo = [
+  {
+    ...DefaultInfo,
+    title: "ChIP-exo",
+    imageList: [
+      {
+        url: "img/ChIP-exo_heatmap.jpg",
+      },
+      {
+        url: "img/ChIP-exo_composite.jpg",
+      },
+    ],
+    description: (
+      <>
+      ScriptManager supports strand-specific base-pair resolution analysis of base-pair resolution assays like
+      ChIP-exo. Shown here are examples of the two-color merged heatmap (left) and composite plot (right)
+      analyses of real ChIP-exo data
+      </>
+    ),
+    label: " View tutorial",
+    href: "docs/Tutorials/threebasicplots-exo",
+  }
+];
+
 
 const GenomicInfo = [
   {
-    /*title: "Genomic Features",*/
-    imageUrl: "img/12141_Motif_1_bound_50bp.png",
+    ...DefaultInfo,
+    title: "Genomic Features",
+    imageList: [
+      {
+        url: "img/12141_Motif_1_bound_50bp.png",
+      },
+    ],
     description: (
       <>
         Visualize genomic patterns such as nucleotide enrichment across a set of
-        protein-bound sites (called a "four-color plot").
+        protein-bound sites (called a "Four Color Sequence Plot").
       </>
     ),
-    /*label: "View tutorial",*/
-    /*href: "",*/
   },
 ];
 
 const AtacseqInfo = [
   {
-    /*title: "ATAC-seq",*/
+    ...DefaultInfo,
+    title: "ATAC-seq",
     imageUrl: "img/ENCFF534DCE_InsertHistogram.png",
+    imageList: [
+      {
+        url: "img/ENCFF534DCE_InsertHistogram.png",
+      },
+    ],
     description: (
       <>
         Perform quality checks of genomics data like calculating fragment insert
         size histograms for ATACseq data.
       </>
     ),
-    /*label: "View tutorial",*/
-    /*href: "",*/
   },
 ];
 
-/*----- Funtion fore the ChIP-exo tab which only has 2 diagrams  ------*/
-function Feature2({ imageUrl }) {
-  const imgUrl = useBaseUrl(imageUrl);
+function DisplayTutorialLinkElement(link) {
+  if( link === "" )
+    return(<p></p>);
+  return(
+    <a href={link}>
+      View tutorial
+      <svg
+        width="13.5"
+        height="13.5"
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        class="iconExternalLink_node_modules-@docusaurus-theme-classic-lib-next-theme-IconExternalLink-styles-module"
+      >
+        <path
+          fill="currentColor"
+          d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"
+        ></path>
+      </svg>
+    </a>
+  )
+}
+
+function DisplayImageElement({ url }) {
+  const imgUrl = useBaseUrl(url);
   return (
-    <div className={("", styles.feature2)}>
-      <div className="text--center">
-        <img className={styles.feature2Image} src={imgUrl} />
-      </div>
-    </div>
+    // <div className={("", styles.galleryImageMargins)}>
+        <img className={styles.galleryImage} src={imgUrl} />
+    // </div>
   );
 }
 
-function Feature({ imageUrl, title, description, label, href }) {
+function GalleryTab({ imageUrl, imageList, title, description, label, href }) {
   const imgUrl = useBaseUrl(imageUrl);
   return (
-    <div className={clsx("col col--6", styles.feature)}>
-      {imgUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
+    <section className={styles.features}>
+      <div className="container">
+        <div
+          className="row"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div className={clsx("col col--6", styles.feature)}>
+            <div
+              className=""
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {imageList?.map((props, idx) => (
+                <DisplayImageElement key={idx} {...props} />
+              ))}
+            </div>
+            <h3></h3>
+            <h3 className="text--center">{title}</h3>
+            <p className="text--left" style={{ padding: 10 + "px" }}>
+              {description}
+              <a href={href}>
+                {label}
+                <svg
+                  width="13.5"
+                  height="13.5"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  class="iconExternalLink_node_modules-@docusaurus-theme-classic-lib-next-theme-IconExternalLink-styles-module"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"
+                  ></path>
+                </svg>
+              </a>
+            </p>
+          </div>
         </div>
-      )}
-      <h3 className="text--center">{title}</h3>
-      <p className="text--left" style={{ padding: 10 + "px" }}>
-        {description}
-      </p>
-    </div>
+      </div>
+    </section>
   );
 }
 
@@ -130,89 +214,19 @@ function Home() {
         </h1>
         <Tabs class="tabs">
           <TabItem value="ChIP-exo" label="ChIP-exo" default>
-            {ChipexoInfo && ChipexoInfo.length > 0 && (
-              <section className={styles.features}>
-                <div className="container">
-                  <div
-                    className=""
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {ChipexoInfo.map((props, idx) => (
-                      <Feature2 key={idx} {...props} />
-                    ))}
-                  </div>
-                  <div className="row">
-                    <div className="col col--2"></div>
-                    <div className="col col--8">
-                      <p>
-                        ScriptManager supports strand-specific base-pair
-                        resolution analysis of base-pair resolution assays like
-                        ChIP-exo. Shown here are examples of the two-color
-                        merged heatmap (left) and composite plot (right)
-                        analyses of real ChIP-exo data
-                      </p>
-                      <a href="docs/Tutorials/threebasicplots-exo">
-                        View tutorial
-                        <svg
-                          width="13.5"
-                          height="13.5"
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          class="iconExternalLink_node_modules-@docusaurus-theme-classic-lib-next-theme-IconExternalLink-styles-module"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"
-                          ></path>
-                        </svg>
-                      </a>
-                    </div>
-                    <div className="col col--2"></div>
-                  </div>
-                </div>
-              </section>
-            )}
+            {ChipexoInfo && ChipexoInfo.length > 0 && ChipexoInfo.map((props, idx) => (
+              <GalleryTab key={idx} {...props} />
+            ))}
           </TabItem>
           <TabItem value="Genomic Features" label="Genomic Features">
-            {GenomicInfo && GenomicInfo.length > 0 && (
-              <section className={styles.features}>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {GenomicInfo.map((props, idx) => (
-                      <Feature key={idx} {...props} />
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
+            {GenomicInfo && GenomicInfo.length > 0 && GenomicInfo.map((props, idx) => (
+              <GalleryTab key={idx} {...props} />
+            ))}
           </TabItem>
           <TabItem value="ATAC-seq" label="ATAC-seq">
-            {AtacseqInfo && AtacseqInfo.length > 0 && (
-              <section className={styles.features}>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {AtacseqInfo.map((props, idx) => (
-                      <Feature key={idx} {...props} />
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
+            {AtacseqInfo && AtacseqInfo.length > 0 && AtacseqInfo.map((props, idx) => (
+                <GalleryTab key={idx} {...props} />
+            ))}
           </TabItem>
         </Tabs>
       </main>
