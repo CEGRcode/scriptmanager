@@ -1,6 +1,6 @@
 module.exports = {
   someSidebar: {
-    Guides: ["Guides/quick-start", "Guides/command-line", "Guides/tool-group", "Guides/color-guide"],
+    Guides: ["Guides/getting-started", "Guides/command-line", "Guides/tool-group", "Guides/color-guide"],
     Tutorials: ["Tutorials/threebasicplots-exo"],
     References: ["file-formats", "tool-index"],
     Contributing: ["Contributing/developer-guidelines", "Contributing/testing"],
