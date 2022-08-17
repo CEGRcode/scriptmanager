@@ -4,11 +4,11 @@ title: Search Motif
 sidebar_label: search-motif
 ---
 
-![search-motif](/../static/icons/SequenceAnalysis/SearchMotif_square.svg)
+![search-motif](/../static/icons/Sequence_Analysis/SearchMotif_square.svg)
 
 Search for an IUPAC DNA sequence motif in FASTA files with mismatches allowed
 
-<img src={require('/../static/md-img/SequenceAnalysis/SearchMotif.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Sequence_Analysis/SearchMotifWindow.png').default} style={{width:70+'%'}}/>
 
 Usage:
 ```bash
@@ -35,4 +35,4 @@ java -jar ScriptManager.jar sequence-analysis search-motif [-hV] -m=<motif>
 | `-n, --mismatches=<ALLOWED_MISMATCH>` | the number of mismatches allowed (default=0) |_
 
 
-[fasta-format]:file-formats.md
+[fasta-format]:/docs/file-formats#fasta
