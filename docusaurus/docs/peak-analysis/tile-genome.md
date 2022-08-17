@@ -4,11 +4,13 @@ title: Genomic Coordinate Tile
 sidebar_label: tile-genome
 ---
 
-![tile-genome](/../static/icons/PeakAnalysis/GenomicCoordinateTile_square.svg)
+![tile-genome](/../static/icons/Peak_Analysis/TileGenome_square.svg)
 
 Generate a coordinate file that tiles (non-overlapping) across an entire genome.
 
-<img src={require('/../static/md-img/PeakAnalysis/tile-genome.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Peak_Analysis/TileGenomeWindow.png').default} style={{width:70+'%'}}/>
+
+## Command Line Interface
 
 Usage:
 ```bash
