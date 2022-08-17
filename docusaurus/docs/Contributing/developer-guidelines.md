@@ -30,8 +30,8 @@ While there are plenty of developer tools available for Java developers, this pa
 ## Java Development
 We write exclusively in Java or Java-compiled languages without any operating-system specific packages (to maintain portability across machines).
 
-### SDK Man
-Olivia recommends installing Java using [SDKMan][sdkman] for convenient flipping between Java versions. While ScriptManager is currently developed to the Java 8 SE standard, it is good practice to check for forward and backward compatibility between Java versions. We are constantly monitoring new Java releases and developing according to a standard that is consistent across Java versions makes our lives easier down the road when the Java version standard is incremented.
+### SDKMAN!
+Olivia recommends installing Java using [SDKMAN!][sdkman] for convenient flipping between Java versions. While ScriptManager is currently developed to the Java 8 SE standard, it is good practice to check for forward and backward compatibility between Java versions. We are constantly monitoring new Java releases and developing according to a standard that is consistent across Java versions makes our lives easier down the road when the Java version standard is incremented.
 
 ### Integrated Development Environment (IDE) - Eclipse
 We recommend using [Eclipse][eclipse] to write Java code for ScriptManager because it supports both [Gradle][gradle] (see below) and [WindowBuilder][window-builder] for convenient building of JAR files and graphical interface development.
@@ -149,13 +149,6 @@ The [Release Roadmap][release-roadmap] on Github organizes issue tickets and cre
   * [ ] Write up summary for the version tag commit including links to resolved/relevant issue tickets
 * Switch naming back to `dev`
   * [ ] `build.gradle` file should switch naming JAR to use `dev`
-
-
-
-
-
-
-
 
 [eclipse]:https://www.eclipse.org/ide/
 [eclipse-ide]:https://www.eclipse.org/eclipseide/

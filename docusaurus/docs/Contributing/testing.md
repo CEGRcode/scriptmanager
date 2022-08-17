@@ -5,13 +5,17 @@ sidebar_label: "Testing"
 ---
 
 ## Automatic CLI Testing
-Github Actions deployment
 
-<TODO\>
+:::caution
+We have shell scripts for testing that need to be deployed to the Github Actions system and documented here.
+:::
 
 
 ## Automatic GUI Testing
-<TODO\>
+
+:::warning
+We need to decide on a method for GUI testing and set it up with Github Actions.
+:::
 
 ## JFree tools
 

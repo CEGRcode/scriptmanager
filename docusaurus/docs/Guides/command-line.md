@@ -18,8 +18,6 @@ To run tools from the CLI version of ScriptManager, use the following format.
 
 The `TOOLGROUP` corresponds to one of the tabs in the GUI tool while the `TOOLNAME` corresponds to the specific tool within the `TOOLGROUP` group. Each tool will have its own set of input requirements and options. You will have to rely on the `-h` flag for usage help or the documentation here for the specific tool you wish to use.
 
-For more information on CLI usage, see *Command Line Overview*.
-
 <table>
 <tr valign="top"><td>
 
@@ -79,14 +77,14 @@ refer the user to the appropriate tool.
 </td></tr>
 </table>
 
-## General Options (common to all ScriptManager tools)
+## General Options
+
+The following options are shared by **all** ScriptManager tools.
 
 | Option | Description |
 | ------ | ----------- |
-| -h, --help | Show this help message and exit. |
-| -V, --version | Print version information and exit. |
-
-
+| `-h, --help` | Show this help message and exit. |
+| `-V, --version` | Print version information and exit. |
 
 ### Help Option (`-h`)
 
@@ -96,48 +94,67 @@ At any point in building a command, if you get stuck or are unsure of your optio
 ## Output Options
 
 ### Default filename
-Most tools generate a filename based on the input filenames and attempt to mimick the file naming system of the GUI tools.
+Most tools generate a filename based on the input filenames and attempt to mimic the file naming system of the GUI tools.
 
-### Specify Output filename
-The tools of ScriptManager all use the `-o` flag to specify output filenames or output file basenames.
+### Specify Output filename (`-o`)
+Many tools allow the user to specify output filenames or output file basenames (`-o`).
 
 When appropriate, some tools have constraints are added to check the extension of the output filename so that it matches the correct format. The tools also check that the parent directory exist before attempting to execute. The tool will print messages that let the user know when the filename fails these checks.
 
-### Redirect to STDOUT
-The tools of ScriptManager all use the `-s` flag to indicate that the results should stream to ”standard output” or "STDOUT". This is to mimic the function of other tools like Samtools, Bedtools, etc.
+### Redirect to STDOUT (`-s`)
+Some tools allow the user to stream the output to [standard output][stdout-help] or "STDOUT". This is to mimic the function of other tools like Samtools, Bedtools, etc.
 
-_Note only some of the tools have this option. Check the help guide if you're not sure._
+#### Advantages of streaming:
+1. Save on disk space (fewer intermediate files)
+2. Potentially speed up command by skipping steps to write intermediate file to disk (save on I/O operations).
 
-_Note this flag cannot be used in combination with the `-o` flag._
+:::note
+Only some of the tools have this option. Check the help guide if you're not sure.
+:::
 
-For example, if we wanted to run ExpandBED on a BED file to expand the window before getting the TagPileup results, we could execute each tool sequentially with an intermediate file, `intermediate.bed`, as follows:
+:::note
+This flag cannot be used in combination with the `-o` flag.
+:::
 
-Template:
+### Examples
 
-`COMMANDA input.file -o intermediate.file`
-`COMMANDB intermediate.file -o results.file`
-
-`COMMANDA input.file -c | COMMANDB -o results.file`
-`COMMANDB <( COMMANDA input.file -c ) -o results.file
-
-Example:
+For example, if we wanted to run some `COMMANDA` tool and then use the output as an input for the `COMMANDB` tool, there are several ways to run this in a shell script. The first way explicitly saves the intermediate file between commands.
 
 ```bash
+# Method A -save intermediate files
+COMMANDA input.file -o intermediate.file
+COMMANDB intermediate.file -o results.file
+```
+
+...or alternatively, we could stream the output of `COMMANDA` to the input of `COMMANDB` using the pipe (`|`) character:
+```bash
+# Method B -pipe stream
+COMMANDA input.file -s | COMMANDB -o results.file
+```
+
+...or we could redirect (`<`) the stream directly into the positional argument location:
+```bash
+# Method C -redirect stream
+COMMANDB <( COMMANDA input.file -s ) -o results.file
+```
+
+<br></br>
+
+More specifically, below shows how these methods would look linking the inputs and outputs of the [Expand BED][expand-bed] and [Tag Pileup][tag-pileup] tools for a user that wants to look at the tag pileup results around a wider coordinate interval window.
+```bash
+# Method A -save intermediate files
 java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -o intermediate.bed
 java -jar ScriptManager.jar read-analysis tag-pileup intermediate.bed data.bam -o RESULTS.composite
-```
-
-```bash
-java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c \
+# Method B -pipe stream
+java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -s \
   | java -jar ScriptManager.jar read-analysis tag-pileup - data.bam -o RESULTS.composite
-```
-
-```bash
+# Method C -redirect stream
 java -jar ScriptManager.jar read-analysis tag-pileup \
-  <(java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -c) \
+  <(java -jar ScriptManager.jar coordinate-manipulation expand-bed Tup1_peaks.bed -b 500 -s) \
   data.bam -o RESULTS.composite
 ```
 
-Advantages:
-1. Save on disk space (fewer intermediate files)
-2. Potentially speed up command by skipping steps to write intermediate file to disk (save on I/O operations
+
+[stdout-help]:https://linuxhint.com/bash_stdin_stderr_stdout/
+[expand-bed]:/docs/coordinate-manipulation/expand-bed
+[tag-pileup]:/docs/read-analysis/tag-pileup
