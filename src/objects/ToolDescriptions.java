@@ -25,6 +25,8 @@ public class ToolDescriptions {
 	public static final String md5checksum_description = "Calculate MD5 checksum for files.";
 	public static final String convertBEDChrNamesDescription = "Convert BED coordinate files between the standard SGD roman numeral chromosome names to the legacy SacCer3_cegr arabic numeral chromosome names.";
 	public static final String convertGFFChrNamesDescription = "Convert GFF coordinate files between the standard SGD roman numeral chromosome names to the legacy SacCer3_cegr arabic numeral chromosome names.";
+	public static final String compressFileDescription = "Compress (gzip) files.";
+	public static final String decompressFileDescription = "Decompress (gzip) files.";
 
 	// Peak Calling
 	public static final String gene_track_description = "Genetrack peak-calling algorithm.";

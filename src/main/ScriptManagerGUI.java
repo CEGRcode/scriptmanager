@@ -43,6 +43,8 @@ import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
 import window_interface.File_Utilities.MD5ChecksumWindow;
 import window_interface.File_Utilities.ConvertBEDChrNamesWindow;
 import window_interface.File_Utilities.ConvertGFFChrNamesWindow;
+import window_interface.File_Utilities.CompressFileWindow;
+import window_interface.File_Utilities.DecompressGZFileWindow;
 import window_interface.Read_Analysis.AggregateDataWindow;
 import window_interface.Read_Analysis.ScaleMatrixWindow;
 import window_interface.Read_Analysis.ScalingFactorWindow;
@@ -537,6 +539,62 @@ public class ScriptManagerGUI {
 		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, btnConvertGFFChrNames, 10, SpringLayout.WEST, pnlFileUtility);
 		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, txtConvertGFFChrNames, 10, SpringLayout.EAST, btnConvertGFFChrNames);
 		pnlFileUtility.add(btnConvertGFFChrNames);
+
+		// >CompressFileWindow
+		JTextArea txtCompressFile = new JTextArea();
+		initializeTextArea(txtCompressFile);
+		txtCompressFile.setText(ToolDescriptions.compressFileDescription);
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, txtCompressFile, 10, SpringLayout.SOUTH, txtConvertGFFChrNames);
+		sl_pnlFileUtility.putConstraint(SpringLayout.EAST, txtCompressFile, -10, SpringLayout.EAST, pnlFileUtility);
+		pnlFileUtility.add(txtCompressFile);
+
+		JButton btnCompressFile = new JButton("Compress Files");
+		btnCompressFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							CompressFileWindow frame = new CompressFileWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, btnCompressFile, 0, SpringLayout.NORTH, txtCompressFile);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, btnCompressFile, 10, SpringLayout.WEST, pnlFileUtility);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, txtCompressFile, 10, SpringLayout.EAST, btnCompressFile);
+		pnlFileUtility.add(btnCompressFile);
+
+		// >DecompressGZFileWindow
+		JTextArea txtDecompressFile = new JTextArea();
+		initializeTextArea(txtDecompressFile);
+		txtDecompressFile.setText(ToolDescriptions.decompressFileDescription);
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, txtDecompressFile, 10, SpringLayout.SOUTH, txtCompressFile);
+		sl_pnlFileUtility.putConstraint(SpringLayout.EAST, txtDecompressFile, -10, SpringLayout.EAST, pnlFileUtility);
+		pnlFileUtility.add(txtDecompressFile);
+
+		JButton btnDecompressFile = new JButton("Decompress Files");
+		btnDecompressFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							DecompressGZFileWindow frame = new DecompressGZFileWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, btnDecompressFile, 0, SpringLayout.NORTH, txtDecompressFile);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, btnDecompressFile, 10, SpringLayout.WEST, pnlFileUtility);
+		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, txtDecompressFile, 10, SpringLayout.EAST, btnDecompressFile);
+		pnlFileUtility.add(btnDecompressFile);
 
 		// >>>>>>>> Peak_Calling <<<<<<<<
 		JPanel pnlPeakCalling = new JPanel();
