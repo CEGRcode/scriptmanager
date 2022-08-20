@@ -45,7 +45,11 @@ public class FileSelection {
 	}
 	
 	public static File[] getFiles(JFileChooser fc, String ext){
-		fc.setFileFilter(new ExtensionFileFilter(ext));
+		return getFiles(fc, ext, false);
+	}
+
+	public static File[] getFiles(JFileChooser fc, String ext, boolean includeGZ){
+		fc.setFileFilter(new ExtensionFileFilter(ext,includeGZ));
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
 		fc.setSelectedFile(new File(""));

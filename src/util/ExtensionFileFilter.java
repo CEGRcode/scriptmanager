@@ -11,6 +11,7 @@ public class ExtensionFileFilter extends FileFilter{
 	private String ext = "";
 	private String ext2 = "";
 	private String ext3 = "";
+	private boolean includeGZ = false;
 	
 	public ExtensionFileFilter(String filter) {
 		ext = filter;
@@ -18,9 +19,16 @@ public class ExtensionFileFilter extends FileFilter{
 		if(ext.equals("gff")) { ext2 = "gtf"; ext3 = "gff3"; }
 	}
 	
+	public ExtensionFileFilter(String filter, boolean gz) {
+		ext = filter;
+		if(ext.equals("fa")) { ext2 = "fasta"; ext3 = "fsa"; }
+		if(ext.equals("gff")) { ext2 = "gtf"; ext3 = "gff3"; }
+		includeGZ = gz;
+	}
+	
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
-		String extension = getExtension(f);
+		String extension = includeGZ ? getExtensionIgnoreGZ(f) : getExtension(f);
 		if (extension != null) {
 			if (extension.equals(ext) || extension.equals(ext2) || extension.equals(ext3)) {
 				return true;
@@ -40,6 +48,22 @@ public class ExtensionFileFilter extends FileFilter{
         }
         return ext;
     }
+	
+	public static String getExtensionIgnoreGZ(File f) {
+		String ext = null;
+		String s = f.getName();
+		int i = s.lastIndexOf('.');
+		if (i > 0 &&  i < s.length() - 1) {
+			ext = s.substring(i+1).toLowerCase();
+			// Get ext before .gz
+			if (ext.equals("gz")) {
+				s = s.substring(0,i);
+				i = s.lastIndexOf('.');
+				ext = s.substring(i+1).toLowerCase();
+			}
+		}
+		return ext;
+	}
 
 	public static String stripExtension(File f) throws IOException {
 		String[] name = f.getName().split("\\.");
