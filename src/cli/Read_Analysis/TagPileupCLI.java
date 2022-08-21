@@ -218,6 +218,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		
 		//validate smooth params
 		if(smoothType.winVals!=-9999 && smoothType.winVals<1){ r += "(!)Invalid Smoothing Window Size. Must be larger than 0 bins, winSize=" + smoothType.winVals + "\n"; }
+		if(smoothType.winVals!=-9999 && smoothType.winVals%2==0){ r += "(!)Invalid Smoothing Window Size. Must be odd for symmetrical smoothing (so that the window is centered properly), winSize=" + smoothType.winVals + "\n"; }
 		if(smoothType.gaussVals[0]!=-9999 && smoothType.gaussVals[0]<1){ r += "(!)Invalid Standard Deviation Size. Must be larger than 0 bins, stdSize=" + smoothType.gaussVals[0] + "\n"; }
 		if(smoothType.gaussVals[1]!=-9999 && smoothType.gaussVals[1]<1){ r += "(!)Invalid Number of Standard Deviations. Must be larger than 0 standard deviations, stdNum=" + smoothType.gaussVals[1] + "\n"; }
 		
