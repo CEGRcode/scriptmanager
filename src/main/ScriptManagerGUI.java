@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -40,6 +41,7 @@ import window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow;
 import window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow;
+import window_interface.Coordinate_Manipulation.ShiftIntervalWindow;
 import window_interface.File_Utilities.MD5ChecksumWindow;
 import window_interface.File_Utilities.ConvertBEDChrNamesWindow;
 import window_interface.File_Utilities.ConvertGFFChrNamesWindow;
@@ -847,6 +849,7 @@ public class ScriptManagerGUI {
 
 		// >>>>>>>> Coordinate_Manipulation <<<<<<<<
 		JPanel pnlCoordManip = new JPanel();
+		pnlCoordManip.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 5));
 		tabbedPane.addTab("Coordinate File Manipulation", null, pnlCoordManip, null);
 
 		JSplitPane splitPaneExpand = new JSplitPane();
@@ -972,6 +975,25 @@ public class ScriptManagerGUI {
 		});
 		splitPaneSort.setRightComponent(btnSortGffFile);
 
+		JButton btnShiftInterval = new JButton("Shift BED Interval");
+		btnSortGffFile.setToolTipText(ToolDescriptions.shift_coordinate_description);
+		btnShiftInterval.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ShiftIntervalWindow frame = new ShiftIntervalWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		pnlCoordManip.add(btnShiftInterval);
+		
+		
 		// >>>>>>>> Read_Analysis <<<<<<<<
 		JPanel pnlReadAnalysis = new JPanel();
 		SpringLayout sl_pnlReadAnalysis = new SpringLayout();
