@@ -1,12 +1,16 @@
 package scripts.Read_Analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
@@ -266,7 +271,6 @@ public class TagPileup {
 				COMPOSITE.println();
 			}
 		}
-
 	}
 
 	// Get size of largest array for composite generation
@@ -363,11 +367,18 @@ public class TagPileup {
 		return time;
 	}
 
-	public Vector<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
-		Scanner scan = new Scanner(INPUT);
+	public Vector<BEDCoord> loadCoord(File INPUT) throws UnsupportedEncodingException, IOException {
 		Vector<BEDCoord> COORD = new Vector<BEDCoord>();
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
+		BufferedReader br;
+		if (INPUT.getAbsoluteFile().toString().endsWith(".gz")) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(INPUT)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(INPUT), "UTF-8"));
+		}
+		
+		String line = br.readLine();
+		while (line != null) {
+			String[] temp = line.split("\t");
 			if (temp.length > 2) {
 				if (!temp[0].contains("track") && !temp[0].contains("#")) {
 					String name = "";
@@ -386,14 +397,14 @@ public class TagPileup {
 						} else {
 							COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name));
 						}
-
 					} else {
 						System.err.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
 					}
 				}
 			}
+			line = br.readLine();
 		}
-		scan.close();
+		br.close();
 		return COORD;
 	}
 

@@ -241,7 +241,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 10, SpringLayout.WEST, contentPane);
 		btnLoadBedFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc, "bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc, "bed", true);
 				if (newBEDFiles != null) {
 					for (int x = 0; x < newBEDFiles.length; x++) {
 						BEDFiles.add(newBEDFiles[x]);
