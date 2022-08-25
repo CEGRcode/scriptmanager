@@ -97,7 +97,7 @@ const config = {
             items: [
               {
                 label: 'Tool Index (A-Z)',
-                to: '/docs/tool-index',
+                to: '/docs/References/tool-index',
               },
               {
                 label: 'File Formats',
