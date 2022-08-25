@@ -30,7 +30,7 @@ public class RandomCoordinate {
 		else { EXTENSION = ".gff"; }
 	}
 	
-	public void execute() throws IOException {
+	public void execute() throws IOException, IllegalArgumentException {
 	    GenomeSizeReference coord = new GenomeSizeReference(GENOME);
 	    if(!coord.isSmaller(windowSize)) {
 	    	System.err.println("Window size is too large for selected genome!!!\n");
