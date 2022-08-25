@@ -4,11 +4,11 @@ title: Mark Duplicates (Picard)
 sidebar_label: Mark Duplicates
 ---
 
-![remove-duplicates](/../static/icons/bam-manipulation/MarkDuplicates_square.svg)
+![remove-duplicates](/../static/icons/BAM_Manipulation/BAMMarkDuplicates_square.svg)
 
 Removes or marks duplicate reads in paired-end sequencing given identical 5' read positions. _Read more in the [Picard documentation][picard-markdup]_.
 
-<img src={require('/../static/md-img/BAMManipulation/MarkDuplicates.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/BAM_Manipulation/BAMMarkDupWindow.png').default} style={{width:70+'%'}}/>
 
 ### File inputs (BAM list)
 

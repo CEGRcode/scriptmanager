@@ -189,7 +189,7 @@ export const toolIndex = [
 		group: "SA",
 		description: "Randomizes FASTA sequence for each input entry",
 		command: "-",
-		url: "docs/sequence-analysis/randomize-fasta", 
+		url: "docs/sequence-analysis/randomize-fasta",
 	},
 	{
 	  name: "Mark (Remove) Duplicates",
@@ -224,7 +224,7 @@ export const toolIndex = [
 		group: "SA",
 		description: "Search for an IUPAC DNA sequence motif in FASTA files with mismatches allowed",
 		command: "-",
-		url: "docs/sequence-analysis/search-motif",  
+		url: "docs/sequence-analysis/search-motif",
 	},
 	{
 		name: "Signal Duplication",

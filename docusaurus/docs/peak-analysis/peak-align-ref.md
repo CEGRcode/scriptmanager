@@ -4,11 +4,13 @@ title: Align BED to Reference
 sidebar_label: peak-align-ref
 ---
 
-![peak-align-ref](/../static/icons/PeakAnalysis/AlignBEDtoReference_square.svg)
+![peak-align-ref](/../static/icons/Peak_Analysis/BEDPeakAligntoRef_square.svg)
 
 Align BED peaks to Reference BED file creating CDT files for heatmap generation
 
-<img src={require('/../static/md-img/PeakAnalysis/AlignBEDtoReference.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Peak_Analysis/BEDPeakAligntoRefWindow.png').default} style={{width:70+'%'}}/>
+
+## Command Line Interface
 
 Usage:
 ```bash

@@ -4,11 +4,11 @@ title: Merge BAM
 sidebar_label: Merge BAM
 ---
 
-![merge-bam](/../static/icons/bam-manipulation/BAMReplicateMerge_square.svg)
+![merge-bam](/../static/icons/BAM_Manipulation/MergeSamFiles_square.svg)
 
 Merges Multiple BAM files into single BAM file. Sorting is performed automatically. RAM intensive process. If program freezes, increase JAVA heap size.
 
-<img src={require('/../static/md-img/BAMManipulation/MergeBAM.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/BAM_Manipulation/MergeBAMWindow.png').default} style={{width:70+'%'}}/>
 
 This is frequently used for replicate merging. All input files loaded will be saved to a merged BAM file with the default `merged_BAM.bam` but user-customizable filename in the "Output Directory".
 

@@ -4,13 +4,17 @@ title: BAM Correlation
 sidebar_label: bam-correlation
 ---
 
-![bam-correlation](/../static/icons/BAMStatistics/BAMCorrelation_square.svg)
+![bam-correlation](/../static/icons/BAM_Statistics/BAMGenomeCorrelation_square.svg)
 
-_Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File._
+Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.
 
-<img src={require('/../static/md-img/BAMStatistics/BAMCorrelation.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/BAM_Statistics/BAMGenomeCorrelationWindow.png').default} style={{width:70+'%'}}/>
 
-## Command Line (bam-correlation)
+:::caution
+Make sure your BAM input files are [sorted][sort-bam] and [indexed][bam-indexer].
+:::
+
+## Command Line Interface
 
 Compare a list of BAM files to get a matrix of correlations between them. Outputs both a text file of matrix correlation scores and a heatmap PNG.
 
@@ -21,13 +25,6 @@ java -jar ScriptManager.jar bam-statistics bam-correlation
 [-1 | -2 | -a | -m] [-fhV] [-b=<binSize>] [--cpu=<cpu>]
 [-o=<outputBasename>] [-t=<tagshift>] [<inputFiles>...]
 ```
-
-Description:
-
-Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.
-
-
-
 
 ### Input Options
 | Option | Description |
@@ -87,3 +84,7 @@ _Note that absolute file paths are easier to work with. For relative paths, you\
 | `-2, --read2` | output read 2 |
 | `-a, --all-reads` | output combined |
 | `-m, --midpoint` | output midpoint (require PE) |
+
+
+[sort-bam]:/docs/bam-manipulation/sort-bam
+[bam-indexer]:/docs/bam-manipulation/bam-indexer

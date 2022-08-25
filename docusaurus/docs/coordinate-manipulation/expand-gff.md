@@ -4,11 +4,14 @@ title: Expand GFF File
 sidebar_label: expand-gff
 ---
 
-![expand-gff](/../static/icons/CoordinateManipulation/ExpandGFF_square.svg)
+![expand-gff](/../static/icons/Coordinate_Manipulation/ExpandGFF_square.svg)
 
 Expands input GFF file by adding positions to the border or around the center
 
-<img src={require('/../static/md-img/Coordinate Manipulation/ExpandGFF.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Coordinate_Manipulation/ExpandGFFWindow.png').default} style={{width:70+'%'}}/>
+
+
+## Command Line Interface
 
 Usage:
 ```bash
@@ -38,4 +41,4 @@ This tool takes a single [GFF file][gff-format] for input.
 | `-b, --border` | add to border |
 
 
-[gff-format]:file-formats.md
+[gff-format]:/docs/file-formats#gff

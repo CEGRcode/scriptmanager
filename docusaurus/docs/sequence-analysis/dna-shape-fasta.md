@@ -4,12 +4,12 @@ title: DNA Shape from FASTA File
 sidebar_label: dna-shape-fasta
 ---
 
-![dna-shape-fasta](/../static/icons/SequenceAnalysis/DNAShapefromFASTA_square.svg)
+![dna-shape-fasta](/../static/icons/Sequence_Analysis/DNAShapefromFASTA_square.svg)
 
 Calculate intrinsic DNA shape parameters given input FASTA files. Based on
 Roh's lab DNAshape server data
 
-<img src={require('/../static/md-img/SequenceAnalysis/DNAShapefromFASTAFile.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Sequence_Analysis/DNAShapefromFASTAWindow.png').default} style={{width:70+'%'}}/>
 
 Usage:
 ```bash
@@ -39,7 +39,7 @@ Expects a [FASTA][fasta-format] formatted file with many sequences to stack up w
 | `-l, --helical` | output helical twist
 | `-a, --all` | output groove, roll, propeller twist, and helical twist, equivalent to `-grpl`.
 
-[Roh_paper]:www.pubmed.gov
+[rohs-paper]:https://pubmed.ncbi.nlm.nih.gov/23703209/
 
-[cdt-format]:file-formats.md
-[fasta-format]:file-formats.md
+[cdt-format]:/docs/file-formats#cdt
+[fasta-format]:/docs/file-formats#fasta

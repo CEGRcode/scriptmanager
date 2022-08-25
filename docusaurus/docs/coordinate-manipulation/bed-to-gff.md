@@ -4,11 +4,14 @@ title: Convert BED to GFF
 sidebar_label: BED to GFF
 ---
 
-![BEDtoGFF](/../static/icons/CoordinateManipulation/BED-to-GFF_square.svg)
+![BEDtoGFF](/../static/icons/Coordinate_Manipulation/BEDtoGFF_square.svg)
 
 Converts [BED file][bed-format]  to [GFF file][gff-format]
 
-<img src={require('/../static/md-img/Coordinate Manipulation/ConvertBEDtoGFF.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Coordinate_Manipulation/BEDtoGFFWindow.png').default} style={{width:70+'%'}}/>
+
+
+## Command Line Interface
 
 Usage:
 ```bash
@@ -27,5 +30,5 @@ This tool takes a single [BED file][bed-format] for input.
 | -o, --output | specify output directory (default name will be same as original with .gff ext) |
 | -s, --stdout | output gff to STDOUT |
 
-[bed-format]:/docs/file-formats
-[gff-format]:/docs/file-formats
+[bed-format]:/docs/file-formats#bed
+[gff-format]:/docs/file-formats#gff

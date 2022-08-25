@@ -4,7 +4,7 @@ title: Merge Heatmap
 sidebar_label: Merge Heatmap
 ---
 
-![Merge Heatmap](/../static/icons/FigureGeneration/MergeHeatmaps_square.svg)
+![Merge Heatmap](/../static/icons/Figure_Generation/MergeHeatmaps_square.svg)
 
 export const Highlight = ({children, color}) => (
 <span
@@ -20,11 +20,11 @@ style={{
 
 This tool merges two PNG files into a third PNG file that is an average of each corresponding pair of pixels from the input files.
 
-<img src={require('/../static/md-img/FigureGeneration/mergeheatmapgraphic.jpg').default} style={{width:35+'%'}}/>
+<img src={require('/../static/md-img/Figure_Generation/MergeHeatMapSchematic.jpg').default} style={{width:35+'%'}}/>
 
 Typical use of this tool is for merging <Highlight color="blue">blue(sense)</Highlight> and <Highlight color="red">red(anti-sense)</Highlight> [**two-color heatmap plots**][heatmap] plots for [**ChIP-exo analysis**][chip-exo-tutorial].
 
-<img src={require('/../static/md-img/FigureGeneration/MergeHeatmap.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/Figure_Generation/MergeHeatMapWindow.png').default} style={{width:70+'%'}}/>
 
 Any file with a `.png` extension may be loaded into the Merge Heatmap tool. When a batch of files have been loaded, the user can click "Merge" which will execute the script which will run the script to pair off samples based on their filenames and merge each pair into a new file with the `*_merge.png` suffix.
 
@@ -66,9 +66,17 @@ We define the **merged `.png` heatmap** ($P_{merge}$) pixel matrix as follows:
 
 $$
 \forall M_i \in P_{merge},\\
-M_i = (\frac{\textcolor{red}{r_s} + \textcolor{red}{r_a}}{2},
+
+M_i =
+\begin{cases}
+A_i     &, \text{if } \textcolor{red}{r_s} >=240 \text{, } \textcolor{green}{g_s} >=240 \text{, and } \textcolor{blue}{b_s} >= 240
+\\
+S_i     &, \text{if } \textcolor{red}{r_a} >=240 \text{, } \textcolor{green}{g_a} >=240 \text{, and } \textcolor{blue}{b_a} >= 240
+\\
+(\frac{\textcolor{red}{r_s} + \textcolor{red}{r_a}}{2},
   \frac{\textcolor{green}{g_s} + \textcolor{green}{g_a}}{2},
-  \frac{\textcolor{blue}{b_s} + \textcolor{blue}{b_a}}{2})
+  \frac{\textcolor{blue}{b_s} + \textcolor{blue}{b_a}}{2})     &, \text{otherwise}
+\end{cases}
 $$
 
 :::note

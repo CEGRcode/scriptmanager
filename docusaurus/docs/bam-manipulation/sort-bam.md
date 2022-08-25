@@ -3,11 +3,11 @@ id: sort-bam
 title: Sort BAM
 sidebar_label: Sort BAM
 ---
-![sort-bam](/../static/icons/bam-manipulation/BamManipulation:SortBAM.svg)
+![sort-bam](/../static/icons/BAM_Manipulation/BAMFileSort_square.svg)
 
 Sort BAM files in order to efficiently extract and manipulate. RAM intensive process. If program freezes, increase JAVA heap size.
 
-<img src={require('/../static/md-img/BAMManipulation/SortBAM.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/BAM_Manipulation/SortBAMWindow.png').default} style={{width:70+'%'}}/>
 
 Many bioinformatic files require sorting BAM files so that they can be efficiently parsed. It is good practice to keep your BAM files sorted.
 

@@ -4,7 +4,7 @@ title: Chromosome Name Converter
 sidebar_label: Chr Name Converter
 ---
 
-![ChrNameConverter](/../static/icons/FileUtilities/Roman_Arabicchrnameconverter_square.svg)
+![ChrNameConverter](/../static/icons/File_Utilities/ConvertChrNames_square.svg)
 
 Different files using different chromosome naming systems for the same genome build presents a challenge during analysis. This tool is provided as a converter between chromosome naming systems for tab-delimited file formats such as BED and GFF.
 
@@ -21,8 +21,6 @@ chrM &harr; chrmt
 
 Also, a mitochondiral chromosome name conversion is also included with the selection of a checkbox option.
 
-<img src={require('/../static/md-img/FileUtilities/ChromosomeNameConverterBED.png').default} style={{width:70+'%'}}/> 
-
-<img src={require('/../static/md-img/FileUtilities/ChromosomeNameConverterGFF.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/File_Utilities/ConvertBEDChrNamesWindow.png').default} style={{width:50+'%'}}/><img src={require('/../static/md-img/File_Utilities/ConvertGFFChrNamesWindow.png').default} style={{width:50+'%'}}/>
 
 ### Command Line Interface
