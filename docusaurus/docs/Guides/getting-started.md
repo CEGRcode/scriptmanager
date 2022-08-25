@@ -120,6 +120,10 @@ The help documentation is very useful so at any point in constructing your comma
 ## Citing Us
 If you use ScriptManager in your work, you can use the [Lang et al (2022)][pearc-paper] publication or use ScriptManager's unique [RRID:**SCR_021797**][rrid-link].
 
+:::tip
+We welcome anyone who uses ScriptManager for analysis in their publications to let us know by sending an email to owl8@cornell.edu so we can list it in our [showcase of publications][publications-list]!
+:::
+
 [openjdk]:https://openjdk.java.net/install/
 [conda-openjdk]:https://anaconda.org/conda-forge/openjdk
 [github-releases]:https://github.com/CEGRcode/scriptmanager/releases
@@ -130,3 +134,4 @@ If you use ScriptManager in your work, you can use the [Lang et al (2022)][pearc
 [github-repo]:https://github.com/CEGRcode/scriptmanager
 [sdk-notes]:/docs/Contributing/developer-guidelines#sdkman
 [cli]:/docs/Guides/command-line
+[publications-list]:/docs/References/publications

@@ -2,7 +2,7 @@ module.exports = {
   someSidebar: {
     Guides: ["Guides/getting-started", "Guides/command-line", "Guides/tool-group", "Guides/color-guide"],
     Tutorials: ["Tutorials/threebasicplots-exo"],
-    References: ["file-formats", "tool-index"],
+    References: ["file-formats", "References/tool-index", "References/publications"],
     Contributing: ["Contributing/developer-guidelines", "Contributing/testing"],
     Community: ["Community/code-of-conduct"],
   },
