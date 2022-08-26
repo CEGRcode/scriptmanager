@@ -15,17 +15,20 @@ Both Graphical User Interface (GUI) and Command Line Interface (CLI) execution o
 
 ### Java
 
-This tool is a Java-based tool and has been developed for Java versions 8 or higher. Most machines already have Java installed! So check if you've got it first!
+This tool is a Java-based tool and has been developed to run using Java versions 8 or higher. Set up Java on your machine in one of many ways...
 
-There are many ways to set up Java on your machine but we are just including three ways below:
+* **Option A:** Download [OpenJDK for Java 11][temurin-11] (recommend for novice users)
 
-1. Download [OpenJDK for Java 8][openjdk] (recommend for novice users)
-2. Create a [conda][conda-openjdk] environment with Java:
+* **Option B:** If you have Anaconda set up on a Unix/MacOS system, create a [conda][conda-openjdk] environment with Java using the following command:
 ```
 conda install -n my-env -c conda-forge openjdk
 ```
-3. ...or use [SDKMAN!][sdk-notes] (what Olivia does)
 
+Feel free to use whatever Java installation method you are most comfortable with. Most machines already have Java installed! **So check if you've got it first!**
+
+:::note
+**For Developers:** If you are writing code for scriptmanager and need to flip between Java versions to perform testing across different versions and releases, consider using  [SDKMAN!][sdk-notes] (what Olivia does).
+:::
 
 ## Set-up: Download Executable and Start
 There are two ways to obtain the ScriptManager executable JAR file.
@@ -49,8 +52,12 @@ cd scriptmanager
 
 The ScriptManager jar file will be created in the `build/libs` directory. As long as you have this file, you can move it wherever you want and do whatever you want with the rest of the ScriptManager files (even delete them). If you ever lose the JAR file, you can regenerate it by rerunning the Gradle build command in while in the `scriptmanager` directory.
 
+:::caution
+Please note that the latest **Java version** may not be compatible our supported Gradle version to compile. The JAR can be *executed* on most versions but compiling the code may require installing an older version of Java. Consider directly downloading the JAR executable (instructions above) if these steps aren't working.
+:::
+
 ### Update the Github repository (update to latest dev version)
-If you ever need to update to get the latest code from the Github repo, just navigate to the `scriptmanager` directory and run the following commands to update and then re-build your JAR executable.
+If you ever need to get the latest code from the Github repo, just navigate to the `scriptmanager` directory and run the following commands in the terminal to update and then re-build your JAR executable.
 ```bash
 cd scriptmanager
 git pull
@@ -124,7 +131,7 @@ If you use ScriptManager in your work, you can use the [Lang et al (2022)][pearc
 We welcome anyone who uses ScriptManager for analysis in their publications to let us know by sending an email to owl8@cornell.edu so we can list it in our [showcase of publications][publications-list]!
 :::
 
-[openjdk]:https://openjdk.java.net/install/
+[temurin-11]:https://adoptium.net/temurin/releases?version=11
 [conda-openjdk]:https://anaconda.org/conda-forge/openjdk
 [github-releases]:https://github.com/CEGRcode/scriptmanager/releases
 [direct-download-jar]:https://github.com/CEGRcode/scriptmanager/releases/download/v0.13/ScriptManager-v0.13.jar
