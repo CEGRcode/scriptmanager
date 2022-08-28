@@ -111,6 +111,9 @@ public class PlotComposite {
 			// set default output filename
 			if (OUT_PATH == null) {
 				OUT_PATH = new File(ExtensionFileFilter.stripExtension(input) + "_plot.png");
+			} else if (OUT_PATH.isDirectory()) {
+				OUT_PATH = new File(OUT_PATH.getCanonicalFile() + File.separator + ExtensionFileFilter.stripExtension(input) + "_plot.png");
+
 			}
 			ChartUtils.writeChartAsPNG(new FileOutputStream(OUT_PATH), chart, pxWidth, pxHeight);
 		}
