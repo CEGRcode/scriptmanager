@@ -23,7 +23,7 @@ public class GenomeSizeReference {
 		setGenome(build);
 	}
 	
-	public void setGenome(String build) {
+	public void setGenome(String build) throws IllegalArgumentException {
 		if (build.equals("sacCer3")) {
 			initialize_sacCer3();
 		} else if(build.equals("sacCer3_cegr")) {
@@ -35,7 +35,7 @@ public class GenomeSizeReference {
 		} else if(build.equals("mm10")) {
 			initialize_mm10();
 		} else {
-			System.err.println("Non-existent genome build!\n");
+			throw new IllegalArgumentException(" (!)Invalid genomeName selected(" + build + "), please select from one of the provided genomes: sacCer3_cegr, hg19, hg19_contigs, and mm10\n");
 		}
 	}
 	

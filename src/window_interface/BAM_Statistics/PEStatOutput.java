@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -74,53 +75,67 @@ public class PEStatOutput extends JFrame {
 	}
 	
 	public void run() throws IOException {
-		//Iterate through all BAM files in Vector	
+		// Check if BAI index file exists for all BAM files
+		boolean[] BAMvalid = new boolean[bamFiles.size()];
+		for (int z = 0; z < bamFiles.size(); z++) {
+			File BAM = bamFiles.get(z); // Pull current BAM file
+			File f = new File(BAM + ".bai"); // Generate file name for BAI index file
+			if (!f.exists() || f.isDirectory()) {
+				BAMvalid[z] = false;
+				JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + BAM.getName());
+				System.err.println("BAI Index File does not exist for: " + BAM.getName());
+			} else {
+				BAMvalid[z] = true;
+			}
+		}
+		//Iterate through all BAM files in Vector
 		for(int x = 0; x < bamFiles.size(); x++) {
-			// Construct Basename
-			File OUT_BASENAME = null;
-			if(OUTPUT_STATUS){
-				try{
-					if(OUT_DIR == null) { OUT_BASENAME = new File(bamFiles.get(x).getName().split("\\.")[0]); }
-					else { OUT_BASENAME = new File( OUT_DIR.getCanonicalPath() + File.separator + bamFiles.get(x).getName().split("\\.")[0] ); }
+			if (BAMvalid[x]) {
+				// Construct Basename
+				File OUT_BASENAME = null;
+				if(OUTPUT_STATUS){
+					try{
+						if(OUT_DIR == null) { OUT_BASENAME = new File(bamFiles.get(x).getName().split("\\.")[0]); }
+						else { OUT_BASENAME = new File( OUT_DIR.getCanonicalPath() + File.separator + bamFiles.get(x).getName().split("\\.")[0] ); }
+					}
+					catch (FileNotFoundException e) { e.printStackTrace(); }
 				}
-				catch (FileNotFoundException e) { e.printStackTrace(); }
-// 				catch (IOException e) {	e.printStackTrace(); }
-			}
-			
-			// Initialize PrintStream and TextArea for PE stats (insert sizes)
-			PrintStream ps_insert = null;
-			JTextArea PE_STATS = new JTextArea();
-			PE_STATS.setEditable(false);
-			ps_insert = new PrintStream(new CustomOutputStream( PE_STATS ));
-			// Initialize PrintStream and TextArea for DUP stats
-			PrintStream ps_dup = null;
-			JTextArea DUP_STATS = new JTextArea();
-			if(DUP_STATUS) {
-				DUP_STATS.setEditable(false);
-				ps_dup = new PrintStream(new CustomOutputStream( DUP_STATS ));
-			}
 
-			//Call public static method from scripts
-			Vector<ChartPanel> charts = PEStats.getPEStats( OUT_BASENAME, bamFiles.get(x), DUP_STATUS, MIN_INSERT, MAX_INSERT, ps_insert, ps_dup, false );
-			
-			//Add pe stats to tabbed pane
-			PE_STATS.setCaretPosition(0);
-			JScrollPane pe_pane = new JScrollPane(PE_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			tabbedPane_InsertStats.add(bamFiles.get(x).getName(), pe_pane);
-			tabbedPane_Histogram.add(bamFiles.get(x).getName(), charts.get(0));
-			
-			if(DUP_STATUS) {
-				//Add duplication stats to tabbed pane
-				DUP_STATS.setCaretPosition(0);
-				JScrollPane dup_pane = new JScrollPane(DUP_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				tabbedPane_DupStats.add(bamFiles.get(x).getName(), dup_pane);
-				tabbedPane_Duplication.add(bamFiles.get(x).getName(), charts.get(1));
+				// Initialize PrintStream and TextArea for PE stats (insert sizes)
+				PrintStream ps_insert = null;
+				JTextArea PE_STATS = new JTextArea();
+				PE_STATS.setEditable(false);
+				ps_insert = new PrintStream(new CustomOutputStream( PE_STATS ));
+				// Initialize PrintStream and TextArea for DUP stats
+				PrintStream ps_dup = null;
+				JTextArea DUP_STATS = new JTextArea();
+				if(DUP_STATUS) {
+					DUP_STATS.setEditable(false);
+					ps_dup = new PrintStream(new CustomOutputStream( DUP_STATS ));
+				}
+
+				//Call public static method from scripts
+				Vector<ChartPanel> charts = PEStats.getPEStats( OUT_BASENAME, bamFiles.get(x), DUP_STATUS, MIN_INSERT, MAX_INSERT, ps_insert, ps_dup, false );
+
+				//Add pe stats to tabbed pane
+				PE_STATS.setCaretPosition(0);
+				JScrollPane pe_pane = new JScrollPane(PE_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				tabbedPane_InsertStats.add(bamFiles.get(x).getName(), pe_pane);
+				tabbedPane_Histogram.add(bamFiles.get(x).getName(), charts.get(0));
+
+				if(DUP_STATUS) {
+					//Add duplication stats to tabbed pane
+					DUP_STATS.setCaretPosition(0);
+					JScrollPane dup_pane = new JScrollPane(DUP_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					tabbedPane_DupStats.add(bamFiles.get(x).getName(), dup_pane);
+					tabbedPane_Duplication.add(bamFiles.get(x).getName(), charts.get(1));
+				}
+
+				if(ps_dup!=null) { ps_dup.close(); }
+				ps_insert.close();
+
+				firePropertyChange("bam",x, x + 1);
 			}
-			
-			if(ps_dup!=null) { ps_dup.close(); }
-			ps_insert.close();
-			
-			firePropertyChange("bam",x, x + 1);	
 		}
 	}
 }

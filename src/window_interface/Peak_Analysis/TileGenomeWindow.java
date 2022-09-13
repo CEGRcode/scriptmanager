@@ -69,6 +69,8 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	        		}
 	        	} catch(NumberFormatException nfe){
 					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(null, iae.getMessage());
 			}
 	        	return null;
         }
