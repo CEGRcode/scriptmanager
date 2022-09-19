@@ -367,7 +367,7 @@ public class TwoColorHeatMap {
 	public static ArrayList<double[]> loadMatrix(File input) throws UnsupportedEncodingException, IOException {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();
 		int currentRow = 0;
-		// Assume file is gzipped and create normal BufferedReader if not
+		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br;
 		if(GZipUtilities.isGZipped(input)) {
 			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));

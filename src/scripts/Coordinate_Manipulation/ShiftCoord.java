@@ -42,7 +42,7 @@ public class ShiftCoord {
 				OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(out_filepath)));
 			}
 		}
-		// Assume file is gzipped and create normal BufferedReader if not
+		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br;
 		if(GZipUtilities.isGZipped(input)) {
 			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
@@ -111,7 +111,7 @@ public class ShiftCoord {
 				OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(out_filepath)));
 			}
 		}
-		// Assume file is gzipped and create normal BufferedReader if not
+		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br;
 		if(GZipUtilities.isGZipped(input)) {
 			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
