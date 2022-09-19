@@ -13,9 +13,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -366,46 +368,34 @@ public class TwoColorHeatMap {
 	public static ArrayList<double[]> loadMatrix(File input) throws UnsupportedEncodingException, IOException {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();
 		int currentRow = 0;
-		if (input.getAbsoluteFile().toString().endsWith(".gz")) {
-			BufferedReader scan = new BufferedReader(
-					new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-			String line = scan.readLine();
-			while (line != null) {
-				String[] temp = line.split("\t");
-				if (!temp[0].contains("YORF") && currentRow >= startROW) {
-					double[] ARRAY = new double[temp.length - startCOL];
-					for (int x = startCOL; x < temp.length; x++) {
-						try {
-							ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
-						} catch (NumberFormatException nfe) {
-							ARRAY[x - startCOL] = Double.NaN;
-						}
-					}
-					matrix.add(ARRAY);
-				}
-				currentRow++;
-				line = scan.readLine();
-			}
-			scan.close();
-		} else {
-			Scanner scan = new Scanner(input);
-			while (scan.hasNextLine()) {
-				String[] temp = scan.nextLine().split("\t");
-				if (!temp[0].contains("YORF") && currentRow >= startROW) {
-					double[] ARRAY = new double[temp.length - startCOL];
-					for (int x = startCOL; x < temp.length; x++) {
-						try {
-							ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
-						} catch (NumberFormatException nfe) {
-							ARRAY[x - startCOL] = Double.NaN;
-						}
-					}
-					matrix.add(ARRAY);
-				}
-				currentRow++;
-			}
-			scan.close();
+		// Assume file is gzipped and create normal BufferedReader if not
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+		} catch (ZipException e) {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
 		}
+		// Initialize line variable to loop through
+		String line = br.readLine();
+		while (line != null) {
+			// Split into tokens by tab delimiter
+			String[] temp = line.split("\t");
+			if (!temp[0].contains("YORF") && currentRow >= startROW) {
+				double[] ARRAY = new double[temp.length - startCOL];
+				for (int x = startCOL; x < temp.length; x++) {
+					try {
+						ARRAY[x - startCOL] = Double.parseDouble(temp[x]);
+					} catch (NumberFormatException nfe) {
+						ARRAY[x - startCOL] = Double.NaN;
+					}
+				}
+				matrix.add(ARRAY);
+			}
+			currentRow++;
+			line = br.readLine();
+		}
+		// Close files
+		br.close();
 		return matrix;
 	}
 

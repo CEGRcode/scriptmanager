@@ -4,25 +4,19 @@ title: Single-End Statistics
 sidebar_label: se-stat
 ---
 
-![se-stat](/../static/icons/BAMStatistics/Single-endstatistics_square.svg)
+![se-stat](/../static/icons/BAM_Statistics/SEStats_square.svg)
 
-_Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files._
+Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.
 
-<img src={require('/../static/md-img/BAMStatistics/Single-EndStatistics.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/BAM_Statistics/SEStatWindow.png').default} style={{width:70+'%'}}/>
 
-## Command Line (se-stat)
+## Command Line Interface
 
 Usage:
 ```bash
 java -jar ScriptManager.jar bam-statistics se-stat <bamFile>
 [-hV] [-o=<output>]
 ```
-
-Description:
-
-Output BAM Header including alignment statistics and parameters given any
-indexed (BAI) BAM File.
-
 
 ### Positional Input
 

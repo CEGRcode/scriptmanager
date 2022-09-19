@@ -4,12 +4,13 @@ title: BAM to BED
 sidebar_label: bam-to-bed
 ---
 
-<!-- <img src={image} alt="" style={{width:70+'%'}}/> -->
+![bam-to-bed](/../static/icons/BAM_Format_Converter/BAMtoBED_square.svg)
 
-![bam-to-bed](/../static/icons/bam-format-converter/BAM-FormatConverter:BAMtoBED.svg)
 Convert BAM file to BED file
 
-<img src={require('/../static/md-img/BAMFormatConverter/BAM-FormatConverter_BAMtoBED.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/BAM_Format_Converter/BAMtoBEDWindow.png').default} style={{width:70+'%'}}/>
+
+## Command Line Interface
 
 Usage:
 

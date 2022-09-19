@@ -9,7 +9,7 @@ Signal Duplication is still under development and not yet actively supported.
 
 Calculate duplication statistics at user-specified regions.
 
-<img src={require('/../static/md-img/PeakAnalysis/signal-dup.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/Peak_Analysis/SignalDuplicationWindow.png').default} style={{width:70+'%'}}/>
 
 ## Command Line Interface
 

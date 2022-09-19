@@ -1,10 +1,10 @@
 ---
 id: heatmap
 title: Two-color Heatmap
-sidebar_label: Two-color heatmap
+sidebar_label: Two-color Heatmap
 ---
 
-![Two-colorheatmap](/../static/icons/FigureGeneration/TwoColorHeatmap_square.svg)
+![Two-colorheatmap](/../static/icons/Figure_Generation/TwoColorHeatmap_square.svg)
 
 export const Highlight = ({children, color}) => (
 <span
@@ -42,7 +42,7 @@ The values to color scale is defined as a range from a minimum value of 0 (desig
 
 <div className="row">
   <div class = "col col--3">
-  <img src={require('/../static/md-img/FigureGeneration/matrix.jpg').default} style={{width:85+'%',}}/>
+  <img src={require('/../static/md-img/Figure_Generation/matrix.jpg').default} style={{width:85+'%',}}/>
   </div>
   <div class = "col col--2">
   <img src={require('/../static/md-img/blue_nucleosome.png').default} style={{width:100+'%',}}/>
@@ -58,7 +58,7 @@ The values to color scale is defined as a range from a minimum value of 0 (desig
   </div>
 </div>
 
-<!--[blue-nucleosome](/../static/md-img/FigureGeneration/matrix.jpg)
+<!--[blue-nucleosome](/../static/md-img/Figure_Generation/matrix.jpg)
 ![blue-nucleosome](/../static/md-img/blue_nucleosome.png)
 ![default-nucleosome](/../static/md-img/default_nucleosome.png)
 ![custom-nucleosome](/../static/md-img/custom_nucleosome.png)
@@ -67,7 +67,7 @@ The values to color scale is defined as a range from a minimum value of 0 (desig
 
 This tool is typically used for visualizing the matrix output of [**Tag Pileup**][tag-pileup] to look at the raw tag coverage of any biochemical sequencing assay (ChIP-exo, ATAC-seq, PROcap, etc.). But there are many other tools in ScriptmManager like [**Align BED to Reference**][peak-align-ref] that produce output that can be visualized by this tool. Any tab-delimited text file can be used (many third party tools use such outputs) so long as the appropriate start row and start column are specified to skip over header columns and rows.
 
-<img src={require('/../static/md-img/FigureGeneration/Twocolorheatmap.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/Figure_Generation/TwoColorHeatMapWindow.png').default} style={{width:70+'%'}}/>
 
 ### File inputs
 

@@ -30,8 +30,8 @@ While there are plenty of developer tools available for Java developers, this pa
 ## Java Development
 We write exclusively in Java or Java-compiled languages without any operating-system specific packages (to maintain portability across machines).
 
-### SDK Man
-Olivia recommends installing Java using [SDKMan][sdkman] for convenient flipping between Java versions. While ScriptManager is currently developed to the Java 8 SE standard, it is good practice to check for forward and backward compatibility between Java versions. We are constantly monitoring new Java releases and developing according to a standard that is consistent across Java versions makes our lives easier down the road when the Java version standard is incremented.
+### SDKMAN!
+Olivia recommends installing Java using [SDKMAN!][sdkman] for convenient flipping between Java versions and releases. While ScriptManager is currently developed to the Java 8 SE standard, it is good practice to check for forward and backward compatibility between Java versions. We are constantly monitoring new Java releases and developing according to a standard that is consistent across Java versions makes our lives easier down the road when the Java version standard is incremented.
 
 ### Integrated Development Environment (IDE) - Eclipse
 We recommend using [Eclipse][eclipse] to write Java code for ScriptManager because it supports both [Gradle][gradle] (see below) and [WindowBuilder][window-builder] for convenient building of JAR files and graphical interface development.
@@ -39,6 +39,11 @@ We recommend using [Eclipse][eclipse] to write Java code for ScriptManager becau
 ### Gradle-based build
 Compiling Java classes and building JAR files could be handled manually, but for this project, we let Gradle juggle the process of compiling, retrieving dependencies, and building the final JAR file. The dependencies we use are a mix of downloaded JAR files (`scriptmanager/lib/*.jar` and dependencies retrieved directly from [Maven][maven]).
 
+Gradle will need to be updated periodically to support *building* on later Java versions.
+
+:::caution
+Please note the minimum Java version required to support building the JAR executable. Code compiling with Gradle creates an upper Java version limit depending on the version of Gradle used. See this [table][gradle-version-compatibility] for more information on version compatibility.
+:::
 
 ## The Code Structure (Packages)
 ```
@@ -150,16 +155,10 @@ The [Release Roadmap][release-roadmap] on Github organizes issue tickets and cre
 * Switch naming back to `dev`
   * [ ] `build.gradle` file should switch naming JAR to use `dev`
 
-
-
-
-
-
-
-
 [eclipse]:https://www.eclipse.org/ide/
 [eclipse-ide]:https://www.eclipse.org/eclipseide/
 [gradle]:https://docs.gradle.org/current/userguide/userguide.html
+[gradle-version-compatibility]:https://docs.gradle.org/current/userguide/compatibility.html
 [htsjdk]:https://github.com/samtools/htsjdk
 [jfree]:https://github.com/jfree/jfreechart
 [maven]:https://maven.apache.org/

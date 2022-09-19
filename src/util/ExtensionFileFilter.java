@@ -73,6 +73,16 @@ public class ExtensionFileFilter extends FileFilter{
 		}
 		return(NEWNAME);
 	}
+
+	public static String stripExtensionIgnoreGZ(File f) throws IOException {
+		String NEWNAME = f.getName();
+		if (NEWNAME.endsWith(".gz")) { NEWNAME = NEWNAME.substring(0, NEWNAME.length()-3); }
+		int i = NEWNAME.lastIndexOf('.');
+		if (i > 0 &&  i < NEWNAME.length() - 1) {
+			NEWNAME = NEWNAME.substring(0,i).toLowerCase();
+		}
+		return(NEWNAME);
+	}
 	
 	public static String stripExtensionPath(File f) throws IOException {
 		String NAME = f.getCanonicalPath();

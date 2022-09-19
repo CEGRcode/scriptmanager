@@ -163,7 +163,7 @@ Within the [Github repository][github-repo], there is (will be) also an [example
 [gui-expandbed]:/../static/figs-ex-chipexo/gui-expandbed.png
 
 [testdata-reb1-bed]:https://github.com/CEGRcode/2018-Rossi_GenomeResearch/blob/master/Fig1_Reb1/A.Reb1_Rhee_primary_sites_975.bed
-[testdata-reb1-bam]:https://github.com/CEGRcode/2018-Rossi_GenomeResearch/blob/master/Fig1_Reb1/A.Reb1_Rhee_primary_sites_975.bam
+[testdata-reb1-bam]:ftp://data1.commons.psu.edu/pub/commons/eberly/pughlab/yeast-epigenome-project/12141_YEP.zip
 [saccer3cegr-fasta]:https://github.com/CEGRcode/GenoPipe/blob/master/EpitopeID/utility_scripts/genome_data/download_sacCer3_Genome.sh
 [noble2009]:https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1000424&type=printable
 [github-repo]:https://www.github.com/CEGRcode/scriptmanager

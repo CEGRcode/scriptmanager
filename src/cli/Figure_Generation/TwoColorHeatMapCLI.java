@@ -108,13 +108,9 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 			r += "(!)CDT file does not exist: " + CDT.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		if (!"cdt".equals(ExtensionFileFilter.getExtension(CDT))) {
-			r += "(!)Is this a CDT file? Check extension: " + CDT.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
-			String NAME = ExtensionFileFilter.stripExtension(CDT);
+			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(CDT);
 			output = new File(NAME + "_" + scaleType + ".png");
 			// check output filename is valid
 		} else {

@@ -389,10 +389,10 @@ public class TagPileup {
 					}
 					if (Integer.parseInt(temp[1]) >= 0) {
 						if (temp.length > 4) {
-							if (temp[5].equals("+")) {
-								COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name));
-							} else {
+							if (temp[5].equals("-")) {
 								COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "-", name));
+							} else {
+								COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name));
 							}
 						} else {
 							COORD.add(new BEDCoord(temp[0], Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), "+", name));

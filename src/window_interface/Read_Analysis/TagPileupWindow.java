@@ -118,6 +118,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
 				} else if (rdbtnSlidingWindow.isSelected() && Integer.parseInt(txtSmooth.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be larger than 0 bp");
+				} else if (rdbtnSlidingWindow.isSelected() && Integer.parseInt(txtSmooth.getText()) % 2 == 0) {
+					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be odd for symmetrical smoothing (so that the window is centered properly).");
 				} else if (rdbtnGaussianSmooth.isSelected() && Integer.parseInt(txtStdSize.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Standard Deviation Size!!! Must be larger than 0 bp");
 				} else if (rdbtnGaussianSmooth.isSelected() && Integer.parseInt(txtNumStd.getText()) < 1) {

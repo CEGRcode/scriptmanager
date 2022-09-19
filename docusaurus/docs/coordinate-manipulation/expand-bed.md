@@ -5,7 +5,7 @@ sidebar_label: Expand BED
 author: Olivia Lang
 ---
 
-![ExpandBED](/../static/icons/CoordinateManipulation/ExpandBED_square.svg)
+![ExpandBED](/../static/icons/Coordinate_Manipulation/ExpandBED_square.svg)
 
 Expands input BED file by adding positions to the border or around the center.
 
@@ -15,8 +15,7 @@ This script is related to several [Bedtools functions][bedtools-slop] and is typ
 
 The script can also pad the intervals of BED coordinates to create intervals that aren't necessarily all of a fixed length.
 
-[ToolWindow]
-
+<img src={require('/../static/md-img/Coordinate_Manipulation/ExpandBEDWindow.png').default} style={{width:70+'%'}}/>
 
 ### Input BED files
 The graphical interface restricts file selection by the `.bed` file extension. This tool supports batch processing of files.
@@ -31,7 +30,6 @@ Depending on the strategy selected, the "Size of Expansion" (in bp) can mean dif
 ### Output format
 For each input BED file, a new BED file is created with the original filename and the `.bed` file extension replaced with the `*_<sizeofexpansion>bp.bed` suffix.
 
-<img src={require('/../static/md-img/Coordinate Manipulation/ExpandBED.png').default} style={{width:70+'%'}}/> 
 
 ## Command Line Interface
 
@@ -64,7 +62,7 @@ This tool takes a single [BED file][bed-format] for input.
 
 [bedtools-slop]:https://bedtools.readthedocs.io/en/latest/content/tools/slop.html
 
-[bed-format]:/docs/file-formats
+[bed-format]:/docs/file-formats#bed
 [tag-pileup]:/docs/read-analysis/tag-pileup
 [four-color]:/docs/figure-generation/four-color
 [fasta-extract]:/docs/sequence-analysis/fasta-extract

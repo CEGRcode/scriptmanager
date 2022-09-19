@@ -4,11 +4,12 @@ title: DNA Shape from BED File
 sidebar_label: dna-shape-bed
 ---
 
-![dna-shape-bed](/../static/icons/SequenceAnalysis/DNAShapefromBED_square.svg)
+![dna-shape-bed](/../static/icons/Sequence_Analysis/DNAShapefromBED_square.svg)
 
 Calculate intrinsic DNA shape parameters given BED file and Genome FASTA file.
 
-<img src={require('/../static/md-img/SequenceAnalysis/DNA ShapefromBEDFile.png').default} style={{width:70+'%'}}/> 
+<!--![DNA Shape Cheatsheet](IMGADDRESS) -->
+<img src={require('/../static/md-img/Sequence_Analysis/DNAShapefromBEDWindow.png').default} style={{width:70+'%'}}/>
 
 Usage:
 ```bash
@@ -23,7 +24,7 @@ Notes: Sequences with Ns are thrown out.
 
 ### Positional Input
 
-Expects a [FASTA][fasta-format]] formatted file with many sequences to stack up with each other (like [fasta-extract tool][fasta-extract] output).
+Expects a [FASTA][fasta-format] formatted file with many sequences to stack up with each other (like [fasta-extract tool][fasta-extract] output).
 
 
 ### Output Options
@@ -56,9 +57,9 @@ For each shape option to calculate indicated by the command, a [CDT file][cdt-fo
 If the *groove* information is indicated in the command to be used for the output, a file called `<outputBasename>_MGW.cdt` will be generated.
 Similarly for *propeller*, *helical*, and *roll*, the output matrix [CDT files][cdt-format] will be named with the suffixes `_PTwist.cdt`, `_HTwist.cdt`, and `_Roll.cdt`, respectively.
 
+[rohs-paper]:https://pubmed.ncbi.nlm.nih.gov/23703209/
+[fasta-extract]:/docs/sequence-analysis/fasta-extract
 
-[Roh_paper]:www.pubmed.gov
-
-[cdt-format]:file-formats.md
-[bed-format]:file-formats.md
-[fasta-format]:file-formats.md
+[cdt-format]:/docs/file-formats#cdt
+[bed-format]:/docs/file-formats#bed
+[fasta-format]:/docs/file-formats#fasta

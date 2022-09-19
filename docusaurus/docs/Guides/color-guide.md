@@ -13,26 +13,29 @@ Color customization options available in the [Heatmap Labeler][heatmap-labeler],
 
 When the user opens up the color selector window, they will see several tabs, each visualizing a different method for selecting a custom color.
 
-The default/first tab ("Swatch") shows a bunch of color swatches for a fixed collection of colors to choose from.
-![swatch-guide](/../static/md-img/swatch-guide.png)
+![swatch-guide](/../static/md-img/ColorSelector/swatch-guide.png)
 
-The "HSV" tab allows the user to select a color based on the Hue, Saturation, and Value color system...
-![hsv-guide](/../static/md-img/hsv-guide.png)
+The default/first tab, "Swatch" (above), shows a bunch of color swatches for a fixed collection of colors to choose from.
 
-...while the "HSL" tab  allows the user to select a color based on the Hue, Saturation, and Lightness color system...
-![hsl-guide](/../static/md-img/hsl-guide.png)
+* "HSV" tab allows the user to select a color based on the Hue, Saturation, and Value color system
+* "HSL" tab  allows the user to select a color based on the Hue, Saturation, and Lightness color system
+* "RGB" tab  allows the user to select a color based on the Red, Green, and Blue color system
+* "CMYK" tab  allows the user to select a color based on the Cyan, Magenta, Yellow, and Black color system
 
-...and the "RGB" tab  allows the user to select a color based on the Red, Green, and Blue color system...
-![rgb-guide](/../static/md-img/rgb-guide.png)
+<img src={require('/../static/md-img/ColorSelector/hsv-guide.png').default} style={{width:50+'%'}}/><img src={require('/../static/md-img/ColorSelector/hsl-guide.png').default} style={{width:50+'%'}}/>
+<img src={require('/../static/md-img/ColorSelector/rgb-guide.png').default} style={{width:50+'%'}}/><img src={require('/../static/md-img/ColorSelector/cmyk-guide.png').default} style={{width:50+'%'}}/>
 
-...and the "CMYK" tab  allows the user to select a color based on the Cyan, Magenta, Yellow, and Black color system...
-![cmyk-guide](/../static/md-img/cmyk-guide.png)
-
+Note that the RGB selector window includes a "Color Code" text box that allows you to directly paste a hexstring (see below) value encoding a color.
 
 ## Choosing colors from the command line (CLI)
 
 ScriptManager's command-line tools typically indicate color using the `-c` flag followed one or more hexidecimal color strings shexstrings). The hexstrings are composed of a sequence of 6 characters (0-9 or A-F), where each pair of characters represent an Red, Green, and Blue value, and each pair encoding any value from 0-255. The help documentation points the user to [this url][color-hex-url] for users to browse colors and get the corresponding hexstring.
 
+$$
+\huge{
+  \#\textcolor{red}{FF}\textcolor{green}{B4}\space\textcolor{blue}{00}
+}
+$$
 :::caution
 
 User should not use the pound symbol `#` in front of the hexidecimal because it renders the token invisible to bash and thus, ScriptManager.

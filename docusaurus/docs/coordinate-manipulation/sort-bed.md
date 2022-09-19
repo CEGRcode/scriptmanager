@@ -4,11 +4,14 @@ title: Sort BED by CDT
 sidebar_label: sort-bed
 ---
 
-![sort-bed](/../static/icons/CoordinateManipulation/SortBED_square.svg)
+![sort-bed](/../static/icons/Coordinate_Manipulation/SortBED_square.svg)
 
 Sort a CDT file and its corresponding BED file by the total score in the CDT file across the specified interval
 
-<img src={require('/../static/md-img/Coordinate Manipulation/SortBEDbyCDT.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Coordinate_Manipulation/SortBEDWindow.png').default} style={{width:70+'%'}}/>
+
+
+## Command Line Interface
 
 Usage:
 ```bash
@@ -49,5 +52,5 @@ Note that if the value input using the `-c` flag is odd, it is the equivalent of
 
 
 
-[bed-format]:file-formats.md
-[cdt-format]:file-formats.md
+[bed-format]:/docs/file-formats#bed
+[cdt-format]:/docs/file-formats#cdt

@@ -72,7 +72,7 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'Guides/quick-start',
+            docId: 'Guides/getting-started',
             position: 'left',
             label: 'General',
           },
@@ -97,7 +97,7 @@ const config = {
             items: [
               {
                 label: 'Tool Index (A-Z)',
-                to: '/docs/tool-index',
+                to: '/docs/References/tool-index',
               },
               {
                 label: 'File Formats',

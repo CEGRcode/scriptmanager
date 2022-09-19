@@ -1,10 +1,10 @@
 ---
 id: three-color-heatmap
 title: Three Color Heatmap
-sidebar_label: Three Color Heatmap
+sidebar_label: three-color-heatmap
 ---
 
-![Three Color Heatmap](/../static/icons/FigureGeneration/ThreeColorHeatmap_square.svg)
+![Three Color Heatmap](/../static/icons/Figure_Generation/ThreeColorHeatmap_square.svg)
 
 export const Highlight = ({children, color}) => (
 <span
@@ -18,28 +18,99 @@ style={{
 </span>
 );
 
-This tool xxxxxxxxxx
+Generate heat map with middling values.
 
-[schematic.jpg]
+<!-- ![ThreeColorHeatMapSchematic.png] -->
 
-Typically this tool is used...
+:::note
+Extended description goes here.
+:::
 
-<img src={require('/../static/md-img/FigureGeneration/three-color-heatmap.png').default} style={{width:70+'%'}}/>
+<img src={require('/../static/md-img/Figure_Generation/ThreeColorHeatMapWindow.png').default} style={{width:70+'%'}}/>
 
-### Positional Input
+```bash
+Usage: script-manager figure-generation three-color [-pn=<percentile> |
+       -an=<absolute>] [-pd=<percentile> | -ad=<absolute>] [-px=<percentile> |
+       -ax=<absolute>] [-cn=<min> | -cd=<mid> | -cx=<max> | -ca=<nan>] [-0hV]
+       [-l=<startCOL>] [-o=<output>] [-r=<startROW>] [-x=<pixelWidth>]
+       [-y=<pixelHeight>] [-z=<compression>] <CDT>
+Generate heat map with middling values.
+      <CDT>
+  -o, --output=<output>      specify output filename, please use PNG extension
+                             (default=CDT filename with "_<compression-type>.
+                               png" appended to the name in working directory
+                               of ScriptManager
+  -r, --start-row=<startROW>
+  -l, --start-col=<startCOL>
+  -x, --width=<pixelWidth>   indicate a pixel width for the heatmap
+                               (default=200)
+  -y, --height=<pixelHeight> indicate a pixel height for the heatmap
+                               (default=600)
+  -z, --compression=<compression>
+                             choose an image compression type: 1=Treeview,
+                               2=Bicubic, 3=Bilinear, 4=Nearest Neighbor
+                               (default=1Treeview)
+  -0, --include-zeros        used with `-p` flag, indicating exclusion of zero
+                               values when calculating percentile thresholds
+  -h, --help                 Show this help message and exit.
+  -V, --version              Print version information and exit.
 
-description
+Select minimum value:
+	(select no more than one of these options)
+      -pn=<percentile>       use this percentile (as opposed to specific
+                               values) for contrast thresholding in determining
+                               max contrast value of the heatmap
+      -an=<absolute>         the minimum value for contrast thresholding in the
+                               heatmap (default,min=-10)
 
-### Output Options
+Select middling value:
+	(select no more than one of these options)
+      -pd=<percentile>       use this percentile (as opposed to specific
+                               values) for contrast thresholding in determining
+                               max contrast value of the heatmap
+      -ad=<absolute>         the midpoint value for contrast thresholding in
+                               the heatmap (default,mid=0)
 
-| Option    | Description |
-| --------- | ----------- |
-| `command` | Description |
+Select maximum value:
 
-### Plot Design Options
+	(select no more than one of these options)
+      -px=<percentile>       use this percentile (as opposed to specific
+                               values) for contrast thresholding in determining
+                               max contrast value of the heatmap
+      -ax=<absolute>         the maximum value for contrast thresholding
+                               (default,max=10)
 
-| Option    | Description |
-| --------- | ----------- |
-| `command` | Description |
-| `command` | Description |
-| `command` | Description |
+Select heatmap colors:
+      -cn, --color-min=<min> Color indicating minimum values (default=YELLOW)
+                               For custom color: type hexadecimal string to
+                               represent colors (e.g. "FF0000" is hexadecimal
+                               for red).
+                              See <http://www.javascripter.net/faq/rgbtohex.
+                               htm> for some color options with their
+                               corresponding hex strings.
+
+      -cd, --color-mid=<mid> Color indicating middle values (default=BLACK) For
+                               custom color: type hexadecimal string to
+                               represent colors (e.g. "FF0000" is hexadecimal
+                               for red).
+                              See <http://www.javascripter.net/faq/rgbtohex.
+                               htm> for some color options with their
+                               corresponding hex strings.
+
+      -cx, --color-max=<max> Color indicating maximum values (default=CYAN) For
+                               custom color: type hexadecimal string to
+                               represent colors (e.g. "FF0000" is hexadecimal
+                               for red).
+                              See <http://www.javascripter.net/faq/rgbtohex.
+                               htm> for some color options with their
+                               corresponding hex strings.
+
+      -ca, --color-nan=<nan> Color indicating not-a-number values
+                               (default=GRAY) For custom color: type
+                               hexadecimal string to represent colors (e.g.
+                               "FF0000" is hexadecimal for red).
+                              See <http://www.javascripter.net/faq/rgbtohex.
+                               htm> for some color options with their
+                               corresponding hex strings.
+
+```

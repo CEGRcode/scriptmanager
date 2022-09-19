@@ -74,6 +74,8 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	        		}
 	        	} catch(NumberFormatException nfe){
 					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IllegalArgumentException iae) {
+				JOptionPane.showMessageDialog(null, iae.getMessage());
 			}
 	        	return null;
         }

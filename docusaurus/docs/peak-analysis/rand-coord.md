@@ -4,11 +4,13 @@ title: Generate Random Coordinate
 sidebar_label: rand-coord
 ---
 
-![rand-coord](/../static/icons/PeakAnalysis/GenerateRandomCoordinate_square.svg)
+![rand-coord](/../static/icons/Peak_Analysis/RandomCoordinate_square.svg)
 
 Generate a coordinate file that tiles (non-overlapping) across an entire genome.
 
-<img src={require('/../static/md-img/PeakAnalysis/GenerateRandomCoordinate.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Peak_Analysis/RandomCoordinateWindow.png').default} style={{width:70+'%'}}/>
+
+## Command Line Interface
 
 Usage:
 ```bash

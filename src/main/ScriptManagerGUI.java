@@ -60,6 +60,7 @@ import window_interface.Figure_Generation.FourColorSequenceWindow;
 import window_interface.Figure_Generation.TwoColorHeatMapWindow;
 import window_interface.Figure_Generation.ThreeColorHeatMapWindow;
 import window_interface.Figure_Generation.MergeHeatMapWindow;
+import window_interface.Figure_Generation.PlotCompositeWindow;
 import window_interface.Figure_Generation.LabelHeatMapWindow;
 
 public class ScriptManagerGUI {
@@ -1427,12 +1428,40 @@ public class ScriptManagerGUI {
 				});
 			}
 		});
-		sl_pnlFigure.putConstraint(SpringLayout.NORTH, btncolorSequencePlot, 0, SpringLayout.NORTH,
-				txtcolorSequencePlot);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, btncolorSequencePlot, 0, SpringLayout.NORTH, txtcolorSequencePlot);
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, btncolorSequencePlot, 10, SpringLayout.WEST, pnlFigure);
-		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtcolorSequencePlot, 10, SpringLayout.EAST,
-				btncolorSequencePlot);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtcolorSequencePlot, 10, SpringLayout.EAST, btncolorSequencePlot);
 		pnlFigure.add(btncolorSequencePlot);
+		
+
+		// >FourColorPlot
+		JTextArea txtMakeCompositePlot = new JTextArea();
+		initializeTextArea(txtMakeCompositePlot);
+		txtMakeCompositePlot.setText(ToolDescriptions.composite_description);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMakeCompositePlot, 10, SpringLayout.SOUTH, txtcolorSequencePlot);
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, txtMakeCompositePlot, 10, SpringLayout.SOUTH, btncolorSequencePlot);
+		sl_pnlFigure.putConstraint(SpringLayout.EAST, txtMakeCompositePlot, -10, SpringLayout.EAST, pnlFigure);
+		pnlFigure.add(txtMakeCompositePlot);
+
+		JButton btnMakeCompositePlot = new JButton("Composite Plot");
+		btnMakeCompositePlot.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							PlotCompositeWindow frame = new PlotCompositeWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlFigure.putConstraint(SpringLayout.NORTH, btnMakeCompositePlot, 0, SpringLayout.NORTH, txtMakeCompositePlot);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, btnMakeCompositePlot, 10, SpringLayout.WEST, pnlFigure);
+		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtMakeCompositePlot, 10, SpringLayout.EAST, btnMakeCompositePlot);
+		pnlFigure.add(btnMakeCompositePlot);
 
 		// Set default tab to open to...
 		// 0=BAM_Statistics 5=Peak_Analysis

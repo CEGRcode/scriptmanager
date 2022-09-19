@@ -4,11 +4,14 @@ title: Sort GFF by CDT
 sidebar_label: sort-gff
 ---
 
-![sort-gff](/../static/icons/CoordinateManipulation/SortGFF_sqaure.svg)
+![sort-gff](/../static/icons/Coordinate_Manipulation/SortGFF_sqaure.svg)
 
 Sort a CDT file and its corresponding GFF file by the total score in the CDT file across the specified interval
 
-<img src={require('/../static/md-img/Coordinate Manipulation/SortGFFbyCDT.png').default} style={{width:70+'%'}}/> 
+<img src={require('/../static/md-img/Coordinate_Manipulation/SortGFFWindow.png').default} style={{width:70+'%'}}/>
+
+
+## Command Line Interface
 
 Usage:
 ```bash
@@ -42,5 +45,5 @@ These options indicate which windows to sort the files by (choose one).
 | `-x, --index=<index> <index>` | sort by index from the specified start to the specified stop (0-indexed and half-open interval) |
 
 
-[cdt-format]:file-formats.md
-[gff-format]:file-formats.md
+[cdt-format]:/docs/file-formats#cdt
+[gff-format]:/docs/file-formats#gff

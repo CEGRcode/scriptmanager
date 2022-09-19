@@ -24,7 +24,7 @@ public class TileGenome {
 		else { EXTENSION = ".gff"; }
 	}
 	
-	public void execute() throws IOException {
+	public void execute() throws IOException, IllegalArgumentException {
 	    GenomeSizeReference coord = new GenomeSizeReference(GENOME);
 	    
 	    String fileName = GENOME + "_" + windowSize + "bp" + EXTENSION;
