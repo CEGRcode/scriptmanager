@@ -11,7 +11,8 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipException;
+
+import util.GZipUtilities;
 
 /**
  * This class contains scripts for shifting coordinate intervals (BED/GFF) by a user-defined direction and distance.
@@ -43,9 +44,9 @@ public class ShiftCoord {
 		}
 		// Assume file is gzipped and create normal BufferedReader if not
 		BufferedReader br;
-		try {
+		if(GZipUtilities.isGZipped(input)) {
 			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-		} catch (ZipException e) {
+		} else {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
 		}
 		// Initialize line variable to loop through
@@ -112,9 +113,9 @@ public class ShiftCoord {
 		}
 		// Assume file is gzipped and create normal BufferedReader if not
 		BufferedReader br;
-		try {
+		if(GZipUtilities.isGZipped(input)) {
 			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-		} catch (ZipException e) {
+		} else {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
 		}
 		// Initialize line variable to loop through
