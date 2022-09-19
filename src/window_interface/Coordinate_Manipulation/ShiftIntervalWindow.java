@@ -135,7 +135,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		setTitle("Shift Coordinate Interval");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 345);
+		setBounds(125, 125, 450, 375);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -161,13 +161,12 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.NORTH, inputCards, 0, SpringLayout.SOUTH, rdbtnBed);
 		sl_contentPane.putConstraint(SpringLayout.WEST, inputCards, 0, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, inputCards, 0, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -110, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -125, SpringLayout.SOUTH, contentPane);
 		contentPane.add(inputCards);
 
 		JPanel bedInputPane = new JPanel();
 		SpringLayout sl_bedInputPane = new SpringLayout();
 		bedInputPane.setLayout(sl_bedInputPane);
-		bedInputPane.setBackground(Color.BLUE);
 		inputCards.add(bedInputPane, "bed");
 
 		JScrollPane scrollPaneBED = new JScrollPane();
@@ -215,14 +214,13 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		JPanel gffInputPane = new JPanel();
 		SpringLayout sl_gffInputPane = new SpringLayout();
 		gffInputPane.setLayout(sl_gffInputPane);
-		gffInputPane.setBackground(Color.CYAN);
 		inputCards.add(gffInputPane, "gff");
 
 		JScrollPane scrollPaneGFF = new JScrollPane();
 		sl_gffInputPane.putConstraint(SpringLayout.NORTH, scrollPaneGFF, 36, SpringLayout.NORTH, gffInputPane);
 		sl_gffInputPane.putConstraint(SpringLayout.WEST, scrollPaneGFF, 10, SpringLayout.WEST, gffInputPane);
 		sl_gffInputPane.putConstraint(SpringLayout.EAST, scrollPaneGFF, -10, SpringLayout.EAST, gffInputPane);
-		sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneGFF, -3, SpringLayout.SOUTH, gffInputPane);
+		sl_gffInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneGFF, -3, SpringLayout.SOUTH, gffInputPane);
 		gffInputPane.add(scrollPaneGFF);
 
 		expGFFList = new DefaultListModel<String>();
@@ -259,7 +257,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		});
 		gffInputPane.add(btnRemoveGFF);
 
-		btnExecute = new JButton("Transform");
+		btnExecute = new JButton("Execute");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnExecute, 160, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnExecute, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnExecute, -160, SpringLayout.EAST, contentPane);
@@ -273,14 +271,20 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 
 		btnExecute.setActionCommand("start");
 
-		JLabel lblSizeOfShift = new JLabel("Size of Shift (bp):");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeOfShift, 6, SpringLayout.SOUTH, inputCards);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfShift, 10, SpringLayout.WEST, contentPane);
-		contentPane.add(lblSizeOfShift);
+		JLabel lblDirectionalShift = new JLabel("Directional Shift (bp):");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDirectionalShift, 6, SpringLayout.SOUTH, inputCards);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblDirectionalShift, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(lblDirectionalShift);
+		
+		JLabel lblSizeAdmonishment = new JLabel("upstream(-) and downstream(+)");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeAdmonishment, 6, SpringLayout.SOUTH, lblDirectionalShift);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeAdmonishment, 10, SpringLayout.WEST, contentPane);
+		lblSizeAdmonishment.setFont(new Font("Dialog", Font.ITALIC, 12));
+		contentPane.add(lblSizeAdmonishment);
 
 		txtShift = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtShift, -3, SpringLayout.NORTH, lblSizeOfShift);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtShift, 10, SpringLayout.EAST, lblSizeOfShift);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtShift, -3, SpringLayout.NORTH, lblDirectionalShift);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtShift, 10, SpringLayout.EAST, lblDirectionalShift);
 		txtShift.setToolTipText("Must be integer. Negative values for upstream shift, positive values for downstream shift");
 		txtShift.setHorizontalAlignment(SwingConstants.CENTER);
 		txtShift.setColumns(10);
@@ -288,7 +292,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		contentPane.add(txtShift);
 
 		chckbxStranded = new JCheckBox("Use stranded info");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxStranded, 0, SpringLayout.NORTH, lblSizeOfShift);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxStranded, 0, SpringLayout.NORTH, lblDirectionalShift);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxStranded, -20, SpringLayout.EAST, contentPane);
 		chckbxStranded.setSelected(true);
 		contentPane.add(chckbxStranded);
@@ -299,7 +303,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		contentPane.add(chckbxGzipOutput);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 30, SpringLayout.SOUTH, inputCards);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 50, SpringLayout.SOUTH, inputCards);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 10, SpringLayout.WEST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

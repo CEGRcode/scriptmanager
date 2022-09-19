@@ -976,7 +976,7 @@ public class ScriptManagerGUI {
 		});
 		splitPaneSort.setRightComponent(btnSortGffFile);
 
-		JButton btnShiftInterval = new JButton("Shift BED Interval");
+		JButton btnShiftInterval = new JButton("Shift Coordinate Interval");
 		btnSortGffFile.setToolTipText(ToolDescriptions.shift_coordinate_description);
 		btnShiftInterval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
