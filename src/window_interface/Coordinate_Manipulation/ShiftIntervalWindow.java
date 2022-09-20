@@ -103,14 +103,36 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						if (XBED.getName().endsWith(".bed.gz")) {
 							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
 						}
-						System.out.println(XBED.getName());
-						System.out.println(OUTPUT);
-						System.out.println(SUFFIX);
+						System.out.println("Input: " + XBED.getName());
 						// Execute expansion and update progress
 						ShiftCoord.shiftBEDInterval(new File(OUTPUT + SUFFIX), XBED, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
 						
 						// Update progress bar
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
+						setProgress(percentComplete);
+					}
+				} else {
+					for (int x = 0; x < GFFFiles.size(); x++) {
+						// Save current BED to temp variable
+						File XGFF = GFFFiles.get(x);
+						// Set suffix format
+						String SUFFIX = SHIFT < 0 ? "_shift" + txtShift.getText() + "bp.gff" : "_shift+" + txtShift.getText() + "bp.gff";
+						SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
+						// Set output filepath with name and output directory
+						String OUTPUT = ExtensionFileFilter.stripExtension(XGFF);
+						if (OUT_DIR != null) {
+							OUTPUT = OUT_DIR + File.separator + OUTPUT;
+						}
+						// Strip second extension if input has ".gz" first extension
+						if (XGFF.getName().endsWith(".gff.gz")) {
+							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
+						}
+						System.out.println("Input: " + XGFF.getName());
+						// Execute expansion and update progress
+						ShiftCoord.shiftGFFInterval(new File(OUTPUT + SUFFIX), XGFF, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
+						
+						// Update progress bar
+						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
 				}
@@ -247,7 +269,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		btnRemoveGFF = new JButton("Remove GFF");
 		sl_gffInputPane.putConstraint(SpringLayout.SOUTH, btnRemoveGFF, -6, SpringLayout.NORTH, scrollPaneGFF);
 		sl_gffInputPane.putConstraint(SpringLayout.EAST, btnRemoveGFF, 0, SpringLayout.EAST, scrollPaneGFF);
-		btnRemoveBED.addActionListener(new ActionListener() {
+		btnRemoveGFF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while (listGFFExp.getSelectedIndex() > -1) {
 					GFFFiles.remove(listGFFExp.getSelectedIndex());
@@ -297,7 +319,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		chckbxStranded.setSelected(true);
 		contentPane.add(chckbxStranded);
 
-		chckbxGzipOutput = new JCheckBox("Gzip output");
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.SOUTH, chckbxStranded);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 0, SpringLayout.WEST, chckbxStranded);
 		contentPane.add(chckbxGzipOutput);

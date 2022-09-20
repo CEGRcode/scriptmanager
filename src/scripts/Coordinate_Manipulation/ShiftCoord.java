@@ -80,8 +80,10 @@ public class ShiftCoord {
 						}
 						OUT.println();
 					} else {
-						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
+						System.out.println("Invalid Coordinate in File!!! (coordinate must be >= 0)\n" + Arrays.toString(temp));
 					}
+				} else {
+					System.out.println("Invalid Coordinate in File!!! (must have at least 3 columns)\n" + Arrays.toString(temp));
 				}
 			}
 			line = br.readLine();
@@ -136,8 +138,8 @@ public class ShiftCoord {
 						int newstop = Integer.parseInt(temp[4]) + SHIFT;
 						// Shift reverse if strand negative
 						if (temp[6].equals("-") && stranded) {
-							newstart = Integer.parseInt(temp[1]) - SHIFT;
-							newstop = Integer.parseInt(temp[2]) - SHIFT;
+							newstart = Integer.parseInt(temp[3]) - SHIFT;
+							newstop = Integer.parseInt(temp[4]) - SHIFT;
 						}
 						// Write new coordinate info
 						OUT.print(temp[0] + "\t" + temp[1] + "\t" + temp[2] + "\t" + newstart + "\t" + newstop);
@@ -147,8 +149,10 @@ public class ShiftCoord {
 						}
 						OUT.println();
 					} else {
-						System.out.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
+						System.out.println("Invalid Coordinate in File!!! (coordinate must be >= 1)\n" + Arrays.toString(temp));
 					}
+				} else {
+					System.out.println("Invalid Coordinate in File!!! (must have 9 columns)\n" + Arrays.toString(temp));
 				}
 			}
 			line = br.readLine();
