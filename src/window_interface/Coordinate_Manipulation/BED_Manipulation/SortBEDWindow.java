@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,9 +32,17 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.CDTUtilities;
+import util.ExtensionFileFilter;
 import util.FileSelection;
 import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 
+
+/**
+ * Graphical interface window for sorting BED coordinate interval files by CDT matrix occupancies.
+ * 
+ * @author William KM Lai
+ *
+ */
 @SuppressWarnings("serial")
 public class SortBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -51,7 +60,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	private JButton btnLoadBEDFile;
 	private JButton btnLoadCdtFile;
 	private JButton btnOutput;
-	private JButton btnConvert;
+	private JButton btnExecute;
 
 	private JProgressBar progressBar;
 	public Task task;
@@ -72,6 +81,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	private JLabel lblColumnCount;
 	private JLabel lblIndexStart;
 	private JLabel lblIndexStop;
+	private static JCheckBox chckbxGzipOutput;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -92,13 +102,14 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 						STOP_INDEX = Integer.parseInt(txtStop.getText());
 					}
 
-					String OUTPUT = txtOutput.getText();
+					String OUTPUT = ExtensionFileFilter.stripExtension(txtOutput.getText());
+					OUTPUT = txtOutput.getText().endsWith(".gz") ? ExtensionFileFilter.stripExtension(OUTPUT) : OUTPUT;
 					if (OUT_DIR != null) {
 						OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 					}
 
 					setProgress(0);
-					SortBED.sortBEDbyCDT(OUTPUT, BED_File, CDT_File, START_INDEX, STOP_INDEX);
+					SortBED.sortBEDbyCDT(OUTPUT, BED_File, CDT_File, START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Sort Complete");
 				}
@@ -114,6 +125,9 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public SortBEDWindow() {
 		setTitle("Sort BED File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -125,19 +139,19 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		SpringLayout sl_contentPane = new SpringLayout();
 		contentPane.setLayout(sl_contentPane);
 
-		btnConvert = new JButton("Convert");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnConvert, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConvert, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnConvert, -175, SpringLayout.EAST, contentPane);
-		contentPane.add(btnConvert);
+		btnExecute = new JButton("Sort");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnExecute, 167, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnExecute, 0, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnExecute, -175, SpringLayout.EAST, contentPane);
+		contentPane.add(btnExecute);
 
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnExecute);
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 
-		btnConvert.setActionCommand("start");
+		btnExecute.setActionCommand("start");
 
 		lblCurrent = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
@@ -152,9 +166,8 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -6, SpringLayout.NORTH, lblDefaultToLocal);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
@@ -165,12 +178,35 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		});
 		contentPane.add(btnOutput);
 
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
+		chckbxGzipOutput.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				String NAME = txtOutput.getText();
+				if (chckbxGzipOutput.isSelected()) {
+					if (!NAME.endsWith(".gz")) {
+						txtOutput.setText(NAME + ".gz");
+					}
+				} else {
+					if (NAME.endsWith(".gz")) {
+						NAME = ExtensionFileFilter.stripExtension(NAME);
+						txtOutput.setText(NAME);
+					}
+				}
+			}
+		});
+		
 		rdbtnSortbyCenter = new JRadioButton("Sort by Center");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSortbyCenter, 129, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnSortbyCenter, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnSortbyCenter);
 
 		rdbtnSortbyIndex = new JRadioButton("Sort by Index");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSortbyIndex, 15, SpringLayout.SOUTH, rdbtnSortbyCenter);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnSortbyIndex, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnSortbyIndex);
 
 		ButtonGroup ExpansionType = new ButtonGroup();
@@ -189,7 +225,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtMid, 6, SpringLayout.EAST, lblSizeOfExpansion);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtMid, 59, SpringLayout.EAST, lblSizeOfExpansion);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeOfExpansion, 4, SpringLayout.NORTH, rdbtnSortbyCenter);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 0, SpringLayout.WEST, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 150, SpringLayout.WEST, contentPane);
 		contentPane.add(lblSizeOfExpansion);
 
 		txtOutput = new JTextField();
@@ -237,7 +273,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		lblIndexStart.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtStart, 6, SpringLayout.EAST, lblIndexStart);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblIndexStart, 4, SpringLayout.NORTH, rdbtnSortbyIndex);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblIndexStart, 0, SpringLayout.WEST, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblIndexStart, 150, SpringLayout.WEST, contentPane);
 		contentPane.add(lblIndexStart);
 
 		lblIndexStop = new JLabel("Index Stop:");
@@ -247,7 +283,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtStop, 6, SpringLayout.EAST, lblIndexStop);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblIndexStop, 4, SpringLayout.NORTH, rdbtnSortbyIndex);
 		contentPane.add(lblIndexStop);
-		btnConvert.addActionListener(this);
+		btnExecute.addActionListener(this);
 
 		rdbtnSortbyCenter.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -279,15 +315,20 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblBEDFile, 5, SpringLayout.NORTH, btnLoadBEDFile);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblBEDFile, 14, SpringLayout.EAST, btnLoadBEDFile);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBEDFile, 10, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBEDFile, 10, SpringLayout.WEST, contentPane);
 		btnLoadBEDFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File newBEDFile = FileSelection.getFile(fc, "bed");
+				File newBEDFile = FileSelection.getFile(fc, "bed", true);
 				if (newBEDFile != null) {
 					BED_File = newBEDFile;
 					lblBEDFile.setText(BED_File.getName());
 					txtOutput.setEnabled(true);
-					String sortName = (BED_File.getName()).substring(0, BED_File.getName().length() - 4) + "_SORT";
-					txtOutput.setText(sortName);
+					// Set default output filename
+					String NAME = ExtensionFileFilter.stripExtension(BED_File.getName());
+					NAME = BED_File.getName().endsWith(".bed.gz") ? ExtensionFileFilter.stripExtension(NAME) : NAME;
+					NAME += "_SORT.bed";
+					NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
+					txtOutput.setText(NAME);
 				}
 			}
 		});
@@ -300,7 +341,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadCdtFile, 0, SpringLayout.WEST, rdbtnSortbyCenter);
 		btnLoadCdtFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File newCDTFile = FileSelection.getFile(fc, "cdt");
+				File newCDTFile = FileSelection.getFile(fc, "cdt", true);
 				if (newCDTFile != null) {
 					try {
 						CDT_File = newCDTFile;
