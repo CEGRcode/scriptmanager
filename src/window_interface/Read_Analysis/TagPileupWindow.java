@@ -41,6 +41,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import objects.PileupParameters;
+import objects.ReadFragmentCartoon;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -86,7 +87,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JLabel lblTagExtend;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrentOutput;
-	private JLabel lblOutputMatrixFormat;
 	private JLabel lblCurrentBlacklist;
 	private JLabel lblCpusToUse;
 	private JLabel lblNoBlacklistLoaded;
@@ -114,6 +114,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JLabel lblReadManipulation;
 
 	private File BLACKLIST = null;
+	
+	private ReadFragmentCartoon cartoon;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -389,8 +391,21 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		OutputRead.add(rdbtnAllReads);
 		rdbtnRead1.setSelected(true);
 
+		cartoon = new ReadFragmentCartoon();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, cartoon,0, SpringLayout.SOUTH, rdbtnRead1);
+		sl_contentPane.putConstraint(SpringLayout.WEST, cartoon, 0, SpringLayout.WEST, lblAspectRead);
+		sl_contentPane.putConstraint(SpringLayout.EAST, cartoon, 0, SpringLayout.EAST, contentPane);
+		contentPane.add(cartoon);
+		cartoon.redrawArrows(0,0);
+
+		JLabel lblFilter = new JLabel("Filter Reads:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblFilter, 0, SpringLayout.SOUTH, cartoon);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblFilter, 0, SpringLayout.WEST, lblAspectRead);
+		lblFilter.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblFilter);
+		
 		chckbxRequireProperPe = new JCheckBox("Require Proper Paired-End");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRequireProperPe, 10, SpringLayout.SOUTH, lblOutputRead);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRequireProperPe, 6, SpringLayout.SOUTH, lblFilter);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRequireProperPe, 10, SpringLayout.WEST, lblOutputRead);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxRequireProperPe, -175, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxRequireProperPe);
@@ -720,13 +735,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(txtSmooth);
 		txtSmooth.setColumns(10);
 
-		JSeparator sepOutput = new JSeparator();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, sepOutput, 15, SpringLayout.SOUTH, scrollPane_BAM);
-		sl_contentPane.putConstraint(SpringLayout.WEST, sepOutput, 10, SpringLayout.EAST, scrollPane_BAM);
-		sl_contentPane.putConstraint(SpringLayout.EAST, sepOutput, -10, SpringLayout.EAST, contentPane);
-		sepOutput.setForeground(Color.BLACK);
-		contentPane.add(sepOutput);
-
 		// Output Parameters
 		chckbxOutputData = new JCheckBox("Output Heatmap Matrix");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputData, 6, SpringLayout.SOUTH, scrollPane_BAM);
@@ -755,7 +763,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(chckbxOutputGzip);
 
 		chckbxOutputCompositeData = new JCheckBox("Output Composite");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputCompositeData, 6, SpringLayout.SOUTH, rdbtnTabdelimited);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputCompositeData, 10, SpringLayout.SOUTH, rdbtnTabdelimited);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputCompositeData, 0, SpringLayout.WEST, scrollPane_BAM);
 		chckbxOutputCompositeData.setSelected(true);
 		contentPane.add(chckbxOutputCompositeData);
@@ -769,7 +777,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		txtCompositeName.setColumns(10);
 
 		btnOutputDirectory = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, chckbxOutputCompositeData);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 20, SpringLayout.SOUTH, chckbxOutputCompositeData);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(btnOutputDirectory);
 
@@ -788,7 +796,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(lblCurrentOutput);
 
 		lblCpusToUse = new JLabel("CPU's to Use:");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCpusToUse, -15, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCpusToUse, -10, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 0, SpringLayout.WEST, btnOutputDirectory);
 		lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblCpusToUse);
@@ -806,8 +814,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnFivePrime.isSelected()) {
 					allowReadChoice(true);
-					allowStrandChoice(true);
 				}
+				updateCartoon();
 			}
 		});
 
@@ -815,8 +823,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnThreePrime.isSelected()) {
 					allowReadChoice(true);
-					allowStrandChoice(true);
 				}
+				updateCartoon();
 			}
 		});
 
@@ -824,34 +832,50 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnMidpoint.isSelected()) {
 					allowReadChoice(false);
-					allowStrandChoice(false);
 					rdbtnComb.setSelected(true);
 					chckbxRequireProperPe.setSelected(true);
 					chckbxRequireProperPe.setEnabled(false);
 				} else if (!chckbxFilterByMin.isSelected() && !chckbxFilterByMax.isSelected()) {
 					chckbxRequireProperPe.setEnabled(true);
 				}
+				updateCartoon();
 			}
 		});
-
 		rdbtnFragment.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnFragment.isSelected()) {
 					allowReadChoice(false);
-					allowStrandChoice(false);
 					rdbtnComb.setSelected(true);
 					chckbxRequireProperPe.setSelected(true);
 					chckbxRequireProperPe.setEnabled(false);
 				} else if (!chckbxFilterByMin.isSelected() && !chckbxFilterByMax.isSelected()) {
 					chckbxRequireProperPe.setEnabled(true);
 				}
+				updateCartoon();
+			}
+		});
+		
+		rdbtnRead1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				updateCartoon();
+			}
+		});
+		
+		rdbtnRead2.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				updateCartoon();
+			}
+		});
+		
+		rdbtnAllReads.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				updateCartoon();
 			}
 		});
 
 		rdbtnNone.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnNone.isSelected()) {
-					lblWindowSizebin.setEnabled(false);
 					lblStdDevSize.setEnabled(false);
 					lblNumStd.setEnabled(false);
 					txtSmooth.setEnabled(false);
@@ -890,12 +914,10 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (chckbxOutputData.isSelected()) {
 					activateOutput(true);
-					lblOutputMatrixFormat.setEnabled(true);
 					rdbtnTabdelimited.setEnabled(true);
 					rdbtnCdt.setEnabled(true);
 					chckbxOutputGzip.setEnabled(true);
 				} else {
-					lblOutputMatrixFormat.setEnabled(false);
 					rdbtnTabdelimited.setEnabled(false);
 					rdbtnCdt.setEnabled(false);
 					chckbxOutputGzip.setEnabled(false);
@@ -970,18 +992,16 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(progressBar);
 		btnPileup.setActionCommand("start");
 
+		updateCartoon();
 		btnPileup.addActionListener(this);
 	}
 
-	public void allowStrandChoice(boolean activate) {
-		rdbtnComb.setEnabled(activate);
-		rdbtnSeperate.setEnabled(activate);
-	}
-	
 	public void allowReadChoice(boolean activate) {
 		rdbtnRead1.setEnabled(activate);
 		rdbtnRead2.setEnabled(activate);
 		rdbtnAllReads.setEnabled(activate);
+		rdbtnComb.setEnabled(activate);
+		rdbtnSeperate.setEnabled(activate);
 	}
 
 	public void activateOutput(boolean activate) {
@@ -995,6 +1015,20 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		btnRemoveBlacklistfilter.setEnabled(activate);
 		lblCurrentBlacklist.setEnabled(activate);
 		lblNoBlacklistLoaded.setEnabled(activate);
+	}
+	
+	public void updateCartoon() {
+		int aspect = 0;
+		if (rdbtnFivePrime.isSelected()) { aspect = 0; }
+		else if (rdbtnThreePrime.isSelected()) { aspect = 1; }
+		else if (rdbtnMidpoint.isSelected()) { aspect = 2; }
+		else if (rdbtnFragment.isSelected()) { aspect = 3; }
+		int read = 0;
+		if (rdbtnRead1.isSelected()) { read = 0; }
+		else if (rdbtnRead2.isSelected()) { read = 1; }
+		else if (rdbtnAllReads.isSelected()) { read = 2; }
+		
+		cartoon.redrawArrows(aspect, read);
 	}
 
 	@Override
@@ -1063,7 +1097,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				txtNumStd.setEnabled(false);
 			}
 			if (!chckbxOutputData.isSelected()) {
-				lblOutputMatrixFormat.setEnabled(false);
 				rdbtnTabdelimited.setEnabled(false);
 				rdbtnCdt.setEnabled(false);
 				chckbxOutputGzip.setEnabled(false);

@@ -3,31 +3,42 @@ package objects;
 import java.io.File;
 import java.io.PrintStream;
 
+/**
+ * Object for storing pileup-related parameter information and constants.
+ * @see scripts.Read_Analysis.PileupScripts.PileupExtract
+ * @author William KM Lai
+ */
+
 public class PileupParameters {
-	//Directory to save matrix and composite into
-	private File OUTPUT = null;
-	//Composite values file if output
-	private PrintStream COMPOSITE = null;
+	//Read aspect
+	final static int FIVE = 0;
+	final static int THREE = 1;
+	final static int MIDPOINT = 2;
+	final static int FRAGMENT = 3;
+	private int ASPECT = PileupParameters.FIVE;
 	
-	//Read aspect:
-	//  0=5prime end, 1=3prime end, 2=midpoint, 3=fullfragment
-	private int ASPECT = 0;
-	//Read type:
-	//  0=read1, 1=read2, 2=allreads
-	private int READ = 0;
+	//Read type
+	final static int READ1 = 0;
+	final static int READ2 = 1;
+	final static int ALLREADS = 2;
+	private int READ = PileupParameters.READ1;
 	
-	//Strand type:
-	//  0=separate, 1=combined
-	private int STRAND = 0;
+	//Strand type
+	final static int COMBINED = 1;
+	final static int SEPARATE = 0;
+	private int STRAND = PileupParameters.SEPARATE;
 	
-	//Transformation/smoothing type:
-	//  0=no_smooth, 1=window, 2=gaussian
-	private int TRANS = 0;
+	//Transformation/smoothing type
+	final static int NO_SMOOTH = 0;
+	final static int WINDOW = 1;
+	final static int GAUSSIAN = 2;
+	private int TRANS = PileupParameters.NO_SMOOTH;
+	
 	//TRANS=1 parameters:  window size (#bins)
 	private int SMOOTH = 0;
-	//TRANS=2 parameters:  stdev window size (#bins) and number of standard devations
+	//TRANS=2 parameters:  stdev window size (#bins) and number of standard deviations
 	private int STDSIZE = 0;
-	private int STDNUM = 0;	
+	private int STDNUM = 0;
 	
 	private int SHIFT = 0;
 	private int BIN = 1;
@@ -43,7 +54,12 @@ public class PileupParameters {
 	
 	private int MIN_INSERT = -9999;
 	private int MAX_INSERT = -9999;
-	
+
+	//Directory to save matrix and composite into
+	private File OUTPUT = null;
+	//Composite values file if output
+	private PrintStream COMPOSITE = null;
+
 	public void printAll(){
 		System.out.println( "<><><><><><><><><><><><><><><><><><><><>" );
 		System.out.println( "private File OUTPUT = " + OUTPUT );
