@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: bitnami/minideb:latest
+
+%post
+    apt-get -y update
+    apt-get -y install default-jre git
+    git clone https://github.com/CEGRcode/scriptmanager.git
+    cd scriptmanager
+    ./gradlew build
+    apt-get -y remove git
+    echo '#!/bin/bash\njava -jar /scriptmanager/build/libs/'$(ls /scriptmanager/build/libs) '"$@"' > /usr/bin/scriptmanager
+    chmod +x /usr/bin/scriptmanager
+    cd /

@@ -11,6 +11,7 @@ Scripts are generically categorized within semi-descriptive tabs and are designe
 Open **ScriptManager-Tutorial.docx** available in root directory
 
 ## Build Instructions
+### From source
 (after cloning this repo):
 ```
 $ cd scriptmanager
@@ -19,8 +20,15 @@ $ ./gradlew build
 
 The compiled JAR file will be output into the `build/libs` directory. 
 
+### Singularity
+```
+$ cd scriptmanager
+$ singularity build --fakeroot scriptmanager.sif scriptmanager.def
+```
+
 ## Running ScriptManager
 
+### .jar file
 To run the GUI verson of ScriptManager, you can double click the compiled JAR file or run the followinug command in the terminal
 ```
 $ java -jar /path/to/jarfile
@@ -34,6 +42,16 @@ $ java -jar /path/to/jarfile -h
 **Example:**
 ```
 $ java -jar /path/to/jarfile coordinate-manipulation bed-to-gff BEDFILE.bed -o OUTPUT.gff
+```
+
+### Singularity
+```
+$ singularity exec scriptmanager.sif scriptmanager ${command}
+```
+
+**Example:**
+```
+$ singularity exec scriptmanager.sif scriptmanager coordinate-manipulation bed-to-gff BEDFILE.bed -o OUTPUT.gff
 ```
 
 ## Current scripts available (210106):
