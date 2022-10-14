@@ -329,11 +329,21 @@ public class TagPileup {
 		String[] bedname = bed.split("\\.");
 		String[] bamname = bam.split("\\.");
 
-		String read = "read1";
-		if (PARAM.getRead() == 1) {
-			read = "read2";
-		} else if (PARAM.getRead() == 2) {
-			read = "readc";
+		String read = "5read1";
+		if (PARAM.getAspect() == 0 && PARAM.getRead() == 1) {
+			read = "5read2";
+		} else if (PARAM.getAspect() == 0 && PARAM.getRead() == 2) {
+			read = "5readc";
+		} else if (PARAM.getAspect() == 1 && PARAM.getRead() == 0) {
+			read = "3read1";
+		} else if (PARAM.getAspect() == 1 && PARAM.getRead() == 1) {
+			read = "3read2";
+		} else if (PARAM.getAspect() == 1 && PARAM.getRead() == 2) {
+			read = "3readc";
+		} else if (PARAM.getAspect() == 2) {
+			read = "midpoint";
+		} else if (PARAM.getAspect() == 3) {
+			read = "fragment";
 		}
 
 		return (generateFileName(bedname[0] + "_" + bamname[0] + "_" + read, strandnum));
