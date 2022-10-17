@@ -67,9 +67,12 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 				"--color" }, description = "For custom color: type hexadecimal string to represent colors (e.g. \"FF0000\" is hexadecimal for red).\n See <http://www.javascripter.net/faq/rgbtohex.htm> for some color options with their corresponding hex strings.\n")
 		private String custom = null;
 	}
-	@Option(names = { "-t",
-				"--transparent" }, description = "Value indicating transparency of heatmap, 0 to 255  (default=255)\\n")
+	@Option(names = { "-t", "--transparent" }, description = "Value indicating transparency of heatmap, 0 to 255  (default=255)\n")
 	private int alpha = 255;
+
+	@Option(names = { "-b", "--background" }, description = "Set a transparent background for the heatmap minimum values (default=white)\n")
+	private boolean transparentBackground = false;
+	
 
 	String scaleType = "treeview";
 	Color MAXCOLOR = Color.BLACK;
@@ -86,7 +89,7 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 
 		// Generate HeatMap
 		TwoColorHeatMap script_object = new TwoColorHeatMap(CDT, MAXCOLOR, startROW, startCOL, pixelHeight, pixelWidth,
-				scaleType, absolute, percentile, output, true);
+				scaleType, absolute, percentile, output, true, transparentBackground);
 		script_object.run();
 
 		System.err.println("Image Generated.");
@@ -110,26 +113,12 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 			r += "(!)CDT file does not exist: " + CDT.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		if (!"cdt".equals(ExtensionFileFilter.getExtension(CDT))) {
-			r += "(!)Is this a CDT file? Check extension: " + CDT.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtension(CDT);
 			output = new File(NAME + "_" + scaleType + ".png");
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"png".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".png\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output
-						+ ".png\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

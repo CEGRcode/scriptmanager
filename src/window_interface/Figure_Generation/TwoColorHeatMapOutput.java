@@ -28,8 +28,8 @@ public class TwoColorHeatMapOutput extends JFrame {
 	protected static double quantile = 0.9;
 	protected static double absolute = -999;
 
-	public static Color MINCOLOR = new Color(255, 255, 255);
 	public static Color MAXCOLOR = new Color(255, 0, 0);
+	public boolean transparentBackground = false;
 
 	protected static boolean OUTPUTSTATUS = false;
 	protected static File OUT_DIR = null;
@@ -39,7 +39,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 	JTabbedPane newpane;
 
 	public TwoColorHeatMapOutput(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth,
-			String scale, double abs, double quant, File out_dir, boolean outstatus) {
+			String scale, double abs, double quant, File out_dir, boolean outstatus, boolean trans) {
 		setTitle("Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -49,6 +49,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 
 		SAMPLE = in;
 		MAXCOLOR = c;
+		transparentBackground = trans;
 		startROW = startR;
 		startCOL = startC;
 		pixelHeight = pHeight;
@@ -60,7 +61,6 @@ public class TwoColorHeatMapOutput extends JFrame {
 
 		OUT_DIR = out_dir;
 		OUTPUTSTATUS = outstatus;
-		System.out.println(OUTPUTSTATUS);
 	}
 
 	public void run() throws IOException {
@@ -72,7 +72,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 
 			// Execute script
 			TwoColorHeatMap script_object = new TwoColorHeatMap(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
-					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, OUTPUTSTATUS);
+					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, OUTPUTSTATUS, transparentBackground);
 			script_object.run();
 			JLabel picLabel = script_object.getImg();
 
