@@ -60,6 +60,7 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 	private JTextField txtHeight;
 	private JTextField txtWidth;
 	private JButton btnColor;
+	private JCheckBox chckbxTransparentBackground;
 	private JRadioButton rdbtnAbsoluteValue;
 	private JRadioButton rdbtnPercentileValue;
 	private JRadioButton rdbtnTreeview;
@@ -125,7 +126,7 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 				double quantile = Double.parseDouble(txtPercent.getText());
 
 				TwoColorHeatMapOutput heat = new TwoColorHeatMapOutput(txtFiles, COLOR, startR, startC, pHeight, pWidth,
-						scaletype, absolute, quantile, OUT_DIR, chckbxOutputHeatmap.isSelected());
+						scaletype, absolute, quantile, OUT_DIR, chckbxOutputHeatmap.isSelected(), chckbxTransparentBackground.isSelected());
 
 				heat.addPropertyChangeListener("heat", new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -333,9 +334,14 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 			}
 		});
 
+		chckbxTransparentBackground = new JCheckBox("Use transparent background");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxTransparentBackground, 8, SpringLayout.SOUTH, lblSelectColor);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxTransparentBackground, 10, SpringLayout.WEST, lblSelectColor);
+		contentPane.add(chckbxTransparentBackground);
+		
 		JLabel lblPixelHeight = new JLabel("Image Height:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblPixelHeight, 20, SpringLayout.SOUTH, btnColor);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblPixelHeight, 0, SpringLayout.WEST, lblSelectColor);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblPixelHeight, 8, SpringLayout.SOUTH, chckbxTransparentBackground);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblPixelHeight, 15, SpringLayout.WEST, contentPane);
 		contentPane.add(lblPixelHeight);
 
 		JLabel lblPixelWidth = new JLabel("Image Width:");
@@ -425,7 +431,7 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 		});
 
 		JLabel lblImageCompression = new JLabel("Image Compression:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblImageCompression, 10, SpringLayout.SOUTH, txtAbsolute);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblImageCompression, 5, SpringLayout.SOUTH, txtAbsolute);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblImageCompression, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(lblImageCompression);
 
