@@ -48,7 +48,7 @@ public class TwoColorHeatMap {
 	private JLabel picLabel = null;
 
 	public TwoColorHeatMap(File in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs,
-			double quant, File output, boolean outstatus) {
+			double quant, File output, boolean outstatus, boolean trans) {
 
 		SAMPLE = in;
 		MAXCOLOR = c;
@@ -63,6 +63,10 @@ public class TwoColorHeatMap {
 
 		OUTFILE = output;
 		OUTPUTSTATUS = outstatus;
+		MINCOLOR = new Color(255, 255, 255, 255);
+		if (trans) {
+			MINCOLOR = new Color(MAXCOLOR.getRed(), MAXCOLOR.getGreen(), MAXCOLOR.getBlue(), 0);
+		}
 	}
 
 	public void run() throws IOException {
@@ -121,7 +125,7 @@ public class TwoColorHeatMap {
 		BufferedImage im = new BufferedImage(pixwidth, pixheight, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = im.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(new Color(255, 255, 255));
+		g2.setColor(MINCOLOR);
 		g2.fillRect(0, 0, pixwidth, pixheight);
 
 		int count = 0;
@@ -135,9 +139,10 @@ public class TwoColorHeatMap {
 					int red = (int) (MAXCOLOR.getRed() * sVal + MINCOLOR.getRed() * (1 - sVal));
 					int green = (int) (MAXCOLOR.getGreen() * sVal + MINCOLOR.getGreen() * (1 - sVal));
 					int blue = (int) (MAXCOLOR.getBlue() * sVal + MINCOLOR.getBlue() * (1 - sVal));
-					g.setColor(new Color(red, green, blue));
+					int alpha = (int) (MAXCOLOR.getAlpha() * sVal + MINCOLOR.getAlpha() * (1 - sVal));
+					g.setColor(new Color(red, green, blue, alpha));
 				} else {
-					g.setColor(Color.WHITE);
+					g.setColor(MINCOLOR);
 				}
 				g.fillRect(j * width, count * height, width, height);
 			}
@@ -353,7 +358,7 @@ public class TwoColorHeatMap {
 		ArrayList<Double> nonZero = new ArrayList<Double>();
 		for (int x = 0; x < matrix.size(); x++) {
 			for (int y = 0; y < matrix.get(x).length; y++) {
-				if (matrix.get(x)[y] != 0) {
+				if (matrix.get(x)[y] != 0 && !Double.isNaN(matrix.get(x)[y])) {
 					nonZero.add(Double.valueOf(matrix.get(x)[y]));
 				}
 			}
