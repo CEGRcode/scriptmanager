@@ -9,7 +9,7 @@ apply plugin: 'eclipse'
 
 sourceSets.main.java.srcDirs = ['src']
 mainClassName = "main.ScriptManager"
-version = 'v0.13-dev'
+version = 'v0.14'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -20,7 +20,7 @@ jar {
 	baseName = "ScriptManager"
 
 	manifest {
-        attributes 'ScriptManager-Title': baseName,  
+        attributes 'ScriptManager-Title': baseName,
         	'ScriptManager-Version': version,
         	'Main-Class': mainClassName
     }
@@ -31,11 +31,11 @@ task fatJar(type: Jar) {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 
 	manifest {
-        attributes 'ScriptManager-Title': 'Gradle jar of ScriptManager',  
+        attributes 'ScriptManager-Title': 'Gradle jar of ScriptManager',
         	'ScriptManager-Version': version,
         	'Main-Class': mainClassName
     }
-    
+
     baseName = 'ScriptManager' + version
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
