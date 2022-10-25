@@ -167,14 +167,6 @@ public class TagPileupCLI implements Callable<Integer> {
 		else if(readType.read2){ p.setRead(1); }
 		else if(readType.allreads){ p.setRead(2); }
 		
-		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() +  "\n";
-		}
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() +  "\n";
-		}
-		if(!r.equals("")){ return(r); }
 		//check inputs exist
 		if(!bedFile.exists()){
 			r += "(!)BED file does not exist: " + bedFile.getCanonicalPath() +  "\n";
@@ -182,6 +174,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		if(!bamFile.exists()){
 			r += "(!)BAM file does not exist: " + bamFile.getCanonicalPath() +  "\n";
 		}
+		if(!r.equals("")){ return(r); }
 		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){

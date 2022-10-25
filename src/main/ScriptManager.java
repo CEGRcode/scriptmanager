@@ -22,6 +22,8 @@ import cli.BAM_Statistics.BAMGenomeCorrelationCLI;
 import cli.BAM_Statistics.PEStatsCLI;
 import cli.BAM_Statistics.SEStatsCLI;
 
+import cli.Coordinate_Manipulation.ShiftCoordCLI;
+
 import cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
 import cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
 import cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
@@ -149,6 +151,7 @@ class BAM_StatisticsCLI extends SubcommandCLI {}
 
 @Command(name = "coordinate-manipulation",
 		subcommands = {
+			ShiftCoordCLI.class,
 			BEDtoGFFCLI.class,
 			ExpandBEDCLI.class,
 			SortBEDCLI.class,

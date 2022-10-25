@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
@@ -34,8 +35,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
+import util.ExtensionFileFilter;
 import util.FileSelection;
-
+/**
+ * Graphical interface window for the size expansion of BED coordinate interval files.
+ * 
+ * @author William KM Lai
+ *
+ */
 @SuppressWarnings("serial")
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -49,7 +56,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 
 	private JButton btnLoad;
 	private JButton btnRemoveBED;
-	private JButton btnConvert;
+	private JButton btnExecute;
 
 	public Task task;
 	private JLabel lblCurrent;
@@ -59,6 +66,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 
 	private static JRadioButton rdbtnExpandFromCenter;
 	private static JRadioButton rdbtnAddToBorder;
+	private static JCheckBox chckbxGzipOutput;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -70,16 +78,24 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				} else {
 					setProgress(0);
 					for (int x = 0; x < BEDFiles.size(); x++) {
+						// Save current BED to temp variable
 						File XBED = BEDFiles.get(x);
-						// Set outfilepath
-						String OUTPUT = (XBED.getName()).substring(0, XBED.getName().length() - 4) + "_"
-								+ Integer.toString(SIZE) + "bp.bed";
+						System.out.println("Input: " + XBED.getName());
+						// Set output filepath with name and output directory
+						String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
+						// Strip second extension if input has ".gz" first extension
+						if (XBED.getName().endsWith(".bed.gz")) {
+							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
+						}
+						// Add suffix
+						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
+						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
 
 						// Execute expansion and update progress
-						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected());
+						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
@@ -98,6 +114,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public ExpandBEDWindow() {
 		setTitle("Expand BED File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -125,7 +144,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc, "bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc, "bed", true);
 				if (newBEDFiles != null) {
 					for (int x = 0; x < newBEDFiles.length; x++) {
 						BEDFiles.add(newBEDFiles[x]);
@@ -149,19 +168,19 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnRemoveBED);
 
-		btnConvert = new JButton("Convert");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnConvert, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConvert, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnConvert, -175, SpringLayout.EAST, contentPane);
-		contentPane.add(btnConvert);
+		btnExecute = new JButton("Expand");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnExecute, 167, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnExecute, 0, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnExecute, -175, SpringLayout.EAST, contentPane);
+		contentPane.add(btnExecute);
 
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnExecute);
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 
-		btnConvert.setActionCommand("start");
+		btnExecute.setActionCommand("start");
 
 		lblCurrent = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
@@ -175,8 +194,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 143, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -157, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 10, SpringLayout.WEST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
@@ -186,6 +204,11 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
 		contentPane.add(btnOutput);
+		
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		rdbtnExpandFromCenter = new JRadioButton("Expand from Center");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnExpandFromCenter, 6, SpringLayout.SOUTH, scrollPane);
@@ -218,7 +241,8 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 100, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 40, SpringLayout.SOUTH, lblSizeOfExpansion);
 		contentPane.add(lblSizeOfExpansion);
-		btnConvert.addActionListener(this);
+
+		btnExecute.addActionListener(this);
 	}
 
 	@Override

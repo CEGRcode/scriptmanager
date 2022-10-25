@@ -32,6 +32,8 @@ public class ExpandBEDCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	@ArgGroup(validate = false, heading = "%nType of Expansion%n")
 	ExpandType expandType = new ExpandType();
@@ -55,7 +57,7 @@ public class ExpandBEDCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		ExpandBED.expandBEDBorders(output, bedFile, SIZE, byCenter);
+		ExpandBED.expandBEDBorders(output, bedFile, SIZE, byCenter, gzOutput);
 		
 		System.err.println("Expansion Complete");
 		return(0);
@@ -63,17 +65,14 @@ public class ExpandBEDCLI implements Callable<Integer> {
 	
 	private String validateInput() throws IOException {
 		String r = "";
-		
+
 		//check inputs exist
 		if(!bedFile.exists()){
 			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
-		}
-		
+		if(!"".equals(r)){ return(r); }
+
 		// Define default behavior
 		if(expandType.center==-999 && expandType.border==-999){
 			SIZE = 250;
@@ -91,27 +90,28 @@ public class ExpandBEDCLI implements Callable<Integer> {
 		if(SIZE<=0){
 			r += "(!) Invalid size input. Must be a positive integer greater than 0.";
 		}
-		
+
+		//check stdout and gzip not both selected
+		if (stdout && gzOutput) {
+			r += "(!) Cannot use -s flag with -z.\n";
+		}
 		//set default output filename
-		if(output==null && !stdout){
-			if(byCenter){ output = new File(ExtensionFileFilter.stripExtension(bedFile) + "_" + Integer.toString(SIZE) + "bp.bed"); }
-			else{ output = new File(ExtensionFileFilter.stripExtension(bedFile) + "_border_" + Integer.toString(SIZE) + "bp.bed"); }
-		//check stdout and output not both selected
-		}else if(stdout){
-			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
-		//check output filename is valid
-		}else{
-			//check ext
-			try{
-				if(!"bed".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".bed\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use BED extension for output filename. Try: " + output + ".bed\n"; }
+		if (output == null) {
+			if (!stdout) {
+				String NAME = ExtensionFileFilter.stripExtension(bedFile);
+				NAME += byCenter ? "_" + Integer.toString(SIZE) + "bp.bed" : "_border_" + Integer.toString(SIZE) + "bp.bed";
+				NAME += gzOutput ? ".gz" : "";
+				output = new File(NAME);
+			//check stdout and output not both selected
+			} else {
+				r += "(!) Cannot use -s flag with -o.\n";
+			}
+		} else {
 			//check directory
-			if(output.getParent()==null){
-	// 			System.err.println("default to current directory");
-			} else if(!new File(output.getParent()).exists()){
-				r += "(!)Check output directory exists: " + output.getParent() + "\n";
+			if (output.getParent() != null) {
+				if (!new File(output.getParent()).exists()) {
+					r += "(!) Check output directory exists: " + output.getParent() + "\n";
+				}
 			}
 		}
 		

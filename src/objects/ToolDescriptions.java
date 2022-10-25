@@ -47,6 +47,7 @@ public class ToolDescriptions {
 	public static final String gff_to_bed_description = "Convert GFF file to BED file.";
 	public static final String sort_bed_description = "Sort BED file by CDT file statistics."; //"Sort a CDT file and its corresponding BED file by the total score in the CDT file across the specified interval"
 	public static final String sort_gff_description = "Sort GFF file by CDT file statistics."; //"Sort a CDT file and its corresponding GFF file by the total score in the CDT file across the specified interval"
+	public static final String shift_coordinate_description = "Shift coordinate intervals up/downstream.";
 
 	// Read Analysis
 	public static final String tag_pileup_description = "Pileup 5' ends of aligned tags given BED and BAM files according to user-defined parameters.";

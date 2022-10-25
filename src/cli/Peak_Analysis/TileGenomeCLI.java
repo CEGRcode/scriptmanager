@@ -24,7 +24,7 @@ import scripts.Peak_Analysis.TileGenome;
 	exitCodeOnExecutionException = 1)
 public class TileGenomeCLI implements Callable<Integer> {
 	
-	@Parameters( index = "0", description = "reference genome [sacCer3|sacCer3_cegr|hg19|hg19_contigs|mm10]")
+	@Parameters( index = "0", description = "reference genome [sacCer3|sacCer3_cegr|hg38|hg38_contigs|hg19|hg19_contigs|mm10]")
 	private String genomeName;
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be genome_tiles_<genomeName>_<window>bp.<ext>")
@@ -44,8 +44,7 @@ public class TileGenomeCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		TileGenome script_obj = new TileGenome(genomeName, window, formatIsBed, output);
-		script_obj.execute();
+		TileGenome.execute(genomeName, window, formatIsBed, output);
 		
 		System.err.println( "Genomic Tiling Complete." );
 		return(0);

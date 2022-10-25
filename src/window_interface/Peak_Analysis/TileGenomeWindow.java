@@ -29,6 +29,12 @@ import javax.swing.border.EmptyBorder;
 import util.FileSelection;
 import scripts.Peak_Analysis.TileGenome;
 
+/**
+ * Graphical interface window for generating coordinate interval files that tile a genome.
+ * 
+ * @author William KM Lai
+ * @see scripts.Peak_Analysis.TileGenome
+ */
 @SuppressWarnings("serial")
 public class TileGenomeWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
@@ -37,7 +43,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	private JTextField txtSize;
 	private JRadioButton rdbtnGff;
 	private JRadioButton rdbtnBed;
-	private String[] genomeBuilds = { "sacCer3", "sacCer3_cegr", "hg19", "hg19_contigs", "mm10" };
+	private String[] genomeBuilds = { "sacCer3", "sacCer3_cegr", "hg38", "hg38_contigs", "hg19", "hg19_contigs", "mm10" };
 	private JComboBox<String> cmbGenome;
 
 	private File OUTPUT_PATH = null;
@@ -45,8 +51,8 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws IOException, InterruptedException {
+		@Override
+		public Void doInBackground() throws IOException, InterruptedException {
 	        	try {
 	        		if(txtSize.getText().isEmpty()) {
 	    				JOptionPane.showMessageDialog(null, "No Window Size Entered!!!");
@@ -63,8 +69,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 						}else{
 							OUTFILE = new File(randomName);
 						}
-	        			TileGenome generate = new TileGenome((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
-	        			generate.execute();
+						TileGenome.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
 	    				JOptionPane.showMessageDialog(null, "Genomic Tiling Complete");
 	        		}
 	        	} catch(NumberFormatException nfe){

@@ -13,15 +13,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Scanner;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+
+import util.GZipUtilities;
 
 public class TwoColorHeatMap {
 
@@ -373,11 +372,11 @@ public class TwoColorHeatMap {
 	public static ArrayList<double[]> loadMatrix(File input) throws UnsupportedEncodingException, IOException {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();
 		int currentRow = 0;
-		// Assume file is gzipped and create normal BufferedReader if not
+		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br;
-		try {
+		if(GZipUtilities.isGZipped(input)) {
 			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-		} catch (ZipException e) {
+		} else {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
 		}
 		// Initialize line variable to loop through

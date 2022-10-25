@@ -35,6 +35,8 @@ public class SortBEDCLI implements Callable<Integer> {
 	private String outputBasename = null;
 	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
 	private int center = -999;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = {"-x", "--index"}, description = "sort by index from the specified start to the specified stop (0-indexed and half-open interval)",
 		arity = "2")
 	private int[] index = {-999, -999};
@@ -57,7 +59,7 @@ public class SortBEDCLI implements Callable<Integer> {
 			index[1] = (CDT_SIZE / 2) + (center / 2);
 		}
 		
-		SortBED.sortBEDbyCDT(outputBasename, bedFile, cdtFile, index[0], index[1]);
+		SortBED.sortBEDbyCDT(outputBasename, bedFile, cdtFile, index[0], index[1], gzOutput);
 		
 		System.err.println("Sort Complete");
 		return(0);
@@ -74,13 +76,6 @@ public class SortBEDCLI implements Callable<Integer> {
 			r += "(!)CDT file does not exist: " + cdtFile.getName() + "\n";
 		}
 		if(!"".equals(r)){ return(r); }
-		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
-		}
-		if(!"cdt".equals(ExtensionFileFilter.getExtension(cdtFile))){
-			r += "(!)Is this a CDT file? Check extension: " + cdtFile.getName() + "\n";
-		}
 		// validate CDT as file, with consistent row size, and save row_size value
 		try {
 			CDTUtilities cdt_obj = new CDTUtilities();

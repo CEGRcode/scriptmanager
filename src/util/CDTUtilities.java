@@ -1,7 +1,11 @@
 package util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,23 +13,45 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
+import java.util.zip.GZIPInputStream;
 
+/**
+ * This class was created to parse and validate CDT files and counting the number of columns and is based on originally tool-specific methods.
+ * 
+ * @author William KM Lai
+ * @see window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow
+ * @see scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
+ * @see scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF
+ * 
+ */
 public class CDTUtilities {
 	
 	private int SIZE;
 	private boolean consistentSize;
 	private String invalidMessage;
 	
-	// This function is almost exactly copied from window/*/SortBEDWindow & scripts/*/SortBED & scripts/*/SortGFF...good practice to merge at some point.
-	public void parseCDT(File CDT) throws FileNotFoundException {
+	/**
+	 * Parse CDT-formatted file for consistent column sizes and a row count
+	 * @param CDT a CDT-formatted file to validate
+	 * @throws IOException
+	 */
+	public void parseCDT(File CDT) throws IOException {
 		SIZE = -999;
 		consistentSize = true;
 		invalidMessage = "";
 		
-		Scanner scan = new Scanner(CDT);
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(CDT)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(CDT)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(CDT), "UTF-8"));
+		}
+		// Initialize line variable to loop through
+		String line = br.readLine();
 		int currentRow = 1;
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
+		while (line != null) {
+			String[] temp = line.split("\t");
 			if(!temp[0].contains("YORF") && !temp[0].contains("NAME")) {
 				int tempsize = temp.length - 2;
 				if(SIZE == -999) { SIZE = tempsize; }
@@ -36,8 +62,9 @@ public class CDTUtilities {
 				}
 				currentRow++;
 			}
+			line = br.readLine();
 		}
-		scan.close();
+		br.close();
 	}
 	
 	public boolean isValid(){ return consistentSize; }
@@ -63,7 +90,12 @@ public class CDTUtilities {
 		scan.close();
 		return matrix;
 	}
-	
+
+	/**
+	 * Given a 2D-array formatted as a vector of primitive array types, return the average composite.
+	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
+	 * @return an array of positional composite average values from the input matrix
+	 */
 	public static double[] getComposite(Vector<double[]> CDT) {
 		double[] AVG = new double[CDT.get(0).length];
 		double COUNT = 0;
@@ -77,7 +109,12 @@ public class CDTUtilities {
 		for(int x = 0; x < AVG.length; x++) { AVG[x] /= COUNT; }
 		return AVG;
 	}
-	
+
+	/**
+	 * Given a 2D-array formatted as a vector of primitive array types, return some basic statistics.
+	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
+	 * @return an ArrayList of statistics on the input matrix
+	 */
 	public static ArrayList<Double> getStats(Vector<double[]> CDT) {
 		ArrayList<Double> STATS = new ArrayList<Double>();
 		ArrayList<Double> values = new ArrayList<Double>();
@@ -127,7 +164,12 @@ public class CDTUtilities {
 		STATS.add(mode);
 		return STATS;
 	}
-	
+
+	/**
+	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero maximum value.
+	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
+	 * @return the maximum value ignoring zeros of the input matrix.
+	 */
 	public static Double getMax(Vector<double[]> CDT) {
 		double max = 0;
 		for(int x = 0; x < CDT.size(); x++) {
@@ -139,7 +181,12 @@ public class CDTUtilities {
 		}
 		return max;
 	}
-	
+
+	/**
+	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero minimum value.
+	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
+	 * @return the minimum value ignoring zeros of the input matrix.
+	 */
 	public static Double getMin(Vector<double[]> CDT) {
 		double min = 0;
 		for(int x = 0; x < CDT.size(); x++) {
@@ -152,7 +199,12 @@ public class CDTUtilities {
 		}
 		return min;
 	}
-	
+
+	/**
+	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero median value.
+	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
+	 * @return the median value ignoring zeros of the input matrix
+	 */
 	public static Double getMedian(Vector<double[]> CDT) {
 		ArrayList<Double> values = new ArrayList<Double>();
 		for(int x = 0; x < CDT.size(); x++) {
@@ -164,6 +216,7 @@ public class CDTUtilities {
 		}
 		Collections.sort(values);
 
+		// Averaging two floor/ceil middle values accounts for even/odd list size
 	    double pos1 = Math.floor((values.size() - 1.0) / 2.0);
 	    double pos2 = Math.ceil((values.size() - 1.0) / 2.0);
 	      if (pos1 == pos2 ) {
@@ -172,7 +225,12 @@ public class CDTUtilities {
 	         return (values.get((int)pos1) + values.get((int)pos2)) / 2.0 ;
 	      }
 	}
-	
+
+	/**
+	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero average value.
+	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
+	 * @return the average value ignoring zeros of the input matrix
+	 */
 	public static Double getAverage(Vector<double[]> CDT) {
 		double average = 0;
 		int count = 0;
@@ -187,7 +245,12 @@ public class CDTUtilities {
 		if(count != 0) return (average / count);
 		else return 0.0;
 	}
-	
+
+	/**
+	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero mode value.
+	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
+	 * @return the mode value ignoring zeros of the input matrix
+	 */
 	public static Double getMode(Vector<double[]> CDT) {
 		double mode = 0;
 		int modecount = 0;
