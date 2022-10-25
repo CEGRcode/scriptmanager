@@ -62,7 +62,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 		}
 
 		// Generate Composite Plot
-		PlotComposite.plotCompositeFile(inputComposite, output, true, title, COLORS, legend, pixelWidth, pixelHeight);
+		PlotComposite.plotCompositeFile(inputComposite, output, true, title, COLORS, legend, pixelHeight, pixelWidth);
 
 		System.err.println("Image Generated.");
 		return (0);
