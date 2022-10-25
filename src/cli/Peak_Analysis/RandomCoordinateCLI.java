@@ -24,7 +24,7 @@ import scripts.Peak_Analysis.RandomCoordinate;
 	exitCodeOnExecutionException = 1)
 public class RandomCoordinateCLI implements Callable<Integer> {
 	
-	@Parameters( index = "0", description = "reference genome [sacCer3|sacCer3_cegr|hg19|hg19_contigs|mm10]")
+	@Parameters( index = "0", description = "reference genome [sacCer3|sacCer3_cegr|hg38|hg38_contigs|hg19|hg19_contigs|mm10]")
 	private String genomeName;
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be random_coordinates_<genomeName>_<window>bp.<ext>")
@@ -46,8 +46,7 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		RandomCoordinate script_obj = new RandomCoordinate(genomeName, numSites, window, formatIsBed, output); 
-		script_obj.execute();
+		RandomCoordinate.execute(genomeName, numSites, window, formatIsBed, output); 
 		
 		System.err.println( "Random Coordinate Generation Complete." );
 		return(0);

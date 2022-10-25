@@ -29,6 +29,12 @@ import javax.swing.border.EmptyBorder;
 import util.FileSelection;
 import scripts.Peak_Analysis.RandomCoordinate;
 
+/**
+ * Graphical interface window for generating random coordinate interval files.
+ * 
+ * @author William KM Lai
+ * @see scripts.Peak_Analysis.RandomCoordinate
+ */
 @SuppressWarnings("serial")
 public class RandomCoordinateWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
@@ -38,7 +44,7 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	private JTextField txtSize;
 	private JRadioButton rdbtnGff;
 	private JRadioButton rdbtnBed;
-	private String[] genomeBuilds = { "sacCer3", "sacCer3_cegr", "hg19", "hg19_contigs", "mm10" };
+	private String[] genomeBuilds = { "sacCer3", "sacCer3_cegr", "hg38", "hg38_contigs", "hg19", "hg19_contigs", "mm10" };
 	private JComboBox<String> cmbGenome;
 
 	private File OUTPUT_PATH = null;
@@ -46,8 +52,8 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws IOException, InterruptedException {
+		@Override
+		public Void doInBackground() throws IOException, InterruptedException {
 	        	try {
 	        		if(txtSites.getText().isEmpty()) {
 	    				JOptionPane.showMessageDialog(null, "No Sites Entered!!!");
@@ -68,9 +74,8 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 						}else{
 							OUTFILE = new File(randomName);
 						}
-						RandomCoordinate generate = new RandomCoordinate((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
-	        			generate.execute();
-	    				JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
+						RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
+	        			JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
 	        		}
 	        	} catch(NumberFormatException nfe){
 					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
