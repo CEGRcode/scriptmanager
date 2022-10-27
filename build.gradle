@@ -9,7 +9,7 @@ apply plugin: 'eclipse'
 
 sourceSets.main.java.srcDirs = ['src']
 mainClassName = "main.ScriptManager"
-version = 'v0.14'
+version = 'v0.14-dev'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
