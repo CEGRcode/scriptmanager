@@ -38,10 +38,10 @@ import scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import util.ExtensionFileFilter;
 import util.FileSelection;
 /**
- * Graphical interface window for the size expansion of BED coordinate interval files.
+ * Graphical interface window for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
  * 
  * @author William KM Lai
- *
+ * @see scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
  */
 @SuppressWarnings("serial")
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -68,6 +68,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private static JRadioButton rdbtnAddToBorder;
 	private static JCheckBox chckbxGzipOutput;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -204,7 +207,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
 		contentPane.add(btnOutput);
-		
+
 		chckbxGzipOutput = new JCheckBox("Output GZIP");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);

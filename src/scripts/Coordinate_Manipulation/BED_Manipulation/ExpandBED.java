@@ -16,9 +16,10 @@ import util.GZipUtilities;
 
 /**
  * Class that contains method for expanding (BED) coordinate intervals from the center/border by a user-defined direction and distance.
- * 
- * @author William KM Lai
  *
+ * @author William KM Lai
+ * @see cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI
+ * @see window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow
  */
 public class ExpandBED {
 	/**

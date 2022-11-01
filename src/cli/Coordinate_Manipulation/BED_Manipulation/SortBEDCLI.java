@@ -16,8 +16,11 @@ import util.ExtensionFileFilter;
 import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 
 /**
-	Coordinate_ManipulationCLI/SortBEDCLI
-*/
+ * Command line interface class for sorting BED coordinate interval files by CDT matrix occupancies by calling the method implemented in the scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
+ */
 @Command(name = "sort-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_bed_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -25,12 +28,12 @@ import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class SortBEDCLI implements Callable<Integer> {
-	
+
 	@Parameters( index = "0", description = "the BED file to sort")
 	private File bedFile;
 	@Parameters( index = "1", description = "the reference CDT file to sort the input by")
 	private File cdtFile;
-	
+
 	@Option(names = {"-o", "--output"}, description = "specify output file basename with no .cdt/.bed/.jtv extension (default=<bedFile>_SORT")
 	private String outputBasename = null;
 	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
@@ -40,10 +43,10 @@ public class SortBEDCLI implements Callable<Integer> {
 	@Option(names = {"-x", "--index"}, description = "sort by index from the specified start to the specified stop (0-indexed and half-open interval)",
 		arity = "2")
 	private int[] index = {-999, -999};
-	
+
 	private int CDT_SIZE = -999;
 	private boolean byCenter = false;
-	
+
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SortBEDCLI.call()" );
@@ -53,21 +56,21 @@ public class SortBEDCLI implements Callable<Integer> {
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			System.exit(1);
 		}
-		
+
 		if( byCenter ){
 			index[0] = (CDT_SIZE / 2) - (center / 2);
 			index[1] = (CDT_SIZE / 2) + (center / 2);
 		}
-		
+
 		SortBED.sortBEDbyCDT(outputBasename, bedFile, cdtFile, index[0], index[1], gzOutput);
-		
+
 		System.err.println("Sort Complete");
 		return(0);
 	}
-	
+
 	private String validateInput() throws IOException {
 		String r = "";
-		
+
 		//check inputs exist
 		if(!bedFile.exists()){
 			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
@@ -83,7 +86,7 @@ public class SortBEDCLI implements Callable<Integer> {
 			if( cdt_obj.isValid() ){ CDT_SIZE = cdt_obj.getSize(); }
 			else{ r += "(!)CDT file doesn't have consistent row sizes. " + cdt_obj.getInvalidMessage(); }
 		}catch (FileNotFoundException e1){ e1.printStackTrace(); }
-		
+
 		//set default output filename
 		if(outputBasename==null){
 			outputBasename = ExtensionFileFilter.stripExtension(bedFile) + "_SORT";
@@ -98,7 +101,7 @@ public class SortBEDCLI implements Callable<Integer> {
 				r += "(!)Check output directory exists: " + BASEFILE.getParent() + "\n";
 			}
 		}
-		
+
 		// Set Center if Index not given
 		if( index[0]==-999 && index[1]==-999 ) { byCenter = true; }
 		// Center Specified
@@ -113,7 +116,7 @@ public class SortBEDCLI implements Callable<Integer> {
 				r += "(!)Invalid --index value input, check that start>0, stop<CDT row size, and start<stop.";
 			}
 		}
-		
+
 		return(r);
 	}
 }

@@ -15,8 +15,11 @@ import util.ExtensionFileFilter;
 import scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 
 /**
-	Coordinate_ManipulationCLI/ExpandBEDCLI
-*/
+ * Command line interface class for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
+ */
 @Command(name = "expand-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_bed_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -24,17 +27,17 @@ import scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class ExpandBEDCLI implements Callable<Integer> {
-	
+
 	@Parameters( index = "0", description = "the BED file to expand on")
 	private File bedFile;
-	
+
 	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with coordinate info appended)")
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
-	
+
 	@ArgGroup(validate = false, heading = "%nType of Expansion%n")
 	ExpandType expandType = new ExpandType();
 	static class ExpandType {
@@ -43,10 +46,10 @@ public class ExpandBEDCLI implements Callable<Integer> {
 		@Option(names = {"-b", "--border"}, description = "add to border")
 		private int border = -999;
 	}
-	
+
 	private boolean byCenter = true;
 	private int SIZE = 250;
-	
+
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ExpandBEDCLI.call()" );
@@ -56,13 +59,13 @@ public class ExpandBEDCLI implements Callable<Integer> {
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			System.exit(1);
 		}
-		
+
 		ExpandBED.expandBEDBorders(output, bedFile, SIZE, byCenter, gzOutput);
-		
+
 		System.err.println("Expansion Complete");
 		return(0);
 	}
-	
+
 	private String validateInput() throws IOException {
 		String r = "";
 
@@ -114,7 +117,7 @@ public class ExpandBEDCLI implements Callable<Integer> {
 				}
 			}
 		}
-		
+
 		return(r);
 	}
 }

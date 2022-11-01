@@ -42,10 +42,10 @@ import util.ExtensionFileFilter;
 import util.FileSelection;
 
 /**
- * Graphical interface window for calling static gzip compressing method implemented in the scripts package.
+ * Graphical interface window for shifting coordinate intervals up/downstream by calling method implemented in the scripts package.
  * 
  * @author Olivia Lang
- *
+ * @see scripts.Coordinate_Manipulation.ShiftCoord
  */
 @SuppressWarnings("serial")
 public class ShiftIntervalWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -74,10 +74,13 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 
 	private JRadioButton rdbtnBed;
 	private JRadioButton rdbtnGff;
-	
+
 	private static JCheckBox chckbxGzipOutput;
 	private static JCheckBox chckbxStranded;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -106,7 +109,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						System.out.println("Input: " + XBED.getName());
 						// Execute expansion and update progress
 						ShiftCoord.shiftBEDInterval(new File(OUTPUT + SUFFIX), XBED, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
-						
+
 						// Update progress bar
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						setProgress(percentComplete);
@@ -130,7 +133,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						System.out.println("Input: " + XGFF.getName());
 						// Execute expansion and update progress
 						ShiftCoord.shiftGFFInterval(new File(OUTPUT + SUFFIX), XGFF, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
-						
+
 						// Update progress bar
 						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
 						setProgress(percentComplete);
@@ -168,17 +171,17 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnBed, 6, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnBed, 120, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnBed);
-		
+
 		rdbtnGff = new JRadioButton("GFF input");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnGff, 0, SpringLayout.NORTH, rdbtnBed);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnGff, 10, SpringLayout.EAST, rdbtnBed);
 		contentPane.add(rdbtnGff);
-		
+
 		ButtonGroup InputType = new ButtonGroup();
 		InputType.add(rdbtnBed);
 		InputType.add(rdbtnGff);
 		rdbtnBed.setSelected(true);
-		
+
 		JPanel inputCards = new JPanel(new CardLayout());
 		sl_contentPane.putConstraint(SpringLayout.NORTH, inputCards, 0, SpringLayout.SOUTH, rdbtnBed);
 		sl_contentPane.putConstraint(SpringLayout.WEST, inputCards, 0, SpringLayout.WEST, contentPane);
@@ -231,8 +234,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 			}
 		});
 		bedInputPane.add(btnRemoveBED);
-		
-		
+
 		JPanel gffInputPane = new JPanel();
 		SpringLayout sl_gffInputPane = new SpringLayout();
 		gffInputPane.setLayout(sl_gffInputPane);
@@ -297,7 +299,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDirectionalShift, 6, SpringLayout.SOUTH, inputCards);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDirectionalShift, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(lblDirectionalShift);
-		
+
 		JLabel lblSizeAdmonishment = new JLabel("upstream(-) and downstream(+)");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeAdmonishment, 6, SpringLayout.SOUTH, lblDirectionalShift);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeAdmonishment, 10, SpringLayout.WEST, contentPane);
@@ -365,7 +367,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 				}
 			}
 		});
-		
+
 		btnExecute.addActionListener(this);
 	}
 

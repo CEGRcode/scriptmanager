@@ -38,10 +38,10 @@ import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 
 
 /**
- * Graphical interface window for sorting BED coordinate interval files by CDT matrix occupancies.
+ * Graphical interface window for sorting BED coordinate interval files by CDT matrix occupancies by calling the method implemented in the scripts package.
  * 
  * @author William KM Lai
- *
+ * @see scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
  */
 @SuppressWarnings("serial")
 public class SortBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -83,6 +83,9 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	private JLabel lblIndexStop;
 	private static JCheckBox chckbxGzipOutput;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -198,7 +201,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 				}
 			}
 		});
-		
+
 		rdbtnSortbyCenter = new JRadioButton("Sort by Center");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSortbyCenter, 129, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnSortbyCenter, 10, SpringLayout.WEST, contentPane);

@@ -19,9 +19,10 @@ import util.GZipUtilities;
 
 /**
  * This class contains scripts for sorting coordinate intervals (BED/GFF) by the tag counts of a CDT matrix file.
- * 
- * @author William KM Lai
  *
+ * @author William KM Lai
+ * @see cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI
+ * @see window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow
  */
 public class SortBED {
 	/**

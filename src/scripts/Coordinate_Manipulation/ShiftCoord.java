@@ -16,15 +16,16 @@ import util.GZipUtilities;
 
 /**
  * This class contains scripts for shifting coordinate intervals (BED/GFF) by a user-defined direction and distance.
- * 
- * @author Olivia Lang
  *
+ * @author Olivia Lang
+ * @see cli.Coordinate_Manipulation.ShiftIntervalCLI
+ * @see window_interface.Coordinate_Manipulation.ShiftIntervalWindow
  */
 public class ShiftCoord {
 
 	/**
 	 * Shift BED-formatted intervals by a user-defined direction and distance. Includes Gzip support.
-	 * 
+	 *
 	 * @param out_filepath Filepath to save shifted BED-formatted files. If null, outputs to STDOUT.
 	 * @param input Filepath to starting BED-formatted coordinates we want to shift. Supports automatic detection and handling of GZipped BED-formatted files. Must have at least 3 tab-delimited columns per BED specifications.
 	 * @param SHIFT Integer value indicating number and direction of nucleotides to shift the entire intervals (negative values are upstream shifts while positive values are downstream shifts)
@@ -95,7 +96,7 @@ public class ShiftCoord {
 
 	/**
 	 * Shift GFF-formatted intervals by a user-defined direction and distance. Includes Gzip support.
-	 * 
+	 *
 	 * @param out_filepath Filepath to save shifted GFF-formatted files. If null, outputs to STDOUT.
 	 * @param input Filepath to starting GFF-formatted coordinates we want to shift. Supports automatic detection and handling of GZipped GFF-formatted files. Must have exactly 9 tab-delimited columns per GFF specifications.
 	 * @param SHIFT Integer value indicating number and direction of nucleotides to shift the entire intervals (negative values are upstream shifts while positive values are downstream shifts)
