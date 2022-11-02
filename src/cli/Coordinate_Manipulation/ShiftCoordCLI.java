@@ -8,10 +8,8 @@ import java.util.concurrent.Callable;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.FileNotFoundException;
 
 import objects.ToolDescriptions;
-import util.CDTUtilities;
 import util.ExtensionFileFilter;
 import scripts.Coordinate_Manipulation.ShiftCoord;
 
