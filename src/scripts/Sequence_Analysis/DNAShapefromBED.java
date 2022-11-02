@@ -1,6 +1,7 @@
 package scripts.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
+import htsjdk.samtools.reference.FastaSequenceIndexCreator;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import objects.CoordinateObjects.BEDCoord;
 
@@ -18,7 +19,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 import charts.CompositePlot;
-import objects.CustomExceptions.FASTAException;
 import util.FASTAUtilities;
 import util.DNAShapeReference;
 
@@ -51,7 +51,7 @@ public class DNAShapefromBED {
 	Component chart_R = null;
 
 	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps)
-			throws IOException, FASTAException {
+			throws IOException {
 		GENOME = gen;
 		BED = b;
 		OUTBASENAME = out;
@@ -62,7 +62,7 @@ public class DNAShapefromBED {
 		File FAI = new File(GENOME + ".fai");
 		// Check if FAI index file exists
 		if (!FAI.exists() || FAI.isDirectory()) {
-			FASTAUtilities.buildFASTAIndex(GENOME);
+			FastaSequenceIndexCreator.create(GENOME.toPath(), true);
 		}
 
 		STRUCTURE = DNAShapeReference.InitializeStructure();

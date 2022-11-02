@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import objects.CustomOutputStream;
-import objects.CustomExceptions.FASTAException;
 import scripts.Sequence_Analysis.FASTAExtract;
 
 @SuppressWarnings("serial")
@@ -46,7 +45,7 @@ public class FASTAExtractOutput extends JFrame {
 		HEADER = head;
 	}
 
-	public void run() throws IOException, InterruptedException, FASTAException {
+	public void run() throws IOException, InterruptedException {
 
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 

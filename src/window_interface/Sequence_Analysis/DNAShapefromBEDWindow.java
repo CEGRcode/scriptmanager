@@ -31,7 +31,6 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import objects.CustomExceptions.FASTAException;
 import util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -96,8 +95,6 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 					signal.run();
 
 				}
-			} catch (FASTAException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (InterruptedException e) {

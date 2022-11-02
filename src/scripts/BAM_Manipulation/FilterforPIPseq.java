@@ -8,6 +8,7 @@ import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.reference.FastaSequenceIndexCreator;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import htsjdk.samtools.util.CloseableIterator;
 import htsjdk.samtools.util.IOUtil;
@@ -16,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import objects.CustomExceptions.FASTAException;
 import util.FASTAUtilities;
 
 public class FilterforPIPseq {
@@ -27,7 +27,7 @@ public class FilterforPIPseq {
 
 	private PrintStream PS = null;
 
-	public FilterforPIPseq(File in, File gen, File out, String s, PrintStream ps) throws IOException, FASTAException {
+	public FilterforPIPseq(File in, File gen, File out, String s, PrintStream ps) throws IOException {
 		bamFile = in;
 		genome = gen;
 		output = out;
@@ -37,7 +37,7 @@ public class FilterforPIPseq {
 		File FAI = new File(genome + ".fai");
 		// Check if FAI index file exists
 		if (!FAI.exists() || FAI.isDirectory()) {
-			FASTAUtilities.buildFASTAIndex(genome);
+			FastaSequenceIndexCreator.create(genome.toPath(), true);
 		}
 	}
 

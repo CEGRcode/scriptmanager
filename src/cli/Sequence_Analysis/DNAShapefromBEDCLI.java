@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import objects.CustomExceptions.FASTAException;
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.DNAShapefromBED;
@@ -92,8 +91,6 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 					}
 				}
 			}
-		} catch (FASTAException e) {
-			System.err.println(e.getMessage() + "\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

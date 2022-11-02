@@ -1,6 +1,7 @@
 package scripts.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
+import htsjdk.samtools.reference.FastaSequenceIndexCreator;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import objects.CoordinateObjects.BEDCoord;
 
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import objects.CustomExceptions.FASTAException;
 import util.FASTAUtilities;
 
 public class FASTAExtract {
@@ -25,7 +25,7 @@ public class FASTAExtract {
 	private boolean HEADER = true;
 
 	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps)
-			throws IOException, FASTAException {
+			throws IOException {
 		GENOME = gen;
 		BED = b;
 		OUTFILE = out;
@@ -36,7 +36,7 @@ public class FASTAExtract {
 		File FAI = new File(GENOME + ".fai");
 		// Check if FAI index file exists
 		if (!FAI.exists() || FAI.isDirectory()) {
-			FASTAUtilities.buildFASTAIndex(GENOME);
+			FastaSequenceIndexCreator.create(GENOME.toPath(), true);
 		}
 	}
 

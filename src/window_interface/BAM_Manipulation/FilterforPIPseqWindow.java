@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import objects.CustomExceptions.FASTAException;
 import util.FileSelection;
 import scripts.BAM_Manipulation.BAIIndexer;
 
@@ -87,8 +87,10 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 				}
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Permanganate-Seq Filtering Complete");
-			} catch (FASTAException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 			return null;
 		}
