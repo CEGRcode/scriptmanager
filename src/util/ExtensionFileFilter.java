@@ -6,11 +6,14 @@ import java.io.IOException;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * Filters files such as BAI, BAM, BED, CDT, FASTA, FA, GFF, TAB for the FileSelection tool base on the extension of the filename. Also includes file extension parsing utilities used across all ScriptManager classes (especially for creating default filenames).
+ * Filters files such as BAI, BAM, BED, CDT, FASTA, FA, GFF, TAB for the
+ * FileSelection tool based on the extension of the filename. Also includes file
+ * extension parsing utilities used across all ScriptManager classes (especially
+ * for creating default filenames). Includes optional ignoring of `.gz`
+ * extension.
  * 
  * @author William KM Lai
  * @see util.FileSelection
- *
  */
 public class ExtensionFileFilter extends FileFilter{
 
@@ -20,8 +23,8 @@ public class ExtensionFileFilter extends FileFilter{
 	private boolean includeGZ = false;
 
 	/**
-	 * Create file filter for the given file extension. 
-	 * If ExtensionFileFilter is instantiated with "fa", file extensions "fasta" and "fsa" are set to be equivalent.
+	 * Create file filter for the given file extension.<br>
+	 * If ExtensionFileFilter is instantiated with "fa", file extensions "fasta" and "fsa" are set to be equivalent.<br>
 	 * If ExtensionFileFilter is instantiated with "gff", file extensions "gtf" and "gff3" are set to be equivalent.
 	 * 
 	 * @param filter file extension to filter by (see notes on "fa" and "gff").
@@ -33,12 +36,18 @@ public class ExtensionFileFilter extends FileFilter{
 	}
 
 	/**
-	 * Create file filter for the given file extension with option to ignore or include ".gz" extensions. 
-	 * If ExtensionFileFilter is instantiated with "fa", file extensions "fasta" and "fsa" are set to be equivalent.
-	 * If ExtensionFileFilter is instantiated with "gff", file extensions "gtf" and "gff3" are set to be equivalent.
+	 * Create file filter for the given file extension with option to ignore or
+	 * include ".gz" extensions.<br>
+	 * If ExtensionFileFilter is instantiated with "fa", file extensions "fasta" and
+	 * "fsa" are set to be equivalent.<br>
+	 * If ExtensionFileFilter is instantiated with "gff", file extensions "gtf" and
+	 * "gff3" are set to be equivalent.<br>
 	 * 
 	 * @param filter file extension to filter by (see notes on "fa" and "gff").
-	 * @param gz whether or not to ignore the ".gz" extension (e.g. if gz=true and filter="bed", then "XXX.bed.gz" will pass the filter, "XXX.bed" will pass the filter, but "XXX.gff" will NOT pass the filter).
+	 * @param gz     whether or not to ignore the ".gz" extension (e.g. if gz=true
+	 *               and filter="bed", then "XXX.bed.gz" will pass the filter,
+	 *               "XXX.bed" will pass the filter, but "XXX.gff" will NOT pass the
+	 *               filter).
 	 */
 	public ExtensionFileFilter(String filter, boolean gz) {
 		ext = filter;
@@ -67,17 +76,18 @@ public class ExtensionFileFilter extends FileFilter{
 	 * @return the file extension string (without "." char)
 	 */
 	public static String getExtension(File f) {
-        String ext = null;
-        String s = f.getName();
-        int i = s.lastIndexOf('.');
-        if (i > 0 &&  i < s.length() - 1) {
-            ext = s.substring(i+1).toLowerCase();
-        }
-        return ext;
-    }
+		String ext = null;
+		String s = f.getName();
+		int i = s.lastIndexOf('.');
+		if (i > 0 &&  i < s.length() - 1) {
+			ext = s.substring(i+1).toLowerCase();
+		}
+		return ext;
+	}
 
 	/**
-	 * Get the extension string from a File object, ignoring ".gz" extension if present and searching for next extension.
+	 * Get the extension string from a File object, ignoring ".gz" extension if
+	 * present and searching for next extension.
 	 * 
 	 * @param f the input file to get the extension for
 	 * @return the file extension string (without "." char)
@@ -99,8 +109,10 @@ public class ExtensionFileFilter extends FileFilter{
 	}
 
 	/**
-	 * Get the filename without the last extension (tokenize filename by "." char and pull off last "." character and last token. If no "." characters, return the whole filename)
-	 * e.g. f="blahblah.fa" returns "blahblah"
+	 * Get the filename without the last extension (tokenize filename by "." char
+	 * and pull off last "." character and last token. If no "." characters, return
+	 * the whole filename)<br>
+	 * e.g. f="blahblah.fa" returns "blahblah"<br>
 	 * e.g. f="oompaloompa" returns "oompaloompa"
 	 * 
 	 * @param f the File to strip an extension from
@@ -117,11 +129,13 @@ public class ExtensionFileFilter extends FileFilter{
 	}
 
 	/**
-	 * Get the string without the last extension, ignoring any ".gz" extensions (tokenize strings by "." char and pull off last "." character and last token. If no "." characters, return the whole filename)
-	 * e.g. f="blahblah.fa" returns "blahblah"
-	 * e.g. f="oompaloompa" returns "oompaloompa"
-	 * e.g. f="blahblah.fa.gz" returns "blahblah"
-	 * e.g. f="oompaloompa.gz" returns "oompaloompa"
+	 * Get the string without the last extension, ignoring any ".gz" extensions
+	 * (tokenize strings by "." char and pull off last "." character and last token.
+	 * If no "." characters, return the whole filename)<br>
+	 * e.g. f="blahblah.fa" returns "blahblah"<br>
+	 * e.g. f="oompaloompa" returns "oompaloompa"<br>
+	 * e.g. f="blahblah.fa.gz" returns "blahblah"<br>
+	 * e.g. f="oompaloompa.gz" returns "oompaloompa"<br>
 	 * 
 	 * @param f the File to strip an extension from
 	 * @return string of filename with extension stripped away
@@ -138,8 +152,10 @@ public class ExtensionFileFilter extends FileFilter{
 	}
 
 	/**
-	 * Get the string without the last extension (tokenize strings by "." char and pull off last "." character and last token. If no "." characters, return the whole filename)
-	 * e.g. f="blahblah.fa" returns "blahblah"
+	 * Get the string without the last extension (tokenize strings by "." char and
+	 * pull off last "." character and last token. If no "." characters, return the
+	 * whole filename)<br>
+	 * e.g. f="blahblah.fa" returns "blahblah"<br>
 	 * e.g. f="oompaloompa" returns "oompaloompa"
 	 * 
 	 * @param f the String to strip an extension from
@@ -155,8 +171,11 @@ public class ExtensionFileFilter extends FileFilter{
 	}
 
 	/**
-	 * Get the string of the cannonical filepath without the last extension. Return every character in the path until the last instance of "." character (not including ".").
-	 * e.g. f="/parent/directory/blahblah.fa" returns "/parent/directory/blahblah"
+	 * Get the string of the cannonical filepath without the last extension. Return
+	 * every character in the path until the last instance of "." character (not
+	 * including ".").<br>
+	 * e.g. f="/parent/directory/blahblah.fa" returns
+	 * "/parent/directory/blahblah"<br>
 	 * 
 	 * @param f the String to strip an extension from
 	 * @return string of filename with extension stripped away

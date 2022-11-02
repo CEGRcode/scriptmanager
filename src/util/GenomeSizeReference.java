@@ -14,7 +14,8 @@ import objects.CoordinateObjects.GenericCoord;
  * coordinates.
  *
  * @author William KM Lai
- *
+ * @see scripts.Peak_Analysis.RandomCoordinate
+ * @see scripts.Peak_Analysis.TileGenome
  */
 public class GenomeSizeReference {
 
@@ -448,8 +449,8 @@ public class GenomeSizeReference {
 	 * Check to make sure WINDOW size is smaller than every chromosome to prevent
 	 * infinite loop.
 	 *
-	 * @param WINDOW
-	 * @return
+	 * @param WINDOW the size of the window to check
+	 * @return true if WINDOW is smaller than all chr, false if there is at least one chr smaller than WINDOW
 	 */
 	public boolean isSmaller(int WINDOW) {
 		for(int x = 0; x < chromSize.size(); x++) {

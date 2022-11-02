@@ -5,11 +5,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class stores reference collections on DNA shape as constants for tools
+ * in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.DNAShapefromBED
+ * @see scripts.Sequence_Analysis.DNAShapefromFASTA
+ */
 public class DNAShapeReference {
 	
-	/*	
-	 *	http://rohslab.cmb.usc.edu/DNAshape/
-	 *	Zhou,,T., Yang,L., Lu,Y., Dror,I., Dantas Machado,A.C., Ghane,T., Di Felice,R. and Rohs,R. (2013) DNAshape: a method for the high-throughput prediction of DNA structural features on a genomic scale. Nucleic Acids Res., 41, W56-W62.
+	/**
+	 * A collection of 5-mers DNA strings with a list of constants that describe
+	 * DNAshape assigned to each based on the Rohs Lab 2013 paper (<a
+	 * href=http://rohslab.cmb.usc.edu/DNAshape/>http://rohslab.cmb.usc.edu/DNAshape/</a>).
+	 * <br>
+	 * <br>
+	 * Zhou,,T., Yang,L., Lu,Y., Dror,I., Dantas Machado,A.C., Ghane,T., Di
+	 * Felice,R. and Rohs,R. (2013) DNAshape: a method for the high-throughput
+	 * prediction of DNA structural features on a genomic scale. Nucleic Acids Res.,
+	 * 41, W56-W62. <br>
+	 * <br>
+	 * <em>Last updated 2015-04-15</em> <br>
+	 * <br>
+	 * The shape information for each 5-mer is encoded as an ArrayList<Double> of 6
+	 * values in the following order:
+	 * <ul>
+	 * <li>0 - MGW</li>
+	 * <li>1 - PropT</li>
+	 * <li>2 - HelT-1</li>
+	 * <li>3 - HelT-2</li>
+	 * <li>4 - Roll-1</li>
+	 * <li>5 - Roll-2</li>
+	 * </ul>
+	 * 
+	 * @return each DNA 5-mer string is the key to a list value formatted as described above
 	 */
 	@SuppressWarnings("serial")
 	public static Map<String, List<Double>> InitializeStructure() {

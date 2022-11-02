@@ -4,16 +4,18 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 /**
- * Fixed pre-set color palettes for figure generation.
+ * Fixed preset color palettes for figure generation.
+ * 
  * @author Olivia Lang
  * @see scripts.Figure_Generation.PlotComposite
- *
  */
 public class ColorSeries {
-	
+
 	/**
 	 * Initialize an ArrayList of Color objects using the ChIP-exo red and blue.
-	 * @return
+	 * 
+	 * @return list of the two colors in the following order: {blue(0x0000FF),
+	 *         red(0xFF0000)}
 	 */
 	public static final ArrayList<Color> InitializeXOColors() {
 		ArrayList<Color> COLORS = new ArrayList<Color>();
@@ -21,10 +23,14 @@ public class ColorSeries {
 		COLORS.add(Color.decode("0xFF0000")); // Red
 		return (COLORS);
 	}
-	
+
 	/**
-	 * Initialize an ArrayList of Color objects using the color palette from <a href="https://pubmed.ncbi.nlm.nih.gov/33692541/"><em>Rossi et al, 2021 (Nature)</em></a>.
-	 * @return
+	 * Initialize an ArrayList of Color objects using the color palette from
+	 * <a href="https://pubmed.ncbi.nlm.nih.gov/33692541/"><em>Rossi et al, 2021
+	 * (Nature)</em></a>.
+	 * 
+	 * @return list of the ten colors in the following order: {Grey, Black, Red,
+	 *         Orange, Yellow, Green, LightBlue, DarkBlue, Purple, Pink}
 	 */
 	public static final ArrayList<Color> InitializeYEPColors() {
 		ArrayList<Color> COLORS = new ArrayList<Color>();
@@ -40,11 +46,14 @@ public class ColorSeries {
 		COLORS.add(Color.decode("0xEA33CA")); // Pink
 		return (COLORS);
 	}
-	
+
 	/**
-	 * Initialize an ArrayList of Color objects using the Kelly color palette.
-	 * Colors copied from response on StackOverflow: https://stackoverflow.com/questions/470690/how-to-automatically-generate-n-distinct-colors
-	 * @return
+	 * Initialize an ArrayList of Color objects using the Kelly color palette.<br>
+	 * <br>
+	 * Colors copied from response on StackOverflow:s
+	 * https://stackoverflow.com/questions/470690/how-to-automatically-generate-n-distinct-colors
+	 * 
+	 * @return list of the 20 colors
 	 */
 	public static final ArrayList<Color> InitializeKellyColors() {
 		ArrayList<Color> COLORS = new ArrayList<Color>();

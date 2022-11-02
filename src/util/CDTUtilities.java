@@ -16,7 +16,8 @@ import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
 /**
- * This class was created to parse and validate CDT files and counting the number of columns and is based on originally tool-specific methods.
+ * This class was created to parse and validate CDT files and counting the
+ * number of columns and is based on originally tool-specific methods.
  * 
  * @author William KM Lai
  * @see window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow
@@ -25,13 +26,14 @@ import java.util.zip.GZIPInputStream;
  * 
  */
 public class CDTUtilities {
-	
+
 	private int SIZE;
 	private boolean consistentSize;
 	private String invalidMessage;
-	
+
 	/**
 	 * Parse CDT-formatted file for consistent column sizes and a row count
+	 * 
 	 * @param CDT a CDT-formatted file to validate
 	 * @throws IOException
 	 */
@@ -92,7 +94,9 @@ public class CDTUtilities {
 	}
 
 	/**
-	 * Given a 2D-array formatted as a vector of primitive array types, return the average composite.
+	 * Given a 2D-array formatted as a vector of primitive array types, return the
+	 * average composite.
+	 * 
 	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
 	 * @return an array of positional composite average values from the input matrix
 	 */
@@ -111,7 +115,9 @@ public class CDTUtilities {
 	}
 
 	/**
-	 * Given a 2D-array formatted as a vector of primitive array types, return some basic statistics.
+	 * Given a 2D-array formatted as a vector of primitive array types, return some
+	 * basic statistics.
+	 * 
 	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
 	 * @return an ArrayList of statistics on the input matrix
 	 */
@@ -145,11 +151,11 @@ public class CDTUtilities {
 		if(count != 0) { average /= count; }
 
 		double pos1 = Math.floor((values.size() - 1.0) / 2.0);
-	    double pos2 = Math.ceil((values.size() - 1.0) / 2.0);
-	    if (pos1 == pos2 ) { median = values.get((int)pos1); }
-	    else { median = (values.get((int)pos1) + values.get((int)pos2)) / 2.0 ; }
+		double pos2 = Math.ceil((values.size() - 1.0) / 2.0);
+		if (pos1 == pos2 ) { median = values.get((int)pos1); }
+		else { median = (values.get((int)pos1) + values.get((int)pos2)) / 2.0 ; }
 
-	    Set<Double> keys = mode_hash.keySet();
+		Set<Double> keys = mode_hash.keySet();
 		for(Double key : keys) {
 			if(mode_hash.get(key) > modecount) {
 				modecount = mode_hash.get(key);
@@ -166,7 +172,9 @@ public class CDTUtilities {
 	}
 
 	/**
-	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero maximum value.
+	 * Given a 2D-array formatted as a vector of primitive array types, return the
+	 * non-zero maximum value.
+	 * 
 	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
 	 * @return the maximum value ignoring zeros of the input matrix.
 	 */
@@ -183,7 +191,9 @@ public class CDTUtilities {
 	}
 
 	/**
-	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero minimum value.
+	 * Given a 2D-array formatted as a vector of primitive array types, return the
+	 * non-zero minimum value.
+	 * 
 	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
 	 * @return the minimum value ignoring zeros of the input matrix.
 	 */
@@ -201,7 +211,9 @@ public class CDTUtilities {
 	}
 
 	/**
-	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero median value.
+	 * Given a 2D-array formatted as a vector of primitive array types, return the
+	 * non-zero median value.
+	 * 
 	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
 	 * @return the median value ignoring zeros of the input matrix
 	 */
@@ -217,17 +229,19 @@ public class CDTUtilities {
 		Collections.sort(values);
 
 		// Averaging two floor/ceil middle values accounts for even/odd list size
-	    double pos1 = Math.floor((values.size() - 1.0) / 2.0);
-	    double pos2 = Math.ceil((values.size() - 1.0) / 2.0);
-	      if (pos1 == pos2 ) {
-	         return values.get((int)pos1);
-	      } else {
-	         return (values.get((int)pos1) + values.get((int)pos2)) / 2.0 ;
-	      }
+		double pos1 = Math.floor((values.size() - 1.0) / 2.0);
+		double pos2 = Math.ceil((values.size() - 1.0) / 2.0);
+		if (pos1 == pos2 ) {
+			return values.get((int)pos1);
+		} else {
+			return (values.get((int)pos1) + values.get((int)pos2)) / 2.0 ;
+		}
 	}
 
 	/**
-	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero average value.
+	 * Given a 2D-array formatted as a vector of primitive array types, return the
+	 * non-zero average value.
+	 * 
 	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
 	 * @return the average value ignoring zeros of the input matrix
 	 */
@@ -247,7 +261,9 @@ public class CDTUtilities {
 	}
 
 	/**
-	 * Given a 2D-array formatted as a vector of primitive array types, return the non-zero mode value.
+	 * Given a 2D-array formatted as a vector of primitive array types, return the
+	 * non-zero mode value.
+	 * 
 	 * @param CDT a Vector of primitive arrays of primitive doubles (decimal matrix)
 	 * @return the mode value ignoring zeros of the input matrix
 	 */
