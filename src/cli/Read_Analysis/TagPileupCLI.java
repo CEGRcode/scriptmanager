@@ -68,6 +68,8 @@ public class TagPileupCLI implements Callable<Integer> {
 		boolean threeprime = false;
 		@Option(names = {"-m", "--midpoint"}, description = "pileup fragment midpoints (require PE, combined)")
 		boolean midpoint = false;
+		@Option(names = {"--full-fragment"}, description = "pile full fragment length (require PE)")
+		boolean fragment = false;
 	}
 
 	//Read
@@ -161,6 +163,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		if(aspectType.fiveprime) { p.setAspect(0); }
 		else if(aspectType.threeprime) { p.setAspect(1); }
 		else if(aspectType.midpoint) { p.setAspect(2); }
+		else if(aspectType.fragment) { p.setAspect(3); }
 
 		// Set READ
 		if(readType.read1){ p.setRead(0); }
