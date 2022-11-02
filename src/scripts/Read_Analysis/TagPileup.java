@@ -3,7 +3,6 @@ package scripts.Read_Analysis;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -140,9 +138,9 @@ public class TagPileup {
 
 		// Account for the shifted oversized window produced by binning and smoothing
 		int OUTSTART = 0;
-		if (PARAM.getTrans() == 1) {
+		if (PARAM.getTrans() == PileupParameters.WINDOW) {
 			OUTSTART = PARAM.getSmooth();
-		} else if (PARAM.getTrans() == 2) {
+		} else if (PARAM.getTrans() == PileupParameters.GAUSSIAN) {
 			OUTSTART = (PARAM.getStdSize() * PARAM.getStdNum());
 		}
 
@@ -213,11 +211,11 @@ public class TagPileup {
 		}
 
 		// Transform average given transformation parameters
-		if (PARAM.getTrans() == 1) {
+		if (PARAM.getTrans() == PileupParameters.WINDOW) {
 			AVG_S1 = ArrayUtilities.windowSmooth(AVG_S1, PARAM.getSmooth());
 			if (AVG_S2 != null)
 				AVG_S2 = ArrayUtilities.windowSmooth(AVG_S2, PARAM.getSmooth());
-		} else if (PARAM.getTrans() == 2) {
+		} else if (PARAM.getTrans() == PileupParameters.GAUSSIAN) {
 			AVG_S1 = ArrayUtilities.gaussSmooth(AVG_S1, PARAM.getStdSize(), PARAM.getStdNum());
 			if (AVG_S2 != null)
 				AVG_S2 = ArrayUtilities.gaussSmooth(AVG_S2, PARAM.getStdSize(), PARAM.getStdNum());
@@ -330,19 +328,19 @@ public class TagPileup {
 		String[] bamname = bam.split("\\.");
 
 		String read = "5read1";
-		if (PARAM.getAspect() == 0 && PARAM.getRead() == 1) {
+		if (PARAM.getAspect() == PileupParameters.FIVE && PARAM.getRead() == PileupParameters.READ2) {
 			read = "5read2";
-		} else if (PARAM.getAspect() == 0 && PARAM.getRead() == 2) {
+		} else if (PARAM.getAspect() == PileupParameters.FIVE && PARAM.getRead() == PileupParameters.ALLREADS) {
 			read = "5readc";
-		} else if (PARAM.getAspect() == 1 && PARAM.getRead() == 0) {
+		} else if (PARAM.getAspect() == PileupParameters.THREE && PARAM.getRead() == PileupParameters.READ1) {
 			read = "3read1";
-		} else if (PARAM.getAspect() == 1 && PARAM.getRead() == 1) {
+		} else if (PARAM.getAspect() == PileupParameters.THREE && PARAM.getRead() == PileupParameters.READ2) {
 			read = "3read2";
-		} else if (PARAM.getAspect() == 1 && PARAM.getRead() == 2) {
+		} else if (PARAM.getAspect() == PileupParameters.THREE && PARAM.getRead() == PileupParameters.ALLREADS) {
 			read = "3readc";
-		} else if (PARAM.getAspect() == 2) {
+		} else if (PARAM.getAspect() == PileupParameters.MIDPOINT) {
 			read = "midpoint";
-		} else if (PARAM.getAspect() == 3) {
+		} else if (PARAM.getAspect() == PileupParameters.FRAGMENT) {
 			read = "fragment";
 		}
 

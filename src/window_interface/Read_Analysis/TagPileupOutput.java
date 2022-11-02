@@ -102,7 +102,7 @@ public class TagPileupOutput extends JFrame {
 					script_obj.run();
 
 					// Make composite plots
-					if (PARAM.getStrand() == 0) {
+					if (PARAM.getStrand() == PileupParameters.SEPARATE) {
 						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, script_obj.AVG_S2, BEDFiles.get(BED_Index).getName(), COLORS));
 					} else {
 						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, BEDFiles.get(BED_Index).getName(), COLORS));

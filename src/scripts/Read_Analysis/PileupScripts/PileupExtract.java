@@ -3,7 +3,6 @@ package scripts.Read_Analysis.PileupScripts;
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.filter.SamRecordFilter;
 import htsjdk.samtools.util.CloseableIterator;
 
 import java.io.File;
@@ -47,8 +46,8 @@ public class PileupExtract implements Runnable{
 		// Ugly hack to account for the fact that read 1 5' end may be outside the window of interest even though read 2 and the midpoint may be in range
 		// TODO FIX this into something more logical, probably check for read2 in region independently?
 		int MIDPOINT_ADJUST = 0;
-		if(param.getAspect() == 2) { MIDPOINT_ADJUST = 300; }
-		if(param.getAspect() == 3) { MIDPOINT_ADJUST = 300; }
+		if (param.getAspect() == PileupParameters.MIDPOINT) { MIDPOINT_ADJUST = 300; }
+		if (param.getAspect() == PileupParameters.FRAGMENT) { MIDPOINT_ADJUST = 300; }
 		
 		int BEDSTART = (int)coord.getStart();
 		int BEDSTOP = (int)coord.getStop();
@@ -56,17 +55,19 @@ public class PileupExtract implements Runnable{
 		//Correct Window Size for proper transformations
 		int WINDOW = (BEDSTOP - BEDSTART) + ((param.getBin() / 2) * 2);
 		int QUERYWINDOW = 0;
-		if(param.getTrans() == 1) {
+		if (param.getTrans() == PileupParameters.WINDOW) {
 			WINDOW = (BEDSTOP - BEDSTART) + (param.getBin() * param.getSmooth() * 2);
 			QUERYWINDOW = (param.getBin() * param.getSmooth()); 
 		}
-		else if(param.getTrans() == 2) {
+		else if (param.getTrans() == PileupParameters.GAUSSIAN) {
 			WINDOW = (BEDSTOP - BEDSTART) + (param.getBin() * param.getStdSize() * param.getStdNum() * 2);
 			QUERYWINDOW = (param.getBin() * param.getStdSize() * param.getStdNum());
 		}
 		TAG_S1 = new double[WINDOW];
-		if(param.getStrand() == 0) TAG_S2 = new double[WINDOW];
-		int sr_count = 0;
+		if (param.getStrand() == PileupParameters.SEPARATE) {
+			TAG_S2 = new double[WINDOW];
+		}
+//		int sr_count = 0;
 		//SAMRecords are 1-based and inclusive
 		CloseableIterator<SAMRecord> iter = inputSam.query(coord.getChrom(), BEDSTART - QUERYWINDOW - param.getShift() - MIDPOINT_ADJUST - 1, BEDSTOP + QUERYWINDOW + param.getShift() + MIDPOINT_ADJUST + 1, false);
 		while (iter.hasNext()) {
@@ -75,22 +76,22 @@ public class PileupExtract implements Runnable{
 //			System.out.println("\n===SAM Record # " + sr_count + "===");
 //			System.out.println("Read Name:" + sr.getReadName());
 
-			if(param.getAspect()==0) {
+			if (param.getAspect()==PileupParameters.FIVE) {
 				addFivePrime(sr, coord, BEDSTART - QUERYWINDOW);
-			} else if(param.getAspect()==1) {
+			} else if (param.getAspect()==PileupParameters.THREE) {
 				addThreePrime(sr, coord, BEDSTART - QUERYWINDOW);
-			} else if(param.getAspect()==2) {
+			} else if (param.getAspect()==PileupParameters.MIDPOINT) {
 				addMidpoint(sr, coord, BEDSTART - QUERYWINDOW);
-			} else if(param.getAspect()==3) {
+			} else if (param.getAspect()==PileupParameters.FRAGMENT) {
 				addFragment(sr, coord, BEDSTART - QUERYWINDOW);
 			} else {
 				System.err.println("Invalid read Aspect");
 			}
-			sr_count++;
+//			sr_count++;
 		}
 		iter.close();
 		
-		if(coord.getDir().equals("-")) {
+		if (coord.getDir().equals("-")) {
 			TAG_S1 = ArrayUtilities.reverseArray(TAG_S1);
 			TAG_S2 = ArrayUtilities.reverseArray(TAG_S2);
 		}
@@ -98,13 +99,15 @@ public class PileupExtract implements Runnable{
 		//Perform Binning here
 		double[] binF = new double[TAG_S1.length];
 		double[] binR = null;
-		if(TAG_S2 != null) binR = new double[TAG_S2.length]; 
+		if (TAG_S2 != null) {
+			binR = new double[TAG_S2.length]; 
+		}
 		
 		for(int j = 0; j < TAG_S1.length; j++) {
 			for(int k = j - (param.getBin() / 2); k <= j + (param.getBin() / 2); k++) {
 				if(k < 0) k = 0;
 				if(k >= TAG_S1.length) k = j + (param.getBin() / 2) + 1;
-				else  {
+				else {
 					binF[k] += TAG_S1[j];
 					if(binR != null) binR[k] += TAG_S2[j];
 				}
@@ -136,7 +139,7 @@ public class PileupExtract implements Runnable{
 			if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
 				int mark = sr.getUnclippedStart() - 1;
 				// Read 1 and want Read 1, Read 2 and want Read 2, want any read
-				if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2) {
+				if ((sr.getFirstOfPairFlag() && param.getRead() == PileupParameters.READ1) || (!sr.getFirstOfPairFlag() && param.getRead() == PileupParameters.READ2) || param.getRead() == PileupParameters.ALLREADS) {
 					// Apply insert size filters
 					if(sr.getProperPairFlag()) { //prevent cases where non-properly paired Read1 gets to this point
 						if(Math.abs(sr.getInferredInsertSize()) < param.getMinInsert() && param.getMinInsert() != -9999) { return; } //Test for MIN insert size cutoff here
@@ -154,7 +157,7 @@ public class PileupExtract implements Runnable{
 				mark -= GENOMIC_SHIFT;
 				//Determine final array strandedness
 				boolean useTAG_S2 = false;
-				if(param.getStrand() == 0 && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
+				if (param.getStrand() == PileupParameters.SEPARATE && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
 				//Increment Final Array keeping track of pileup
 				for(int m = 0; m < param.getTagExtend() + 1; m++) {
 					if(mark >= 0 && mark < TAG_S1.length) {
@@ -164,7 +167,7 @@ public class PileupExtract implements Runnable{
 					mark += sr.getInferredInsertSize() < 0 ? -1 : 1;
 				}
 			}
-		} else if(param.getRead() == 0 || param.getRead() == 2) {
+		} else if (param.getRead() == PileupParameters.READ1 || param.getRead() == PileupParameters.ALLREADS) {
 			// Set marker (left side default, right side if positive strand and 5 prime or negative strand and 3 prime
 			int mark = sr.getUnclippedStart() - 1;
 			if(sr.getReadNegativeStrandFlag()) {
@@ -177,7 +180,7 @@ public class PileupExtract implements Runnable{
 			mark -= (GENOMIC_SHIFT);
 			//Determine final array strandedness
 			boolean useTAG_S2 = false;
-			if(param.getStrand() == 0 && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
+			if (param.getStrand() == PileupParameters.SEPARATE && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
 			//Increment Final Array keeping track of pileup
 			for(int m = 0; m < param.getTagExtend() + 1; m++) {
 				if(mark >= 0 && mark < TAG_S1.length) {
@@ -194,7 +197,7 @@ public class PileupExtract implements Runnable{
 			if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
 				int mark = sr.getUnclippedEnd() - 1;
 				// Read 1 and want Read 1, Read 2 and want Read 2, want any read
-				if((sr.getFirstOfPairFlag() && param.getRead() == 0) || (!sr.getFirstOfPairFlag() && param.getRead() == 1) || param.getRead() == 2) {
+				if ((sr.getFirstOfPairFlag() && param.getRead() == PileupParameters.READ1) || (!sr.getFirstOfPairFlag() && param.getRead() == PileupParameters.READ2) || param.getRead() == PileupParameters.ALLREADS) {
 					// Apply insert size filters
 					if(sr.getProperPairFlag()) { //prevent cases where non-properly paired Read1 gets to this point
 						if(Math.abs(sr.getInferredInsertSize()) < param.getMinInsert() && param.getMinInsert() != -9999) { return; } //Test for MIN insert size cutoff here
@@ -222,7 +225,7 @@ public class PileupExtract implements Runnable{
 					mark += sr.getInferredInsertSize() < 0 ? -1 : 1;
 				}
 			}
-		} else if(param.getRead() == 0 || param.getRead() == 2) {
+		} else if (param.getRead() == PileupParameters.READ1 || param.getRead() == PileupParameters.ALLREADS) {
 			// Set marker (left side default, right side if positive strand and 5 prime or negative strand and 3 prime
 			int mark = sr.getUnclippedStart() - 1;
 			if(sr.getReadNegativeStrandFlag()) {
@@ -235,7 +238,7 @@ public class PileupExtract implements Runnable{
 			mark -= (GENOMIC_SHIFT);
 			//Determine final array strandedness
 			boolean useTAG_S2 = false;
-			if(param.getStrand() == 0 && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
+			if (param.getStrand() == PileupParameters.SEPARATE && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
 			//Increment Final Array keeping track of pileup
 			for(int m = 0; m < param.getTagExtend() + 1; m++) {
 				if(mark >= 0 && mark < TAG_S1.length) {
@@ -268,7 +271,7 @@ public class PileupExtract implements Runnable{
 				mark -= GENOMIC_SHIFT;
 //				//Determine final array strandedness
 //				boolean useTAG_S2 = false;
-//				if(param.getStrand() == 0 && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
+//				if (param.getStrand() == PileupParameters.SEPARATE && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
 				//Increment Final Array keeping track of pileup
 				for(int m = 0; m < param.getTagExtend() + 1; m++) {
 					if(mark >= 0 && mark < TAG_S1.length) {
@@ -297,7 +300,7 @@ public class PileupExtract implements Runnable{
 				mark -= GENOMIC_SHIFT;
 //				//Determine final array strandedness
 //				boolean useTAG_S2 = false;
-//				if(param.getStrand() == 0 && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
+//				if (param.getStrand() == PileupParameters.SEPARATE && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
 				//Increment Final Array keeping track of pileup
 				for(int m = 0; m < Math.abs(sr.getInferredInsertSize()) + param.getTagExtend(); m++) {
 					if(mark >= 0 && mark < TAG_S1.length) {

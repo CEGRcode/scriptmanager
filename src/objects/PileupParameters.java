@@ -11,27 +11,27 @@ import java.io.PrintStream;
 
 public class PileupParameters {
 	//Read aspect
-	final static int FIVE = 0;
-	final static int THREE = 1;
-	final static int MIDPOINT = 2;
-	final static int FRAGMENT = 3;
+	final public static int FIVE = 0;
+	final public static int THREE = 1;
+	final public static int MIDPOINT = 2;
+	final public static int FRAGMENT = 3;
 	private int ASPECT = PileupParameters.FIVE;
 	
 	//Read type
-	final static int READ1 = 0;
-	final static int READ2 = 1;
-	final static int ALLREADS = 2;
+	final public static int READ1 = 0;
+	final public static int READ2 = 1;
+	final public static int ALLREADS = 2;
 	private int READ = PileupParameters.READ1;
 	
 	//Strand type
-	final static int COMBINED = 1;
-	final static int SEPARATE = 0;
+	final public static int SEPARATE = 0;
+	final public static int COMBINED = 1;
 	private int STRAND = PileupParameters.SEPARATE;
 	
 	//Transformation/smoothing type
-	final static int NO_SMOOTH = 0;
-	final static int WINDOW = 1;
-	final static int GAUSSIAN = 2;
+	final public static int NO_SMOOTH = 0;
+	final public static int WINDOW = 1;
+	final public static int GAUSSIAN = 2;
 	private int TRANS = PileupParameters.NO_SMOOTH;
 	
 	//TRANS=1 parameters:  window size (#bins)

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import util.BAMUtilities;
-import util.ExtensionFileFilter;
 import objects.PileupParameters;
 import objects.ToolDescriptions;
 import scripts.Read_Analysis.TagPileup;
@@ -160,15 +159,15 @@ public class TagPileupCLI implements Callable<Integer> {
 		String r = "";
 		
 		// Set ASPECT
-		if(aspectType.fiveprime) { p.setAspect(0); }
-		else if(aspectType.threeprime) { p.setAspect(1); }
-		else if(aspectType.midpoint) { p.setAspect(2); }
-		else if(aspectType.fragment) { p.setAspect(3); }
+		if(aspectType.fiveprime) { p.setAspect(PileupParameters.FIVE); }
+		else if(aspectType.threeprime) { p.setAspect(PileupParameters.THREE); }
+		else if(aspectType.midpoint) { p.setAspect(PileupParameters.MIDPOINT); }
+		else if(aspectType.fragment) { p.setAspect(PileupParameters.FRAGMENT); }
 
 		// Set READ
-		if(readType.read1){ p.setRead(0); }
-		else if(readType.read2){ p.setRead(1); }
-		else if(readType.allreads){ p.setRead(2); }
+		if(readType.read1){ p.setRead(PileupParameters.READ1); }
+		else if(readType.read2){ p.setRead(PileupParameters.READ2); }
+		else if(readType.allreads){ p.setRead(PileupParameters.ALLREADS); }
 		
 		//check inputs exist
 		if(!bedFile.exists()){
@@ -252,24 +251,24 @@ public class TagPileupCLI implements Callable<Integer> {
 		p.setCompositePrintStream(new PrintStream(outputOptions.outputComposite));
 		
 		//Set STRAND
-		p.setStrand(0);
-		if(combStatus || p.getAspect() == 2) { p.setStrand(1); }
+		p.setStrand(PileupParameters.SEPARATE);
+		if(combStatus || p.getAspect() == PileupParameters.MIDPOINT) { p.setStrand(PileupParameters.COMBINED); }
 		
 		//Set smooth type and parameters
 		if(smoothType.noSmooth){			//default behavior
-			p.setTrans(0);
+			p.setTrans(PileupParameters.NO_SMOOTH);
 		}else if(smoothType.winStatus){   //window default
-			p.setTrans(1);
+			p.setTrans(PileupParameters.WINDOW);
 			p.setSmooth(3);
 		}else if(smoothType.winVals!=-9999){
-			p.setTrans(1);
+			p.setTrans(PileupParameters.WINDOW);
 			p.setSmooth(smoothType.winVals);
 		}else if(smoothType.gaussStatus){   //gauss default
-			p.setTrans(2);
+			p.setTrans(PileupParameters.GAUSSIAN);
 			p.setStdSize(5);
 			p.setStdNum(3);
 		}else if(smoothType.gaussVals[0]!=-9999 && smoothType.gaussVals[1]!=-9999){
-			p.setTrans(2);
+			p.setTrans(PileupParameters.GAUSSIAN);
 			p.setStdSize(smoothType.gaussVals[0]);
 			p.setStdNum(smoothType.gaussVals[1]);
 		}else{ p.setTrans(0); }      //default behavior

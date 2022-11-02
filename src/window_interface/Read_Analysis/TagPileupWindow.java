@@ -157,14 +157,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 						colors.add(btnCombinedColor.getForeground());
 					}
 
-					if (rdbtnFivePrime.isSelected()) { param.setAspect(0); }
-					else if (rdbtnThreePrime.isSelected()) { param.setAspect(1); }
-					else if (rdbtnMidpoint.isSelected()) { param.setAspect(2); }
-					else if (rdbtnFragment.isSelected()) { param.setAspect(3); }
+					if (rdbtnFivePrime.isSelected()) { param.setAspect(PileupParameters.FIVE); }
+					else if (rdbtnThreePrime.isSelected()) { param.setAspect(PileupParameters.THREE); }
+					else if (rdbtnMidpoint.isSelected()) { param.setAspect(PileupParameters.MIDPOINT); }
+					else if (rdbtnFragment.isSelected()) { param.setAspect(PileupParameters.FRAGMENT); }
 
-					if (rdbtnRead1.isSelected()) { param.setRead(0); }
-					else if (rdbtnRead2.isSelected()) { param.setRead(1); }
-					else if (rdbtnAllReads.isSelected()) { param.setRead(2); }
+					if (rdbtnRead1.isSelected()) { param.setRead(PileupParameters.READ1); }
+					else if (rdbtnRead2.isSelected()) { param.setRead(PileupParameters.READ2); }
+					else if (rdbtnAllReads.isSelected()) { param.setRead(PileupParameters.ALLREADS); }
 
 					if (chckbxRequireProperPe.isSelected()) { param.setPErequire(true); }
 					else { param.setPErequire(false); }
@@ -172,11 +172,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					if (chckbxFilterByMin.isSelected()) { param.setMinInsert(Integer.parseInt(txtMin.getText())); }
 					if (chckbxFilterByMax.isSelected()) { param.setMaxInsert(Integer.parseInt(txtMax.getText())); }
 
-					if (rdbtnNone.isSelected()) { param.setTrans(0); }
-					else if (rdbtnSlidingWindow.isSelected()) { param.setTrans(1); }
-					else if (rdbtnGaussianSmooth.isSelected()) { param.setTrans(2); }
+					if (rdbtnNone.isSelected()) { param.setTrans(PileupParameters.NO_SMOOTH); }
+					else if (rdbtnSlidingWindow.isSelected()) { param.setTrans(PileupParameters.WINDOW); }
+					else if (rdbtnGaussianSmooth.isSelected()) { param.setTrans(PileupParameters.GAUSSIAN); }
 
-					if(!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {	param.setOutputDirectory(null); }
+					if (!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) { param.setOutputDirectory(null); }
 					else { param.setOutputDirectory(OUT_DIR); }
 
 					param.setOutputCompositeStatus(chckbxOutputCompositeData.isSelected()); //Outputs composite plots if check box is selected
