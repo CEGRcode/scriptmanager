@@ -264,17 +264,17 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead1, 0, SpringLayout.WEST, scrollPane);
 		contentPane.add(rdbtnRead1);
 		
-		JRadioButton rdbtnRead2 = new JRadioButton("Read 2");
+		rdbtnRead2 = new JRadioButton("Read 2");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnRead2, 0, SpringLayout.NORTH, rdbtnRead1);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnRead2, 10, SpringLayout.EAST, rdbtnRead1);
 		contentPane.add(rdbtnRead2);
 		
-		JRadioButton rdbtnAllReads = new JRadioButton("All Reads");
+		rdbtnAllReads = new JRadioButton("All Reads");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnAllReads, 0, SpringLayout.NORTH, rdbtnRead1);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnAllReads, 10, SpringLayout.EAST, rdbtnRead2);
 		contentPane.add(rdbtnAllReads);
 		
-		JRadioButton rdbtnMidpoint = new JRadioButton("Midpoint (Requires PE)");
+		rdbtnMidpoint = new JRadioButton("Midpoint (Requires PE)");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnMidpoint, 0, SpringLayout.NORTH, rdbtnRead1);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnMidpoint, 10, SpringLayout.EAST, rdbtnAllReads);
 		contentPane.add(rdbtnMidpoint);
@@ -284,7 +284,7 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		CorrelateRead.add(rdbtnRead2);
 		CorrelateRead.add(rdbtnAllReads);
 		CorrelateRead.add(rdbtnMidpoint);
-        rdbtnRead1.setSelected(true);
+		rdbtnRead1.setSelected(true);
 		
 		JLabel lblPleaseSelectWhich = new JLabel("Please Select Which Read to Correlate:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblPleaseSelectWhich, 197, SpringLayout.NORTH, contentPane);
