@@ -42,7 +42,7 @@ public class FASTAExtractCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		FASTAExtract script_obj = new FASTAExtract(genomeFASTA, bedFile, output, forceStrand, bedHeader, null);
+		FASTAExtract script_obj = new FASTAExtract(genomeFASTA, bedFile, output, forceStrand, bedHeader, System.err);
 		script_obj.run();
 
 		System.err.println("Extraction Complete.");
