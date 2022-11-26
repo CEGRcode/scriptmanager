@@ -20,10 +20,11 @@ public class SearchMotifOutput extends JFrame {
 	private String motif;
 	private File INPUTFILE = null;
 	private File OUT_DIR;
+	private boolean gzOutput = false;
 
 	private JTextArea textArea;
 
-	public SearchMotifOutput(File input, String mot, int num, File out_dir) throws IOException {
+	public SearchMotifOutput(File input, String mot, int num, File out_dir, boolean gz) throws IOException {
 		setTitle("Motif Search Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -39,6 +40,7 @@ public class SearchMotifOutput extends JFrame {
 		motif = mot;
 		INPUTFILE = input;
 		OUT_DIR = out_dir;
+		gzOutput = gz;
 	}
 
 	public void run() throws IOException, InterruptedException {
@@ -48,8 +50,9 @@ public class SearchMotifOutput extends JFrame {
 		if (OUT_DIR != null) {
 			BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 		}
+		BASENAME += gzOutput ? ".gz" : "";
 
-		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS);
+		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS, gzOutput);
 		script_obj.run();
 
 		Thread.sleep(2000);

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,6 +44,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 	private JPanel contentPane;
 	private JTextField txtMotif;
 	private JTextField txtMismatch;
+	private static JCheckBox chckbxGzipOutput;
 	private JProgressBar progressBar;
 
 	public Task task;
@@ -64,7 +66,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 					setProgress(0);
 					for (int gfile = 0; gfile < GenomeFiles.size(); gfile++) {
 						SearchMotifOutput search = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(),
-								Integer.parseInt(txtMismatch.getText()), OUT_DIR);
+								Integer.parseInt(txtMismatch.getText()), OUT_DIR, chckbxGzipOutput.isSelected());
 						search.setVisible(true);
 						search.run();
 						int percentComplete = (int) (((double) (gfile + 1) / (GenomeFiles.size())) * 100);
@@ -121,6 +123,11 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 			}
 		});
 		contentPane.add(btnOutputDirectory);
+
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		JLabel lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblNewLabel, 5, SpringLayout.SOUTH, lblCurrentOutput);
@@ -182,7 +189,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 
 		btnLoadFASTA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGenomeFiles = FileSelection.getFiles(fc, "fa");
+				File[] newGenomeFiles = FileSelection.getFiles(fc, "fa", true);
 				if (newGenomeFiles != null) {
 					for (int x = 0; x < newGenomeFiles.length; x++) {
 						GenomeFiles.add(newGenomeFiles[x]);

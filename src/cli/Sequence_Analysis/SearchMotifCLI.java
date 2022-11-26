@@ -26,6 +26,8 @@ public class SearchMotifCLI implements Callable<Integer> {
 
 	@Option(names = { "-o", "--output" }, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
 	private File output = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = { "-m", "--motif" }, required = true, description = "the IUPAC motif to search for")
 	private String motif;
 	@Option(names = { "-n", "--mismatches" }, description = "the number of mismatches allowed (default=0)")
@@ -41,7 +43,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SearchMotif script_obj = new SearchMotif(fastaFile, motif, ALLOWED_MISMATCH, output, System.err);
+		SearchMotif script_obj = new SearchMotif(fastaFile, motif, ALLOWED_MISMATCH, output, System.err, gzOutput);
 		script_obj.run();
 
 		System.err.println("Search Complete.");
@@ -63,8 +65,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 		}
 		// set default output filename
 		if (output == null) {
-			output = new File(motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
-					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed");
+			String NAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
+					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed";
+			NAME += gzOutput ? ".gz" : "";
+			output = new File(NAME);
 			// check output filename is valid
 		} else {
 			// check ext
