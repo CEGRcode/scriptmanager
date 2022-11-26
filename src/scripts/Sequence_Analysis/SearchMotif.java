@@ -20,16 +20,14 @@ public class SearchMotif {
 	private Map<String, String> IUPAC_HASH = new HashMap<>();
 	private Map<String, String> RC_HASH = new HashMap<>();
 	private String motif;
-	private InputStream inputStream;
-	private String INPUTFILE = null;
+	private File INPUT = null;
 	private PrintStream OUT;
 	private PrintStream PS;
 
 	public SearchMotif(File input, String mot, int num, File output, PrintStream ps) throws IOException {
 		ALLOWED_MISMATCH = num;
 		motif = mot;
-		inputStream = new FileInputStream(input);
-		INPUTFILE = input.getName();
+		INPUT = input;
 		OUT = new PrintStream(output);
 		PS = ps;
 
@@ -65,8 +63,8 @@ public class SearchMotif {
 	}
 
 	public void run() throws IOException, InterruptedException {
-		printPS("Searching motif: " + motif + " in " + INPUTFILE);
-		printPS("Starting: " + getTimeStamp());
+		PS.println("Searching motif: " + motif + " in " + INPUT.getName());
+		PS.println("Starting: " + getTimeStamp());
 
 		char[] ORIG = motif.toUpperCase().toCharArray();
 		List<String> MOTIF = new ArrayList<>();
@@ -92,6 +90,7 @@ public class SearchMotif {
 		int currentEND = 0;
 		String ID;
 
+		InputStream inputStream = new FileInputStream(INPUT);
 		BufferedReader lines = new BufferedReader(new InputStreamReader(inputStream), 100);
 		while (lines.ready()) {
 			String line = lines.readLine().trim();
@@ -100,7 +99,7 @@ public class SearchMotif {
 				currentLine = "";
 				currentBP = 0;
 				currentEND = currentBP + motif.length();
-				printPS("Proccessing: " + currentChrom);
+				PS.println("Proccessing: " + currentChrom);
 			} else {
 				currentLine = currentLine + line;
 				// System.out.println(currentLine);
@@ -150,20 +149,12 @@ public class SearchMotif {
 		}
 		inputStream.close();
 		lines.close();
-		printPS("Completing: " + getTimeStamp());
+		PS.println("Completing: " + getTimeStamp());
 	}
 
 	private static String getTimeStamp() {
 		Date date = new Date();
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
-	}
-
-	private void printPS(String message) {
-		if (PS != null) {
-			PS.println(message);
-		} else {
-			System.err.println(message);
-		}
 	}
 }

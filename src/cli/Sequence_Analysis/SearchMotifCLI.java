@@ -5,14 +5,13 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import java.io.File;
 import java.io.IOException;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
+import util.FASTAUtilities;
 import scripts.Sequence_Analysis.SearchMotif;
 
 /**
@@ -25,8 +24,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 	@Parameters(index = "0", description = "The FASTA file in which to search for the motif.")
 	private File fastaFile;
 
-	@Option(names = { "-o",
-			"--output" }, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
+	@Option(names = { "-o", "--output" }, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
 	private File output = null;
 	@Option(names = { "-m", "--motif" }, required = true, description = "the IUPAC motif to search for")
 	private String motif;
@@ -43,7 +41,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SearchMotif script_obj = new SearchMotif(fastaFile, motif, ALLOWED_MISMATCH, output, null);
+		SearchMotif script_obj = new SearchMotif(fastaFile, motif, ALLOWED_MISMATCH, output, System.err);
 		script_obj.run();
 
 		System.err.println("Search Complete.");
@@ -87,12 +85,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 			}
 		}
 
-		// check filter string is valid ATCG
-		Pattern seqPat = Pattern.compile("[ATCG]+");
-		Matcher m = seqPat.matcher(motif);
-		if (!m.matches()) {
-			r += "(!)Motif string must be formatted as a nucleotide sequence.\n" + motif
-					+ " is not a valid nucleotide sequence.\nExpected input string format: \"[ATCG]\"";
+		// check filter string is valid IUPAC
+		if (!FASTAUtilities.isValidIUPACString(motif)) {
+			r += "(!)Motif string must be formatted as an IUPAC sequence.\n" + motif
+					+ " is not a valid nucleotide sequence.\nExpected input string format: \"[ATGCRYSWKMBDHVN]+\"";
 		}
 
 		// check mismatch value
