@@ -23,10 +23,11 @@ public class FASTAExtractOutput extends JFrame {
 	private ArrayList<File> BED = null;
 	private boolean STRAND = true;
 	private boolean HEADER = true;
+	private boolean gzOutput = false;
 
 	private JTextArea textArea;
 
-	public FASTAExtractOutput(File gen, ArrayList<File> b, File out_dir, boolean str, boolean head) {
+	public FASTAExtractOutput(File gen, ArrayList<File> b, File out_dir, boolean str, boolean head, boolean gz) {
 		setTitle("FASTA Extraction Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -43,6 +44,7 @@ public class FASTAExtractOutput extends JFrame {
 		OUT_DIR = out_dir;
 		STRAND = str;
 		HEADER = head;
+		gzOutput = gz;
 	}
 
 	public void run() throws IOException, InterruptedException {
@@ -56,14 +58,14 @@ public class FASTAExtractOutput extends JFrame {
 				File OUTFILE;
 				String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
 				if (OUT_DIR != null) {
-					OUTFILE = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
-				} else {
-					OUTFILE = new File(NAME);
+					NAME = OUT_DIR.getCanonicalPath() + File.separator + NAME;
 				}
+				NAME += gzOutput ? ".gz" : "";
+				OUTFILE = new File(NAME);
 				PS.println("Proccessing File: " + BED.get(x).getName());
 
 				// Execute Script object
-				FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS);
+				FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS, gzOutput);
 				script_obj.run();
 
 				firePropertyChange("fa", x, x + 1);

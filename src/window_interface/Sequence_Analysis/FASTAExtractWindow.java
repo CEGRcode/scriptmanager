@@ -54,6 +54,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 	private JRadioButton rdbtnGenomeCoordinate;
 	private JProgressBar progressBar;
 	private JCheckBox chckbxStrand;
+	private static JCheckBox chckbxGzipOutput;
 
 	public Task task;
 
@@ -68,7 +69,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 				} else {
 					setProgress(0);
 					FASTAExtractOutput signal = new FASTAExtractOutput(INPUT, BEDFiles, OUT_DIR,
-							chckbxStrand.isSelected(), rdbtnBedName.isSelected());
+							chckbxStrand.isSelected(), rdbtnBedName.isSelected(), chckbxGzipOutput.isSelected());
 
 					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -122,7 +123,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc, "bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc, "bed", true);
 				if (newBEDFiles != null) {
 					for (int x = 0; x < newBEDFiles.length; x++) {
 						BEDFiles.add(newBEDFiles[x]);
@@ -199,6 +200,11 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 			}
 		});
 		contentPane.add(btnOutput);
+
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		chckbxStrand = new JCheckBox("Force Strandedness");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxStrand, 1, SpringLayout.NORTH, btnLoad);

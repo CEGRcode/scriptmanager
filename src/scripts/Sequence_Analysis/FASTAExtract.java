@@ -5,11 +5,14 @@ import htsjdk.samtools.reference.FastaSequenceIndexCreator;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import objects.CoordinateObjects.BEDCoord;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.zip.GZIPOutputStream;
 
 import util.FASTAUtilities;
 import util.BEDUtilities;
@@ -18,12 +21,12 @@ public class FASTAExtract {
 	private File GENOME = null;
 	private File OUTFILE = null;
 	private File BED = null;
-	private PrintStream OUT = null;
 	private PrintStream PS = null;
 	private boolean STRAND = true;
 	private boolean HEADER = true;
+	private boolean gzOutput = false;
 
-	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps)
+	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps, boolean gz)
 			throws IOException {
 		GENOME = gen;
 		BED = b;
@@ -31,6 +34,7 @@ public class FASTAExtract {
 		STRAND = str;
 		HEADER = head;
 		PS = ps;
+		gzOutput = gz;
 
 		File FAI = new File(GENOME + ".fai");
 		// Check if FAI index file exists
@@ -46,8 +50,17 @@ public class FASTAExtract {
 		try {
 			IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
 			PS.println("Proccessing File: " + BED.getName());
-			// Open Output File
-			OUT = new PrintStream(OUTFILE);
+
+			// Initialize output writer
+			PrintStream OUT = System.out;
+			if (OUTFILE != null) {
+				if (gzOutput) {
+					OUT = new PrintStream(
+							new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(OUTFILE))));
+				} else {
+					OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(OUTFILE)));
+				}
+			}
 
 			ArrayList<BEDCoord> BED_Coord = BEDUtilities.loadCoord(BED, HEADER);
 

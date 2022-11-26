@@ -26,11 +26,12 @@ public class FASTAExtractCLI implements Callable<Integer> {
 
 	@Option(names = { "-o", "--output" }, description = "Specify output file (default = <bedFilename>.fa)")
 	private File output = null;
-	@Option(names = { "-c",
-			"--coord-header" }, description = "use genome coordinate for output FASTA header (default is to use bed file headers)")
+	@Option(names = { "-c", "--coord-header" }, description = "use genome coordinate for output FASTA header (default is to use bed file headers)")
 	private boolean bedHeader = true;
 	@Option(names = { "-n", "--no-force" }, description = "don't force-strandedness (default is to force strandedness)")
 	private boolean forceStrand = true;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 
 	@Override
 	public Integer call() throws Exception {
@@ -42,7 +43,7 @@ public class FASTAExtractCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		FASTAExtract script_obj = new FASTAExtract(genomeFASTA, bedFile, output, forceStrand, bedHeader, System.err);
+		FASTAExtract script_obj = new FASTAExtract(genomeFASTA, bedFile, output, forceStrand, bedHeader, System.err, gzOutput);
 		script_obj.run();
 
 		System.err.println("Extraction Complete.");
@@ -61,29 +62,13 @@ public class FASTAExtractCLI implements Callable<Integer> {
 			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(genomeFASTA)) {
-			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
-		}
-		if (!"bed".equals(ExtensionFileFilter.getExtension(bedFile))) {
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
-			output = new File(ExtensionFileFilter.stripExtension(bedFile) + ".fa");
+			String NAME = ExtensionFileFilter.stripExtension(bedFile) + ".fa";
+			NAME += gzOutput ? ".gz" : "";
+			output = new File(NAME);
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!faFilter.accept(output)) {
-					r += "(!)Use FASTA extension for output filename. Try: "
-							+ ExtensionFileFilter.stripExtension(output) + ".fa\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use FASTA extension for output filename. Try: " + output
-						+ ".fa\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");
