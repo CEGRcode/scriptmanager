@@ -32,6 +32,14 @@ import javax.swing.border.EmptyBorder;
 import util.FileSelection;
 import util.FASTAUtilities;
 
+/**
+ * Graphical interface window for searching for genomic motif sequences by
+ * calling a script implemented in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.SearchMotif
+ * @see window_interface.Sequence_Analysis.SearchMotifOutput
+ */
 @SuppressWarnings("serial")
 public class SearchMotifWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
@@ -49,6 +57,9 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -86,6 +97,9 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public SearchMotifWindow() {
 		setTitle("Search Motif in FASTA file with Mismatch");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

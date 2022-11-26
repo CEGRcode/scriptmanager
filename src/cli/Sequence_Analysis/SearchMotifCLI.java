@@ -15,7 +15,11 @@ import util.FASTAUtilities;
 import scripts.Sequence_Analysis.SearchMotif;
 
 /**
- * Sequence_AnalysisCLI/SearchMotifCLI
+ * Command line interface class for searching a genomic sequence for a motif by
+ * calling the methods implemented in the scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Sequence_Analysis.SearchMotif
  */
 @Command(name = "search-motif", mixinStandardHelpOptions = true, description = ToolDescriptions.search_motif_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

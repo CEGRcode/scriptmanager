@@ -37,6 +37,13 @@ import util.FileSelection;
 import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.RandomizeFASTA;
 
+/**
+ * Graphical interface window for randomizing sequences (shuffling nucleotides)
+ * in a FASTA file by calling the methods implemented in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.RandomizeFASTA
+ */
 @SuppressWarnings("serial")
 public class RandomizeFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -59,6 +66,9 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -100,6 +110,9 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public RandomizeFASTAWindow() {
 		setTitle("Randomize FASTA File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

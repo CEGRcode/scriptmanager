@@ -14,7 +14,12 @@ import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
- * Sequence_AnalysisCLI/RandomizeFASTACLI
+ * Command line interface class for randomizing sequences (shuffling
+ * nucleotides) in a FASTA file by calling the methods implemented in the
+ * scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Sequence_Analysis.RandomizeFASTA
  */
 @Command(name = "randomize-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.randomize_fasta_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

@@ -33,6 +33,14 @@ import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
 
+/**
+ * Graphical interface window for extracting the genomic sequence of a set of
+ * BED intervals by calling a script implemented in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.FASTAExtract
+ * @see window_interface.Sequence_Analysis.FASTAExtractOutput
+ */
 @SuppressWarnings("serial")
 public class FASTAExtractWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -58,6 +66,9 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -97,6 +108,9 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public FASTAExtractWindow() {
 		setTitle("FASTA Extract from BED");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

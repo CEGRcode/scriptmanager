@@ -19,6 +19,15 @@ import java.util.zip.GZIPOutputStream;
 
 import util.GZipUtilities;
 
+/**
+ * This script creates a BED coordinate file of every instance of the
+ * user-provided IUPAC motif in a user-provided genomic sequence.
+ * 
+ * @author William KM Lai
+ * @see cli.Sequence_Analysis.SearchMotifCLI
+ * @see window_interface.Sequence_Analysis.SearchMotifOutput
+ * @see window_interface.Sequence_Analysis.SearchMotifWindow
+ */
 public class SearchMotif {
 
 	private int ALLOWED_MISMATCH;
@@ -30,6 +39,19 @@ public class SearchMotif {
 	private PrintStream PS;
 	private boolean gzOutput;
 
+	/**
+	 * Initialize object with script inputs for generating the coordinates of the
+	 * provided motif.
+	 * 
+	 * @param input  the reference genome sequence in FASTA-format
+	 * @param mot    the IUPAC motif to search for [ATGCRYSWKMBDHVN]+
+	 * @param num    the number of allowed mismatches in the motif
+	 * @param output the location to save the BED-formatted coordinates of the found
+	 *               motifs
+	 * @param ps     where to stream the error/progress updates as the script
+	 *               executes
+	 * @throws IOException
+	 */
 	public SearchMotif(File i, String mot, int num, File output, PrintStream ps, boolean gz) {
 		ALLOWED_MISMATCH = num;
 		motif = mot;
@@ -69,6 +91,13 @@ public class SearchMotif {
 		RC_HASH.put("A", "T");
 	}
 
+	/**
+	 * Execute script to search a genome for motifs. Print the header of each
+	 * sequence (i.e. "chromosome" name) as they are procesed.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		PS.println("Searching motif: " + motif + " in " + input.getName());
 		PS.println("Starting: " + getTimeStamp());
@@ -178,6 +207,11 @@ public class SearchMotif {
 		PS.println("Completing: " + getTimeStamp());
 	}
 
+	/**
+	 * Get the current timestamp.
+	 * 
+	 * @return current time as a String
+	 */
 	private static String getTimeStamp() {
 		Date date = new Date();
 		String time = new Timestamp(date.getTime()).toString();

@@ -13,6 +13,14 @@ import objects.CustomOutputStream;
 import scripts.Sequence_Analysis.SearchMotif;
 import util.ExtensionFileFilter;
 
+/**
+ * Graphical window for displaying progress as genome sequences are searched for
+ * a given motif.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.SearchMotif
+ * @see window_interface.Sequence_Analysis.SearchMotifWindow
+ */
 @SuppressWarnings("serial")
 public class SearchMotifOutput extends JFrame {
 
@@ -24,6 +32,17 @@ public class SearchMotifOutput extends JFrame {
 
 	private JTextArea textArea;
 
+	/**
+	 * Initialize a scrollable JTextArea window to display progress and save inputs
+	 * for calling the script.
+	 * 
+	 * @param input
+	 * @param mot
+	 * @param num
+	 * @param out_dir
+	 * @param gz
+	 * @throws IOException
+	 */
 	public SearchMotifOutput(File input, String mot, int num, File out_dir, boolean gz) throws IOException {
 		setTitle("Motif Search Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -43,6 +62,15 @@ public class SearchMotifOutput extends JFrame {
 		gzOutput = gz;
 	}
 
+	/**
+	 * Call script to search for motif instances and display progress by
+	 * instantiating a scrollable JTextArea window that prints each
+	 * sequence/chromosome name within the FASTA file and dispose the window after
+	 * the script finishes.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		String BASENAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"

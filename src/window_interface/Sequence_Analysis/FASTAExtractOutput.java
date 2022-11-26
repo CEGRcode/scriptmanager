@@ -16,6 +16,14 @@ import javax.swing.JTextArea;
 import objects.CustomOutputStream;
 import scripts.Sequence_Analysis.FASTAExtract;
 
+/**
+ * Graphical window for displaying progress as genomic sequence is extracted
+ * from a set of coordinates.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.FASTAExtract
+ * @see window_interface.Sequence_Analysis.FASTAExtractWindow
+ */
 @SuppressWarnings("serial")
 public class FASTAExtractOutput extends JFrame {
 	private File GENOME = null;
@@ -27,6 +35,15 @@ public class FASTAExtractOutput extends JFrame {
 
 	private JTextArea textArea;
 
+	/**
+	 * Initialize a scrollable text area for printing progress log statements.
+	 * 
+	 * @param gen     the reference genome sequence in FASTA-format
+	 * @param b       the BED-formatted coordinate intervals to extract sequence from
+	 * @param out_dir the output directory to save output files to
+	 * @param str     the force-strandedness to pass to the script
+	 * @param head    the style of FASTA-header to use for the output
+	 */
 	public FASTAExtractOutput(File gen, ArrayList<File> b, File out_dir, boolean str, boolean head, boolean gz) {
 		setTitle("FASTA Extraction Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -47,13 +64,19 @@ public class FASTAExtractOutput extends JFrame {
 		gzOutput = gz;
 	}
 
+	/**
+	 * Call script to extract genomic sequences and display progress by
+	 * instantiating a scrollable JTextArea window that prints each
+	 * sequence/chromosome name within the FASTA file and dispose the window after
+	 * the script finishes.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
-
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-
 		try {
 			for (int x = 0; x < BED.size(); x++) {
-
 				// Open Output File
 				File OUTFILE;
 				String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
@@ -67,7 +90,7 @@ public class FASTAExtractOutput extends JFrame {
 				// Execute Script object
 				FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS, gzOutput);
 				script_obj.run();
-
+				// Update progress
 				firePropertyChange("fa", x, x + 1);
 			}
 			PS.println("Extraction Complete");

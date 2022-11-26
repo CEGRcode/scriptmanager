@@ -17,6 +17,15 @@ import java.util.zip.GZIPOutputStream;
 import util.FASTAUtilities;
 import util.BEDUtilities;
 
+/**
+ * This script retrieves the genomic sequences from a BED coordinate file.
+ * 
+ * @author William KM Lai
+ * @see util.FASTAUtilities
+ * @see cli.Sequence_Analysis.FASTAExtractCLI
+ * @see window_interface.Sequence_Analysis.FASTAExtractOutput
+ * @see window_interface.Sequence_Analysis.FASTAExtractWindow
+ */
 public class FASTAExtract {
 	private File GENOME = null;
 	private File OUTFILE = null;
@@ -26,6 +35,20 @@ public class FASTAExtract {
 	private boolean HEADER = true;
 	private boolean gzOutput = false;
 
+	/**
+	 * Initialize object with script inputs for extracting genomic sequences.
+	 * 
+	 * @param gen  the reference genome sequence in FASTA-format (FAI will be
+	 *             automatically generated)
+	 * @param b    the BED-formatted coordinate intervals to extract sequence from
+	 * @param out  the FASTA-formatted subsequences that were extracted from the
+	 *             genomic sequence
+	 * @param str  force strandedness (true = force, false = don't force)
+	 * @param head the style of FASTA-header to use for the output (true = BED coord
+	 *             name, false = use Genomic Coordinate)
+	 * @param ps   a PrintStream object for printing progress updates (for GUI)
+	 * @throws IOException
+	 */
 	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps, boolean gz)
 			throws IOException {
 		GENOME = gen;
@@ -43,6 +66,12 @@ public class FASTAExtract {
 		}
 	}
 
+	/**
+	 * Execute script to extract the genomic sequences.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		PS.println("STRAND:" + STRAND);
 		PS.println("COORD:" + HEADER);

@@ -22,6 +22,16 @@ import charts.CompositePlot;
 import util.FASTAUtilities;
 import util.DNAShapeReference;
 
+/**
+ * This script calculates various aspects of DNA shape across a set of BED
+ * intervals.
+ * 
+ * @author William KM Lai
+ * @see util.DNAShapeReference
+ * @see cli.Sequence_Analysis.DNAShapefromBEDCLI
+ * @see window_interface.Sequence_Analysis.DNAShapefromBEDOutput
+ * @see window_interface.Sequence_Analysis.DNAShapefromBEDWindow
+ */
 public class DNAShapefromBED {
 	private File GENOME = null;
 	private String OUTBASENAME = null;
@@ -50,6 +60,20 @@ public class DNAShapefromBED {
 	Component chart_H = null;
 	Component chart_R = null;
 
+	/**
+	 * Initialize object with script inputs for generating DNA shape reports.
+	 * 
+	 * @param gen  the reference genome sequence in FASTA-format (FAI will be
+	 *             automatically generated)
+	 * @param b    the BED-formatted coordinate intervals to extract sequence from
+	 * @param out  the output file name base (to add _<shapetype>.cdt suffix to)
+	 * @param type a four-element boolean list for specifying shape type to output
+	 *             (no enforcement on size)
+	 * @param str  force strandedness (true=forced, false=not forced)
+	 * @param ps   list of four PrintStream objects corresponding to each shape type
+	 *             (for GUI)
+	 * @throws IOException
+	 */
 	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps)
 			throws IOException {
 		GENOME = gen;
@@ -68,6 +92,13 @@ public class DNAShapefromBED {
 		STRUCTURE = DNAShapeReference.InitializeStructure();
 	}
 
+	/**
+	 * Execute script to calculate DNA shape for all types across the input
+	 * sequence.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		try {
 			IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(GENOME);
@@ -241,26 +272,62 @@ public class DNAShapefromBED {
 		}
 	}
 
+	/**
+	 * TODO: Likely leftover from previous implementations of checking and creating
+	 * FAI. Need to remove this, remove calls of this, and instead handle the
+	 * SAMException thrown by FastaSequenceIndexCreator to account for malformed
+	 * FASTA file.
+	 * 
+	 * @return
+	 */
 	public boolean getFAIstatus() {
 		return INDEX;
 	}
 
+	/**
+	 * Getter method for the swing component chart of the Minor Groove Width DNA
+	 * shape type.
+	 * 
+	 * @return the chart for Minor Groove Width
+	 */
 	public Component getChartM() {
 		return chart_M;
 	}
 
+	/**
+	 * Getter method for the swing component chart of the Propeller Twist DNA shape type.
+	 * 
+	 * @return the chart for Propeller Twist
+	 */
 	public Component getChartP() {
 		return chart_P;
 	}
 
+	/**
+	 * Getter method for the swing component chart of the Helical Twist DNA shape
+	 * type.
+	 * 
+	 * @return the chart for Helical Twist
+	 */
 	public Component getChartH() {
 		return chart_H;
 	}
 
+	/**
+	 * Getter method for the swing component chart of the Roll DNA shape type.
+	 * 
+	 * @return the chart for Roll
+	 */
 	public Component getChartR() {
 		return chart_R;
 	}
 
+	/**
+	 * Getter method for average scores of each DNA shape type.
+	 * 
+	 * @param shapeType indicate shape type to return (0=MGW, 1=PropT, 2=HelT, 3=Roll).
+	 * @return the array of shape scores
+	 */
 	public double[] getAvg(int shapeType) {
 		if (shapeType == 0) {
 			return AVG_MGW;
@@ -275,6 +342,14 @@ public class DNAShapefromBED {
 		}
 	}
 
+	/**
+	 * Parse a BED-formatted file to load all coordinates into memory as a list of
+	 * BEDCoord objects.
+	 * 
+	 * @param INPUT a BED-formatted file
+	 * @return the parsed BED coordinate objects
+	 * @throws FileNotFoundException
+	 */
 	public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
 		Scanner scan = new Scanner(INPUT);
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
@@ -306,6 +381,9 @@ public class DNAShapefromBED {
 		return COORD;
 	}
 
+	/**
+	 * Initialize output PrintStream objects for each DNA shape as needed.
+	 */
 	private void openOutputFiles() {
 		if (OUTBASENAME == null) {
 			OUTBASENAME = BED.getName().split("\\.")[0];
@@ -329,6 +407,19 @@ public class DNAShapefromBED {
 		}
 	}
 
+	/**
+	 * Print a row of scores in a tab-delimited manner using the CDT format with the
+	 * BEDCoord name/id string occupying the first two tokens (or "columns"). Each
+	 * score is simultaneously added to the AVG array in the matching position
+	 * (parallel arrays).
+	 * 
+	 * @param b      the coordinate object whose name/id attribute is used for the
+	 *               header
+	 * @param SCORES an array of scores to print to a line
+	 * @param AVG    an array with the same length as SCORES (if not longer)
+	 * @param O      destination to print the line to
+	 * @return SCORES that have been element-wise summed with AVG
+	 */
 	private double[] printVals(BEDCoord b, List<Double> SCORES, double[] AVG, PrintStream O) {
 		O.print(b.getName() + "\t" + b.getName());
 		for (int z = 0; z < SCORES.size(); z++) {
@@ -339,6 +430,11 @@ public class DNAShapefromBED {
 		return (AVG);
 	}
 
+	/**
+	 * Get the current timestamp
+	 * 
+	 * @return current time as a String
+	 */
 	private static String getTimeStamp() {
 		Date date = new Date();
 		String time = new Timestamp(date.getTime()).toString();

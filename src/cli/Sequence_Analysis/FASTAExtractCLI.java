@@ -13,7 +13,11 @@ import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.FASTAExtract;
 
 /**
- * Sequence_AnalysisCLI/FASTAExtractCLI
+ * Command line interface class for extracting genomic sequences by calling a
+ * script implemented in the scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Sequence_Analysis.FASTAExtract
  */
 @Command(name = "fasta-extract", mixinStandardHelpOptions = true, description = ToolDescriptions.fasta_extract_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

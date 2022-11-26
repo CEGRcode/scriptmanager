@@ -17,7 +17,12 @@ import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 /**
- * Sequence_AnalysisCLI/DNAShapefromFASTACLI
+ * Command line interface class for calculating various aspects of DNA shape
+ * across a set of FASTA sequences by calling the methods implemented in the
+ * scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Sequence_Analysis.DNAShapefromFASTA
  */
 @Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_fasta_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

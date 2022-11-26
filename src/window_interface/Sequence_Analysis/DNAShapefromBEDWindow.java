@@ -33,6 +33,15 @@ import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
 
+/**
+ * Graphical interface window for calculating various aspects of DNA shape
+ * across a set of BED intervals by calling a script implemented in the scripts
+ * package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.DNAShapefromBED
+ * @see window_interface.Sequence_Analysis.DNAShapefromBEDOutput
+ */
 @SuppressWarnings("serial")
 public class DNAShapefromBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -61,6 +70,9 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -109,6 +121,9 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public DNAShapefromBEDWindow() {
 		setTitle("DNA Shape Predictions from BED");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
