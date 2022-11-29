@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,9 +29,17 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import util.ExtensionFileFilter;
 import util.FileSelection;
 import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
+/**
+ * Graphical interface window for converting BED-formatted coordinates to
+ * GFF-format by calling a script implemented in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
+ */
 @SuppressWarnings("serial")
 public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -49,7 +58,11 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutput;
+	private static JCheckBox chckbxGzipOutput;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -57,12 +70,13 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XBED = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = (XBED.getName()).substring(0, XBED.getName().length() - 4) + ".gff";
+				String OUTPUT = ExtensionFileFilter.stripExtension(XBED) + ".gff";
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
+				OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
 				// Execute conversion and update progress
-				BEDtoGFF.convertBEDtoGFF(new File(OUTPUT), XBED);
+				BEDtoGFF.convertBEDtoGFF(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 				setProgress(percentComplete);
 			}
@@ -77,6 +91,9 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public BEDtoGFFWindow() {
 		setTitle("BED to GFF File Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -103,7 +120,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc, "bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc, "bed", true);
 				if (newBEDFiles != null) {
 					for (int x = 0; x < newBEDFiles.length; x++) {
 						BEDFiles.add(newBEDFiles[x]);
@@ -169,6 +186,11 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
 		btnConvert.addActionListener(this);
+		
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 	}
 
 	@Override

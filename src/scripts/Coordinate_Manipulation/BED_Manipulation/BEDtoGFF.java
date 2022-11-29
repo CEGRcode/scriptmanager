@@ -1,22 +1,57 @@
 package scripts.Coordinate_Manipulation.BED_Manipulation;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import util.GZipUtilities;
+
+/**
+ * This script converts a BED-formatted coordinate file too the GFF-format.
+ * 
+ * @author William KM Lai
+ * @see cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI
+ * @see window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow
+ */
 public class BEDtoGFF {
-	public static void convertBEDtoGFF(File out_filepath, File input) throws IOException {
+	/**
+	 * Read the BED-formatted input file and write it as a GFF-formatted output file.
+	 * 
+	 * @param outpath the filepath destination of the GFF-formatted output
+	 * @param input the BED-formatted file to convert
+	 * @param gzOutput If this is true, the output file will be gzipped.
+	 * @throws IOException
+	 */
+	public static void convertBEDtoGFF(File outpath, File input, boolean gzOutput) throws IOException {
 		// chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
-
-		Scanner scan = new Scanner(input);
+		// Initialize output writer
 		PrintStream OUT = System.out;
-		if (out_filepath != null)
-			OUT = new PrintStream(out_filepath);
-
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
+		if (outpath != null) {
+			if (gzOutput) {
+				OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(outpath))));
+			} else {
+				OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(outpath)));
+			}
+		}
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(input)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
+		}
+		// Initialize line variable to loop through
+		String line = br.readLine();
+		while (line != null) {
+			String[] temp = line.split("\t");
 			if (temp[0].toLowerCase().contains("track") || temp[0].startsWith("#")) {
 				OUT.println(String.join("\t", temp));
 			} else {
@@ -44,8 +79,9 @@ public class BEDtoGFF {
 					}
 				}
 			}
+			line = br.readLine();
 		}
-		scan.close();
+		br.close();
 		OUT.close();
 	}
 }
