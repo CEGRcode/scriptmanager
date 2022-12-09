@@ -31,7 +31,7 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the BED file to convert")
 	private File bedFile;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with .gff ext)")
+	@Option(names = {"-o", "--output"}, description = "specify output filename (name will be same as original with .gff ext)")
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output gff to STDOUT")
 	private boolean stdout = false;

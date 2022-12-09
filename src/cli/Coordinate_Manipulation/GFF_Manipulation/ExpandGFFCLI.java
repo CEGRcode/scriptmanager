@@ -28,7 +28,7 @@ public class ExpandGFFCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the GFF file to expand on")
 	private File gffFile;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with coordinate info appended)")
+	@Option(names = {"-o", "--output"}, description = "specify output filename (name will be same as original with coordinate info appended)")
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
