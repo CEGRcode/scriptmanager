@@ -1,6 +1,27 @@
 package objects;
 
+/**
+ * This class acts as a central and shared storage location for each tool's
+ * description for consistentcy betweeen CLI help message and the GUI-displayed
+ * text.
+ * 
+ * @author Olivia Lang
+ * @see main.ScriptManager
+ * @see main.ScriptManagerGUI
+ * @see cli.BAM_Format_Converter
+ * @see cli.BAM_Statistics
+ * @see cli.Coordinate_Manipulation
+ * @see cli.Figure_Generation
+ * @see cli.File_Utilities
+ * @see cli.Peak_Analysis
+ * @see cli.Peak_Calling
+ * @see cli.Read_Analysis
+ * @see cli.Sequence_Analysis
+ */
 public class ToolDescriptions {
+	/**
+	 * The version string for the whole tool
+	 */
 	public static final String VERSION = "0.14-dev";
 
 	// BAM Statistics

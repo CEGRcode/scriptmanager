@@ -13,12 +13,14 @@ import javax.swing.JPanel;
  * Component that displays a graphic of a sequenced DNA fragment with annotated
  * Read1, Read2, and dynamically updating encoding reference points marked by
  * arrows.
- * 
- * @author Olivia Lang
  *
+ * @author Olivia Lang
+ * @see window_interface.Read_Analysis.TagPileupWindow
  */
+@SuppressWarnings("serial")
 public class ReadFragmentCartoon extends JPanel {
 
+	// Define constants of cartoon like dimensions
 	int readHeight = 20;
 	int readWidth = 100;
 	public int cartoonHeight = 80;
@@ -34,7 +36,7 @@ public class ReadFragmentCartoon extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
+
 		// Determine distance from top of graphic
 		verticalPad = (cartoonHeight - 2*(readHeight) - fragmentThickness - arrowHeight) / 2 + arrowHeight;
 
@@ -45,7 +47,7 @@ public class ReadFragmentCartoon extends JPanel {
 		// Draw Read 2
 		g.setColor(Color.ORANGE);
 		g.fillRect(edgePad+fragmentLength - readWidth, verticalPad + readHeight + fragmentThickness, readWidth, readHeight);
-		
+
 		// Draw Fragment
 		g.setColor(Color.BLACK);
 		g.fillRect(edgePad, verticalPad + readHeight, fragmentLength, fragmentThickness);
@@ -62,9 +64,10 @@ public class ReadFragmentCartoon extends JPanel {
 
 	/**
 	 * Update graphic to reflect changes in aspect and read encodings.
-	 * 
-	 * @param aspect
-	 * @param read
+	 *
+	 * @param aspect encoding for read aspect (5', 3', midpoint, full frag) as defined by PileupParameters
+	 * @param read encoding for read output (R1, R2, or both) as defined by PileupParameters
+	 * @see objects.PileupParameters
 	 */
 	public void redrawArrows(int aspect, int read) {
 		verticalPad = (cartoonHeight - (2 * readHeight) - fragmentThickness - arrowHeight) / 2 + arrowHeight;
@@ -96,9 +99,12 @@ public class ReadFragmentCartoon extends JPanel {
 	}
 
 	/**
-	 * Unused legacy code for how Full Fragment was initially represented: a
-	 * rightward-pointing arrow across length of DNA fragment.
-	 * @return
+	 * A rightward-pointing arrow across length of DNA fragment. (unused)
+	 * <br>
+	 * Legacy code for how Full Fragment was initially represented.
+	 *
+	 * @return a Polygon object describing the coordinates of a large,
+	 *         right-pointing arrow
 	 */
 	public Polygon bigArrow() {
 		int arrowThickness = 5;
@@ -116,7 +122,7 @@ public class ReadFragmentCartoon extends JPanel {
 	 * Draw downward-pointing arrow at (x,y) coordinate (upper-center) for marking
 	 * where on the DNA fragment coverage is tallied on this graphic. Arrow size is
 	 * arrowHeight tall (15px) and flank*2 (6px) wide.
-	 * 
+	 * <pre>
 	 *   (x,y)
 	 *    ||
 	 *    ||
@@ -124,10 +130,11 @@ public class ReadFragmentCartoon extends JPanel {
 	 *    ||
 	 *   \  /
 	 *    \/
+	 * </pre>
 	 * 
-	 * @param x
-	 * @param y
-	 * @return
+	 * @param x center (width) coordinate of arrow to draw
+	 * @param y top coordinate of arrow to draw
+	 * @return a Polygon object describing a small down-pointing arrow
 	 */
 	public Polygon arrow(int x,int y) {
 
@@ -145,6 +152,9 @@ public class ReadFragmentCartoon extends JPanel {
 		return(new Polygon(xPoly,yPoly,xPoly.length));
 	}
 
+	/**
+	 * Override function to set preferred size (800 x cartoonHeight).
+	 */
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(800,cartoonHeight);
