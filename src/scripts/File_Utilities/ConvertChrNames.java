@@ -1,14 +1,41 @@
 package scripts.File_Utilities;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.String;
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import util.GZipUtilities;
+
+/**
+ * Class to contain all static chromosome name conversion methods. Primarily a
+ * utility for renaming sacCer3 chromosomes in coordinate files between the two
+ * alternative chromosome naming systems.
+ * 
+ * @author Olivia Lang
+ * @see cli.File_Utilities.ConvertBEDChrNamesCLI
+ * @see cli.File_Utilities.ConvertGFFChrNamesCLI
+ * @see window_interface.File_Utilities.ConvertBEDsChrNamesWindow
+ * @see window_interface.File_Utilities.ConvertGFFChrNamesWindow
+ */
 public class ConvertChrNames {
 
+	/**
+	 * Helper method to generate the roman --> arabic numeral chromosome name map.
+	 * 
+	 * @param useChrmt if true, include "chrM" --> "chrmt" map, else include "chrmt"
+	 *                 --> "chrM" map
+	 * @return the string for the arabic numeral chrname mapped to the analagous
+	 *         roman numeral chrname with mitochondrial chr map
+	 */
 	public static HashMap<String, String> getR2A(boolean useChrmt) {
 		HashMap<String,String> R2A = new HashMap<String, String>();
 		R2A.put("chrXVI", "chr16");
@@ -35,6 +62,14 @@ public class ConvertChrNames {
 		return (R2A);
 	}
 
+	/**
+	 * Helper method to generate the arabic --> roman numeral chromosome name map.
+	 * 
+	 * @param useChrmt if true, include "chrM" --> "chrmt" map, else include "chrmt"
+	 *                 --> "chrM" map
+	 * @return the string for the arabic numeral chrname mapped to the analagous
+	 *         roman numeral chrname with mitochondrial chr map
+	 */
 	public static HashMap<String, String> getA2R(boolean useChrmt) {
 		HashMap<String,String> A2R = new HashMap<String, String>();
 		A2R.put("chr16", "chrXVI");
@@ -61,17 +96,50 @@ public class ConvertChrNames {
 		return (A2R);
 	}
 
-	// Coordinate File wrappers
-	public static void convert_RomantoArabic(File input, File out_filepath, boolean useChrmt) throws IOException {
-		convertCoordinateFile(out_filepath, getR2A(useChrmt), input);
+	/**
+	 * Wrapper for convertCoordinateFile using Roman --> Arabic chromosome name map.
+	 * 
+	 * @param input        the input BED/GFF file to convert
+	 * @param out_filepath this is the filepath to write the converted coordinate
+	 *                     file to
+	 * @param useChrmt     Used to generate the chromosome map for the conversion
+	 *                     (see getR2A()).
+	 * @param gzOutput     If this is true, the output file will be gzipped.
+	 * @throws IOException
+	 */
+	public static void convert_RomantoArabic(File input, File out_filepath, boolean useChrmt, boolean gzOutput) throws IOException {
+		convertCoordinateFile(input, out_filepath, getR2A(useChrmt), gzOutput);
 	}
 
-	public static void convert_ArabictoRoman(File input, File out_filepath, boolean useChrmt) throws IOException {
-		convertCoordinateFile(out_filepath, getA2R(useChrmt), input);
+	/**
+	 * Wrapper for convertCoordinateFile using Arabic --> Roman chromosome name map.
+	 * 
+	 * @param input        the input BED/GFF file to convert
+	 * @param out_filepath this is the filepath to write the converted coordinate
+	 *                     file to
+	 * @param useChrmt     Used to generate the chromosome map for the conversion
+	 *                     (see getA2R()).
+	 * @param gzOutput     If this is true, the output file will be gzipped.
+	 * @throws IOException
+	 */
+	public static void convert_ArabictoRoman(File input, File out_filepath, boolean useChrmt, boolean gzOutput) throws IOException {
+		convertCoordinateFile(input, out_filepath, getA2R(useChrmt), gzOutput);
 	}
-
-	public static void convertCoordinateFile(File out_filepath, HashMap<String, String> chrMap, File input)
-			throws IOException {
+	
+	/**
+	 * Convert method for tab-delimited coordinate files. Note that both BED and GFF
+	 * implementations are the same. If chr name not in provided HashMap (chrMap),
+	 * then the coordinate is written to match the original.
+	 * 
+	 * @param input        the input coordinate BED/GFF file (chr info in first
+	 *                     column of tab-delimited file)
+	 * @param out_filepath the new output coordinate file with the exchanged chr
+	 *                     names
+	 * @param chrMap       the HashMap for which conversion direction to implement
+	 * @param gzOutput     If this is true, the output file will be gzipped.
+	 * @throws IOException
+	 */
+	public static void convertCoordinateFile(File input, File out_filepath, HashMap<String, String> chrMap, boolean gzOutput) throws IOException {
 		// BED Coords:
 		// chr1 87116 87156 NS500168:175:H5LJJBGXY:1:11107:3505:14769 40 +
 		// chr1 87124 87164 NS500168:175:H5LJJBGXY:1:23303:23713:17862 40 -
@@ -79,23 +147,41 @@ public class ConvertChrNames {
 		// chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
 		// chr12 bed2gff chr12_384641_384659_+ 384642 384659 42.6 + .
 		// chr12_384641_384659_+;
-		Scanner scan = new Scanner(input);
+		
+		// Initialize output writer
 		PrintStream OUT = System.out;
-		if (out_filepath != null)
-			OUT = new PrintStream(out_filepath);
-
-		while (scan.hasNextLine()) {
-			String newline = scan.nextLine();
-			if (newline.startsWith("#")) {
-				OUT.println(newline);
+		if (out_filepath != null) {
+			if (gzOutput) {
+				OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(out_filepath))));
 			} else {
-				// Split line, replace first chromosome string token, and write new line
-				String[] temp = newline.split("\t");
-				if (chrMap.containsKey(temp[0])) temp[0] = chrMap.get(temp[0]);
-				OUT.println(String.join("\t", temp));
+				OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(out_filepath)));
 			}
 		}
-		scan.close();
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(input)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
+		}
+		// Initialize line variable to loop through
+		String line = br.readLine();
+		while (line != null) {
+		
+			if (line.startsWith("#")) {
+				OUT.println(line);
+			} else {
+				// Split into tokens by tab delimiter
+				String[] temp = line.split("\t");
+				// Update first col with mapped key
+				if (chrMap.containsKey(temp[0])) { temp[0] = chrMap.get(temp[0]); }
+				// Write new row
+				OUT.println(String.join("\t", temp));
+			}
+			line = br.readLine();
+		}
+		// Close files
+		br.close();
 		OUT.close();
 	}
 }
