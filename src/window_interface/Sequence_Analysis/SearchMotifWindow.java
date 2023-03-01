@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,7 +30,16 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
+import util.FASTAUtilities;
 
+/**
+ * Graphical interface window for searching for genomic motif sequences by
+ * calling a script implemented in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.SearchMotif
+ * @see window_interface.Sequence_Analysis.SearchMotifOutput
+ */
 @SuppressWarnings("serial")
 public class SearchMotifWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
@@ -38,15 +48,18 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 	final DefaultListModel<String> genomeList;
 	ArrayList<File> GenomeFiles = new ArrayList<File>();
 	private File OUT_DIR = null;
-	private int counter = 0;
 
 	private JPanel contentPane;
 	private JTextField txtMotif;
 	private JTextField txtMismatch;
+	private static JCheckBox chckbxGzipOutput;
 	private JProgressBar progressBar;
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -55,21 +68,19 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 					JOptionPane.showMessageDialog(null, "No FASTA Files Selected!!!");
 				} else if (txtMotif.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "No Motif String Entered!!!");
-				} else if (!parseValidIUPACString(txtMotif.getText())) {
+				} else if (!FASTAUtilities.isValidIUPACString(txtMotif.getText())) {
 					System.out.println(txtMotif.getText());
 					JOptionPane.showMessageDialog(null, "Invalid IUPAC Nucleotides detected!!!");
 				} else if (Integer.parseInt(txtMismatch.getText()) < 0) {
 					JOptionPane.showMessageDialog(null, "Invalid Number of Mismatches Entered!!!");
 				} else {
 					setProgress(0);
-					SearchMotifOutput search;
 					for (int gfile = 0; gfile < GenomeFiles.size(); gfile++) {
-						search = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(),
-								Integer.parseInt(txtMismatch.getText()), OUT_DIR);
+						SearchMotifOutput search = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(),
+								Integer.parseInt(txtMismatch.getText()), OUT_DIR, chckbxGzipOutput.isSelected());
 						search.setVisible(true);
 						search.run();
-						counter++;
-						int percentComplete = (int) (((double) (counter) / (GenomeFiles.size())) * 100);
+						int percentComplete = (int) (((double) (gfile + 1) / (GenomeFiles.size())) * 100);
 						setProgress(percentComplete);
 					}
 					JOptionPane.showMessageDialog(null, "Search Complete");
@@ -86,6 +97,9 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public SearchMotifWindow() {
 		setTitle("Search Motif in FASTA file with Mismatch");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -123,6 +137,11 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 			}
 		});
 		contentPane.add(btnOutputDirectory);
+
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		JLabel lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblNewLabel, 5, SpringLayout.SOUTH, lblCurrentOutput);
@@ -184,7 +203,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 
 		btnLoadFASTA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGenomeFiles = FileSelection.getFiles(fc, "fa");
+				File[] newGenomeFiles = FileSelection.getFiles(fc, "fa", true);
 				if (newGenomeFiles != null) {
 					for (int x = 0; x < newGenomeFiles.length; x++) {
 						GenomeFiles.add(newGenomeFiles[x]);
@@ -221,48 +240,6 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 		task = new Task();
 		task.addPropertyChangeListener(this);
 		task.execute();
-	}
-
-	private boolean parseValidIUPACString(String nuc) {
-		String[] array = nuc.toUpperCase().split("");
-		for (int x = 1; x < array.length; x++) {
-			boolean valid = false;
-			if (array[x].equals("A")) {
-				valid = true;
-			} else if (array[x].equals("T")) {
-				valid = true;
-			} else if (array[x].equals("G")) {
-				valid = true;
-			} else if (array[x].equals("C")) {
-				valid = true;
-			} else if (array[x].equals("R")) {
-				valid = true;
-			} else if (array[x].equals("Y")) {
-				valid = true;
-			} else if (array[x].equals("S")) {
-				valid = true;
-			} else if (array[x].equals("W")) {
-				valid = true;
-			} else if (array[x].equals("K")) {
-				valid = true;
-			} else if (array[x].equals("M")) {
-				valid = true;
-			} else if (array[x].equals("B")) {
-				valid = true;
-			} else if (array[x].equals("D")) {
-				valid = true;
-			} else if (array[x].equals("H")) {
-				valid = true;
-			} else if (array[x].equals("V")) {
-				valid = true;
-			} else if (array[x].equals("N")) {
-				valid = true;
-			}
-			if (!valid) {
-				return valid;
-			}
-		}
-		return true;
 	}
 
 	/**

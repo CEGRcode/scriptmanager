@@ -17,6 +17,14 @@ import javax.swing.SpringLayout;
 import objects.CustomOutputStream;
 import scripts.Sequence_Analysis.DNAShapefromFASTA;
 
+/**
+ * Graphical window for displaying the DNA shape scores and charts for the set
+ * of input FASTA sequences.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.DNAShapefromFASTA
+ * @see window_interface.Sequence_Analysis.DNAShapefromFASTAWindow
+ */
 @SuppressWarnings("serial")
 public class DNAShapefromFASTAOutput extends JFrame {
 	private File OUT_DIR = null;
@@ -28,6 +36,14 @@ public class DNAShapefromFASTAOutput extends JFrame {
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 
+	/**
+	 * Initialize a tabbed window with a tab for the charts and a tab for the
+	 * statistics.
+	 * 
+	 * @param fa the FASTA-formatted sequences to generate the shape scores from
+	 * @param out_dir the output directory to save output files to
+	 * @param type the shape types to generate
+	 */
 	public DNAShapefromFASTAOutput(ArrayList<File> fa, File out_dir, boolean[] type) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,6 +72,14 @@ public class DNAShapefromFASTAOutput extends JFrame {
 		OUTPUT_TYPE = type;
 	}
 
+	/**
+	 * Call script on each BED file to calculate shape scores and append the values
+	 * for each shape type under the "DNA Shape Statistics" tab and append each
+	 * chart generated under the "DNA Shape Plot" tab.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 
 		for (int x = 0; x < FASTA.size(); x++) {

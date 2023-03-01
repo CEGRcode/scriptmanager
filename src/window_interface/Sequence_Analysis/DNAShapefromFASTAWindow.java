@@ -33,6 +33,15 @@ import javax.swing.border.EmptyBorder;
 
 import util.FileSelection;
 
+/**
+ * Graphical interface window for calculating various aspects of DNA shape
+ * across a set of FASTA sequences by calling the methods implemented in the
+ * scripts package.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.DNAShapefromFASTA
+ * @see window_interface.Sequence_Analysis.DNAShapefromFASTAOutput
+ */
 @SuppressWarnings("serial")
 public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -57,6 +66,9 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -100,6 +112,9 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public DNAShapefromFASTAWindow() {
 		setTitle("DNA Shape Predictions from FASTA");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

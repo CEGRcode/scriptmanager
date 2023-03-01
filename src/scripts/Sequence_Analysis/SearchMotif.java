@@ -1,10 +1,11 @@
 package scripts.Sequence_Analysis;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
@@ -13,25 +14,51 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import util.GZipUtilities;
+
+/**
+ * This script creates a BED coordinate file of every instance of the
+ * user-provided IUPAC motif in a user-provided genomic sequence.
+ * 
+ * @author William KM Lai
+ * @see cli.Sequence_Analysis.SearchMotifCLI
+ * @see window_interface.Sequence_Analysis.SearchMotifOutput
+ * @see window_interface.Sequence_Analysis.SearchMotifWindow
+ */
 public class SearchMotif {
 
 	private int ALLOWED_MISMATCH;
 	private Map<String, String> IUPAC_HASH = new HashMap<>();
 	private Map<String, String> RC_HASH = new HashMap<>();
 	private String motif;
-	private InputStream inputStream;
-	private String INPUTFILE = null;
-	private PrintStream OUT;
+	private File input;
+	private File out_filepath;
 	private PrintStream PS;
+	private boolean gzOutput;
 
-	public SearchMotif(File input, String mot, int num, File output, PrintStream ps) throws IOException {
+	/**
+	 * Initialize object with script inputs for generating the coordinates of the
+	 * provided motif.
+	 * 
+	 * @param input  the reference genome sequence in FASTA-format
+	 * @param mot    the IUPAC motif to search for [ATGCRYSWKMBDHVN]+
+	 * @param num    the number of allowed mismatches in the motif
+	 * @param output the location to save the BED-formatted coordinates of the found
+	 *               motifs
+	 * @param ps     where to stream the error/progress updates as the script
+	 *               executes
+	 * @throws IOException
+	 */
+	public SearchMotif(File i, String mot, int num, File output, PrintStream ps, boolean gz) {
 		ALLOWED_MISMATCH = num;
 		motif = mot;
-		inputStream = new FileInputStream(input);
-		INPUTFILE = input.getName();
-		OUT = new PrintStream(output);
+		input = i;
+		out_filepath = output;
 		PS = ps;
+		gzOutput = gz;
 
 		IUPAC_HASH.put("A", "A");
 		IUPAC_HASH.put("T", "T");
@@ -64,9 +91,16 @@ public class SearchMotif {
 		RC_HASH.put("A", "T");
 	}
 
+	/**
+	 * Execute script to search a genome for motifs. Print the header of each
+	 * sequence (i.e. "chromosome" name) as they are procesed.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
-		printPS("Searching motif: " + motif + " in " + INPUTFILE);
-		printPS("Starting: " + getTimeStamp());
+		PS.println("Searching motif: " + motif + " in " + input.getName());
+		PS.println("Starting: " + getTimeStamp());
 
 		char[] ORIG = motif.toUpperCase().toCharArray();
 		List<String> MOTIF = new ArrayList<>();
@@ -92,15 +126,34 @@ public class SearchMotif {
 		int currentEND = 0;
 		String ID;
 
-		BufferedReader lines = new BufferedReader(new InputStreamReader(inputStream), 100);
-		while (lines.ready()) {
-			String line = lines.readLine().trim();
+		// Initialize output writer
+		PrintStream OUT = System.out;
+		if (out_filepath != null) {
+			if (gzOutput) {
+				OUT = new PrintStream(
+						new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(out_filepath))));
+			} else {
+				OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(out_filepath)));
+			}
+		}
+
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if (GZipUtilities.isGZipped(input)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
+		}
+		// Initialize line variable to loop through
+		String line = br.readLine();
+		while (line != null) {
+			line = line.trim();
 			if (line.startsWith(">")) {
 				currentChrom = line.substring(1);
 				currentLine = "";
 				currentBP = 0;
 				currentEND = currentBP + motif.length();
-				printPS("Proccessing: " + currentChrom);
+				PS.println("Proccessing: " + currentChrom);
 			} else {
 				currentLine = currentLine + line;
 				// System.out.println(currentLine);
@@ -147,23 +200,21 @@ public class SearchMotif {
 				// System.out.println(tmp);
 				currentLine = tmp;
 			}
+			line = br.readLine();
 		}
-		inputStream.close();
-		lines.close();
-		printPS("Completing: " + getTimeStamp());
+		br.close();
+		OUT.close();
+		PS.println("Completing: " + getTimeStamp());
 	}
 
+	/**
+	 * Get the current timestamp.
+	 * 
+	 * @return current time as a String
+	 */
 	private static String getTimeStamp() {
 		Date date = new Date();
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
-	}
-
-	private void printPS(String message) {
-		if (PS != null) {
-			PS.println(message);
-		} else {
-			System.err.println(message);
-		}
 	}
 }

@@ -31,7 +31,7 @@ public class ExpandBEDCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the BED file to expand on")
 	private File bedFile;
 
-	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with coordinate info appended)")
+	@Option(names = {"-o", "--output"}, description = "specify output filename (name will be same as original with coordinate info appended)")
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;

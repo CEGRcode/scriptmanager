@@ -5,18 +5,21 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import java.io.File;
 import java.io.IOException;
 
 import objects.ToolDescriptions;
 import util.ExtensionFileFilter;
+import util.FASTAUtilities;
 import scripts.Sequence_Analysis.SearchMotif;
 
 /**
- * Sequence_AnalysisCLI/SearchMotifCLI
+ * Command line interface class for searching a genomic sequence for a motif by
+ * calling the methods implemented in the scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Sequence_Analysis.SearchMotif
  */
 @Command(name = "search-motif", mixinStandardHelpOptions = true, description = ToolDescriptions.search_motif_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
@@ -25,9 +28,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 	@Parameters(index = "0", description = "The FASTA file in which to search for the motif.")
 	private File fastaFile;
 
-	@Option(names = { "-o",
-			"--output" }, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
+	@Option(names = { "-o", "--output" }, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
 	private File output = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = { "-m", "--motif" }, required = true, description = "the IUPAC motif to search for")
 	private String motif;
 	@Option(names = { "-n", "--mismatches" }, description = "the number of mismatches allowed (default=0)")
@@ -43,7 +47,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SearchMotif script_obj = new SearchMotif(fastaFile, motif, ALLOWED_MISMATCH, output, null);
+		SearchMotif script_obj = new SearchMotif(fastaFile, motif, ALLOWED_MISMATCH, output, System.err, gzOutput);
 		script_obj.run();
 
 		System.err.println("Search Complete.");
@@ -65,8 +69,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 		}
 		// set default output filename
 		if (output == null) {
-			output = new File(motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
-					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed");
+			String NAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
+					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed";
+			NAME += gzOutput ? ".gz" : "";
+			output = new File(NAME);
 			// check output filename is valid
 		} else {
 			// check ext
@@ -87,12 +93,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 			}
 		}
 
-		// check filter string is valid ATCG
-		Pattern seqPat = Pattern.compile("[ATCG]+");
-		Matcher m = seqPat.matcher(motif);
-		if (!m.matches()) {
-			r += "(!)Motif string must be formatted as a nucleotide sequence.\n" + motif
-					+ " is not a valid nucleotide sequence.\nExpected input string format: \"[ATCG]\"";
+		// check filter string is valid IUPAC
+		if (!FASTAUtilities.isValidIUPACString(motif)) {
+			r += "(!)Motif string must be formatted as an IUPAC sequence.\n" + motif
+					+ " is not a valid nucleotide sequence.\nExpected input string format: \"[ATGCRYSWKMBDHVN]+\"";
 		}
 
 		// check mismatch value

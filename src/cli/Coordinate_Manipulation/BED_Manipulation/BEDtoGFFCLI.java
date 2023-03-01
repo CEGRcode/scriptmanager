@@ -14,8 +14,12 @@ import util.ExtensionFileFilter;
 import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
-	Coordinate_ManipulationCLI/BEDtoGFFCLI
-*/
+ * Command line interface class for converting BED-formatted coordinates to
+ * GFF-format by calling a script implemented in the scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
+ */
 @Command(name = "bed-to-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bed_to_gff_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -27,10 +31,12 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 	@Parameters( index = "0", description = "the BED file to convert")
 	private File bedFile;
 	
-	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with .gff ext)")
+	@Option(names = {"-o", "--output"}, description = "specify output filename (name will be same as original with .gff ext)")
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output gff to STDOUT")
 	private boolean stdout = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	@Override
 	public Integer call() throws Exception {
@@ -42,7 +48,7 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BEDtoGFF.convertBEDtoGFF(output, bedFile);
+		BEDtoGFF.convertBEDtoGFF(output, bedFile, gzOutput);
 		
 		System.err.println("Conversion Complete");
 		return(0);
@@ -58,7 +64,9 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if(output==null && !stdout){
-			output = new File(ExtensionFileFilter.stripExtension(bedFile) + ".gff");
+			String NAME = ExtensionFileFilter.stripExtension(bedFile) + ".gff";
+			NAME += gzOutput ? ".gz" : "";
+			output = new File(NAME);
 		//check stdout and output not both selected
 		}else if(stdout){
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }

@@ -27,10 +27,10 @@ This tool takes a single [GFF file][gff-format] for input.
 
 ### Output Options
 
-| Option | Description |
-| ------ | ----------- |
-| -o, --output | specify output directory (default name will be same as original with .bed ext) |
-| -s, --stdout | output bed to STDOUT |
+| Option | Description                                                                    |
+| ------ |--------------------------------------------------------------------------------|
+| -o, --output | specify output file name (default name will be same as original with .bed ext) |
+| -s, --stdout | output bed to STDOUT                                                           |
 
 
 

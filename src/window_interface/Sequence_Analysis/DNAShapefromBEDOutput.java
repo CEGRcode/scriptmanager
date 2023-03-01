@@ -20,6 +20,14 @@ import javax.swing.SpringLayout;
 import objects.CustomOutputStream;
 import scripts.Sequence_Analysis.DNAShapefromBED;
 
+/**
+ * Graphical window for displaying the DNA shape scores and charts for the set
+ * of input BED intervals.
+ * 
+ * @author William KM Lai
+ * @see scripts.Sequence_Analysis.DNAShapefromBED
+ * @see window_interface.Sequence_Analysis.DNAShapefromBEDWindow
+ */
 @SuppressWarnings("serial")
 public class DNAShapefromBEDOutput extends JFrame {
 	private File GENOME = null;
@@ -34,6 +42,16 @@ public class DNAShapefromBEDOutput extends JFrame {
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 
+	/**
+	 * Initialize a tabbed window with a tab for the charts and a tab for the
+	 * statistics.
+	 * 
+	 * @param gen     the reference genome sequence in FASTA-format
+	 * @param b       the BED-formatted coordinate intervals to extract sequence from
+	 * @param out_dir the output directory to save output files to
+	 * @param type    the information on the shape types to generate
+	 * @param str     the force-strandedness to pass to the script
+	 */
 	public DNAShapefromBEDOutput(File gen, ArrayList<File> b, File out_dir, boolean[] type, boolean str) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -64,6 +82,14 @@ public class DNAShapefromBEDOutput extends JFrame {
 		STRAND = str;
 	}
 
+	/**
+	 * Call script on each BED file to calculate shape scores and append the values
+	 * for each shape type under the "DNA Shape Statistics" tab and append each
+	 * chart generated under the "DNA Shape Plot" tab.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		try {
 			// Move through each BED File

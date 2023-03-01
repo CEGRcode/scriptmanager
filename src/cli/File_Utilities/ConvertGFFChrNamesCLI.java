@@ -14,8 +14,12 @@ import util.ExtensionFileFilter;
 import scripts.File_Utilities.ConvertChrNames;
 
 /**
-	File_Utilities/ConvertBEDGenomeCLI
-*/
+ * Command line interface class for converting chromsome names of GFF file by
+ * calling method implemented in the scripts package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.File_Utilities.ConvertChrNames
+ */
 @Command(name = "convert-gff-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.convertGFFChrNamesDescription,
 	sortOptions = false,
@@ -34,6 +38,8 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 	
 	@Option(names = {"-m", "--chrmt"}, description = "converter will map \"chrM\" --> \"chrmt\" (default with no flag is \"chrmt\" --> \"chrM\")")
 	private boolean useChrmt = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 
 	@Override
 	public Integer call() throws Exception {
@@ -45,9 +51,12 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		// load conversion hashmap
-		if(toArabic) ConvertChrNames.convert_RomantoArabic(coordFile,output,useChrmt);
-		else ConvertChrNames.convert_ArabictoRoman(coordFile,output,useChrmt);
+		// call method according to conversion direction
+		if (toArabic) {
+			ConvertChrNames.convert_RomantoArabic(coordFile, output, useChrmt, gzOutput);
+		} else {
+			ConvertChrNames.convert_ArabictoRoman(coordFile, output, useChrmt, gzOutput);
+		}
 
 		System.err.println("Conversion Complete");
 		return(0);
@@ -60,22 +69,20 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 		if(!coordFile.exists()){
 			r += "(!)Coordinate file does not exist: " + coordFile.getName() + "\n";
 			return(r);
-		//check input extensions
-		} else if(!"gff".equals(ExtensionFileFilter.getExtension(coordFile))){
-			r += "(!)Is this a GFF file? Check extension: " + coordFile.getName() + "\n";
 		}
 		//set default output filename
-		if(output==null){
-			if(toArabic) output = new File(ExtensionFileFilter.stripExtension(coordFile) + "_toArabic.gff");
-			else output = new File(ExtensionFileFilter.stripExtension(coordFile) + "_toRoman.gff");
-		//check output filename is valid
+		if (output == null) {
+			// Set suffix format
+			String SUFFIX = toArabic ? "_toRoman.bed" : "_toArabic.bed";
+			SUFFIX += gzOutput ? ".gz" : "";
+			// Set output filepath with name and output directory
+			String OUTPUT = ExtensionFileFilter.stripExtension(coordFile);
+			// Strip second extension if input has ".gz" first extension
+			if (coordFile.getName().endsWith(".bed.gz")) {
+				OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
+			}
+			output = new File(OUTPUT + SUFFIX);
 		}else{
-			//check ext
-			try{
-				if(!"gff".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".gff\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use GFF extension for output filename. Try: " + output + ".youroutputextensionhere\n"; }
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");

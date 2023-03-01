@@ -1,5 +1,8 @@
 package util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Utilities for sequence manipulation.
  * 
@@ -52,5 +55,23 @@ public class FASTAUtilities {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Perform regex validation ("[ATGCRYSWKMBDHVN]+") of motif string,
+	 * capitalization INsensitive, to ensure that only IUPAC DNA nucleotide
+	 * characters are used in the motif search.
+	 * 
+	 * @param motif some IUPAC motif string to check
+	 * @return false if non-IUPAC chars are in the motif String, else true
+	 */
+	public static boolean isValidIUPACString(String motif) {
+		// check filter string is valid ATGCRYSWKMBDHVN
+		Pattern seqPat = Pattern.compile("[ATGCRYSWKMBDHVN]+");
+		Matcher m = seqPat.matcher(motif.toUpperCase());
+		if (m.matches()) {
+			return true;
+		}
+		return false;
 	}
 }

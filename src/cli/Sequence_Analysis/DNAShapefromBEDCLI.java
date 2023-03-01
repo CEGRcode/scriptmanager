@@ -17,7 +17,12 @@ import util.ExtensionFileFilter;
 import scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
- * Sequence_AnalysisCLI/DNAShapefromBEDCLI
+ * Command line interface class for calculating various aspects of DNA shape
+ * across a set of BED intervals by calling a script implemented in the scripts
+ * package.
+ * 
+ * @author Olivia Lang
+ * @see scripts.Sequence_Analysis.DNAShapefromBED
  */
 @Command(name = "dna-shape-bed", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_bed_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
