@@ -1,4 +1,4 @@
-package cli.Sequence_Analysis;
+package scriptmanager.cli.Sequence_Analysis;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -8,16 +8,16 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Sequence_Analysis.FASTAExtract;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
  * Command line interface class for extracting genomic sequences by calling a
  * script implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Sequence_Analysis.FASTAExtract
+ * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
  */
 @Command(name = "fasta-extract", mixinStandardHelpOptions = true, description = ToolDescriptions.fasta_extract_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

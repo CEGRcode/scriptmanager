@@ -1,4 +1,4 @@
-package cli.Coordinate_Manipulation.GFF_Manipulation;
+package scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,9 +9,9 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
 /**
 	Coordinate_ManipulationCLI/GFFtoBEDCLI

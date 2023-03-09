@@ -1,4 +1,4 @@
-package cli.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,16 +9,16 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
  * Command line interface class for converting BED-formatted coordinates to
  * GFF-format by calling a script implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
  */
 @Command(name = "bed-to-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bed_to_gff_description,

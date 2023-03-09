@@ -1,4 +1,4 @@
-package cli.Figure_Generation;
+package scriptmanager.cli.Figure_Generation;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -13,9 +13,9 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Figure_Generation.TwoColorHeatMap;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 
 /**
  * Figure_GenerationCLI/TwoColorHeatMapCLI

@@ -1,4 +1,4 @@
-package scripts.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,14 +12,14 @@ import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import util.GZipUtilities;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * This script converts a BED-formatted coordinate file too the GFF-format.
  * 
  * @author William KM Lai
- * @see cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI
- * @see window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow
+ * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow
  */
 public class BEDtoGFF {
 	/**

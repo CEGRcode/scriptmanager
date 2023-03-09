@@ -1,11 +1,11 @@
-package cli.Peak_Calling;
+package scriptmanager.cli.Peak_Calling;
 
 import picocli.CommandLine.Command;
 import java.util.concurrent.Callable;
 
 import java.io.IOException;
 
-import objects.ToolDescriptions;
+import scriptmanager.objects.ToolDescriptions;
 
 /**
 	Peak_CallingCLI/GeneTrackCLI

@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 // import java.awt.image.BufferedImage;
 
@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import scripts.Figure_Generation.MergeHeatMapPlot;
+import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 
 @SuppressWarnings("serial")
 public class MergeHeatMapOutput extends JFrame {

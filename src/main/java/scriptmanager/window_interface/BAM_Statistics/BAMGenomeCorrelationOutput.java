@@ -1,4 +1,4 @@
-package window_interface.BAM_Statistics;
+package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,7 +14,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SpringLayout;
 
-import scripts.BAM_Statistics.BAMGenomeCorrelation;
+import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 // Output Window wrapper for executing the script and displaying output
 @SuppressWarnings("serial")

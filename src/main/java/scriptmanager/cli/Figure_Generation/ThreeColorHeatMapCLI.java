@@ -1,4 +1,4 @@
-package cli.Figure_Generation;
+package scriptmanager.cli.Figure_Generation;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -14,10 +14,10 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import objects.ToolDescriptions;
-import objects.CustomExceptions.OptionException;
-import util.ExtensionFileFilter;
-import scripts.Figure_Generation.ThreeColorHeatMap;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
 
 /**
  * Figure_GenerationCLI/ThreeColorHeatMapCLI

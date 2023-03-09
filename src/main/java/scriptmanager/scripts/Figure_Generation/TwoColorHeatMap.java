@@ -1,4 +1,4 @@
-package scripts.Figure_Generation;
+package scriptmanager.scripts.Figure_Generation;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import util.GZipUtilities;
+import scriptmanager.util.GZipUtilities;
 
 public class TwoColorHeatMap {
 

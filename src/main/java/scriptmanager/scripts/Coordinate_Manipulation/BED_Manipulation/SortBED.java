@@ -1,4 +1,4 @@
-package scripts.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -14,15 +14,15 @@ import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import objects.CoordinateObjects.BEDCoord;
-import util.GZipUtilities;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * This class contains scripts for sorting coordinate intervals (BED/GFF) by the tag counts of a CDT matrix file.
  *
  * @author William KM Lai
- * @see cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI
- * @see window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow
+ * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow
  */
 public class SortBED {
 	/**

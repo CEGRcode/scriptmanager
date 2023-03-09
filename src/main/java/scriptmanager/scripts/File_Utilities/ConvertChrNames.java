@@ -1,4 +1,4 @@
-package scripts.File_Utilities;
+package scriptmanager.scripts.File_Utilities;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import util.GZipUtilities;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Class to contain all static chromosome name conversion methods. Primarily a
@@ -21,10 +21,10 @@ import util.GZipUtilities;
  * alternative chromosome naming systems.
  * 
  * @author Olivia Lang
- * @see cli.File_Utilities.ConvertBEDChrNamesCLI
- * @see cli.File_Utilities.ConvertGFFChrNamesCLI
- * @see window_interface.File_Utilities.ConvertBEDsChrNamesWindow
- * @see window_interface.File_Utilities.ConvertGFFChrNamesWindow
+ * @see scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI
+ * @see scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI
+ * @see scriptmanager.window_interface.File_Utilities.ConvertBEDsChrNamesWindow
+ * @see scriptmanager.window_interface.File_Utilities.ConvertGFFChrNamesWindow
  */
 public class ConvertChrNames {
 

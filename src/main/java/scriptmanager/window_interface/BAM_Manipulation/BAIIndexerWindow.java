@@ -1,4 +1,4 @@
-package window_interface.BAM_Manipulation;
+package scriptmanager.window_interface.BAM_Manipulation;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -25,8 +25,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {

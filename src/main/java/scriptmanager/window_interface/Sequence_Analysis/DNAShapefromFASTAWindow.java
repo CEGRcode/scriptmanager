@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -31,7 +31,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 /**
  * Graphical interface window for calculating various aspects of DNA shape
@@ -39,8 +39,8 @@ import util.FileSelection;
  * scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.DNAShapefromFASTA
- * @see window_interface.Sequence_Analysis.DNAShapefromFASTAOutput
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
+ * @see scriptmanager.window_interface.Sequence_Analysis.DNAShapefromFASTAOutput
  */
 @SuppressWarnings("serial")
 public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {

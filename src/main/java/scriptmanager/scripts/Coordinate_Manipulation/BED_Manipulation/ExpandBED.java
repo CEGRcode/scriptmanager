@@ -1,4 +1,4 @@
-package scripts.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,14 +12,14 @@ import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import util.GZipUtilities;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Class that contains method for expanding (BED) coordinate intervals from the center/border by a user-defined direction and distance.
  *
  * @author William KM Lai
- * @see cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI
- * @see window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow
+ * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow
  */
 public class ExpandBED {
 	/**

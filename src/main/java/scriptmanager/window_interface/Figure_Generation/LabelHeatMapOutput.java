@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 import java.awt.Color;
 import java.io.File;
@@ -13,9 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import objects.CustomOutputStream;
-import objects.CustomExceptions.OptionException;
-import scripts.Figure_Generation.LabelHeatMap;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 
 @SuppressWarnings("serial")
 public class LabelHeatMapOutput extends JFrame {

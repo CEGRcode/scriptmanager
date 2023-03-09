@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,9 +20,9 @@ import java.util.zip.GZIPInputStream;
  * number of columns and is based on originally tool-specific methods.
  * 
  * @author William KM Lai
- * @see window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow
- * @see scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
- * @see scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
+ * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF
  * 
  */
 public class CDTUtilities {

@@ -1,4 +1,4 @@
-package scripts.BAM_Statistics;
+package scriptmanager.scripts.BAM_Statistics;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMSequenceRecord;

@@ -1,4 +1,4 @@
-package cli.Read_Analysis;
+package scriptmanager.cli.Read_Analysis;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -13,10 +13,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import util.BAMUtilities;
-import objects.PileupParameters;
-import objects.ToolDescriptions;
-import scripts.Read_Analysis.TagPileup;
+import scriptmanager.util.BAMUtilities;
+import scriptmanager.objects.PileupParameters;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.scripts.Read_Analysis.TagPileup;
 
 /**
 	Read_AnalysisCLI/TagPileupCLI

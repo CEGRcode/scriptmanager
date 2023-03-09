@@ -1,4 +1,4 @@
-package window_interface.Peak_Analysis;
+package scriptmanager.window_interface.Peak_Analysis;
 
 import java.awt.event.ActionListener;
 import java.awt.Color;
@@ -27,7 +27,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -1,4 +1,4 @@
-package scripts.Peak_Calling;
+package scriptmanager.scripts.Peak_Calling;
 
 import java.awt.BorderLayout;
 import java.io.BufferedReader;

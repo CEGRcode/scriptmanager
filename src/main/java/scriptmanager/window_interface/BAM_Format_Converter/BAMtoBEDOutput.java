@@ -1,4 +1,4 @@
-package window_interface.BAM_Format_Converter;
+package scriptmanager.window_interface.BAM_Format_Converter;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.CustomOutputStream;
-import scripts.BAM_Format_Converter.BAMtoBED;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 
 @SuppressWarnings("serial")
 public class BAMtoBEDOutput extends JFrame {

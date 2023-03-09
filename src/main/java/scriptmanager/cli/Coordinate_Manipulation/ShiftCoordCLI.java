@@ -1,4 +1,4 @@
-package cli.Coordinate_Manipulation;
+package scriptmanager.cli.Coordinate_Manipulation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,15 +9,15 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Coordinate_Manipulation.ShiftCoord;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord;
 
 /**
  * Command line interface class for shifting coordinate intervals up/downstream by calling method implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Coordinate_Manipulation.ShiftCoord
+ * @see scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord
  */
 @Command(name = "shift-coord", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.shift_coordinate_description,

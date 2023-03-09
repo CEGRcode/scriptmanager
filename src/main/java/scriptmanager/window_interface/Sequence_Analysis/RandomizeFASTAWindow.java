@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -33,16 +33,16 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import util.ExtensionFileFilter;
-import scripts.Sequence_Analysis.RandomizeFASTA;
+import scriptmanager.util.FileSelection;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
  * Graphical interface window for randomizing sequences (shuffling nucleotides)
  * in a FASTA file by calling the methods implemented in the scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.RandomizeFASTA
+ * @see scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA
  */
 @SuppressWarnings("serial")
 public class RandomizeFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {

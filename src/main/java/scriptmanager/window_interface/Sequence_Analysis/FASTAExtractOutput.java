@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
 
@@ -13,16 +13,16 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.CustomOutputStream;
-import scripts.Sequence_Analysis.FASTAExtract;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
  * Graphical window for displaying progress as genomic sequence is extracted
  * from a set of coordinates.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.FASTAExtract
- * @see window_interface.Sequence_Analysis.FASTAExtractWindow
+ * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
+ * @see scriptmanager.window_interface.Sequence_Analysis.FASTAExtractWindow
  */
 @SuppressWarnings("serial")
 public class FASTAExtractOutput extends JFrame {

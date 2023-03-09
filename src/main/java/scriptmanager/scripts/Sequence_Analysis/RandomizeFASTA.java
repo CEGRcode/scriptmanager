@@ -1,4 +1,4 @@
-package scripts.Sequence_Analysis;
+package scriptmanager.scripts.Sequence_Analysis;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.util.Scanner;
  * within each FASTA sequence.
  * 
  * @author William KM Lai
- * @see cli.Sequence_Analysis.RandomizeFASTACLI
- * @see window_interface.Sequence_Analysis.RandomizeFASTAWindow
+ * @see scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI
+ * @see scriptmanager.window_interface.Sequence_Analysis.RandomizeFASTAWindow
  */
 public class RandomizeFASTA {
 

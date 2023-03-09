@@ -1,4 +1,4 @@
-package window_interface.BAM_Manipulation;
+package scriptmanager.window_interface.BAM_Manipulation;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -32,8 +32,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import util.FileSelection;
-import scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -1,4 +1,4 @@
-package scripts.BAM_Statistics;
+package scriptmanager.scripts.BAM_Statistics;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMSequenceRecord;
@@ -21,9 +21,9 @@ import javax.swing.JOptionPane;
 
 import org.jfree.chart.ChartPanel;
 
-import charts.HeatMap;
-import scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord;
-import scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract;
+import scriptmanager.charts.HeatMap;
+import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord;
+import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract;
 
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelation extends Component {

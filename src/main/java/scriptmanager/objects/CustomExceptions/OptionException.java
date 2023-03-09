@@ -1,4 +1,4 @@
-package objects.CustomExceptions;
+package scriptmanager.objects.CustomExceptions;
 
 @SuppressWarnings("serial")
 public class OptionException extends Exception {

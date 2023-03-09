@@ -1,4 +1,4 @@
-package window_interface.Coordinate_Manipulation.GFF_Manipulation;
+package scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -30,9 +30,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.CDTUtilities;
-import util.FileSelection;
-import scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
+import scriptmanager.util.CDTUtilities;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
 @SuppressWarnings("serial")
 public class SortGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -1,4 +1,4 @@
-package cli.Read_Analysis;
+package scriptmanager.cli.Read_Analysis;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,9 +9,9 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Read_Analysis.ScaleMatrix;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
 /**
 	Read_AnalysisCLI/ScaleMatrixCLI

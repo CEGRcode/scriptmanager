@@ -1,4 +1,4 @@
-package objects;
+package scriptmanager.objects;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -7,10 +7,10 @@ import java.io.PrintStream;
  * Object for storing pileup-related parameter information and constants.
  *
  * @author William KM Lai
- * @see scripts.Read_Analysis.TagPileup
- * @see scripts.Read_Analysis.PileupScripts.PileupExtract
- * @see cli.Read_Analysis.TagPileupCLI
- * @see window_interface.Read_Analysis.TagPileupWindow
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
+ * @see scriptmanager.cli.Read_Analysis.TagPileupCLI
+ * @see scriptmanager.window_interface.Read_Analysis.TagPileupWindow
  */
 
 public class PileupParameters {

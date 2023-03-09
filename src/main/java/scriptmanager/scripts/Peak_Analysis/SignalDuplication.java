@@ -1,4 +1,4 @@
-package scripts.Peak_Analysis;
+package scriptmanager.scripts.Peak_Analysis;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMRecord;
@@ -7,7 +7,7 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
-import objects.CoordinateObjects.GFFCoord;
+import scriptmanager.objects.CoordinateObjects.GFFCoord;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -31,7 +31,7 @@ import javax.swing.SpringLayout;
 import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 
-import charts.LineChart;
+import scriptmanager.charts.LineChart;
 
 @SuppressWarnings("serial")
 public class SignalDuplication extends JFrame {

@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,15 +12,15 @@ import javax.swing.JTabbedPane;
 
 import org.jfree.chart.ChartPanel;
 
-import scripts.Figure_Generation.PlotComposite;
+import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
  * Initialize a tabbed window where all composite data images are displayed for each file input from a window_interface.Figure_Generation.PlotCompositeWindow instance.
  * 
  * The object will loop through and call the scripts.Figure_Generation.PlotComposite script on each input file to generate the line charts. Each chart's title will be the filename. Legend will be included if indicated by input. Default colors will be used for the chart (see scripts.Figure_Generation.PlotComposite for details). If specified by the input parameter values, a PNG image is saved to the indicated output directory with the passed pixel values for the saved file dimensions.
  * @author Olivia Lang
- * @see window_interface.Figure_Generation.PlotCompositeWindow
- * @see scripts.Figure_Generation.PlotComposite
+ * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeWindow
+ * @see scriptmanager.scripts.Figure_Generation.PlotComposite
  *
  */
 @SuppressWarnings("serial")

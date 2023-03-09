@@ -1,4 +1,4 @@
-package scripts.BAM_Manipulation;
+package scriptmanager.scripts.BAM_Manipulation;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMFileHeader;
@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import util.FASTAUtilities;
+import scriptmanager.util.FASTAUtilities;
 
 public class FilterforPIPseq {
 	File bamFile = null;

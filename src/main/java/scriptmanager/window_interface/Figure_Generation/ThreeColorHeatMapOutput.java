@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 import java.awt.Color;
 import java.io.File;
@@ -12,8 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import objects.CustomExceptions.OptionException;
-import scripts.Figure_Generation.ThreeColorHeatMap;
+import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
 
 @SuppressWarnings("serial")
 public class ThreeColorHeatMapOutput extends JFrame {

@@ -1,4 +1,4 @@
-package window_interface.Read_Analysis;
+package scriptmanager.window_interface.Read_Analysis;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -33,8 +33,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Read_Analysis.AggregateData;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Read_Analysis.AggregateData;
 
 @SuppressWarnings("serial")
 public class AggregateDataWindow extends JFrame implements ActionListener, PropertyChangeListener {

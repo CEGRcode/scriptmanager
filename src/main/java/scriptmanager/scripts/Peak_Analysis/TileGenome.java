@@ -1,17 +1,17 @@
-package scripts.Peak_Analysis;
+package scriptmanager.scripts.Peak_Analysis;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import objects.CoordinateObjects.BEDCoord;
-import objects.CoordinateObjects.GFFCoord;
-import util.GenomeSizeReference;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.objects.CoordinateObjects.GFFCoord;
+import scriptmanager.util.GenomeSizeReference;
 
 /**
  * Class with static method for creating a coordinate file of tiles across a genome.
  * 
  * @author William KM Lai
- * @see util.GenomeSizeReference
+ * @see scriptmanager.util.GenomeSizeReference
  */
 	public class TileGenome {
 

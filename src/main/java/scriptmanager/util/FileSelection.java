@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.io.File;
 

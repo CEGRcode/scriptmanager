@@ -1,4 +1,4 @@
-package scripts.Peak_Analysis;
+package scriptmanager.scripts.Peak_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import objects.CoordinateObjects.BEDCoord;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 public class FilterBEDbyProximity{
 	

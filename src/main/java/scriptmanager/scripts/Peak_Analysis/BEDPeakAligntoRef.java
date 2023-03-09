@@ -1,4 +1,4 @@
-package scripts.Peak_Analysis;
+package scriptmanager.scripts.Peak_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;

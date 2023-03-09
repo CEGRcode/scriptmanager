@@ -1,4 +1,4 @@
-package window_interface.Peak_Calling;
+package scriptmanager.window_interface.Peak_Calling;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -32,8 +32,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Peak_Calling.GeneTrack;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Peak_Calling.GeneTrack;
 
 @SuppressWarnings("serial")
 public class GeneTrackWindow extends JFrame implements ActionListener, PropertyChangeListener {

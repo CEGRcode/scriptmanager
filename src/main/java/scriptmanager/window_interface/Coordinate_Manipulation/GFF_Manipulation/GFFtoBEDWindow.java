@@ -1,4 +1,4 @@
-package window_interface.Coordinate_Manipulation.GFF_Manipulation;
+package scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -28,8 +28,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
 @SuppressWarnings("serial")
 public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {

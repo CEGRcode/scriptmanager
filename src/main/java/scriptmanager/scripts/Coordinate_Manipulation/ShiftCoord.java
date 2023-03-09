@@ -1,4 +1,4 @@
-package scripts.Coordinate_Manipulation;
+package scriptmanager.scripts.Coordinate_Manipulation;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,14 +12,14 @@ import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import util.GZipUtilities;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * This class contains scripts for shifting coordinate intervals (BED/GFF) by a user-defined direction and distance.
  *
  * @author Olivia Lang
- * @see cli.Coordinate_Manipulation.ShiftIntervalCLI
- * @see window_interface.Coordinate_Manipulation.ShiftIntervalWindow
+ * @see scriptmanager.cli.Coordinate_Manipulation.ShiftIntervalCLI
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.ShiftIntervalWindow
  */
 public class ShiftCoord {
 

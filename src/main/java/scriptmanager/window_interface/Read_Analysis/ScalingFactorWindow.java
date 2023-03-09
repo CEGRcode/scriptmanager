@@ -1,4 +1,4 @@
-package window_interface.Read_Analysis;
+package scriptmanager.window_interface.Read_Analysis;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -35,7 +35,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
 public class ScalingFactorWindow extends JFrame implements ActionListener, PropertyChangeListener {

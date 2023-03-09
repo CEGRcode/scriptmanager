@@ -1,4 +1,4 @@
-package scripts.File_Utilities;
+package scriptmanager.scripts.File_Utilities;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,7 @@ import java.lang.String;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import util.ExtensionFileFilter;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Class to contain all static "gzipping" and "ungzipping" methods with customizable buffer sizes.

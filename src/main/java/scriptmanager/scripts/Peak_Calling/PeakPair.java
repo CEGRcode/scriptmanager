@@ -1,4 +1,4 @@
-package scripts.Peak_Calling;
+package scriptmanager.scripts.Peak_Calling;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.Peak;
+import scriptmanager.objects.Peak;
 
 @SuppressWarnings("serial")
 public class PeakPair extends JFrame {

@@ -1,4 +1,4 @@
-package cli.Coordinate_Manipulation.GFF_Manipulation;
+package scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -10,10 +10,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-import objects.ToolDescriptions;
-import util.CDTUtilities;
-import util.ExtensionFileFilter;
-import scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.CDTUtilities;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
 /**
 	Coordinate_ManipulationCLI/SortGFFCLI

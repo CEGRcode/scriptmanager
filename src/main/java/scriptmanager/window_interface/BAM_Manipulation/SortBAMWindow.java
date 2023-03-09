@@ -1,4 +1,4 @@
-package window_interface.BAM_Manipulation;
+package scriptmanager.window_interface.BAM_Manipulation;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -28,8 +28,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scripts.BAM_Manipulation.BAMFileSort;
-import util.FileSelection;
+import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;
+import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
 public class SortBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {

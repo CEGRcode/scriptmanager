@@ -1,4 +1,4 @@
-package scripts.File_Utilities;
+package scriptmanager.scripts.File_Utilities;
 
 import java.io.IOException;
 import java.nio.file.Files;

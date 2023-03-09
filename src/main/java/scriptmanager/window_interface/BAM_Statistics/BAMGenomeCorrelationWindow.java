@@ -1,4 +1,4 @@
-package window_interface.BAM_Statistics;
+package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -35,7 +35,7 @@ import javax.swing.SwingWorker;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {

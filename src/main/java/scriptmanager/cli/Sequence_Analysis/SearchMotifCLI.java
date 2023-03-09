@@ -1,4 +1,4 @@
-package cli.Sequence_Analysis;
+package scriptmanager.cli.Sequence_Analysis;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,17 +9,17 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import util.FASTAUtilities;
-import scripts.Sequence_Analysis.SearchMotif;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.FASTAUtilities;
+import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 
 /**
  * Command line interface class for searching a genomic sequence for a motif by
  * calling the methods implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Sequence_Analysis.SearchMotif
+ * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
  */
 @Command(name = "search-motif", mixinStandardHelpOptions = true, description = ToolDescriptions.search_motif_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

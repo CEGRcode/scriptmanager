@@ -1,4 +1,4 @@
-package objects.CoordinateObjects;
+package scriptmanager.objects.CoordinateObjects;
 
 import java.util.Comparator;
 

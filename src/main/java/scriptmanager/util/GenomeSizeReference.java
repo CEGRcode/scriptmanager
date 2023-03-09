@@ -1,10 +1,10 @@
-package util;
+package scriptmanager.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-import objects.CoordinateObjects.GenericCoord;
+import scriptmanager.objects.CoordinateObjects.GenericCoord;
 
 /**
  * Create a genomic chromosome/contig size reference that is essentially defined
@@ -14,8 +14,8 @@ import objects.CoordinateObjects.GenericCoord;
  * coordinates.
  *
  * @author William KM Lai
- * @see scripts.Peak_Analysis.RandomCoordinate
- * @see scripts.Peak_Analysis.TileGenome
+ * @see scriptmanager.scripts.Peak_Analysis.RandomCoordinate
+ * @see scriptmanager.scripts.Peak_Analysis.TileGenome
  */
 public class GenomeSizeReference {
 

@@ -1,4 +1,4 @@
-package scripts.Sequence_Analysis;
+package scriptmanager.scripts.Sequence_Analysis;
 
 import java.awt.Component;
 import java.io.File;
@@ -12,18 +12,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import charts.CompositePlot;
-import util.DNAShapeReference;
+import scriptmanager.charts.CompositePlot;
+import scriptmanager.util.DNAShapeReference;
 
 /**
  * This script calculates the various aspects of DNA shape across a set of FASTA
  * sequences.
  * 
  * @author William KM Lai
- * @see util.DNAShapeReference
- * @see cli.Sequence_Analysis.DNAShapefromFASTACLI
- * @see window_interface.Sequence_Analysis.DNAShapefromFASTAOutput
- * @see window_interface.Sequence_Analysis.DNAShapefromFASTAWindow
+ * @see scriptmanager.util.DNAShapeReference
+ * @see scriptmanager.cli.Sequence_Analysis.DNAShapefromFASTACLI
+ * @see scriptmanager.window_interface.Sequence_Analysis.DNAShapefromFASTAOutput
+ * @see scriptmanager.window_interface.Sequence_Analysis.DNAShapefromFASTAWindow
  */
 public class DNAShapefromFASTA {
 	private String OUTBASENAME = null;

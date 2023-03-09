@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
 
@@ -17,16 +17,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
-import objects.CustomOutputStream;
-import scripts.Sequence_Analysis.DNAShapefromBED;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
  * Graphical window for displaying the DNA shape scores and charts for the set
  * of input BED intervals.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.DNAShapefromBED
- * @see window_interface.Sequence_Analysis.DNAShapefromBEDWindow
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
+ * @see scriptmanager.window_interface.Sequence_Analysis.DNAShapefromBEDWindow
  */
 @SuppressWarnings("serial")
 public class DNAShapefromBEDOutput extends JFrame {

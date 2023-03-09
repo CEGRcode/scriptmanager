@@ -1,4 +1,4 @@
-package window_interface.Read_Analysis;
+package scriptmanager.window_interface.Read_Analysis;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -41,9 +41,9 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import util.ExtensionFileFilter;
-import util.FileSelection;
-import scripts.Read_Analysis.ScaleMatrix;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
 @SuppressWarnings("serial")
 public class ScaleMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {

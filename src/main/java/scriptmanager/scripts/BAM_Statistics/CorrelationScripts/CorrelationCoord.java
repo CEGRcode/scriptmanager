@@ -1,4 +1,4 @@
-package scripts.BAM_Statistics.CorrelationScripts;
+package scriptmanager.scripts.BAM_Statistics.CorrelationScripts;
 
 import java.util.Vector;
 

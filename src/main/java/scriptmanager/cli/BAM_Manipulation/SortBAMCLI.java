@@ -1,10 +1,10 @@
-package cli.BAM_Manipulation;
+package scriptmanager.cli.BAM_Manipulation;
 
 import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
 
-import objects.ToolDescriptions;
+import scriptmanager.objects.ToolDescriptions;
 
 /**
 	BAM_ManipulatioCLI/SortBAMCLI

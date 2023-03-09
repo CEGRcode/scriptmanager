@@ -1,68 +1,68 @@
-package main;
+package scriptmanager.main;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
 
-import objects.ToolDescriptions;
+import scriptmanager.objects.ToolDescriptions;
 
-import cli.BAM_Format_Converter.BAMtoBEDCLI;
-import cli.BAM_Format_Converter.BAMtobedGraphCLI;
-import cli.BAM_Format_Converter.BAMtoGFFCLI;
-import cli.BAM_Format_Converter.BAMtoscIDXCLI;
+import scriptmanager.cli.BAM_Format_Converter.BAMtoBEDCLI;
+import scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI;
+import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
+import scriptmanager.cli.BAM_Format_Converter.BAMtoscIDXCLI;
 
-import cli.BAM_Manipulation.BAIIndexerCLI;
-import cli.BAM_Manipulation.BAMRemoveDupCLI;
-import cli.BAM_Manipulation.FilterforPIPseqCLI;
-import cli.BAM_Manipulation.MergeBAMCLI;
-import cli.BAM_Manipulation.SortBAMCLI;
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
+import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
+import scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI;
+import scriptmanager.cli.BAM_Manipulation.MergeBAMCLI;
+import scriptmanager.cli.BAM_Manipulation.SortBAMCLI;
 
-import cli.BAM_Statistics.BAMGenomeCorrelationCLI;
-import cli.BAM_Statistics.PEStatsCLI;
-import cli.BAM_Statistics.SEStatsCLI;
+import scriptmanager.cli.BAM_Statistics.BAMGenomeCorrelationCLI;
+import scriptmanager.cli.BAM_Statistics.PEStatsCLI;
+import scriptmanager.cli.BAM_Statistics.SEStatsCLI;
 
-import cli.Coordinate_Manipulation.ShiftCoordCLI;
+import scriptmanager.cli.Coordinate_Manipulation.ShiftCoordCLI;
 
-import cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
-import cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
-import cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
 
-import cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI;
-import cli.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDCLI;
-import cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI;
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI;
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDCLI;
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI;
 
-import cli.Figure_Generation.CompositePlotCLI;
-import cli.Figure_Generation.FourColorSequenceCLI;
-import cli.Figure_Generation.TwoColorHeatMapCLI;
-import cli.Figure_Generation.ThreeColorHeatMapCLI;
-import cli.Figure_Generation.MergeHeatMapCLI;
-import cli.Figure_Generation.LabelHeatMapCLI;
+import scriptmanager.cli.Figure_Generation.CompositePlotCLI;
+import scriptmanager.cli.Figure_Generation.FourColorSequenceCLI;
+import scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI;
+import scriptmanager.cli.Figure_Generation.ThreeColorHeatMapCLI;
+import scriptmanager.cli.Figure_Generation.MergeHeatMapCLI;
+import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
 
-import cli.File_Utilities.MD5ChecksumCLI;
-import cli.File_Utilities.ConvertBEDChrNamesCLI;
-import cli.File_Utilities.ConvertGFFChrNamesCLI;
+import scriptmanager.cli.File_Utilities.MD5ChecksumCLI;
+import scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI;
+import scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI;
 
-import cli.Peak_Analysis.BEDPeakAligntoRefCLI;
-import cli.Peak_Analysis.FilterBEDbyProximityCLI;
-import cli.Peak_Analysis.RandomCoordinateCLI;
-import cli.Peak_Analysis.SignalDuplicationCLI;
-import cli.Peak_Analysis.TileGenomeCLI;
+import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
+import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
+import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
+import scriptmanager.cli.Peak_Analysis.SignalDuplicationCLI;
+import scriptmanager.cli.Peak_Analysis.TileGenomeCLI;
 
-import cli.Peak_Calling.GeneTrackCLI;
-import cli.Peak_Calling.PeakPairCLI;
+import scriptmanager.cli.Peak_Calling.GeneTrackCLI;
+import scriptmanager.cli.Peak_Calling.PeakPairCLI;
 
-import cli.Read_Analysis.AggregateDataCLI;
-import cli.Read_Analysis.ScaleMatrixCLI;
-import cli.Read_Analysis.ScalingFactorCLI;
+import scriptmanager.cli.Read_Analysis.AggregateDataCLI;
+import scriptmanager.cli.Read_Analysis.ScaleMatrixCLI;
+import scriptmanager.cli.Read_Analysis.ScalingFactorCLI;
 //import cli.Read_Analysis.SimilarityMatrixCLI;
-import cli.Read_Analysis.TagPileupCLI;
+import scriptmanager.cli.Read_Analysis.TagPileupCLI;
 
-import cli.Sequence_Analysis.DNAShapefromBEDCLI;
-import cli.Sequence_Analysis.DNAShapefromFASTACLI;
-import cli.Sequence_Analysis.FASTAExtractCLI;
-import cli.Sequence_Analysis.RandomizeFASTACLI;
-import cli.Sequence_Analysis.SearchMotifCLI;
+import scriptmanager.cli.Sequence_Analysis.DNAShapefromBEDCLI;
+import scriptmanager.cli.Sequence_Analysis.DNAShapefromFASTACLI;
+import scriptmanager.cli.Sequence_Analysis.FASTAExtractCLI;
+import scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI;
+import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 
 @Command(name = "script-manager",
 		subcommands = {

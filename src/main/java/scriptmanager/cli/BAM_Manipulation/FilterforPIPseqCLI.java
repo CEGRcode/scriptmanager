@@ -1,4 +1,4 @@
-package cli.BAM_Manipulation;
+package scriptmanager.cli.BAM_Manipulation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -13,9 +13,9 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.BAM_Manipulation.FilterforPIPseq;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq;
 
 /**
  * BAM_ManipulatioCLIn/FilterforPIPseqCLI

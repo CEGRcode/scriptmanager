@@ -1,4 +1,4 @@
-package window_interface.Peak_Analysis;
+package scriptmanager.window_interface.Peak_Analysis;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -26,14 +26,14 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Peak_Analysis.TileGenome;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
  * Graphical interface window for generating coordinate interval files that tile a genome.
  * 
  * @author William KM Lai
- * @see scripts.Peak_Analysis.TileGenome
+ * @see scriptmanager.scripts.Peak_Analysis.TileGenome
  */
 @SuppressWarnings("serial")
 public class TileGenomeWindow extends JFrame implements ActionListener, PropertyChangeListener {

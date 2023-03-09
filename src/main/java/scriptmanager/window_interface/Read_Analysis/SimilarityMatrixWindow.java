@@ -1,4 +1,4 @@
-package window_interface.Read_Analysis;
+package scriptmanager.window_interface.Read_Analysis;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -32,8 +32,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Read_Analysis.SimilarityMatrix;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Read_Analysis.SimilarityMatrix;
 
 @SuppressWarnings("serial")
 public class SimilarityMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {

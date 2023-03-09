@@ -1,4 +1,4 @@
-package cli.Read_Analysis;
+package scriptmanager.cli.Read_Analysis;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -11,8 +11,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import objects.ToolDescriptions;
-import scripts.Read_Analysis.AggregateData;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.scripts.Read_Analysis.AggregateData;
 
 /**
 	Read_AnalysisCLI/AggregateDataCLI

@@ -1,4 +1,4 @@
-package scripts.Figure_Generation;
+package scriptmanager.scripts.Figure_Generation;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import objects.CustomExceptions.OptionException;
+import scriptmanager.objects.CustomExceptions.OptionException;
 
 public class ThreeColorHeatMap {
 

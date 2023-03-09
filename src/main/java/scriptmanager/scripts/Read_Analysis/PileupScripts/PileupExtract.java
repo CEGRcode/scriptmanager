@@ -1,4 +1,4 @@
-package scripts.Read_Analysis.PileupScripts;
+package scriptmanager.scripts.Read_Analysis.PileupScripts;
 
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SamReader;
@@ -9,9 +9,9 @@ import java.io.File;
 import java.util.Vector;
 import java.lang.Math;
 
-import objects.PileupParameters;
-import objects.CoordinateObjects.BEDCoord;
-import util.ArrayUtilities;
+import scriptmanager.objects.PileupParameters;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.util.ArrayUtilities;
 
 public class PileupExtract implements Runnable{
 	PileupParameters param;

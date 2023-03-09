@@ -1,4 +1,4 @@
-package scripts.BAM_Manipulation;
+package scriptmanager.scripts.BAM_Manipulation;
 
 /*
  * The MIT License

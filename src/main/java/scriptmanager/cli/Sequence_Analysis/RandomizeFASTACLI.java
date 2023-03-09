@@ -1,4 +1,4 @@
-package cli.Sequence_Analysis;
+package scriptmanager.cli.Sequence_Analysis;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,9 +9,9 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Sequence_Analysis.RandomizeFASTA;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
  * Command line interface class for randomizing sequences (shuffling
@@ -19,7 +19,7 @@ import scripts.Sequence_Analysis.RandomizeFASTA;
  * scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Sequence_Analysis.RandomizeFASTA
+ * @see scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA
  */
 @Command(name = "randomize-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.randomize_fasta_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

@@ -1,4 +1,4 @@
-package cli.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -10,16 +10,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-import objects.ToolDescriptions;
-import util.CDTUtilities;
-import util.ExtensionFileFilter;
-import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.CDTUtilities;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 
 /**
  * Command line interface class for sorting BED coordinate interval files by CDT matrix occupancies by calling the method implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
  */
 @Command(name = "sort-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_bed_description,

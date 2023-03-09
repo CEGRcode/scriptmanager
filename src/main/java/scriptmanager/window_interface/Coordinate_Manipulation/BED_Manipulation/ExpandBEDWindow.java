@@ -1,4 +1,4 @@
-package window_interface.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,14 +34,14 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
-import util.ExtensionFileFilter;
-import util.FileSelection;
+import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.FileSelection;
 /**
  * Graphical interface window for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
  */
 @SuppressWarnings("serial")
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {

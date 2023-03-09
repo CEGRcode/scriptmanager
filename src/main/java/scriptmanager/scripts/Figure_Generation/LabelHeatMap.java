@@ -1,4 +1,4 @@
-package scripts.Figure_Generation;
+package scriptmanager.scripts.Figure_Generation;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import org.jfree.graphics2d.svg.SVGUtils;
 
-import objects.CustomExceptions.OptionException;
+import scriptmanager.objects.CustomExceptions.OptionException;
 
 /**
  * @author 	William KM Lai

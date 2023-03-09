@@ -1,4 +1,4 @@
-package scripts.Read_Analysis;
+package scriptmanager.scripts.Read_Analysis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import util.SimilarityMetric;
+import scriptmanager.util.SimilarityMetric;
 
 public class SimilarityMatrix {
 

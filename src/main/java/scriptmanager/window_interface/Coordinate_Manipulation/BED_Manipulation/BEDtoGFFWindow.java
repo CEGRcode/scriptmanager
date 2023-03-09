@@ -1,4 +1,4 @@
-package window_interface.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -29,16 +29,16 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.ExtensionFileFilter;
-import util.FileSelection;
-import scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
  * Graphical interface window for converting BED-formatted coordinates to
  * GFF-format by calling a script implemented in the scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
  */
 @SuppressWarnings("serial")
 public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {

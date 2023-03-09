@@ -1,4 +1,4 @@
-package charts;
+package scriptmanager.charts;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

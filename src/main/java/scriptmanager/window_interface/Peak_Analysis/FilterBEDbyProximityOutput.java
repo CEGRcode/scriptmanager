@@ -1,4 +1,4 @@
-package window_interface.Peak_Analysis;
+package scriptmanager.window_interface.Peak_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.CustomOutputStream;
-import scripts.Peak_Analysis.FilterBEDbyProximity;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 
 @SuppressWarnings({"serial"})
 public class FilterBEDbyProximityOutput extends JFrame{

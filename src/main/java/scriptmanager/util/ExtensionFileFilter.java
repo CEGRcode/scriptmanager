@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import javax.swing.filechooser.FileFilter;
  * extension.
  * 
  * @author William KM Lai
- * @see util.FileSelection
+ * @see scriptmanager.util.FileSelection
  */
 public class ExtensionFileFilter extends FileFilter{
 

@@ -1,4 +1,4 @@
-package window_interface.Coordinate_Manipulation.GFF_Manipulation;
+package scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +33,8 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
-import util.FileSelection;
+import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
+import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
 public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {

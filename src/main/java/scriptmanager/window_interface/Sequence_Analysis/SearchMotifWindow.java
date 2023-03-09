@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -29,16 +29,16 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import util.FASTAUtilities;
+import scriptmanager.util.FileSelection;
+import scriptmanager.util.FASTAUtilities;
 
 /**
  * Graphical interface window for searching for genomic motif sequences by
  * calling a script implemented in the scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.SearchMotif
- * @see window_interface.Sequence_Analysis.SearchMotifOutput
+ * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
+ * @see scriptmanager.window_interface.Sequence_Analysis.SearchMotifOutput
  */
 @SuppressWarnings("serial")
 public class SearchMotifWindow extends JFrame implements ActionListener, PropertyChangeListener {

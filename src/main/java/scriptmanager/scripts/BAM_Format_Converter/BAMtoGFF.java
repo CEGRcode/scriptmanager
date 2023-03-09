@@ -1,4 +1,4 @@
-package scripts.BAM_Format_Converter;
+package scriptmanager.scripts.BAM_Format_Converter;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMRecord;

@@ -1,4 +1,4 @@
-package window_interface.Peak_Analysis;
+package scriptmanager.window_interface.Peak_Analysis;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -28,8 +28,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Peak_Analysis.SignalDuplication;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Peak_Analysis.SignalDuplication;
 
 @SuppressWarnings("serial")
 public class SignalDuplicationWindow extends JFrame implements ActionListener, PropertyChangeListener {

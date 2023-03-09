@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,9 +10,9 @@ import java.util.Set;
  * Generally useful array manipulations.
  * 
  * @author William KM Lai
- * @see scripts.Read_Analysis.TagPileup
- * @see scripts.Read_Analysis.PileupScripts.PileupExtract
- * @see scripts.Read_Analysis.AggregateData
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
+ * @see scriptmanager.scripts.Read_Analysis.AggregateData
  */
 public class ArrayUtilities {
 	/**
@@ -36,7 +36,7 @@ public class ArrayUtilities {
 	/**
 	 * Reverse the order of an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.PileupScripts.PileupExtract
+	 * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
 	 * @param orig the array to reverse
 	 * @return reversed array, null if orig array is null
 	 */
@@ -54,7 +54,7 @@ public class ArrayUtilities {
 	/**
 	 * Apply a smoothing window to an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.TagPileup
+	 * @see scriptmanager.scripts.Read_Analysis.TagPileup
 	 * @param orig the array to smooth
 	 * @param win  the size of the smoothing window (recommend odd values for
 	 *             symmetrical smoothing but not required)
@@ -115,7 +115,7 @@ public class ArrayUtilities {
 	/**
 	 * Return the largest value in an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.AggregateData
+	 * @see scriptmanager.scripts.Read_Analysis.AggregateData
 	 * @param array the input array to search
 	 * @return largest value in array
 	 */
@@ -134,7 +134,7 @@ public class ArrayUtilities {
 	/**
 	 * Return the smallest value in an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.AggregateData
+	 * @see scriptmanager.scripts.Read_Analysis.AggregateData
 	 * @param array the input array to search
 	 * @return smallest value in array
 	 */
@@ -155,7 +155,7 @@ public class ArrayUtilities {
 	/**
 	 * Return the median value in an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.AggregateData
+	 * @see scriptmanager.scripts.Read_Analysis.AggregateData
 	 * @param array the input array to search
 	 * @return median of the array elements
 	 */
@@ -183,7 +183,7 @@ public class ArrayUtilities {
 	/**
 	 * Return the average value in an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.AggregateData
+	 * @see scriptmanager.scripts.Read_Analysis.AggregateData
 	 * @param array the input array to average
 	 * @return average of the array elements
 	 */
@@ -205,7 +205,7 @@ public class ArrayUtilities {
 	/**
 	 * Return the sum of an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.AggregateData
+	 * @see scriptmanager.scripts.Read_Analysis.AggregateData
 	 * @param array the input array to sum
 	 * @return sum of the array elements
 	 */
@@ -227,7 +227,7 @@ public class ArrayUtilities {
 	/**
 	 * Return the mode of an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.AggregateData
+	 * @see scriptmanager.scripts.Read_Analysis.AggregateData
 	 * @param array the input array to search
 	 * @return mode of the array elements
 	 */
@@ -261,7 +261,7 @@ public class ArrayUtilities {
 	/**
 	 * Return the positional variance of an input primitive array.
 	 * 
-	 * @see scripts.Read_Analysis.AggregateData
+	 * @see scriptmanager.scripts.Read_Analysis.AggregateData
 	 * @param array the input array to calculate from
 	 * @return positional variance of array (NaN if array is empty and 0 if array
 	 *         has only 1 element)

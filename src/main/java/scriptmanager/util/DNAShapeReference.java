@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +10,8 @@ import java.util.Map;
  * in the scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.DNAShapefromBED
- * @see scripts.Sequence_Analysis.DNAShapefromFASTA
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
  */
 public class DNAShapeReference {
 	

@@ -1,4 +1,4 @@
-package scripts.BAM_Statistics;
+package scriptmanager.scripts.BAM_Statistics;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMRecord;
@@ -20,8 +20,8 @@ import java.util.Vector;
 
 import org.jfree.chart.ChartPanel;
 
-import charts.Histogram;
-import charts.LineChart;
+import scriptmanager.charts.Histogram;
+import scriptmanager.charts.LineChart;
 
 public class PEStats {
 	

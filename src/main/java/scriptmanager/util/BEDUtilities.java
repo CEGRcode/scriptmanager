@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 
-import objects.CoordinateObjects.BEDCoord;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 /**
  * Class containing a set of shared methods to be used across script classes.
  * 
  * @author Olivia Lang
- * @see scripts.Sequence_Analysis.FASTAExtract
+ * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
  */
 public class BEDUtilities {
 

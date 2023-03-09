@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -9,17 +9,17 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.CustomOutputStream;
-import scripts.Sequence_Analysis.SearchMotif;
-import util.ExtensionFileFilter;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Graphical window for displaying progress as genome sequences are searched for
  * a given motif.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.SearchMotif
- * @see window_interface.Sequence_Analysis.SearchMotifWindow
+ * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
+ * @see scriptmanager.window_interface.Sequence_Analysis.SearchMotifWindow
  */
 @SuppressWarnings("serial")
 public class SearchMotifOutput extends JFrame {

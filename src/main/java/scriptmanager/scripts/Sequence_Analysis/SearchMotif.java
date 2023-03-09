@@ -1,4 +1,4 @@
-package scripts.Sequence_Analysis;
+package scriptmanager.scripts.Sequence_Analysis;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -17,16 +17,16 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import util.GZipUtilities;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * This script creates a BED coordinate file of every instance of the
  * user-provided IUPAC motif in a user-provided genomic sequence.
  * 
  * @author William KM Lai
- * @see cli.Sequence_Analysis.SearchMotifCLI
- * @see window_interface.Sequence_Analysis.SearchMotifOutput
- * @see window_interface.Sequence_Analysis.SearchMotifWindow
+ * @see scriptmanager.cli.Sequence_Analysis.SearchMotifCLI
+ * @see scriptmanager.window_interface.Sequence_Analysis.SearchMotifOutput
+ * @see scriptmanager.window_interface.Sequence_Analysis.SearchMotifWindow
  */
 public class SearchMotif {
 

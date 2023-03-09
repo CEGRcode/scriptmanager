@@ -1,4 +1,4 @@
-package cli.Peak_Analysis;
+package scriptmanager.cli.Peak_Analysis;
 
 import picocli.CommandLine.Command;
 
@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 
 import java.io.IOException;
 
-import objects.ToolDescriptions;
+import scriptmanager.objects.ToolDescriptions;
 	
 /**
 	Peak_AnalysisCLI/SignalDuplicationCLI

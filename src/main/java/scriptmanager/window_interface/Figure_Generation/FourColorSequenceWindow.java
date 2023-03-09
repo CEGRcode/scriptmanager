@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -32,8 +32,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Figure_Generation.FourColorPlot;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Figure_Generation.FourColorPlot;
 
 @SuppressWarnings("serial")
 public class FourColorSequenceWindow extends JFrame implements ActionListener, PropertyChangeListener {

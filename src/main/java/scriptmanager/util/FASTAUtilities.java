@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
  * Utilities for sequence manipulation.
  * 
  * @author William KM Lai
- * @see scripts.BAM_Manipulation.FilterforPIPseq
- * @see scripts.Sequence_Analysis.DNAShapefromBED
- * @see scripts.Sequence_Analysis.FASTAExtract
+ * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
+ * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
  */
 public class FASTAUtilities {
 	

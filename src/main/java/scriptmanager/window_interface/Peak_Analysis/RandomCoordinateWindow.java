@@ -1,4 +1,4 @@
-package window_interface.Peak_Analysis;
+package scriptmanager.window_interface.Peak_Analysis;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -26,14 +26,14 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.Peak_Analysis.RandomCoordinate;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
 /**
  * Graphical interface window for generating random coordinate interval files.
  * 
  * @author William KM Lai
- * @see scripts.Peak_Analysis.RandomCoordinate
+ * @see scriptmanager.scripts.Peak_Analysis.RandomCoordinate
  */
 @SuppressWarnings("serial")
 public class RandomCoordinateWindow extends JFrame implements ActionListener, PropertyChangeListener {

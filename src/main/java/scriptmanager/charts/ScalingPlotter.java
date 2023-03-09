@@ -1,4 +1,4 @@
-package charts;
+package scriptmanager.charts;
 
 import java.awt.Color;
 import java.awt.Font;

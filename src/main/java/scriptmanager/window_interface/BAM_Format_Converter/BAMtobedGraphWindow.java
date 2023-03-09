@@ -1,4 +1,4 @@
-package window_interface.BAM_Format_Converter;
+package scriptmanager.window_interface.BAM_Format_Converter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +35,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
 public class BAMtobedGraphWindow extends JFrame implements ActionListener, PropertyChangeListener {

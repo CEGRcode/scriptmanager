@@ -1,4 +1,4 @@
-package window_interface.BAM_Statistics;
+package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -17,8 +17,8 @@ import javax.swing.SpringLayout;
 
 import org.jfree.chart.ChartPanel;
 
-import objects.CustomOutputStream;
-import scripts.BAM_Statistics.PEStats;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.BAM_Statistics.PEStats;
 
 @SuppressWarnings("serial")
 public class PEStatOutput extends JFrame {

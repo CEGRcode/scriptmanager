@@ -1,4 +1,4 @@
-package cli.BAM_Format_Converter;
+package scriptmanager.cli.BAM_Format_Converter;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -10,9 +10,9 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.BAM_Format_Converter.BAMtoGFF;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 
 /**
 	BAM_Format_ConverterCLI/SEStatsCLI

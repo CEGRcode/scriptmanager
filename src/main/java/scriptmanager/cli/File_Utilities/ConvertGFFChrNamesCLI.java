@@ -1,4 +1,4 @@
-package cli.File_Utilities;
+package scriptmanager.cli.File_Utilities;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,16 +9,16 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.File_Utilities.ConvertChrNames;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 /**
  * Command line interface class for converting chromsome names of GFF file by
  * calling method implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.File_Utilities.ConvertChrNames
+ * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
  */
 @Command(name = "convert-gff-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.convertGFFChrNamesDescription,

@@ -1,4 +1,4 @@
-package scripts.Coordinate_Manipulation.GFF_Manipulation;
+package scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import objects.CoordinateObjects.GFFCoord;
+import scriptmanager.objects.CoordinateObjects.GFFCoord;
 
 public class SortGFF {
 	public static void sortGFFbyCDT(String outname, File gff, File cdt, int START_INDEX, int STOP_INDEX)

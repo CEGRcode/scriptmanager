@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -31,15 +31,15 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 /**
  * Graphical interface window for extracting the genomic sequence of a set of
  * BED intervals by calling a script implemented in the scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.FASTAExtract
- * @see window_interface.Sequence_Analysis.FASTAExtractOutput
+ * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
+ * @see scriptmanager.window_interface.Sequence_Analysis.FASTAExtractOutput
  */
 @SuppressWarnings("serial")
 public class FASTAExtractWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -1,4 +1,4 @@
-package window_interface.Sequence_Analysis;
+package scriptmanager.window_interface.Sequence_Analysis;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -14,16 +14,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
-import objects.CustomOutputStream;
-import scripts.Sequence_Analysis.DNAShapefromFASTA;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 /**
  * Graphical window for displaying the DNA shape scores and charts for the set
  * of input FASTA sequences.
  * 
  * @author William KM Lai
- * @see scripts.Sequence_Analysis.DNAShapefromFASTA
- * @see window_interface.Sequence_Analysis.DNAShapefromFASTAWindow
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
+ * @see scriptmanager.window_interface.Sequence_Analysis.DNAShapefromFASTAWindow
  */
 @SuppressWarnings("serial")
 public class DNAShapefromFASTAOutput extends JFrame {

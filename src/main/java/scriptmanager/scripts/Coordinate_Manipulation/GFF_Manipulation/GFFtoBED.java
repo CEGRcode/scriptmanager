@@ -1,4 +1,4 @@
-package scripts.Coordinate_Manipulation.GFF_Manipulation;
+package scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
 import java.io.IOException;

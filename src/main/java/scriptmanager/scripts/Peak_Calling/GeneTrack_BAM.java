@@ -1,4 +1,4 @@
-package scripts.Peak_Calling;
+package scriptmanager.scripts.Peak_Calling;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMRecord;
@@ -20,8 +20,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.GenetrackParameters;
-import objects.Peak;
+import scriptmanager.objects.GenetrackParameters;
+import scriptmanager.objects.Peak;
 
 @SuppressWarnings("serial")
 public class GeneTrack_BAM extends JFrame {

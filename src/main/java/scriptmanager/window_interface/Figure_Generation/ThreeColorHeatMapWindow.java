@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -37,7 +37,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
 public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {

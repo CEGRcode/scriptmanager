@@ -1,4 +1,4 @@
-package scripts.Read_Analysis;
+package scriptmanager.scripts.Read_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,10 +24,10 @@ import java.util.zip.GZIPOutputStream;
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
-import objects.PileupParameters;
-import objects.CoordinateObjects.BEDCoord;
-import scripts.Read_Analysis.PileupScripts.PileupExtract;
-import util.ArrayUtilities;
+import scriptmanager.objects.PileupParameters;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract;
+import scriptmanager.util.ArrayUtilities;
 
 public class TagPileup {
 	File BED = null;

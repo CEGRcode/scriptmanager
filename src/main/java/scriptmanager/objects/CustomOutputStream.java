@@ -1,4 +1,4 @@
-package objects;
+package scriptmanager.objects;
 
 import java.io.IOException;
 import java.io.OutputStream;

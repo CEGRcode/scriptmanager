@@ -1,4 +1,4 @@
-package objects;
+package scriptmanager.objects;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  * arrows.
  *
  * @author Olivia Lang
- * @see window_interface.Read_Analysis.TagPileupWindow
+ * @see scriptmanager.window_interface.Read_Analysis.TagPileupWindow
  */
 @SuppressWarnings("serial")
 public class ReadFragmentCartoon extends JPanel {
@@ -67,7 +67,7 @@ public class ReadFragmentCartoon extends JPanel {
 	 *
 	 * @param aspect encoding for read aspect (5', 3', midpoint, full frag) as defined by PileupParameters
 	 * @param read encoding for read output (R1, R2, or both) as defined by PileupParameters
-	 * @see objects.PileupParameters
+	 * @see scriptmanager.objects.PileupParameters
 	 */
 	public void redrawArrows(int aspect, int read) {
 		verticalPad = (cartoonHeight - (2 * readHeight) - fragmentThickness - arrowHeight) / 2 + arrowHeight;

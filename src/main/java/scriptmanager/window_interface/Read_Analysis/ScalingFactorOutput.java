@@ -1,4 +1,4 @@
-package window_interface.Read_Analysis;
+package scriptmanager.window_interface.Read_Analysis;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,8 +14,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SpringLayout;
 
-import util.ExtensionFileFilter;
-import scripts.Read_Analysis.ScalingFactor;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 /**
  * NCIS code adapted from Mahony Lab https://github.com/seqcode/seqcode-core

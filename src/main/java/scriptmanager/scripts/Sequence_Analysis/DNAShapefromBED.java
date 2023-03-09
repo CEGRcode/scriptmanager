@@ -1,9 +1,9 @@
-package scripts.Sequence_Analysis;
+package scriptmanager.scripts.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
 import htsjdk.samtools.reference.FastaSequenceIndexCreator;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
-import objects.CoordinateObjects.BEDCoord;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 import java.awt.Component;
 import java.io.File;
@@ -18,19 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import charts.CompositePlot;
-import util.FASTAUtilities;
-import util.DNAShapeReference;
+import scriptmanager.charts.CompositePlot;
+import scriptmanager.util.FASTAUtilities;
+import scriptmanager.util.DNAShapeReference;
 
 /**
  * This script calculates various aspects of DNA shape across a set of BED
  * intervals.
  * 
  * @author William KM Lai
- * @see util.DNAShapeReference
- * @see cli.Sequence_Analysis.DNAShapefromBEDCLI
- * @see window_interface.Sequence_Analysis.DNAShapefromBEDOutput
- * @see window_interface.Sequence_Analysis.DNAShapefromBEDWindow
+ * @see scriptmanager.util.DNAShapeReference
+ * @see scriptmanager.cli.Sequence_Analysis.DNAShapefromBEDCLI
+ * @see scriptmanager.window_interface.Sequence_Analysis.DNAShapefromBEDOutput
+ * @see scriptmanager.window_interface.Sequence_Analysis.DNAShapefromBEDWindow
  */
 public class DNAShapefromBED {
 	private File GENOME = null;

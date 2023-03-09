@@ -1,4 +1,4 @@
-package window_interface.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -31,17 +31,17 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.CDTUtilities;
-import util.ExtensionFileFilter;
-import util.FileSelection;
-import scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
+import scriptmanager.util.CDTUtilities;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 
 
 /**
  * Graphical interface window for sorting BED coordinate interval files by CDT matrix occupancies by calling the method implemented in the scripts package.
  * 
  * @author William KM Lai
- * @see scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
  */
 @SuppressWarnings("serial")
 public class SortBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {

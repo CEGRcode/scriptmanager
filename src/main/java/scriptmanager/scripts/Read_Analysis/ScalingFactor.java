@@ -1,4 +1,4 @@
-package scripts.Read_Analysis;
+package scriptmanager.scripts.Read_Analysis;
 
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.SAMRecord;
@@ -25,8 +25,8 @@ import java.util.Scanner;
 
 import org.jfree.chart.ChartPanel;
 
-import charts.ScalingPlotter;
-import objects.CoordinateObjects.BEDCoord;
+import scriptmanager.charts.ScalingPlotter;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 /**
  * NCIS code adapted from Mahony Lab https://github.com/seqcode/seqcode-core

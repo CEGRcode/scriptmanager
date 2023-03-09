@@ -1,4 +1,4 @@
-package window_interface.File_Utilities;
+package scriptmanager.window_interface.File_Utilities;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -30,8 +30,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
-import scripts.File_Utilities.MD5Checksum;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
 @SuppressWarnings("serial")
 public class MD5ChecksumWindow extends JFrame implements ActionListener, PropertyChangeListener {

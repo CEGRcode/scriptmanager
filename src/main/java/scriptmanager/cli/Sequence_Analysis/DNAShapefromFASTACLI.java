@@ -1,4 +1,4 @@
-package cli.Sequence_Analysis;
+package scriptmanager.cli.Sequence_Analysis;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -12,9 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Sequence_Analysis.DNAShapefromFASTA;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 /**
  * Command line interface class for calculating various aspects of DNA shape
@@ -22,7 +22,7 @@ import scripts.Sequence_Analysis.DNAShapefromFASTA;
  * scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Sequence_Analysis.DNAShapefromFASTA
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
  */
 @Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_fasta_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)

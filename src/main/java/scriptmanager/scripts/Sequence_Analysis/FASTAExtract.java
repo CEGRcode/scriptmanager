@@ -1,9 +1,9 @@
-package scripts.Sequence_Analysis;
+package scriptmanager.scripts.Sequence_Analysis;
 
 import htsjdk.samtools.SAMException;
 import htsjdk.samtools.reference.FastaSequenceIndexCreator;
 import htsjdk.samtools.reference.IndexedFastaSequenceFile;
-import objects.CoordinateObjects.BEDCoord;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -14,17 +14,17 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.zip.GZIPOutputStream;
 
-import util.FASTAUtilities;
-import util.BEDUtilities;
+import scriptmanager.util.FASTAUtilities;
+import scriptmanager.util.BEDUtilities;
 
 /**
  * This script retrieves the genomic sequences from a BED coordinate file.
  * 
  * @author William KM Lai
- * @see util.FASTAUtilities
- * @see cli.Sequence_Analysis.FASTAExtractCLI
- * @see window_interface.Sequence_Analysis.FASTAExtractOutput
- * @see window_interface.Sequence_Analysis.FASTAExtractWindow
+ * @see scriptmanager.util.FASTAUtilities
+ * @see scriptmanager.cli.Sequence_Analysis.FASTAExtractCLI
+ * @see scriptmanager.window_interface.Sequence_Analysis.FASTAExtractOutput
+ * @see scriptmanager.window_interface.Sequence_Analysis.FASTAExtractWindow
  */
 public class FASTAExtract {
 	private File GENOME = null;

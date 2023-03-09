@@ -1,10 +1,10 @@
-package cli.Read_Analysis;
+package scriptmanager.cli.Read_Analysis;
 
 import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
 
-import objects.ToolDescriptions;
+import scriptmanager.objects.ToolDescriptions;
 
 import java.io.IOException;
 

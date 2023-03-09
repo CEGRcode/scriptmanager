@@ -1,4 +1,4 @@
-package scripts.Figure_Generation;
+package scriptmanager.scripts.Figure_Generation;
 
 import java.awt.Color;
 import java.io.File;
@@ -13,16 +13,16 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import charts.CompositePlot;
-import util.ColorSeries;
-import util.ExtensionFileFilter;
+import scriptmanager.charts.CompositePlot;
+import scriptmanager.util.ColorSeries;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * The script class to create/display line plot images based on the output files of scripts.Figure_Generation.TagPileup.
  * @author Olivia Lang
- * @see util.ColorSeries
- * @see charts.CompositePlot
- * @see cli.Figure_Generation.CompositePlotCLI
+ * @see scriptmanager.util.ColorSeries
+ * @see scriptmanager.charts.CompositePlot
+ * @see scriptmanager.cli.Figure_Generation.CompositePlotCLI
  */
 public class PlotComposite {
 

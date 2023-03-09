@@ -1,4 +1,4 @@
-package scripts.Figure_Generation;
+package scriptmanager.scripts.Figure_Generation;
 
 import java.awt.image.BufferedImage;
 

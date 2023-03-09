@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Fixed preset color palettes for figure generation.
  * 
  * @author Olivia Lang
- * @see scripts.Figure_Generation.PlotComposite
+ * @see scriptmanager.scripts.Figure_Generation.PlotComposite
  */
 public class ColorSeries {
 

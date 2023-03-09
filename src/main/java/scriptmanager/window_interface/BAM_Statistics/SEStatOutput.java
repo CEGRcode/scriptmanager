@@ -1,4 +1,4 @@
-package window_interface.BAM_Statistics;
+package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.CustomOutputStream;
-import scripts.BAM_Statistics.SEStats;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.BAM_Statistics.SEStats;
 
 @SuppressWarnings("serial")
 public class SEStatOutput extends JFrame {

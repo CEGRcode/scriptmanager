@@ -1,4 +1,4 @@
-package cli.Figure_Generation;
+package scriptmanager.cli.Figure_Generation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -11,10 +11,10 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import objects.ToolDescriptions;
-import objects.CustomExceptions.OptionException;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.CustomExceptions.OptionException;
 
-import scripts.Figure_Generation.LabelHeatMap;
+import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 
 /**
  * Figure_GenerationCLI/LabelHeatMapCLI

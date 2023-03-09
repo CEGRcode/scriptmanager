@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 import java.awt.Color;
 import java.io.File;
@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import scripts.Figure_Generation.TwoColorHeatMap;
+import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 
 @SuppressWarnings("serial")
 public class TwoColorHeatMapOutput extends JFrame {

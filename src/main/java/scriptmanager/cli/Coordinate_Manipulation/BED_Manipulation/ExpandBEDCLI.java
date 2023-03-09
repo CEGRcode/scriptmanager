@@ -1,4 +1,4 @@
-package cli.Coordinate_Manipulation.BED_Manipulation;
+package scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -10,15 +10,15 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 
 /**
  * Command line interface class for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
  */
 @Command(name = "expand-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_bed_description,

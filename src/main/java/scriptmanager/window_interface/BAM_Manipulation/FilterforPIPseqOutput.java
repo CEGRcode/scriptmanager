@@ -1,4 +1,4 @@
-package window_interface.BAM_Manipulation;
+package scriptmanager.window_interface.BAM_Manipulation;
 
 import java.awt.BorderLayout;
 import java.io.File;
@@ -10,8 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import objects.CustomOutputStream;
-import scripts.BAM_Manipulation.FilterforPIPseq;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq;
 
 @SuppressWarnings("serial")
 public class FilterforPIPseqOutput extends JFrame {

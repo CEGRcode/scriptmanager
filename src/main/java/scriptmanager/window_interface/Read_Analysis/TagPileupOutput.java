@@ -1,4 +1,4 @@
-package window_interface.Read_Analysis;
+package scriptmanager.window_interface.Read_Analysis;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,11 +16,11 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
 
-import charts.CompositePlot;
-import objects.PileupParameters;
-import objects.CustomOutputStream;
-import scripts.Read_Analysis.TagPileup;
-import util.BAMUtilities;
+import scriptmanager.charts.CompositePlot;
+import scriptmanager.objects.PileupParameters;
+import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.scripts.Read_Analysis.TagPileup;
+import scriptmanager.util.BAMUtilities;
 
 @SuppressWarnings("serial")
 public class TagPileupOutput extends JFrame {

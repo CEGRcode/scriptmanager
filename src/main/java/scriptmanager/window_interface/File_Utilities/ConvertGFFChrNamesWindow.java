@@ -1,4 +1,4 @@
-package window_interface.File_Utilities;
+package scriptmanager.window_interface.File_Utilities;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -31,9 +31,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.ExtensionFileFilter;
-import util.FileSelection;
-import scripts.File_Utilities.ConvertChrNames;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 @SuppressWarnings("serial")
 public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, PropertyChangeListener {

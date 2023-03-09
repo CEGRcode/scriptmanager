@@ -1,4 +1,4 @@
-package scripts.Read_Analysis;
+package scriptmanager.scripts.Read_Analysis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,8 +7,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import util.ArrayUtilities;
-import util.ExtensionFileFilter;
+import scriptmanager.util.ArrayUtilities;
+import scriptmanager.util.ExtensionFileFilter;
 
 public class AggregateData {
 

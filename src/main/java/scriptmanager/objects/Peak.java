@@ -1,4 +1,4 @@
-package objects;
+package scriptmanager.objects;
 
 import java.util.Comparator;
 
@@ -6,8 +6,8 @@ import java.util.Comparator;
  * The object describing how peaks are stored for the Peak Calling tools.
  *
  * @author William KM Lai
- * @see scripts.Peak_Calling.GeneTrack_BAM
- * @see scripts.Peak_Calling.PeakPair
+ * @see scriptmanager.scripts.Peak_Calling.GeneTrack_BAM
+ * @see scriptmanager.scripts.Peak_Calling.PeakPair
  */
 public class Peak {
 	private String CHROM = "";

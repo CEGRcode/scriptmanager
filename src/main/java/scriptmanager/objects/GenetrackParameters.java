@@ -1,11 +1,11 @@
-package objects;
+package scriptmanager.objects;
 
 /**
  * Object for tracking accessing GeneTrack parameters
  *
  * @author William KM Lai
- * @see scripts.Peak_Calling.GeneTrack_BAM
- * @see scripts.Peak_Calling.GeneTrack
+ * @see scriptmanager.scripts.Peak_Calling.GeneTrack_BAM
+ * @see scriptmanager.scripts.Peak_Calling.GeneTrack
  */
 public class GenetrackParameters {
 

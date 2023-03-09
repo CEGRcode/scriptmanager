@@ -1,4 +1,4 @@
-package cli.BAM_Statistics;
+package scriptmanager.cli.BAM_Statistics;
 
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -12,9 +12,9 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
-import objects.ToolDescriptions;
-import util.ExtensionFileFilter;
-import scripts.BAM_Statistics.BAMGenomeCorrelation;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 /**
 	BAM_StatisticsCLI/SEStats

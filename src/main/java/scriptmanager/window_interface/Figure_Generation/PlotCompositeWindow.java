@@ -1,4 +1,4 @@
-package window_interface.Figure_Generation;
+package scriptmanager.window_interface.Figure_Generation;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -33,13 +33,13 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import util.FileSelection;
+import scriptmanager.util.FileSelection;
 
 /**
  * PlotComposite GUI window. User inputs for calling the script are organized into a user-friendly layout of fields and labels.
  * @author Olivia Lang
- * @see scripts.Figure_Generation.PlotComposite
- * @see window_interface.Figure_Generation.PlotCompositeOutput
+ * @see scriptmanager.scripts.Figure_Generation.PlotComposite
+ * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeOutput
  */
 @SuppressWarnings("serial")
 public class PlotCompositeWindow extends JFrame implements ActionListener, PropertyChangeListener {

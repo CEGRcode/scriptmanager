@@ -1,4 +1,4 @@
-package cli.File_Utilities;
+package scriptmanager.cli.File_Utilities;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,8 +9,8 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.PrintStream;
 
-import objects.ToolDescriptions;
-import scripts.File_Utilities.MD5Checksum;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
 /**
 	File_UtilitiesCLI/MD5ChecksumCLI

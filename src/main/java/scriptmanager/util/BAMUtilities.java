@@ -1,4 +1,4 @@
-package util;
+package scriptmanager.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +16,7 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
-import objects.CoordinateObjects.BEDCoord;
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 public class BAMUtilities {
 	

@@ -1,4 +1,4 @@
-package window_interface.Coordinate_Manipulation;
+package scriptmanager.window_interface.Coordinate_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,15 +37,15 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scripts.Coordinate_Manipulation.ShiftCoord;
-import util.ExtensionFileFilter;
-import util.FileSelection;
+import scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.FileSelection;
 
 /**
  * Graphical interface window for shifting coordinate intervals up/downstream by calling method implemented in the scripts package.
  * 
  * @author Olivia Lang
- * @see scripts.Coordinate_Manipulation.ShiftCoord
+ * @see scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord
  */
 @SuppressWarnings("serial")
 public class ShiftIntervalWindow extends JFrame implements ActionListener, PropertyChangeListener {

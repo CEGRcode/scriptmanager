@@ -1,4 +1,4 @@
-package cli.Figure_Generation;
+package scriptmanager.cli.Figure_Generation;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -12,14 +12,14 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import objects.ToolDescriptions;
-import scripts.Figure_Generation.PlotComposite;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
  * Command line interface class for scripts.Figure_Generation.PlotComposite to create line plot images based on the output files of scripts.Figure_Generation.TagPileup.
  * @author Olivia Lang
- * @see scripts.Figure_Generation.PlotComposite
- * @see scripts.Figure_Generation.TagPileup
+ * @see scriptmanager.scripts.Figure_Generation.PlotComposite
+ * @see scriptmanager.scripts.Figure_Generation.TagPileup
  */
 @Command(name = "composite-plot", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.composite_description,
