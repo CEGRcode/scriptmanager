@@ -49,6 +49,7 @@ import javax.swing.border.TitledBorder;
 import scriptmanager.objects.CompositeCartoon;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -894,9 +895,18 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
-					lblDefaultToLocal.setText(OUT_DIR.getName());
-					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					try {
+						lblDefaultToLocal.setText("..." + ExtensionFileFilter.getSubstringEnd(OUT_DIR, 35));
+					} catch (IOException e1) {
+						System.err.println("Output directory may not be loaded!");
+						e1.printStackTrace();
+					}
+				} else {
+					OUT_DIR = new File(System.getProperty("user.dir"));
+					lblDefaultToLocal.setText("Default to Local Directory");
 				}
+				lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 			}
 		});
 
@@ -915,9 +925,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				File newBlack = FileSelection.getFile(fc, "bed");
 				if (newBlack != null) {
 					BLACKLIST = newBlack.getAbsoluteFile();
-					lblNoBlacklistLoaded.setText(newBlack.getName());
-					lblNoBlacklistLoaded.setToolTipText(newBlack.getAbsolutePath());
+					try {
+						lblNoBlacklistLoaded.setText("..." + ExtensionFileFilter.getSubstringEnd(newBlack, 45));
+					} catch (IOException e1) {
+						System.err.println("Blacklist may not be loaded!");
+						e1.printStackTrace();
+					}
 				}
+				lblNoBlacklistLoaded.setToolTipText(newBlack.getAbsolutePath());
 			}
 		});
 
