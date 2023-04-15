@@ -18,6 +18,7 @@ import scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI;
 import scriptmanager.cli.BAM_Manipulation.MergeBAMCLI;
 import scriptmanager.cli.BAM_Manipulation.SortBAMCLI;
 
+import scriptmanager.cli.BAM_Statistics.ArchTExCrossCorrelationCLI;
 import scriptmanager.cli.BAM_Statistics.BAMGenomeCorrelationCLI;
 import scriptmanager.cli.BAM_Statistics.PEStatsCLI;
 import scriptmanager.cli.BAM_Statistics.SEStatsCLI;
@@ -42,7 +43,6 @@ import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
 import scriptmanager.cli.File_Utilities.MD5ChecksumCLI;
 import scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI;
 import scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI;
-
 import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
@@ -141,11 +141,12 @@ class BAM_ManipulationCLI extends SubcommandCLI {}
 
 @Command(name = "bam-statistics",
 		subcommands = {
+			ArchTExCrossCorrelationCLI.class,
 			BAMGenomeCorrelationCLI.class,
 			PEStatsCLI.class,
 			SEStatsCLI.class
 		},
-		description = "Includes tools like BAMGenomeCorrelationCLI, PEStatsCLI, and SEStatsCLI.")
+		description = "Includes tools like SEStatsCLI, PEStatsCLI, BAMGenomeCorrelationCLI, and ArchTExCrossCorrelationCLI.")
 class BAM_StatisticsCLI extends SubcommandCLI {}
 
 
