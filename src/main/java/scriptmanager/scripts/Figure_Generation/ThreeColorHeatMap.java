@@ -23,6 +23,16 @@ import javax.swing.JLabel;
 
 import scriptmanager.objects.CustomExceptions.OptionException;
 
+/**
+ * The script to generate a three-color heamap PNG (with a an adjustable
+ * middling value for the middle color) from a matrix of values in
+ * tab-delmited/CDT format.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.cli.Figure_Generation.ThreeColorHeatMapCLI
+ * @see scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapOutput
+ * @see scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapWindow
+ */
 public class ThreeColorHeatMap {
 
 	protected static File SAMPLE = null;
@@ -458,11 +468,11 @@ public class ThreeColorHeatMap {
 		int i_max = percentToIndex(p_max, sizeminusone);
 		int i_mid = percentToIndex(p_mid, sizeminusone);
 		int i_min = percentToIndex(p_min, sizeminusone);
-		
+
 		double[] quantiles = { withZero.get(i_min), withZero.get(i_mid), withZero.get(i_max) };
 		return quantiles;
 	}
-	
+
 	public static int percentToIndex(double per, int maxval) {
 		int index = (int) (per * (double) (maxval));
 		return(Math.min(maxval, Math.max(0, index)));

@@ -15,12 +15,12 @@ import org.jfree.chart.ChartPanel;
 import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
- * Initialize a tabbed window where all composite data images are displayed for each file input from a window_interface.Figure_Generation.PlotCompositeWindow instance.
+ * Call script on each input and display chart results in a tabbed window where
+ * all composite data images can be viewed.
  * 
- * The object will loop through and call the scripts.Figure_Generation.PlotComposite script on each input file to generate the line charts. Each chart's title will be the filename. Legend will be included if indicated by input. Default colors will be used for the chart (see scripts.Figure_Generation.PlotComposite for details). If specified by the input parameter values, a PNG image is saved to the indicated output directory with the passed pixel values for the saved file dimensions.
  * @author Olivia Lang
- * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeWindow
  * @see scriptmanager.scripts.Figure_Generation.PlotComposite
+ * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeWindow
  *
  */
 @SuppressWarnings("serial")
@@ -36,6 +36,16 @@ public class PlotCompositeOutput extends JFrame {
 
 	JTabbedPane newpane;
 
+	/**
+	 * Store inputs and initialize a tabbed pane to display the results.
+	 * 
+	 * @param in list of files to make composites from (one chart per file)
+	 * @param o_dir output directory save composites to
+	 * @param o whether to save composites or not (save = true, don't save = false)
+	 * @param l whether or not to include a legend (include legend = true, don't include = false)
+	 * @param ph height of image to save (in pixels)
+	 * @param pw width of image to save (in pixels)
+	 */
 	public PlotCompositeOutput(ArrayList<File> in, File o_dir, boolean o, boolean l, int ph, int pw) {
 		setTitle("Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -52,6 +62,18 @@ public class PlotCompositeOutput extends JFrame {
 		pxWidth = pw;
 	}
 
+	/**
+	 * Loop through and call the script on each input file to generate the line
+	 * charts and add them to the tabbed pane to be displayed.
+	 * <br>
+	 * Each chart's title will be the filename. Legend will be included if
+	 * indicated by input. Default colors will be used for the chart (see
+	 * scripts.Figure_Generation.PlotComposite for details). If specified by the
+	 * input parameter values, a PNG image is saved to the indicated output
+	 * directory with the passed pixel values for the saved file dimensions.
+	 * 
+	 * @throws IOException
+	 */
 	public void run() throws IOException {
 		for (int x = 0; x < SAMPLE.size(); x++) {
 			try {

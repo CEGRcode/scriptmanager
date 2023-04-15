@@ -71,6 +71,9 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -121,6 +124,9 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public ScalingFactorWindow() {
 		setTitle("Calculate Scaling Factor");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

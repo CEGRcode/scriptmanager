@@ -4,7 +4,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.lang.NullPointerException;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -19,7 +18,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.FourColorPlot;
 
 /**
- * Figure_GenerationCLI/FourColorSequenceCLI
+ * Command line interface class for calling the script to creating four color
+ * sequence plots.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
  */
 @Command(name = "four-color", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.four_color_description,

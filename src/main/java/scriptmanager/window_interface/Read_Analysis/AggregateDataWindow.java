@@ -61,6 +61,9 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	private JTextField txtRow;
 	private JTextField txtCol;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -98,6 +101,9 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public AggregateDataWindow() {
 		setTitle("Aggregate Data");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

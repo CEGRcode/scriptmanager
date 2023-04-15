@@ -470,7 +470,7 @@ public class PileupParameters {
 	/**
 	 * set standard deviation size for smoothing. Used when transformation is set to gaussian mode ({@code PileupParameters.GAUSSIAN})
 	 *
-	 * @param sMOOTH standard deviations size (bins)
+	 * @param sTDSIZE standard deviations size (bins)
 	 */
 	public void setStdSize(int sTDSIZE) {
 		STDSIZE = sTDSIZE;

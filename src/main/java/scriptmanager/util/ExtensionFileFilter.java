@@ -196,6 +196,7 @@ public class ExtensionFileFilter extends FileFilter{
 	 * 
 	 * @param f the String to strip an extension from
 	 * @return string of filename with extension stripped away
+	 * @throws IOException
 	 */
 	public static String stripExtensionPath(File f) throws IOException {
 		String NAME = f.getCanonicalPath();

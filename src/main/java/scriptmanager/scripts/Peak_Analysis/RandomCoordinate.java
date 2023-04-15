@@ -16,20 +16,27 @@ import scriptmanager.util.GenomeSizeReference;
  * 
  * @author William KM Lai
  * @see scriptmanager.util.GenomeSizeReference
+ * @see scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI
+ * @see scriptmanager.window_interface.Peak_Analysis.RandomCoordinateWindow
  */
 public class RandomCoordinate {
 	/**
 	 * Create and write output BED/GFF file of random genomic intervals for a genome
 	 * build. All entries will be "+" stranded, score="0.0", and the identifier
-	 * column is a genomic coordinate string (\<chr\>_\<start\>_\<stop\>_\<dir\>).
-	 * For the BED format, the identifier column will be the 4th column while the
-	 * GFF format will use the 9th column for the identifier.
+	 * column is a genomic coordinate string
+	 * (&lt;chr&gt;_&lt;start&gt;_&lt;stop&gt;_&lt;dir&gt;). For the BED format, the
+	 * identifier column will be the 4th column while the GFF format will use the
+	 * 9th column for the identifier.
 	 * 
-	 * @param GENOME     the String encoding the genome build to tile (matches util.GenomeSizeReference)
+	 * @param GENOME     the String encoding the genome build to tile (matches
+	 *                   util.GenomeSizeReference)
 	 * @param numSites   the number of random coordinate sites to sample
 	 * @param windowSize the base-pair length of each coordinate interval
-	 * @param BEDout     coordinate file format of output where BED-format is used if true and GFF-format used if false
-	 * @param OUTPUT     the file to write the coordinate tile output to (if null, a default filename is determined using \<GENOME\>_\<numSites\>SITES_\<windowSize\>bp.\<ext\>)
+	 * @param BEDout     coordinate file format of output where BED-format is used
+	 *                   if true and GFF-format used if false
+	 * @param OUTPUT     the file to write the coordinate tile output to (if null, a
+	 *                   default filename is determined using
+	 *                   &lt;GENOME&gt;_&lt;numSites&gt;SITES_&lt;windowSize&gt;bp.&lt;ext&gt;)
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */

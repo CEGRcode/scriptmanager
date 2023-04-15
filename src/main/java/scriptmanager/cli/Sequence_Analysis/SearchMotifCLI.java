@@ -54,6 +54,12 @@ public class SearchMotifCLI implements Callable<Integer> {
 		return (0);
 	}
 
+	/**
+	 * Validate the input values before executing the script.
+	 * 
+	 * @return a multi-line string describing input validation issues
+	 * @throws IOException
+	 */
 	private String validateInput() throws IOException {
 		String r = "";
 

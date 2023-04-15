@@ -43,14 +43,14 @@ public class SearchMotif {
 	 * Initialize object with script inputs for generating the coordinates of the
 	 * provided motif.
 	 * 
-	 * @param input  the reference genome sequence in FASTA-format
+	 * @param i      the reference genome sequence in FASTA-format
 	 * @param mot    the IUPAC motif to search for [ATGCRYSWKMBDHVN]+
 	 * @param num    the number of allowed mismatches in the motif
 	 * @param output the location to save the BED-formatted coordinates of the found
 	 *               motifs
 	 * @param ps     where to stream the error/progress updates as the script
 	 *               executes
-	 * @throws IOException
+	 * @param gz     If this is true, the output file will be gzipped.
 	 */
 	public SearchMotif(File i, String mot, int num, File output, PrintStream ps, boolean gz) {
 		ALLOWED_MISMATCH = num;

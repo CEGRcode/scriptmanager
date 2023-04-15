@@ -39,6 +39,8 @@ public class CompositeCartoon extends JPanel {
 
 	/**
 	 * Initialize the cartoon component with a customized scale factor.
+	 * 
+	 * @param scale this factor will scale the cartoon larger (or smaller)
 	 */
 	public CompositeCartoon(int scale) {
 		x = scale;

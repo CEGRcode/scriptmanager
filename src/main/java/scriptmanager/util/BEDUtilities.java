@@ -23,7 +23,7 @@ public class BEDUtilities {
 	/**
 	 * Load a list of BEDCoord objects from a file.
 	 * 
-	 * @param INPUT  the BED-formatted input file to load
+	 * @param input  the BED-formatted input file to load
 	 * @param HEADER the style of FASTA-header to use for the output (true = BED
 	 *               coord name, false = use Genomic Coordinate)
 	 * @return

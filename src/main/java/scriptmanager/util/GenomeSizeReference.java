@@ -26,7 +26,7 @@ public class GenomeSizeReference {
 	private static ArrayList<Long> chromSize = null;
 
 	/**
-	 * Constructor for empty GenomeSizeReference object. I.e., empty chromName &
+	 * Constructor for empty GenomeSizeReference object. I.e., empty chromName &amp;
 	 * chromSize lists with genomeSize set to 0 and genomeName as an empty Sstring.
 	 */
 	public GenomeSizeReference() {

@@ -28,7 +28,7 @@ public class SortBED {
 	/**
 	 * Sort a BED file by the values from a CDT matrix file. Includes Gzip support.
 	 * 
-	 * @param outbase Filepath basename (without ext) to save the sorted BED (<basename>.bed) and sorted CDT (<basename>.cdt) files.
+	 * @param outbase Filepath basename (without ext) to save the sorted BED (&lt;basename&gt;.bed) and sorted CDT (&lt;basename&gt;.cdt) files.
 	 * @param bed input BED file to sort
 	 * @param cdt input CDT file with values to sort by
 	 * @param START_INDEX the start column to consider when summing values to sort

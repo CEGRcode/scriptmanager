@@ -18,18 +18,37 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 
+/**
+ * Static methods for building charts for the Scaling Factor tool (particularly
+ * NCIS-related plots).
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ */
 public class ScalingPlotter{
-			
-		public ScalingPlotter() {
-			
-		}
-		
-		public static ChartPanel generateXYplot(List<Double> Xaxis, List<Double> Yaxis, double scalingTotal, double scalingRatio, String title, String xName, String yName){
-			final JFreeChart chart = ChartFactory.createScatterPlot(title,
-	                "X",
-	                "Y",
-	                new DefaultXYDataset(), PlotOrientation.VERTICAL,
-	                false,false,false);
+
+	/**
+	 * Plot the list of (x,y) coordinates from two parallel data array inputs
+	 * and decorate with customized figure labels.
+	 * 
+	 * @param Xaxis
+	 *            list of x values
+	 * @param Yaxis
+	 *            list of y values
+	 * @param scalingTotal
+	 *            draw a red line at the y-axis for this value
+	 * @param scalingRatio
+	 *            draw a red line at the x-axis for this value
+	 * @param title
+	 *            title of chart
+	 * @param xName
+	 *            label for x-axis
+	 * @param yName
+	 *            label for y-axis
+	 * @return the built scatter plot
+	 */
+	public static ChartPanel generateXYplot(List<Double> Xaxis, List<Double> Yaxis, double scalingTotal, double scalingRatio, String title, String xName, String yName){
+		final JFreeChart chart = ChartFactory.createScatterPlot(title, "X", "Y", new DefaultXYDataset(), PlotOrientation.VERTICAL, false, false, false);
 	        chart.setBackgroundPaint(Color.white);
 	        chart.setBorderVisible(false);
 	        
@@ -41,7 +60,7 @@ public class ScalingPlotter{
 	        plot.setDomainZeroBaselineVisible(true);
 	        plot.setRangeZeroBaselineVisible(true);
 	        plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-		    
+
 	        //Load XY Scatterplot dataset
 		    DefaultXYDataset dataset = new DefaultXYDataset();
 			double[][] data = new double[2][Xaxis.size()];
@@ -51,14 +70,14 @@ public class ScalingPlotter{
 		    }
 		    dataset.addSeries("DATA", data);
 		    plot.setDataset(dataset);
-	        
+
 		    //Set X-axis
 		    plot.setDomainAxis(initializeLogAxis());
 		    ValueAxis daxis=plot.getDomainAxis();   	
         	//Set Y-axis
 		    plot.setRangeAxis(initializeLogAxis());
 		    ValueAxis raxis=plot.getRangeAxis();
-	        
+
 	        //Set axis labels
 	        daxis.setLabel(xName);
 	        raxis.setLabel(yName);
@@ -70,7 +89,7 @@ public class ScalingPlotter{
 	        raxis.setLabelFont(new Font("Tahoma", Font.BOLD, yAxisLabelFontSize));
 	        daxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, xAxisTickLabelFontSize));
 	        raxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, yAxisTickLabelFontSize));
-	        		    
+
 	        //Set datapoint appearance
 	        int dotSize = 3;
 	        Color dotColor = new Color(0, 0, 0);
@@ -96,7 +115,13 @@ public class ScalingPlotter{
 			chartPanel.setPreferredSize(new java.awt.Dimension(width, height));
 			return chartPanel;
 		}
-		
+
+		/**
+		 * Initialize a log-scale axis that is black and bounded from 1 to 1
+		 * million (1e7). (helper method for generateXYplot)
+		 * 
+		 * @return the formatted log-scale axis
+		 */
 		public static ValueAxis initializeLogAxis() {
 			ValueAxis axis = new LogAxis();
 		    axis.setAxisLinePaint(Color.black);
@@ -110,24 +135,26 @@ public class ScalingPlotter{
             axis.setAutoRange(true);
             return axis;
 		}
-		
-	    /**
-	     * Return the minimum value in a List<Double>
-	     * @param List<Double>
-	     * @return double
-	     */
+
+		/**
+		 * Return the minimum value in a list of Doubles
+		 * 
+		 * @param vector the list to search
+		 * @return min value, Double.MAX_VALUE if empty list
+		 */
 	    public static double getMin(List<Double> vector){
 		    	double min = Double.MAX_VALUE;
 		    	for(Double d : vector) { if(d.doubleValue() < min) { min = d.doubleValue(); } }
 		    	return min;
 	    }
 
-	    /**
-	     * Return the maximum value in a List<Double>
-	     * @param List<Double>
-	     * @return double
-	     */
-	    public static double getMax(List<Double> vector){
+		/**
+		 * Return the maximum value in a list of Doubles
+		 * 
+		 * @param vector the list to search
+		 * @return max value, -Double.MAX_VALUE if empty list
+		 */
+		public static double getMax(List<Double> vector){
 		    	double max = -Double.MAX_VALUE;
 		    	for(Double d : vector) { if(d.doubleValue() > max) { max = d.doubleValue(); } }
 		    	return max;

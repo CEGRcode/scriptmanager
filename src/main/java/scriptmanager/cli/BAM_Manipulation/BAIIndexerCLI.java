@@ -7,8 +7,11 @@ import java.util.concurrent.Callable;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
-	BAM_ManipulatioCLIn/BAIIndexerCLI
-*/
+ * Print a message redirecting user to the original CLI tool.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.BAM_Manipulation.BAIIndexer
+ */
 @Command(name = "bam-indexer", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_indexer_description + "\n"+
 		"@|bold **Please run the samtools tool directly:**|@ \n"+

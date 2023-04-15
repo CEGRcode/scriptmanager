@@ -73,6 +73,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -138,6 +141,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public ScaleMatrixWindow() {
 		setTitle("Apply Scaling Factor");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

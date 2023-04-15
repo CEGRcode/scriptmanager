@@ -13,8 +13,12 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
 /**
-	File_UtilitiesCLI/MD5ChecksumCLI
-*/
+ * Print a message redirecting user to the original CLI tool.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.File_Utilities.MD5Checksum
+ * @see scriptmanager.window_interface.File_Utilities.MD5ChecksumWindow
+ */
 @Command(name = "md5checksum", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.md5checksum_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

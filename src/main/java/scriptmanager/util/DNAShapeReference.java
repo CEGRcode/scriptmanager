@@ -28,7 +28,7 @@ public class DNAShapeReference {
 	 * <br>
 	 * <em>Last updated 2015-04-15</em> <br>
 	 * <br>
-	 * The shape information for each 5-mer is encoded as an ArrayList<Double> of 6
+	 * The shape information for each 5-mer is encoded as an ArrayList&lt;Double&gt; of 6
 	 * values in the following order:
 	 * <ul>
 	 * <li>0 - MGW</li>
