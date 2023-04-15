@@ -22,6 +22,13 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Read_Analysis.TagPileup;
 import scriptmanager.util.BAMUtilities;
 
+/**
+ * Graphical window for displaying composite results of TagPileup's output.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ * @see scriptmanager.window_interface.Read_Analysis.TagPileupWindow
+ */
 @SuppressWarnings("serial")
 public class TagPileupOutput extends JFrame {
 	Vector<File> BEDFiles = null;
@@ -36,6 +43,20 @@ public class TagPileupOutput extends JFrame {
 	final JTabbedPane tabbedPane_Scatterplot;
 	final JTabbedPane tabbedPane_Statistics;
 
+	/**
+	 * Store inputs and initialize a tabbed pane to display composite plot
+	 * results and the composite plot values.
+	 * 
+	 * @param be
+	 *            the list of input BED coordinate RefPT files
+	 * @param ba
+	 *            the list of input BAM tag alignment files
+	 * @param param
+	 *            the custom object to store configurations for how to perform
+	 *            the TagPileup
+	 * @param colors
+	 *            the list of colors to use for the composite plots
+	 */
 	public TagPileupOutput(Vector<File> be, Vector<File> ba, PileupParameters param, ArrayList<Color> colors) {
 		setTitle("Tag Pileup Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -65,6 +86,17 @@ public class TagPileupOutput extends JFrame {
 		COLORS = colors;
 	}
 
+	/**
+	 * Loop through and call the script on each combination of BED, BAM pair
+	 * inputs, build a chart for each composite result, and display that chart
+	 * by adding it to the "Pileup Plot" tabbed pane. Raw results will also be
+	 * added under the "Pileup Statistics" tabbed pane. <br>
+	 * Each chart's BED filename will be the title of the chart under a tab
+	 * labeled with the BAM filename. These tabs are "subtabs" in the "Pileup
+	 * Plot" tab.
+	 * 
+	 * @throws IOException
+	 */
 	public void run() throws IOException {
 		// Check if BAI index file exists for all BAM files
 		boolean[] BAMvalid = new boolean[BAMFiles.size()];

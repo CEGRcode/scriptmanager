@@ -51,7 +51,14 @@ import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
-
+/**
+ * Graphical interface window for piling up aligned tags around reference
+ * coordinates by calling a script implemented in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ * @see scriptmanager.window_interface.Read_Analysis.TagPileupOutput
+ */
 @SuppressWarnings("serial")
 public class TagPileupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -107,9 +114,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JCheckBox chckbxFilterByMax;
 	private JCheckBox chckbxOutputGzip;
 
-	JProgressBar progressBar;
-	public Task task;
-
 	private File BLACKLIST = null;
 
 	private ReadFragmentCartoon readCartoon;
@@ -120,7 +124,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private String[] readOutputOptions = {"Read 1", "Read 2", "All Reads"};
 	private String[] transformationOptions = {"None", "Sliding Window", "Gaussian Smooth"};
 
-
+	JProgressBar progressBar;
+	public Task task;
+	
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -242,6 +251,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 * 
+	 * @throws IOException
+	 */
 	public TagPileupWindow() throws IOException {
 		setTitle("Tag Pileup");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -980,7 +994,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	public void allowReadChoice(boolean activate) {
 		cbox_ReadOutput.setEnabled(activate);
 		tglSeperate.setEnabled(activate);
-		tglCombined.setEnabled(!activate);
+		tglCombined.setEnabled(activate);
 	}
 
 	public void activateOutput(boolean activate) {
@@ -1001,6 +1015,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Extract read aspect and read output to upddate the cartoon accordingly.
+	 */
 	public void updateCartoon() {
 		int aspect = cbox_ReadAspect.getSelectedIndex();
 		int read = cbox_ReadOutput.getSelectedIndex();
