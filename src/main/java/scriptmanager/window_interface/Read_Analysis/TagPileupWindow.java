@@ -92,7 +92,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JLabel lblStdDevSize;
 	private JLabel lblNumStd;
 	private JLabel lblDefaultToLocal;
-	private JLabel lblCurrentOutput;
 	private JLabel lblCurrentBlacklist;
 	private JLabel lblCpusToUse;
 	private JLabel lblNoBlacklistLoaded;
@@ -126,7 +125,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 	JProgressBar progressBar;
 	public Task task;
-	
+
 	/**
 	 * Organize user inputs for calling script.
 	 */
@@ -876,7 +875,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		chckbxOutputData.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (chckbxOutputData.isSelected()) {
-					activateOutput(true);
 					tglTab.setEnabled(true);
 					tglCdt.setEnabled(true);
 					chckbxOutputGzip.setEnabled(true);
@@ -884,10 +882,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					tglTab.setEnabled(false);
 					tglCdt.setEnabled(false);
 					chckbxOutputGzip.setEnabled(false);
-					if (!chckbxOutputCompositeData.isSelected()) {
-						activateOutput(false);
-					}
 				}
+				activateOutput();
 			}
 		});
 
@@ -895,13 +891,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			public void itemStateChanged(ItemEvent e) {
 				if (chckbxOutputCompositeData.isSelected()) {
 					txtCompositeName.setEnabled(true);
-					activateOutput(true);
 				} else {
 					txtCompositeName.setEnabled(false);
 					if (!chckbxOutputData.isSelected()) {
-						activateOutput(false);
 					}
 				}
+				activateOutput();
 			}
 		});
 
@@ -991,16 +986,29 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		btnPileup.addActionListener(this);
 	}
 
+	/**
+	 * Update components to allow for read choice or not--Disable or enable BOTH
+	 * Read Output choices and and "Combined" toggle.
+	 * 
+	 * @param activate to enable (true) or disable (false) the two components
+	 */
 	public void allowReadChoice(boolean activate) {
 		cbox_ReadOutput.setEnabled(activate);
 		tglSeperate.setEnabled(activate);
-		tglCombined.setEnabled(activate);
 	}
 
-	public void activateOutput(boolean activate) {
-		btnOutputDirectory.setEnabled(activate);
-		lblDefaultToLocal.setEnabled(activate);
-		lblCurrentOutput.setEnabled(activate);
+	/**
+	 * Activate/deactivate output directory on whether or not BOTH output heatmap
+	 * and output composite are unchecked.
+	 */
+	public void activateOutput() {
+		if (!chckbxOutputCompositeData.isSelected() && !chckbxOutputData.isSelected()) {
+			btnOutputDirectory.setEnabled(false);
+			lblDefaultToLocal.setEnabled(false);
+		} else {
+			btnOutputDirectory.setEnabled(true);
+			lblDefaultToLocal.setEnabled(true);
+		}
 	}
 
 	public void activateBlacklist(boolean activate) {
@@ -1108,9 +1116,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			if (!chckbxOutputCompositeData.isSelected()) {
 				txtCompositeName.setEnabled(false);
 			}
-			if (!chckbxOutputData.isSelected() && !chckbxOutputCompositeData.isSelected()) {
-				activateOutput(false);
-			}
+			activateOutput();
 			if (chckbxTagStandard.isSelected()) {
 				activateBlacklist(true);
 			} else {
