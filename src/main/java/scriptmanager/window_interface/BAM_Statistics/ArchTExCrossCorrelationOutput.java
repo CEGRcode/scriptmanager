@@ -54,7 +54,7 @@ public class ArchTExCrossCorrelationOutput extends JFrame {
 	 * @param ostats whether to output results to a file or not
 	 */
 	public ArchTExCrossCorrelationOutput(File o, Vector<File> input, CorrParameter param, boolean ostats) {
-		setTitle("BAM File Paired-end Statistics");
+		setTitle("BAM File Cross Correlation Plots and Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
 		
