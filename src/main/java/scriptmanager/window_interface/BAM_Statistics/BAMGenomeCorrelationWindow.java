@@ -101,23 +101,30 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
         			if (rdbtnClassicCS.isSelected()) { COLORSCALE = HeatMap.BLUEWHITERED; }
         			else if (rdbtnJetLikeCS.isSelected()) { COLORSCALE = HeatMap.JETLIKE; }
 
-        			BAMGenomeCorrelationOutput corr = new BAMGenomeCorrelationOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ, COLORSCALE);
-					
-				corr.run();
+					BAMGenomeCorrelationOutput corr = new BAMGenomeCorrelationOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ, COLORSCALE);
+					corr.addPropertyChangeListener("progress", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+							int temp = (Integer) propertyChangeEvent.getNewValue();
+							int percentComplete = (int) (((double)(temp) / (((BAMFiles.size() * BAMFiles.size()) - BAMFiles.size()) / 2)) * 100);
+							setProgress(percentComplete);
+						}
+					});
+
+					corr.run();
+				}
+			} catch(NumberFormatException nfe){
+				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch(NumberFormatException nfe){
-			JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
-		} catch (IOException e) {
-			e.printStackTrace();
+			setProgress(100);
+			return null;
 		}
-		setProgress(100);
-		return null;
-	}
-	
-	public void done() {
-		massXable(contentPane, true);
-		setCursor(null); //turn off the wait cursor
-	}
+
+		public void done() {
+			massXable(contentPane, true);
+			setCursor(null); //turn off the wait cursor
+		}
 	}
 	
 	public BAMGenomeCorrelationWindow() {
@@ -388,16 +395,17 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
         task.execute();
 	}
 	
+
 	/**
-     * Invoked when task's progress property changes.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
-    }
-	
+	 * Invoked when task's progress property changes.
+	 */
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		}
+	}
+
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

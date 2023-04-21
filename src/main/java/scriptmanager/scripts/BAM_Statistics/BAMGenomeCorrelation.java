@@ -64,10 +64,7 @@ public class BAMGenomeCorrelation extends Component {
 		if(!validateBAM()) {
 			return;
 		}
-		
-// 		// Toggle GUI v CLI status
-// 		if( gui!=null ){ GUI = true; }
-		
+
 		//Open Output File
 		PrintStream OUT = null;
 		File OUT_PNG = null;
@@ -79,14 +76,14 @@ public class BAMGenomeCorrelation extends Component {
 		}
 	
 		//Iterate through all BAM files in Vector
-//		int counter = 0;
-		for(int x = 0; x < bamFiles.size(); x++) {				
+		int counter = 0;
+		for (int x = 0; x < bamFiles.size(); x++) {
 			for(int y = 0; y < bamFiles.size(); y++) {
 				if(x != y && (x - y) >= 1) {
 					MATRIX[x][y] = correlate(bamFiles.get(x), bamFiles.get(y));
 					MATRIX[y][x] = MATRIX[x][y];
-//					gui.firePropertyChange("bam", counter, counter + 1);
-//					counter++;
+					firePropertyChange("progress", counter, counter + 1);
+					counter++;
 				} else if(x == y) { MATRIX[x][y] = 1; }
 			}
 		}

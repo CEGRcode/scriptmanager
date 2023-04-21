@@ -2,6 +2,8 @@ package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -78,7 +80,14 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 		}
 		BAMGenomeCorrelation script_obj = new BAMGenomeCorrelation( bamFiles, OUT, SHIFT, BIN, CPU, READ, COLORSCALE );
 		script_obj.getBAMGenomeCorrelation(true);
-		
+		script_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("progress" == evt.getPropertyName()) {
+					firePropertyChange("progress", (Integer) evt.getOldValue(), (Integer) evt.getNewValue());
+				}
+			}
+		});
+
 		tabbedPane.addTab("Correlation Plot", script_obj.getHeatMap());
 		tabbedPane.addTab("Correlation Data", makeTablePanel(script_obj.getMatrix()));
 		
