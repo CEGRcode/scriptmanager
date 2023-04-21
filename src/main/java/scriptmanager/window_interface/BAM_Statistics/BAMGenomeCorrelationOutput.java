@@ -29,11 +29,12 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 	private int BIN;
 	private int CPU;
 	private int READ;
+	private short COLORSCALE;
 	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
 		
-	public BAMGenomeCorrelationOutput(Vector<File> input, File o, boolean out, int s, int b, int c, int r) {
+	public BAMGenomeCorrelationOutput(Vector<File> input, File o, boolean out, int s, int b, int c, int r, short cs) {
 		setTitle("Genome Correlation");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -58,6 +59,7 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 		BIN = b;
 		CPU = c;
 		READ = r;
+		COLORSCALE = cs;
 	}
 	
 	public void run() throws IOException {
@@ -67,13 +69,14 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 			if(OUTPUT_PATH != null) {
 				try { OUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME); }
 				catch (FileNotFoundException e) { e.printStackTrace(); }
-				catch (IOException e) {	e.printStackTrace(); }
+				catch (IOException e) { e.printStackTrace(); }
 			} else {
 				OUT = new File(NAME);
 			}
+		} else {
+			OUTPUT_PATH = null;
 		}
-		
-		BAMGenomeCorrelation script_obj = new BAMGenomeCorrelation( bamFiles, OUT, OUTPUT_STATUS, SHIFT, BIN, CPU, READ );
+		BAMGenomeCorrelation script_obj = new BAMGenomeCorrelation( bamFiles, OUT, SHIFT, BIN, CPU, READ, COLORSCALE );
 		script_obj.getBAMGenomeCorrelation(true);
 		
 		tabbedPane.addTab("Correlation Plot", script_obj.getHeatMap());

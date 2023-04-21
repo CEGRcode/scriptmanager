@@ -33,17 +33,17 @@ public class BAMGenomeCorrelation extends Component {
 	private double[][] MATRIX;
 	private ChartPanel HEATMAP;
 	private File OUT_BASENAME = null;
-	private boolean OUTPUT_STATUS = false;
 	private int SHIFT;
 	private int BIN;
 	private int CPU;
 	private int READ;
+	private short COLORSCALE;
 	private boolean GUI = false;
 	
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 	
-	public BAMGenomeCorrelation(Vector<File> input, File o, boolean out, int s, int b, int c, int r){
+	public BAMGenomeCorrelation(Vector<File> input, File o, int s, int b, int c, int r, short cs ){
 		//Load in bamFiles
 		bamFiles = input;
 		fileID = new String[bamFiles.size()];
@@ -51,11 +51,11 @@ public class BAMGenomeCorrelation extends Component {
 		MATRIX = new double[bamFiles.size()][bamFiles.size()];
 		//Store the rest of the variables
 		OUT_BASENAME = o;
-		OUTPUT_STATUS = out;
 		SHIFT = s;
 		BIN = b;
 		CPU = c;
 		READ = r;
+		COLORSCALE = cs;
 	}
 		
 	public void getBAMGenomeCorrelation(boolean GUI) throws IOException {
@@ -73,10 +73,9 @@ public class BAMGenomeCorrelation extends Component {
 		File OUT_PNG = null;
 		if(OUT_BASENAME!=null) {
 			try {
-				OUT = new PrintStream(new File( OUT_BASENAME + ".out"));
-				OUT_PNG = new File( OUT_BASENAME + ".png" );
-			}
-			catch (FileNotFoundException e) { e.printStackTrace(); }
+				OUT = new PrintStream(new File( OUT_BASENAME + "_Correlation.out"));
+				OUT_PNG = new File( OUT_BASENAME + "_Correlation.png" );
+			} catch (FileNotFoundException e) { e.printStackTrace(); }
 		}
 	
 		//Iterate through all BAM files in Vector
@@ -106,7 +105,8 @@ public class BAMGenomeCorrelation extends Component {
 		}
 		if(OUT != null) OUT.close();
 		
-		HEATMAP = HeatMap.createCorrelationHeatmap(fileID, MATRIX, OUT_PNG);
+		// call HeatMap script to create Heatmap with specific colorscale
+		HEATMAP = HeatMap.createCorrelationHeatmap(fileID, MATRIX, OUT_PNG, HeatMap.getPresetPaintscale(COLORSCALE));
 		
 		System.err.println(getTimeStamp());
 	}
