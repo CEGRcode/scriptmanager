@@ -44,21 +44,22 @@ public class HeatMap {
      */
     private static LookupPaintScale getJetLikeScale() {
         LookupPaintScale paintScale = new LookupPaintScale(0, 1, Color.black);
-        paintScale.add(0.000, Color.decode("#020080"));    //dark red
-        paintScale.add(0.067, Color.decode("#0600C9"));
-        paintScale.add(0.134, Color.decode("#0912F5"));
-        paintScale.add(0.201, Color.decode("#255AF6"));
-        paintScale.add(0.268, Color.decode("#08A3FF"));
-        paintScale.add(0.335, Color.decode("#6DE9EF"));
-        paintScale.add(0.402, Color.decode("#81FBBB"));
-        paintScale.add(0.469, Color.decode("#9EFC8A"));
-        paintScale.add(0.536, Color.decode("#C6FD64"));
-        paintScale.add(0.603, Color.decode("#F3FC53"));
-        paintScale.add(0.670, Color.decode("#F4BC41"));
-        paintScale.add(0.737, Color.decode("#FF7500"));
-        paintScale.add(0.804, Color.decode("#EB4826"));
-        paintScale.add(0.871, Color.decode("#C0281B"));
         paintScale.add(0.938, Color.decode("#75140C"));    //dark blue
+        paintScale.add(0.871, Color.decode("#C0281B"));
+        paintScale.add(0.804, Color.decode("#EB4826"));
+        paintScale.add(0.737, Color.decode("#FF7500"));
+        paintScale.add(0.670, Color.decode("#F4BC41"));
+        paintScale.add(0.603, Color.decode("#F3FC53"));
+        paintScale.add(0.536, Color.decode("#C6FD64"));
+        paintScale.add(0.469, Color.decode("#9EFC8A"));
+        paintScale.add(0.402, Color.decode("#81FBBB"));
+        paintScale.add(0.335, Color.decode("#6DE9EF"));
+        paintScale.add(0.268, Color.decode("#08A3FF"));
+        paintScale.add(0.201, Color.decode("#255AF6"));
+        paintScale.add(0.134, Color.decode("#0912F5"));
+        paintScale.add(0.134, Color.decode("#0912F5"));
+        paintScale.add(0.067, Color.decode("#0600C9"));
+        paintScale.add(0.000, Color.decode("#020080"));    //dark red
         return paintScale;
     }
 
