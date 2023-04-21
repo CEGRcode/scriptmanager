@@ -27,7 +27,7 @@ import htsjdk.samtools.util.CloseableIterator;
  * 
  * @author William KM Lai
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation
+ * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
  */
 public class CorrExtract implements Runnable {
 	final Lock lock = new ReentrantLock();

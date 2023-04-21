@@ -18,21 +18,21 @@ import javax.swing.SpringLayout;
 
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.ArchTEx.CorrParameter;
-import scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation;
+import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Graphical window for running the ArchTExCrossCorrelation script and
+ * Graphical window for running the CrossCorrelation script and
  * displaying the Tag Shift-to-Correlation plots, the raw Tag
  * Shift-to-Correlation values, and script progress.
  * 
  * @author William KM Lai
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation
- * @see scriptmanager.window_interface.BAM_Statistics.ArchTExCrossCorrelationWindow
+ * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
+ * @see scriptmanager.window_interface.BAM_Statistics.CrossCorrelationWindow
  */
 @SuppressWarnings("serial")
-public class ArchTExCrossCorrelationOutput extends JFrame {
+public class CrossCorrelationOutput extends JFrame {
 
 	Vector<File> bamFiles = null;
 	private File OUT_DIR = null;
@@ -53,7 +53,7 @@ public class ArchTExCrossCorrelationOutput extends JFrame {
 	 * @param param the custom parameter storing object for running the ArchTEx script
 	 * @param ostats whether to output results to a file or not
 	 */
-	public ArchTExCrossCorrelationOutput(File o, Vector<File> input, CorrParameter param, boolean ostats) {
+	public CrossCorrelationOutput(File o, Vector<File> input, CorrParameter param, boolean ostats) {
 		setTitle("BAM File Cross Correlation Plots and Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -127,7 +127,7 @@ public class ArchTExCrossCorrelationOutput extends JFrame {
 				tabbedPane_CCData.add(bamFiles.get(x).getName(), new JScrollPane(CC_DATA, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 				
 				//Call public static method from scripts
-				Component chart = ArchTExCrossCorrelation.correlate(OUT_FILEPATH, bamFiles.get(x), PARAM, ps_ccdata);
+				Component chart = CrossCorrelation.correlate(OUT_FILEPATH, bamFiles.get(x), PARAM, ps_ccdata);
 				tabbedPane_CCPlots.add(bamFiles.get(x).getName(), chart);
 
 				ps_ccdata.close();

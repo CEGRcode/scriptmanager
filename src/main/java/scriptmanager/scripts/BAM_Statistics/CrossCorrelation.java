@@ -28,11 +28,11 @@ import scriptmanager.objects.ArchTEx.CorrParameter;
  * 
  * @author William KM Lai
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.cli.BAM_Statistics.ArchTExCrossCorrelationCLI
- * @see scriptmanager.window_interface.BAM_Statistics.ArchTExCrossCorrelationOutput
- * @see scriptmanager.window_interface.BAM_Statistics.ArchTExCrossCorrelationWindow
+ * @see scriptmanager.cli.BAM_Statistics.CrossCorrelationCLI
+ * @see scriptmanager.window_interface.BAM_Statistics.CrossCorrelationOutput
+ * @see scriptmanager.window_interface.BAM_Statistics.CrossCorrelationWindow
  */
-public class ArchTExCrossCorrelation {
+public class CrossCorrelation {
 
 	/**
 	 * Perform the cross-correlation analysis from ArchTEx of a BAM file by

@@ -10,7 +10,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.ArchTEx.CorrParameter;
-import scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation;
+import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
@@ -19,15 +19,15 @@ import scriptmanager.util.ExtensionFileFilter;
  * 
  * @author Olivia Lang
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation
+ * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
  */
-@Command(name = "archtex-cross-corr", mixinStandardHelpOptions = true,
+@Command(name = "cross-corr", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.archtex_crosscorrelation_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
-public class ArchTExCrossCorrelationCLI implements Callable<Integer> {
+public class CrossCorrelationCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "The BAM file to perform the cross-correlation on")
 	private File bamFile;
@@ -60,7 +60,7 @@ public class ArchTExCrossCorrelationCLI implements Callable<Integer> {
 
 	@Override
 	public Integer call() throws Exception {
-		System.err.println( ">ArchTExCrossCorrelationCLI.call()" );
+		System.err.println( ">CrossCorrelationCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );
@@ -68,7 +68,7 @@ public class ArchTExCrossCorrelationCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		ArchTExCrossCorrelation.correlate( outputBasename, bamFile, param, null);
+		CrossCorrelation.correlate( outputBasename, bamFile, param, null);
 		
 		System.err.println("Calculations Complete");
 		return(0);

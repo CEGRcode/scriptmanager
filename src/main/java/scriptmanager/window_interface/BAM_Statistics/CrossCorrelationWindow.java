@@ -44,18 +44,18 @@ import scriptmanager.util.FileSelection;
 
 /**
  * Graphical window for user argument selection and execution of the
- * ArchTExCrossCorrelation script. <br>
+ * CrossCorrelation script. <br>
  * Code largely sourced from ArchTEx.components.CorrelationParametersWindow in
  * <a href=
  * "https://github.com/WilliamKMLai/ArchTEx">https://github.com/WilliamKMLai/ArchTEx</a>
  * 
  * @author William KM Lai
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation
- * @see scriptmanager.window_interface.BAM_Statistics.ArchTExCrossCorrelationOutput
+ * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
+ * @see scriptmanager.window_interface.BAM_Statistics.CrossCorrelationOutput
  */
 @SuppressWarnings("serial")
-public class ArchTExCrossCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class CrossCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	private JCheckBox chckbxOutputStatistics;
@@ -111,7 +111,7 @@ public class ArchTExCrossCorrelationWindow extends JFrame implements ActionListe
 					}
 					System.out.println("Parameters Loaded.\n");
 					// Initialize output window and run
-					ArchTExCrossCorrelationOutput script_obj = new ArchTExCrossCorrelationOutput(OUT_DIR, BAMFiles, param, chckbxOutputStatistics.isSelected());
+					CrossCorrelationOutput script_obj = new CrossCorrelationOutput(OUT_DIR, BAMFiles, param, chckbxOutputStatistics.isSelected());
 					script_obj.addPropertyChangeListener("bam", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -142,8 +142,8 @@ public class ArchTExCrossCorrelationWindow extends JFrame implements ActionListe
 	/**
 	 * Instantiate window with graphical interface design.
 	 */
-	public ArchTExCrossCorrelationWindow() {
-		setTitle("ArchTEx Cross Correlation");
+	public CrossCorrelationWindow() {
+		setTitle("BAM Cross Correlation");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setBounds(125, 125, 490, 420);

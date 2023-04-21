@@ -10,9 +10,9 @@ package scriptmanager.objects.ArchTEx;
  * "https://github.com/WilliamKMLai/ArchTEx">https://github.com/WilliamKMLai/ArchTEx</a>
  * 
  * @author William KM Lai
- * @see scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation
- * @see scriptmanager.window_interface.BAM_Statistics.ArchTExCrossCorrelationOutput
- * @see scriptmanager.window_interface.BAM_Statistics.ArchTExCrossCorrelationWindow
+ * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
+ * @see scriptmanager.window_interface.BAM_Statistics.CrossCorrelationOutput
+ * @see scriptmanager.window_interface.BAM_Statistics.CrossCorrelationWindow
  */
 public class CorrParameter {
 //	//BAM Files and Accompanying indexes

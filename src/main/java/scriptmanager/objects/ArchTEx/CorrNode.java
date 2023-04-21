@@ -10,7 +10,7 @@ import java.util.Vector;
  * 
  * @author William KM Lai
  * @see scriptmanager.objects.ArchTEx.CorrExtract
- * @see scriptmanager.scripts.BAM_Statistics.ArchTExCrossCorrelation
+ * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
  */
 public class CorrNode {
 	private String uniqID = "";
