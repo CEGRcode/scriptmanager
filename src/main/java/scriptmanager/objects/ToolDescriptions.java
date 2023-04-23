@@ -59,7 +59,7 @@ public class ToolDescriptions {
 	public static final String filter_bed_description = "Filter BED file using user-specified exclusion zone using the score column to determine which peak to retain.";
 	public static final String tile_genome_description = "Generate a coordinate file that tiles (non-overlapping) across an entire genome.";
 	public static final String rand_coord_description = "Generate random BED coordinates based on reference genome.";
-	public static final String signal_dup_description = "Calculate duplication statistics at user-specified regsions.";
+	public static final String signal_dup_description = "Calculate duplication statistics at user-specified regions.";
 
 	// Coordinate Manipulation
 	public static final String expand_bed_description = "Expand BED file given user-defined criteria."; //"Expands input BED file by adding positions to the border or around the center"
