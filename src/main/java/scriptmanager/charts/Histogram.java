@@ -16,12 +16,23 @@ import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+/**
+ * Collection of static methods for plotting interactive histograms.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.PEStats
+ */
 public class Histogram {
-	
-	public Histogram() {
 
-	}
-			
+	/**
+	 * Plot a set of bar-style plots using the frequencies (y) of values (x)
+	 * parallel input arrays.
+	 * 
+	 * @param y the list of frequencies
+	 * @param x the list of values that have frequencies (same len as y)
+	 * @return the bar-style histogram chart
+	 * @throws IOException
+	 */
 	public static ChartPanel createBarChart(double[] y, int[] x) throws IOException {
 		final XYSeries series = new XYSeries("Frequency");
 		for(int i = 0; i < x.length; i++) {
@@ -29,12 +40,22 @@ public class Histogram {
 		}
 		final XYSeriesCollection dataset = new XYSeriesCollection(series);
 		
-        JFreeChart chart = createChart(dataset);
+		JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-		return chartPanel;				
+		return chartPanel;
 	}
-	
+
+	/**
+	 * Plot a set of bar-style plots using the frequencies (y) of values (x)
+	 * parallel input arrays and save the chart as a PNG.
+	 * 
+	 * @param y the list of frequencies
+	 * @param x the list of values that have frequencies (same len as y)
+	 * @param output the path of the PNG file to save the chart image to
+	 * @return the bar-style histogram chart
+	 * @throws IOException
+	 */
 	public static ChartPanel createBarChart(double[] y, int[] x, File output) throws IOException {
 		final XYSeries series = new XYSeries("Frequency");
 		for(int i = 0; i < x.length; i++) {
@@ -42,7 +63,7 @@ public class Histogram {
 		}
 		final XYSeriesCollection dataset = new XYSeriesCollection(series);
 		
-        JFreeChart chart = createChart(dataset);
+		JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		
@@ -51,9 +72,18 @@ public class Histogram {
 			int height = 480;
 			ChartUtils.saveChartAsPNG(output, chart, width, height);
 		}
-		return chartPanel;				
+		return chartPanel;
 	}
-	
+
+	/**
+	 * Helper method to turn a formatted dataset into a standard chart with specific
+	 * look configurations including hard coded titles, axis labels, orientation,
+	 * legend, tooltips, grid colors, etc).
+	 * 
+	 * @param dataset the formatted dataset to plot
+	 * @return the formatted and configured histogram chart
+	 * @throws IOException
+	 */
 	private static JFreeChart createChart(IntervalXYDataset dataset) throws IOException {
         final JFreeChart chart = ChartFactory.createXYBarChart(
         		"Paired-End Insert Size Frequency Histogram",      // chart title
@@ -88,6 +118,6 @@ public class Histogram {
         //target.setPaint(new Color(222, 222, 255, 128));
         //plot.addRangeMarker(target, Layer.BACKGROUND);
                 
-        return chart;    
+        return chart;
     }
 }

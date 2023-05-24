@@ -16,12 +16,23 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+/**
+ * Collection of static methods for plotting interactive line charts.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.PEStats
+ * @see scriptmanager.scripts.Peak_Analysis.SignalDuplication
+ */
 public class LineChart {
-	
-	public LineChart() {
 
-	}
-			
+	/**
+	 * Create a line chart with a single line labeled "Duplication Rate".
+	 * 
+	 * @param y the duplication rate values
+	 * @param x the domain values
+	 * @return the line plot chart
+	 * @throws IOException
+	 */
 	public static ChartPanel createLineChart(ArrayList<Double> y, String[] x) throws IOException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		for(int i = 0; i < x.length; i++) {
@@ -31,9 +42,19 @@ public class LineChart {
         JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-		return chartPanel;				
+		return chartPanel;
 	}
-	
+
+	/**
+	 * Create a line chart with a two lines labeled "Signal Duplication Rate" and
+	 * "Genome Duplication Rate".
+	 * 
+	 * @param y1 the signal duplication rate values
+	 * @param y2 the genome duplication rate values
+	 * @param x  the domain values
+	 * @return the line plot chart
+	 * @throws IOException
+	 */
 	public static ChartPanel createLineChart(ArrayList<Double> y1, ArrayList<Double> y2, String[] x) throws IOException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		for(int i = 0; i < x.length; i++) {
@@ -44,9 +65,18 @@ public class LineChart {
         JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-		return chartPanel;				
+		return chartPanel;
 	}
-	
+
+	/**
+	 * Create a line chart with a single line labeled "Duplication Rate" and save the chart as a PNG file.
+	 * 
+	 * @param y the duplication rate values
+	 * @param x the domain values
+	 * @param output the path of the PNG file to save the chart image to
+	 * @return the line plot chart
+	 * @throws IOException
+	 */
 	public static ChartPanel createLineChart(ArrayList<Double> y, String[] x, File output) throws IOException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		for(int i = 0; i < x.length; i++) {
@@ -62,9 +92,18 @@ public class LineChart {
 			int height = 480;
 			ChartUtils.saveChartAsPNG(output, chart, width, height);
 		}
-		return chartPanel;				
+		return chartPanel;
 	}
-	
+
+	/**
+	 * Helper method to turn a formatted dataset into a standard chart with specific
+	 * look configurations including hard coded titles, axis labels, orientation,
+	 * legend, tooltips, grid colors, etc).
+	 * 
+	 * @param dataset the formatted dataset to plot
+	 * @return the line plot chart
+	 * @throws IOException
+	 */
 	private static JFreeChart createChart(CategoryDataset dataset) throws IOException {
         final JFreeChart chart = ChartFactory.createLineChart(
         		"Paired-End Duplication Rate",      // chart title
@@ -94,7 +133,7 @@ public class LineChart {
         //target.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
         //target.setPaint(new Color(222, 222, 255, 128));
         //plot.addRangeMarker(target, Layer.BACKGROUND);
-                
-        return chart;    
+
+        return chart;
     }
 }

@@ -28,23 +28,16 @@ import org.jfree.data.xy.DefaultXYDataset;
 public class ScalingPlotter{
 
 	/**
-	 * Plot the list of (x,y) coordinates from two parallel data array inputs
-	 * and decorate with customized figure labels.
+	 * Plot the list of (x,y) coordinates from two parallel data array inputs and
+	 * decorate with customized figure labels.
 	 * 
-	 * @param Xaxis
-	 *            list of x values
-	 * @param Yaxis
-	 *            list of y values
-	 * @param scalingTotal
-	 *            draw a red line at the y-axis for this value
-	 * @param scalingRatio
-	 *            draw a red line at the x-axis for this value
-	 * @param title
-	 *            title of chart
-	 * @param xName
-	 *            label for x-axis
-	 * @param yName
-	 *            label for y-axis
+	 * @param Xaxis        list of x values
+	 * @param Yaxis        list of y values
+	 * @param scalingTotal draw a red line at the y-axis for this value
+	 * @param scalingRatio draw a red line at the x-axis for this value
+	 * @param title        title of chart
+	 * @param xName        label for x-axis
+	 * @param yName        label for y-axis
 	 * @return the built scatter plot
 	 */
 	public static ChartPanel generateXYplot(List<Double> Xaxis, List<Double> Yaxis, double scalingTotal, double scalingRatio, String title, String xName, String yName){
