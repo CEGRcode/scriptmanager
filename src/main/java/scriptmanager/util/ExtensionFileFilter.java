@@ -147,7 +147,7 @@ public class ExtensionFileFilter extends FileFilter{
 		if (NEWNAME.endsWith(".gz")) { NEWNAME = NEWNAME.substring(0, NEWNAME.length()-3); }
 		int i = NEWNAME.lastIndexOf('.');
 		if (i > 0 &&  i < NEWNAME.length() - 1) {
-			NEWNAME = NEWNAME.substring(0,i).toLowerCase();
+			NEWNAME = NEWNAME.substring(0,i);
 		}
 		return(NEWNAME);
 	}

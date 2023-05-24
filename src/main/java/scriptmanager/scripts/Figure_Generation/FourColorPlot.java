@@ -4,13 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
+
+import scriptmanager.util.GZipUtilities;
 /**
  * The script class to generate a four-color sequence plot to be saved as a PNG.
  * 
@@ -36,16 +41,24 @@ public class FourColorPlot {
 		List<String> seq = new ArrayList<String>();
 		int maxLen = 0;
 
-		Scanner scan = new Scanner(input);
-		while (scan.hasNextLine()) {
-			String temp = scan.nextLine();
-			if (!temp.contains(">")) {
-				if (maxLen < temp.length())
-					maxLen = temp.length();
-				seq.add(temp);
-			}
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(input)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
 		}
-		scan.close();
+		// Initialize line variable to loop through
+		String line = br.readLine();
+		while (line != null) {
+			if (!line.contains(">")) {
+				if (maxLen < line.length())
+					maxLen = line.length();
+				seq.add(line);
+			}
+			line = br.readLine();
+		}
+		br.close();
 		int pixwidth = maxLen * width;
 		int pixheight = seq.size() * height;
 

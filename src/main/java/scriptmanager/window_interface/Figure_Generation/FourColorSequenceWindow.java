@@ -32,6 +32,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Figure_Generation.FourColorPlot;
 
@@ -82,7 +83,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 					COLORS.add(btnNColor.getForeground());
 
 					for (int x = 0; x < fastaFiles.size(); x++) {
-						String OUTPUT = fastaFiles.get(x).getName().split("\\.")[0] + ".png";
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFiles.get(x)) + ".png";
 						if(OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
@@ -133,7 +134,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa");
+				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa", true);
 				if (newFASTAFiles != null) {
 					for (int x = 0; x < newFASTAFiles.length; x++) {
 						fastaFiles.add(newFASTAFiles[x]);
