@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
+import scriptmanager.util.ExtensionFileFilter;
 
 @SuppressWarnings("serial")
 public class TwoColorHeatMapOutput extends JFrame {
@@ -65,7 +66,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 
 	public void run() throws IOException {
 		for (int x = 0; x < SAMPLE.size(); x++) {
-			File OUTPUT = new File(SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png");
+			File OUTPUT = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(SAMPLE.get(x)) + "_" + scaleType + ".png");
 			if (OUT_DIR != null) {
 				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT.getName());
 			}

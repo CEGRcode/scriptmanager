@@ -17,11 +17,6 @@ import javax.swing.SpringLayout;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
-/**
- * NCIS code adapted from Mahony Lab https://github.com/seqcode/seqcode-core
- * NCIS algorithm from Liang & Keles (BMC Bioinformatics 2012)
- */
-
 @SuppressWarnings("serial")
 public class ScalingFactorOutput extends JFrame {
 

@@ -7,8 +7,11 @@ import java.util.concurrent.Callable;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
-	BAM_ManipulatioCLIn/BAMRemoveDupCLI
-*/
+ * Print a message redirecting user to the original CLI tool.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates
+ */
 @Command(name = "remove-duplicates", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.remove_duplicates_description + "\n"+
 		"@|bold **Please run the picard/samtools tools directly:**|@ \n"+

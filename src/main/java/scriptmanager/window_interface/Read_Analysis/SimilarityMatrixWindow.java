@@ -58,6 +58,9 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 
 	public Task task;
 
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -86,6 +89,9 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public SimilarityMatrixWindow() {
 		setTitle("Generate Similarity Matrix");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

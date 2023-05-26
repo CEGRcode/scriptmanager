@@ -7,8 +7,11 @@ import java.util.concurrent.Callable;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
-	BAM_ManipulatioCLI/SortBAMCLI
-*/
+ * Print a message redirecting user to the original CLI tool.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.BAM_Manipulation.BAMFileSort
+ */
 @Command(name = "sort-bam", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_bam_description + "\n"+
 		"@|bold **Please run the samtools tool directly:**|@ \n"+

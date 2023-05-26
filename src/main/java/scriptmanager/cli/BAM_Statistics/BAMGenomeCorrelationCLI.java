@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 import java.io.File;
 import java.io.IOException;
 
+import scriptmanager.charts.HeatMap;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
@@ -55,8 +56,18 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 	private int binSize = 10;
 	@Option(names = {"--cpu"}, description = "CPUs to use (default 1)")
 	private int cpu = 1;
+	//ColorScale
+	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
+	ColorType colorScheme = new ColorType();
+	static class ColorType {
+		@Option(names = {"--classic"}, description = "Use classic blue to white to red color scale (default)")
+		boolean redwhiteblue = false;
+		@Option(names = {"--jet-like"}, description = "Use rainbow \"jet-like\" color scale")
+		boolean jetlike = false;
+	}
 	
 	private int READ = 0;
+	private short colorScale = HeatMap.BLUEWHITERED;
 	private Vector<File> bamFiles = new Vector<File>();
 	
 	@Override
@@ -69,7 +80,7 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BAMGenomeCorrelation script_obj = new BAMGenomeCorrelation( bamFiles, outputBasename, true, tagshift, binSize, cpu, READ);
+		BAMGenomeCorrelation script_obj = new BAMGenomeCorrelation( bamFiles, outputBasename, tagshift, binSize, cpu, READ, colorScale);
 		script_obj.getBAMGenomeCorrelation(false);
 		
 		System.err.println("Calculations Complete");
@@ -144,6 +155,10 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 		//validate binSize, and CPU count
 		if(binSize<1){ r += "(!)Please indicate a binSize of at least 1: " + binSize + "\n"; }
 		if(cpu<1){ r += "(!)Cannot use less than 1 CPU: " + cpu + "\n"; }
+		
+		//Assign color scheme
+		if (colorScheme.redwhiteblue) { colorScale = HeatMap.BLUEWHITERED; }
+		else if (colorScheme.jetlike) { colorScale = HeatMap.JETLIKE; }
 		
 		return(r);
 	}

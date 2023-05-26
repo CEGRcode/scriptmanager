@@ -66,7 +66,7 @@ public class DNAShapefromBED {
 	 * @param gen  the reference genome sequence in FASTA-format (FAI will be
 	 *             automatically generated)
 	 * @param b    the BED-formatted coordinate intervals to extract sequence from
-	 * @param out  the output file name base (to add _<shapetype>.cdt suffix to)
+	 * @param out  the output file name base (to add _&lt;shapetype&gt;.cdt suffix to)
 	 * @param type a four-element boolean list for specifying shape type to output
 	 *             (no enforcement on size)
 	 * @param str  force strandedness (true=forced, false=not forced)

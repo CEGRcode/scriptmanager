@@ -26,7 +26,7 @@ public class ReadFragmentCartoon extends JPanel {
 	public int cartoonHeight = 80;
 	public int arrowHeight = 15;
 	public int arrowWidth = 6;
-	int fragmentLength = 480;
+	int fragmentLength = 350;
 	int fragmentThickness = 3;
 	int edgePad = 20;
 	int verticalPad;
@@ -131,7 +131,7 @@ public class ReadFragmentCartoon extends JPanel {
 	 *   \  /
 	 *    \/
 	 * </pre>
-	 * 
+	 *
 	 * @param x center (width) coordinate of arrow to draw
 	 * @param y top coordinate of arrow to draw
 	 * @return a Polygon object describing a small down-pointing arrow
@@ -157,6 +157,6 @@ public class ReadFragmentCartoon extends JPanel {
 	 */
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(800,cartoonHeight);
+		return new Dimension(400,cartoonHeight);
 	}
 }

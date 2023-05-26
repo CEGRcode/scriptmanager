@@ -4,20 +4,35 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
 
+import scriptmanager.util.GZipUtilities;
+/**
+ * The script class to generate a four-color sequence plot to be saved as a PNG.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Figure_Generation.FourColorSequenceCLI
+ * @see scriptmanager.window_interface.Figure_Generation.FourColorSequenceWindow
+ */
 public class FourColorPlot {
 	/**
 	 * Visualize sequences as color pixels
 	 * 
-	 * @param width,  width of each base, in pixel
-	 * @param height, height of each base, in pixel
+	 * @param input the FASTA to make the four color plot from
+	 * @param output the filepath to write the four-color PNG to
+	 * @param COLOR the list of colors to use for each ATCGN encoding
+	 * @param h height of each base, in pixel
+	 * @param w  width of each base, in pixel
+	 * @throws IOException
 	 */
 	public static void generatePLOT(File input, File output, ArrayList<Color> COLOR, int h, int w) throws IOException {
 		int height = h;
@@ -26,16 +41,24 @@ public class FourColorPlot {
 		List<String> seq = new ArrayList<String>();
 		int maxLen = 0;
 
-		Scanner scan = new Scanner(input);
-		while (scan.hasNextLine()) {
-			String temp = scan.nextLine();
-			if (!temp.contains(">")) {
-				if (maxLen < temp.length())
-					maxLen = temp.length();
-				seq.add(temp);
-			}
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(input)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
 		}
-		scan.close();
+		// Initialize line variable to loop through
+		String line = br.readLine();
+		while (line != null) {
+			if (!line.contains(">")) {
+				if (maxLen < line.length())
+					maxLen = line.length();
+				seq.add(line);
+			}
+			line = br.readLine();
+		}
+		br.close();
 		int pixwidth = maxLen * width;
 		int pixheight = seq.size() * height;
 

@@ -4,7 +4,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.lang.NullPointerException;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -19,7 +18,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.FourColorPlot;
 
 /**
- * Figure_GenerationCLI/FourColorSequenceCLI
+ * Command line interface class for calling the script to creating four color
+ * sequence plots.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
  */
 @Command(name = "four-color", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.four_color_description,
@@ -85,27 +88,12 @@ public class FourColorSequenceCLI implements Callable<Integer> {
 			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(fastaFile)) {
-			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
-			String NAME = ExtensionFileFilter.stripExtension(fastaFile);
+			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile);
 			output = new File(NAME + ".png");
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"png".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".png\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output
-						+ ".png\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

@@ -43,6 +43,7 @@ public class FASTAExtractOutput extends JFrame {
 	 * @param out_dir the output directory to save output files to
 	 * @param str     the force-strandedness to pass to the script
 	 * @param head    the style of FASTA-header to use for the output
+	 * @param gz      If this is true, the output file will be gzipped.
 	 */
 	public FASTAExtractOutput(File gen, ArrayList<File> b, File out_dir, boolean str, boolean head, boolean gz) {
 		setTitle("FASTA Extraction Progress");

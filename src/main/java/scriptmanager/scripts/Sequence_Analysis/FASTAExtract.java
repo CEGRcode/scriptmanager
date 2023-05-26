@@ -47,6 +47,7 @@ public class FASTAExtract {
 	 * @param head the style of FASTA-header to use for the output (true = BED coord
 	 *             name, false = use Genomic Coordinate)
 	 * @param ps   a PrintStream object for printing progress updates (for GUI)
+	 * @param gz   If this is true, the output file will be gzipped.
 	 * @throws IOException
 	 */
 	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps, boolean gz)

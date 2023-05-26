@@ -36,7 +36,9 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * PlotComposite GUI window. User inputs for calling the script are organized into a user-friendly layout of fields and labels.
+ * PlotComposite GUI window. User inputs for calling the script are organized
+ * into a user-friendly layout of fields and labels.
+ * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.PlotComposite
  * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeOutput
@@ -54,7 +56,6 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 	private JButton btnGen;
 	private JProgressBar progressBar;
 
-	public Task task;
 	/**
 	 * default to true (include legend)
 	 */
@@ -81,6 +82,11 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 
 	private File OUT_DIR = null;
 
+	public Task task;
+
+	/**
+	 * Organize user inputs for calling script.
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -121,6 +127,9 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public PlotCompositeWindow() {
 		setTitle("Composite Plot Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

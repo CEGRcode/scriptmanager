@@ -40,7 +40,7 @@ public class SearchMotifOutput extends JFrame {
 	 * @param mot
 	 * @param num
 	 * @param out_dir
-	 * @param gz
+	 * @param gz If this is true, the output file will be gzipped.
 	 * @throws IOException
 	 */
 	public SearchMotifOutput(File input, String mot, int num, File out_dir, boolean gz) throws IOException {

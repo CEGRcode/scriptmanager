@@ -53,7 +53,7 @@ public class DNAShapefromFASTA {
 	 * Initialize object with script inputs for generating DNA shape reports.
 	 * 
 	 * @param fa   the FASTA-formatted file with a fixed sequence length
-	 * @param out  the output file name base (to add _<shapetype>.cdt suffix to)
+	 * @param out  the output file name base (to add _&lt;shapetype&gt;.cdt suffix to)
 	 * @param type a four-element boolean list for specifying shape type to output
 	 *             (no enforcement on size)
 	 * @param ps   list of four PrintStream objects corresponding to each shape type

@@ -2,7 +2,6 @@ package scriptmanager.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -17,6 +16,17 @@ import java.util.zip.GZIPInputStream;
  * (https://stackoverflow.com/questions/30507653/how-to-check-whether-file-is-gzip-or-not-in-java)
  *
  * @author Olivia Lang
+ * @see scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
+ * @see scriptmanager.scripts.Figure_Generation.TwoColorHeatMap
+ * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
+ * @see scriptmanager.util.BEDUtilities
+ * @see scriptmanager.util.CDTUtilities
  */
 public final class GZipUtilities {
 
@@ -24,10 +34,9 @@ public final class GZipUtilities {
 	 * Checks if InputStream is gzipped by reading the next two bytes for the GZip
 	 * MAGIC value and then resets the file marker to the original start position.
 	 *
-	 * @param input the InputStream to check if Gzipped (assumes stream starts at
-	 *              the beginning of the file).
-	 * @return Returns true if bytes match GZip MAGIC and false if not.
-	 * @throws FileNotFoundException
+	 * @param in the InputStream to check if Gzipped (assumes stream starts at the
+	 *           beginning of the file).
+	 * @return returns true if bytes match GZip MAGIC and false if not.
 	 */
 	public static boolean isGZipped(InputStream in) {
 		if (!in.markSupported()) {
@@ -50,7 +59,7 @@ public final class GZipUtilities {
 	 * GZip MAGIC value and then closing the file.
 	 * 
 	 * @param f the File to check if Gzipped.
-	 * @return Returns true if bytes match GZip MAGIC and false if not.
+	 * @return true if bytes match GZip MAGIC and false if not.
 	 */
 	public static boolean isGZipped(File f) {
 		int magic = 0;

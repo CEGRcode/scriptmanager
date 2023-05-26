@@ -58,22 +58,30 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() {
-        	setProgress(0);
-        	try {
-				int min = Integer.parseInt(txtMin.getText());
-				int max = Integer.parseInt(txtMax.getText());	
-				PEStatOutput stat = new PEStatOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), min, max);
-				stat.addPropertyChangeListener("bam", new PropertyChangeListener() {
-				    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-				    	int temp = (Integer) propertyChangeEvent.getNewValue();
-				    	int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
-			        	setProgress(percentComplete);
-				     }
-				 });
-				stat.setVisible(true);
-				stat.run();
+		@Override
+		public Void doInBackground() {
+			setProgress(0);
+			try {
+				int MIN = Integer.parseInt(txtMin.getText());
+				int MAX = Integer.parseInt(txtMax.getText());
+				if(MIN < 0) {
+					JOptionPane.showMessageDialog(null, "Invalid minimum value!!! Must be integer greater than or equal to 0");
+				} else if(MAX < MIN) {
+					JOptionPane.showMessageDialog(null, "Invalid maximum value!!! Must be greater than minimum");
+				} else if (expList.size() < 1) {
+					JOptionPane.showMessageDialog(null, "Must load at least one BAM file");
+				} else {
+					PEStatOutput stat = new PEStatOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), MIN, MAX);
+					stat.addPropertyChangeListener("bam", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+							int temp = (Integer) propertyChangeEvent.getNewValue();
+							int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
+							setProgress(percentComplete);
+						}
+					});
+					stat.setVisible(true);
+					stat.run();
+				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
 			} catch (IOException e) {
@@ -82,13 +90,16 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
         	setProgress(100);
         	return null;
         }
-        
+
         public void done() {
     		massXable(contentPane, true);
             setCursor(null); //turn off the wait cursor
         }
 	}
-	
+
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public PEStatWindow() {
 		setTitle("Paired-End BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -104,7 +115,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
-		
+
       	expList = new DefaultListModel<String>();
 		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

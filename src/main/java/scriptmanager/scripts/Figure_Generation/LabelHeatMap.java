@@ -18,15 +18,23 @@ import org.jfree.graphics2d.svg.SVGUtils;
 import scriptmanager.objects.CustomExceptions.OptionException;
 
 /**
- * @author 	William KM Lai
- * @date	March 15, 2021
- *
+ * The script class to decorate an input PNG file with plot labels and save as
+ * an SVG. <br>
+ * Code sourced from <a href=
+ * "https://github.com/WilliamKMLai/jHeatmapLabel">https://github.com/WilliamKMLai/jHeatmapLabel</a>
+ * <br>
+ * (Dated March 15, 2021)
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Figure_Generation.LabelHeatMapCLI
+ * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapOutput
+ * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapWindow
  */
 public class LabelHeatMap {
-	
+
 	private static File INPUT = null;
 	private static File OUTPUT = new File("OutputHeatmap.svg");
-	
+
 	private static Color color = Color.BLACK; // Color.BLACK
 	private static Integer borderWidth = 2; // Set thickness of border and tickmarks
 	private static Integer XtickHeight = 10; // Height of X-axis tickmarks
@@ -38,14 +46,32 @@ public class LabelHeatMap {
 
 	private static String xLabel = ""; // X-axis label
 	private static String yLabel = ""; // Y-axis label
-	
+
 	private static PrintStream outPS = null;
 
+	/**
+	 * Initialize labeling parameters in this constructor
+	 *
+	 * @param iNPUT the PNG input to format the labels and outline around
+	 * @param oUTPUT the filepath for the SVG-formatted labeled PNG
+	 * @param cOLOR the color of all the lines and text annotating the PNG
+	 * @param bORDERWIDTH the thickness of the line outlining the PNG
+	 * @param xTICKHEIGHT the length (in pixels) of the tickmarks on the x-axis (no tickmarks on y-axis)
+	 * @param fONTSIZE the size of all text labels on the annotated SVG
+	 * @param xLEFTLABEL the text label for the far left tickmark on the x-axis
+	 * @param xMIDLABEL the text label for the midpoint tickmark on the x-axis
+	 * @param xRIGHTLABEL the text label for the far right tickmark on the x-axis
+	 * @param xLABEL the text label for the x-axis
+	 * @param yLABEL the text label for the y-axis
+	 * @param out_win_ps the destination to output progress update and input information as the script executes
+	 * @throws IOException
+	 * @throws OptionException
+	 */
 	public LabelHeatMap(File iNPUT, File oUTPUT, Color cOLOR,
 			Integer bORDERWIDTH, Integer xTICKHEIGHT, Integer fONTSIZE,
 			String xLEFTLABEL, String xMIDLABEL, String xRIGHTLABEL,
 			String xLABEL, String yLABEL, PrintStream out_win_ps) throws IOException, OptionException {
-		
+
 		INPUT = iNPUT;
 		OUTPUT = oUTPUT;
 		color = cOLOR;
@@ -55,12 +81,12 @@ public class LabelHeatMap {
 		XleftLabel = xLEFTLABEL;
 		XmidLabel = xMIDLABEL;
 		XrightLabel = xRIGHTLABEL;
-		
+
 		xLabel = xLABEL;
 		yLabel = yLABEL;
-		
+
 		outPS = out_win_ps;
-		
+
 		// validate input
 		if(INPUT == null) {
 			throw new OptionException("(!) No image file specified!!!");
@@ -89,6 +115,12 @@ public class LabelHeatMap {
 		if(!yLabel.equals("")) { System.out.println("Y-axis label:\t\t" + yLabel); }
 	}
 
+	/**
+	 * Execute building SVG labels around the input PNG.
+	 *
+	 * @return 0 upon succesful execution
+	 * @throws IOException
+	 */
 	public Integer run() throws IOException {
 		// Initialize empty SVG object
 		SVGGraphics2D svg = new SVGGraphics2D(0,0);
@@ -106,7 +138,7 @@ public class LabelHeatMap {
 		int leftPad = (borderWidth / 2);
 		int bottomPad = XtickHeight - (borderWidth / 2);
 		//System.out.println(leftPad + "\t" + rightPad + "\t" + bottomPad);
-		
+
 		// Account for x-label if exists
 		if(!xLabel.equals("")) {
 			bottomPad += (FONTSIZE * 1.5);
@@ -119,19 +151,19 @@ public class LabelHeatMap {
 				rightPad += ((XlabelSize - Width) / 2);
 			}
 		}
-		
+
 		// Account for y-label if exists
 		if(!yLabel.equals("")) {
 			if(leftPad < (FONTSIZE * 1.5)) {
 				leftPad = (int)(FONTSIZE * 1.5) + (borderWidth / 2);
 			}
 		}
-		
+
 		// Account for X-axis tickmark labels
 		if(!XleftLabel.equals("") || !XmidLabel.equals("") || !XrightLabel.equals("")) {
 			// Account for bottom padding
 			bottomPad += (FONTSIZE * 1.5);
-			
+
 			// Account for X-axis tickmark labels on side-padding
 			if(!XleftLabel.equals("")) {
 				int XleftSize = svg.getFontMetrics().stringWidth(XleftLabel);
@@ -144,34 +176,34 @@ public class LabelHeatMap {
 				if((XrightSize / 2) > rightPad) {
 					rightPad += ((XrightSize / 2) - rightPad);
 				}
-			}	
-			
+			}
+
 		}
-		
+
 		// Re-initialize SVG object
 		svg = new SVGGraphics2D(leftPad + Width + rightPad, Height + bottomPad);
 		// Re-set font parameters
 		svg.setFont(new Font("Arial", Font.PLAIN, FONTSIZE));
-		
+
 		int newHeight = svg.getHeight();
 		int newWidth = svg.getWidth();
-		
+
 		svg.setColor(color);
 		// Set thickness of border
 		svg.setStroke(new BasicStroke(borderWidth));
-		
+
 		// Draw heatmap
 		svg.drawImage(image, leftPad, (borderWidth / 2), null);
 		// Draw rectangle around PNG
 		svg.draw(new Rectangle(leftPad, (borderWidth / 2), Width, Height));
-		
+
 		// Draw left x-axis tickmark
 		svg.drawLine(leftPad, Height + (borderWidth / 2), leftPad, Height + (borderWidth / 2) + XtickHeight);
 		// Draw mid x-axis tickmark
 		svg.drawLine(newWidth - (Width / 2) - rightPad, Height + (borderWidth / 2), newWidth - (Width / 2) - rightPad, Height + (borderWidth / 2) + XtickHeight);
 		// Draw right x-axis tickmark
 		svg.drawLine(newWidth - rightPad, Height + (borderWidth / 2), newWidth - rightPad, Height + (borderWidth / 2) + XtickHeight);
-		
+
 		// Draw X-axis tickmark labels
 		if(!XleftLabel.equals("")) {
 			int XleftSize = svg.getFontMetrics().stringWidth(XleftLabel);
@@ -185,7 +217,7 @@ public class LabelHeatMap {
 			int XrightSize = svg.getFontMetrics().stringWidth(XrightLabel);
 			svg.drawString(XrightLabel, newWidth - rightPad - (XrightSize / 2), Height + XtickHeight + FONTSIZE);
 		}
-		
+
 		// Draw X-label
 		if(!xLabel.equals("")) {
 			int Xmidpoint = svg.getFontMetrics().stringWidth(xLabel);
@@ -202,12 +234,12 @@ public class LabelHeatMap {
 			// Restore original orientation
 			svg.setTransform(orig);
 		}
-		
+
 		// Output file as SVG
 		SVGUtils.writeToSVG(OUTPUT, svg.getSVGElement());
 		return(0);
 	}
-	
+
 	public void writePS(String message) {
 		if(outPS!=null) {
 			outPS.println(message);

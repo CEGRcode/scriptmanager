@@ -7,8 +7,11 @@ import java.util.concurrent.Callable;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
-	BAM_ManipulatioCLIn/MergeBAMCLI
-*/
+ * Print a message redirecting user to the original CLI tool.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.BAM_Manipulation.MergeSamFiles
+ */
 @Command(name = "merge-bam", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.merge_bam_description + "\n"+
 		"@|bold **Please run the picard tool directly:**|@ \n"+

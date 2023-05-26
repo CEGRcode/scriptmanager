@@ -56,6 +56,7 @@ public class ExtensionFileFilter extends FileFilter{
 		includeGZ = gz;
 	}
 
+	@Override
 	public boolean accept(File f) {
 		if (f.isDirectory()) return true;
 		String extension = includeGZ ? getExtensionIgnoreGZ(f) : getExtension(f);
@@ -146,7 +147,7 @@ public class ExtensionFileFilter extends FileFilter{
 		if (NEWNAME.endsWith(".gz")) { NEWNAME = NEWNAME.substring(0, NEWNAME.length()-3); }
 		int i = NEWNAME.lastIndexOf('.');
 		if (i > 0 &&  i < NEWNAME.length() - 1) {
-			NEWNAME = NEWNAME.substring(0,i).toLowerCase();
+			NEWNAME = NEWNAME.substring(0,i);
 		}
 		return(NEWNAME);
 	}
@@ -171,6 +172,22 @@ public class ExtensionFileFilter extends FileFilter{
 	}
 
 	/**
+	 * Get the last N characters of a filepath and return the truncated string. Used
+	 * for display purposes in the GUI objects.<br>
+	 * e.g. f="/parent/directory/blahblah.fa" and n=15 returns "ory/blahblah.fa"<br>
+	 * 
+	 * @param f the File object whose path a substring is taken from
+	 * @param n the length of the substring to take
+	 * @return the ending substring of length n
+	 * @throws IOException
+	 */
+	public static String getSubstringEnd(File f, int n) throws IOException {
+		String NAME = f.getCanonicalPath();
+		int startIdx = Math.max(NAME.length()-n, 0);
+		return(NAME.substring(startIdx, NAME.length()));
+	}
+
+	/**
 	 * Get the string of the cannonical filepath without the last extension. Return
 	 * every character in the path until the last instance of "." character (not
 	 * including ".").<br>
@@ -179,12 +196,13 @@ public class ExtensionFileFilter extends FileFilter{
 	 * 
 	 * @param f the String to strip an extension from
 	 * @return string of filename with extension stripped away
+	 * @throws IOException
 	 */
 	public static String stripExtensionPath(File f) throws IOException {
 		String NAME = f.getCanonicalPath();
 		return(NAME.substring(0, NAME.lastIndexOf('.')));
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return null;

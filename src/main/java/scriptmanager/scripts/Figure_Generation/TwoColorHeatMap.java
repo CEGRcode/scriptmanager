@@ -22,6 +22,15 @@ import javax.swing.JLabel;
 
 import scriptmanager.util.GZipUtilities;
 
+/**
+ * The script to generate a two-color heamap PNG from a matrix of values in
+ * tab-delmited/CDT format.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI
+ * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapOutput
+ * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapWindow
+ */
 public class TwoColorHeatMap {
 
 	protected static File SAMPLE = null;
@@ -83,7 +92,7 @@ public class TwoColorHeatMap {
 			} else {
 				COLOR_RATIO = getQuantile(newMatrix, quantile);
 			}
-		
+
 			System.out.println("Contrast threshold: " + COLOR_RATIO);
 			BufferedImage treeMap = generateHeatMap(newMatrix);
 			picLabel = new JLabel(new ImageIcon(treeMap));

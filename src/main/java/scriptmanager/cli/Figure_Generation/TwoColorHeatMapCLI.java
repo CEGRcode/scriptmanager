@@ -48,7 +48,7 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 	private int compression = 1;
 	@Option(names = { "-a",
 			"--absolute-threshold" }, description = "use the specified value for contrast thresholding in the heatmap (default=10)")
-	private int absolute = -999;
+	private double absolute = -999;
 	@Option(names = { "-p",
 			"--percentile-threshold" }, description = "use the specified percentile value for contrast thresholding in the heatmap (try .95 if unsure)")
 	private double percentile = -999;

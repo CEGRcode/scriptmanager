@@ -29,10 +29,18 @@ import scriptmanager.charts.ScalingPlotter;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 /**
- * NCIS code adapted from Mahony Lab https://github.com/seqcode/seqcode-core
- * NCIS algorithm from Liang & Keles (BMC Bioinformatics 2012)
+ * The script class for calculating various kinds of normalization factors from
+ * a BAM file. Used to normalize for various kinds of analysis.
+ * <br>
+ * NCIS code adapted from Mahony Lab <a href=
+ * "https://github.com/seqcode/seqcode-core">https://github.com/seqcode/seqcode-core</a>
+ * <br>
+ * NCIS algorithm from Liang &amp; Keles (BMC Bioinformatics 2012)
+ * 
+ * @see scriptmanager.cli.Read_Analysis.ScalingFactorCLI
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorOutput
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorWindow
  */
-
 public class ScalingFactor {
 
 	private File BAMFile = null;
@@ -62,6 +70,33 @@ public class ScalingFactor {
 
 	private String dialogMessage = null;
 
+	/**
+	 * Initialize scaling factor parameters in this constructor
+	 * 
+	 * @param bamFile
+	 *            the BAM file to calculate a scaling factor from
+	 * @param bl
+	 *            the BED formatted blacklist file for excluding specific
+	 *            regions from the calculation
+	 * @param c
+	 *            the control BAM file that is used by the NCIS strategy to
+	 *            determine background signal
+	 * @param out_basename
+	 *            the filepath base name (the script will append suffixes) for
+	 *            the output files
+	 * @param out
+	 *            whether or not to write the output (write =true, don't write =
+	 *            false)
+	 * @param scale
+	 *            an integer value encoding the scaling type strategy to use
+	 *            (1=Total Tag, 2=NCIS, 3=NCISwithTotal)
+	 * @param win
+	 *            the NCIS parameter for the window/bin size (only used if
+	 *            scale!=1)
+	 * @param min
+	 *            the NCIS parameter for the minimum fraction (only used if
+	 *            scale!=1)
+	 */
 	public ScalingFactor(File bamFile, File bl, File c, String out_basename, boolean out, int scale, int win,
 			double min) {
 		BAMFile = bamFile;
@@ -74,6 +109,12 @@ public class ScalingFactor {
 		minFraction = min;
 	}
 
+	/**
+	 * Execute to calculate and write/store a scaling factor with the currently
+	 * stored input values.
+	 * 
+	 * @throws IOException
+	 */
 	public void run() throws IOException {
 		// Load blacklist HashMap if blacklist file uploaded by user
 		if (BLACKLISTFile != null) {
@@ -327,14 +368,16 @@ public class ScalingFactor {
 	}
 
 	/**
-	 * Find the scaling ratio according to the NCIS method from Liang & Keles (BMC
-	 * Bioinf 2012). Also sets a background proportion estimate for the signal
+	 * Find the scaling ratio according to the NCIS method from Liang &amp; Keles
+	 * (BMC Bioinf 2012). Also sets a background proportion estimate for the signal
 	 * channel. Should be run using *all* genomic windows in the Lists. Uses ratios
 	 * that are based on at least 75% of genomic regions by default.
 	 * 
-	 * @param setA       : signal list
-	 * @param setB       : control list
-	 * @param outputFile : optional file that will contain the data
+	 * @param setA    signal list
+	 * @param setB    control list
+	 * @param outpath optional file that will contain the data
+	 * @param fileid
+	 * @param minFrac
 	 * @return
 	 */
 	public double scalingRatioByNCIS(List<Float> setA, List<Float> setB, String outpath, String fileid,
@@ -385,14 +428,18 @@ public class ScalingFactor {
 
 	/**
 	 * Find the scaling ratio according to the total tag normalization followed by
-	 * NCIS method from Liang & Keles (BMC Bioinf 2012). Also sets a background
+	 * NCIS method from Liang &amp; Keles (BMC Bioinf 2012). Also sets a background
 	 * proportion estimate for the signal channel. Should be run using *all* genomic
 	 * windows in the Lists. Uses ratios that are based on at least 75% of genomic
 	 * regions by default.
 	 * 
-	 * @param setA       : signal list
-	 * @param setB       : control list
-	 * @param outputFile : optional file that will contain the data
+	 * @param setA       signal list
+	 * @param setB       control list
+	 * @param totalA
+	 * @param totalB
+	 * @param outpath optional file that will contain the data
+	 * @param fileid
+	 * @param minFrac
 	 * @return
 	 */
 	public double scalingRatioByHitRatioAndNCIS(List<Float> setA, List<Float> setB, double totalA, double totalB,

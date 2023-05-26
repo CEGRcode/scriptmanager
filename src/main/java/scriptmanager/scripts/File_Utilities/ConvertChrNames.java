@@ -23,16 +23,17 @@ import scriptmanager.util.GZipUtilities;
  * @author Olivia Lang
  * @see scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI
  * @see scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI
- * @see scriptmanager.window_interface.File_Utilities.ConvertBEDsChrNamesWindow
+ * @see scriptmanager.window_interface.File_Utilities.ConvertBEDChrNamesWindow
  * @see scriptmanager.window_interface.File_Utilities.ConvertGFFChrNamesWindow
  */
 public class ConvertChrNames {
 
 	/**
-	 * Helper method to generate the roman --> arabic numeral chromosome name map.
+	 * Helper method to generate the roman --&gt; arabic numeral chromosome name
+	 * map.
 	 * 
-	 * @param useChrmt if true, include "chrM" --> "chrmt" map, else include "chrmt"
-	 *                 --> "chrM" map
+	 * @param useChrmt if true, include "chrM" --&gt; "chrmt" map, else include
+	 *                 "chrmt" --&gt; "chrM" map
 	 * @return the string for the arabic numeral chrname mapped to the analagous
 	 *         roman numeral chrname with mitochondrial chr map
 	 */
@@ -63,10 +64,11 @@ public class ConvertChrNames {
 	}
 
 	/**
-	 * Helper method to generate the arabic --> roman numeral chromosome name map.
+	 * Helper method to generate the arabic --&gt; roman numeral chromosome name
+	 * map.
 	 * 
-	 * @param useChrmt if true, include "chrM" --> "chrmt" map, else include "chrmt"
-	 *                 --> "chrM" map
+	 * @param useChrmt if true, include "chrM" --&gt; "chrmt" map, else include
+	 *                 "chrmt" --&gt; "chrM" map
 	 * @return the string for the arabic numeral chrname mapped to the analagous
 	 *         roman numeral chrname with mitochondrial chr map
 	 */
@@ -97,7 +99,8 @@ public class ConvertChrNames {
 	}
 
 	/**
-	 * Wrapper for convertCoordinateFile using Roman --> Arabic chromosome name map.
+	 * Wrapper for convertCoordinateFile using Roman --&gt; Arabic chromosome name
+	 * map.
 	 * 
 	 * @param input        the input BED/GFF file to convert
 	 * @param out_filepath this is the filepath to write the converted coordinate
@@ -112,7 +115,8 @@ public class ConvertChrNames {
 	}
 
 	/**
-	 * Wrapper for convertCoordinateFile using Arabic --> Roman chromosome name map.
+	 * Wrapper for convertCoordinateFile using Arabic --&gt; Roman chromosome name
+	 * map.
 	 * 
 	 * @param input        the input BED/GFF file to convert
 	 * @param out_filepath this is the filepath to write the converted coordinate
