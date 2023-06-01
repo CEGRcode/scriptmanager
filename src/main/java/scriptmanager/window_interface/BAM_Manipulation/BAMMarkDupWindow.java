@@ -1,5 +1,7 @@
 package scriptmanager.window_interface.BAM_Manipulation;
 
+import htsjdk.samtools.SAMException;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Color;
@@ -30,8 +32,8 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 @SuppressWarnings("serial")
 public class BAMMarkDupWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -58,27 +60,29 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-        		String[] NAME = BAMFiles.get(x).getName().split("\\.");
-        	    File OUTPUT = null;
-        	    File METRICS = null;
-        	    if(OUTPUT_PATH != null) {
-        	    	OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam");
-        	    	METRICS = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.metrics");
-        	    } else {
-        	    	OUTPUT = new File(NAME[0] + "_dedup.bam");
-        	    	METRICS = new File(NAME[0] + "_dedup.metrics");
-        	    }
-        	    
-        	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
-        	    dedup.run();
-        	    
-        	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
-        	    
-        	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-        		setProgress(percentComplete);
-        	}
-        	setProgress(100);
+			try {
+				for(int x = 0; x < BAMFiles.size(); x++) {
+					String[] NAME = BAMFiles.get(x).getName().split("\\.");
+					File OUTPUT = null;
+					File METRICS = null;
+					if(OUTPUT_PATH != null) {
+						OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam");
+						METRICS = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.metrics");
+					} else {
+						OUTPUT = new File(NAME[0] + "_dedup.bam");
+						METRICS = new File(NAME[0] + "_dedup.metrics");
+					}
+					BAMMarkDuplicates.mark(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
+					
+					if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
+					
+					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+					setProgress(percentComplete);
+				}
+			} catch (SAMException se){
+				JOptionPane.showMessageDialog(null, se.getMessage());
+			}
+			setProgress(100);
 			JOptionPane.showMessageDialog(null, "Mark Duplicates Complete");
         	return null;
         }
