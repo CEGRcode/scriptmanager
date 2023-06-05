@@ -5,7 +5,9 @@ import picard.sam.BuildBamIndex;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -52,7 +54,7 @@ public class BAIIndexer {
 	}
 }
 */
-
+@SuppressWarnings("serial")
 public class BAIIndexer {
 	public static File generateIndex(File input) throws IOException {
 		File retVal = null;
@@ -65,9 +67,10 @@ public class BAIIndexer {
 
 			// Generates the index
 			final BuildBamIndex buildBamIndex = new BuildBamIndex();
-			buildBamIndex.INPUT = input.toString();
-			buildBamIndex.OUTPUT = retVal;
-			buildBamIndex.instanceMain(new String[]{});
+			final ArrayList<String> args = new ArrayList<>();
+			args.add("INPUT=" + input.getAbsolutePath());
+			args.add("OUTPUT=" + retVal.getAbsolutePath());
+			buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
 			System.out.println("Index File Generated");
 			return retVal;
 		} catch (htsjdk.samtools.SAMException exception) {
