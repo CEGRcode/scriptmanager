@@ -65,7 +65,7 @@ public class BAIIndexer {
 
 			// Generates the index
 			final BuildBamIndex buildBamIndex = new BuildBamIndex();
-			buildBamIndex.INPUT = input.getAbsolutePath();
+			buildBamIndex.INPUT = input.toString();
 			buildBamIndex.OUTPUT = retVal;
 			buildBamIndex.instanceMain(new String[]{});
 			System.out.println("Index File Generated");
