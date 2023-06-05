@@ -1,10 +1,7 @@
 package scriptmanager.scripts.BAM_Manipulation;
 
-import htsjdk.samtools.BAMIndexer;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
+import htsjdk.samtools.*;
+import picard.sam.BuildBamIndex;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +9,15 @@ import java.text.NumberFormat;
 
 import javax.swing.JOptionPane;
 
+/**
+ * @author Erik Pavloski
+ * @version v0.14
+ * The following class is designed to index a BAM file and output said index to a file of the same name with a .bai tag
+ * The commented out code is the legacy code left there for my personal reference
+ * It can be deleted once my code is verified
+ */
+
+/*
 public class BAIIndexer {
 	public static File generateIndex(File input) throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.CACHE_FILE_BASED_INDEXES, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.LENIENT);
@@ -42,6 +48,33 @@ public class BAIIndexer {
 			JOptionPane.showMessageDialog(null, exception.getMessage());
 			retVal = null;
 		}
+		return retVal;
+	}
+}
+*/
+
+public class BAIIndexer {
+	public static File generateIndex(File input) throws IOException {
+		File retVal = null;
+
+		// Tells user that their file is being generated
+		System.out.println("Generating Index File...");
+		try {
+			String output = input.getCanonicalPath() + ".bai";
+			retVal = new File(output);
+
+			// Generates the index
+			final BuildBamIndex buildBamIndex = new BuildBamIndex();
+			buildBamIndex.INPUT = input.getAbsolutePath();
+			buildBamIndex.OUTPUT = retVal;
+			buildBamIndex.instanceMain(new String[]{});
+			System.out.println("Index File Generated");
+			return retVal;
+		} catch (htsjdk.samtools.SAMException exception) {
+			System.out.println(exception.getMessage());
+			retVal = null;
+		}
+		// Returns retVal
 		return retVal;
 	}
 }
