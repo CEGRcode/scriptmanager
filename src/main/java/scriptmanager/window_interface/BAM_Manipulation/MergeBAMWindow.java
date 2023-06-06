@@ -1,9 +1,12 @@
 package scriptmanager.window_interface.BAM_Manipulation;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Font;
+import picard.sam.BuildBamIndex;
+import picard.sam.MergeSamFiles;
+import scriptmanager.util.FileSelection;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -11,27 +14,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
-import javax.swing.SwingWorker;
-import javax.swing.border.EmptyBorder;
-
-import scriptmanager.util.FileSelection;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
-import scriptmanager.scripts.BAM_Manipulation.MergeSamFiles;
 
 @SuppressWarnings("serial")
 public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -56,16 +38,34 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
+
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
         	if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText()); }
      	    else { OUTPUT = new File(txtOutput.getText()); }
-        	MergeSamFiles merge = new MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
+			scriptmanager.scripts.BAM_Manipulation.MergeSamFiles merge = new scriptmanager.scripts.BAM_Manipulation.MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
     		merge.run();
 
     		if(chckbxGenerateBaiindex.isSelected()) {
-				BAIIndexer.generateIndex(OUTPUT);
+				File retVal;
+				// Tells user that their file is being generated
+				System.out.println("Generating Index File...");
+				try {
+					String output = OUTPUT.getCanonicalPath() + ".bai";
+					retVal = new File(output);
+
+					// Generates the index
+					final BuildBamIndex buildBamIndex = new BuildBamIndex();
+					final ArrayList<String> args = new ArrayList<>();
+					args.add("INPUT=" + OUTPUT.getAbsolutePath());
+					args.add("OUTPUT=" + retVal.getAbsolutePath());
+					buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
+					System.out.println("Index File Generated");
+				} catch (htsjdk.samtools.SAMException exception) {
+					System.out.println(exception.getMessage());
+					retVal = null;
+				}
 			}	
 			JOptionPane.showMessageDialog(null, "Merging Complete");
         	return null;
@@ -77,6 +77,7 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
             setCursor(null); //turn off the wait cursor
         }
 	}
+
 	
 	public MergeBAMWindow() {
 		setTitle("BAM File Replicate Merger");

@@ -29,8 +29,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import picard.sam.BuildBamIndex;
 import scriptmanager.util.FileSelection;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
 @SuppressWarnings("serial")
@@ -73,7 +73,27 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
         	    dedup.run();
         	    
-        	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
+        	    if(chckbxGenerateBaiIndex.isSelected()) {
+					// Generates the Index
+					File retVal;
+					// Tells user that their file is being generated
+					System.out.println("Generating Index File...");
+					try {
+						String output = OUTPUT.getCanonicalPath() + ".bai";
+						retVal = new File(output);
+
+						// Generates the index
+						final BuildBamIndex buildBamIndex = new BuildBamIndex();
+						final ArrayList<String> args = new ArrayList<>();
+						args.add("INPUT=" + OUTPUT.getAbsolutePath());
+						args.add("OUTPUT=" + retVal.getAbsolutePath());
+						buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
+						System.out.println("Index File Generated");
+					} catch (htsjdk.samtools.SAMException exception) {
+						System.out.println(exception.getMessage());
+						retVal = null;
+					}
+					}
         	    
         	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);
