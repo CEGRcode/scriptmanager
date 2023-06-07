@@ -1,4 +1,4 @@
-<tool id="scriptmanager_label-heatmap" name="ScriptManager: Label Heatmap" version="1.0.0">
+<tool id="scriptmanager_label-heatmap" name="ScriptManager: Label Heatmap" version="0.0.1">
     <description>Create an SVG label for heatmap inputs</description>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>

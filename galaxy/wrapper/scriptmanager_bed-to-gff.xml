@@ -1,4 +1,4 @@
-<tool id="scriptmanager_bed-to-gff" name="ScriptManager: Convert BED to GFF" version="2.0.2">
+<tool id="scriptmanager_bed-to-gff" name="ScriptManager: Convert BED to GFF" version="0.0.1">
     <description>Convert BED file to GFF file.</description>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>

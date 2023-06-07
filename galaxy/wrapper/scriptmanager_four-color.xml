@@ -1,10 +1,10 @@
-<tool id="scriptmanager_four-color" name="ScriptManager: Four Color Sequence Plot" version="0.1.0">
+<tool id="scriptmanager_four-color" name="ScriptManager: Four Color Sequence Plot" version="0.0.1">
     <description>Generate 4Color sequence plot given FASTA file and user-defined RGB colors.</description>
     <macros>
         <import>macros.xml</import>
     </macros>
     <requirements>
-      <requirement type="package" version="8.0.112">openjdk</requirement>
+        <requirement type="package" version="11.0.11">openjdk</requirement>
     </requirements>
 
 
