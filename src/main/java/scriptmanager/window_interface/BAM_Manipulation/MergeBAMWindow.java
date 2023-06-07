@@ -61,9 +61,7 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         	setProgress(0);
         	if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText()); }
      	    else { OUTPUT = new File(txtOutput.getText()); }
-        	MergeSamFiles merge = new MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
-    		merge.run();
-
+        	MergeSamFiles.run(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
     		if(chckbxGenerateBaiindex.isSelected()) {
 				BAIIndexer.generateIndex(OUTPUT);
 			}	

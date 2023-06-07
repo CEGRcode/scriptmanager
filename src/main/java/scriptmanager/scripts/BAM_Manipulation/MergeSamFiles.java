@@ -11,18 +11,11 @@ import java.util.List;
  */
 
 public class MergeSamFiles {
-	// These are the 3 fields for the class
-	private List<File> inputs;
-	private File output;
-	private boolean useMultipleCpus;
-	// Constructor
-	public MergeSamFiles(List<File> inputs, File output, boolean useMultipleCpus) {
-		this.inputs = inputs;
-		this.output = output;
-		this.useMultipleCpus = useMultipleCpus;
+	// Private constructor to prevent instantiation of the class
+	private MergeSamFiles() {
 	}
-	// This is the main method of the class. Does the sorting
-	public void run() throws IOException {
+
+	public static void run(List<File> inputs, File output, boolean useMultipleCpus) throws IOException {
 		// Tells the user their files are being merged
 		System.out.println("Merging BAM Files...");
 		// Merges the files
