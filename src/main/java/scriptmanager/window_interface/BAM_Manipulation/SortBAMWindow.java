@@ -28,8 +28,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import htsjdk.samtools.SAMFileHeader;
-import picard.sam.SortSam;
+import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -60,21 +59,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         	    File OUTPUT = null;
         	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_sorted.bam"); }
         	    else { OUTPUT = new File(NAME[0] + "_sorted.bam"); }
-        	    // Tells user their File is being sorted
-				System.out.println("Sorting Bam File...");
-				try {
-					// Sorts the BAM file
-					final SortSam sorter = new SortSam();
-					final ArrayList<String> args = new ArrayList<>();
-					args.add("INPUT=" + BAMFiles.get(x).getAbsolutePath());
-					args.add("OUTPUT=" + OUTPUT.getAbsolutePath());
-					args.add("SORT_ORDER=" + SAMFileHeader.SortOrder.coordinate);
-					sorter.instanceMain(args.toArray(new String[args.size()]));
-					System.out.println("BAM File Sorted");
-				} catch (htsjdk.samtools.SAMException exception) {
-					System.out.println(exception.getMessage());
-					OUTPUT = null;
-				}
+        	    BAMFileSort.sort(BAMFiles.get(x), OUTPUT);
         		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);
         	}

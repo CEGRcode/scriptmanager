@@ -9,7 +9,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -26,8 +25,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import picard.sam.BuildBamIndex;
 import scriptmanager.util.FileSelection;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -49,23 +48,7 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         public Void doInBackground() throws IOException {
         	setProgress(0);
         	for(int x = 0; x < BAMFiles.size(); x++) {
-				File retVal;
-				System.out.println("Generating Index File...");
-				try {
-					String output = BAMFiles.get(x).getCanonicalPath() + ".bai";
-					retVal = new File(output);
-
-					// Generates the index
-					final BuildBamIndex buildBamIndex = new BuildBamIndex();
-					final ArrayList<String> args = new ArrayList<>();
-					args.add("INPUT=" + BAMFiles.get(x).getAbsolutePath());
-					args.add("OUTPUT=" + retVal.getAbsolutePath());
-					buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
-					System.out.println("Index File Generated");
-				} catch (htsjdk.samtools.SAMException exception) {
-					System.out.println(exception.getMessage());
-					retVal = null;
-				}
+				BAIIndexer.generateIndex(BAMFiles.get(x));
 				int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
