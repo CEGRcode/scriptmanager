@@ -1,5 +1,5 @@
-<tool id="bam_statistics_pe_stats" name="bam statistics PE" version="1.0.0">
-    <description> Generates Insert-size Histogram statistics </description>
+<tool id="scriptmanager_pe-stat" name="ScriptManager: Paired-end BAM Statistics" version="1.0.0">
+    <description>Generates Insert-size Histogram statistics (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.</description>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
         <requirement type="package" version="1.7">samtools</requirement>

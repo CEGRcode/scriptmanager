@@ -1,9 +1,9 @@
-<tool id="gff2bed" name="Converts file extension from gff to bed" version="2.0.2">
-<description>from one extension to another</description>
-<requirements>
-    <requirement type="package" version="11.0.11">openjdk</requirement>
-</requirements>
-<command>
+<tool id="scriptmanager_gff-to-bed" name="ScriptManager: Convert GFF to BED" version="2.0.2">
+    <description>Convert GFF file to BED file.</description>
+    <requirements>
+        <requirement type="package" version="11.0.11">openjdk</requirement>
+    </requirements>
+    <command>
 <![CDATA[
 
 java -jar $__tool_directory__/ScriptManager-v0.13-dev.jar coordinate-manipulation gff-to-bed '${input}' -o '${output}' 2>&1

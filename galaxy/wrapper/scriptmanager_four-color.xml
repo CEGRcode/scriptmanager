@@ -1,20 +1,20 @@
-<tool id="script_manager_4color" name="script-manager four-color plot" version="0.1.0">
-    <description>generates four-color plot</description>
+<tool id="scriptmanager_four-color" name="ScriptManager: Four Color Sequence Plot" version="0.1.0">
+    <description>Generate 4Color sequence plot given FASTA file and user-defined RGB colors.</description>
     <macros>
         <import>macros.xml</import>
     </macros>
     <requirements>
-	<requirement type="package" version="8.0.112">openjdk</requirement>
+      <requirement type="package" version="8.0.112">openjdk</requirement>
     </requirements>
 
 
     <command detect_errors="aggressive">
         <![CDATA[
-                
+
         #set output_dir = $output_four_color.files_path
         mkdir -p $output_dir
         && cp $input_fasta 'tmp3.fasta'
-        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar figure-generation four-color tmp3.fasta 
+        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar figure-generation four-color tmp3.fasta
         -o four_color.png
         -x $pixel_width
         -y $pixel_height
@@ -67,7 +67,7 @@
                 <param name="a_hex" type="text" value="FF0000" label="Hexadecimal code" />
             </when>
         </conditional>
-        
+
         <conditional name="t_select_color_cond">
             <param name="t_select_color" type="select" label="T nucleotide: select color or specify hexadecimal color code?">
                 <option value="t_color" selected="True">select color</option>
@@ -97,7 +97,7 @@
                 <param name="g_hex" type="text" value="FFFF00" label="Hexadecimal code" />
             </when>
         </conditional>
-        
+
         <conditional name="c_select_color_cond">
             <param name="c_select_color" type="select" label="C nucleotide: select color or specify hexadecimal color code?">
                 <option value="c_color" selected="True">select color</option>
@@ -112,7 +112,7 @@
                 <param name="c_hex" type="text" value="0000FF" label="Hexadecimal code" />
             </when>
         </conditional>
-       
+
         <conditional name="n_select_color_cond">
             <param name="n_select_color" type="select" label="N nucleotide: select color or specify hexadecimal color code?">
                 <option value="n_color" selected="True">select color</option>
@@ -148,8 +148,3 @@ plot four-color graph based on input FASTA file.
     </help>
     <expand macro="citations_two" />
 </tool>
-
-
-
-
-
