@@ -1,29 +1,17 @@
 package scriptmanager.main;
 
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.SpringLayout;
-import javax.swing.UIManager;
-import javax.swing.JTabbedPane;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 import scriptmanager.objects.ToolDescriptions;
 
+import scriptmanager.window_interface.BAM_Manipulation.*;
 import scriptmanager.window_interface.BAM_Statistics.PEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.SEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
-import scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWindow;
-import scriptmanager.window_interface.BAM_Manipulation.BAMMarkDupWindow;
-import scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow;
-import scriptmanager.window_interface.BAM_Manipulation.MergeBAMWindow;
-import scriptmanager.window_interface.BAM_Manipulation.SortBAMWindow;
 import scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow;
 import scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow;
 import scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow;
@@ -187,7 +175,18 @@ public class ScriptManagerGUI {
 		JPanel pnlBamManip = new JPanel();
 		SpringLayout sl_pnlBamManip = new SpringLayout();
 		pnlBamManip.setLayout(sl_pnlBamManip);
-		tabbedPane.addTab("BAM Manipulation", null, pnlBamManip, null);
+		pnlBamManip.setPreferredSize(new Dimension(200,400));
+
+		// Wrapped pnlBamManip in a scrollPane to support scrolling
+		JScrollPane scrollPane = new JScrollPane(pnlBamManip);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		//This line control the speed of the scroll. Higher number - faster scroll
+		scrollPane.getVerticalScrollBar().setUnitIncrement(15);
+
+		// Adds the Bam Manipulation tab to the main GUI
+		tabbedPane.addTab("BAM Manipulation", null, scrollPane, null);
+
 
 		// >BAMIndexer
 		JTextArea txtBAIIndex = new JTextArea();
@@ -331,6 +330,36 @@ public class ScriptManagerGUI {
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnFilterForPIPseq, 10, SpringLayout.WEST, pnlBamManip);
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtFilterForPIPseq, 10, SpringLayout.EAST, btnFilterForPIPseq);
 		pnlBamManip.add(btnFilterForPIPseq);
+
+		JTextArea txtDownsample = new JTextArea();
+		initializeTextArea(txtDownsample);
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtDownsample, 10, SpringLayout.SOUTH, txtFilterForPIPseq);
+		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtDownsample, -10, SpringLayout.EAST, pnlBamManip);
+		txtDownsample.setText(ToolDescriptions.downsample_sam_description);
+		pnlBamManip.add(txtDownsample);
+
+		JButton btnDownsample = new JButton("Downsample SAM/BAM");
+		btnDownsample.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							DownsampleSamFileWindow frame = new DownsampleSamFileWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+
+		sl_pnlBamManip.putConstraint(SpringLayout.SOUTH, btnDownsample, -45, SpringLayout.SOUTH, txtDownsample);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnDownsample, 10, SpringLayout.WEST, pnlBamManip);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtDownsample, 10, SpringLayout.EAST, btnDownsample);
+		sl_pnlBamManip.putConstraint(SpringLayout.SOUTH, pnlBamManip, 25, SpringLayout.SOUTH, btnDownsample);
+		pnlBamManip.add(btnDownsample);
+
 
 		// >>>>>>>> BAM_Format_Converter <<<<<<<<
 		JPanel pnlBamConvert = new JPanel();

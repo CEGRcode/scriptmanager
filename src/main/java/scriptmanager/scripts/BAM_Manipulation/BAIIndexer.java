@@ -1,46 +1,42 @@
 package scriptmanager.scripts.BAM_Manipulation;
 
-import htsjdk.samtools.*;
 import picard.sam.BuildBamIndex;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 /**
+ * Picard wrapper for BuildBamIndex
+ * 
  * @author Erik Pavloski
- * The following class is designed to index a BAM file and output said
- * index to a file of the same name with a .bai tag
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWIndow
  */
-
-@SuppressWarnings("serial")
 public class BAIIndexer {
+	/**
+	 * Index a BAM file and output said index to a file of the same name with a .bai
+	 * extension
+	 * 
+	 * @param input the BAM file to index
+	 * @return the BAM index file (.bai)
+	 * @throws IOException
+	 */
 	public static File generateIndex(File input) throws IOException {
-		File retVal = null;
-
 		// Tells user that their file is being generated
 		System.out.println("Generating Index File...");
-		try {
-			String output = input.getCanonicalPath() + ".bai";
-			retVal = new File(output);
+		// Build output filepath
+		String output = input.getCanonicalPath() + ".bai";
+		File retVal = new File(output);
+		// Instatiate Picard object
+		final BuildBamIndex buildBamIndex = new BuildBamIndex();
+		// Build input argument string
+		final ArrayList<String> args = new ArrayList<>();
+		args.add("INPUT=" + input.getAbsolutePath());
+		args.add("OUTPUT=" + retVal.getAbsolutePath());
+		// Call Picard with args
+		buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
 
-			// Generates the index
-			final BuildBamIndex buildBamIndex = new BuildBamIndex();
-			final ArrayList<String> args = new ArrayList<>();
-			args.add("INPUT=" + input.getAbsolutePath());
-			args.add("OUTPUT=" + retVal.getAbsolutePath());
-			buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
-			System.out.println("Index File Generated");
-			return retVal;
-		} catch (htsjdk.samtools.SAMException exception) {
-			System.out.println(exception.getMessage());
-			retVal = null;
-		}
-		// Returns retVal
+		System.out.println("Index File Generated");
 		return retVal;
 	}
 }

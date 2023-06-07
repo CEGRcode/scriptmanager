@@ -1,5 +1,7 @@
 package scriptmanager.window_interface.BAM_Manipulation;
 
+import htsjdk.samtools.SAMException;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -47,13 +49,19 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         @Override
         public Void doInBackground() throws IOException {
         	setProgress(0);
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-				BAIIndexer.generateIndex(BAMFiles.get(x));
-				int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-        		setProgress(percentComplete);
-        	}
-        	setProgress(100);
-			JOptionPane.showMessageDialog(null, "Indexing Complete");
+			try {
+				for(int x = 0; x < BAMFiles.size(); x++) {
+					// Execute Picard wrapper
+					BAIIndexer.generateIndex(BAMFiles.get(x));
+					// Update progress
+					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+					setProgress(percentComplete);
+				}
+				setProgress(100);
+				JOptionPane.showMessageDialog(null, "Indexing Complete");
+			} catch (SAMException se) {
+				JOptionPane.showMessageDialog(null, se.getMessage());
+    		}
         	return null;
         }
         
@@ -158,6 +166,3 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 		}
 	}
 }
-
-
-	
