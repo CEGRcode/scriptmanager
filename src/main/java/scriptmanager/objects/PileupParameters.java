@@ -117,6 +117,9 @@ public class PileupParameters {
 
 	private int CPU = 1;
 
+	/**
+	 * Print all PileupParameters attributes (mainly for debugging purposes).
+	 */
 	public void printAll(){
 		System.out.println( "<><><><><><><><><><><><><><><><><><><><>" );
 		System.out.println( "private File OUTPUT = " + OUTPUT );
@@ -511,25 +514,33 @@ public class PileupParameters {
 	}
 
 	/**
-	 * recreate TagPileup command from the provided parameters (unused)
+	 * Get the flag options for a cli execution with this object's parameter
+	 * settings.
 	 *
-	 * @return the string command
+	 * @return the string of flags and options
 	 */
-	public String getCLIcmd(){
+	public String getCLIOptions(){
+		String cliCommand = "";
 
-		String cliCommand = "java -jar ScriptManager.jar read-analysis tag-pileup <bed-file> <bam-file>";
+		// Add ASPECT
+		if (ASPECT == PileupParameters.FIVE ) { cliCommand += " -5"; }
+		else if (ASPECT == PileupParameters.THREE ) { cliCommand += " -3"; }
+		else if (ASPECT == PileupParameters.MIDPOINT ) { cliCommand += " -m"; }
+		else if (ASPECT == PileupParameters.FRAGMENT ) { cliCommand += " --full-fragment"; }
+		else { System.err.println("This should not print."); }
 
-		//Add READ
-		if(READ==0){ cliCommand += " -1"; }
-		else if(READ==1){ cliCommand += " -2"; }
-		else if(READ==2){ cliCommand += " -a"; }
-		else if(READ==3){ cliCommand += " -m"; }
-		else{ System.err.println("This should not print."); }
-		//Add STRAND
-		if(STRAND==0){ cliCommand += " --separate"; }
-		else if(STRAND==1){ cliCommand += " --combined"; }
-		else{ System.err.println("This should not print."); }
-		//Add TRANS
+		// Add READ
+		if (READ == PileupParameters.READ1) { cliCommand += " -1"; }
+		else if (READ == PileupParameters.READ2) { cliCommand += " -2"; }
+		else if (READ == PileupParameters.ALLREADS) { cliCommand += " -a"; }
+		else { System.err.println("This should not print."); }
+
+		// Add STRAND
+		if (STRAND == 0) { cliCommand += " --separate"; }
+		else if (STRAND == 1) { cliCommand += " --combined"; }
+		else { System.err.println("This should not print."); }
+
+		// Add TRANS
 		if(TRANS==0){
 			cliCommand += " --no-smooth";
 		}else if(TRANS==1){
@@ -540,15 +551,17 @@ public class PileupParameters {
 			else{ cliCommand += " -G " + STDSIZE + " " + STDNUM; }
 		}else{ System.err.println("This should not print."); }
 
-		//Add SHIFT
-		if(SHIFT!=0){ cliCommand += " -s " + SHIFT; }
-		//Add BIN
-		if(BIN!=1){ cliCommand += " -b " + BIN; }
+		// Add SHIFT
+		if (SHIFT != 0) { cliCommand += " -s " + SHIFT; }
+		// Add BIN
+		if (BIN != 1) { cliCommand += " -b " + BIN; }
+		// Add TagExtend
+		if (TAGEXTEND != 0) { cliCommand += " -e " + TAGEXTEND; }
 
 		//Add STANDARD
 		if(STANDARD==true){ cliCommand += " -t"; }
 		//Add BLACKLIST
-		if(BLACKLIST!=null){ cliCommand += " -f " + BLACKLIST; }
+		if(BLACKLIST!=null){ cliCommand += " -f " + BLACKLIST.getAbsolutePath(); }
 
 		//Add requirePE
 		if(requirePE==true){ cliCommand += " -p"; }
@@ -557,6 +570,7 @@ public class PileupParameters {
 		//Add MAX_INSERT
 		if(MAX_INSERT!=-9999){ cliCommand += " -x " + MAX_INSERT; }
 
+		if (OUTTYPE == PileupParameters.TAB) { cliCommand += " --tab"; }
 		//Add outputGZIP
 		if(outputGZIP==true){ cliCommand += " -z"; }
 
@@ -565,5 +579,4 @@ public class PileupParameters {
 
 		return(cliCommand);
 	}
-
 }
