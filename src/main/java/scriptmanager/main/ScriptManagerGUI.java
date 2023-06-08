@@ -19,6 +19,7 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.window_interface.BAM_Statistics.PEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.SEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
+import scriptmanager.window_interface.BAM_Statistics.CrossCorrelationWindow;
 import scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWindow;
 import scriptmanager.window_interface.BAM_Manipulation.BAMMarkDupWindow;
 import scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow;
@@ -176,12 +177,39 @@ public class ScriptManagerGUI {
 				});
 			}
 		});
-		sl_pnlStat.putConstraint(SpringLayout.NORTH, btnBamGenomeCorrelation, 0, SpringLayout.NORTH,
-				txtBamGenomeCorrelation);
+		sl_pnlStat.putConstraint(SpringLayout.NORTH, btnBamGenomeCorrelation, 0, SpringLayout.NORTH, txtBamGenomeCorrelation);
 		sl_pnlStat.putConstraint(SpringLayout.WEST, btnBamGenomeCorrelation, 10, SpringLayout.WEST, pnlStat);
-		sl_pnlStat.putConstraint(SpringLayout.WEST, txtBamGenomeCorrelation, 10, SpringLayout.EAST,
-				btnBamGenomeCorrelation);
+		sl_pnlStat.putConstraint(SpringLayout.WEST, txtBamGenomeCorrelation, 10, SpringLayout.EAST, btnBamGenomeCorrelation);
 		pnlStat.add(btnBamGenomeCorrelation);
+
+		// >CrossCorrelation
+		JTextArea txtCrossCorrelation = new JTextArea();
+		initializeTextArea(txtCrossCorrelation);
+		txtCrossCorrelation.setText(ToolDescriptions.archtex_crosscorrelation_description);
+		sl_pnlStat.putConstraint(SpringLayout.NORTH, txtCrossCorrelation, 10, SpringLayout.SOUTH, txtBamGenomeCorrelation);
+		sl_pnlStat.putConstraint(SpringLayout.EAST, txtCrossCorrelation, -10, SpringLayout.EAST, pnlStat);
+		pnlStat.add(txtCrossCorrelation);
+
+		JButton btnCrossCorrelation = new JButton("Cross Correlation");
+		btnCrossCorrelation.setToolTipText("Calculate optimal tag shift based on ArchTEx implementation (PMID:22302569)");
+		btnCrossCorrelation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							CrossCorrelationWindow frame = new CrossCorrelationWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlStat.putConstraint(SpringLayout.NORTH, btnCrossCorrelation, 0, SpringLayout.NORTH, txtCrossCorrelation);
+		sl_pnlStat.putConstraint(SpringLayout.WEST, btnCrossCorrelation, 10, SpringLayout.WEST, pnlStat);
+		sl_pnlStat.putConstraint(SpringLayout.WEST, txtCrossCorrelation, 10, SpringLayout.EAST, btnCrossCorrelation);
+		pnlStat.add(btnCrossCorrelation);
 
 		// >>>>>>>> BAM_Manipulation <<<<<<<<
 		JPanel pnlBamManip = new JPanel();
