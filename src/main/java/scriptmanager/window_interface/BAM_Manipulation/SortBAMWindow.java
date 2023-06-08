@@ -1,5 +1,7 @@
 package scriptmanager.window_interface.BAM_Manipulation;
 
+import htsjdk.samtools.SAMException;
+
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,9 +37,9 @@ import scriptmanager.util.FileSelection;
 public class SortBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
-	
+
 	final DefaultListModel<String> expList;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	List<File> BAMFiles = new ArrayList<File>();
 
 	private JButton btnLoad;
@@ -54,17 +56,25 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-        		String[] NAME = BAMFiles.get(x).getName().split("\\.");
-        	    File OUTPUT = null;
-        	    if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_sorted.bam"); }
-        	    else { OUTPUT = new File(NAME[0] + "_sorted.bam"); }
-        	    BAMFileSort.sort(BAMFiles.get(x), OUTPUT);
-        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-        		setProgress(percentComplete);
-        	}
-        	setProgress(100);
-			JOptionPane.showMessageDialog(null, "Sorting Complete");
+			try {
+				for(int x = 0; x < BAMFiles.size(); x++) {
+					// Build output filepath
+					String[] NAME = BAMFiles.get(x).getName().split("\\.");
+					File OUTPUT = null;
+					if(OUT_DIR != null) { OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME[0] + "_sorted.bam"); }
+					else { OUTPUT = new File(NAME[0] + "_sorted.bam"); }
+					// Execute Picard wrapper
+					BAMFileSort.sort(BAMFiles.get(x), OUTPUT);
+					// Update progress
+					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+					setProgress(percentComplete);
+					
+				}
+				setProgress(100);
+				JOptionPane.showMessageDialog(null, "Sorting Complete");
+			} catch (SAMException se) {
+				JOptionPane.showMessageDialog(null, se.getMessage());
+			}
         	return null;
         }
         
@@ -144,9 +154,10 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		btnOutput = new JButton("Output Directory");
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if(OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				File temp = FileSelection.getOutputDir(fc);
+				if(temp != null) {
+					OUT_DIR = temp;
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});

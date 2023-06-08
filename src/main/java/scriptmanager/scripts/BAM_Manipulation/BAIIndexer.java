@@ -1,47 +1,42 @@
 package scriptmanager.scripts.BAM_Manipulation;
 
-import htsjdk.samtools.BAMIndexer;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
+import picard.sam.BuildBamIndex;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.NumberFormat;
+import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
+/**
+ * Picard wrapper for BuildBamIndex
+ * 
+ * @author Erik Pavloski
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWIndow
+ */
 public class BAIIndexer {
+	/**
+	 * Index a BAM file and output said index to a file of the same name with a .bai
+	 * extension
+	 * 
+	 * @param input the BAM file to index
+	 * @return the BAM index file (.bai)
+	 * @throws IOException
+	 */
 	public static File generateIndex(File input) throws IOException {
-		SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.CACHE_FILE_BASED_INDEXES, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.LENIENT);
-		File retVal = null;
-		System.out.println("Generating New Index File...");
-		try{
-			String output = input.getCanonicalPath() + ".bai";
-			retVal = new File(output);
-			//Generate index
-			SamReader inputSam = factory.open(input);
-			BAMIndexer bamindex = new BAMIndexer(retVal, inputSam.getFileHeader());
-			int counter = 0;
-			for(SAMRecord record : inputSam) {
-				if(counter % 1000000 == 0) {
-					System.out.print("Tags processed: " + NumberFormat.getIntegerInstance().format(counter) + "\r");
-					System.out.flush();
-				}
-				counter++;
-				bamindex.processAlignment(record);
-			}
-			bamindex.finish();
-			inputSam.close();
-			System.out.println("\nIndex File Generated");
-			return retVal;
-		}
-		catch(htsjdk.samtools.SAMException exception){
-			System.out.println(exception.getMessage());
-			JOptionPane.showMessageDialog(null, exception.getMessage());
-			retVal = null;
-		}
+		// Tells user that their file is being generated
+		System.out.println("Generating Index File...");
+		// Build output filepath
+		String output = input.getCanonicalPath() + ".bai";
+		File retVal = new File(output);
+		// Instatiate Picard object
+		final BuildBamIndex buildBamIndex = new BuildBamIndex();
+		// Build input argument string
+		final ArrayList<String> args = new ArrayList<>();
+		args.add("INPUT=" + input.getAbsolutePath());
+		args.add("OUTPUT=" + retVal.getAbsolutePath());
+		// Call Picard with args
+		buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
+
+		System.out.println("Index File Generated");
 		return retVal;
 	}
 }
