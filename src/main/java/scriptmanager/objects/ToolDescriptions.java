@@ -35,7 +35,7 @@ public class ToolDescriptions {
 	public static final String remove_duplicates_description = "Removes duplicate reads in Paired-End sequencing given identical 5' read locations. RAM intensive process. If program freezes, increase JAVA heap size."; //*
 	public static final String merge_bam_description = "Merges Multiple BAM files into single BAM file. Sorting is performed automatically. RAM intensive process. If program freezes, increase JAVA heap size."; //*
 	public static final String filter_pip_seq_description = "Filter BAM file by -1 nucleotide. Requires genome FASTA file.";
-	public static final String downsample_sam_description = "This tool applies a downsampling algorithm to a SAM or BAM file to retain only a (deterministically random) subset of the reads";
+	public static final String downsample_sam_description = "Downsample a BAM file to a specified percentage or read count of deterministically random reads.";
 
 	// BAM Format Converter
 	public static final String bam_to_scidx_description = "Convert BAM file to scIDX file.";

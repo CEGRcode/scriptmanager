@@ -1,18 +1,18 @@
 package scriptmanager.scripts.BAM_Manipulation;
 
 import htsjdk.samtools.SAMException;
-import scriptmanager.window_interface.BAM_Manipulation.DownsampleSamFileWindow;
+import scriptmanager.window_interface.BAM_Manipulation.DownsampleSamWindow;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 /**
  * @author Erik Pavloski
- * @see DownsampleSamFileWindow
+ * @see DownsampleSamWindow
  * This code runs the Picard tool DownsampleSam
  *
  */
-public class DownsampleSamFile {
+public class DownsampleSamWrapper {
     /**
      * The following code uses Picard's downsampleSAM tool to shink the BAM/SAM file
      * and retain a random subset of the reads based on the probability parameter
@@ -25,21 +25,17 @@ public class DownsampleSamFile {
      * @throws IOException
      * @throws SAMException
      */
-    public static void run(File input, double probability) throws IOException, SAMException {
-        File retVal;
+    public static void run(File input, File output, double probability, Long seed) throws IOException, SAMException {
         System.out.println("Down-sampling SAM/BAM file...");
-
-        String output = input.getAbsolutePath() + ".downsampled.bam";
-        retVal = new File(output);
 
         // Downsamples the SAM/BAM file
         final picard.sam.DownsampleSam downsampleSam = new picard.sam.DownsampleSam();
         final ArrayList<String> args = new ArrayList<>();
         args.add("INPUT=" + input.getAbsolutePath());
-        args.add("OUTPUT=" + retVal.getAbsolutePath());
+        args.add("OUTPUT=" + output.getAbsolutePath());
         args.add("PROBABILITY=" + probability);
+        args.add("RANDOM_SEED=" + seed);
         downsampleSam.instanceMain(args.toArray(new String[args.size()]));
-
         System.out.println("SAM/BAM file down-sampled");
     }
 }

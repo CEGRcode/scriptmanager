@@ -1,7 +1,5 @@
 package scriptmanager.scripts.BAM_Manipulation;
 import htsjdk.samtools.SAMException;
-import picard.sam.ValidateSamFile;
-import htsjdk.samtools.SAMException;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +12,7 @@ import java.util.ArrayList;
  */
 
 
-public class ValidateSam {
+public class ValidateSamFileWrapper {
     public static void run(File input) throws IOException, SAMException{
         /**
          * This method runs the picard tool validateSAMFile

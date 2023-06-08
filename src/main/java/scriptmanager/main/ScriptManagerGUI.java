@@ -175,7 +175,10 @@ public class ScriptManagerGUI {
 		JPanel pnlBamManip = new JPanel();
 		SpringLayout sl_pnlBamManip = new SpringLayout();
 		pnlBamManip.setLayout(sl_pnlBamManip);
-		pnlBamManip.setPreferredSize(new Dimension(200,400));
+
+		// This line keeps the width at default but modifies the height.
+		// This is required to allow for scrolling. It is set at 500 pixels to provide room for future tools
+		pnlBamManip.setPreferredSize(new Dimension(pnlBamManip.getPreferredSize().width, 500));
 
 		// Wrapped pnlBamManip in a scrollPane to support scrolling
 		JScrollPane scrollPane = new JScrollPane(pnlBamManip);
@@ -331,10 +334,13 @@ public class ScriptManagerGUI {
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtFilterForPIPseq, 10, SpringLayout.EAST, btnFilterForPIPseq);
 		pnlBamManip.add(btnFilterForPIPseq);
 
+		// DownsampleSam
+
 		JTextArea txtDownsample = new JTextArea();
-		initializeTextArea(txtDownsample);
-		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtDownsample, 10, SpringLayout.SOUTH, txtFilterForPIPseq);
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtDownsample, 20, SpringLayout.SOUTH, txtFilterForPIPseq);
 		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtDownsample, -10, SpringLayout.EAST, pnlBamManip);
+		initializeTextArea(txtDownsample);
+
 		txtDownsample.setText(ToolDescriptions.downsample_sam_description);
 		pnlBamManip.add(txtDownsample);
 
@@ -344,7 +350,7 @@ public class ScriptManagerGUI {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							DownsampleSamFileWindow frame = new DownsampleSamFileWindow();
+							DownsampleSamWindow frame = new DownsampleSamWindow();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -353,11 +359,9 @@ public class ScriptManagerGUI {
 				});
 			}
 		});
-
-		sl_pnlBamManip.putConstraint(SpringLayout.SOUTH, btnDownsample, -45, SpringLayout.SOUTH, txtDownsample);
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, btnDownsample, 0, SpringLayout.NORTH, txtDownsample);
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnDownsample, 10, SpringLayout.WEST, pnlBamManip);
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtDownsample, 10, SpringLayout.EAST, btnDownsample);
-		sl_pnlBamManip.putConstraint(SpringLayout.SOUTH, pnlBamManip, 25, SpringLayout.SOUTH, btnDownsample);
 		pnlBamManip.add(btnDownsample);
 
 
