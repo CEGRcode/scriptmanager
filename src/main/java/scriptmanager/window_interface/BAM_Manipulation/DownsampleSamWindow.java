@@ -101,7 +101,7 @@ public class DownsampleSamWindow extends JFrame implements ActionListener, Prope
 
                 }
                 setProgress(100);
-                JOptionPane.showMessageDialog(null, "Down-sampling Complete");
+                JOptionPane.showMessageDialog(null, "Downsampling Complete");
                 return null;
             } catch (SAMException sme) {
                 JOptionPane.showMessageDialog(null, sme.getMessage());
@@ -263,7 +263,7 @@ public class DownsampleSamWindow extends JFrame implements ActionListener, Prope
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
 
-        btnDownSample = new JButton("Down-sample");
+        btnDownSample = new JButton("Downsample");
         sl_contentPane.putConstraint(SpringLayout.WEST, btnDownSample, 5, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnDownSample, 0, SpringLayout.SOUTH, contentPane);
         btnDownSample.addActionListener(new ActionListener() {

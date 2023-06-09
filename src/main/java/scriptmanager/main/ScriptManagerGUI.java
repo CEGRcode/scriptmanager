@@ -364,6 +364,35 @@ public class ScriptManagerGUI {
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtDownsample, 10, SpringLayout.EAST, btnDownsample);
 		pnlBamManip.add(btnDownsample);
 
+		// ValidateSamFile
+
+		JTextArea txtValidateSamFile = new JTextArea();
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtValidateSamFile, 20, SpringLayout.SOUTH, txtDownsample);
+		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtValidateSamFile, -10, SpringLayout.EAST, pnlBamManip);
+		initializeTextArea(txtValidateSamFile);
+
+		txtValidateSamFile.setText(ToolDescriptions.validate_sam_file_description);
+		pnlBamManip.add(txtValidateSamFile);
+
+		JButton btnValidateSamFile = new JButton("Validate SAM/BAM");
+		btnValidateSamFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							ValidateSamWindow frame = new ValidateSamWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, btnValidateSamFile, 0, SpringLayout.NORTH, txtValidateSamFile);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnValidateSamFile, 10, SpringLayout.WEST, pnlBamManip);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtValidateSamFile, 10, SpringLayout.EAST, btnValidateSamFile);
+		pnlBamManip.add(btnValidateSamFile);
 
 		// >>>>>>>> BAM_Format_Converter <<<<<<<<
 		JPanel pnlBamConvert = new JPanel();

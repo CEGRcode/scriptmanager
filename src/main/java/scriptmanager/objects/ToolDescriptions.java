@@ -36,6 +36,7 @@ public class ToolDescriptions {
 	public static final String merge_bam_description = "Merges Multiple BAM files into single BAM file. Sorting is performed automatically. RAM intensive process. If program freezes, increase JAVA heap size."; //*
 	public static final String filter_pip_seq_description = "Filter BAM file by -1 nucleotide. Requires genome FASTA file.";
 	public static final String downsample_sam_description = "Downsample a BAM file to a specified percentage or read count of deterministically random reads.";
+	public static final String validate_sam_file_description = "Validate SAM/BAM files comprehensively, ensuring adherence to the SAM format specification and detecting errors or inconsistencies in alignment data.";
 
 	// BAM Format Converter
 	public static final String bam_to_scidx_description = "Convert BAM file to scIDX file.";
