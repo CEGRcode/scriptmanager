@@ -18,7 +18,8 @@ import java.util.Vector;
 
 /**
  * @author Erik Pavloski
- * This is the window class for DownsampleSam
+ * This is the window class for DownsampleSamWrapper
+ * @see scriptmanager.scripts.BAM_Manipulation.DownsampleSamWrapper
  */
 public class DownsampleSamWindow extends JFrame implements ActionListener, PropertyChangeListener {
     private JPanel contentPane;

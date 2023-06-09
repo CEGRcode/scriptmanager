@@ -6,10 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- *
+ * @author Erik Pavloski
  * @see scriptmanager.window_interface.BAM_Manipulation.ValidateSamWindow - class still missing code
  * This code runs the picard tool validateSAMFile
- * @author Erik Pavloski
  *
  */
 
@@ -18,11 +17,11 @@ public class ValidateSamWrapper {
     public static void run(File input, File output, boolean mode, File referenceGenome, int maxOutput) throws IOException, SAMException{
         /**
          *
-         * @param input - The BAM/SAM file to be Validated
-         * @param output - the output of the validation
-         * @param mode - Allows the user to select verbose or summary mode. True = verbose - false = summary
-         * @param referenceGenome - Allows the user to add reference sequence if needed
-         * @param maxOutput - Allows customization of the maximum number of outputs in verbose mode
+         * @param input The BAM/SAM file to be Validated
+         * @param output the output of the validation
+         * @param mode Allows the user to select verbose or summary mode. True = verbose - false = summary
+         * @param referenceGenome Allows the user to add reference sequence if needed
+         * @param maxOutput Allows customization of the maximum number of outputs in verbose mode
          *
          * @throws IOException
          * @throws SAMException

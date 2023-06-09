@@ -7,10 +7,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 /**
- *
+ * @author Erik Pavloski
  * @see scriptmanager.window_interface.BAM_Manipulation.DownsampleSamWindow
  * This code runs the Picard tool DownsampleSam
- * @author Erik Pavloski
+ *
  *
  */
 public class DownsampleSamWrapper {
@@ -19,12 +19,12 @@ public class DownsampleSamWrapper {
      * and retain a random subset of the reads based on the probability parameter
      * Output reads = (probability) * (input reads)
      *
-     * @param input - the BAM/SAM file to be downsampled
-     * @param output - the downsampled file
-     * @param probability - the probability of keeping reads.
+     * @param input the BAM/SAM file to be downsampled
+     * @param output the downsampled file
+     * @param probability the probability of keeping reads.
      *                    0.5 default -> 50% reduction in data.
      *                    Smaller number -> less data once down-sampled
-     * @param seed - the custom seed that the user entered.
+     * @param seed the custom seed that the user entered.
      *             Defaults to null if no custom seed is entered which just spools a random seed
      * @throws IOException
      * @throws SAMException

@@ -16,6 +16,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
+/**
+ * @author Erik Pavloski
+ * This is the window class for ValidateSamWrapper
+ * @see scriptmanager.scripts.BAM_Manipulation.ValidateSamWrapper
+ */
+
 public class ValidateSamWindow  extends JFrame implements ActionListener, PropertyChangeListener {
     private JPanel contentPane;
     protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
@@ -42,7 +48,7 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
     private boolean mode;
 
     private JButton btnValidate;
-    private int maxOutput = 100;
+    private int maxOutput;
     private JProgressBar progressBar;
     public Task task;
 
@@ -165,7 +171,7 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
             public void actionPerformed(ActionEvent e) {
                 boolean isChecked = chckbxSummaryMode.isSelected();
                 maxField.setEnabled(!isChecked);
-                maxField.setText("");
+                maxField.setText("100");
                 if (isChecked) {
                     maxField.setText("");
                     maxOutput = 100;
@@ -232,7 +238,7 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
         sl_contentPane.putConstraint(SpringLayout.NORTH, maxLabel, 5, SpringLayout.SOUTH, scrollPane);
         contentPane.add(maxLabel);
 
-        maxField = new JTextField("");
+        maxField = new JTextField("100");
         maxField.setPreferredSize(new Dimension(65, maxField.getPreferredSize().height));
         sl_contentPane.putConstraint(SpringLayout.EAST, maxField, 0, SpringLayout.EAST, scrollPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, maxField, 50, SpringLayout.EAST, btnOutput);
