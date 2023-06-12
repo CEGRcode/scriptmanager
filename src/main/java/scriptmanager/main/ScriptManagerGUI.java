@@ -8,14 +8,11 @@ import javax.swing.*;
 
 import scriptmanager.objects.ToolDescriptions;
 
+import scriptmanager.window_interface.BAM_Format_Converter.*;
 import scriptmanager.window_interface.BAM_Manipulation.*;
 import scriptmanager.window_interface.BAM_Statistics.PEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.SEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
-import scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow;
-import scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow;
-import scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow;
-import scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXWindow;
 import scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow;
 import scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityWindow;
 import scriptmanager.window_interface.Peak_Analysis.RandomCoordinateWindow;
@@ -514,6 +511,64 @@ public class ScriptManagerGUI {
 		sl_pnlBamConvert.putConstraint(SpringLayout.WEST, btnBamToBedgraph, 10, SpringLayout.WEST, pnlBamConvert);
 		sl_pnlBamConvert.putConstraint(SpringLayout.WEST, txtBamToBedgraph, 10, SpringLayout.EAST, btnBamToBedgraph);
 		pnlBamConvert.add(btnBamToBedgraph);
+
+		// >SamtoFastq
+		JTextArea txtSamtoFastq = new JTextArea();
+		initializeTextArea(txtSamtoFastq);
+		txtSamtoFastq.setText(ToolDescriptions.sam_to_fastq_description);
+		sl_pnlBamConvert.putConstraint(SpringLayout.NORTH, txtSamtoFastq, 10, SpringLayout.SOUTH, txtBamToBedgraph);
+		sl_pnlBamConvert.putConstraint(SpringLayout.NORTH, txtSamtoFastq, 10, SpringLayout.SOUTH, btnBamToBedgraph);
+		sl_pnlBamConvert.putConstraint(SpringLayout.EAST, txtSamtoFastq, -10, SpringLayout.EAST, pnlBamConvert);
+		pnlBamConvert.add(txtSamtoFastq);
+
+		JButton btnSamtoFastq = new JButton("BAM to FASTQ");
+		btnSamtoFastq.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SamtoFastqWindow frame = new SamtoFastqWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlBamConvert.putConstraint(SpringLayout.NORTH, btnSamtoFastq, 0, SpringLayout.NORTH, txtSamtoFastq);
+		sl_pnlBamConvert.putConstraint(SpringLayout.WEST, btnSamtoFastq, 10, SpringLayout.WEST, pnlBamConvert);
+		sl_pnlBamConvert.putConstraint(SpringLayout.WEST, txtSamtoFastq, 10, SpringLayout.EAST, btnSamtoFastq);
+		pnlBamConvert.add(btnSamtoFastq);
+
+		// >SamFormatConverter
+		JTextArea txtSamFormatConverter = new JTextArea();
+		initializeTextArea(txtSamtoFastq);
+		txtSamFormatConverter.setText(ToolDescriptions.sam_format_converter_description);
+		sl_pnlBamConvert.putConstraint(SpringLayout.NORTH, txtSamFormatConverter, 10, SpringLayout.SOUTH, txtSamtoFastq);
+		sl_pnlBamConvert.putConstraint(SpringLayout.NORTH, txtSamFormatConverter, 10, SpringLayout.SOUTH, btnSamtoFastq);
+		sl_pnlBamConvert.putConstraint(SpringLayout.EAST, txtSamFormatConverter, -10, SpringLayout.EAST, pnlBamConvert);
+		pnlBamConvert.add(txtSamFormatConverter);
+
+		JButton btnSamFormatConverter = new JButton("SAM to BAM or BAM to SAM");
+		btnSamFormatConverter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SamFormatConverterWindow frame = new SamFormatConverterWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlBamConvert.putConstraint(SpringLayout.NORTH, btnSamFormatConverter, 0, SpringLayout.NORTH, txtSamFormatConverter);
+		sl_pnlBamConvert.putConstraint(SpringLayout.WEST, btnSamFormatConverter, 10, SpringLayout.WEST, pnlBamConvert);
+		sl_pnlBamConvert.putConstraint(SpringLayout.WEST, txtSamFormatConverter, 10, SpringLayout.EAST, btnSamFormatConverter);
+		pnlBamConvert.add(btnSamFormatConverter);
 
 		// >>>>>>>> File_Utilities <<<<<<<<
 		JPanel pnlFileUtility = new JPanel();

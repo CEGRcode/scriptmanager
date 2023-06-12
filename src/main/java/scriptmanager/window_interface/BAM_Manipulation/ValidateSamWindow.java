@@ -31,7 +31,7 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
     Vector<File> BAMFiles = new Vector<File>();
     private File OUT_DIR = null;
     private File GENOME = null;
-    private JButton btnLoad;
+    private JButton btnLoadBam;
     private JButton btnRemoveBam;
     private JCheckBox chckbxGenerateBaiIndex;
     private JCheckBox chckbxSummaryMode;
@@ -40,6 +40,7 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
     private JButton btnOutput;
 
     private JLabel outputLabel;
+    private JButton btnLoadSam;
     private JLabel maxLabel;
 
     private JTextField maxField;
@@ -78,11 +79,7 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
                     if (chckbxGenerateBaiIndex.isSelected()) {
                         BAIIndexer.generateIndex(BAMFiles.get(x));
                     }
-                    if (chckbxSummaryMode.isSelected()) {
-                        mode = false;
-                    } else {
-                        mode = true;
-                    }
+                    mode = !chckbxSummaryMode.isSelected();
                     // Execute Picard wrapper
                     ValidateSamWrapper.run(BAMFiles.get(x), OUTPUT, mode, GENOME, maxOutput);
                     // Update progress
@@ -123,11 +120,11 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
         listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         scrollPane.setViewportView(listExp);
 
-        btnLoad = new JButton("Load BAM Files");
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
+        btnLoadBam = new JButton("Load BAM Files");
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBam, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoadBam);
 
-        btnLoad.addActionListener(new ActionListener() {
+        btnLoadBam.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
                 if(newBAMFiles != null) {
@@ -138,10 +135,30 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
                 }
             }
         });
-        contentPane.add(btnLoad);
+        contentPane.add(btnLoadBam);
+
+        btnLoadSam = new JButton("Load SAM Files");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadSam, 6, SpringLayout.SOUTH, btnLoadBam);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadSam, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadSam, 60, SpringLayout.NORTH, btnLoadBam);
+
+
+
+        btnLoadSam.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                File[] newBAMFiles = FileSelection.getFiles(fc,"sam");
+                if(newBAMFiles != null) {
+                    for(int x = 0; x < newBAMFiles.length; x++) {
+                        BAMFiles.add(newBAMFiles[x]);
+                        expList.addElement(newBAMFiles[x].getName());
+                    }
+                }
+            }
+        });
+        contentPane.add(btnLoadSam);
 
         btnRemoveBam = new JButton("Remove BAM");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBam, 0, SpringLayout.NORTH, btnRemoveBam);
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
         btnRemoveBam.addActionListener(new ActionListener() {
@@ -191,8 +208,8 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
         });
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGenome, 0, SpringLayout.NORTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadGenome, 5, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGenome, 30, SpringLayout.NORTH, btnLoad);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 30, SpringLayout.NORTH, btnLoadGenome);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGenome, 30, SpringLayout.NORTH, btnLoadBam);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 60, SpringLayout.NORTH, btnLoadGenome);
         contentPane.add(btnLoadGenome);
 
         lblReferenceGenome = new JLabel("Reference Genome: ");

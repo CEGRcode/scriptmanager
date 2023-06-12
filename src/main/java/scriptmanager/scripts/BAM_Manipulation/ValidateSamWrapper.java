@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  * @author Erik Pavloski
- * @see scriptmanager.window_interface.BAM_Manipulation.ValidateSamWindow - class still missing code
+ * @see scriptmanager.window_interface.BAM_Manipulation.ValidateSamWindow
  * This code runs the picard tool validateSAMFile
  *
  */

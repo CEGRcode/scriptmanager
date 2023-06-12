@@ -28,7 +28,7 @@ public class DownsampleSamWindow extends JFrame implements ActionListener, Prope
     final DefaultListModel<String> expList;
 
     Vector<File> BAMFiles = new Vector<File>();
-    private JButton btnLoad;
+    private JButton btnLoadBam;
     private JButton btnRemoveBam;
     private JButton btnDownSample;
     private Long desiredReadCount;
@@ -48,6 +48,7 @@ public class DownsampleSamWindow extends JFrame implements ActionListener, Prope
     private JCheckBox setReadCountBox;
     private JTextField readCountField;
     private File OUT_DIR = null;
+    private JButton btnLoadSam;
 
     private JProgressBar progressBar;
     public Task task;
@@ -137,11 +138,11 @@ public class DownsampleSamWindow extends JFrame implements ActionListener, Prope
         listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         scrollPane.setViewportView(listExp);
 
-        btnLoad = new JButton("Load BAM Files");
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
+        btnLoadBam = new JButton("Load BAM Files");
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBam, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoadBam);
 
-        btnLoad.addActionListener(new ActionListener() {
+        btnLoadBam.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
                 if(newBAMFiles != null) {
@@ -152,10 +153,29 @@ public class DownsampleSamWindow extends JFrame implements ActionListener, Prope
                 }
             }
         });
-        contentPane.add(btnLoad);
+        contentPane.add(btnLoadBam);
+
+        btnLoadSam = new JButton("Load SAM Files");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadSam, 0, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadSam, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadSam, 30, SpringLayout.NORTH, btnLoadBam);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 30, SpringLayout.NORTH, btnLoadSam);
+
+        btnLoadSam.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                File[] newBAMFiles = FileSelection.getFiles(fc,"sam");
+                if(newBAMFiles != null) {
+                    for(int x = 0; x < newBAMFiles.length; x++) {
+                        BAMFiles.add(newBAMFiles[x]);
+                        expList.addElement(newBAMFiles[x].getName());
+                    }
+                }
+            }
+        });
+        contentPane.add(btnLoadSam);
 
         btnRemoveBam = new JButton("Remove BAM");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBam, 0, SpringLayout.NORTH, btnRemoveBam);
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
         btnRemoveBam.addActionListener(new ActionListener() {
@@ -282,8 +302,7 @@ public class DownsampleSamWindow extends JFrame implements ActionListener, Prope
                                    // Set the probability value relative to the desired read count
                                    probability = (double) desiredReadCount / totalreadCount;
                                } else {
-                                   // Set a default probability value
-                                   probability = 0.5;
+                                   JOptionPane.showMessageDialog(null, "Invalid read count. The entered value is larger than the total number of reads. Defaulting to 0.5 probability");
                                }
                        } catch (NumberFormatException ex) {
                            JOptionPane.showMessageDialog(null, "Invalid read count. Please enter an integer value.");

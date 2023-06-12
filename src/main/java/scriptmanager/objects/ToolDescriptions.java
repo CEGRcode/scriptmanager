@@ -43,6 +43,8 @@ public class ToolDescriptions {
 	public static final String bam_to_gff_description = "Convert BAM file to GFF file.";
 	public static final String bam_to_bed_description = "Convert BAM file to BED file.";
 	public static final String bam_to_bedgraph_description = "Convert BAM file to bedGraph file.";
+	public static final String sam_to_fastq_description = "Convert BAM file to FASTQ file";
+	public static final String sam_format_converter_description = "Convert SAM file to Bam file or Bam file to Sam file";
 
 	// File Utilities
 	public static final String md5checksum_description = "Calculate MD5 checksum for files.";
