@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
@@ -75,10 +76,7 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         	    }
 
 				// Initialize LogItem
-				String command = "java -jar $PICARD MarkDuplicates";
-				command += " INPUT=" + BAMFiles.get(x).getAbsolutePath();
-				command += " OUTPUT=" + OUTPUT.getAbsolutePath();
-				command += " METRICS_FILE=" + METRICS.getAbsolutePath();
+        	    String command = BAMRemoveDupCLI.getCLIcommand(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
         	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);

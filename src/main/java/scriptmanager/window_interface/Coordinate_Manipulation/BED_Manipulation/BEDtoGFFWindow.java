@@ -34,6 +34,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
@@ -80,9 +81,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 				}
 				OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
 				// Initialize LogItem
-				String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bed-to-gff";
-				command += chckbxGzipOutput.isSelected() ? " -z" : "";
-				command += " " + XBED.toString() + " -o " + OUTPUT;
+				String command = BEDtoGFFCLI.getCLIcommand(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
 				// Execute conversion and update progress
