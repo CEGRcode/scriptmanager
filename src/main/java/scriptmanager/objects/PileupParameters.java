@@ -513,6 +513,56 @@ public class PileupParameters {
 		CPU = cPU;
 	}
 
+	public String generateFileBase(String bed, String bam) {
+		String[] bedname = bed.split("\\.");
+		String[] bamname = bam.split("\\.");
+
+		String read = "5read1";
+		if (getAspect() == PileupParameters.FIVE && getRead() == PileupParameters.READ2) {
+			read = "5read2";
+		} else if (getAspect() == PileupParameters.FIVE && getRead() == PileupParameters.ALLREADS) {
+			read = "5readc";
+		} else if (getAspect() == PileupParameters.THREE && getRead() == PileupParameters.READ1) {
+			read = "3read1";
+		} else if (getAspect() == PileupParameters.THREE && getRead() == PileupParameters.READ2) {
+			read = "3read2";
+		} else if (getAspect() == PileupParameters.THREE && getRead() == PileupParameters.ALLREADS) {
+			read = "3readc";
+		} else if (getAspect() == PileupParameters.MIDPOINT) {
+			read = "midpoint";
+		} else if (getAspect() == PileupParameters.FRAGMENT) {
+			read = "fragment";
+		}
+
+		return (bedname[0] + "_" + bamname[0] + "_" + read);
+	}
+
+	public String generateFileName(String bed, String bam, int strandnum) {
+		return (generateFileName(generateFileBase(bed, bam), strandnum));
+	}
+
+	public String generateFileName(String basename, int strandnum) {
+		String strand = "sense";
+		if (strandnum == 1) {
+			strand = "anti";
+		} else if (strandnum == 2) {
+			strand = "combined";
+		}
+
+		String filename = basename + "_" + strand;
+		if (getOutputType() == 1) {
+			filename += ".tab";
+		} else {
+			filename += ".cdt";
+		}
+
+		if (getOutputGZIP()) {
+			filename += ".gz";
+		}
+
+		return filename;
+	}
+
 	/**
 	 * Get the flag options for a cli execution with this object's parameter
 	 * settings.

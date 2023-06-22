@@ -46,6 +46,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import htsjdk.samtools.SAMException;
 import scriptmanager.objects.CompositeCartoon;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
@@ -243,6 +244,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (SAMException se) {
+				JOptionPane.showMessageDialog(null, se.getMessage());
 			}
 			return null;
 		}

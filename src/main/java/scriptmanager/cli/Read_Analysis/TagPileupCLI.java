@@ -302,4 +302,13 @@ public class TagPileupCLI implements Callable<Integer> {
 		return(r);
 	}
 	
+	public static String getCLIcommand(File BED, File BAM, PileupParameters PARAM) {
+		String command = "java -jar $SCRIPTMANAGER read-analysis tag-pileup";
+		command += " " + PARAM.getCLIOptions();
+		command += " " + BED.getAbsolutePath();
+		command += " " + BAM.getAbsolutePath();
+		String NAME = PARAM.getOutputDirectory() + File.separator + PARAM.generateFileBase(BED.getName(), BAM.getName());
+		command += " -M " + NAME + " -o " + NAME;
+		return(command);
+	}
 }

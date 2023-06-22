@@ -22,6 +22,7 @@ import scriptmanager.charts.CompositePlot;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
+import scriptmanager.cli.Read_Analysis.TagPileupCLI;
 import scriptmanager.scripts.Read_Analysis.TagPileup;
 import scriptmanager.util.BAMUtilities;
 
@@ -134,12 +135,7 @@ public class TagPileupOutput extends JFrame {
 					PrintStream ps = new PrintStream(new CustomOutputStream(STATS));
 
 					// Initialize LogItem
-					String NAME = XBED.getName().split("\\.")[0] + "_" + BAM.getName().split("\\.")[0];
-					String command = "java -jar $SCRIPTMANAGER read-analysis tag-pileup";
-					command += " " + PARAM.getCLIOptions();
-					command += " " + XBED.getAbsolutePath();
-					command += " " + BAM.getAbsolutePath();
-					command += " -M " + NAME + " -o " + NAME;
+					String command = TagPileupCLI.getCLIcommand(XBED, BAM, PARAM);
 					LogItem new_li = new LogItem(command);
 					firePropertyChange("log", old_li, new_li);
 
