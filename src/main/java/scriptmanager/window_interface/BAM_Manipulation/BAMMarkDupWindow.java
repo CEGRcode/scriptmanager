@@ -10,7 +10,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -29,7 +31,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
@@ -58,6 +62,7 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
+        	LogItem old_li = null;
         	for(int x = 0; x < BAMFiles.size(); x++) {
         		String[] NAME = BAMFiles.get(x).getName().split("\\.");
         	    File OUTPUT = null;
@@ -69,15 +74,25 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         	    	OUTPUT = new File(NAME[0] + "_dedup.bam");
         	    	METRICS = new File(NAME[0] + "_dedup.metrics");
         	    }
-        	    
+
+				// Initialize LogItem
+        	    String command = BAMRemoveDupCLI.getCLIcommand(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
         	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
         	    dedup.run();
-        	    
+
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
+
         	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
-        	    
+
         	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);
         	}
+			firePropertyChange("log", old_li, null);
         	setProgress(100);
 			JOptionPane.showMessageDialog(null, "Mark Duplicates Complete");
         	return null;
@@ -212,6 +227,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		
         }
 	}
 	

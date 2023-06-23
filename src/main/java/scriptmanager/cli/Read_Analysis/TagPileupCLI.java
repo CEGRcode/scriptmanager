@@ -110,6 +110,8 @@ public class TagPileupCLI implements Callable<Integer> {
 		private int shift = 0;
 		@Option(names = {"-b", "--bin-size"}, description = "set a bin size for the output (default=1bp)")
 		private int binSize = 1;
+		@Option(names = {"-e", "--tag-extend"}, description = "set a bp length to extend the tag (default=0)")
+		private int tagExtend = 0;
 		@Option(names = {"-t", "--standard"}, description = "set tags to be equal (default=false)")
 		private boolean tagsEqual;
 		@Option(names = {"--cpu"}, description = "set number of CPUs to use (default=1)")
@@ -276,6 +278,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		//Set SHIFT, BIN, CPU
 		p.setShift(calcOptions.shift);
 		p.setBin(calcOptions.binSize);
+		p.setTagExtend(calcOptions.tagExtend);
 		p.setCPU(calcOptions.cpu);
 		
 		//Set BLACKLIST & STANDARD
@@ -299,4 +302,13 @@ public class TagPileupCLI implements Callable<Integer> {
 		return(r);
 	}
 	
+	public static String getCLIcommand(File BED, File BAM, PileupParameters PARAM) {
+		String command = "java -jar $SCRIPTMANAGER read-analysis tag-pileup";
+		command += " " + PARAM.getCLIOptions();
+		command += " " + BED.getAbsolutePath();
+		command += " " + BAM.getAbsolutePath();
+		String NAME = PARAM.getOutputDirectory() + File.separator + PARAM.generateFileBase(BED.getName(), BAM.getName());
+		command += " -M " + NAME + " -o " + NAME;
+		return(command);
+	}
 }

@@ -2,6 +2,7 @@ package scriptmanager.cli.BAM_Manipulation;
 
 import picocli.CommandLine.Command;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
@@ -28,5 +29,14 @@ public class BAMRemoveDupCLI implements Callable<Integer> {
 							"\t'samtools view -F 1024 <marked.bam> > <out.bam>'" );
 		System.exit(1);
 		return(1);
+	}
+
+	public static String getCLIcommand(File BAM, boolean removeDuplicates, File OUTPUT, File METRICS) {
+		String command = "java -jar $PICARD MarkDuplicates";
+		command += " INPUT=" + BAM.getAbsolutePath();
+		command += " OUTPUT=" + OUTPUT.getAbsolutePath();
+		command += " METRICS_FILE=" + METRICS.getAbsolutePath();
+		command += removeDuplicates ? "REMOVE_DUPLICATES=true" : "REMOVE_DUPLICATES=false";
+		return(command);
 	}
 }

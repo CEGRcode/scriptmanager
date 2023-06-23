@@ -11,6 +11,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -29,8 +31,10 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
@@ -67,6 +71,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		@Override
 		public Void doInBackground() throws IOException {
 			setProgress(0);
+			LogItem old_li = new LogItem("");
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XBED = BEDFiles.get(x);
 				// Set outfilepath
@@ -75,11 +80,21 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
 				OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
+				// Initialize LogItem
+				String command = BEDtoGFFCLI.getCLIcommand(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
 				// Execute conversion and update progress
 				BEDtoGFF.convertBEDtoGFF(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
+				// Update progress
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 				setProgress(percentComplete);
 			}
+			firePropertyChange("log", old_li, null);
 			setProgress(100);
 			JOptionPane.showMessageDialog(null, "Conversion Complete");
 			return null;
@@ -186,7 +201,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
 		btnConvert.addActionListener(this);
-		
+
 		chckbxGzipOutput = new JCheckBox("Output GZIP");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
@@ -210,6 +225,8 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

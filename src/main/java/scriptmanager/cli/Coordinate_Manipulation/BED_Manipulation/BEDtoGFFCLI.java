@@ -82,4 +82,12 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 		
 		return(r);
 	}
+
+	public static String getCLIcommand(File OUTPUT, File BED, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bed-to-gff";
+		command += " " + BED.getAbsolutePath();
+		command += gzOutput ? " -z" : "";
+		command += " -o " + OUTPUT;
+		return(command);
+	}
 }

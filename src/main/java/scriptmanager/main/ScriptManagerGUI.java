@@ -3,6 +3,8 @@ package scriptmanager.main;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JFrame;
@@ -15,7 +17,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 import scriptmanager.objects.ToolDescriptions;
-
+import scriptmanager.objects.LogItem;
 import scriptmanager.window_interface.BAM_Statistics.PEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.SEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
@@ -64,8 +66,17 @@ import scriptmanager.window_interface.Figure_Generation.MergeHeatMapWindow;
 import scriptmanager.window_interface.Figure_Generation.PlotCompositeWindow;
 import scriptmanager.window_interface.Figure_Generation.LabelHeatMapWindow;
 
+/**
+ * Main GUI object that manages main window design for spinning out the GUI for
+ * each tool and the logging manager window. Instantiated by
+ * scriptmanager.main.ScriptManager.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.main.ScriptManager
+ */
 public class ScriptManagerGUI {
 	private JFrame frmScriptManager;
+	private static LogManagerWindow logs;
 
 	/**
 	 * Initialize the contents of the frame.
@@ -73,21 +84,48 @@ public class ScriptManagerGUI {
 	private void initialize() {
 		frmScriptManager = new JFrame();
 		frmScriptManager.setTitle("Script Manager v" + ToolDescriptions.VERSION);
-		frmScriptManager.setBounds(100, 100, 600, 350);
+		frmScriptManager.setBounds(100, 100, 600, 380);
 		frmScriptManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScriptManager.setResizable(false);
 		SpringLayout springLayout = new SpringLayout();
 		frmScriptManager.getContentPane().setLayout(springLayout);
 
+		// >>>>>>>> Logging <<<<<<<<
+		JPanel pnlLogging = new JPanel();
+		springLayout.putConstraint(SpringLayout.NORTH, pnlLogging, -40, SpringLayout.SOUTH, frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, pnlLogging, 10, SpringLayout.WEST, frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, pnlLogging, -10, SpringLayout.SOUTH, frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, pnlLogging, -10, SpringLayout.EAST, frmScriptManager.getContentPane());
+		frmScriptManager.getContentPane().add(pnlLogging);
+
+//		TitledBorder ttlLogging = BorderFactory.createTitledBorder("Session logs");
+//		ttlLogging.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 14));
+//		pnlLogging.setBorder(ttlLogging);
+
+		// Initialize Logging Manager Window
+		logs = new LogManagerWindow();
+
+		JButton btnLoggingManager = new JButton("Open Log Manager");
+		btnLoggingManager.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							logs.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		pnlLogging.add(btnLoggingManager);
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		springLayout.putConstraint(SpringLayout.NORTH, tabbedPane, 10, SpringLayout.NORTH,
-				frmScriptManager.getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, tabbedPane, 10, SpringLayout.WEST,
-				frmScriptManager.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, tabbedPane, -10, SpringLayout.SOUTH,
-				frmScriptManager.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, tabbedPane, -10, SpringLayout.EAST,
-				frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, tabbedPane, 10, SpringLayout.NORTH, frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, tabbedPane, 10, SpringLayout.WEST, frmScriptManager.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, tabbedPane, -10, SpringLayout.NORTH, pnlLogging);
+		springLayout.putConstraint(SpringLayout.EAST, tabbedPane, -10, SpringLayout.EAST, frmScriptManager.getContentPane());
 		frmScriptManager.getContentPane().add(tabbedPane);
 
 		// >>>>>>>> BAM_Statistics <<<<<<<<
@@ -288,6 +326,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BAMMarkDupWindow frame = new BAMMarkDupWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -514,7 +563,7 @@ public class ScriptManagerGUI {
 		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, btnMD5, 10, SpringLayout.WEST, pnlFileUtility);
 		sl_pnlFileUtility.putConstraint(SpringLayout.WEST, txtMD5, 10, SpringLayout.EAST, btnMD5);
 		pnlFileUtility.add(btnMD5);
-		
+
 		// >ConvertBEDChrNames
 		JTextArea txtConvertBEDChrNames = new JTextArea();
 		initializeTextArea(txtConvertBEDChrNames);
@@ -522,7 +571,7 @@ public class ScriptManagerGUI {
 		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, txtConvertBEDChrNames, 10, SpringLayout.SOUTH, btnMD5);
 		sl_pnlFileUtility.putConstraint(SpringLayout.EAST, txtConvertBEDChrNames, -10, SpringLayout.EAST, pnlFileUtility);
 		pnlFileUtility.add(txtConvertBEDChrNames);
-		
+
 		JButton btnConvertBEDChrNames = new JButton("Convert BED Chr Names");
 		btnConvertBEDChrNames.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -550,7 +599,7 @@ public class ScriptManagerGUI {
 		sl_pnlFileUtility.putConstraint(SpringLayout.NORTH, txtConvertGFFChrNames, 10, SpringLayout.SOUTH, txtConvertBEDChrNames);
 		sl_pnlFileUtility.putConstraint(SpringLayout.EAST, txtConvertGFFChrNames, -10, SpringLayout.EAST, pnlFileUtility);
 		pnlFileUtility.add(txtConvertGFFChrNames);
-		
+
 		JButton btnConvertGFFChrNames = new JButton("Convert GFF Chr Names");
 		btnConvertGFFChrNames.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -934,6 +983,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BEDtoGFFWindow frame = new BEDtoGFFWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1021,8 +1081,8 @@ public class ScriptManagerGUI {
 			}
 		});
 		pnlCoordManip.add(btnShiftInterval);
-		
-		
+
+
 		// >>>>>>>> Read_Analysis <<<<<<<<
 		JPanel pnlReadAnalysis = new JPanel();
 		SpringLayout sl_pnlReadAnalysis = new SpringLayout();
@@ -1044,6 +1104,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							TagPileupWindow frame = new TagPileupWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1460,7 +1531,7 @@ public class ScriptManagerGUI {
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, btncolorSequencePlot, 10, SpringLayout.WEST, pnlFigure);
 		sl_pnlFigure.putConstraint(SpringLayout.WEST, txtcolorSequencePlot, 10, SpringLayout.EAST, btncolorSequencePlot);
 		pnlFigure.add(btncolorSequencePlot);
-		
+
 
 		// >FourColorPlot
 		JTextArea txtMakeCompositePlot = new JTextArea();
@@ -1533,5 +1604,6 @@ public class ScriptManagerGUI {
 			}
 		});
 	}
+
 
 }
