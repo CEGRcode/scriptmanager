@@ -13,7 +13,7 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.SEStats;
 	
 /**
-	BAM_StatisticsCLI/SEStatsCLI
+	Subcommand for running SEStats script
 */
 @Command(name = "se-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.se_stat_description,

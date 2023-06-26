@@ -25,6 +25,9 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * Window for running SEStats script
+ */
 @SuppressWarnings("serial")
 public class SEStatWindow extends JFrame {
 	private JPanel contentPane;

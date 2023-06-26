@@ -14,15 +14,15 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
-	Script for SE Stats.
+	Script to output BAM header and parameters given by indexed (BAI) BAM file
 */
 public class SEStats {
 	
 	/**
-	 * 
-	 * @param out_filepath File path to output to.
-	 * @param bamFile BAM file to be analyzed.
-	 * @param ps Output print stream.
+	 * Outputs BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File
+	 * @param out_filepath File path to output text file to
+	 * @param bamFile BAM file to be analyzed
+	 * @param ps Output print stream
 	 */
 	public static void getSEStats( File out_filepath, File bamFile, PrintStream ps ) {
 		
@@ -96,14 +96,22 @@ public class SEStats {
 		//BAMIndexMetaData.printIndexStats(bamFiles.get(x))
 	}	
 	
-	//Helper method to de-clutter method above:
-	//Prints output to both pop-up window (for GUI) and output file (GUI and CLI)
+	/**
+	*Helper method to de-clutter method above:
+	*Prints output to both pop-up window (for GUI) and output file (GUI and CLI)
+	*@param p PrintStream to GUI output
+	*@param out PrintStream to file
+	*@param line Line to print
+	*/
 	private static void printBoth( PrintStream p, PrintStream out, String line ){
 		out.println( line );
 		if( p != null ){ p.println( line ); }
 	}
 	
-	//Returns Timestamp for printing to the output
+	/**
+	 * Returns Timestamp for printing to the output
+	 * @return Timestamp The time at which the BAM file was analyzed
+	 */
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();
