@@ -13,8 +13,17 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+	Script for SE Stats.
+*/
 public class SEStats {
 	
+	/**
+	 * 
+	 * @param out_filepath File path to output to.
+	 * @param bamFile BAM file to be analyzed.
+	 * @param ps Output print stream.
+	 */
 	public static void getSEStats( File out_filepath, File bamFile, PrintStream ps ) {
 		
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
