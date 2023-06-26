@@ -11,8 +11,10 @@ Scripts are generically categorized within semi-descriptive tabs and are designe
 Open **ScriptManager-Tutorial.docx** available in root directory
 
 ### Javadoc Documentation
-[https://htmlpreview.github.io/?https://raw.githubusercontent.com/CEGRcode/scriptmanager/javadoc/doc/overview-summary.html
-](url)
+https://htmlpreview.github.io/?https://raw.githubusercontent.com/CEGRcode/scriptmanager/javadoc/doc/overview-summary.html
+
+
+
 ## Build Instructions
 ### From source
 (after cloning this repo):
