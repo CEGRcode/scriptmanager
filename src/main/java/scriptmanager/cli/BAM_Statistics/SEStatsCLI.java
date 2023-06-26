@@ -12,9 +12,12 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.SEStats;
 	
+
 /**
-	Subcommand for running SEStats script
-*/
+ * Command line interface class for printing out BAM header by calling a script implemented in the scripts package.
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.BAM_Statistics.SEStats
+ */
 @Command(name = "se-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.se_stat_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

@@ -14,7 +14,9 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
-	Script to output BAM header and parameters given by indexed (BAI) BAM file
+* Script to output BAM header and parameters given by indexed (BAI) BAM file.
+* @see scriptmanager.cli.BAM_Statistics.SEStatsCLI
+* @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
 */
 public class SEStats {
 	
