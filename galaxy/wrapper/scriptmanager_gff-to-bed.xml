@@ -3,22 +3,19 @@
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
     </requirements>
-    <command>
-<![CDATA[
-
-java -jar $__tool_directory__/ScriptManager-v0.13-dev.jar coordinate-manipulation gff-to-bed '${input}' -o '${output}' 2>&1
-]]>
-</command>
+    <command detect_errors="exit_code"><![CDATA[
+        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation gff-to-bed -o '$output' '$input'
+    ]]></command>
 <inputs>
-     <param name="input" type="data" format="gff" label="input file in gff format"/>
+     <param name="input" type="data" format="gff" label="Input file in GFF format"/>
      </inputs>
 <outputs>
-    <data name="output" type="data" format="bed" label="output file in bed format"/>
+    <data name="output" type="data" format="bed" label="Output file in BED format"/>
 </outputs>
 <help>
 **What it does**
 
-This tool converts a file extension from gff to bed
+This tool converts a file extension from GFF to BED
 
 -----
 **Example**
