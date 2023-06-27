@@ -17,6 +17,7 @@ import java.util.Date;
 * Script to output BAM header and parameters given by indexed (BAI) BAM file.
 * @see scriptmanager.cli.BAM_Statistics.SEStatsCLI
 * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
+* @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
 */
 public class SEStats {
 	

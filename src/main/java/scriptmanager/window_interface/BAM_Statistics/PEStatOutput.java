@@ -21,6 +21,12 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
 
 @SuppressWarnings("serial")
+/**
+ * Graphical window for viewing results form the PEStats script
+ * @see scriptmanager.scripts.BAM_Statistics.SEStats
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
+ */
 public class PEStatOutput extends JFrame {
 	
 	Vector<File> bamFiles = null;
