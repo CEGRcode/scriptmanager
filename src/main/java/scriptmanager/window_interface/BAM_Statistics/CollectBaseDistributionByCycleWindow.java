@@ -1,8 +1,9 @@
-package scriptmanager.window_interface.BAM_Format_Converter;
+package scriptmanager.window_interface.BAM_Statistics;
 
 import htsjdk.samtools.SAMException;
-import scriptmanager.scripts.BAM_Format_Converter.SamtoFastqWrapper;
+import scriptmanager.scripts.BAM_Statistics.CollectBaseDistributionByCycleWrapper;
 import scriptmanager.util.FileSelection;
+import scriptmanager.window_interface.BAM_Manipulation.ValidateSamWindow;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,7 +16,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
-public class SamtoFastqWindow extends JFrame implements ActionListener, PropertyChangeListener {
+/**
+ * @author Erik Pavloski
+ * This is the window class for the CollectBaseDistrubtionByCycleWinow
+ * @see scriptmanager.scripts.BAM_Statistics.CollectBaseDistributionByCycleWrapper
+ */
+public class CollectBaseDistributionByCycleWindow  extends JFrame implements ActionListener, PropertyChangeListener {
     private JPanel contentPane;
     protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
@@ -24,22 +30,17 @@ public class SamtoFastqWindow extends JFrame implements ActionListener, Property
     Vector<File> BAMFiles = new Vector<File>();
     private File OUT_DIR = null;
 
-    private JButton btnLoad;
-
+    private JButton btnLoadBam;
     private JButton btnRemoveBam;
+    private JButton btnAction;
     private JButton btnOutput;
+
     private JLabel outputLabel;
     private JLabel lblDefaultToLocal;
-    private JCheckBox chckbxCompress;
-    private JCheckBox chckbxPerRG;
-    private JButton btnConvert;
-    private boolean compress;
-    private boolean perRG;
     private JProgressBar progressBar;
-    public SamtoFastqWindow.Task task;
+    public Task task;
 
     class Task extends SwingWorker<Void, Void> {
-
         @Override
         public Void doInBackground() throws IOException {
             setProgress(0);
@@ -48,35 +49,39 @@ public class SamtoFastqWindow extends JFrame implements ActionListener, Property
                     // Build output filepath
                     String[] NAME = BAMFiles.get(x).getName().split("\\.");
                     File OUTPUT = null;
+                    File chartOutput = null;
                     if (OUT_DIR != null) {
-                        OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME[0] + "_converted.fastq");
+                        OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME[0] + "_output.txt");
+                        chartOutput = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME[0] + "_collect_base_dist_by_cycle.pdf");
                     } else {
-                        OUTPUT = new File(NAME[0] + "_converted.fastq");
+                        OUTPUT = new File(NAME[0] + "_output.txt");
+                        chartOutput = new File(NAME[0] + "_collect_base_dist_by_cycle.pdf");
                     }
-                    compress = chckbxCompress.isSelected();
-                    perRG = chckbxPerRG.isSelected();
+
                     // Execute Picard wrapper
-                    SamtoFastqWrapper.run(BAMFiles.get(x), OUTPUT, compress, perRG, OUT_DIR);
+                    CollectBaseDistributionByCycleWrapper.run(BAMFiles.get(x), OUTPUT, chartOutput);
                     // Update progress
                     int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
                     setProgress(percentComplete);
                 }
                 setProgress(100);
-                JOptionPane.showMessageDialog(null, "Conversion Complete");
+                JOptionPane.showMessageDialog(null, "Distribution Complete");
             } catch (SAMException se) {
                 JOptionPane.showMessageDialog(null, se.getMessage());
             }
             return null;
         }
-
         public void done() {
             massXable(contentPane, true);
             setCursor(null); //turn off the wait cursor
         }
+
     }
-    public SamtoFastqWindow(){
-        setTitle("Convert BAM to Fastq");
-        setBounds(125, 125, 480, 450);
+    public CollectBaseDistributionByCycleWindow() {
+        setTitle("Collect Base Distribution By Cycle");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        setBounds(125, 125, 580, 450);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -93,26 +98,12 @@ public class SamtoFastqWindow extends JFrame implements ActionListener, Property
         listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         scrollPane.setViewportView(listExp);
 
-        btnLoad = new JButton("Load BAM Files");
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 5, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
-
-        btnLoad.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
-                if(newBAMFiles != null) {
-                    for(int x = 0; x < newBAMFiles.length; x++) {
-                        BAMFiles.add(newBAMFiles[x]);
-                        expList.addElement(newBAMFiles[x].getName());
-                    }
-                }
-            }
-        });
-        contentPane.add(btnLoad);
-
+        btnLoadBam = new JButton("Load BAM Files");
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBam, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoadBam);
 
         btnRemoveBam = new JButton("Remove BAM");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBam, 0, SpringLayout.NORTH, btnRemoveBam);
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
         sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, -5, SpringLayout.EAST, contentPane);
         btnRemoveBam.addActionListener(new ActionListener() {
@@ -125,34 +116,18 @@ public class SamtoFastqWindow extends JFrame implements ActionListener, Property
         });
         contentPane.add(btnRemoveBam);
 
-        chckbxCompress = new JCheckBox("Compress output?");
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxCompress, 0, SpringLayout.WEST, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxCompress, 10, SpringLayout.SOUTH, scrollPane);
-        chckbxCompress.setSelected(false);
-        contentPane.add(chckbxCompress);
-
-        chckbxCompress.addActionListener(new ActionListener() {
+        btnLoadBam.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (chckbxCompress.isSelected()) {
-                    chckbxPerRG.setSelected(false);
+                File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
+                if(newBAMFiles != null) {
+                    for(int x = 0; x < newBAMFiles.length; x++) {
+                        BAMFiles.add(newBAMFiles[x]);
+                        expList.addElement(newBAMFiles[x].getName());
+                    }
                 }
             }
         });
-
-        chckbxPerRG = new JCheckBox("Output per read group?");
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxPerRG, 0, SpringLayout.WEST, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxPerRG, 30, SpringLayout.SOUTH, scrollPane);
-        chckbxPerRG.setSelected(false);
-        contentPane.add(chckbxPerRG);
-
-        chckbxPerRG.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (chckbxPerRG.isSelected()) {
-                    chckbxCompress.setSelected(false);
-                }
-            }
-        });
-
+        contentPane.add(btnLoadBam);
         btnOutput = new JButton("Output Directory");
         btnOutput.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -164,9 +139,9 @@ public class SamtoFastqWindow extends JFrame implements ActionListener, Property
             }
         });
         sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -3, SpringLayout.NORTH, btnOutput);
-        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 200, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -50, SpringLayout.SOUTH, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -200, SpringLayout.EAST, contentPane);
         contentPane.add(btnOutput);
 
         outputLabel = new JLabel("Current Output:");
@@ -180,26 +155,24 @@ public class SamtoFastqWindow extends JFrame implements ActionListener, Property
         lblDefaultToLocal.setBackground(Color.WHITE);
         contentPane.add(lblDefaultToLocal);
 
-        btnConvert = new JButton("Convert");
-        sl_contentPane.putConstraint(SpringLayout.NORTH, btnConvert, 2, SpringLayout.SOUTH, scrollPane);
-        sl_contentPane.putConstraint(SpringLayout.EAST, btnConvert, -5, SpringLayout.EAST, contentPane);
-        contentPane.add(btnConvert);
+        btnAction = new JButton("Collect Base Distribution");
+        sl_contentPane.putConstraint(SpringLayout.NORTH, btnAction, 30, SpringLayout.NORTH, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.EAST, btnAction, -5, SpringLayout.EAST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 30, SpringLayout.NORTH, btnAction);
+        contentPane.add(btnAction);
 
+        btnAction.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                task = new Task();
+                task.addPropertyChangeListener(CollectBaseDistributionByCycleWindow.this);
+                task.execute();
+            }
+        });
         progressBar = new JProgressBar();
         sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, -3, SpringLayout.NORTH, lblDefaultToLocal);
         sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, scrollPane);
         progressBar.setStringPainted(true);
         contentPane.add(progressBar);
-
-
-        btnConvert.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                task = new Task();
-                task.addPropertyChangeListener(SamtoFastqWindow.this);
-                task.execute();
-            }
-        });
-
     }
     @Override
     public void actionPerformed(ActionEvent arg0) {
@@ -225,4 +198,7 @@ public class SamtoFastqWindow extends JFrame implements ActionListener, Property
             if(c instanceof Container) { massXable((Container)c, status); }
         }
     }
+
 }
+
+

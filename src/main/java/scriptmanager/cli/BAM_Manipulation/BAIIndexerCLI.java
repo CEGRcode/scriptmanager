@@ -5,12 +5,13 @@ import picocli.CommandLine.Command;
 import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexerWrapper;
 
 /**
  * Print a message redirecting user to the original CLI tool.
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.BAM_Manipulation.BAIIndexer
+ * @see BAIIndexerWrapper
  */
 @Command(name = "bam-indexer", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_indexer_description + "\n"+

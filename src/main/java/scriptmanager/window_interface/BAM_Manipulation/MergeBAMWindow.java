@@ -31,7 +31,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexerWrapper;
 import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
 
 @SuppressWarnings("serial")
@@ -68,7 +68,7 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 				MergeBAM.run(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
 				// Index if checkbox selected
 				if(chckbxGenerateBaiindex.isSelected()) {
-					BAIIndexer.generateIndex(OUTPUT);
+					BAIIndexerWrapper.generateIndex(OUTPUT);
 				}
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Merging Complete");

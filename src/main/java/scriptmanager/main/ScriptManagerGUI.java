@@ -10,6 +10,7 @@ import scriptmanager.objects.ToolDescriptions;
 
 import scriptmanager.window_interface.BAM_Format_Converter.*;
 import scriptmanager.window_interface.BAM_Manipulation.*;
+import scriptmanager.window_interface.BAM_Statistics.CollectBaseDistributionByCycleWindow;
 import scriptmanager.window_interface.BAM_Statistics.PEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.SEStatWindow;
 import scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow;
@@ -167,6 +168,34 @@ public class ScriptManagerGUI {
 		sl_pnlStat.putConstraint(SpringLayout.WEST, txtBamGenomeCorrelation, 10, SpringLayout.EAST,
 				btnBamGenomeCorrelation);
 		pnlStat.add(btnBamGenomeCorrelation);
+
+		JTextArea txtCollectBase = new JTextArea();
+		sl_pnlStat.putConstraint(SpringLayout.NORTH, txtCollectBase, 20, SpringLayout.SOUTH, txtBamGenomeCorrelation);
+		sl_pnlStat.putConstraint(SpringLayout.EAST, txtCollectBase, -10, SpringLayout.EAST, pnlStat);
+		initializeTextArea(txtCollectBase);
+
+		txtCollectBase.setText(ToolDescriptions.collect_base_distribution_by_cycle_description);
+		pnlStat.add(txtCollectBase);
+
+		JButton btnCollectBase = new JButton("Collect BAM Distribution");
+		btnCollectBase.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							CollectBaseDistributionByCycleWindow frame = new CollectBaseDistributionByCycleWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlStat.putConstraint(SpringLayout.NORTH, btnCollectBase, 0, SpringLayout.NORTH, txtCollectBase);
+		sl_pnlStat.putConstraint(SpringLayout.WEST, btnCollectBase, 10, SpringLayout.WEST, pnlStat);
+		sl_pnlStat.putConstraint(SpringLayout.WEST, txtCollectBase, 10, SpringLayout.EAST, btnCollectBase);
+		pnlStat.add(btnCollectBase);
 
 		// >>>>>>>> BAM_Manipulation <<<<<<<<
 		JPanel pnlBamManip = new JPanel();
@@ -390,6 +419,36 @@ public class ScriptManagerGUI {
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnValidateSamFile, 10, SpringLayout.WEST, pnlBamManip);
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtValidateSamFile, 10, SpringLayout.EAST, btnValidateSamFile);
 		pnlBamManip.add(btnValidateSamFile);
+
+		// NormalizeFasta
+
+		JTextArea txtNormalizeFasta = new JTextArea();
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtNormalizeFasta, 20, SpringLayout.SOUTH, txtValidateSamFile);
+		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtNormalizeFasta, -10, SpringLayout.EAST, pnlBamManip);
+		initializeTextArea(txtNormalizeFasta);
+
+		txtNormalizeFasta.setText(ToolDescriptions.normalize_fasta_description);
+		pnlBamManip.add(txtNormalizeFasta);
+
+		JButton btnNormalizeFasta = new JButton("Normalize FASTA File");
+		btnNormalizeFasta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							NormalizeFastaWindow frame = new NormalizeFastaWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, btnNormalizeFasta, 0, SpringLayout.NORTH, txtNormalizeFasta);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnNormalizeFasta, 10, SpringLayout.WEST, pnlBamManip);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtNormalizeFasta, 10, SpringLayout.EAST, btnNormalizeFasta);
+		pnlBamManip.add(btnNormalizeFasta);
 
 		// >>>>>>>> BAM_Format_Converter <<<<<<<<
 		JPanel pnlBamConvert = new JPanel();

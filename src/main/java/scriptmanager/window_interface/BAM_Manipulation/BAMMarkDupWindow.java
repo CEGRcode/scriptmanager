@@ -30,7 +30,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexerWrapper;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
 @SuppressWarnings("serial")
@@ -73,7 +73,7 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
         	    dedup.run();
         	    
-        	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
+        	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexerWrapper.generateIndex(OUTPUT);	}
         	    
         	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
         		setProgress(percentComplete);

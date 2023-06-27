@@ -28,7 +28,7 @@ public class ToolDescriptions {
 	public static final String se_stat_description = "Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.";
 	public static final String pe_stat_description = "Generates Insert-size Histogram statistics (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.";
 	public static final String bam_correlation_description = "Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.";
-
+	public static final String collect_base_distribution_by_cycle_description = "Chart the nucleotide distribution per cycle in a BAM file";
 	// BAM Manipulation
 	public static final String bam_indexer_description = "Generates BAI Index for input BAM files. Output BAI is in the same directory as input BAM file."; //*
 	public static final String sort_bam_description = "Sort BAM files in order to efficiently extract and manipulate.\nRAM intensive process. If program freezes, increase JAVA heap size."; //*
@@ -37,6 +37,7 @@ public class ToolDescriptions {
 	public static final String filter_pip_seq_description = "Filter BAM file by -1 nucleotide. Requires genome FASTA file.";
 	public static final String downsample_sam_description = "Downsample a BAM file to a specified percentage or read count of deterministically random reads.";
 	public static final String validate_sam_file_description = "Validate SAM/BAM files comprehensively, ensuring adherence to the SAM format specification and detecting errors or inconsistencies in alignment data.";
+	public static final String normalize_fasta_description = "Reduce redundant sequences and normalize read coverage in a FASTA file, improving downstream analysis accuracy";
 
 	// BAM Format Converter
 	public static final String bam_to_scidx_description = "Convert BAM file to scIDX file.";

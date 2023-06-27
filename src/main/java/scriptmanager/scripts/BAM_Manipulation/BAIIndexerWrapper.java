@@ -10,9 +10,9 @@ import java.util.ArrayList;
  * Picard wrapper for BuildBamIndex
  * 
  * @author Erik Pavloski
- * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWIndow
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWindow
  */
-public class BAIIndexer {
+public class BAIIndexerWrapper {
 	/**
 	 * Index a BAM file and output said index to a file of the same name with a .bai
 	 * extension
@@ -25,7 +25,8 @@ public class BAIIndexer {
 		// Tells user that their file is being generated
 		System.out.println("Generating Index File...");
 		// Build output filepath
-		String output = input.getCanonicalPath() + ".bai";
+		String[] NAME = input.getName().split("\\.");
+		String output = input.getParent() + File.separator + NAME[0] + "_index.bai";
 		File retVal = new File(output);
 		// Instatiate Picard object
 		final BuildBamIndex buildBamIndex = new BuildBamIndex();
@@ -35,7 +36,6 @@ public class BAIIndexer {
 		args.add("OUTPUT=" + retVal.getAbsolutePath());
 		// Call Picard with args
 		buildBamIndex.instanceMain(args.toArray(new String[args.size()]));
-
 		System.out.println("Index File Generated");
 		return retVal;
 	}

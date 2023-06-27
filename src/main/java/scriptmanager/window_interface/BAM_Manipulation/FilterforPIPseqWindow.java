@@ -33,7 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import scriptmanager.util.FileSelection;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexerWrapper;
 
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -79,7 +79,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 					filter.run();
 
 					if (chckbxGenerateBaiIndex.isSelected()) {
-						BAIIndexer.generateIndex(OUTPUT);
+						BAIIndexerWrapper.generateIndex(OUTPUT);
 					}
 
 					int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);

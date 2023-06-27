@@ -28,7 +28,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexerWrapper;
 
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -52,7 +52,7 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 			try {
 				for(int x = 0; x < BAMFiles.size(); x++) {
 					// Execute Picard wrapper
-					BAIIndexer.generateIndex(BAMFiles.get(x));
+					BAIIndexerWrapper.generateIndex(BAMFiles.get(x));
 					// Update progress
 					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
 					setProgress(percentComplete);

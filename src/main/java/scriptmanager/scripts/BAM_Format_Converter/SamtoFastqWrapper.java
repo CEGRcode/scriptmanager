@@ -29,11 +29,11 @@ public static void run(File input, File output, boolean compress, boolean perRG,
             final ArrayList<String> args = new ArrayList<>();
             args.add("INPUT=" + input.getAbsolutePath());
             if (compress) {
+                args.add("OUTPUT_DIR=" + outputDir.getCanonicalPath());
                 args.add("COMPRESS_OUTPUTS_PER_RG=" + true);
-                args.add("OUTPUT_DIR=" + outputDir.getCanonicalPath());
             } else if (perRG) {
-                args.add("OUTPUT_PER_RG=" + true);
                 args.add("OUTPUT_DIR=" + outputDir.getCanonicalPath());
+                args.add("OUTPUT_PER_RG=" + true);
             } else {
                 args.add("FASTQ=" + output.getAbsolutePath());
             }

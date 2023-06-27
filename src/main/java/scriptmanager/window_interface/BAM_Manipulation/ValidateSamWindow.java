@@ -1,7 +1,7 @@
 package scriptmanager.window_interface.BAM_Manipulation;
 
 import htsjdk.samtools.SAMException;
-import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.scripts.BAM_Manipulation.BAIIndexerWrapper;
 import scriptmanager.scripts.BAM_Manipulation.ValidateSamWrapper;
 import scriptmanager.util.FileSelection;
 
@@ -77,7 +77,7 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
                         OUTPUT = new File(NAME[0] + "_validated.html");
                     }
                     if (chckbxGenerateBaiIndex.isSelected()) {
-                        BAIIndexer.generateIndex(BAMFiles.get(x));
+                        BAIIndexerWrapper.generateIndex(BAMFiles.get(x));
                     }
                     mode = !chckbxSummaryMode.isSelected();
                     // Execute Picard wrapper
@@ -141,8 +141,6 @@ public class ValidateSamWindow  extends JFrame implements ActionListener, Proper
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadSam, 6, SpringLayout.SOUTH, btnLoadBam);
         sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadSam, 5, SpringLayout.WEST, contentPane);
         sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadSam, 60, SpringLayout.NORTH, btnLoadBam);
-
-
 
         btnLoadSam.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

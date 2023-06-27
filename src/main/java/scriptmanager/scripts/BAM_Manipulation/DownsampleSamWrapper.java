@@ -1,7 +1,6 @@
 package scriptmanager.scripts.BAM_Manipulation;
 
 import htsjdk.samtools.SAMException;
-import scriptmanager.window_interface.BAM_Manipulation.DownsampleSamWindow;
 
 import java.io.File;
 import java.io.IOException;
