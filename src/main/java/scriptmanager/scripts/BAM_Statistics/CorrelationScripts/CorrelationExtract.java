@@ -9,6 +9,11 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
+/**
+ * Object for calculating correlation between two CorrelationCoords
+ * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
+ * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
+ */
 public class CorrelationExtract implements Runnable {
 	Vector<CorrelationCoord> ALLNodes;	
 	
@@ -24,6 +29,17 @@ public class CorrelationExtract implements Runnable {
 	
 	SamReader inputSam;
 	
+	/**
+	 * Creates a new CorrelationExtract object given parameters
+	 * @param win Set of CorrelationCoords to compare
+	 * @param r Which reads to correlate 
+	 * @param s The tag shift in #of base pairs
+	 * @param b The bin size in #of base pairs
+	 * @param current Specifies the current  
+	 * @param sub ️
+	 * @param e1 First SAM file
+	 * @param e2 Second SAM file
+	 */
 	public CorrelationExtract(Vector<CorrelationCoord> win, int r, int s, int b, int current, int sub, File e1, File e2) {
 		ALLNodes = win;
 		READ = r;
@@ -35,6 +51,9 @@ public class CorrelationExtract implements Runnable {
 		EXP2 = e2;
 	}
 	
+	/**
+	 * Runs the correlation analysis between the two SAM files
+	 */
 	public void run() {
 		for(int x = INDEX; x < INDEX + SUBSETSIZE; x++) {
 			inputSam = SamReaderFactory.makeDefault().open(EXP1);
@@ -75,6 +94,10 @@ public class CorrelationExtract implements Runnable {
 		}
 	}	
 	
+	/**
+	 * Extracts region for correlation given a CorrelationCoord
+	 * @param current CorrelationCoord to analyze
+	 */
 	public void extractRegion(CorrelationCoord current) {
 		int WINDOW = current.getStop() - current.getStart();
 		if(WINDOW < 1) {

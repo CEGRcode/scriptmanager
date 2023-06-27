@@ -16,7 +16,6 @@ import scriptmanager.util.ExtensionFileFilter;
 /**
  * Command line interface class for performing the ArchTEX cross correlation
  * analysis by calling a method implemented in the scripts package.
- * 
  * @author Olivia Lang
  * @see scriptmanager.objects.ArchTEx.CorrParameter
  * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation

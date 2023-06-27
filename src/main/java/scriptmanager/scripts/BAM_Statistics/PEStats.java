@@ -308,9 +308,9 @@ public class PEStats {
 	}
 	
 	/**
-	 * Returns the correct X-value for the Pair-End Duplication Rate plot
-	 * @param COUNT Frequency of duplications
-	 * @return The index/X-value for a given amount of duplications
+	 * Returns the correct X-value for the Pair-End Duplication Rate plot given a number of duplications
+	 * @param COUNT Frequency/number of duplications
+	 * @return The index/X-value for a given number of duplications
 	 */
 	public static int getBinIndex(int COUNT) {
 		if(COUNT == 1) return 0;
@@ -332,7 +332,7 @@ public class PEStats {
 	}
 	
 	/**
-	 * Initializes ArrayList of values for Pair-End Duplication Rate plot 
+	 * Initializes ArrayList of values (the X-axis) for Pair-End Duplication Rate plot 
 	 * @param BIN ArrayList to be initialized
 	 */
 	public static void initializeBINS(ArrayList<Double> BIN) {

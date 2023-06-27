@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Statistics.SEStats;
 /**
- * Displays window with results from SEStats script (the BAM's header)
+ * Graphical window for viewing results form the SEStats script
  * @see scriptmanager.scripts.BAM_Statistics.SEStats
  * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
  */

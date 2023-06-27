@@ -18,7 +18,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 /**
-	BAM_StatisticsCLI/SEStats
+* Command line interface class for performing 
+* @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
 */
 @Command(name = "bam-correlation", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_correlation_description,
