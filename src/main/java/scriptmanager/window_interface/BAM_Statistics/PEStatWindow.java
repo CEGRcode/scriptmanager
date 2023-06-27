@@ -35,12 +35,12 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
-@SuppressWarnings("serial")
 /**
  * Graphical window for user argument selection and execution of the PEStats script.
  * @see scriptmanager.scripts.BAM_Statistics.SEStats
  * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
  */
+@SuppressWarnings("serial")
 public class PEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	

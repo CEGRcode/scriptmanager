@@ -28,8 +28,8 @@ import scriptmanager.charts.LineChart;
  * and parameters given a sorted and indexed (BAI) paired-end BAM File.
  * @author Olivia Lang
  * @see scriptmanager.cli.BAM_Statistics.PEStatsCLI
- * @see scriptmanager.window_interface.BAM_Statistics.PEStatsWindow
- * @see scriptmanager.window_interface.BAM_Statistics.PEStatsWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatWindow
  */
 public class PEStats {
 	
