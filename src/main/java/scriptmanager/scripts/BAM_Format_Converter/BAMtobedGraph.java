@@ -15,6 +15,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Script to convert BAM file to bedGraph file
+ */
 public class BAMtobedGraph {
 	private File BAM = null;
 	private String OUTBASENAME = null;

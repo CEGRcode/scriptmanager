@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
-
+/**
+ * Script to convert BAM file to BED file
+ */
 public class BAMtoBED {
 	private File BAM = null;
 	private File OUTFILE = null;
@@ -30,6 +32,16 @@ public class BAMtoBED {
 
 	private int CHROMSTOP = -999;
 
+	/**
+	 * Creates a new instance of a BAMtoBED script with a single BAM file
+	 * @param b BAM file
+	 * @param o Output file
+	 * @param s Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
+	 * @param min_size Minimum acceptable insert size
+	 * @param max_size Maximum acceptable insert size
+	 * @param ps PrintStream to output results
+	 */
 	public BAMtoBED(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;
 		OUTFILE = o;
@@ -51,6 +63,11 @@ public class BAMtoBED {
 		}
 	}
 
+	/**
+	 * Runs the processReads method and checks that data is inputs are valid
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
@@ -122,6 +139,10 @@ public class BAMtoBED {
 		printPS(getTimeStamp());
 	}
 
+	/**
+	 * Checks to make sure reads in BAM file are valid and writes to BED file and output stream
+	 * @param read
+	 */
 	public void outputRead(SAMRecord read) {
 		// chr7 118970079 118970129 TUPAC_0001:3:1:0:1452#0/1 37 -
 		// chr7 118965072 118965122 TUPAC_0001:3:1:0:1452#0/2 37 +
@@ -165,6 +186,9 @@ public class BAMtoBED {
 		}
 	}
 
+	/**
+	 * Parses reads for {@link BAMtoBED#outputRead(SAMRecord)}
+	 */
 	public void processREADS() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();

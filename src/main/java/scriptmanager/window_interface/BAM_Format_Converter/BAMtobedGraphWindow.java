@@ -37,6 +37,11 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * Graphical window for user argument selection of the BAMtobedGraphOutput script.
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraph
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraph
+ */
 @SuppressWarnings("serial")
 public class BAMtobedGraphWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -127,6 +132,9 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Creates a new BAMtobedGraphWindow
+	 */
 	public BAMtobedGraphWindow() {
 		setTitle("BAM to bedGraph Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -332,6 +340,9 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 		});
 	}
 
+	/**
+	 * Runs every time an action is performed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);

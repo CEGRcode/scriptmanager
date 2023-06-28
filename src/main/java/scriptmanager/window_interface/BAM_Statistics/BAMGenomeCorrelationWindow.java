@@ -43,6 +43,11 @@ import javax.swing.border.TitledBorder;
 import scriptmanager.charts.HeatMap;
 import scriptmanager.util.FileSelection;
 
+/**
+ * Graphical window for collecting user argument selection to be used with the BAMGenomeCorrelation script.
+ * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
+ * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationOutput
+ */
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -127,6 +132,9 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		}
 	}
 	
+	/**
+	 * Creates a new instance of a BAMGenomeCorrelationWindow
+	 */
 	public BAMGenomeCorrelationWindow() {
 		setTitle("BAM Genome Correlation");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -385,7 +393,10 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		btnCorrelate.addActionListener(this);
 	}
 	
-	@Override
+	/**
+	 * Checks if inputs are valid
+	 * @Override
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
     	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -406,6 +417,11 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		}
 	}
 
+	/**
+	 * Makes a content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

@@ -12,6 +12,9 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph;
 
+/**
+ * 
+ */
 @SuppressWarnings("serial")
 public class BAMtobedGraphOutput extends JFrame {
 	private File BAM = null;
@@ -25,6 +28,16 @@ public class BAMtobedGraphOutput extends JFrame {
 
 	private JTextArea textArea;
 
+	/**
+	 * Creates a new instance of a BAMtoBED script with a single BAM file
+	 * @param b BAM file
+	 * @param o Output file
+	 * @param s Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
+	 * @param min_size Minimum acceptable insert size
+	 * @param max_size Maximum acceptable insert size
+	 * @param ps PrintStream to output results
+	 */
 	public BAMtobedGraphOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to bedGraph Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -54,6 +67,11 @@ public class BAMtobedGraphOutput extends JFrame {
 		}
 	}
 
+	/**
+	 * Runs the BAMtobedGraph script
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
 		String OUTBASENAME = BAM.getName().split("\\.")[0] + "_" + READ;

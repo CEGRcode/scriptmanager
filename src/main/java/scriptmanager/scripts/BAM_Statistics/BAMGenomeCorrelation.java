@@ -52,7 +52,7 @@ public class BAMGenomeCorrelation extends Component {
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 	
 	/**
-	 * Creates a new BAMGenomeCOrrelation object given parameters
+	 * Creates a new BAMGenomeCorrelation object given parameters
 	 * @param input Vector containing bam files
 	 * @param o Base name for output files
 	 * @param s The tag shift in #of base pairs
@@ -132,7 +132,7 @@ public class BAMGenomeCorrelation extends Component {
 	}
 	
 	/**
-	 * Performs reflexive pearson correlaiton between two given genomes
+	 * Performs reflexive pearson correlation calculations between two given genomes
 	 * @param exp1 First genome
 	 * @param exp2 Second genome
 	 * @return correlation value

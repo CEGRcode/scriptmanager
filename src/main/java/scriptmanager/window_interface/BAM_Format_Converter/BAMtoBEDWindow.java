@@ -37,6 +37,11 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * Graphical window for user argument selection and execution of the BAMtoBEDOutput script.
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBED
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDOutput
+ */
 @SuppressWarnings("serial")
 public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -129,6 +134,9 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Creates a new BAMtoBEDWindow
+	 */
 	public BAMtoBEDWindow() {
 		setTitle("BAM to BED Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -352,6 +360,9 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		});
 	}
 
+	/**
+	 * Runs every time an action is performed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -372,6 +383,11 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Makes a content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);
