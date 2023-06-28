@@ -56,6 +56,17 @@
         <option value="808080" selected="True">gray</option>
         <option value="000000">black</option>
     </xml>
+    <xml name="color_selector_default_black">
+        <option value="FF0000" >red</option>
+        <option value="00FF00">green</option>
+        <option value="0000FF">blue</option>
+        <option value="FFFF00">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000" selected="True">black</option>
+    </xml>
+
 
     <xml name="stdio">
         <stdio>
