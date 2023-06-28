@@ -119,7 +119,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private CompositeCartoon compositeCartoon;
 
 	// Names of fields indexed by PileupParameters constants
-	private String[] readAspectOptions = {"5' End", "3' End", "Midpoint (Require PE)", "Full Fragment (Require PE)"};
+	private String[] readAspectOptions = {"5' End", "3' End", "Midpoint", "Full Fragment"};
 	private String[] readOutputOptions = {"Read 1", "Read 2", "All Reads"};
 	private String[] transformationOptions = {"None", "Sliding Window", "Gaussian Smooth"};
 
