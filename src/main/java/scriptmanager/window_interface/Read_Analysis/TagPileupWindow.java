@@ -135,26 +135,28 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			try {
 				if (Integer.parseInt(txtBin.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
+				} else if (Integer.parseInt(txtTagExtend.getText()) < 0) {
+					JOptionPane.showMessageDialog(null, "Invalid Tag Extend length!!! Must be non-negative bp length" + "\n\n" + "Consider adjusting the shift bp value if you are interested in negative extensions.", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.WINDOW && Integer.parseInt(txtSmooth.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be larger than 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be larger than 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.WINDOW && Integer.parseInt(txtSmooth.getText()) % 2 == 0) {
-					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be odd for symmetrical smoothing (so that the window is centered properly).");
+					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be odd for symmetrical smoothing (so that the window is centered properly).", "Validate Options", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.GAUSSIAN && Integer.parseInt(txtStdSize.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Standard Deviation Size!!! Must be larger than 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Standard Deviation Size!!! Must be larger than 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.GAUSSIAN && Integer.parseInt(txtNumStd.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Number of Standard Deviations!!! Must be larger than 0");
+					JOptionPane.showMessageDialog(null, "Invalid Number of Standard Deviations!!! Must be larger than 0", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (Integer.parseInt(txtCPU.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Number of CPU's!!! Must use at least 1");
+					JOptionPane.showMessageDialog(null, "Invalid Number of CPU's!!! Must use at least 1", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (chckbxFilterByMin.isSelected() && Integer.parseInt(txtMin.getText()) < 0) {
-					JOptionPane.showMessageDialog(null, "Invalid Minimum Insert Size!!! Must be greater than or equal to 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Minimum Insert Size!!! Must be greater than or equal to 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (chckbxFilterByMax.isSelected() && Integer.parseInt(txtMax.getText()) < 0) {
-					JOptionPane.showMessageDialog(null, "Invalid Maximum Insert Size!!! Must be greater than or equal to 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Maximum Insert Size!!! Must be greater than or equal to 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (chckbxFilterByMin.isSelected() && chckbxFilterByMax.isSelected() && Integer.parseInt(txtMax.getText()) < Integer.parseInt(txtMin.getText())) {
-					JOptionPane.showMessageDialog(null, "Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!");
+					JOptionPane.showMessageDialog(null, "Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (BEDFiles.size() < 1) {
-					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
+					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (BAMFiles.size() < 1) {
-					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
+					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else {
 					setProgress(0);
 					// Load up parameters for the pileup into single object
@@ -239,7 +241,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					return null;
 				}
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 			}
 			return null;
 		}
@@ -552,7 +554,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_ReadManipulation.putConstraint(SpringLayout.NORTH, txtTagExtend, -1, SpringLayout.NORTH, lblTagExtend);
 		sl_ReadManipulation.putConstraint(SpringLayout.WEST, txtTagExtend, 120, SpringLayout.WEST, lblTagExtend);
 		sl_ReadManipulation.putConstraint(SpringLayout.EAST, txtTagExtend, -6, SpringLayout.EAST, pnlReadManipulation);
-		txtTagExtend.setText("1");
+		txtTagExtend.setText("0");
 		txtTagExtend.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTagExtend.setColumns(10);
 		pnlReadManipulation.add(txtTagExtend);
