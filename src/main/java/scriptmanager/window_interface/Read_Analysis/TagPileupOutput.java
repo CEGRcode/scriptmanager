@@ -5,7 +5,9 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -19,6 +21,8 @@ import javax.swing.SpringLayout;
 import scriptmanager.charts.CompositePlot;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
+import scriptmanager.cli.Read_Analysis.TagPileupCLI;
 import scriptmanager.scripts.Read_Analysis.TagPileup;
 import scriptmanager.util.BAMUtilities;
 
@@ -44,18 +48,14 @@ public class TagPileupOutput extends JFrame {
 	final JTabbedPane tabbedPane_Statistics;
 
 	/**
-	 * Store inputs and initialize a tabbed pane to display composite plot
-	 * results and the composite plot values.
+	 * Store inputs and initialize a tabbed pane to display composite plot results
+	 * and the composite plot values.
 	 * 
-	 * @param be
-	 *            the list of input BED coordinate RefPT files
-	 * @param ba
-	 *            the list of input BAM tag alignment files
-	 * @param param
-	 *            the custom object to store configurations for how to perform
-	 *            the TagPileup
-	 * @param colors
-	 *            the list of colors to use for the composite plots
+	 * @param be     the list of input BED coordinate RefPT files
+	 * @param ba     the list of input BAM tag alignment files
+	 * @param param  the custom object to store configurations for how to perform
+	 *               the TagPileup
+	 * @param colors the list of colors to use for the composite plots
 	 */
 	public TagPileupOutput(Vector<File> be, Vector<File> ba, PileupParameters param, ArrayList<Color> colors) {
 		setTitle("Tag Pileup Composite");
@@ -112,6 +112,7 @@ public class TagPileupOutput extends JFrame {
 			}
 		}
 
+		LogItem old_li = new LogItem("");
 		int PROGRESS = 0;
 		for (int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z); // Pull current BAM file
@@ -123,15 +124,28 @@ public class TagPileupOutput extends JFrame {
 					PARAM.setRatio(BAMUtilities.calculateStandardizationRatio(BAM, PARAM.getRead()));
 				}
 
+				// Loop through each BED file
 				for (int BED_Index = 0; BED_Index < BEDFiles.size(); BED_Index++) {
-					System.err.println( "Processing BAM: " + BAM.getName() + "\tCoordinate: " + BEDFiles.get(BED_Index).getName());
+					File XBED  = BEDFiles.get(BED_Index);
+					System.err.println( "Processing BAM: " + BAM.getName() + "\tCoordinate: " + XBED.getName());
 
-					JTextArea STATS = new JTextArea(); // Generate statistics object
+					// Generate statistics object for printing composite results
+					JTextArea STATS = new JTextArea();
 					STATS.setEditable(false); // Make it un-editable
 					PrintStream ps = new PrintStream(new CustomOutputStream(STATS));
 
-					TagPileup script_obj = new TagPileup(BEDFiles.get(BED_Index), BAM, PARAM, ps, null);
+					// Initialize LogItem
+					String command = TagPileupCLI.getCLIcommand(XBED, BAM, PARAM);
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+
+					// Execute conversion and update progress
+					TagPileup script_obj = new TagPileup(XBED, BAM, PARAM, ps, null);
 					script_obj.run();
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
 
 					// Make composite plots
 					if (PARAM.getStrand() == PileupParameters.SEPARATE) {
@@ -140,15 +154,18 @@ public class TagPileupOutput extends JFrame {
 						tabbedPane_Scatterplot.add(BAM.getName(), CompositePlot.createCompositePlot(script_obj.DOMAIN, script_obj.AVG_S1, BEDFiles.get(BED_Index).getName(), COLORS));
 					}
 
+					// Add statistics to new tab
 					STATS.setCaretPosition(0);
-					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-							JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					JScrollPane newpane = new JScrollPane(STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					tabbedPane_Statistics.add(BAM.getName(), newpane);
+
+					// Update progress
 					firePropertyChange("tag", PROGRESS, PROGRESS + 1);
 					PROGRESS++;
 				}
 			}
 		}
+		firePropertyChange("log", old_li, null);
 	}
 
 }

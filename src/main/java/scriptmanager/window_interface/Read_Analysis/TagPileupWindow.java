@@ -46,6 +46,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import htsjdk.samtools.SAMException;
 import scriptmanager.objects.CompositeCartoon;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
@@ -223,8 +224,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					//debug gui by printing params
 //					param.printAll();
 
+					// Initialize, addPropertyChangeListeners, and execute
 					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
-
 					pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -232,8 +233,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 							setProgress(percentComplete);
 						}
 					});
-
-
+					pile.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
 					pile.setVisible(true);
 					pile.run();
 
@@ -242,6 +246,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
+			} catch (SAMException se) {
+				JOptionPane.showMessageDialog(null, se.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
 			}
 			return null;
 		}
@@ -1134,6 +1140,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 }

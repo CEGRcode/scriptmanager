@@ -1,25 +1,39 @@
 package scriptmanager.scripts.BAM_Manipulation;
 
+import htsjdk.samtools.SAMException;
 import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileWriter;
-import htsjdk.samtools.SAMFileWriterFactory;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.util.IOUtil;
+import picard.sam.SortSam;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+/**
+ * Picard wrapper for MergeSamFiles SortSam
+ * 
+ * @author Erik Pavloski
+ * @see scriptmanager.window_interface.BAM_Manipulation.SortBAMWindow
+ */
 public class BAMFileSort {
-	public static void sort(File INPUT, File OUTPUT) {
-		IOUtil.assertFileIsReadable(INPUT);
-        IOUtil.assertFileIsWritable(OUTPUT);
-        final SamReader reader = SamReaderFactory.makeDefault().open(INPUT);
-        reader.getFileHeader().setSortOrder(SAMFileHeader.SortOrder.coordinate);
-        final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, OUTPUT);
-        for (final SAMRecord rec: reader) {
-            writer.addAlignment(rec);
-        }
-        writer.close();
-	}
+	/**
+	 * The following code uses Picard's SortSam to sort a BAM file by coordinate
+	 * 
+	 * @param input the BAM file to be sorted (corresponds to INPUT)
+	 * @param output the file to write the sorted BAM to (corresponds to OUTPUT)
+	 * @throws SAMException
+	 * @throws IOException
+	 */
+    public static void sort(File input, File output) throws SAMException, IOException {
+        // Tells user their File is being sorted
+        System.out.println("Sorting Bam File...");
+		// Instatiate Picard object
+            final SortSam sorter = new SortSam();
+		// Build input argument string
+            final ArrayList<String> args = new ArrayList<>();
+            args.add("INPUT=" + input.getAbsolutePath());
+            args.add("OUTPUT=" + output.getAbsolutePath());
+            args.add("SORT_ORDER=" + SAMFileHeader.SortOrder.coordinate);
+            // Call Picard with args
+            sorter.instanceMain(args.toArray(new String[args.size()]));
+    }
 }

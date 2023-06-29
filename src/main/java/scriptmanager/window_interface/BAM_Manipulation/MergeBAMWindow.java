@@ -1,5 +1,7 @@
 package scriptmanager.window_interface.BAM_Manipulation;
 
+import htsjdk.samtools.SAMException;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -10,7 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -31,7 +32,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
-import scriptmanager.scripts.BAM_Manipulation.MergeSamFiles;
+import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
 
 @SuppressWarnings("serial")
 public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -39,9 +40,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> expList;
-	List<File> BAMFiles = new ArrayList<File>();
+	ArrayList<File> BAMFiles = new ArrayList<File>();
     private File OUTPUT = null;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
@@ -59,15 +60,21 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	if(OUTPUT_PATH != null) { OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + txtOutput.getText()); }
-     	    else { OUTPUT = new File(txtOutput.getText()); }
-        	MergeSamFiles merge = new MergeSamFiles(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
-    		merge.run();
-
-    		if(chckbxGenerateBaiindex.isSelected()) {
-				BAIIndexer.generateIndex(OUTPUT);
-			}	
-			JOptionPane.showMessageDialog(null, "Merging Complete");
+			try {
+				// Build output filepath
+				if(OUT_DIR != null) { OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + txtOutput.getText()); }
+				else { OUTPUT = new File(txtOutput.getText()); }
+				// Execute Picard wrapper
+				MergeBAM.run(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
+				// Index if checkbox selected
+				if(chckbxGenerateBaiindex.isSelected()) {
+					BAIIndexer.generateIndex(OUTPUT);
+				}
+				setProgress(100);
+				JOptionPane.showMessageDialog(null, "Merging Complete");
+			} catch (SAMException se) {
+				JOptionPane.showMessageDialog(null, se.getMessage());
+			}
         	return null;
         }
         
@@ -187,9 +194,10 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
         btnOutput.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+        		File temp = FileSelection.getOutputDir(fc);
+    			if(temp != null) {
+    				OUT_DIR = temp;
+    				lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
     			}
         	}
         });

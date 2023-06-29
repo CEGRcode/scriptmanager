@@ -64,11 +64,11 @@ public class TagPileup {
 				String NAME0;
 				String NAME1;
 				if (outMatrixBasename == null) {
-					NAME0 = PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 0);
-					NAME1 = PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 1);
+					NAME0 = PARAM.getOutputDirectory() + File.separator + PARAM.generateFileName(BED.getName(), BAM.getName(), 0);
+					NAME1 = PARAM.getOutputDirectory() + File.separator + PARAM.generateFileName(BED.getName(), BAM.getName(), 1);
 				} else {
-					NAME0 = generateFileName(outMatrixBasename, 0);
-					NAME1 = generateFileName(outMatrixBasename, 1);
+					NAME0 = PARAM.generateFileName(outMatrixBasename, 0);
+					NAME1 = PARAM.generateFileName(outMatrixBasename, 1);
 				}
 				// Build streams
 				if (PARAM.getOutputGZIP()) {
@@ -82,9 +82,9 @@ public class TagPileup {
 				// Set FileName
 				String NAME2;
 				if (outMatrixBasename == null) {
-					NAME2 = PARAM.getOutputDirectory() + File.separator + generateFileName(BED.getName(), BAM.getName(), 2);
+					NAME2 = PARAM.getOutputDirectory() + File.separator + PARAM.generateFileName(BED.getName(), BAM.getName(), 2);
 				} else {
-					NAME2 = generateFileName(outMatrixBasename, 2);
+					NAME2 = PARAM.generateFileName(outMatrixBasename, 2);
 				}
 				if (PARAM.getOutputGZIP()) {
 					OUT_S1 = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(NAME2)), "UTF-8");
@@ -251,18 +251,18 @@ public class TagPileup {
 			}
 			COMPOSITE.println();
 			if (STRAND == 0) {
-				COMPOSITE.print(generateFileName(BED.getName(), BAM.getName(), 0));
+				COMPOSITE.print(PARAM.generateFileName(BED.getName(), BAM.getName(), 0));
 				for (int a = 0; a < AVG_S1.length; a++) {
 					COMPOSITE.print("\t" + AVG_S1[a]);
 				}
 				COMPOSITE.println();
-				COMPOSITE.print(generateFileName(BED.getName(), BAM.getName(), 1));
+				COMPOSITE.print(PARAM.generateFileName(BED.getName(), BAM.getName(), 1));
 				for (int a = 0; a < AVG_S2.length; a++) {
 					COMPOSITE.print("\t" + AVG_S2[a]);
 				}
 				COMPOSITE.println();
 			} else {
-				COMPOSITE.print(generateFileName(BED.getName(), BAM.getName(), 2));
+				COMPOSITE.print(PARAM.generateFileName(BED.getName(), BAM.getName(), 2));
 				for (int a = 0; a < AVG_S1.length; a++) {
 					COMPOSITE.print("\t" + AVG_S1[a]);
 				}
@@ -321,52 +321,6 @@ public class TagPileup {
 		}
 
 		return FINAL;
-	}
-
-	public String generateFileName(String bed, String bam, int strandnum) {
-		String[] bedname = bed.split("\\.");
-		String[] bamname = bam.split("\\.");
-
-		String read = "5read1";
-		if (PARAM.getAspect() == PileupParameters.FIVE && PARAM.getRead() == PileupParameters.READ2) {
-			read = "5read2";
-		} else if (PARAM.getAspect() == PileupParameters.FIVE && PARAM.getRead() == PileupParameters.ALLREADS) {
-			read = "5readc";
-		} else if (PARAM.getAspect() == PileupParameters.THREE && PARAM.getRead() == PileupParameters.READ1) {
-			read = "3read1";
-		} else if (PARAM.getAspect() == PileupParameters.THREE && PARAM.getRead() == PileupParameters.READ2) {
-			read = "3read2";
-		} else if (PARAM.getAspect() == PileupParameters.THREE && PARAM.getRead() == PileupParameters.ALLREADS) {
-			read = "3readc";
-		} else if (PARAM.getAspect() == PileupParameters.MIDPOINT) {
-			read = "midpoint";
-		} else if (PARAM.getAspect() == PileupParameters.FRAGMENT) {
-			read = "fragment";
-		}
-
-		return (generateFileName(bedname[0] + "_" + bamname[0] + "_" + read, strandnum));
-	}
-
-	public String generateFileName(String basename, int strandnum) {
-		String strand = "sense";
-		if (strandnum == 1) {
-			strand = "anti";
-		} else if (strandnum == 2) {
-			strand = "combined";
-		}
-
-		String filename = basename + "_" + strand;
-		if (PARAM.getOutputType() == 1) {
-			filename += ".tab";
-		} else {
-			filename += ".cdt";
-		}
-
-		if (PARAM.getOutputGZIP()) {
-			filename += ".gz";
-		}
-
-		return filename;
 	}
 
 	private static String getTimeStamp() {

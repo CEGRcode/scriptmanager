@@ -28,6 +28,7 @@ public class ToolDescriptions {
 	public static final String se_stat_description = "Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.";
 	public static final String pe_stat_description = "Generates Insert-size Histogram statistics (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.";
 	public static final String bam_correlation_description = "Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.";
+	public static final String archtex_crosscorrelation_description = ("Calculate optimal tag shift based on ArchTEx implementation (PMID:22302569)");
 
 	// BAM Manipulation
 	public static final String bam_indexer_description = "Generates BAI Index for input BAM files. Output BAI is in the same directory as input BAM file."; //*
