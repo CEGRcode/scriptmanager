@@ -37,6 +37,11 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * Graphical window for user argument selection of the BAMtoGFF script.
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFOutput
+ */
 @SuppressWarnings("serial")
 public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -129,6 +134,9 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Creates a new BAMtoGFFWindow
+	 */
 	public BAMtoGFFWindow() {
 		setTitle("BAM to GFF Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -352,6 +360,9 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		});
 	}
 
+	/**
+	 * Runs every time an action is performed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -363,7 +374,7 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress changes.
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -372,6 +383,11 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Makes a content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

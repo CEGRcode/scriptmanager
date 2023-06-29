@@ -14,7 +14,10 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 /**
- * Script to convert BAM file to BED file
+ * Script to convert a BAM file to BED file
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
+ * @see scriptmanager.cli.BAM_Format_Converter.BAMtoBEDCLI
  */
 public class BAMtoBED {
 	private File BAM = null;
@@ -64,7 +67,7 @@ public class BAMtoBED {
 	}
 
 	/**
-	 * Runs the processReads method and checks that data is inputs are valid
+	 * Runs the {@link BAMtoBED#processReads(SAMRecord)} method and checks that data is inputs are valid
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
@@ -140,8 +143,8 @@ public class BAMtoBED {
 	}
 
 	/**
-	 * Checks to make sure reads in BAM file are valid and writes to BED file and output stream
-	 * @param read
+	 * Writes reads to BED output file and the output stream
+	 * @param read Read to be written
 	 */
 	public void outputRead(SAMRecord read) {
 		// chr7 118970079 118970129 TUPAC_0001:3:1:0:1452#0/1 37 -
@@ -187,7 +190,7 @@ public class BAMtoBED {
 	}
 
 	/**
-	 * Parses reads for {@link BAMtoBED#outputRead(SAMRecord)}
+	 * Makes sure reads are valid, and passes them into {@link BAMtoBED#outputRead(SAMRecord)}
 	 */
 	public void processREADS() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);

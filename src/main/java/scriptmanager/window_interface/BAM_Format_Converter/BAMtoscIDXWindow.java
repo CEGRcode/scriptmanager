@@ -37,6 +37,11 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * Output window wrapper for executing the BAMtobedGraph script given arguments provided by BAMtobedGraph and displaying output
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXOutput
+ */
 @SuppressWarnings("serial")
 public class BAMtoscIDXWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -127,6 +132,9 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		}
 	}
 
+	/**
+	 * Creates a new BAMtoscIDXWindow
+	 */
 	public BAMtoscIDXWindow() {
 		setTitle("BAM to scIDX Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -332,6 +340,9 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		});
 	}
 
+	/**
+	 * Runs every time an action is performed.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -352,6 +363,11 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		}
 	}
 
+	/**
+	 * Makes a content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

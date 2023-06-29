@@ -15,8 +15,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
 
 /**
-	BAM_Format_ConverterCLI/BAMtosciIDXCLI
-*/
+ * Command line interface class for running BAMtoscIDX script with user defined arguments
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX
+ */
 @Command(name = "bam-to-scidx", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_scidx_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

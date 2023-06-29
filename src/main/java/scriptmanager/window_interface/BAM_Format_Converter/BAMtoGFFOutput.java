@@ -12,6 +12,11 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 
+/**
+ * Output window wrapper for executing the BAMtoGFF script given arguments provided by BAMtoGFF and displaying output
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow
+ */
 @SuppressWarnings("serial")
 public class BAMtoGFFOutput extends JFrame {
 	private File BAM = null;
@@ -25,6 +30,16 @@ public class BAMtoGFFOutput extends JFrame {
 
 	private JTextArea textArea;
 
+	/**
+	 * Creates a new instance of a BAMtoGFF script with a single BAM file
+	 * @param b BAM file
+	 * @param o Output file
+	 * @param s Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
+	 * @param min_size Minimum acceptable insert size
+	 * @param max_size Maximum acceptable insert size
+	 * @param ps PrintStream to output results
+	 */
 	public BAMtoGFFOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to GFF Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -55,7 +70,12 @@ public class BAMtoGFFOutput extends JFrame {
 			READ = "FRAGMENT";
 		}
 	}
-
+	
+	/**
+	 * Runs the BAMtoGFF script
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
 		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".gff";

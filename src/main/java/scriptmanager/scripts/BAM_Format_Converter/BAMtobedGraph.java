@@ -17,6 +17,9 @@ import java.util.Date;
 
 /**
  * Script to convert BAM file to bedGraph file
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
+ * @see scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI
  */
 public class BAMtobedGraph {
 	private File BAM = null;
@@ -40,6 +43,16 @@ public class BAMtobedGraph {
 
 	private int CHROMSTOP = -999;
 
+	/**
+	 * Creates a new instance of a BAMtobedGraph script with a single BAM file
+	 * @param b BAM file
+	 * @param o Output file
+	 * @param s Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
+	 * @param min_size Minimum acceptable insert size
+	 * @param max_size Maximum acceptable insert size
+	 * @param ps PrintStream to output results
+	 */
 	public BAMtobedGraph(File b, String o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;
 		OUTBASENAME = o;
@@ -59,6 +72,11 @@ public class BAMtobedGraph {
 		}
 	}
 
+	/**
+	 * Runs the {@link BAMtobedGraph#processREADS()} and {@link BAMtobedGraph#processMIDPOINT()} method and checks inputs are valid
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 
 		// Open Output File
@@ -144,6 +162,10 @@ public class BAMtobedGraph {
 		printPS(getTimeStamp());
 	}
 
+	/**
+	 * Adds valid reads to output file
+	 * @param sr SAMRecord to output
+	 */
 	public void addTag(SAMRecord sr) {
 		// Get the start of the record
 		int recordStart = sr.getUnclippedStart() - 1; // SAM to BED -1 convert
@@ -195,6 +217,10 @@ public class BAMtobedGraph {
 		}
 	}
 
+	/**
+	 * Marks the midpoint of a read
+	 * @param sr The read to be marked
+	 */
 	public void addMidTag(SAMRecord sr) {
 		// int recordMid = sr.getUnclippedStart() + (sr.getInferredInsertSize() / 2);
 		// if(sr.getReadNegativeStrandFlag()) { recordMid = sr.getUnclippedEnd() +
@@ -234,6 +260,10 @@ public class BAMtobedGraph {
 		}
 	}
 
+	/**
+	 * Removes up to 9000 bp's from the start of a chromosome string, outputting them to a file, to save memory
+	 * @param chrom Chromosome to be reduced
+	 */
 	public void dumpExcess(String chrom) {
 		int trim = 9000;
 		while (trim > 0) {
@@ -252,6 +282,10 @@ public class BAMtobedGraph {
 		}
 	}
 
+	/**
+	 * Removes at least 600 bp's from a chromsome string, outputting them to a file, to save memory
+	 * @param chrom Chromosome to be reduced
+	 */
 	public void dumpMidExcess(String chrom) {
 		int trim = (MAX_INSERT * 10) - (MAX_INSERT * 2);
 		if (MAX_INSERT * 10 < 1000) {
@@ -268,6 +302,9 @@ public class BAMtobedGraph {
 		}
 	}
 
+	/**
+	 * Makes sure reads are valid before calling {@link BAMtobedGraph#addTag(SAMRecord sr)} to output them to a file
+	 */
 	public void processREADS() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
@@ -366,6 +403,9 @@ public class BAMtobedGraph {
 		bai.close();
 	}
 
+	/**
+	 * Processes reads if 'Midpoint Record' was selected and validates them before calling {@link BAMtobedGraph#addTag(SAMRecord sr)}
+	 */
 	public void processMIDPOINT() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();

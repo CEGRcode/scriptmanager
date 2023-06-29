@@ -15,9 +15,9 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 
 /**
- * Command line interface class running BAMtoBED script with user defined arguments
+ * Command line interface class for running BAMtoBED script with user defined arguments
  * @author Olivia Lang
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBED
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoBED
  */
 @Command(name = "bam-to-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_bed_description,

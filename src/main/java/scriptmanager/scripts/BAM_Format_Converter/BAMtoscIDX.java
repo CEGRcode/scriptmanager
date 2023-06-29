@@ -15,6 +15,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+* Script to convert BAM file to scIDX file
+* @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXWindow
+* @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXOutput
+* @see scriptmanager.cli.BAM_Format_Converter.BAMtoscIDXCLI
+*/
 public class BAMtoscIDX {
 	private File BAM = null;
 	private File OUTFILE = null;
@@ -36,6 +42,16 @@ public class BAMtoscIDX {
 
 	private int CHROMSTOP = -999;
 
+	/**
+	 * Creates a new instance of a BAMtoscIDX script with a single BAM file
+	 * @param b BAM file
+	 * @param o Output file
+	 * @param s Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
+	 * @param min_size Minimum acceptable insert size
+	 * @param max_size Maximum acceptable insert size
+	 * @param ps PrintStream to output results
+	 */
 	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;
 		OUTFILE = o;
@@ -55,6 +71,11 @@ public class BAMtoscIDX {
 		}
 	}
 
+	/**
+	 * Runs the {@link BAMtoscIDX#processREADS()} and {@link BAMtoscIDX#processMIDPOINT()} method and checks that inputs are valid
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
@@ -127,6 +148,10 @@ public class BAMtoscIDX {
 		printPS(getTimeStamp());
 	}
 
+	/**
+	 * Adds valid reads to scIDX output file
+	 * @param sr SAMRecord to output
+	 */
 	public void addTag(SAMRecord sr) {
 		// Get the start of the record
 		int recordStart = sr.getUnclippedStart();// .getAlignmentStart();
@@ -178,6 +203,10 @@ public class BAMtoscIDX {
 		}
 	}
 
+	/**
+	 * Marks the midpoint of a read
+	 * @param sr The read to be marked
+	 */
 	public void addMidTag(SAMRecord sr) {
 		// int recordMid = sr.getUnclippedStart() + (sr.getInferredInsertSize() / 2);
 		// if(sr.getReadNegativeStrandFlag()) { recordMid = sr.getUnclippedEnd() +
@@ -218,6 +247,10 @@ public class BAMtoscIDX {
 
 	}
 
+	/**
+	 * Removes up to 9000 bp's from the start of a chromosome string, outputting them to a file, to save memory
+	 * @param chrom Chromosome to be reduced
+	 */
 	public void dumpExcess(String chrom) {
 		int trim = 9000;
 		while (trim > 0) {
@@ -231,6 +264,10 @@ public class BAMtoscIDX {
 		}
 	}
 
+	/**
+	 * Removes at least 600 bp's from a chromsome string, outputting them to a file, to save memory
+	 * @param chrom Chromosome to be reduced
+	 */
 	public void dumpMidExcess(String chrom) {
 		int trim = (MAX_INSERT * 10) - (MAX_INSERT * 2);
 		if (MAX_INSERT * 10 < 1000) {
@@ -248,6 +285,9 @@ public class BAMtoscIDX {
 		}
 	}
 
+	/**
+	 * Makes sure reads are valid before calling {@link BAMtoscIDX#addTag(SAMRecord sr)} 
+	 */
 	public void processREADS() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
@@ -340,6 +380,9 @@ public class BAMtoscIDX {
 		bai.close();
 	}
 
+	/**
+	 * Processes reads if 'Midpoint Record' was selected and validates them before calling {@link BAMtoscIDX#addTag(SAMRecord sr)}
+	 */
 	public void processMIDPOINT() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();

@@ -374,7 +374,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when the task's progress changes
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {

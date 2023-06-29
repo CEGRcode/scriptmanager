@@ -354,7 +354,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when the task's progress changes
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -363,6 +363,11 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Makes a content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

@@ -14,7 +14,7 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 
 /**
  * Output window wrapper for executing the BAMtoBED script given arguments provided by BAMtoBEDWindow and displaying output
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBED
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoBED
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
  */
 @SuppressWarnings("serial")
@@ -71,7 +71,7 @@ public class BAMtoBEDOutput extends JFrame {
 	}
 
 	/**
-	 * Runs the BAMtoBED script
+	 * Runs the BAMtoBED script with the file passed in through the constructor
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */

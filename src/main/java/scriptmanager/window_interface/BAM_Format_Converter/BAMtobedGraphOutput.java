@@ -13,7 +13,9 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph;
 
 /**
- * 
+ * Output window wrapper for executing the BAMtobedGraph script given arguments provided by BAMtobedGraphWindow and displaying output
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphOutput	
  */
 @SuppressWarnings("serial")
 public class BAMtobedGraphOutput extends JFrame {
@@ -29,7 +31,7 @@ public class BAMtobedGraphOutput extends JFrame {
 	private JTextArea textArea;
 
 	/**
-	 * Creates a new instance of a BAMtoBED script with a single BAM file
+	 * Creates a new instance of a BAMtobedGraph script with a single BAM file
 	 * @param b BAM file
 	 * @param o Output file
 	 * @param s Specifies which reads to output
@@ -68,7 +70,7 @@ public class BAMtobedGraphOutput extends JFrame {
 	}
 
 	/**
-	 * Runs the BAMtobedGraph script
+	 * Runs the BAMtoBED script with the file passed in through the constructor
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
