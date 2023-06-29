@@ -60,12 +60,6 @@ public class TileGenomeCLI implements Callable<Integer> {
 			output = new File(genomeName + "_" + window + "bp." + ext);
 		//check output filename is valid
 		}else{
-			//check ext
-			try{
-				if(!ext.equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use \"." + ext.toUpperCase() + "\" extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + "." + ext + "\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use \"." + ext.toUpperCase() + "\" extension for output filename. Try: " + output + "." + ext + "\n"; }
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");

@@ -53,10 +53,6 @@ public class SEStatsCLI implements Callable<Integer> {
 			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
-		}
 		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
@@ -68,7 +64,6 @@ public class SEStatsCLI implements Callable<Integer> {
 			output = new File(ExtensionFileFilter.stripExtension(bamFile) + "_stats.txt");
 		//check output filename is valid
 		}else{
-			//no check ext
 			//check directory
 			if(output.getParent()==null){
 // 				System.err.println("default to current directory");

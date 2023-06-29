@@ -91,10 +91,6 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
-		}
 		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
@@ -113,12 +109,6 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
 		//check output filename is valid
 		}else{
-			//check ext
-			try{
-				if(!"tab".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use \".tab\" extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".tab\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use \".tab\" extension for output filename. Try: " + output + ".tab\n"; }
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");

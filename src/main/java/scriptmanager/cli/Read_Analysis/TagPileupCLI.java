@@ -187,7 +187,6 @@ public class TagPileupCLI implements Callable<Integer> {
 		//check output COMPOSITE filename is valid
 		if(outputOptions.outputComposite!="composite_average.out"){
 			File output = new File(outputOptions.outputComposite);
-			//no check ext
 			//check directory
 			if(output.getParent()==null){
 // 				System.err.println("default to current directory");

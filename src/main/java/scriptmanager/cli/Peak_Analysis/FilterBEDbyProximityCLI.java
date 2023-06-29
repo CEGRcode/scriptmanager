@@ -57,16 +57,11 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 			r += "(!)BED file does not exist: " + bedFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtension(bedFile))){
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
-		}
 		//set default output filename
 		if(outputBasename==null){
 			outputBasename = ExtensionFileFilter.stripExtension(bedFile) + "_" + Integer.toString(exclusion) + "bp";
 		//check output filename is valid
 		}else{
-			//no check ext
 			//check directory
 			File tmpOut = new File(outputBasename);
 			if(tmpOut.getParent()==null){

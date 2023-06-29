@@ -30,8 +30,7 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 	@Parameters(index = "1", description = "Second(anti) PNG heatmap to merge, input2")
 	private File antiFile;
 
-	@Option(names = { "-o",
-			"--output" }, description = "specify output filename, please use PNG extension\n(default=\"<senseFile>_merged.png\" appended to the name in working directory of ScriptManager")
+	@Option(names = { "-o", "--output" }, description = "specify output filename, please use PNG extension\n(default=\"<senseFile>_merged.png\" appended to the name in working directory of ScriptManager")
 	private File output = null;
 
 	@Override
@@ -64,29 +63,12 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 		if (!r.equals("")) {
 			return (r);
 		}
-		// check input extensions
-		if (!"png".equals(ExtensionFileFilter.getExtension(senseFile))) {
-			r += "(!)Is this a PNG file? Check extension: " + senseFile.getName() + "\n";
-		}
-		if (!"png".equals(ExtensionFileFilter.getExtension(antiFile))) {
-			r += "(!)Is this a PNG file? Check extension: " + antiFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtension(senseFile);
 			output = new File(NAME + "_merged.png");
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"png".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".png\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output
-						+ ".png\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

@@ -68,29 +68,14 @@ public class SearchMotifCLI implements Callable<Integer> {
 			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(fastaFile)) {
-			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
 					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed";
 			NAME += gzOutput ? ".gz" : "";
 			output = new File(NAME);
-			// check output filename is valid
+		// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"bed".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".bed\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use BED extension for output filename. Try: " + output
-						+ ".bed\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

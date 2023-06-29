@@ -86,18 +86,10 @@ public class ScalingFactorCLI implements Callable<Integer> {
 			if(!controlBAM.exists()){ r += "(!)BAM(control) file does not exist: " + controlBAM.getName() + "\n"; }
 		}
 		if(!r.equals("")){ return(r); }
-		//check input extensions & BAI exists
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM(input) file? Check extension: " + bamFile.getName() + "\n";
-		}
+		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
 			r += "(!)BAI Index File does not exist for: " + bamFile.getName() + "\n";
-		}
-		if(blacklistFilter!=null){
-			if(!"bed".equals(ExtensionFileFilter.getExtension(blacklistFilter))){
-				r += "(!)Is this a BED file? Check extension: " + blacklistFilter.getName() + "\n";
-			}
 		}
 		if(controlBAM!=null){
 			if(!"bam".equals(ExtensionFileFilter.getExtension(controlBAM))){
@@ -114,7 +106,6 @@ public class ScalingFactorCLI implements Callable<Integer> {
 		//check output filename is valid
 		}else{
 			File tempOut = new File(outputBasename);
-			//no check ext
 			//check directory
 			if(tempOut.getParent()==null){
 // 				System.err.println("default to current directory");
