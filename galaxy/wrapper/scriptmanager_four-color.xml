@@ -8,14 +8,10 @@
     </requirements>
 
 
-    <command detect_errors="aggressive">
-        <![CDATA[
-
-        #set output_dir = $output_four_color.files_path
-        mkdir -p $output_dir
-        && cp $input_fasta 'tmp3.fasta'
-        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar figure-generation four-color tmp3.fasta
-        -o four_color.png
+    <command detect_errors="exit_code"><![CDATA[
+        #set output_dir = $output.files_path
+        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar figure-generation four-color 
+        -o '$output'
         -x $pixel_width
         -y $pixel_height
         -c
@@ -44,18 +40,17 @@
         #else
             $n_select_color_cond.color_n
         #end if
-        && mv four_color.png '$output_four_color'
-        ]]>
-    </command>
-    <inputs>
-        <param name="input_fasta"  type="data" format ="fasta" label="input fasta file" />
+        '$input'
+    ]]></command>
+<inputs>
+    <param name="input"  type="data" format="fasta" label="Input FASTA file" />
 
-        <param name="pixel_height" type="integer" value="2" min="1" label="Pixel height per nucleotide" />
-        <param name="pixel_width"  type="integer" value="10" min="1" label="Pixel width per nucleotide" />
-
-        <conditional name="a_select_color_cond">
+    <param name="pixel_height" type="integer" value="1" min="1" label="Pixel height per nucleotide" />
+    <param name="pixel_width"  type="integer" value="1" min="1" label="Pixel width per nucleotide" />
+    
+    <conditional name="a_select_color_cond">
             <param name="a_select_color" type="select" label="A nucleotide: select color or specify hexadecimal color code?">
-                <option value="a_color" selected="True">select color</option>
+                <option value="a_color" selected="True"> select color</option>
                 <option value="a_hex" >specify hexadecimal color code</option>
             </param>
             <when value="a_color">
@@ -128,15 +123,18 @@
             </when>
         </conditional>
 
-
     </inputs>
 
     <outputs>
-       <data name="output_four_color" format="png" label="${tool.name} (out file) on ${on_string}" >
+       <data name="output" format="png" label="${tool.name} (out file) on ${on_string}" >
        </data>
 
      </outputs>
     <tests>
+        <test>
+        <param name="input" value="2.fasta" />
+        <output name="output" value="2.png" />
+        </test>
     </tests>
     <help>
 **What it does**
