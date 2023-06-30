@@ -34,6 +34,12 @@ import scriptmanager.util.CDTUtilities;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
+/**
+ * Graphical interface window for sorting GFF files by CDT matrix occupancies by calling the method implemented in the scripts package.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF
+ */
 @SuppressWarnings("serial")
 public class SortGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;

@@ -6,6 +6,12 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * This script converts a GFF-file too the BED-format.
+ * 
+ * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.GFFtoBEDCLI
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.GFFtoBEDWindow
+ */
 public class GFFtoBED {
 	public static void convertGFFtoBED(File out_filepath, File input) throws IOException {
 		// GFF: chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
