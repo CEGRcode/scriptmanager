@@ -18,7 +18,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq;
 
 /**
- * BAM_ManipulatioCLIn/FilterforPIPseqCLI
+ * Command line interface class for running FilterforPIPseq script and outputting results
+ * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
  */
 @Command(name = "filter-pip-seq", mixinStandardHelpOptions = true, description = ToolDescriptions.filter_pip_seq_description
 		+ "\n"
@@ -55,7 +56,7 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
 	 * @throws IOException

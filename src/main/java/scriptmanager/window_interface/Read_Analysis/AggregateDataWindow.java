@@ -62,7 +62,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	private JTextField txtCol;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override

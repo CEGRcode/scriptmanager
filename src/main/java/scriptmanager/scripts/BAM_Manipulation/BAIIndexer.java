@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Picard wrapper for BuildBamIndex
  * 
  * @author Erik Pavloski
- * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWIndow
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWindow
  */
 public class BAIIndexer {
 	/**

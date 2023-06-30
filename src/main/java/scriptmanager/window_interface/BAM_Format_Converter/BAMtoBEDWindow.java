@@ -38,7 +38,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the BAMtoBEDOutput script.
+ * Graphical window for user argument selection and execution of the BAMtoBEDOutput script
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBED
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDOutput
  */
@@ -361,7 +361,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	}
 
 	/**
-	 * Runs every time an action is performed
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -384,7 +384,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	}
 
 	/**
-	 * Makes a content pane non-interactive if the program is processing data
+	 * Makes the content pane non-interactive if the program is processing data
 	 * @param con Content pane to make non-interactive
 	 * @param status If the program is processing
 	 */

@@ -37,6 +37,10 @@ import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
+/**
+ * Graphical window for user argument selection and execution of the BAMMarkDuplicates script
+ * @see scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates
+ */
 @SuppressWarnings("serial")
 public class BAMMarkDupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -104,6 +108,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         }
 	}
 	
+	/**
+	 * Creates a new  BAMMarkDupWinow
+	 */
 	public BAMMarkDupWindow() {
 		setTitle("BAM MarkDuplicates (picard)");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -212,6 +219,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 		contentPane.add(chckbxRemoveDuplicates);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -222,6 +232,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         task.execute();
 	}
 	
+	/**
+	 * Invoked when task's progress changes, updating the progress bar.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
@@ -233,6 +246,11 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         }
 	}
 	
+	/**
+	 * Makes the content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

@@ -63,7 +63,7 @@ public class ConvertBEDChrNamesCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
 	 * @throws IOException

@@ -46,7 +46,7 @@ public class CrossCorrelationOutput extends JFrame {
 
 	/**
 	 * Initialize tab frames for scrollable JTextArea and charts as well as save
-	 * inputs for calling the script.
+	 * inputs for calling the script
 	 * 
 	 * @param o the output directory to write output to
 	 * @param input the list of input BAM files to process

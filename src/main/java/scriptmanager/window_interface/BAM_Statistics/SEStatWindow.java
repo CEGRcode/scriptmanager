@@ -26,7 +26,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the SEStats script.
+ * Graphical window for user argument selection and execution of the SEStats script
  * @see scriptmanager.scripts.BAM_Statistics.SEStats
  * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
  */

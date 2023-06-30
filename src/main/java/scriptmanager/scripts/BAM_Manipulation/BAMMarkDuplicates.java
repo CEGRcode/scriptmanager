@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ * Picard wrapper for MarkDuplicates
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAMMarkDupWindow
+ */
 @SuppressWarnings("serial")
 public class BAMMarkDuplicates extends JFrame {
 	File bamFile = null;
@@ -16,6 +20,13 @@ public class BAMMarkDuplicates extends JFrame {
 	File output = null;
 	File metrics = null;
 	
+	/**
+	 * Creates a new instance of BAMarkDuplicates with a single file
+	 * @param in
+	 * @param remove
+	 * @param out
+	 * @param met
+	 */
 	public BAMMarkDuplicates(File in, boolean remove, File out, File met) {
 		bamFile = in;
 		removeDuplicates = remove;
@@ -23,6 +34,10 @@ public class BAMMarkDuplicates extends JFrame {
 		metrics = met;
 	}
 	
+	/**
+	 * Runs MarkDuplicates picard tool
+	 * @throws IOException If BAM file doesn't have corresponding .BAI Index file
+	 */
 	public void run() throws IOException {
 		//Check if BAI index file exists
 		File f = new File(bamFile + ".bai");

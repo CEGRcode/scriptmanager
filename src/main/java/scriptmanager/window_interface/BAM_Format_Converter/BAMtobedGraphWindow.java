@@ -38,7 +38,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection of the BAMtobedGraphOutput script.
+ * Graphical window for user argument selection of the BAMtobedGraphOutput script
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraph
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraph
  */
@@ -341,7 +341,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	}
 
 	/**
-	 * Runs every time an action is performed
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -364,7 +364,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	}
 
 	/**
-	 * Makes a content pane non-interactive if the program is processing data
+	 * Makes the content pane non-interactive if the program is processing data
 	 * @param con Content pane to make non-interactive
 	 * @param status If the program is processing
 	 */

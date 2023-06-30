@@ -44,7 +44,7 @@ import scriptmanager.util.FileSelection;
 
 /**
  * Graphical window for user argument selection and execution of the
- * CrossCorrelation script. <br>
+ * CrossCorrelation script <br>
  * Code largely sourced from ArchTEx.components.CorrelationParametersWindow in
  * <a href=
  * "https://github.com/WilliamKMLai/ArchTEx">https://github.com/WilliamKMLai/ArchTEx</a>
@@ -82,7 +82,7 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override

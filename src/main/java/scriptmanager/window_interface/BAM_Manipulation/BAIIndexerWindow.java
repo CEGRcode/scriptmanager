@@ -30,6 +30,11 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
+/**
+ * Graphical window for user argument selection and execution of the BAIIndexer script
+ * @see scriptmanager.cli.BAM_Manipulation.BAIIndexer
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerOutput
+ */
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -71,6 +76,9 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         }
 	}
 	
+	/**
+	 * Creates a new BAIIndexerWindow
+	 */
 	public BAIIndexerWindow() {
 		setTitle("BAM File Indexer");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -139,6 +147,9 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         btnIndex.addActionListener(this);
 	}
 	
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -159,6 +170,11 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         }
     }
 	
+    /**
+	 * Makes the content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

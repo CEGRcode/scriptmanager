@@ -13,6 +13,11 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq;
 
+/**
+ * Output window for executing the FilterforPIPseq script given arguments provided by FilterforPIPseqWindow and displaying output
+ * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
+ * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow
+ */
 @SuppressWarnings("serial")
 public class FilterforPIPseqOutput extends JFrame {
 	File bamFile = null;
@@ -40,6 +45,11 @@ public class FilterforPIPseqOutput extends JFrame {
 		SEQ = s.toUpperCase();
 	}
 
+	/**
+	 * Runs the FilterforPIPseq script and displays results
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

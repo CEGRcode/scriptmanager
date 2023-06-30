@@ -35,6 +35,11 @@ import javax.swing.SwingConstants;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
+/**
+ * Graphical window for user argument selection and execution of the FilterforPIPseq script
+ * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
+ * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow
+ */
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -101,6 +106,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 
+	/**
+	 * Creates a new FilterforPIPseqWindow
+	 */
 	public FilterforPIPseqWindow() {
 		setTitle("Filter PIP-seq Reads");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -235,6 +243,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		txtSeq.setColumns(10);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -245,6 +256,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		task.execute();
 	}
 
+	/**
+	 * Invoked when task's progress changes, updating the progress bar.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -253,6 +267,11 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

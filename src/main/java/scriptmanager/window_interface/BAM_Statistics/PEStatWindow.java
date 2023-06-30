@@ -36,7 +36,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the PEStats script.
+ * Graphical window for user argument selection and execution of the PEStats script
  * @see scriptmanager.scripts.BAM_Statistics.SEStats
  * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
  */
@@ -279,6 +279,11 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
         }
     }
 	
+    /**
+	 * Makes the content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

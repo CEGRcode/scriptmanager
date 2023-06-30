@@ -79,7 +79,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 	private static JCheckBox chckbxStranded;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override

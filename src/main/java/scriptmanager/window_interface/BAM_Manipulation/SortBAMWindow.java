@@ -33,6 +33,11 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;
 import scriptmanager.util.FileSelection;
 
+/**
+ * Graphical window for user argument selection and execution of the BAMFileSort script
+ * @see scriptmanager.cli.BAM_Manipulation.BAMFileSort
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAMFileSort
+ */
 @SuppressWarnings("serial")
 public class SortBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -84,6 +89,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         }
 	}
 	
+	/**
+	 * Creates a new SortBAMWindow
+	 */
 	public SortBAMWindow() {
 		setTitle("BAM File Sort");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -180,6 +188,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(lblDefaultToLocal);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -190,6 +201,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         task.execute();
 	}
 	
+	/**
+	 * Invoked when task's progress changes, updating the progress bar.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
@@ -198,6 +212,11 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         }
 	}
 	
+	/**
+	 * Makes the content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

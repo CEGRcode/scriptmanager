@@ -34,6 +34,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
 
+/**
+ * Graphical window for user argument selection and execution of the MergeBAM script
+ * @see scriptmanager.cli.BAM_Manipulation.MergeBAM
+ */
 @SuppressWarnings("serial")
 public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -85,6 +89,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         }
 	}
 	
+	/**
+	 * Creates a new MergeBAMWindow
+	 */
 	public MergeBAMWindow() {
 		setTitle("BAM File Replicate Merger");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -205,6 +212,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(btnOutput);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task., running script when 'Merge' is pressed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -215,6 +225,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         task.execute();
 	}
 	
+	/**
+	 * Invoked when task's progress changes, updating the progress bar.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
@@ -223,6 +236,11 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         }
 	}
 	
+	/**
+	 * Makes the content pane non-interactive if the program is processing data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the program is processing
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

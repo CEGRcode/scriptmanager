@@ -65,7 +65,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override

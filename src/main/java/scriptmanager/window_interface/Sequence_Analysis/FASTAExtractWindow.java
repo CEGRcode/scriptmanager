@@ -67,7 +67,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override

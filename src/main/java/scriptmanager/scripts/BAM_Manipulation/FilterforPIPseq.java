@@ -19,6 +19,12 @@ import java.io.PrintStream;
 
 import scriptmanager.util.FASTAUtilities;
 
+/**
+ * Script for filtering a BAM file and outputting reads which have a specific nucleotide at the -1 position
+ * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow
+ * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqOutput
+ * @see scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI
+ */
 public class FilterforPIPseq {
 	File bamFile = null;
 	File genome = null;
@@ -27,6 +33,15 @@ public class FilterforPIPseq {
 
 	private PrintStream PS = null;
 
+	/**
+	 * Creates a new instance of a FilterforPIPseq script
+	 * @param in BAM file to filter
+	 * @param gen Reference genome file
+	 * @param out Output BAM file
+	 * @param s Sequence to filter for
+	 * @param ps PrinstStream to output results
+	 * @throws IOException
+	 */
 	public FilterforPIPseq(File in, File gen, File out, String s, PrintStream ps) throws IOException {
 		bamFile = in;
 		genome = gen;
@@ -41,6 +56,11 @@ public class FilterforPIPseq {
 		}
 	}
 
+	/**
+	 * Writes reads which contain the specified sequence to the output file
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(genome);
 

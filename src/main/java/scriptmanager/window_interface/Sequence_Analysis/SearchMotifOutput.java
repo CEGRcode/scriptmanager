@@ -34,7 +34,7 @@ public class SearchMotifOutput extends JFrame {
 
 	/**
 	 * Initialize a scrollable JTextArea window to display progress and save inputs
-	 * for calling the script.
+	 * for calling the script
 	 * 
 	 * @param input
 	 * @param mot

@@ -118,7 +118,7 @@ This flag cannot be used in combination with the `-o` flag.
 
 ### Examples
 
-For example, if we wanted to run some `COMMANDA` tool and then use the output as an input for the `COMMANDB` tool, there are several ways to run this in a shell script. The first way explicitly saves the intermediate file between commands.
+For example, if we wanted to run some `COMMANDA` tool and then use the output as an input for the `COMMANDB` tool, there are several ways to run this in a shell script The first way explicitly saves the intermediate file between commands.
 
 ```bash
 # Method A -save intermediate files

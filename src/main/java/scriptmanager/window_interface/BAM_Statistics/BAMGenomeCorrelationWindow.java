@@ -44,7 +44,7 @@ import scriptmanager.charts.HeatMap;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for collecting user argument selection to be used with the BAMGenomeCorrelation script.
+ * Graphical window for collecting user argument selection to be used with the BAMGenomeCorrelation script
  * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
  * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationOutput
  */
@@ -408,7 +408,7 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 	
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress changes, updating the progress bar.
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -418,7 +418,7 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 	}
 
 	/**
-	 * Makes a content pane non-interactive if the program is processing data
+	 * Makes the content pane non-interactive if the program is processing data
 	 * @param con Content pane to make non-interactive
 	 * @param status If the program is processing
 	 */

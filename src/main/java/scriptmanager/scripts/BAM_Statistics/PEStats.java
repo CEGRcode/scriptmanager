@@ -29,7 +29,7 @@ import scriptmanager.charts.LineChart;
  * @author Olivia Lang
  * @see scriptmanager.cli.BAM_Statistics.PEStatsCLI
  * @see scriptmanager.window_interface.BAM_Statistics.PEStatWindow
- * @see scriptmanager.window_interface.BAM_Statistics.PEStatWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
  */
 public class PEStats {
 	

@@ -67,7 +67,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override

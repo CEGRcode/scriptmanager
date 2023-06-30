@@ -341,7 +341,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	}
 
 	/**
-	 * Runs every time an action is performed.
+	 * Runs when a task is invoked, making window non-interactive and executing the task..
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -364,7 +364,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	}
 
 	/**
-	 * Makes a content pane non-interactive if the program is processing data
+	 * Makes the content pane non-interactive if the program is processing data
 	 * @param con Content pane to make non-interactive
 	 * @param status If the program is processing
 	 */
