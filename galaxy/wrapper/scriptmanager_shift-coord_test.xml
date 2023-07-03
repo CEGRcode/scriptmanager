@@ -1,0 +1,69 @@
+<tool id="scriptmanager_shift-coord" name="ScriptManager: Shift BED or GFF" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+    <description>Shift coordinate intervals up/downstream.</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <requirements>
+	     <requirement type="package" version="8.0.112">openjdk</requirement>
+    </requirements>
+
+    <command detect_errors="aggressive">
+        <![CDATA[
+        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation shift-coord 
+        
+        #if str($bed_or_gff.input) == "gff" :
+            --gff
+        #end if
+
+        #if str($bed_or_gff.input) == "gff" :
+            -o '$output2'
+        #else if str($bed_or_gff.input) == "bed" :
+            -o '$output1'
+        #end if
+        
+        -t "$SHIFT"
+        
+        '$input1'
+    ]]></command>
+    <inputs>
+        <conditional name="bed_or_gff">
+            <param name="input" type="select" label="Select input format">
+                <option value="bed" selected="True" >BED file</option>
+                <option value="gff" >GFF file</option>
+            </param>
+
+            <when value="bed">
+                <param name="input1" type="data" format="bed" label="Select input file"> 
+                </param>
+            </when>
+
+            <when value="gff">
+                <param name="input1" type="data" format="gff" label="File">
+                </param>
+            </when>
+            
+        </conditional>
+
+        <param name="SHIFT" type="integer" value="0"    label="Set a shift distance in bp (upstream: - and downstream: +)" />
+
+    </inputs>
+    <outputs>
+
+        <data name="output1" format="bed" label="BED output">
+            <filter>options['input'] == "bed" </filter>
+        </data>
+        <data name="output2" format="gff" label="GFF output">
+            <filter>options['input'] == "gff" </filter>
+        </data>
+   
+    </outputs>
+
+    <tests>
+    </tests>
+
+    <help>
+**What it does**
+Shifts coordinate intervals
+
+    </help>
+</tool>
