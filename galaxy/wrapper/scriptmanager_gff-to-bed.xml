@@ -9,15 +9,24 @@
 <inputs>
      <param name="input" type="data" format="gff" label="Input file in GFF format"/>
      </inputs>
+
 <outputs>
-    <data name="output" type="data" format="bed" label="Output file in BED format"/>
+        <data name="output" format="bed" label="${tool.name} on ${on_string}"></data>
 </outputs>
+
+<tests>
+    <test expect_num_outputs="1">
+        <param name="input" value="1.gff"/>
+        <output name="output" file="1.bed" ftype="bed" />
+    </test>
+
+</tests>
+
 <help>
 **What it does**
 
 This tool converts a file extension from GFF to BED
 
------
 **Example**
 
 Input File::
