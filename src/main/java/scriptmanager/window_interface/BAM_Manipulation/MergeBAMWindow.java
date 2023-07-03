@@ -60,6 +60,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws Exception {
@@ -215,6 +218,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task., running script when 'Merge' is pressed
 	 */
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -237,9 +243,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	}
 	
 	/**
-	 * Makes the content pane non-interactive if the program is processing data
+	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive
-	 * @param status If the program is processing
+	 * @param status If the window should be interactive
 	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {

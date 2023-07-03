@@ -51,6 +51,9 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -198,6 +201,9 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		rdbtnBed.setSelected(true);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -212,6 +218,11 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 
     }
 	
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

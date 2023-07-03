@@ -20,7 +20,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
 
 /**
- * Figure_GenerationCLI/ThreeColorHeatMapCLI
+ * Command line interface class for generating three color heat maps
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
  */
 @Command(name = "three-color", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.threecolorheatmap_description,

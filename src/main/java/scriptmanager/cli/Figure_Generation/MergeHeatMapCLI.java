@@ -14,7 +14,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 
 /**
- * Figure_GenerationCLI/MergeHeatMapCLI
+ * Command line interface class for merging two heat maps
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
  */
 @Command(name = "merge-heatmap",
 	mixinStandardHelpOptions = true,

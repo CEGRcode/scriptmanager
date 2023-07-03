@@ -57,6 +57,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	private JLabel label;
 	private JLabel lblDefaultToLocal;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws Exception {
@@ -188,7 +191,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(lblDefaultToLocal);
 	}
 
-	/**
+/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -213,9 +216,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	}
 	
 	/**
-	 * Makes the content pane non-interactive if the program is processing data
+	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive
-	 * @param status If the program is processing
+	 * @param status If the window should be interactive
 	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {

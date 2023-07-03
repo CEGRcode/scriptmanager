@@ -17,7 +17,10 @@ import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 
 /**
- * Figure_GenerationCLI/LabelHeatMapCLI
+ * Command line interface class for labeling png heat maps, outputting an svg
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
  */
 @Command(name = "label-heatmap", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.label_heatmap_description,

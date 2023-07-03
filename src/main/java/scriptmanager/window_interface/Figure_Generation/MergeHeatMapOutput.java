@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 
+/**
+ * Wrapper for running the MergeHeatMapPlot script given inputs from MergeHeatMapWindow
+ */
 @SuppressWarnings("serial")
 public class MergeHeatMapOutput extends JFrame {
 	private ArrayList<File> pngFiles = null;
@@ -34,6 +37,10 @@ public class MergeHeatMapOutput extends JFrame {
 		OUT_DIR = out_dir;
 	}
 
+	/**
+	 * Runs the MergeHeatMapPlot script
+	 * @throws IOException
+	 */
 	public void run() throws IOException {
 		senseFile = new ArrayList<File>();
 		antiFile = new ArrayList<File>();

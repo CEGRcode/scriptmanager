@@ -57,6 +57,9 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutput;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -179,6 +182,9 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		btnConvert.addActionListener(this);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -190,7 +196,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -199,6 +205,11 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

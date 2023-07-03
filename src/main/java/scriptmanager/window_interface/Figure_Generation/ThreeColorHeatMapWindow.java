@@ -39,6 +39,12 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * ThreeColorHeatMap GUI window. User inputs for calling the script are organized and passed into {@link scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapOutput}
+ * 
+ * @see scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapOutput
+ */
 @SuppressWarnings("serial")
 public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -93,6 +99,9 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 
 	private File OUT_DIR = null;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -196,6 +205,9 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 		}
 	}
 
+	/**
+	 * Creates a new ThreeColorHeatMapWindow
+	 */
 	public ThreeColorHeatMapWindow() {
 		setTitle("Hi-Lo Heatmap Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -684,6 +696,9 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 		txtAbsoluteMax.setEnabled(!activate);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -694,7 +709,7 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar.
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -703,6 +718,11 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

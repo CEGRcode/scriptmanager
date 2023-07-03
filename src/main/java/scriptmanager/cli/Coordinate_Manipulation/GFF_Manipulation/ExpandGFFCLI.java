@@ -19,7 +19,6 @@ import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
  * 
  * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
  */
-@Comman
 @Command(name = "expand-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_gff_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

@@ -29,6 +29,12 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by MergeHeatMapPlot script
+ * 
+ * @see scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot
+ * @see scriptmanager.window_interface.Figure_Generation.MergeHeatMapPlot
+ */
 @SuppressWarnings("serial")
 public class MergeHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -48,6 +54,9 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutputDirectory;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -174,6 +183,9 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		btnGen.addActionListener(this);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -185,7 +197,7 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -194,6 +206,11 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

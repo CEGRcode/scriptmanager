@@ -87,6 +87,9 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 	/**
 	 * Organize user inputs for calling script
 	 */
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -287,6 +290,9 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 		txtPixelWidth.setEnabled(activate);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -298,7 +304,7 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -307,6 +313,11 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

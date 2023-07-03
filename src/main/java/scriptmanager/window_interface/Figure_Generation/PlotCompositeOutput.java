@@ -21,7 +21,6 @@ import scriptmanager.scripts.Figure_Generation.PlotComposite;
  * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.PlotComposite
  * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeWindow
- *
  */
 @SuppressWarnings("serial")
 public class PlotCompositeOutput extends JFrame {

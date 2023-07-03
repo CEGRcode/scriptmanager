@@ -15,6 +15,11 @@ import javax.swing.JTabbedPane;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
 
+/**
+ * Output wrapper for running ThreeColorHeatMap script and reporting when script is completed
+ * @see scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapWindow
+ */
 @SuppressWarnings("serial")
 public class ThreeColorHeatMapOutput extends JFrame {
 
@@ -46,6 +51,28 @@ public class ThreeColorHeatMapOutput extends JFrame {
 
 	JTabbedPane newpane;
 
+	/**
+	 * Creates a new instance of a ThreeColorHeatMap with given attributes
+	 * @param in CDT formatted matrix file
+	 * @param c_min Color to represent minimum values
+	 * @param c_mid Color to represent mid values
+	 * @param c_max Color to represent maximum values
+	 * @param c_nan Color to represent missing values
+	 * @param startR Starting row of the CDT file (Zero indexed)
+	 * @param startC Starting column of the CDT file (Zero indexed)
+	 * @param pHeight Height of resulting heat map (# pixels)
+	 * @param pWidth Width of resulting heat map (# pixels)
+	 * @param scale Scale compression type
+	 * @param minPstatus Minimum percentile value
+	 * @param midPstatus Mid percentile value
+	 * @param maxPstatus Maximum percentile value
+	 * @param min_quant Minimum absolute value
+	 * @param mid_quant Mid absolute value
+	 * @param max_quant Maximum absolute value
+	 * @param exZ Exclude zero's in percentile threshold calculations
+	 * @param output Output file
+	 * @param outstatus Whether a file should be output
+	 */
 	public ThreeColorHeatMapOutput(ArrayList<File> in,
 			Color c_max, Color c_mid, Color c_min, Color c_nan,
 			int startR, int startC, int pHeight, int pWidth, String scale,
@@ -85,6 +112,10 @@ public class ThreeColorHeatMapOutput extends JFrame {
 		System.out.println(OUTPUTSTATUS);
 	}
 
+	/**
+	 * Runs the ThreeColorHeatmap script
+	 * @throws IOException
+	 */
 	public void run() throws IOException {
 		String postRunDialog = "";
 		for (int x = 0; x < SAMPLE.size(); x++) {

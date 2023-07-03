@@ -62,6 +62,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	private JCheckBox chckbxGenerateBaiIndex;
 	private JCheckBox chckbxRemoveDuplicates;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws Exception {
@@ -219,7 +222,7 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 		contentPane.add(chckbxRemoveDuplicates);
 	}
 
-	/**
+/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -247,9 +250,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	}
 	
 	/**
-	 * Makes the content pane non-interactive if the program is processing data
+	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive
-	 * @param status If the program is processing
+	 * @param status If the window should be interactive
 	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
