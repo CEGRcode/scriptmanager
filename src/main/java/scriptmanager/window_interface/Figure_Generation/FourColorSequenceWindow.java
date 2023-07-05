@@ -37,7 +37,7 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Figure_Generation.FourColorPlot;
 
 /**
- * Provides GUI for collecting inputs to be processed by the FourColorSequence plot script
+ * GUI for collecting inputs to be processed by the FourColorSequence plot script
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.FourColorSequence

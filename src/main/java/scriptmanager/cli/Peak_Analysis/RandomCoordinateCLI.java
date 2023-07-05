@@ -14,8 +14,9 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
 /**
-	Peak_AnalysisCLI/RandomCoordinateCLI
-*/
+ * Command line interface class for filtering based on proximity with a FilterBEDbyProximity script
+ * @see scriptmanager.scripts.Peak_Analysis.RanomCoordinate
+ */
 @Command(name = "rand-coord", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.rand_coord_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

@@ -35,6 +35,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
+/**
+ * Graphical interface window for calling static ConvertChrNames in scripts package on BED files
+ * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
+ */
 @SuppressWarnings("serial")
 public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;

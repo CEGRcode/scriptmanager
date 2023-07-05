@@ -29,6 +29,10 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by MergeHeatMapPlot script
+ * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
+ */
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
@@ -93,6 +97,9 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
         }
 	}
 	
+	/**
+	 * Creates a new BEDPeakAligntoRefWindow
+	 */
 	public BEDPeakAligntoRefWindow() {
 		setTitle("BED Peaks Alignment");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -251,7 +258,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	}
 	
 	/**
-     * Invoked when task's progress property changes.
+     * Invoked when task's progress property changes and updates progress bar.
      */
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {

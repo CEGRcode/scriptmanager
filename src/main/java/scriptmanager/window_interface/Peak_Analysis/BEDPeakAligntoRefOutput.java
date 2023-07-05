@@ -12,6 +12,10 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 
+/**
+ * Output wrapper for running BEDPeakAligntoRef script and reporting when the process is completed
+ * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
+ */
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefOutput extends JFrame{
 	private File PEAK = null;
@@ -20,6 +24,13 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 
 	private JTextArea textArea;
 		
+	/**
+	 * Creates a new BEDPeakAligntoRefOutput with two BED files and an output directory
+	 * @param ref
+	 * @param peak
+	 * @param outpath
+	 * @throws IOException
+	 */
 	public BEDPeakAligntoRefOutput(File ref, File peak, File outpath) throws IOException {
 		setTitle("BED Align to Reference Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,6 +53,11 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		}
 	}
 		
+	/**
+	 * Runs the BEDPeakAligntoRef script
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

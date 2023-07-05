@@ -30,6 +30,10 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by FilterBEDbyProximity script
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ */
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
@@ -206,6 +210,9 @@ public Task task;
         task.execute();
 	}
 	
+	/**
+	 * Invoked when task's progress property changes and updates progress bar.
+	 */
 	public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
