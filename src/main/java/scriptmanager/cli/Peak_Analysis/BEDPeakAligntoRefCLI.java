@@ -14,8 +14,9 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 	
 /**
-	Peak_AnalysisCLI/BEDPeakAligntoRefCLI
-*/
+ * Command line interface class for performing BED peak alignment using BEDPeakAligntoRef script
+ * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
+ */
 @Command(name = "peak-align-ref", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_align_ref_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

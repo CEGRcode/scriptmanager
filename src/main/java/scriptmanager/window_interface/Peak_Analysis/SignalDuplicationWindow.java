@@ -31,6 +31,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.SignalDuplication;
 
+/**
+ * GUI for collecting inputs to be processed by SignalDuplication script
+ * @see scriptmanager.scripts.Peak_Analysis.SignalDuplication
+ */
 @SuppressWarnings("serial")
 public class SignalDuplicationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -207,7 +211,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 	}
 	
 	/**
-     * Invoked when task's progress property changes.
+     * Invoked when task's progress property changes and updates the progress bar.
      */
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {

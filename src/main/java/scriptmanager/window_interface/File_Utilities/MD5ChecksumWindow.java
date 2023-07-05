@@ -33,6 +33,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
+/**
+ * Graphical interface window for calling {@link scriptmanager.scripts.File_Utilities.MD5Checksum#calculateMD5(String)} method and directing output
+ * @see scriptmanager.scripts.File_Utilities.MD5Checksum
+ */
 @SuppressWarnings("serial")
 public class MD5ChecksumWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;

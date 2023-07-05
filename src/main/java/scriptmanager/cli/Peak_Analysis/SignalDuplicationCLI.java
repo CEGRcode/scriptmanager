@@ -9,8 +9,9 @@ import java.io.IOException;
 import scriptmanager.objects.ToolDescriptions;
 	
 /**
-	Peak_AnalysisCLI/SignalDuplicationCLI
-*/
+ * Command line interface class for creating a coordinate file of random sites across a genome with SignalDuplication script
+ * @see scriptmanager.scripts.Peak_Analysis.SingalDuplication
+ */
 @Command(name = "signal-dup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.signal_dup_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

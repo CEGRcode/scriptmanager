@@ -214,6 +214,9 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
         task.execute();
 	}
 	
+	/**
+	 * Congrats! You found the first empty method - Ben
+	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 
     }

@@ -16,6 +16,9 @@ import java.util.List;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
+/**
+ * Filters reads in BED file for peaks in quality based on given exclusion distance and quality scores in BED file
+ */
 public class FilterBEDbyProximity{
 	
 	private int CUTOFF;
@@ -39,6 +42,11 @@ public class FilterBEDbyProximity{
 		}catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
 	
+	/**
+	 * Runs the filtering operation, outputting peaks to "-FILTER.bed" and other reads to "-CLUSTER.bed"
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException
 	{
 		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTNAME);

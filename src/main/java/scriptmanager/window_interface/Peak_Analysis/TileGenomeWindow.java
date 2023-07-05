@@ -194,6 +194,9 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
         task.execute();
 	}
 	
+	/**
+	 * Congrats!  You found the second empty method - Ben
+	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 
     }

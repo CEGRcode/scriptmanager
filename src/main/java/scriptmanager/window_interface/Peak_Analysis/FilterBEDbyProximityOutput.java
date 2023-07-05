@@ -12,6 +12,10 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 
+/**
+ * Output wrapper for running FilterBEDbyProximity script and reporting when the process is completed
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ */
 @SuppressWarnings({"serial"})
 public class FilterBEDbyProximityOutput extends JFrame{
 	
@@ -44,6 +48,11 @@ public class FilterBEDbyProximityOutput extends JFrame{
 		}
 	}
 	
+	/**
+	 * Runs the FilterBEDbyProximity script
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException
 	{
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

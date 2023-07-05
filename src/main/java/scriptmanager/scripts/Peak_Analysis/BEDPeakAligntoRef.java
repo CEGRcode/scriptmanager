@@ -16,12 +16,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Aligns BED peaks to a reference BED file, creating a CDT file
+ */
 public class BEDPeakAligntoRef {
 	private String peakPath = null;
 	private String refPath = null;
 	private PrintStream OUT = null;
 	private PrintStream PS = null;
 	
+	/**
+	 * Creates a new instance of a BEDPeakAligntoRef script
+	 * @param ref Reference BAM file
+	 * @param peak BAM file to be alligned
+	 * @param output Output CDT file
+	 * @param ps PrintStream for reporting process
+	 * @throws IOException
+	 */
 	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps) throws IOException {
 		refPath = ref.getCanonicalPath();
 		peakPath = peak.getCanonicalPath();
@@ -30,7 +41,12 @@ public class BEDPeakAligntoRef {
 		try {OUT = new PrintStream(output); }
 		catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
-		
+	
+	/**
+	 * Runs the peak alignment, writing to output file and reporting progress
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void run() throws IOException, InterruptedException {
 		printPS("Mapping: " + peakPath + " to " + refPath);
 		printPS("Starting: " + getTimeStamp());

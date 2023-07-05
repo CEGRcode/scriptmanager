@@ -14,8 +14,9 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 	
 /**
-	Peak_AnalysisCLI/FilterBEDbyProximityCLI
-*/
+ * Command line interface class for filtering based on proximity with a FilterBEDbyProximity script
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ */
 @Command(name = "filter-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.filter_bed_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
