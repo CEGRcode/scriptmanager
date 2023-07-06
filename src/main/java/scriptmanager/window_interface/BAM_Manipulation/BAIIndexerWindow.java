@@ -11,6 +11,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -27,6 +29,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import jdk.internal.net.http.common.Log;
+import scriptmanager.objects.LogItem;
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
@@ -49,14 +54,24 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         @Override
         public Void doInBackground() throws IOException {
         	setProgress(0);
+			LogItem old_li = null;
 			try {
 				for(int x = 0; x < BAMFiles.size(); x++) {
+					// Initialize LogItem
+					String command = BAIIndexerCLI.getCLIcommand(BAMFiles.get(x));
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
 					// Execute Picard wrapper
 					BAIIndexer.generateIndex(BAMFiles.get(x));
+					// Update LogItem
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
 					// Update progress
 					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
 					setProgress(percentComplete);
 				}
+				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Indexing Complete");
 			} catch (SAMException se) {
@@ -156,7 +171,9 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
-        }
+        } else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
     }
 	
 	public void massXable(Container con, boolean status) {

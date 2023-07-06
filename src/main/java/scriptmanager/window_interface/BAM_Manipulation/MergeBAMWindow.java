@@ -30,6 +30,11 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
+import scriptmanager.cli.BAM_Manipulation.MergeBAMCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
@@ -60,16 +65,26 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
+			LogItem old_li = null;
 			try {
 				// Build output filepath
 				if(OUT_DIR != null) { OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + txtOutput.getText()); }
 				else { OUTPUT = new File(txtOutput.getText()); }
+				// Initialize LogItem
+				String command = MergeBAMCLI.getCLIcommand(BAMFiles, OUTPUT);
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
 				// Execute Picard wrapper
 				MergeBAM.run(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
+				// Update LogItem
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
 				// Index if checkbox selected
 				if(chckbxGenerateBaiindex.isSelected()) {
 					BAIIndexer.generateIndex(OUTPUT);
 				}
+				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Merging Complete");
 			} catch (SAMException se) {
@@ -220,7 +235,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
-        }
+        } else if ("log" == evt.getPropertyName()) {
+		firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+	}
 	}
 	
 	public void massXable(Container con, boolean status) {

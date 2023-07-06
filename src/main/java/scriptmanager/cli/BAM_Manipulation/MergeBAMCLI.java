@@ -2,7 +2,9 @@ package scriptmanager.cli.BAM_Manipulation;
 
 import picocli.CommandLine.Command;
 
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.io.File;
 
 import scriptmanager.objects.ToolDescriptions;
 
@@ -10,7 +12,7 @@ import scriptmanager.objects.ToolDescriptions;
  * Print a message redirecting user to the original CLI tool.
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.BAM_Manipulation.MergeSamFiles
+ * @see scriptmanager.scripts.BAM_Manipulation.MergeBAM
  */
 @Command(name = "merge-bam", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.merge_bam_description + "\n"+
@@ -26,5 +28,14 @@ public class MergeBAMCLI implements Callable<Integer> {
 							"\t'java -jar picard.jar MergeSamFiles'");
 		System.exit(1);
 		return(1);
+	}
+
+	public static String getCLIcommand(ArrayList<File> BAMFiles, File OUTPUT) {
+		String command = "java -jar $PICARD MergeSamFiles";
+		for (File input : BAMFiles) {
+			command += "INPUT=" + input.getAbsolutePath();
+		}
+		command += "OUTPUT=" + OUTPUT.getAbsolutePath();
+		return command;
 	}
 }

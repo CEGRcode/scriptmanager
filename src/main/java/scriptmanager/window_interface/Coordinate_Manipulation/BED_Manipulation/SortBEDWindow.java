@@ -14,6 +14,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -31,6 +33,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.CDTUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -112,7 +117,17 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 					}
 
 					setProgress(0);
+					LogItem old_li = new LogItem("");
+					// Initialize LogItem
+					String command = SortBEDCLI.getCLIcommand(new File(OUTPUT), BED_File, CDT_File, START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
 					SortBED.sortBEDbyCDT(OUTPUT, BED_File, CDT_File, START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
+					firePropertyChange("log", old_li, null);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Sort Complete");
 				}
@@ -393,6 +408,8 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
