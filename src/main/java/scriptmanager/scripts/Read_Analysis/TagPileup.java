@@ -29,6 +29,10 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract;
 import scriptmanager.util.ArrayUtilities;
 
+/**
+ * A script for running Pileup analysis on BAM files
+ * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
+ */
 public class TagPileup {
 	File BED = null;
 	File BAM = null;
@@ -47,6 +51,14 @@ public class TagPileup {
 
 	String outMatrixBasename;
 
+	/**
+	 * Creates a new instance of the TagPileup script
+	 * @param be BED file to be used in Pileup 
+	 * @param ba BAM file to be used in Pileup 
+	 * @param param Set of parameters for Pileup analysis (specified by user with GUI)
+	 * @param outputwindow_ps Output to be displayed to user
+	 * @param outMat Base name of the output matrix
+	 */
 	public TagPileup(File be, File ba, PileupParameters param, PrintStream outputwindow_ps, String outMat) {
 		BED = be;
 		BAM = ba;
@@ -55,6 +67,10 @@ public class TagPileup {
 		outMatrixBasename = outMat;
 	}
 
+	/**
+	 * Runs the TagPileup script
+	 * @throws IOException
+	 */
 	public void run() throws IOException {
 		// Set-up Matrix output writers
 		int STRAND = PARAM.getStrand();
@@ -271,7 +287,11 @@ public class TagPileup {
 		}
 	}
 
-	// Get size of largest array for composite generation
+	/**
+	 * Gets size of largest array for composite figure generation
+	 * @param sites Sites to find the largest array in
+	 * @return The largest array
+	 */
 	public static int getMaxBEDSize(Vector<BEDCoord> sites) {
 		int maxSize = 0;
 		for (int x = 0; x < sites.size(); x++) {
@@ -283,7 +303,13 @@ public class TagPileup {
 		return maxSize;
 	}
 
-	// Validate BED coordinates exist within BAM file and satisfy BED format
+	/**
+	 * Validate BED coordinates exist within BAM file and satisfy BED format
+	 * @param COORD BED coordinates to validate
+	 * @param BAM BAM file to reference
+	 * @return Whether input files are valid
+	 * @throws IOException
+	 */
 	public Vector<BEDCoord> validateBED(Vector<BEDCoord> COORD, File BAM) throws IOException {
 		Vector<BEDCoord> FINAL = new Vector<BEDCoord>();
 		ArrayList<Integer> indexFail = new ArrayList<Integer>();
@@ -329,6 +355,13 @@ public class TagPileup {
 		return time;
 	}
 
+	/**
+	 * Loads BED coordinates from an input file into a Vector<BEDCoord>
+	 * @param INPUT Input BED file
+	 * @return Vector<BEDCoord> representing input file
+	 * @throws UnsupportedEncodingException
+	 * @throws IOException
+	 */
 	public Vector<BEDCoord> loadCoord(File INPUT) throws UnsupportedEncodingException, IOException {
 		Vector<BEDCoord> COORD = new Vector<BEDCoord>();
 		BufferedReader br;

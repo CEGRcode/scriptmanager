@@ -36,6 +36,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Read_Analysis.AggregateData;
 
+/**
+ * GUI for collecting inputs to be processed by the AggregateData script 
+ * @see scriptmanager.scripts.Read_Analysis.AggregateData
+ */
 @SuppressWarnings("serial")
 public class AggregateDataWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -63,9 +67,6 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 
 	/**
 	 * Organize user inputs for calling script
-	 */
-	/**
-	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override

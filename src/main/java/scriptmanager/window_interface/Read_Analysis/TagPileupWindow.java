@@ -128,9 +128,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script
-	 */
-	/**
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
@@ -1033,7 +1030,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Extract read aspect and read output to upddate the cartoon accordingly.
+	 * Extract read aspect and read output to update the cartoon accordingly.
 	 */
 	public void updateCartoon() {
 		int aspect = cbox_ReadAspect.getSelectedIndex();

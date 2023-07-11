@@ -35,6 +35,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Read_Analysis.SimilarityMatrix;
 
+/**
+ * GUI for collecting inputs and processing them with the ScalingFactor script 
+ * @see scriptmanager.scripts.Read_Analysis.SimilarityMatrix
+ */
 @SuppressWarnings("serial")
 public class SimilarityMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -58,9 +62,6 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 
 	public Task task;
 
-	/**
-	 * Organize user inputs for calling script
-	 */
 	/**
 	 * Organizes user inputs for calling script
 	 */

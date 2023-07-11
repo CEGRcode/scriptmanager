@@ -15,6 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * GUI for running a gene track window 
+ */
 @SuppressWarnings("serial")
 public class GeneTrack extends JFrame {
 	private JTextArea textArea;

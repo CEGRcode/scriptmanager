@@ -13,6 +13,10 @@ import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.ArrayUtilities;
 
+/**
+ * Provides helper methods for {@link scriptmanager.scripts.Read_Analysis.TagPileup}
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ */
 public class PileupExtract implements Runnable{
 	PileupParameters param;
 	File BAM;
@@ -24,6 +28,9 @@ public class PileupExtract implements Runnable{
 	double[] TAG_S1;
 	double[] TAG_S2;
 	
+	/**
+	 * Runs the {@link PileupExtract#extract(BEDCoord)} method
+	 */
 	public void run() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);
 		for(int x = index; x < index + subsetsize; x++) {
@@ -31,6 +38,14 @@ public class PileupExtract implements Runnable{
 		}
 	}
 	
+	/**
+	 * Creates a new instance of a PileupExtract
+	 * @param p Parameters to be used with the extraction
+	 * @param b BAM file to be extracted
+	 * @param i Input BEDCoords
+	 * @param current Starting nucleotide
+	 * @param length Number of BEDCoords to be processed by each thread
+	 */
 	public PileupExtract(PileupParameters p, File b, Vector<BEDCoord> i, int current, int length) {
 		param = p;
 		BAM = b;
@@ -39,6 +54,10 @@ public class PileupExtract implements Runnable{
 		subsetsize = length;
 	}
 
+	/**
+	 * Extracts Pileup stats for a single BEDCoord
+	 * @param coord BEDCoord to be extracted
+	 */
 	public void extract(BEDCoord coord) {
 		TAG_S1 = null;
 		TAG_S2 = null;
@@ -134,6 +153,12 @@ public class PileupExtract implements Runnable{
 		coord.setRstrand(finalR);
 	}
 
+	/**
+	 * Adds five prime strand to Pileup 
+	 * @param sr BED reading read by the with a SamReadFactor
+	 * @param coord BEDCoord to be analyzed
+	 * @param GENOMIC_SHIFT BEDSTART-QUERYWINDOW
+	 */
 	public void addFivePrime(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
 		if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 			if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
@@ -192,6 +217,12 @@ public class PileupExtract implements Runnable{
 		}
 	}
 	
+	/**
+	 * Adds three prime strand to Pileup 
+	 * @param sr BED reading read by the with a SamReadFactory
+	 * @param coord BEDCoord to be analyzed
+	 * @param GENOMIC_SHIFT BEDSTART-QUERYWINDOW
+	 */
 	public void addThreePrime(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
 		if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 			if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
@@ -250,6 +281,12 @@ public class PileupExtract implements Runnable{
 		}
 	}
 	
+	/**
+	 * Adds midpoint analysis strand to Pileup 
+	 * @param sr BED reading read by the with a SamReadFactory (must be PAIRED-END)
+	 * @param coord BEDCoord to be analyzed
+	 * @param GENOMIC_SHIFT BEDSTART-QUERYWINDOW
+	 */
 	public void addMidpoint(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
 		if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 			if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) { //Must either be properly paired for midpoint, only first in pair to avoid double-counting
@@ -282,6 +319,12 @@ public class PileupExtract implements Runnable{
 		}
 	}
 	
+	/**
+	 * Adds a fragment to Pileup
+	 * @param sr BED reading read by the with a SamReadFactory (must be PAIRED-END)
+	 * @param coord BEDCoord to be analyzed
+	 * @param GENOMIC_SHIFT BEDSTART-QUERYWINDOW
+	 */
 	private void addFragment(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
 		if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 			if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) { //Must either be properly paired for midpoint, only first in pair to avoid double-counting

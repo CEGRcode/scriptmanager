@@ -23,6 +23,9 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.GenetrackParameters;
 import scriptmanager.objects.Peak;
 
+/**
+ * GUI for running a gene track window with a given BAM file
+ */
 @SuppressWarnings("serial")
 public class GeneTrack_BAM extends JFrame {
 	private JTextArea textArea;
@@ -59,6 +62,11 @@ public class GeneTrack_BAM extends JFrame {
 	private double[] F_STD;
 	private double[] R_STD;
 	
+	/**
+	 * 
+	 * @param in
+	 * @param PARAM
+	 */
 	public GeneTrack_BAM(File in, GenetrackParameters PARAM) {
 		setTitle("BAM to Genetrack Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -84,6 +92,9 @@ public class GeneTrack_BAM extends JFrame {
 		FILTER = PARAM.getFilter();
 	}
 	
+	/**
+	 * 
+	 */
 	public void run() {
 		String TIME = getTimeStamp();
 		
@@ -175,6 +186,11 @@ public class GeneTrack_BAM extends JFrame {
 		dispose();
 	}
 	
+	/**
+	 * 
+	 * @param chrom
+	 * @param start
+	 */
 	public void filterbyLocalMaxima(String chrom, int start) {
 		for(int z = 0; z < F_GOCC.length; z++) {	
 			int fiveprime = z + start - UP_WIDTH;

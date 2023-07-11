@@ -18,9 +18,6 @@ import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Read_Analysis.TagPileup;
 
-/**
-	Read_AnalysisCLI/TagPileupCLI
-*/
 @Command(name = "tag-pileup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tag_pileup_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -30,6 +27,12 @@ import scriptmanager.scripts.Read_Analysis.TagPileup;
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
+
+/**
+ * Command line interface class for running TagPileup analysis with a given BED and BAM file
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
+ */
 public class TagPileupCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "The BED file with reference coordinates to pileup on.")

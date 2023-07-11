@@ -37,6 +37,11 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by the ScalingFactor script 
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFacotrOutput
+ */
 @SuppressWarnings("serial")
 public class ScalingFactorWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -71,9 +76,7 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 
 	public Task task;
 
-	/**
-	 * Organize user inputs for calling script
-	 */
+	
 	/**
 	 * Organizes user inputs for calling script
 	 */

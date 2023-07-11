@@ -203,6 +203,12 @@ public class ScalingFactor {
 		}
 	}
 
+	/**
+	 * Creates a list of reads based on a BAM file, excluding blacklisted reads
+	 * @param BAM BAM file to be used
+	 * @param sample If the BAM file is a sample or a reference (true = sample, false = reference)
+	 * @return A list of tags
+	 */
 	public List<Float> initializeList(File BAM, boolean sample) {
 		List<Float> GENOME = new ArrayList<Float>();
 		SamReader inputBAM = SamReaderFactory.makeDefault().open(BAM);
@@ -256,6 +262,13 @@ public class ScalingFactor {
 		return GENOME;
 	}
 
+	/**
+	 * Sets blacklisted windows to NaN
+	 * @param chrom Chromosome to be 
+	 * @param chromSize Length of the chromsome
+	 * @param windowSize 
+	 * @return
+	 */
 	public float[] maskChrom(String chrom, long chromSize, int windowSize) {
 		float[] chromArray = new float[(int) (chromSize / windowSize) + 1];
 		if (BLACKLIST.containsKey(chrom)) {
@@ -275,6 +288,11 @@ public class ScalingFactor {
 		return chromArray;
 	}
 
+	/**
+	 * Loads the blacklisted coordinates from a BED file
+	 * @param BLACKFile BED file with blacklisted coordinates
+	 * @throws FileNotFoundException
+	 */
 	public void loadBlacklist(File BLACKFile) throws FileNotFoundException {
 		BLACKLIST = new HashMap<String, ArrayList<BEDCoord>>();
 		Scanner scan = new Scanner(BLACKFile);
@@ -312,6 +330,11 @@ public class ScalingFactor {
 //	    }
 	}
 
+	/**
+	 * Initialized chromName and cromLength variables, with the name and length of each chromosome respectively
+	 * @param BAM File to be used for initialization 
+	 * @throws IOException
+	 */
 	public void initalizeGenomeMetainformation(File BAM) throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault()
 				.enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS,
@@ -330,6 +353,11 @@ public class ScalingFactor {
 		Sbai.close();
 	}
 
+	/**
+	 * Verifies that sample and control files match
+	 * @return Whether sample and control files are a valid pair
+	 * @throws IOException
+	 */
 	public boolean verifyFiles() throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault()
 				.enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS,
@@ -435,11 +463,11 @@ public class ScalingFactor {
 	 * 
 	 * @param setA       signal list
 	 * @param setB       control list
-	 * @param totalA
-	 * @param totalB
+	 * @param totalA Total number of A reads
+	 * @param totalB Total number of B reads 
 	 * @param outpath optional file that will contain the data
-	 * @param fileid
-	 * @param minFrac
+	 * @param fileid Name of file to be used when titling plots
+	 * @param minFrac Minimum ratio of paired counts / num pairs for analysis to start
 	 * @return
 	 */
 	public double scalingRatioByHitRatioAndNCIS(List<Float> setA, List<Float> setB, double totalA, double totalB,
@@ -542,6 +570,15 @@ public class ScalingFactor {
 
 	}
 
+	/**
+	 * Generates scatter plots, assigning them to CC_plot and M_plot respectively
+	 * @param counts List of PairedCounts
+	 * @param totalAtScaling Draw a red line at the y-axis for this value
+	 * @param scalingRatio Draw a red line at the x-axis for this value
+	 * @param outbase Base name for output files
+	 * @param fileid Name of file to be used when titling chart
+	 * @param scaletype Type of scaling to use (1=Total Tag, 2=NCIS, 3=NCISwithTotal)
+	 */
 	public void plotGraphs(List<PairedCounts> counts, double totalAtScaling, double scalingRatio, String outbase,
 			String fileid, String scaletype) {
 		// Scaling plot generation
@@ -602,18 +639,34 @@ public class ScalingFactor {
 		}
 	}
 
+	/**
+	 * Returns the cumulative plot
+	 * @return
+	 */
 	public ChartPanel getCCPlot() {
 		return (CC_plot);
 	}
 
+	/**
+	 * Returns the marginal plot
+	 * @return The marginal plot
+	 */
 	public ChartPanel getMPlot() {
 		return (M_plot);
 	}
 
+	/**
+	 * Returns the scaling factor
+	 * @return The scaling factor
+	 */
 	public double getScalingFactor() {
 		return (SCALE);
 	}
 
+	/**
+	 * Returns the lastest error message
+	 * @return the lastest error message
+	 */
 	public String getDialogMessage() {
 		return (dialogMessage);
 	}

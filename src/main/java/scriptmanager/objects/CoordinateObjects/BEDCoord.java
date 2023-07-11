@@ -2,6 +2,10 @@ package scriptmanager.objects.CoordinateObjects;
 
 import java.util.Comparator;
 
+/**
+ * Object for storing lines of a BED file
+ * @see 
+ */
 public class BEDCoord implements GenomicCoord {
 	private String CHROM = "";
 	private long START = 0;
@@ -20,6 +24,10 @@ public class BEDCoord implements GenomicCoord {
 		
 	}
 	
+	/**
+	 * Creates a new BEDCoord object with a given String
+	 * @param line String to parse in order to create BEDCoord file
+	 */
 	public BEDCoord(String line) {
 		String[] bed = line.split("\t");
 		if(bed.length > -1) CHROM = bed[0];
@@ -33,7 +41,14 @@ public class BEDCoord implements GenomicCoord {
 		if(bed.length > 4) DIR = bed[5];
 	}
 	
-	
+	/**
+	 * Creates a new BEDCoord object
+	 * @param c Chromosome name
+	 * @param sta Start coordinate 
+	 * @param sto Ending coordinate
+	 * @param di Strand direction (+/-)
+	 * @param na Name of coord
+	 */
 	public BEDCoord(String c, long sta, long sto, String di, String na) {
 		CHROM = c;
 		START = sta;
@@ -42,6 +57,13 @@ public class BEDCoord implements GenomicCoord {
 		NAME = na;
 	}
 	
+	/**
+	 * Creates a new BEDCoord object
+	 * @param c Chromosome name
+	 * @param sta Start coordinate 
+	 * @param sto Ending coordinate
+	 * @param di Strand direction (+/-)
+	 */
 	public BEDCoord(String c, long sta, long sto, String di) {
 		CHROM = c;
 		START = sta;
@@ -50,23 +72,43 @@ public class BEDCoord implements GenomicCoord {
 		NAME = CHROM + "_" + START + "_" + STOP + "_" + DIR;
 	}
 	
+	/**
+	 * Creates a new BEDCoord object with only a name and score
+	 * @param na Name of coord
+	 * @param sco Score
+	 */
 	public BEDCoord(String na, double sco) {
 		NAME = na;
 		SCORE = sco;
 	}
 	
+	/**
+	 * Calculates the middle position of a BED coordinate pair
+	 */
 	public void calcMid() {
 		MID = (START + STOP) / 2;
 	}
 	
+	/**
+	 * Sets the middle position of a BED coordinate pair
+	 * @param m New middle position
+	 */
 	public void setMid(int m) {
 		MID = m;
 	}
 	
+	/**
+	 * Returns the middle position of a BED coordinate pair
+	 * @return The middle position of a BED coordinate pair
+	 */
 	public long getMid() {
 		return MID;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public double[] getFStrand() {
 		return Fstrand;
 	}

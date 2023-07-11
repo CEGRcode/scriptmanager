@@ -276,16 +276,34 @@ public class PileupParameters {
 		outputCOMPOSITE = out;
 	}
 
+	/**
+	 * Returns the standardization ratio (default value = 1)
+	 * @return The standardization ration
+	 */
 	public double getRatio() {
 		return STANDRATIO;
 	}
+	
+	/**
+	 * Sets the standardization ratio
+	 * @param rat New value of STANDRATIO
+	 */
 	public void setRatio(double rat) {
 		STANDRATIO = rat;
 	}
 
+	/**
+	 * Returns Whether to perform Tag Standardization
+	 * @return Whether to perform Tag Standardization (default false)
+	 */
 	public boolean getStandard() {
 		return STANDARD;
 	}
+	
+	/**
+	 * Sets if Tag Standardization should be performed
+	 * @param stand New value of STANDARD
+	 */
 	public void setStandard(boolean stand) {
 		STANDARD = stand;
 	}
@@ -513,6 +531,12 @@ public class PileupParameters {
 		CPU = cPU;
 	}
 
+	/**
+	 * Returns the file name and path for an output file (without the extension or strand #)
+	 * @param bed file path to the BED file (name included)
+	 * @param bam file bath to the BAM file  (name included)
+	 * @return The file name, with the path, of an output file (without the extension or strand #)
+	 */
 	public String generateFileBase(String bed, String bam) {
 		String[] bedname = bed.split("\\.");
 		String[] bamname = bam.split("\\.");
@@ -537,10 +561,23 @@ public class PileupParameters {
 		return (bedname[0] + "_" + bamname[0] + "_" + read);
 	}
 
+	/**
+	 * Generates the fine name and path for an output
+	 * @param bed file path to the BED file (name included)
+	 * @param bam file bath to the BAM file  (name included)
+	 * @param strandnum strand # to be used in the file name
+	 * @return The file name, with the path, of an output file (including the file extension and strand #)
+	 */
 	public String generateFileName(String bed, String bam, int strandnum) {
 		return (generateFileName(generateFileBase(bed, bam), strandnum));
 	}
 
+	/**
+	 * Generates the file name and path for an output
+	 * @param basename Base name of the file (created with {@link PileupParameters#generateFileBase(String, String)})
+	 * @param strandnum strand # to be used in the file name
+	 * @return The file name, with the path, of an output file (including the file extension and strand #)
+	 */
 	public String generateFileName(String basename, int strandnum) {
 		String strand = "sense";
 		if (strandnum == 1) {

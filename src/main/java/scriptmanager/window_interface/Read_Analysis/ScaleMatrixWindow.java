@@ -45,6 +45,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
+/**
+ * GUI for collecting inputs to be processed by the ScaleMatrix script
+ * @see scriptmanager.scripts.Read_Analysis.ScaleMatrix
+ */
 @SuppressWarnings("serial")
 public class ScaleMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
@@ -73,9 +77,6 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 
 	public Task task;
 
-	/**
-	 * Organize user inputs for calling script
-	 */
 	/**
 	 * Organizes user inputs for calling script
 	 */
