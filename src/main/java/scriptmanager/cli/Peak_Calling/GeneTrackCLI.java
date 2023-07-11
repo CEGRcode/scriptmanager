@@ -8,8 +8,9 @@ import java.io.IOException;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
-	Peak_CallingCLI/GeneTrackCLI
-*/
+ * Command line interface class that provides access to the GeneTrack script
+ * @see scriptmanager.window_interface.Peak_Calling.GeneTrack
+ */
 @Command(name = "gene-track", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.gene_track_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

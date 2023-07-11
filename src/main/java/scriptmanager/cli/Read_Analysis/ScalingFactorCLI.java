@@ -15,8 +15,9 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 /**
-	Read_AnalysisCLI/ScalingFactorCLI
-*/
+ * Command line interface class for providing access to the ScalingFactor script
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ */
 @Command(name = "scaling-factor", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scaling_factor_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

@@ -30,7 +30,7 @@ import scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract;
 import scriptmanager.util.ArrayUtilities;
 
 /**
- * A script for running Pileup analysis on BAM files
+ * A script for running Pileup analysis on a pair of BED and BAM files
  * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
  */
 public class TagPileup {

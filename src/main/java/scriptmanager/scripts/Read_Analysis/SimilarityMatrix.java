@@ -10,7 +10,7 @@ import java.util.Scanner;
 import scriptmanager.util.SimilarityMetric;
 
 /**
- * Deprecated tool used to create a similarity matrix and outputting resulting matrix to new file
+ * Deprecated tool used to create a similarity matrix and outputting it to a new file
  */
 public class SimilarityMatrix {
 

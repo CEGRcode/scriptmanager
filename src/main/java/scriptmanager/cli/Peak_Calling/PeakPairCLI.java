@@ -9,8 +9,9 @@ import java.io.IOException;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
-	Peak_CallingCLI/PeakPairCLI
-*/
+ * Command line interface class that provides access to the PeackPair script
+ * @see scriptmanager.window_interface.Peak_Calling.PeakPair
+ */
 @Command(name = "peak-pair", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_pairing_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

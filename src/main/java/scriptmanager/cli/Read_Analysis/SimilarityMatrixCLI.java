@@ -9,8 +9,9 @@ import scriptmanager.objects.ToolDescriptions;
 import java.io.IOException;
 
 /**
-	Read_AnalysisCLI/SimilarityMatrixCLI
-*/
+ * Command line interface class for generating a similarity matrix
+ * @see scriptmanager.scripts.Read_Analysis.SimilarityMatrix
+ */
 @Command(name = "similarity-matrix", mixinStandardHelpOptions = true,
 	description = "",
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

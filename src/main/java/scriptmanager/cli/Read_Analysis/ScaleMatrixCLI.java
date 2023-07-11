@@ -14,8 +14,9 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
 /**
-	Read_AnalysisCLI/ScaleMatrixCLI
-*/
+ * Command line interface class for performing scalar multiplication on a given matrix
+ * @see scriptmanager.scripts.Read_Analysis.ScaleMatrix
+ */
 @Command(name = "scale-matrix", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scale_matrix_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,

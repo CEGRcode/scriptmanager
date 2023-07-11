@@ -15,8 +15,9 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Read_Analysis.AggregateData;
 
 /**
-	Read_AnalysisCLI/AggregateDataCLI
-*/
+ * Command line interface class for combining multiple matrices
+ * @see scriptmanager.scripts.Read_Analysis.AggregateData
+ */
 @Command(name = "aggregate-data", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.aggregate_data_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
