@@ -133,7 +133,20 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		if( MAX_INSERT<MIN_INSERT && MIN_INSERT!=-9999 && MAX_INSERT!=-9999){ r += "MAX_INSERT must be larger/equal to MIN_INSERT: " + MIN_INSERT + "," + MAX_INSERT + "\n"; }
 		// turn pair status boolean into int
 		PAIR = matePair ? 1 : 0;
-		
 		return(r);
+	}
+	public static String getCLIcommand(File BAM, File output, int pair, int strand, int min, int max){
+		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bed-to-scIDX";
+		command += " " + BAM.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		if  (strand != 0) {
+			command += " -s";
+		}
+		if (pair != 0) {
+			command += " -p";
+		}
+		command += " -n " + min;
+		command += " -x " + max;
+		return command;
 	}
 }
