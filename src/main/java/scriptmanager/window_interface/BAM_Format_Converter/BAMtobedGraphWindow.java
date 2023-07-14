@@ -13,6 +13,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -35,6 +37,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
+import scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -81,6 +86,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 							"Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!");
 				} else {
 					setProgress(0);
+					LogItem old_li = null;
 					if (rdbtnRead1.isSelected()) {
 						STRAND = 0;
 					} else if (rdbtnRead2.isSelected()) {
@@ -105,13 +111,21 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 					}
 
 					for (int x = 0; x < BAMFiles.size(); x++) {
-						BAMtobedGraphOutput convert = new BAMtobedGraphOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR,
-								MIN, MAX);
+						// Initialize LogItem
+						String command = BAMtobedGraphCLI.getCLIcommand(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX);
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
+						BAMtobedGraphOutput convert = new BAMtobedGraphOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX);
 						convert.setVisible(true);
 						convert.run();
+						// Update LogItem
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 						int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
+					firePropertyChange("log", old_li, null);
 					setProgress(100);
 					return null;
 				}
@@ -349,6 +363,8 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

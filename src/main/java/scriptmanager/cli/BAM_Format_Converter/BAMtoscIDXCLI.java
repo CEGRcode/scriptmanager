@@ -136,7 +136,7 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		return(r);
 	}
 	public static String getCLIcommand(File BAM, File output, int pair, int strand, int min, int max){
-		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bed-to-scIDX";
+		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bam-to-scIDX";
 		command += " " + BAM.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		if  (strand != 0) {

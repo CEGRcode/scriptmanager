@@ -34,6 +34,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -80,6 +83,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 					JOptionPane.showMessageDialog(null, "Invalid Expansion Size!!! Must be larger than 0 bp");
 				} else {
 					setProgress(0);
+					LogItem old_li = new LogItem("");
 					for (int x = 0; x < BEDFiles.size(); x++) {
 						// Save current BED to temp variable
 						File XBED = BEDFiles.get(x);
@@ -96,7 +100,10 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						// Add suffix
 						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
 						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
-
+						// Initialize LogItem
+						/*String command = ExpandBEDCLI.getCLIcommand(XBED, OUTPUT, )
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);*/
 						// Execute expansion and update progress
 						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
