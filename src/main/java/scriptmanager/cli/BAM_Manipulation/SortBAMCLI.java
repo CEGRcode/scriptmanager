@@ -3,6 +3,7 @@ package scriptmanager.cli.BAM_Manipulation;
 import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
+import java.io.File;
 
 import scriptmanager.objects.ToolDescriptions;
 
@@ -26,5 +27,12 @@ public class SortBAMCLI implements Callable<Integer> {
 							"\t'samtools sort -o <output.bam> <input.bam>'");
 		System.exit(1);
 		return(1);
+	}
+
+	public static String getCLIcommand(File BAM, File output) {
+		String command = "java -jar $PICARD SortSam";
+		command += " INPUT=" + BAM.getAbsolutePath();
+		command += " OUTPUT=" + output.getAbsolutePath();
+		return(command);
 	}
 }

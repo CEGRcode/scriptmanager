@@ -12,7 +12,9 @@ import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -30,6 +32,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
+import scriptmanager.cli.BAM_Manipulation.SortBAMCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;
 import scriptmanager.util.FileSelection;
 
@@ -56,6 +61,8 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
+			LogItem old_li = null;
+
 			try {
 				for(int x = 0; x < BAMFiles.size(); x++) {
 					// Build output filepath
@@ -63,13 +70,22 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 					File OUTPUT = null;
 					if(OUT_DIR != null) { OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME[0] + "_sorted.bam"); }
 					else { OUTPUT = new File(NAME[0] + "_sorted.bam"); }
+					// Initialize LogItem
+					String command = SortBAMCLI.getCLIcommand(BAMFiles.get(x), OUTPUT);
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
 					// Execute Picard wrapper
 					BAMFileSort.sort(BAMFiles.get(x), OUTPUT);
+					// Update LogItem
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
 					// Update progress
 					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
 					setProgress(percentComplete);
 					
 				}
+				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Sorting Complete");
 			} catch (SAMException se) {
@@ -195,7 +211,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
-        }
+        } else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
 	}
 	
 	public void massXable(Container con, boolean status) {
