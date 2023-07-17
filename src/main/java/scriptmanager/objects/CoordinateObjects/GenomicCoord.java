@@ -1,5 +1,11 @@
 package scriptmanager.objects.CoordinateObjects;
 
+/**
+ * Interface used by coordinate classes
+ * @see scriptmanager.objects.CoordinateObjects.BEDCoord
+ * @see scriptmanager.objects.CoordinateObjects.GenericCoord
+ * @see scriptmanager.objects.CoordinateObjects.GFFCoord
+ */
 public interface GenomicCoord {
 	public String getChrom();	
 	public void setChrom(String chr);

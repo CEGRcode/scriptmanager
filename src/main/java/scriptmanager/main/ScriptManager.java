@@ -82,6 +82,10 @@ import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 		description = "Choose a tool directory from below to see more command-line tool options.",
 		exitCodeOnInvalidInput = 1,
 		exitCodeOnExecutionException = 1)
+
+/**
+ * Provides command line access to Script Manager sub-commands
+ */
 public class ScriptManager implements Callable<Integer> {
 
 	@Override

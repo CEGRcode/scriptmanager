@@ -132,7 +132,7 @@ public class CorrelationCoord {
 	
 	/**
 	 * Returns the sample standard deviation of x * sample standard deviation of y
-	 * @param newsxy The sample standard deviation of x * sample standard deviation of y
+	 * @return The sample standard deviation of x * sample standard deviation of y
 	 */
 	public double getSxy() {
 		return Sxy;

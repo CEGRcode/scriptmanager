@@ -10,6 +10,11 @@ import java.util.Scanner;
 import scriptmanager.util.ArrayUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 
+/**
+ * Script for combining multiple TAB/CDT files into one file with a given operation
+ * @see scriptmanager.window_interface.Read_Analysis.AggreagateDataWindow
+ * @see scriptmanager.cli.Read_Analysis.AggregateDataCLI
+ */
 public class AggregateData {
 
 	private ArrayList<File> INPUT = null;

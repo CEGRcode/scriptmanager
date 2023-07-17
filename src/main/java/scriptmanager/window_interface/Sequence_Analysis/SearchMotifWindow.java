@@ -58,9 +58,6 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script
-	 */
-	/**
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {

@@ -10,7 +10,7 @@ import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
 /**
- * Object for calculating correlation between two CorrelationCoords
+ * Class for calculating correlation between two CorrelationCoords
  * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
  * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
  */

@@ -2,7 +2,7 @@ package scriptmanager.objects;
 
 /**
  * This class acts as a central and shared storage location for each tool's
- * description for consistentcy betweeen CLI help message and the GUI-displayed
+ * description for consistency between CLI help message and the GUI-displayed
  * text.
  * 
  * @author Olivia Lang
