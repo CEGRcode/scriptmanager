@@ -38,7 +38,7 @@ public class ToolDescriptions {
 	public static final String downsample_sam_description = "Downsample a BAM file to a specified percentage or read count of deterministically random reads.";
 	public static final String validate_sam_file_description = "Validate SAM/BAM files comprehensively, ensuring adherence to the SAM format specification and detecting errors or inconsistencies in alignment data.";
 	public static final String normalize_fasta_description = "Reduce redundant sequences and normalize read coverage in a FASTA file, improving downstream analysis accuracy";
-
+	public static final String filter_sam_reads_description = "Filter BAM files by applying user-defined filters to include or exclude specific reads based on read lists or genomic intervals";
 	// BAM Format Converter
 	public static final String bam_to_scidx_description = "Convert BAM file to scIDX file.";
 	public static final String bam_to_gff_description = "Convert BAM file to GFF file.";

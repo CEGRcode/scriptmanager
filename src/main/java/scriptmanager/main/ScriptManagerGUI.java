@@ -3,6 +3,7 @@ package scriptmanager.main;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.logging.Filter;
 
 import javax.swing.*;
 
@@ -449,6 +450,36 @@ public class ScriptManagerGUI {
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnNormalizeFasta, 10, SpringLayout.WEST, pnlBamManip);
 		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtNormalizeFasta, 10, SpringLayout.EAST, btnNormalizeFasta);
 		pnlBamManip.add(btnNormalizeFasta);
+
+		// FilterSamReads
+
+		JTextArea txtFilterSamReads = new JTextArea();
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, txtFilterSamReads, 20, SpringLayout.SOUTH, txtNormalizeFasta);
+		sl_pnlBamManip.putConstraint(SpringLayout.EAST, txtFilterSamReads, -10, SpringLayout.EAST, pnlBamManip);
+		initializeTextArea(txtFilterSamReads);
+
+		txtFilterSamReads.setText(ToolDescriptions.filter_sam_reads_description);
+		pnlBamManip.add(txtFilterSamReads);
+
+		JButton btnFilterSamReads = new JButton("Filter Bam Reads");
+		btnFilterSamReads.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							FilterSamReadsWindow frame = new FilterSamReadsWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlBamManip.putConstraint(SpringLayout.NORTH, btnFilterSamReads, 0, SpringLayout.NORTH, txtFilterSamReads);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, btnFilterSamReads, 10, SpringLayout.WEST, pnlBamManip);
+		sl_pnlBamManip.putConstraint(SpringLayout.WEST, txtFilterSamReads, 10, SpringLayout.EAST, btnFilterSamReads);
+		pnlBamManip.add(btnFilterSamReads);
 
 		// >>>>>>>> BAM_Format_Converter <<<<<<<<
 		JPanel pnlBamConvert = new JPanel();

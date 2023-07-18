@@ -1,9 +1,11 @@
 package scriptmanager.scripts.BAM_Manipulation;
 
 import htsjdk.samtools.SAMException;
+import picard.sam.FilterSamReads;
 
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * @author Erik Pavloski
@@ -24,6 +26,21 @@ public class FilterSamReadsWrapper {
      * @throws SAMException
      */
     public static void run(File input, File output, boolean filter, File readListFile, File intervalList) throws IOException, SAMException {
+        System.out.println("Filtering Reads");
 
+        final picard.sam.FilterSamReads filterSamReads = new FilterSamReads();
+        final ArrayList<String> args = new ArrayList<>();
+        args.add("INPUT=" + input.getAbsolutePath());
+        args.add("OUTPUT=" + output.getAbsolutePath());
+        if (filter) {
+            args.add("READ_LIST_FILE=" + readListFile.getAbsolutePath());
+            args.add("FILTER=includeReadList");
+        } else {
+            args.add("INTERVAL_LIST=" + intervalList.getAbsolutePath());
+            args.add("FILTER=includePairedIntervals");
+        }
+        filterSamReads.instanceMain(args.toArray(new String[args.size()]));
+
+        System.out.println("Filtering Complete");
     }
 }
