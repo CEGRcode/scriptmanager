@@ -1,4 +1,4 @@
-<tool id="scriptmanager_pe-stat" name="ScriptManager: Paired-end BAM Statistics" version="0.0.1">
+<tool id="scriptmanager_pe-stat" name="ScriptManager: Paired-End Statistics" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description>Generates Insert-size Histogram statistics (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.</description>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
@@ -8,17 +8,38 @@
 	<![CDATA[
             cp $input tmp.bam
             && samtools index tmp.bam
-            && java -jar $__tool_directory__/ScriptManager-v0.13-dev.jar bam-statistics pe-stat tmp.bam  -o output_file 2>&1
+            && java -jar $__tool_directory__/ScriptManager-v0.14.jar bam-statistics pe-stat tmp.bam
+
+            #if str($dup_stats) == "Yes" :
+                -d
+            #end if
+
+            #if str($summary) == "Yes" :
+                -s
+            #end if
+
+            -n "$min"
+            -x "$max"
+            
+            -o output_file 2>&1
             && cp output_file_PE.png $output_png
             && cp output_file_InsertHistogram.out $output_txt
         ]]>
     </command>
     <inputs>
-        <param name="input" type="data" format="bam" label="input file in bam format"/>
+        <param name="input" type="data" format="bam" label="Input file in BAM format"/>
+
+        <param name="min" type="integer" value="0" label="Histogram Min"/>
+        <param name="max" type="integer" value="1000" label="Histogram Max"/>
+
+        <param name="dup_stats" type="boolean" truevalue="Yes" falsevalue="No" label="Calculate duplication statistics" />
+        <param name="summary" type="boolean" truevalue="Yes" falsevalue="No" label="Output summary of insert histogram by chromosome" />
+
+        
     </inputs>
     <outputs>
-        <data name="output_png" type="data" format="png" label=" ${tool.name} on ${on_string} in png format"/>
-        <data name="output_txt" type="data" format="txt" label=" ${tool.name} on ${on_string} in txt format"/>
+        <data name="output_png" format="png" label=" ${tool.name} on ${on_string} in png format"/>
+        <data name="output_txt" format="txt" label=" ${tool.name} on ${on_string} in txt format"/>
     </outputs>
     <tests>
     </tests>
