@@ -1,0 +1,30 @@
+<tool id="scriptmanager_se-stat" name="ScriptManager: Single-End Statistics" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+    <description> Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File. </description>
+    <requirements>
+        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <requirement type="package" version="1.9">samtools</requirement>
+    </requirements>
+
+    <command detect_errors="exit_code"><![CDATA[
+        cp $input1 tmp.bam
+        && samtools index tmp.bam
+        && java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar bam-statistics se-stat tmp.bam
+
+        && cp tmp.bam $output1
+    ]]></command>
+
+    <inputs>
+        <param type="data" name="input1" format="bam" label="Input BAM file"/>
+    </inputs>
+
+    <outputs>
+        <data name="output1" format="bam" label="${tool.name} on ${on_string}"/>
+    </outputs>
+
+    <help>
+    **What it does**
+    Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.
+
+
+    </help>
+</tool>
