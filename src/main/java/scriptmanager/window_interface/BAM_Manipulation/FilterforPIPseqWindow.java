@@ -11,7 +11,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -32,6 +34,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI;
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
@@ -64,6 +69,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		@Override
 		public Void doInBackground() throws Exception {
 			setProgress(0);
+			LogItem old_li = new LogItem("");
 			try {
 				for (int x = 0; x < BAMFiles.size(); x++) {
 					String[] NAME = BAMFiles.get(x).getName().split("\\.");
@@ -73,8 +79,16 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 					} else {
 						OUTPUT = new File(NAME[0] + "_PSfilter.bam");
 					}
-					FilterforPIPseqOutput filter = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT,
-							txtSeq.getText());
+					// Initialize LogItem
+					String command = FilterforPIPseqCLI.getCLIcommand(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					// Execute Wrapper
+					FilterforPIPseqOutput filter = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
 					filter.setVisible(true);
 					filter.run();
 
@@ -85,6 +99,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 					int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
 					setProgress(percentComplete);
 				}
+				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Permanganate-Seq Filtering Complete");
 			} catch (IOException ioe) {
@@ -250,6 +265,8 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

@@ -126,4 +126,12 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 
 		return (r);
 	}
+	public static String getCLIcommand(File BAM, File GENOME, File OUTPUT, String txtSeq) {
+		String command = "java -jar $SCRIPTMANAGER bam-manipulation filterforPIPseq";
+		command += " " + GENOME.getAbsolutePath();
+		command += " " + BAM.getAbsolutePath();
+		command += " -o " + OUTPUT.getAbsolutePath();
+		command += " -f " + txtSeq;
+		return command;
+	}
 }

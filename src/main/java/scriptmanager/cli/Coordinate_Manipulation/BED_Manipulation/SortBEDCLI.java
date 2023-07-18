@@ -126,7 +126,7 @@ public class SortBEDCLI implements Callable<Integer> {
 		command += " " + CDT.getAbsolutePath();
 		command += " -x " + startidx + " " + stopidx;
 		command += gzOutput ? " -z" : "";
-		command += " -o " + OUTPUT;
+		command += " -o " + OUTPUT.getAbsolutePath();
 		return command;
 	}
 }
