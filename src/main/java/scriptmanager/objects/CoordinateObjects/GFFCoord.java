@@ -133,7 +133,7 @@ public class GFFCoord implements GenomicCoord {
 	
 	/**
 	 * Sets the chromosome name
-	 * @return the new chr name
+	 * @param chr The new chromosome name
 	 */
 	public void setChrom(String chr) {
 		CHROM = chr;
@@ -181,7 +181,7 @@ public class GFFCoord implements GenomicCoord {
 	
 	/**
 	 * Sets the strand direction
-	 * @param the strand direction (+/-)
+	 * @param di The strand direction (+/-)
 	 */
 	public void setDir(String di) {
 		DIR = di;

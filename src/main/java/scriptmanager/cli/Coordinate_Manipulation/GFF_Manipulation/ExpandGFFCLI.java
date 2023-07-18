@@ -47,6 +47,10 @@ public class ExpandGFFCLI implements Callable<Integer> {
 	private boolean byCenter = true;
 	private int SIZE = 250;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ExpandGFFCLI.call()" );

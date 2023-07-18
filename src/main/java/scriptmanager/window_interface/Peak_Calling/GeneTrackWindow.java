@@ -38,6 +38,9 @@ import scriptmanager.scripts.Peak_Calling.GeneTrack;
 @SuppressWarnings("serial")
 public class GeneTrackWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	final DefaultListModel<String> expList;
@@ -49,6 +52,9 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnGene;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JTextField txtSigma;
 	private JTextField txtExclusion;

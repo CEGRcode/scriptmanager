@@ -24,7 +24,7 @@ public class RandomizeFASTA {
 	 * @param RANDOUT filepath to write randomized sequences to
 	 * @param seed set a random seed
 	 * @return name of output filename
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed) throws IOException {
 		Random randnum = new Random();

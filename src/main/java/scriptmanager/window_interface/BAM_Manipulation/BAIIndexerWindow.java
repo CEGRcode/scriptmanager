@@ -32,12 +32,15 @@ import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 /**
  * Graphical window for user argument selection and execution of the BAIIndexer script
- * @see scriptmanager.cli.BAM_Manipulation.BAIIndexer
- * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerOutput
+ * @see scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWindow
  */
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	final DefaultListModel<String> expList;
@@ -48,6 +51,9 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 	private JButton btnIndex;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	
 	/**

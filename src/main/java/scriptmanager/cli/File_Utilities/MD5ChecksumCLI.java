@@ -32,6 +32,10 @@ public class MD5ChecksumCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "specify output filepath")
 	private File output = new File("md5checksum.txt");
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws Exception Invalid input
+	 */
 	@Override
 	public Integer call() throws Exception {
 		String md5hash = MD5Checksum.calculateMD5(input.getAbsolutePath());

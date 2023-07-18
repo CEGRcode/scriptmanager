@@ -87,7 +87,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 	 * for each shape type under the "DNA Shape Statistics" tab and append each
 	 * chart generated under the "DNA Shape Plot" tab.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

@@ -47,6 +47,9 @@ import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 @SuppressWarnings("serial")
 public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -58,6 +61,9 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	private JButton btnConvert;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;

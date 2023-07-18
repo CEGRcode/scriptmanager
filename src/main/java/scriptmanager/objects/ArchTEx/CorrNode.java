@@ -64,7 +64,7 @@ public class CorrNode {
 
 	/**
 	 * Sets the sample variance of x
-	 * @return The new sample variance of x
+	 * @param newsxx The new sample variance of x
 	 */
 	public void setSxx(double newsxx) {
 		Sxx = newsxx;

@@ -10,7 +10,8 @@ import scriptmanager.objects.ToolDescriptions;
 
 /**
  * Command line interface class that provides access to the PeackPair script
- * @see scriptmanager.window_interface.Peak_Calling.PeakPair
+ * @see scriptmanager.scripts.Peak_Calling.PeakPair
+ * @see scriptmanager.window_interface.Peak_Calling.PeakPairWindow
  */
 @Command(name = "peak-pair", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_pairing_description,
@@ -20,6 +21,10 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnExecutionException = 1)
 public class PeakPairCLI implements Callable<Integer> {
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.out.println( ">PeakPairCLI.call()" );

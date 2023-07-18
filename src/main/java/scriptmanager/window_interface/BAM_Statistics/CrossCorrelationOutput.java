@@ -85,7 +85,7 @@ public class CrossCorrelationOutput extends JFrame {
 	 * Call script, validate BAI files, build output basename, and display progress
 	 * with results by instantiating results tabs for each input BAM file.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		// Check if BAI index file exists for all BAM files

@@ -72,7 +72,7 @@ public class BAMtoBEDOutput extends JFrame {
 
 	/**
 	 * Runs the BAMtoBED script with the file passed in through the constructor
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

@@ -147,7 +147,7 @@ public class BEDCoord implements GenomicCoord {
 	
 	/**
 	 * Sets the chromosome name
-	 * @return the new chr name
+	 * @param chr The new chr name
 	 */
 	public void setChrom(String chr) {
 		CHROM = chr;
@@ -195,7 +195,7 @@ public class BEDCoord implements GenomicCoord {
 	
 	/**
 	 * Sets the strand direction
-	 * @param the strand direction (+/-)
+	 * @param di The strand direction (+/-)
 	 */
 	public void setDir(String di) {
 		DIR = di;

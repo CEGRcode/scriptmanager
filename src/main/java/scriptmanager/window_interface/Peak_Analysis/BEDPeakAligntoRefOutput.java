@@ -29,7 +29,7 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	 * @param ref
 	 * @param peak
 	 * @param outpath
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public BEDPeakAligntoRefOutput(File ref, File peak, File outpath) throws IOException {
 		setTitle("BED Align to Reference Progress");
@@ -55,7 +55,7 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		
 	/**
 	 * Runs the BEDPeakAligntoRef script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

@@ -9,7 +9,8 @@ import scriptmanager.objects.ToolDescriptions;
 
 /**
  * Command line interface class that provides access to the GeneTrack script
- * @see scriptmanager.window_interface.Peak_Calling.GeneTrack
+ * @see scriptmanager.scripts.Peak_Calling.GeneTrack
+ * @see scriptmanager.window_interface.Peak_Calling.GeneTrackWindow
  */
 @Command(name = "gene-track", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.gene_track_description,
@@ -19,6 +20,10 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnExecutionException = 1)
 public class GeneTrackCLI implements Callable<Integer> {
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.out.println( ">GeneTrackCLI.call()" );

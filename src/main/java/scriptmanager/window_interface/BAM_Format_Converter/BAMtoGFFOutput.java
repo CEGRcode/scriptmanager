@@ -33,12 +33,11 @@ public class BAMtoGFFOutput extends JFrame {
 	/**
 	 * Creates a new instance of a BAMtoGFF script with a single BAM file
 	 * @param b BAM file
-	 * @param o Output file
+	 * @param out_dir Output directory
 	 * @param s Specifies which reads to output
 	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
 	 * @param min_size Minimum acceptable insert size
 	 * @param max_size Maximum acceptable insert size
-	 * @param ps PrintStream to output results
 	 */
 	public BAMtoGFFOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to GFF Progress");
@@ -73,7 +72,7 @@ public class BAMtoGFFOutput extends JFrame {
 	
 	/**
 	 * Runs the BAMtoGFF script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

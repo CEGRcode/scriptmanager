@@ -136,6 +136,10 @@ public class TagPileupCLI implements Callable<Integer> {
 	
 	PileupParameters p;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">TagPileupCLI.call()" );

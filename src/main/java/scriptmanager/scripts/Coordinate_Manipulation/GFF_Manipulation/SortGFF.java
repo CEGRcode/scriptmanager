@@ -21,7 +21,7 @@ public class SortGFF {
 	/**
 	 * Sort a GFF file by the values from a CDT matrix file. 
 	 * 
-	 * @param outbase Filepath basename (without ext) to save the sorted GFF (&lt;basename&gt;.gff) and sorted CDT (&lt;basename&gt;.cdt) files.
+	 * @param outname Filepath basename (without ext) to save the sorted GFF (&lt;basename&gt;.gff) and sorted CDT (&lt;basename&gt;.cdt) files.
 	 * @param gff input GFF file to sort
 	 * @param cdt input CDT file with values to sort by
 	 * @param START_INDEX the start column to consider when summing values to sort

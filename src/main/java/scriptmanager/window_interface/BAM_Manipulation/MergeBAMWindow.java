@@ -36,11 +36,15 @@ import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
 
 /**
  * Graphical window for user argument selection and execution of the MergeBAM script
- * @see scriptmanager.cli.BAM_Manipulation.MergeBAM
+ * @see scriptmanager.scripts.BAM_Manipulation.MergeBAM
+ * @see scriptmanager.cli.BAM_Manipulation.MergeBAMCLI
  */
 @SuppressWarnings("serial")
 public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> expList;
@@ -58,6 +62,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	private JProgressBar progressBar;
 	private JLabel lblDefaultToLocal;
 	
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

@@ -23,6 +23,10 @@ import scriptmanager.util.GZipUtilities;
  */
 public class ExpandBED {
 	/**
+	 * Creates a new ExpandBED object
+	 */
+	public ExpandBED(){}
+	/**
 	 * Self-contained method for expanding the BED-formatted intervals in a BED file by user-specified distance and strategy. This method accounts for even-sized BED interval expansion in midpoint calculations by using the strand-aware downstream nucleotide between the two center nucleotides.
 	 * 
 	 * @param out_filepath Filepath to save expanded BED-formatted files. If null, outputs to STDOUT.
@@ -30,7 +34,7 @@ public class ExpandBED {
 	 * @param SIZE Integer value indicating number of nucleotides to expand by (must be a positive integer).
 	 * @param ExCenter Specifies expansion strategy: if true, size expansion will be performed from the midpoint of each BED interval, if false, size expansion will be performed from the border/edges of the BED intervals (default=true).
 	 * @param gzOutput If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void expandBEDBorders(File out_filepath, File input, int SIZE, boolean ExCenter, boolean gzOutput ) throws IOException {
 		// Initialize output writer

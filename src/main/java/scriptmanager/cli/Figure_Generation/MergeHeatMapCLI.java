@@ -37,6 +37,10 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 			"--output" }, description = "specify output filename, please use PNG extension\n(default=\"<senseFile>_merged.png\" appended to the name in working directory of ScriptManager")
 	private File output = null;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">MergeHeatMapCLI.call()");

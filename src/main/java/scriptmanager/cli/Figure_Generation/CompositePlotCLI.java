@@ -53,6 +53,10 @@ public class CompositePlotCLI implements Callable<Integer> {
 
 	private ArrayList<Color> COLORS = new ArrayList<Color>();
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">CompositePlotCLI.call()");
@@ -73,7 +77,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 	/**
 	 * Validate input values and create user-readable error messages.
 	 * @return
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

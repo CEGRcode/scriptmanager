@@ -52,6 +52,9 @@ import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 @SuppressWarnings("serial")
 public class ScaleMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	ArrayList<File> TABFiles = new ArrayList<File>();
@@ -75,6 +78,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 
 	private DefaultTableModel expTable;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

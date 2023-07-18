@@ -81,7 +81,7 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 	
 	/**
 	 * Runs the analysis and displays results
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		//Open Output File

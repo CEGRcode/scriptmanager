@@ -95,7 +95,7 @@ public class TagPileupOutput extends JFrame {
 	 * labeled with the BAM filename. These tabs are "subtabs" in the "Pileup
 	 * Plot" tab.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		// Check if BAI index file exists for all BAM files

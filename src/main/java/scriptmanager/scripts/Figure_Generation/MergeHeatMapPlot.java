@@ -33,7 +33,7 @@ public class MergeHeatMapPlot {
 	 *            The filepath to save the averaged PNG (same pixel dimensions
 	 *            as input PNG files)
 	 * @return
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static JLabel mergePNG(File INPUT1, File INPUT2, File OUTPUT) throws IOException {
 		JLabel picLabel = null;

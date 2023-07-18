@@ -47,7 +47,7 @@ public class FilterforPIPseqOutput extends JFrame {
 
 	/**
 	 * Runs the FilterforPIPseq script and displays results
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

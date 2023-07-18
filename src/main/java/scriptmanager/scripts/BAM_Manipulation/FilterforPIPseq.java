@@ -40,7 +40,7 @@ public class FilterforPIPseq {
 	 * @param out Output BAM file
 	 * @param s Sequence to filter for
 	 * @param ps PrinstStream to output results
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public FilterforPIPseq(File in, File gen, File out, String s, PrintStream ps) throws IOException {
 		bamFile = in;
@@ -58,7 +58,7 @@ public class FilterforPIPseq {
 
 	/**
 	 * Writes reads which contain the specified sequence to the output file
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

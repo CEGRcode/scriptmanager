@@ -48,7 +48,7 @@ public class FASTAExtract {
 	 *             name, false = use Genomic Coordinate)
 	 * @param ps   a PrintStream object for printing progress updates (for GUI)
 	 * @param gz   If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps, boolean gz)
 			throws IOException {
@@ -70,7 +70,7 @@ public class FASTAExtract {
 	/**
 	 * Execute script to extract the genomic sequences.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

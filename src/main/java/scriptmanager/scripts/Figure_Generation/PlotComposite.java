@@ -59,9 +59,9 @@ public class PlotComposite {
 	 * @param pxWidth
 	 *            width of image to save
 	 * @return
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws IllegalArgumentException
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
 	public static JFreeChart plotCompositeFile(File input, File OUT_PATH, boolean outputImage, String title, ArrayList<Color> COLORS, boolean legend, int pxHeight, int pxWidth) throws IOException, IllegalArgumentException, FileNotFoundException {
 		Scanner scan = new Scanner(input);

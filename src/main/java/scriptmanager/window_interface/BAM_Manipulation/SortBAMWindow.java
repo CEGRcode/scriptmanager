@@ -35,12 +35,15 @@ import scriptmanager.util.FileSelection;
 
 /**
  * Graphical window for user argument selection and execution of the BAMFileSort script
- * @see scriptmanager.cli.BAM_Manipulation.BAMFileSort
- * @see scriptmanager.window_interface.BAM_Manipulation.BAMFileSort
+ * @see scriptmanager.scripts.BAM_Manipulation.BAMFileSort
+ * @see scriptmanager.cli.BAM_Manipulation.SortBAMCLI
  */
 @SuppressWarnings("serial")
 public class SortBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -52,6 +55,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	private JButton btnSort;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JButton btnOutput;
 	private JLabel label;

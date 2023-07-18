@@ -108,7 +108,7 @@ public class ConvertChrNames {
 	 * @param useChrmt     Used to generate the chromosome map for the conversion
 	 *                     (see getR2A()).
 	 * @param gzOutput     If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void convert_RomantoArabic(File input, File out_filepath, boolean useChrmt, boolean gzOutput) throws IOException {
 		convertCoordinateFile(input, out_filepath, getR2A(useChrmt), gzOutput);
@@ -124,7 +124,7 @@ public class ConvertChrNames {
 	 * @param useChrmt     Used to generate the chromosome map for the conversion
 	 *                     (see getA2R()).
 	 * @param gzOutput     If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void convert_ArabictoRoman(File input, File out_filepath, boolean useChrmt, boolean gzOutput) throws IOException {
 		convertCoordinateFile(input, out_filepath, getA2R(useChrmt), gzOutput);
@@ -141,7 +141,7 @@ public class ConvertChrNames {
 	 *                     names
 	 * @param chrMap       the HashMap for which conversion direction to implement
 	 * @param gzOutput     If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void convertCoordinateFile(File input, File out_filepath, HashMap<String, String> chrMap, boolean gzOutput) throws IOException {
 		// BED Coords:

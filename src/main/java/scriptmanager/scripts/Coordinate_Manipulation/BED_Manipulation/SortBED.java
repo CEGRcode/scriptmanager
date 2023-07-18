@@ -34,7 +34,7 @@ public class SortBED {
 	 * @param START_INDEX the start column to consider when summing values to sort
 	 * @param STOP_INDEX
 	 * @param gzOutput if true, the output files will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void sortBEDbyCDT(String outbase, File bed, File cdt, int START_INDEX, int STOP_INDEX, boolean gzOutput ) throws IOException {
 		ArrayList<BEDCoord> SORT = new ArrayList<BEDCoord>();

@@ -41,7 +41,7 @@ public class SearchMotifOutput extends JFrame {
 	 * @param num
 	 * @param out_dir
 	 * @param gz If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public SearchMotifOutput(File input, String mot, int num, File out_dir, boolean gz) throws IOException {
 		setTitle("Motif Search Progress");
@@ -68,7 +68,7 @@ public class SearchMotifOutput extends JFrame {
 	 * sequence/chromosome name within the FASTA file and dispose the window after
 	 * the script finishes.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

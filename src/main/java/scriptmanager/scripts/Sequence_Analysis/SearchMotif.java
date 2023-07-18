@@ -95,7 +95,7 @@ public class SearchMotif {
 	 * Execute script to search a genome for motifs. Print the header of each
 	 * sequence (i.e. "chromosome" name) as they are procesed.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

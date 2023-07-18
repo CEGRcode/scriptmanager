@@ -31,7 +31,7 @@ public class BEDPeakAligntoRef {
 	 * @param peak BAM file to be alligned
 	 * @param output Output CDT file
 	 * @param ps PrintStream for reporting process
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps) throws IOException {
 		refPath = ref.getCanonicalPath();
@@ -44,7 +44,7 @@ public class BEDPeakAligntoRef {
 	
 	/**
 	 * Runs the peak alignment, writing to output file and reporting progress
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

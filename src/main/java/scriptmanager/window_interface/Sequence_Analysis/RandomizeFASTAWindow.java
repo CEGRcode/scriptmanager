@@ -47,6 +47,9 @@ import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 @SuppressWarnings("serial")
 public class RandomizeFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -64,6 +67,9 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 	private JProgressBar progressBar;
 	private JTextField txtSeed;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

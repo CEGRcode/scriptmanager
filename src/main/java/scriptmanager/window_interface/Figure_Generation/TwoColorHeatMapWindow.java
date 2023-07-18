@@ -48,6 +48,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class TwoColorHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -58,6 +61,9 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 	private JButton btnGen;
 	private JProgressBar progressBar;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JTextField txtRow;
 	private JTextField txtCol;

@@ -27,7 +27,7 @@ public class BEDUtilities {
 	 * @param HEADER the style of FASTA-header to use for the output (true = BED
 	 *               coord name, false = use Genomic Coordinate)
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException Invalid file or parameters 
 	 * @throws UnsupportedEncodingException 
 	 */
 	public static ArrayList<BEDCoord> loadCoord(File input, boolean HEADER) throws UnsupportedEncodingException, IOException {

@@ -41,6 +41,10 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ConvertGFFChrNamesCLI.call()" );
@@ -66,7 +70,7 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

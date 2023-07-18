@@ -40,12 +40,14 @@ import scriptmanager.scripts.Figure_Generation.FourColorPlot;
  * GUI for collecting inputs to be processed by the FourColorSequence plot script
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.FourColorSequence
- * @see scriptmanager.window_interface.Figure_Generation.FourColorSequence
+ * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
  */
 @SuppressWarnings("serial")
 public class FourColorSequenceWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -64,6 +66,9 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 	private JButton btnOutputDirectory;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;

@@ -39,12 +39,15 @@ import scriptmanager.util.FileSelection;
 
 /**
  * Graphical window for user argument selection and execution of the BAMtoBEDOutput script
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBED
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDOutput
  */
 @SuppressWarnings("serial")
 public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -69,6 +72,9 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	private JTextField txtMax;
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

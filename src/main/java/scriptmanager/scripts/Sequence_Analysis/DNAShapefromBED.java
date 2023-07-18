@@ -72,7 +72,7 @@ public class DNAShapefromBED {
 	 * @param str  force strandedness (true=forced, false=not forced)
 	 * @param ps   list of four PrintStream objects corresponding to each shape type
 	 *             (for GUI)
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps)
 			throws IOException {
@@ -96,7 +96,7 @@ public class DNAShapefromBED {
 	 * Execute script to calculate DNA shape for all types across the input
 	 * sequence.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {
@@ -348,7 +348,7 @@ public class DNAShapefromBED {
 	 * 
 	 * @param INPUT a BED-formatted file
 	 * @return the parsed BED coordinate objects
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
 	public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
 		Scanner scan = new Scanner(INPUT);

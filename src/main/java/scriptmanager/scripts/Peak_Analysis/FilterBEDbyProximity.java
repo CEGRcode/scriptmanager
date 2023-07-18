@@ -44,7 +44,7 @@ public class FilterBEDbyProximity{
 	
 	/**
 	 * Runs the filtering operation, outputting peaks to "-FILTER.bed" and other reads to "-CLUSTER.bed"
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException

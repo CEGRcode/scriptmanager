@@ -69,7 +69,7 @@ public class TagPileup {
 
 	/**
 	 * Runs the TagPileup script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		// Set-up Matrix output writers
@@ -308,7 +308,7 @@ public class TagPileup {
 	 * @param COORD BED coordinates to validate
 	 * @param BAM BAM file to reference
 	 * @return Whether input files are valid
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public Vector<BEDCoord> validateBED(Vector<BEDCoord> COORD, File BAM) throws IOException {
 		Vector<BEDCoord> FINAL = new Vector<BEDCoord>();
@@ -356,11 +356,11 @@ public class TagPileup {
 	}
 
 	/**
-	 * Loads BED coordinates from an input file into a Vector<BEDCoord>
+	 * Loads BED coordinates from an input file into a Vector&lt;BEDCoord&gt;
 	 * @param INPUT Input BED file
-	 * @return Vector<BEDCoord> representing input file
+	 * @return Vector of type BEDCoord representing input file
 	 * @throws UnsupportedEncodingException
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public Vector<BEDCoord> loadCoord(File INPUT) throws UnsupportedEncodingException, IOException {
 		Vector<BEDCoord> COORD = new Vector<BEDCoord>();

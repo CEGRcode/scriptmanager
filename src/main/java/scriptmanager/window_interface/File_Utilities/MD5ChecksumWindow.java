@@ -40,6 +40,9 @@ import scriptmanager.scripts.File_Utilities.MD5Checksum;
 @SuppressWarnings("serial")
 public class MD5ChecksumWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	private File OUTPUT_PATH = null;
@@ -52,6 +55,9 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
 	private JButton btnConvert;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;

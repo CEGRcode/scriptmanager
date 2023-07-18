@@ -12,7 +12,7 @@ import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Script for combining multiple TAB/CDT files into one file with a given operation
- * @see scriptmanager.window_interface.Read_Analysis.AggreagateDataWindow
+ * @see scriptmanager.window_interface.Read_Analysis.AggregateDataWindow
  * @see scriptmanager.cli.Read_Analysis.AggregateDataCLI
  */
 public class AggregateData {
@@ -46,7 +46,7 @@ public class AggregateData {
 
 	/**
 	 * Runs the aggregation with the specified parameters
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		if (!MERGE) {
@@ -152,15 +152,19 @@ public class AggregateData {
 		endMessage = "Data Parsed";
 	}
 
+	/**
+	 * Returns "Data Parsed," or an error message if script failed
+	 * @return "Data Parsed," or an error message if script failed
+	 */
 	public String getMessage() {
 		return (endMessage);
 	}
 
 	/**
 	 * Calls {@link AggregateData#outputFileScore(File, PrintStream)} but outputs results to a new file if a PrintStream is not provided
-	 * @param IN
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @param IN Input file (used to generate output file's name)
+	 * @throws FileNotFoundException Script could not find valid input file
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
 		String NEWNAME = ExtensionFileFilter.stripExtension(IN);
@@ -176,8 +180,8 @@ public class AggregateData {
 	 * Outputs the first value in a given row and the result of the selected operation for each line of a file
 	 * @param IN TAB file to be scored
 	 * @param OUT Print stream to output scores
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @throws FileNotFoundException Script could not find valid input file
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void outputFileScore(File IN, PrintStream OUT) throws FileNotFoundException, IOException {
 		if (METRIC == 0) {

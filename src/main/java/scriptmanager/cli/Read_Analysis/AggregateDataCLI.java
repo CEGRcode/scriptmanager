@@ -25,6 +25,11 @@ import scriptmanager.scripts.Read_Analysis.AggregateData;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class AggregateDataCLI implements Callable<Integer> {
+
+	/**
+     * Creates a new AggreagateDataCLI object
+     */
+    public AggregateDataCLI() {}
 	
 	@Parameters( index="0..", description = "The matrix files whose statistics we want.")
 	private File[] matrixFiles;
@@ -63,6 +68,10 @@ public class AggregateDataCLI implements Callable<Integer> {
 	private int aggType = 0;
 	private ArrayList<File> matFiles = new ArrayList<File>();
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">AggregateDataCLI.call()" );

@@ -33,11 +33,14 @@ import scriptmanager.util.FileSelection;
  * GUI for collecting inputs to be processed by MergeHeatMapPlot script
  * 
  * @see scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot
- * @see scriptmanager.window_interface.Figure_Generation.MergeHeatMapPlot
+ * @see scriptmanager.window_interface.Figure_Generation.MergeHeatMapOutput
  */
 @SuppressWarnings("serial")
 public class MergeHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -49,6 +52,9 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 	private JButton btnGen;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;

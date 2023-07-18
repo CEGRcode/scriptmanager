@@ -111,7 +111,7 @@ public class GenericCoord implements GenomicCoord {
 	
 	/**
 	 * Sets the strand direction
-	 * @param the strand direction (+/-)
+	 * @param di The strand direction (+/-)
 	 */
 	public void setDir(String di) {
 		DIR = di;

@@ -32,7 +32,7 @@ public class FourColorPlot {
 	 * @param COLOR the list of colors to use for each ATCGN encoding
 	 * @param h height of each base, in pixel
 	 * @param w  width of each base, in pixel
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void generatePLOT(File input, File output, ArrayList<Color> COLOR, int h, int w) throws IOException {
 		int height = h;

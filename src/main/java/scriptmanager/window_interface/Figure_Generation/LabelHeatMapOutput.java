@@ -72,7 +72,7 @@ public class LabelHeatMapOutput extends JFrame {
 
 	/**
 	 * Runs the LabelHeatMap script and reports when completed
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws OptionException
 	 */
 	public void run() throws IOException, OptionException {

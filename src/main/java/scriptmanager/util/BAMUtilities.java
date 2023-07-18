@@ -18,8 +18,18 @@ import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
+/**
+ * Class containing a set of shared methods to be used across script classes.
+ */
 public class BAMUtilities {
 	
+	/**
+	 * Calculates the standardization ratio for a given BAM file
+	 * @param BAM BAM file used to calculate ratio
+	 * @param read Read Type (1 = Read1, 1 = Read2, 3 = All reads)
+	 * @return The standardization ratio for a given BAM file
+	 * @throws IOException Invalid file or parameters
+	 */
 	public static double calculateStandardizationRatio(File BAM, int read) throws IOException {
 		SamReader inputSam = SamReaderFactory.makeDefault().open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();
@@ -62,6 +72,14 @@ public class BAMUtilities {
 		else { return 1; }
 	}
 	
+	/**
+	 * Calculates the standardization ratio for a given BAM file, ignoring blacklisted reads
+	 * @param BAM BAM file used to calculate ratio 
+	 * @param BLACKFile BED file containing blacklisted regions
+	 * @param read Read Type (1 = Read1, 1 = Read2, 3 = All reads)
+	 * @return The standardization ratio for a given BAM file
+	 * @throws IOException Invalid file or parameters
+	 */
 	public static double calculateStandardizationRatio(File BAM, File BLACKFile, int read) throws IOException {
 		//Blacklist filter in 500bp blocks on the genome with any blacklist region overlapping negating the entire block
 		int windowSize = 500;
@@ -117,6 +135,14 @@ public class BAMUtilities {
 		else { return 1; }
 	}
 	
+	/**
+	 * Sets blacklisted positions to NaN
+	 * @param chrom Chromosome to be processed
+	 * @param chromSize Length of the chromosome
+	 * @param windowSize The window/bin size 
+	 * @param BLACKLIST BED file containing blacklisted regions
+	 * @return An array representing the chromosome, with blacklisted regions being represented as NaN and valid regions being zero
+	 */
 	private static float[] maskChrom(String chrom, long chromSize, int windowSize, HashMap<String, ArrayList<BEDCoord>> BLACKLIST) {
 		float[] chromArray = new float[(int) (chromSize / windowSize) + 1];
 		if(BLACKLIST.containsKey(chrom)) {
@@ -134,6 +160,12 @@ public class BAMUtilities {
 		return chromArray;
 	}
 	
+	/**
+	 * Loads the blacklist BED file into a Hashmap<String, ArrayList<BEDCoord>>
+	 * @param BLACKFile BED file to make the blacklist Hashmap with
+	 * @return A Hashmap<String, ArrayList<BEDCoord>> with the name of chromosomes as keys and ArrayLists of blacklisted coordinates as values
+	 * @throws FileNotFoundException Script could not find valid input file
+	 */
 	private static HashMap<String, ArrayList<BEDCoord>> loadBlacklist(File BLACKFile) throws FileNotFoundException {
 		HashMap<String, ArrayList<BEDCoord>>  BLACKLIST = new HashMap<String, ArrayList<BEDCoord>>();
 	    Scanner scan = new Scanner(BLACKFile);

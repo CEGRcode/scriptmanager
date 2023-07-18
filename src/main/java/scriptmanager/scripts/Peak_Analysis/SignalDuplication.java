@@ -91,7 +91,7 @@ public class SignalDuplication extends JFrame {
 	
 	/**
 	 * Runs the duplication analysis and outputs results in GUI
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		//Print TimeStamp
@@ -257,7 +257,7 @@ public class SignalDuplication extends JFrame {
 	}
 	
 	/**
-	 * Initializes G_Bin and S_Bin ArrayList<Double>'s
+	 * Initializes G_Bin and S_Bin ArrayList&lt;Double&gt;'s
 	 * @param BIN
 	 */
 	public static void initializeBINS(ArrayList<Double> BIN) {
@@ -324,8 +324,8 @@ public class SignalDuplication extends JFrame {
 	}
 	
 	/**
-	 * Reads the gff file and initializes COORD ArrayList<GFFCoord>
-	 * @throws FileNotFoundException
+	 * Reads the gff file and initializes COORD ArrayList&lt;GFFCoord&gt;
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
     public void loadCoord() throws FileNotFoundException {
     	//chr1	cwpair	.	45524	45525	3067.0	.	.	cw_distance=26

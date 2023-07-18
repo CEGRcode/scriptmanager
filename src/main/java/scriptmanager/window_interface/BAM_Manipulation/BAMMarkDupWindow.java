@@ -44,6 +44,9 @@ import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 @SuppressWarnings("serial")
 public class BAMMarkDupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> expList;
@@ -55,6 +58,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	private JButton btnSort;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JButton btnOutput;
 	private JLabel label;

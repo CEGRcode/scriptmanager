@@ -39,7 +39,7 @@ public class MergeHeatMapOutput extends JFrame {
 
 	/**
 	 * Runs the MergeHeatMapPlot script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		senseFile = new ArrayList<File>();

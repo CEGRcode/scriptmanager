@@ -20,6 +20,10 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAIIndexerCLI implements Callable<Integer> {
+	/**
+	 * Runs when this subcommand is called, directing user to original tool
+	 * @throws Exception Please use original CLI tool
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println("***Please use the original tool for this job***\n"+

@@ -68,8 +68,8 @@ public class BAMtoGFF {
 	}
 
 	/**
-	 * Checks for valid input and runs the {@link BAMtoGFF#processREADS(SAMRecord)} method
-	 * @throws IOException
+	 * Checks for valid input and runs the {@link BAMtoGFF#processREADS()} method
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

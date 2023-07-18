@@ -19,7 +19,7 @@ public class BAIIndexer {
 	 * 
 	 * @param input the BAM file to index
 	 * @return the BAM index file (.bai)
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static File generateIndex(File input) throws IOException {
 		// Tells user that their file is being generated

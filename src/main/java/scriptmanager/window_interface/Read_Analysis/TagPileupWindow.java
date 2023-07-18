@@ -63,6 +63,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class TagPileupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -125,6 +128,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private String[] transformationOptions = {"None", "Sliding Window", "Gaussian Smooth"};
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
@@ -259,7 +265,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Instantiate window with graphical interface design.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public TagPileupWindow() throws IOException {
 		setTitle("Tag Pileup");

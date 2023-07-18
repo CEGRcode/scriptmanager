@@ -63,14 +63,14 @@ public class ThreeColorHeatMapOutput extends JFrame {
 	 * @param pHeight Height of resulting heat map (# pixels)
 	 * @param pWidth Width of resulting heat map (# pixels)
 	 * @param scale Scale compression type
-	 * @param minPstatus Minimum percentile value
-	 * @param midPstatus Mid percentile value
-	 * @param maxPstatus Maximum percentile value
+	 * @param pStatusMin Minimum percentile value
+	 * @param pStatusMid Mid percentile value
+	 * @param pStatusMax Maximum percentile value
 	 * @param min_quant Minimum absolute value
 	 * @param mid_quant Mid absolute value
 	 * @param max_quant Maximum absolute value
 	 * @param exZ Exclude zero's in percentile threshold calculations
-	 * @param output Output file
+	 * @param out_dir Output directory
 	 * @param outstatus Whether a file should be output
 	 */
 	public ThreeColorHeatMapOutput(ArrayList<File> in,
@@ -114,7 +114,7 @@ public class ThreeColorHeatMapOutput extends JFrame {
 
 	/**
 	 * Runs the ThreeColorHeatmap script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		String postRunDialog = "";

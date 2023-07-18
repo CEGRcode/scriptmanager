@@ -45,6 +45,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class BAMtoscIDXWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -68,6 +71,9 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	private JTextField txtMax;
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

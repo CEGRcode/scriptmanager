@@ -46,6 +46,9 @@ import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 @SuppressWarnings("serial")
 public class SortBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private static File OUT_DIR = null;
@@ -63,6 +66,9 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	private JButton btnExecute;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;

@@ -50,7 +50,7 @@ public class FilterBEDbyProximityOutput extends JFrame{
 	
 	/**
 	 * Runs the FilterBEDbyProximity script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException

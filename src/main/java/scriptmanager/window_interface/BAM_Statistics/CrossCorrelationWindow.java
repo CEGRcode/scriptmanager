@@ -57,6 +57,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class CrossCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	private JCheckBox chckbxOutputStatistics;
 	private JButton btnLoad;
@@ -79,6 +82,9 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

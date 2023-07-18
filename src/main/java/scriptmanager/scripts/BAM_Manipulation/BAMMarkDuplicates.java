@@ -36,7 +36,7 @@ public class BAMMarkDuplicates extends JFrame {
 	
 	/**
 	 * Runs MarkDuplicates picard tool
-	 * @throws IOException If BAM file doesn't have corresponding .BAI Index file
+	 * @throws IOException Invalid file or parameters If BAM file doesn't have corresponding .BAI Index file
 	 */
 	public void run() throws IOException {
 		//Check if BAI index file exists

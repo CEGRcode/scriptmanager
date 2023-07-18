@@ -40,7 +40,7 @@ public class ScaleMatrix {
 
 	/**
 	 * Performs the scalar multiplication
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		// Open output file

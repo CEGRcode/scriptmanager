@@ -38,6 +38,10 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 			"--filter" }, description = "filter by upstream sequence, works only for single-nucleotide A,T,C, or G. (default seq ='T')")
 	private String filterString = "T";
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">FilterforPIPseqCLI.call()");
@@ -59,7 +63,7 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

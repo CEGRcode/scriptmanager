@@ -57,6 +57,10 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 	private int STRAND = -9999;
 	private int PAIR;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BAMtobedGraphCLI.call()" );

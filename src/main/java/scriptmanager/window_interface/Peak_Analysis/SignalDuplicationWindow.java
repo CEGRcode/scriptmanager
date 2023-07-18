@@ -38,6 +38,9 @@ import scriptmanager.scripts.Peak_Analysis.SignalDuplication;
 @SuppressWarnings("serial")
 public class SignalDuplicationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	final DefaultListModel<String> expList;
@@ -50,6 +53,9 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 	private JLabel lblGFFFile;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JTextField txtWindow;
 	

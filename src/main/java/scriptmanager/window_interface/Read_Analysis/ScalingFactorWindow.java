@@ -40,11 +40,14 @@ import scriptmanager.util.FileSelection;
 /**
  * GUI for collecting inputs to be processed by the ScalingFactor script 
  * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
- * @see scriptmanager.window_interface.Read_Analysis.ScalingFacotrOutput
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorOutput
  */
 @SuppressWarnings("serial")
 public class ScalingFactorWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -74,6 +77,9 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	private JTextField txtWindow;
 	private JTextField txtFraction;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	

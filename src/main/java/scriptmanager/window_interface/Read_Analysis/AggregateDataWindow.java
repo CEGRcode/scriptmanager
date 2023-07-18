@@ -43,6 +43,10 @@ import scriptmanager.scripts.Read_Analysis.AggregateData;
 @SuppressWarnings("serial")
 public class AggregateDataWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -61,6 +65,9 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	private JCheckBox chckbxMergeToOne;
 	private JComboBox<String> cmbMethod;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JTextField txtRow;
 	private JTextField txtCol;

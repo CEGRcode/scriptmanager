@@ -67,8 +67,8 @@ public class BAMtoBED {
 	}
 
 	/**
-	 * Runs the {@link BAMtoBED#processReads(SAMRecord)} method and checks that data is inputs are valid
-	 * @throws IOException
+	 * Runs the {@link BAMtoBED#processREADS()} method and checks that data is inputs are valid
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

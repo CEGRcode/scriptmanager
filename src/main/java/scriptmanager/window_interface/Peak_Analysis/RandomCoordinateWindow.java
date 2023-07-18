@@ -38,6 +38,9 @@ import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 @SuppressWarnings("serial")
 public class RandomCoordinateWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	private JPanel contentPane;
 	private JTextField txtSites;
@@ -49,6 +52,9 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 
 	private File OUTPUT_PATH = null;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

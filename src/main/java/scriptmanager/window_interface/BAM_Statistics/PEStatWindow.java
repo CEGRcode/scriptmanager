@@ -43,6 +43,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class PEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	private JCheckBox chckbxOutputStatistics;
 	private JCheckBox chckbxDup;
@@ -60,6 +63,9 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 	private File OUTPUT_PATH = new File(System.getProperty("user.dir"));
 	
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

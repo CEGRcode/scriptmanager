@@ -27,7 +27,11 @@ import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class ExpandBEDCLI implements Callable<Integer> {
-
+	/**
+	 * Creates a new ExpandBEDCLI object
+	 */
+	public ExpandBEDCLI(){}
+	
 	@Parameters( index = "0", description = "the BED file to expand on")
 	private File bedFile;
 
@@ -50,6 +54,10 @@ public class ExpandBEDCLI implements Callable<Integer> {
 	private boolean byCenter = true;
 	private int SIZE = 250;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ExpandBEDCLI.call()" );

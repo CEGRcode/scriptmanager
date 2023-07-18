@@ -71,7 +71,7 @@ public class PlotCompositeOutput extends JFrame {
 	 * input parameter values, a PNG image is saved to the indicated output
 	 * directory with the passed pixel values for the saved file dimensions.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		for (int x = 0; x < SAMPLE.size(); x++) {

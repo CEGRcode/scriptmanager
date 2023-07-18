@@ -15,7 +15,7 @@ import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
 /**
  * Command line interface class for filtering based on proximity with a FilterBEDbyProximity script
- * @see scriptmanager.scripts.Peak_Analysis.RanomCoordinate
+ * @see scriptmanager.scripts.Peak_Analysis.RandomCoordinate
  */
 @Command(name = "rand-coord", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.rand_coord_description,
@@ -37,6 +37,10 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	@Option(names = {"-w", "--window"}, description = "window size in bp (default=200)")
 	private int window = 200;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">RandomCoordinateCLI.call()" );

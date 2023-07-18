@@ -3,6 +3,7 @@ package scriptmanager.cli.BAM_Manipulation;
 import picocli.CommandLine.Command;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
@@ -22,6 +23,10 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMRemoveDupCLI implements Callable<Integer> {
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println("***Please use the original tool for this job***\n"+

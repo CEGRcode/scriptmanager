@@ -71,7 +71,7 @@ public class FASTAExtractOutput extends JFrame {
 	 * sequence/chromosome name within the FASTA file and dispose the window after
 	 * the script finishes.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

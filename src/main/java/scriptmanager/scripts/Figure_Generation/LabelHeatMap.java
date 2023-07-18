@@ -64,7 +64,7 @@ public class LabelHeatMap {
 	 * @param xLABEL the text label for the x-axis
 	 * @param yLABEL the text label for the y-axis
 	 * @param out_win_ps the destination to output progress update and input information as the script executes
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws OptionException
 	 */
 	public LabelHeatMap(File iNPUT, File oUTPUT, Color cOLOR,
@@ -119,7 +119,7 @@ public class LabelHeatMap {
 	 * Execute building SVG labels around the input PNG.
 	 *
 	 * @return 0 upon succesful execution
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public Integer run() throws IOException {
 		// Initialize empty SVG object

@@ -105,7 +105,7 @@ public class CorrParameter {
 
 	/**
 	 * Sets the size of the window frame
-	 * @return The size of the window frame in # of bp
+	 * @param newwindow The new size of the window frame
 	 */
 	public void setWindow(int newwindow) {
 		windowSize = newwindow;		

@@ -42,6 +42,9 @@ import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 @SuppressWarnings("serial")
 public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -58,6 +61,9 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 	private JCheckBox chckbxGzipOutput;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;

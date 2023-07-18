@@ -15,7 +15,7 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
 /**
  * Output window wrapper for executing the BAMtoscIDX script given arguments provided by BAMtoscIDX and displaying output
  * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDX
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXWindow
  */
 @SuppressWarnings("serial")
 public class BAMtoscIDXOutput extends JFrame {
@@ -33,12 +33,11 @@ public class BAMtoscIDXOutput extends JFrame {
 	/**
 	 * Creates a new instance of a BAMtoscIDX script with a single BAM file
 	 * @param b BAM file
-	 * @param o Output file
+	 * @param out_dir Output directory
 	 * @param s Specifies which reads to output
 	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
 	 * @param min_size Minimum acceptable insert size
 	 * @param max_size Maximum acceptable insert size
-	 * @param ps PrintStream to output results
 	 */
 	public BAMtoscIDXOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to scIDX Progress");
@@ -71,7 +70,7 @@ public class BAMtoscIDXOutput extends JFrame {
 
 	/**
 	 * Runs the BAMtoscIDX script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

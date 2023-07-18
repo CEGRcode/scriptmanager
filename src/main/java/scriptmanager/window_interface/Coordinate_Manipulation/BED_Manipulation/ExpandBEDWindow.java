@@ -47,6 +47,9 @@ import scriptmanager.util.FileSelection;
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -58,6 +61,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveBED;
 	private JButton btnExecute;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;

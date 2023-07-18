@@ -37,6 +37,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 	@Option(names = { "-n", "--mismatches" }, description = "the number of mismatches allowed (default=0)")
 	private int ALLOWED_MISMATCH = 0;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">SearchMotifCLI.call()");
@@ -58,7 +62,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

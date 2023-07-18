@@ -47,6 +47,10 @@ public class SortBEDCLI implements Callable<Integer> {
 	private int CDT_SIZE = -999;
 	private boolean byCenter = false;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SortBEDCLI.call()" );

@@ -21,7 +21,7 @@ public class MergeBAM {
 	 * @param output the output file for the merged BAM file (corresponds to OUTPUT)
 	 * @param useMultipleCpus whether or not to parallelize (corresponds to USE_THREADING)
 	 * @throws SAMException
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void run(ArrayList<File> inputs, File output, boolean useMultipleCpus) throws SAMException, IOException {
 		// Check all BAM files have an index

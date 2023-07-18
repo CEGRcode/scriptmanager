@@ -34,6 +34,10 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	@Option(names = {"-s", "--seed"}, description = "specify an integer seed for reproducible outputs")
 	private Integer seed = null;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">RandomizeFASTACLI.call()");
@@ -54,7 +58,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

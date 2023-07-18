@@ -37,6 +37,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> bedList;

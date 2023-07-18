@@ -45,6 +45,9 @@ import scriptmanager.util.FileSelection;
 public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -56,6 +59,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveGFF;
 	private JButton btnConvert;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;

@@ -65,7 +65,7 @@ public class TwoColorHeatMap {
 	 * @param scale Scale compression type
 	 * @param abs The difference in values for each step of the color scale
 	 * @param quant The difference in percent of values for each step of the color scale
-	 * @param out_dir Directory to output PNG to
+	 * @param output Directory to output PNG to
 	 * @param outstatus Whether or not to output a PNG
 	 * @param trans If min values should be transparent
 	 */
@@ -93,7 +93,7 @@ public class TwoColorHeatMap {
 
 	/**
 	 * Runs the {@link TwoColorHeatMap#generateHeatMap(ArrayList) script and manages the image output}
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		System.out.println("Loading Matrix file: " + OUTFILE.getName());
@@ -144,7 +144,7 @@ public class TwoColorHeatMap {
 	 * Generates the two color heat map with the matrix of values parsed with {@link TwoColorHeatMap#loadMatrix(File)}
 	 * @param matrix Matrix of values to create heat map with
 	 * @return The heat map as a BufferedImage object
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
 	public static BufferedImage generateHeatMap(ArrayList<double[]> matrix) throws FileNotFoundException {
 		int width = 1;
@@ -437,11 +437,11 @@ public class TwoColorHeatMap {
 	}
 
 	/**
-	 * Takes an input file and returns an ArrayList<double[]> with the values from the input file
+	 * Takes an input file and returns an ArrayList &lt;double[]&gt; with the values from the input file
 	 * @param input Input file
-	 * @return An ArrayList<double[]> with the values from the input file
+	 * @return An ArrayList &lt;double[]&gt; with the values from the input file
 	 * @throws UnsupportedEncodingException
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static ArrayList<double[]> loadMatrix(File input) throws UnsupportedEncodingException, IOException {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();

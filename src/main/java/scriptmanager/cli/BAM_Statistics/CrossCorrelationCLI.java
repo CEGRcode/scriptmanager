@@ -57,6 +57,10 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 	
 	CorrParameter param = new CorrParameter();
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">CrossCorrelationCLI.call()" );
@@ -77,7 +81,7 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

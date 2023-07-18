@@ -39,12 +39,15 @@ import scriptmanager.util.FileSelection;
 
 /**
  * Graphical window for user argument selection of the BAMtobedGraphOutput script
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraph
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraph
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphOutput
  */
 @SuppressWarnings("serial")
 public class BAMtobedGraphWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -68,6 +71,9 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	private JTextField txtMax;
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

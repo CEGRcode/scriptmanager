@@ -10,7 +10,7 @@ import scriptmanager.objects.ToolDescriptions;
 	
 /**
  * Command line interface class for creating a coordinate file of random sites across a genome with SignalDuplication script
- * @see scriptmanager.scripts.Peak_Analysis.SingalDuplication
+ * @see scriptmanager.scripts.Peak_Analysis.SignalDuplication
  */
 @Command(name = "signal-dup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.signal_dup_description,
@@ -20,6 +20,10 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnExecutionException = 1)
 public class SignalDuplicationCLI implements Callable<Integer> {
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SignalDuplicationCLI.call()" );

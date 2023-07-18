@@ -200,7 +200,7 @@ public class ThreeColorHeatMap {
 	 * Generates a heat map based on the input matrix and constants passed through the constructor
 	 * @param matrix Matrix to be used in generation
 	 * @return A buffered, three color heat map
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
 	public static BufferedImage generateHeatMap(ArrayList<double[]> matrix) throws FileNotFoundException {
 		int width = 1;

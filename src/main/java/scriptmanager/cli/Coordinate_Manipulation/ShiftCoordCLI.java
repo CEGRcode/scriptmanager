@@ -41,6 +41,10 @@ public class ShiftCoordCLI implements Callable<Integer> {
 	@Option(names = {"--gff"}, description = "input is GFF format (default=BED format)")
 	private boolean isGFF = false;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ShiftCoord.call()" );

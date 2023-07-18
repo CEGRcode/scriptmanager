@@ -113,7 +113,7 @@ public class ScalingFactor {
 	 * Execute to calculate and write/store a scaling factor with the currently
 	 * stored input values.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		// Load blacklist HashMap if blacklist file uploaded by user
@@ -263,11 +263,11 @@ public class ScalingFactor {
 	}
 
 	/**
-	 * Sets blacklisted windows to NaN
-	 * @param chrom Chromosome to be 
+	 * Sets blacklisted to NaN
+	 * @param chrom Chromosome to be processed
 	 * @param chromSize Length of the chromsome
-	 * @param windowSize 
-	 * @return
+	 * @param windowSize The window/bin size 
+	 * @return An array representing the chromosome, with blacklisted regions being represented as NaN and valid regions being zero 
 	 */
 	public float[] maskChrom(String chrom, long chromSize, int windowSize) {
 		float[] chromArray = new float[(int) (chromSize / windowSize) + 1];
@@ -291,7 +291,7 @@ public class ScalingFactor {
 	/**
 	 * Loads the blacklisted coordinates from a BED file
 	 * @param BLACKFile BED file with blacklisted coordinates
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
 	public void loadBlacklist(File BLACKFile) throws FileNotFoundException {
 		BLACKLIST = new HashMap<String, ArrayList<BEDCoord>>();
@@ -333,7 +333,7 @@ public class ScalingFactor {
 	/**
 	 * Initialized chromName and cromLength variables, with the name and length of each chromosome respectively
 	 * @param BAM File to be used for initialization 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void initalizeGenomeMetainformation(File BAM) throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault()
@@ -356,7 +356,7 @@ public class ScalingFactor {
 	/**
 	 * Verifies that sample and control files match
 	 * @return Whether sample and control files are a valid pair
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public boolean verifyFiles() throws IOException {
 		SamReaderFactory factory = SamReaderFactory.makeDefault()

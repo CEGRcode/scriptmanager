@@ -33,6 +33,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class SEStatWindow extends JFrame {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 		
 	private JTextField txtOutputName;

@@ -31,7 +31,7 @@ public class ShiftCoord {
 	 * @param SHIFT Integer value indicating number and direction of nucleotides to shift the entire intervals (negative values are upstream shifts while positive values are downstream shifts)
 	 * @param stranded If this is true, then the stranded-ness of features is taken into account for the directionality of the shift. Otherwise all upstream shifts move intervals to the left and all downstream shifts move to the right with respect to the reference.
 	 * @param gzOutput If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void shiftBEDInterval(File out_filepath, File input, int SHIFT, boolean stranded, boolean gzOutput) throws IOException {
 		// Initialize output writer
@@ -102,7 +102,7 @@ public class ShiftCoord {
 	 * @param SHIFT Integer value indicating number and direction of nucleotides to shift the entire intervals (negative values are upstream shifts while positive values are downstream shifts)
 	 * @param stranded If this is true, then the stranded-ness of features is taken into account for the directionality of the shift. Otherwise all upstream shifts move intervals to the left and all downstream shifts move to the right with respect to the reference.
 	 * @param gzOutput If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void shiftGFFInterval(File out_filepath, File input, int SHIFT, boolean stranded, boolean gzOutput) throws IOException {
 		// Initialize output writer

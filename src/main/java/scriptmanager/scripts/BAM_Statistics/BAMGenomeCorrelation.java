@@ -79,7 +79,7 @@ public class BAMGenomeCorrelation extends Component {
 	/**
 	 * Creates correlation matrix 
 	 * @param GUI Specifies if called by window interface or by cli
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void getBAMGenomeCorrelation(boolean GUI) throws IOException {
 		System.err.println(getTimeStamp());
@@ -218,7 +218,7 @@ public class BAMGenomeCorrelation extends Component {
 	/**
 	 * Checks if BAI files (index files for BAM files) exist for all BAM files
 	 * @return if all the input BAM files have corresponding BAI files
-	 * @throws IOException 
+	 * @throws IOException Invalid file or parameters 
 	 */
 	private boolean validateBAM() throws IOException {
 		//Check if BAI index file exists for all BAM files before we process any of them

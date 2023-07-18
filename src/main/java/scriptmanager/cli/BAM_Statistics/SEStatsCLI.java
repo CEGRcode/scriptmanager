@@ -32,6 +32,10 @@ public class SEStatsCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "Specify output file ")
 	private File output;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SEStatsCLI.call()" );

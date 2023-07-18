@@ -72,7 +72,7 @@ public class DNAShapefromFASTA {
 	 * Execute script to calculate DNA shape for all types across the input
 	 * sequence.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {

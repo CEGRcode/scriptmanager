@@ -20,7 +20,7 @@ import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 /**
  * Output wrapper for running ScalingFactor script and reporting when the process is completed
  * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
- * @see scriptmanager.window_interface.Read_Analysis.ScalingFacotrWindow
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorWindow
  */
 @SuppressWarnings("serial")
 public class ScalingFactorOutput extends JFrame {
@@ -90,7 +90,7 @@ public class ScalingFactorOutput extends JFrame {
 
 	/**
 	 * Runs the ScalingFactor script
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		for (int z = 0; z < BAMFiles.size(); z++) {

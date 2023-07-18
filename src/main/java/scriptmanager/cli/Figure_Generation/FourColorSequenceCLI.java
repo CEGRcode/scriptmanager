@@ -46,6 +46,10 @@ public class FourColorSequenceCLI implements Callable<Integer> {
 	@Option(names = { "-y", "--pixel-height" }, description = "pixel height (default=1)")
 	private int pixelHeight = 1;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">FourColorSequenceCLI.call()");

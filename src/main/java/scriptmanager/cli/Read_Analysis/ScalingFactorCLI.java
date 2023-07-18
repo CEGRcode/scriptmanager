@@ -55,6 +55,10 @@ public class ScalingFactorCLI implements Callable<Integer> {
 	
 	private int scaleType = 1;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ScalingFactorCLI.call()" );

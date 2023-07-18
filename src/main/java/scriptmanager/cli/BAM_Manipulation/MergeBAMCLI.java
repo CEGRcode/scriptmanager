@@ -10,7 +10,7 @@ import scriptmanager.objects.ToolDescriptions;
  * Print a message redirecting user to the original CLI tool.
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.BAM_Manipulation.MergeSamFiles
+ * @see scriptmanager.scripts.BAM_Manipulation.MergeBAM
  */
 @Command(name = "merge-bam", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.merge_bam_description + "\n"+
@@ -20,6 +20,10 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class MergeBAMCLI implements Callable<Integer> {
+	/**
+	 * Runs when this subcommand is called, directing user to original tool
+	 * @throws Exception Please use original CLI tool
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println("***Please use the original tool for this job***\n"+

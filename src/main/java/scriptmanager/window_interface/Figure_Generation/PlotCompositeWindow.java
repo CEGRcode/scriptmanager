@@ -46,6 +46,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class PlotCompositeWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 
 	final DefaultListModel<String> expList;
@@ -82,6 +85,9 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 
 	private File OUT_DIR = null;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**

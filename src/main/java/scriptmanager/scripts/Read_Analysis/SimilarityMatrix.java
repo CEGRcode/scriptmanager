@@ -35,7 +35,7 @@ public class SimilarityMatrix {
 
 	/**
 	 * Runs the similarity calculations and outputs matrix
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		ArrayList<double[]> DATA = new ArrayList<double[]>();
@@ -130,8 +130,8 @@ public class SimilarityMatrix {
 
 	/**
 	 * Outputs errors if script fails to laod matrix
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @throws FileNotFoundException Script could not find valid input file
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void outputMatrixLoadFail() throws FileNotFoundException, IOException {
 		String[] name = INPUT.getName().split("\\.");
@@ -159,7 +159,7 @@ public class SimilarityMatrix {
 	 * Outputs resulting matrix to same directory as original matrix
 	 * @param matrix Matrix to output
 	 * @param id
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void outputMatrix(double[][] matrix, ArrayList<String> id) throws IOException {
 		String[] name = INPUT.getName().split("\\.");

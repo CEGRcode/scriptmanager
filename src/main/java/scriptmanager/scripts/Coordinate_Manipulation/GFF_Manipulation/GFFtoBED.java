@@ -9,8 +9,8 @@ import java.util.Scanner;
 /**
  * This script converts a GFF-file too the BED-format.
  * 
- * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.GFFtoBEDCLI
- * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.GFFtoBEDWindow
+ * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow
  */
 public class GFFtoBED {
 	public static void convertGFFtoBED(File out_filepath, File input) throws IOException {
