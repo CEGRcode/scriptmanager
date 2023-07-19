@@ -120,10 +120,9 @@ public class ExpandBEDCLI implements Callable<Integer> {
 
 		return(r);
 	}
-	public static String getCLIcommand(File bedFile, File output, boolean stdout, boolean gzOutput, int center, int border) {
+	public static String getCLIcommand(File bedFile, File output, boolean gzOutput, int center, int border) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed";
 		command += " " + bedFile.getAbsolutePath();
-		command += stdout ? " -s " : "";
 		command += gzOutput ? " -z " : "";
 		command += " -o " + output.getAbsolutePath();
 		command += " -c " + center;

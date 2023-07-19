@@ -100,10 +100,13 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						// Add suffix
 						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
 						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
+						/*
 						// Initialize LogItem
-						/*String command = ExpandBEDCLI.getCLIcommand(XBED, OUTPUT, )
+						String command = ExpandBEDCLI.getCLIcommand(XBED, OUTPUT, chckbxGzipOutput.isSelected(), SIZE);
 						LogItem new_li = new LogItem(command);
-						firePropertyChange("log", old_li, new_li);*/
+						firePropertyChange("log", old_li, new_li);
+
+						 */
 						// Execute expansion and update progress
 						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);

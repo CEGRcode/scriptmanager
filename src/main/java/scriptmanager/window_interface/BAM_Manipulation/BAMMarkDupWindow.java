@@ -229,7 +229,6 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
             progressBar.setValue(progress);
 		} else if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
-		
         }
 	}
 	

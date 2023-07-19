@@ -131,8 +131,14 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bam-to-bedGraph";
 		command += " " + BAM.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
-		if  (strand != 0) {
-			command += " -s";
+		if (strand == 0) {
+			command += " -1 ";
+		} else if (strand == 1) {
+			command += " -2 ";
+		} else if (strand == 2) {
+			command += " -a ";
+		} else if (strand == 3 )  {
+			command += " -m ";
 		}
 		if (pair != 0) {
 			command += " -p";

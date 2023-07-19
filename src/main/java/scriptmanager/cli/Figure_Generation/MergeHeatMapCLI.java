@@ -7,6 +7,7 @@ import picocli.CommandLine.Parameters;
 import java.lang.NullPointerException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
@@ -96,6 +97,27 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 		}
 
 		return (r);
+	}
+
+	public static String getCLIcommand(ArrayList<File> pngFiles, File outdir) {
+		String command = "java -jar $SCRIPTMANAGER figure-generation MergeHeatMap";
+		File antiFile = null;
+		File senseFile = null;
+		for (int x = 0; x < pngFiles.size(); x++) {
+			if (pngFiles.get(x).getName().toLowerCase().contains("sense")) {
+				senseFile = (pngFiles.get(x));
+			} else if (pngFiles.get(x).getName().toLowerCase().contains("anti")) {
+				antiFile = (pngFiles.get(x));
+			}
+		}
+		if (antiFile != null) {
+			command += " " + antiFile.getAbsolutePath();
+		}
+		if (senseFile != null) {
+			command += " " + senseFile.getAbsolutePath();
+		}
+		command += " -o " + outdir.getAbsolutePath() + "merge.png";
+		return command;
 	}
 
 }

@@ -11,7 +11,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -27,6 +29,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
+import scriptmanager.cli.Figure_Generation.MergeHeatMapCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -52,9 +57,12 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		@Override
 		public Void doInBackground() throws IOException {
 			setProgress(0);
-
+			LogItem old_li = null;
+			// Initialize LogItem
+			String command = MergeHeatMapCLI.getCLIcommand(pngFiles, OUT_DIR);
+			LogItem new_li = new LogItem(command);
+			firePropertyChange("log", old_li, new_li);
 			MergeHeatMapOutput heat = new MergeHeatMapOutput(pngFiles, OUT_DIR);
-
 			heat.addPropertyChangeListener("merge", new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 					int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -65,7 +73,11 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 
 			heat.setVisible(true);
 			heat.run();
-
+			// Update log item
+			new_li.setStopTime(new Timestamp(new Date().getTime()));
+			new_li.setStatus(0);
+			old_li = new_li;
+			firePropertyChange("log", old_li, null);
 			setProgress(100);
 			return null;
 		}
@@ -191,6 +203,8 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
