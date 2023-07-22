@@ -2,6 +2,8 @@ package scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -100,18 +102,21 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						// Add suffix
 						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
 						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
-						/*
+
 						// Initialize LogItem
-						String command = ExpandBEDCLI.getCLIcommand(XBED, OUTPUT, chckbxGzipOutput.isSelected(), SIZE);
+						String command = ExpandBEDCLI.getCLIcommand(XBED, new File(OUTPUT), chckbxGzipOutput.isSelected(), rdbtnExpandFromCenter.isSelected());
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
-
-						 */
 						// Execute expansion and update progress
 						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 						setProgress(percentComplete);
 					}
+					firePropertyChange("log", old_li, null);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Conversion Complete");
 				}
@@ -275,6 +280,8 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
