@@ -74,4 +74,10 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 		
 		return(r);
 	}
+	public static String getCLIcommand(File GFF, File output) {
+		String command = "java -jar  $SCRIPTMANAGER gff-manipulation gff-to-bed";
+		command += " " + GFF.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		return command;
+	}
 }

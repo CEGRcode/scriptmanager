@@ -11,6 +11,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -28,6 +30,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
@@ -54,6 +59,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		@Override
 		public Void doInBackground() throws IOException {
 			setProgress(0);
+			LogItem old_li = null;
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
 				// Set outfilepath
@@ -61,12 +67,20 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
-
+				// Initialize LogItem
+				String command = GFFtoBEDCLI.getCLIcommand(XGFF, new File(OUTPUT));
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
 				// Execute conversion and update progress
 				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF);
+				// Update LogItem
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 				setProgress(percentComplete);
 			}
+			firePropertyChange("log", old_li, null);
 			setProgress(100);
 			JOptionPane.showMessageDialog(null, "Conversion Complete");
 			return null;
@@ -189,6 +203,8 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
