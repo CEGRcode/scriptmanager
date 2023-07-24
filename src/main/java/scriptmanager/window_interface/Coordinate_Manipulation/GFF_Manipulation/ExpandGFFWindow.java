@@ -2,6 +2,8 @@ package scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -33,6 +35,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 import scriptmanager.util.FileSelection;
 
@@ -69,6 +74,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 					JOptionPane.showMessageDialog(null, "Invalid Expansion Size!!! Must be larger than 0 bp");
 				} else {
 					setProgress(0);
+					LogItem old_li = new LogItem("");
 					for (int x = 0; x < GFFFiles.size(); x++) {
 						File XGFF = GFFFiles.get(x);
 
@@ -78,12 +84,20 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
-
+						// Initialize LogItem
+						String command = ExpandGFFCLI.getCLIcommand(XGFF, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected());
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
 						ExpandGFF.expandGFFBorders(new File(OUTPUT), XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 						setProgress(percentComplete);
 					}
+					firePropertyChange("log", old_li, null);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Conversion Complete");
 				}
@@ -239,6 +253,8 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

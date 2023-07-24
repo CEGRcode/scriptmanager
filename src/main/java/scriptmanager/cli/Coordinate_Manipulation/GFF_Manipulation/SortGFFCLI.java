@@ -121,4 +121,12 @@ public class SortGFFCLI implements Callable<Integer> {
 		
 		return(r);
 	}
+	public static String getCLIcommand(File OUTPUT, File BED, File CDT, int startidx, int stopidx) {
+		String command = "java -jar $SCRIPTMANAGER gff-manipulation sortGFF";
+		command += " " + BED.getAbsolutePath();
+		command += " " + CDT.getAbsolutePath();
+		command += " -x " + startidx + " " + stopidx;
+		command += " -o " + OUTPUT.getAbsolutePath();
+		return command;
+	}
 }
