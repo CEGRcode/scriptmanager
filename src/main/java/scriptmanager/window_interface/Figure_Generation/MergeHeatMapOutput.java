@@ -9,8 +9,12 @@ import javax.swing.JTabbedPane;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
+import scriptmanager.cli.Figure_Generation.MergeHeatMapCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 
 @SuppressWarnings("serial")
@@ -44,7 +48,7 @@ public class MergeHeatMapOutput extends JFrame {
 				antiFile.add(pngFiles.get(x));
 			}
 		}
-
+		LogItem old_li = new LogItem("");
 		for (int x = 0; x < senseFile.size(); x++) {
 			String name = senseFile.get(x).getName();
 			String out = name.substring(0, name.lastIndexOf("sense"));
@@ -58,7 +62,10 @@ public class MergeHeatMapOutput extends JFrame {
 			if (OUT_DIR != null) {
 				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT.getName());
 			}
-
+			// Initialize LogItem
+			String command = MergeHeatMapCLI.getCLIcommand(senseFile.get(x), antiFile.get(x), OUTPUT);
+			LogItem new_li = new LogItem(command);
+			firePropertyChange("log", old_li, new_li);
 			// Store results in JFrame window
 			if (matchIndex != -999) {
 				// Execute script
@@ -68,8 +75,13 @@ public class MergeHeatMapOutput extends JFrame {
 				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), null, OUTPUT);
 				addImage(OUTPUT.getName(), pic);
 			}
+			// Update log item
+			new_li.setStopTime(new Timestamp(new Date().getTime()));
+			new_li.setStatus(0);
+			old_li = new_li;
 			firePropertyChange("merge", x, x + 1);
 		}
+		firePropertyChange("log", old_li, null);
 	}
 
 	private void addImage(String name, JLabel pic) {

@@ -57,11 +57,6 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		@Override
 		public Void doInBackground() throws IOException {
 			setProgress(0);
-			LogItem old_li = null;
-			// Initialize LogItem
-			String command = MergeHeatMapCLI.getCLIcommand(pngFiles, OUT_DIR);
-			LogItem new_li = new LogItem(command);
-			firePropertyChange("log", old_li, new_li);
 			MergeHeatMapOutput heat = new MergeHeatMapOutput(pngFiles, OUT_DIR);
 			heat.addPropertyChangeListener("merge", new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -70,14 +65,13 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 					setProgress(percentComplete);
 				}
 			});
-
+			heat.addPropertyChangeListener("log", new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent evt) {
+					firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+				}
+			});
 			heat.setVisible(true);
 			heat.run();
-			// Update log item
-			new_li.setStopTime(new Timestamp(new Date().getTime()));
-			new_li.setStatus(0);
-			old_li = new_li;
-			firePropertyChange("log", old_li, null);
 			setProgress(100);
 			return null;
 		}

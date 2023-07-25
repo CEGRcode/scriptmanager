@@ -99,23 +99,10 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 		return (r);
 	}
 
-	public static String getCLIcommand(ArrayList<File> pngFiles, File outdir) {
+	public static String getCLIcommand(File senseFile, File antiFile, File outdir) {
 		String command = "java -jar $SCRIPTMANAGER figure-generation MergeHeatMap";
-		File antiFile = null;
-		File senseFile = null;
-		for (int x = 0; x < pngFiles.size(); x++) {
-			if (pngFiles.get(x).getName().toLowerCase().contains("sense")) {
-				senseFile = (pngFiles.get(x));
-			} else if (pngFiles.get(x).getName().toLowerCase().contains("anti")) {
-				antiFile = (pngFiles.get(x));
-			}
-		}
-		if (antiFile != null) {
-			command += " " + antiFile.getAbsolutePath();
-		}
-		if (senseFile != null) {
-			command += " " + senseFile.getAbsolutePath();
-		}
+		command += " " + antiFile.getAbsolutePath();
+		command += " " + senseFile.getAbsolutePath();
 		command += " -o " + outdir.getAbsolutePath() + "merge.png";
 		return command;
 	}

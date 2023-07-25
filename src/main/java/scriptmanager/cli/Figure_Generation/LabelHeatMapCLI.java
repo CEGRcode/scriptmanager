@@ -7,6 +7,7 @@ import picocli.CommandLine.Parameters;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -111,6 +112,26 @@ public class LabelHeatMapCLI implements Callable<Integer> {
 			r += "(!) Invalid font size. Must be greater than or equal to 0\n";
 		}
 		return(r);
+	}
+
+	public static String getCLIcommand(File input, File output, Color color, int borderWidth,
+									   int xTickHeight, int fontSize, String llabel, String mlabel,
+									   String rlabel, String xlabel, String ylabel) {
+		String command = "java -jar $SCRIPTMANAGER figure-generation LabelHeatMap";
+		command += " " + input.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		// Converts RGB format color to hexadecimal
+		String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+		command += " -c " + hex;
+		command += " -w " + borderWidth;
+		command += " -t " + xTickHeight;
+		command += " -f " + fontSize;
+		command += " -l " + llabel;
+		command += " -m " + mlabel;
+		command += " -r " + rlabel;
+		command += " -x " + xlabel;
+		command += " -y " + ylabel;
+		return command;
 	}
 }
 

@@ -98,6 +98,11 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 						setProgress(percentComplete);
 					}
 				});
+				out_win.addPropertyChangeListener("log", new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+					}
+				});
 				out_win.setVisible(true);
 				out_win.run();
 
@@ -452,6 +457,8 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
