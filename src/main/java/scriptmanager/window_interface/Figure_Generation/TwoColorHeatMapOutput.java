@@ -12,6 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
+import scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 import scriptmanager.util.ExtensionFileFilter;
 
@@ -65,23 +68,33 @@ public class TwoColorHeatMapOutput extends JFrame {
 	}
 
 	public void run() throws IOException {
+		LogItem old_li = null;
 		for (int x = 0; x < SAMPLE.size(); x++) {
 			File OUTPUT = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(SAMPLE.get(x)) + "_" + scaleType + ".png");
 			if (OUT_DIR != null) {
 				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT.getName());
 			}
-
+			old_li = new LogItem("");
+			// Initialize LogItem
+			String command = TwoColorHeatMapCLI.getCLIcommand(SAMPLE.get(x), OUTPUT, MAXCOLOR, startROW, startCOL,
+					pixelHeight, pixelWidth, scaleType, absolute, quantile, transparentBackground);
+			LogItem new_li = new LogItem(command);
+			firePropertyChange("log", old_li, new_li);
 			// Execute script
 			TwoColorHeatMap script_object = new TwoColorHeatMap(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
 					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, OUTPUTSTATUS, transparentBackground);
 			script_object.run();
 			JLabel picLabel = script_object.getImg();
-
+			// Update log item
+			new_li.setStopTime(new Timestamp(new Date().getTime()));
+			new_li.setStatus(0);
+			old_li = new_li;
 			// Output image/error to GUI
 			newpane.addTab(OUTPUT.getName(), new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 			firePropertyChange("heat", x, x + 1);
 		}
+		firePropertyChange("log", old_li, null);
 		System.out.println("Program Complete");
 		System.out.println(getTimeStamp());
 	}

@@ -165,4 +165,31 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 
 		return (r);
 	}
+
+	public static String getCLIcommand(File input, File output, Color color, int startROW,
+									   int startCOL, int pixelHeight, int pixelWidth,
+									   String scaleType, double absolute, double quant, boolean trans) {
+		String command = "java -jar $SCRIPTMANAGER figure-generation TwoColorHeatMap";
+		command += " " + input.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		if (color == Color.BLACK) {
+			command += " --black ";
+		} else if (color == Color.RED) {
+			command += " --red ";
+		} else if (color == Color.BLUE) {
+			command += " --blue ";
+		} else {
+			String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+			command += " -c " + hex;
+		}
+		command += " -r " + startROW;
+		command += " -l " + startCOL;
+		command += " -y " + pixelHeight;
+		command += " -x " + pixelWidth;
+		command += " -z " + scaleType;
+		command += " -a " + absolute;
+		command += " -p " + quant;
+		command += " -t " + trans;
+		return command;
+	}
 }

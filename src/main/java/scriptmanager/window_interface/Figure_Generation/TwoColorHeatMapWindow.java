@@ -135,7 +135,11 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 						setProgress(percentComplete);
 					}
 				});
-
+				heat.addPropertyChangeListener("log", new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+					}
+				});
 				heat.setVisible(true);
 				heat.run();
 
@@ -537,6 +541,8 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
