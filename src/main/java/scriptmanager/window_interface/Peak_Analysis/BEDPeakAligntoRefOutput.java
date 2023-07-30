@@ -4,12 +4,17 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI;
+import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 
 @SuppressWarnings("serial")
@@ -43,12 +48,21 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	}
 		
 	public void run() throws IOException, InterruptedException {
-		
+		LogItem old_li = new LogItem("");
+		// Initialize LogItem
+		String command = BEDPeakAligntoRefCLI.getCLIcommand(PEAK, REF, OUTFILE);
+		LogItem new_li = new LogItem(command);
+		firePropertyChange("log", old_li, new_li);
+		// Execute script
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUTFILE, PS);
 		script_obj.run();
-		
+		// Update log item
+		new_li.setStopTime(new Timestamp(new Date().getTime()));
+		new_li.setStatus(0);
+		old_li = new_li;
 		Thread.sleep(2000);
 		dispose();
+		firePropertyChange("log", old_li, null);
 	}
 }

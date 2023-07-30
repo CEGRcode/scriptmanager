@@ -68,7 +68,12 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
     				{
     					for(int p=0; p < PeakFiles.size(); p++)
     					{
-							align = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH);	
+							align = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH);
+							align.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+								}
+							});
 							align.setVisible(true);
 							align.run();
 							counter++;
@@ -251,7 +256,9 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
-        }
+        } else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
     }
 	
 	public void massXable(Container con, boolean status) {
