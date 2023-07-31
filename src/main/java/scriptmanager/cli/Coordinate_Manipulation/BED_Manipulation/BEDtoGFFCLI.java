@@ -27,7 +27,11 @@ import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BEDtoGFFCLI implements Callable<Integer> {
-	
+	/**
+	 * Creates a new BEDtoGFFCLI object
+	 */
+	public BEDtoGFFCLI(){}
+
 	@Parameters( index = "0", description = "the BED file to convert")
 	private File bedFile;
 	
@@ -87,6 +91,13 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 		return(r);
 	}
 
+	/**
+	 * Returns the CLI command for replicating results with Script Manager
+	 * @param OUTPUT Output GFF file
+	 * @param BED Bed file to be converted
+	 * @param gzOutput If output should be zipped
+	 * @return The CLI command for replicating results
+	 */
 	public static String getCLIcommand(File OUTPUT, File BED, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bed-to-gff";
 		command += " " + BED.getAbsolutePath();

@@ -46,6 +46,11 @@ public class CorrParameter {
 //	public int getExp() {
 //		return currentExp;
 //	}
+
+	/**
+	 * Creates a new CorrParameter object
+	 */
+	public CorrParameter(){}
 	
 	/**
 	 * Returns whether coordinates are randomly or completely sampled

@@ -23,6 +23,11 @@ import scriptmanager.util.GZipUtilities;
  */
 public class BEDtoGFF {
 	/**
+	 * Creates a new BED to GFF object
+	 */
+	public BEDtoGFF(){}
+
+	/**
 	 * Read the BED-formatted input file and write it as a GFF-formatted output file.
 	 * 
 	 * @param outpath the filepath destination of the GFF-formatted output

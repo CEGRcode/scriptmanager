@@ -14,6 +14,10 @@ import java.util.ArrayList;
  */
 public class BAIIndexer {
 	/**
+	 * Creates a new BAIIndexer object (unnecessary becuase this class is a collection of static methods)
+	 */
+	public BAIIndexer(){}
+	/**
 	 * Index a BAM file and output said index to a file of the same name with a .bai
 	 * extension
 	 * 

@@ -113,6 +113,9 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 		}
 	}
 
+	/**
+	 * Creates a new ConvertGFFChrNamesWindow object
+	 */
 	public ConvertGFFChrNamesWindow() {
 		setTitle("Convert Yeast Reference Genome for GFF Files");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

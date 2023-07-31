@@ -26,6 +26,11 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtoGFFCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMtoGFFCLI object
+	 */
+	public BAMtoGFFCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
 	private File bamFile;

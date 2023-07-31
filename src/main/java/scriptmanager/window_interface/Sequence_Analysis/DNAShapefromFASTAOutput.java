@@ -78,7 +78,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 	 * chart generated under the "DNA Shape Plot" tab.
 	 * 
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 

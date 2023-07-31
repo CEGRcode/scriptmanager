@@ -113,6 +113,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Creates a new ExpandGFFWindow
+	 */
 	public ExpandGFFWindow() {
 		setTitle("Expand GFF File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

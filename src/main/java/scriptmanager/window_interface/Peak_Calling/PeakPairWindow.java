@@ -37,6 +37,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Calling.PeakPair;
 
+/**
+ * Graphical interface window for calling the PeakPair script
+ * @see scriptmanager.scripts.Peak_Calling.PeakPair
+ */
 @SuppressWarnings("serial")
 public class PeakPairWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;

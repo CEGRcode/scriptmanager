@@ -113,6 +113,9 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		}
 	}
 
+	/**
+	 * Creates a new ConvertBEDChrNamesWindow
+	 */
 	public ConvertBEDChrNamesWindow() {
 		setTitle("Convert Yeast Reference Genome for BED Files");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

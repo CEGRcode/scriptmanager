@@ -31,6 +31,11 @@ import scriptmanager.scripts.Figure_Generation.PlotComposite;
 	exitCodeOnExecutionException = 1)
 public class CompositePlotCLI implements Callable<Integer> {
 
+	/**
+	 * Creates a CompositePlotCLI object
+	 */
+	public CompositePlotCLI(){}
+
 	@Parameters(index = "0", description = "Composite data to plot. (formatted like TagPileup composite output)")
 	private File inputComposite;
 

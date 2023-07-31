@@ -97,7 +97,7 @@ public class DNAShapefromBED {
 	 * sequence.
 	 * 
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		try {
@@ -278,7 +278,7 @@ public class DNAShapefromBED {
 	 * SAMException thrown by FastaSequenceIndexCreator to account for malformed
 	 * FASTA file.
 	 * 
-	 * @return
+	 * @return Returns true
 	 */
 	public boolean getFAIstatus() {
 		return INDEX;

@@ -35,6 +35,11 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Calling.GeneTrack;
 
+/**
+ * Graphical interface window for calling the GeneTrack script
+ * @see scriptmanager.scripts.Peak_Calling.GeneTrack
+ * @see scriptmanager.scripts.Peak_Calling.GeneTrack_BAM
+ */
 @SuppressWarnings("serial")
 public class GeneTrackWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;

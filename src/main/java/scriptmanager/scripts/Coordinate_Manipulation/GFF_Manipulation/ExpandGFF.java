@@ -15,6 +15,11 @@ import java.util.Scanner;
 public class ExpandGFF {
 	
 	/**
+	 * Creates a new ExpandGFF object (unnecessary because only contains static methods)
+	 */
+	public ExpandGFF(){}
+
+	/**
 	 * Self-contained method for expanding the GFF-formatted intervals in a GFF file by user-specified distance and strategy. This method accounts for even-sized GFF interval expansion in midpoint calculations by using the strand-aware downstream nucleotide between the two center nucleotides.
 	 * 
 	 * @param out_filepath Filepath to save expanded GFF-formatted files. If null, outputs to STDOUT.

@@ -27,6 +27,11 @@ import scriptmanager.util.ExtensionFileFilter;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class CrossCorrelationCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new CrossCorrelationCLI object
+	 */
+	public CrossCorrelationCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file to perform the cross-correlation on")
 	private File bamFile;

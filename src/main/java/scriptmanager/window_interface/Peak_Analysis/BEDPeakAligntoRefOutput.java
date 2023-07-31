@@ -26,9 +26,9 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		
 	/**
 	 * Creates a new BEDPeakAligntoRefOutput with two BED files and an output directory
-	 * @param ref
-	 * @param peak
-	 * @param outpath
+	 * @param ref Reference BAM file
+	 * @param peak BAM file to be alligned
+	 * @param outpath Output directory
 	 * @throws IOException Invalid file or parameters
 	 */
 	public BEDPeakAligntoRefOutput(File ref, File peak, File outpath) throws IOException {
@@ -56,7 +56,7 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	/**
 	 * Runs the BEDPeakAligntoRef script
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		

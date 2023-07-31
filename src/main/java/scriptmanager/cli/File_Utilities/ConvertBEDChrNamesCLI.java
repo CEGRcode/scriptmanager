@@ -27,6 +27,11 @@ import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 	exitCodeOnExecutionException = 1)
 public class ConvertBEDChrNamesCLI implements Callable<Integer> {
 
+	/**
+	 * Creates a ConvertBEDChrNamesCLI object
+	 */
+	public ConvertBEDChrNamesCLI(){}
+
 	@Parameters( index = "0", description = "the BED coordinate file to convert")
 	private File coordFile;
 

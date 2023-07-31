@@ -73,7 +73,7 @@ public class BAMtoGFFOutput extends JFrame {
 	/**
 	 * Runs the BAMtoGFF script
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		// Open Output File

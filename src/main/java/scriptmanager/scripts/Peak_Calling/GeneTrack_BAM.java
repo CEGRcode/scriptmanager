@@ -63,9 +63,9 @@ public class GeneTrack_BAM extends JFrame {
 	private double[] R_STD;
 	
 	/**
-	 * 
-	 * @param in
-	 * @param PARAM
+	 * Creates a new instance of a GeneTrack_BAM script
+	 * @param in BAM file to run Genetrack Script on
+	 * @param PARAM Object containing user-specified parameters
 	 */
 	public GeneTrack_BAM(File in, GenetrackParameters PARAM) {
 		setTitle("BAM to Genetrack Progress");
@@ -93,7 +93,7 @@ public class GeneTrack_BAM extends JFrame {
 	}
 	
 	/**
-	 * 
+	 * Runs the Gene Track algorithm with file and parameters passed through constructor, outputting progress to window
 	 */
 	public void run() {
 		String TIME = getTimeStamp();
@@ -187,9 +187,9 @@ public class GeneTrack_BAM extends JFrame {
 	}
 	
 	/**
-	 * 
-	 * @param chrom
-	 * @param start
+	 * Filters given chromosome for peaks using options from PARAM
+	 * @param chrom Chromosome to find peaks in
+	 * @param start Last position to be 
 	 */
 	public void filterbyLocalMaxima(String chrom, int start) {
 		for(int z = 0; z < F_GOCC.length; z++) {	
@@ -225,6 +225,12 @@ public class GeneTrack_BAM extends JFrame {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param iter
+	 * @param start
+	 * @param stop
+	 */
 	public void loadGenomeFragment(CloseableIterator<SAMRecord> iter, int start, int stop) {
 		double[] tempF = new double[F_TOCC.length];
 		double[] tempR = new double[R_TOCC.length];
@@ -331,7 +337,11 @@ public class GeneTrack_BAM extends JFrame {
 		//Sort by position
 		Collections.sort(peaks, Peak.PeakPositionComparator);
 	}
-		
+	
+	/**
+	 * Creates an 
+	 * @return
+	 */
 	private double[] gaussKernel() {
 		double[] Garray = new double[(int) (SIGMA * NUM_STD * 2) + 1];
 		for(int x = 0; x < Garray.length; x++) {

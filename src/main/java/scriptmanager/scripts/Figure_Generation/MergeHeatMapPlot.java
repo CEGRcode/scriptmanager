@@ -22,6 +22,11 @@ import java.io.IOException;
 public class MergeHeatMapPlot {
 
 	/**
+	 * Creates a new MergeHeatMapPlot object
+	 */
+	public MergeHeatMapPlot(){}
+
+	/**
 	 * Method for merging two same-sized PNG files into a new PNG using a
 	 * pixel-by-pixel color averaging strategy.
 	 *
@@ -32,7 +37,7 @@ public class MergeHeatMapPlot {
 	 * @param OUTPUT
 	 *            The filepath to save the averaged PNG (same pixel dimensions
 	 *            as input PNG files)
-	 * @return
+	 * @return The combined heat map
 	 * @throws IOException Invalid file or parameters
 	 */
 	public static JLabel mergePNG(File INPUT1, File INPUT2, File OUTPUT) throws IOException {

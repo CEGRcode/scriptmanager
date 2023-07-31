@@ -27,6 +27,11 @@ import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 	exitCodeOnExecutionException = 1)
 public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 
+	/**
+	 * Creates a new ConvertGFFChrNamesCLI object
+	 */
+	public ConvertGFFChrNamesCLI(){}
+
 	@Parameters( index = "0", description = "the GFF coordinate file to convert")
 	private File coordFile;
 

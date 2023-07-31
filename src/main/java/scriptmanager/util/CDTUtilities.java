@@ -32,6 +32,11 @@ public class CDTUtilities {
 	private String invalidMessage;
 
 	/**
+	 * Creates a new CDTUtilities object
+	 */
+	public CDTUtilities(){}
+
+	/**
 	 * Parse CDT-formatted file for consistent column sizes and a row count
 	 * 
 	 * @param CDT a CDT-formatted file to validate

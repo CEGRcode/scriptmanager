@@ -161,7 +161,7 @@ public class CorrNode {
 
 	/**
 	 * Returns the Vector of compared tags
-	 * @return
+	 * @return the Vector of compared tags
 	 */
 	public Vector<double[]> getData() {
 		return tagPopulation;

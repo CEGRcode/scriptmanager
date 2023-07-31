@@ -25,6 +25,11 @@ public class MergeHeatMapOutput extends JFrame {
 
 	JTabbedPane newpane;
 
+	/**
+	 * Creates a new MergeHeatMapOutput window
+	 * @param in An ArrayList&lt;File&gt; containing two heat maps of the same size
+	 * @param out_dir Output directory for the combned heat map
+	 */
 	public MergeHeatMapOutput(ArrayList<File> in, File out_dir) {
 		setTitle("Merged Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

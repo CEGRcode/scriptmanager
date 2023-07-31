@@ -24,6 +24,10 @@ import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BEDPeakAligntoRefCLI implements Callable<Integer> {
+	/**
+	 * Creates a new BEDPeakAligntoRefCLI object
+	 */
+	public BEDPeakAligntoRefCLI(){}
 	
 	@Parameters( index = "0", description = "The BED peak file")
 	private File peakBED;

@@ -15,12 +15,18 @@ import java.util.ArrayList;
  * @see scriptmanager.window_interface.BAM_Manipulation.SortBAMWindow
  */
 public class BAMFileSort {
+
+    /**
+     * Creates a new BAMFileSort object (unnecessary because class conly contains static methods) 
+     */
+    public BAMFileSort(){}
+
 	/**
 	 * The following code uses Picard's SortSam to sort a BAM file by coordinate
 	 * 
 	 * @param input the BAM file to be sorted (corresponds to INPUT)
 	 * @param output the file to write the sorted BAM to (corresponds to OUTPUT)
-	 * @throws SAMException
+	 * @throws SAMException Invalid BAM file
 	 * @throws IOException Invalid file or parameters
 	 */
     public static void sort(File input, File output) throws SAMException, IOException {

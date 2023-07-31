@@ -22,10 +22,10 @@ public class BAMMarkDuplicates extends JFrame {
 	
 	/**
 	 * Creates a new instance of BAMarkDuplicates with a single file
-	 * @param in
-	 * @param remove
-	 * @param out
-	 * @param met
+	 * @param in BAM file to be marked
+	 * @param remove Removes duplicates instead of marking them if true
+	 * @param out Output BAM file
+	 * @param met .metrics file for outputting stats
 	 */
 	public BAMMarkDuplicates(File in, boolean remove, File out, File met) {
 		bamFile = in;

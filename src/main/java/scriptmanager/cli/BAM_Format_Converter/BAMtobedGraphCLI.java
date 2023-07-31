@@ -26,6 +26,11 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtobedGraphCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMtobedGraphCLI object
+	 */
+	public BAMtobedGraphCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
 	private File bamFile;

@@ -28,6 +28,11 @@ import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
 public class DNAShapefromFASTACLI implements Callable<Integer> {
 
+	/**
+	 * Creates a new DNAShapefromFASTACLI object
+	 */
+	public DNAShapefromFASTACLI(){}
+
 	@Parameters(index = "0", description = "FASTA sequence file")
 	private File fastaFile;
 

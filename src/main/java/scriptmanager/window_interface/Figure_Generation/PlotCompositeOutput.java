@@ -29,6 +29,9 @@ public class PlotCompositeOutput extends JFrame {
 	protected static File OUT_DIR;
 	protected static boolean outputImg;
 	
+	/**
+	 * Whether or not to include a legend
+	 */
 	protected static boolean includeLegend = true;
 	protected static int pxHeight;
 	protected static int pxWidth;

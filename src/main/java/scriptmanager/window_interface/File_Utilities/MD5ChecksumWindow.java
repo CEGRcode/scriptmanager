@@ -92,6 +92,9 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
         }
 	}
 	
+	/**
+	 * Creates a new MD5ChecksumWindow
+	 */
 	public MD5ChecksumWindow() {
 		setTitle("MD5 Checksum");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

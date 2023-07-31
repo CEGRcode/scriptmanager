@@ -20,9 +20,10 @@ public class BEDCoord implements GenomicCoord {
 	private double[] Fstrand = null;
 	private double[] Rstrand = null;
 	
-	public BEDCoord() {
-		
-	}
+	/**
+	 * Creates a new BEDCoord object with default values
+	 */
+	public BEDCoord() {}
 	
 	/**
 	 * Creates a new BEDCoord object with a given line of a BED file
@@ -139,7 +140,7 @@ public class BEDCoord implements GenomicCoord {
 	
 	/**
 	 * Returns the chromosome name
-	 * @return the stored chr name
+	 * @return the stored chromosome
 	 */
 	public String getChrom() {
 		return CHROM;
@@ -147,7 +148,7 @@ public class BEDCoord implements GenomicCoord {
 	
 	/**
 	 * Sets the chromosome name
-	 * @param chr The new chr name
+	 * @param chr The new chromosome
 	 */
 	public void setChrom(String chr) {
 		CHROM = chr;

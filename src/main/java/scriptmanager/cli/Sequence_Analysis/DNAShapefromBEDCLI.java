@@ -28,6 +28,11 @@ import scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED;
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
 public class DNAShapefromBEDCLI implements Callable<Integer> {
 
+	/**
+	 * Creates a new DNAShapefromBEDCLI object
+	 */
+	public DNAShapefromBEDCLI(){}
+
 	@Parameters(index = "0", description = "reference genome FASTA file")
 	private File genomeFASTA;
 	@Parameters(index = "1", description = "the BED file of sequences to extract")

@@ -28,6 +28,11 @@ import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 	exitCodeOnExecutionException = 1)
 public class MergeHeatMapCLI implements Callable<Integer> {
 
+	/**
+	 * Creates a new MergeHeatMapCLI object
+	 */
+	public MergeHeatMapCLI(){}
+
 	@Parameters(index = "0", description = "First(sense) PNG heatmap to merge, input1")
 	private File senseFile;
 	@Parameters(index = "1", description = "Second(anti) PNG heatmap to merge, input2")

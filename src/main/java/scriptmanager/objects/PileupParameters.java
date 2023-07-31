@@ -12,7 +12,6 @@ import java.io.PrintStream;
  * @see scriptmanager.cli.Read_Analysis.TagPileupCLI
  * @see scriptmanager.window_interface.Read_Analysis.TagPileupWindow
  */
-
 public class PileupParameters {
 	/**
 	 * Read Aspect value encoding 5 prime end

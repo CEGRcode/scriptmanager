@@ -20,6 +20,12 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class MergeBAMCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new MergeBAMCLI object
+	 */
+	public MergeBAMCLI(){}
+	
 	/**
 	 * Runs when this subcommand is called, directing user to original tool
 	 * @throws Exception Please use original CLI tool

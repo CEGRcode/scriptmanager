@@ -59,7 +59,7 @@ public class FilterforPIPseq {
 	/**
 	 * Writes reads which contain the specified sequence to the output file
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		IndexedFastaSequenceFile QUERY = new IndexedFastaSequenceFile(genome);

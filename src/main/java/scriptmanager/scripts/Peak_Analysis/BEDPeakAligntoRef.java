@@ -45,7 +45,7 @@ public class BEDPeakAligntoRef {
 	/**
 	 * Runs the peak alignment, writing to output file and reporting progress
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		printPS("Mapping: " + peakPath + " to " + refPath);

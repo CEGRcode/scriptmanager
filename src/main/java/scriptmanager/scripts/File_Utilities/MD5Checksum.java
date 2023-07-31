@@ -14,6 +14,19 @@ import java.security.NoSuchAlgorithmException;
  * @see scriptmanager.window_interface.File_Utilities.DecompressGZFileWindow
  */
 public class MD5Checksum {
+
+	/**
+	 * Creates a new MD5Checksum object
+	 */
+	public MD5Checksum(){}
+
+	/**
+	 * Calculates the MD5 Checksum for a given input file
+	 * @param input BAM
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 */
 	public static String calculateMD5(String input) throws IOException, NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("MD5");
 		md.update(Files.readAllBytes(Paths.get(input)));

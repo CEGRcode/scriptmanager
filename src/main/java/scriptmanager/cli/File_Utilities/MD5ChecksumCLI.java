@@ -25,6 +25,11 @@ import scriptmanager.scripts.File_Utilities.MD5Checksum;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class MD5ChecksumCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new MD5ChecksumCLI object
+	 */
+	public MD5ChecksumCLI(){}
 	
 	@Parameters( index = "0", description = "The file we want to calculate the MD5checksum for. Alternatively use md5 <file> or md5checksum <file>")
 	private File input;

@@ -35,9 +35,9 @@ public class BAMtoBEDOutput extends JFrame {
 	 * @param b BAM file
 	 * @param out_dir Directory to output BED file to
 	 * @param s Specifies which reads to output
-	 * @param pair_status
-	 * @param min_size
-	 * @param max_size
+	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
+	 * @param min_size Minimum acceptable insert size
+	 * @param max_size Maximum acceptable insert size
 	 */
 	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
 		setTitle("BAM to BED Progress");
@@ -73,7 +73,7 @@ public class BAMtoBEDOutput extends JFrame {
 	/**
 	 * Runs the BAMtoBED script with the file passed in through the constructor
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		// Open Output File

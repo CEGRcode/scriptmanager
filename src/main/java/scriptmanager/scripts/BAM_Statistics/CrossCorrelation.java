@@ -34,6 +34,11 @@ import scriptmanager.objects.ArchTEx.CorrParameter;
  */
 public class CrossCorrelation {
 
+	/** 
+	* Creates a new CrossCorrelation object 
+	*/
+	public CrossCorrelation(){}
+
 	/**
 	 * Perform the cross-correlation analysis from ArchTEx of a BAM file by
 	 * correlating forward and reverse strand pileups at various tag shifts to

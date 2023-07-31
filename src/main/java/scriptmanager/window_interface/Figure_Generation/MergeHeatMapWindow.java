@@ -91,6 +91,9 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 
+	/**
+	 * Creates a new MergeHeatMapWindow
+	 */
 	public MergeHeatMapWindow() {
 		setTitle("Heat Map Plot Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

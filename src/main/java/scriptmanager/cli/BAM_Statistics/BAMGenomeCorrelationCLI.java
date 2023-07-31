@@ -28,6 +28,11 @@ import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMGenomeCorrelationCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMGenomeCorrelationCLI object
+	 */
+	public BAMGenomeCorrelationCLI(){}
 	
 	@Parameters( index = "0..", description = "The BAM file whose statistics we want.")
 	private File[] inputFiles;

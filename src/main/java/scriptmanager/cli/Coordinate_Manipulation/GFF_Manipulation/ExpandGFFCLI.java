@@ -26,6 +26,11 @@ import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class ExpandGFFCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new ExpandGFFCLI object
+	 */
+	public ExpandGFFCLI(){}
 	
 	@Parameters( index = "0", description = "the GFF file to expand on")
 	private File gffFile;

@@ -75,7 +75,7 @@ public class BAMtobedGraph {
 	/**
 	 * Runs the {@link BAMtobedGraph#processREADS()} and {@link BAMtobedGraph#processMIDPOINT()} method and checks inputs are valid
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 

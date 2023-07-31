@@ -26,6 +26,11 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtoscIDXCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMtoscIDXCLI object
+	 */
+	public BAMtoscIDXCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
 	private File bamFile;

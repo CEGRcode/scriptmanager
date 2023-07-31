@@ -71,7 +71,7 @@ public class FASTAExtract {
 	 * Execute script to extract the genomic sequences.
 	 * 
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		PS.println("STRAND:" + STRAND);

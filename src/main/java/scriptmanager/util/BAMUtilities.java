@@ -24,6 +24,11 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 public class BAMUtilities {
 	
 	/**
+	 * Creates a new BAMUtilities object
+	 */
+	public BAMUtilities(){}
+	
+	/**
 	 * Calculates the standardization ratio for a given BAM file
 	 * @param BAM BAM file used to calculate ratio
 	 * @param read Read Type (1 = Read1, 1 = Read2, 3 = All reads)

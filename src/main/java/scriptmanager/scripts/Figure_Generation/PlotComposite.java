@@ -31,6 +31,11 @@ import scriptmanager.util.ExtensionFileFilter;
 public class PlotComposite {
 
 	/**
+	 * Creates a new PlotComposite object
+	 */
+	public PlotComposite(){}
+
+	/**
 	 * Static method that parses the input composite data (formatted like output
 	 * of TagPileup), determines the default color palette if none specified,
 	 * and plots the line chart, saving the image file to the appropriate output
@@ -58,9 +63,9 @@ public class PlotComposite {
 	 *            height of image to save
 	 * @param pxWidth
 	 *            width of image to save
-	 * @return
+	 * @return The composite plot
 	 * @throws IOException Invalid file or parameters
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException File is not formatted properly
 	 * @throws FileNotFoundException Script could not find valid input file
 	 */
 	public static JFreeChart plotCompositeFile(File input, File OUT_PATH, boolean outputImage, String title, ArrayList<Color> COLORS, boolean legend, int pxHeight, int pxWidth) throws IOException, IllegalArgumentException, FileNotFoundException {

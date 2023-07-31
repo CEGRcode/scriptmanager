@@ -61,6 +61,10 @@ public class PeakPair extends JFrame {
 		
 	}
 	
+	/**
+	 * Creates output window and runs 
+	 * @throws IOException Invalid file or parameters
+	 */
 	public void run() throws IOException {
 
 		System.out.println(getTimeStamp());

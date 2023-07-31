@@ -70,7 +70,7 @@ public class BAMtoGFF {
 	/**
 	 * Checks for valid input and runs the {@link BAMtoGFF#processREADS()} method
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		// Set-up Output PrintStream

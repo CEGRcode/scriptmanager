@@ -21,6 +21,11 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnExecutionException = 1)
 public class BAIIndexerCLI implements Callable<Integer> {
 	/**
+	 * Creates a new BAIIndexerCLI object
+	 */
+	public BAIIndexerCLI(){}
+
+	/**
 	 * Runs when this subcommand is called, directing user to original tool
 	 * @throws Exception Please use original CLI tool
 	 */

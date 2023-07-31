@@ -96,7 +96,7 @@ public class SearchMotif {
 	 * sequence (i.e. "chromosome" name) as they are procesed.
 	 * 
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		PS.println("Searching motif: " + motif + " in " + input.getName());

@@ -74,7 +74,7 @@ public class BAMtoscIDX {
 	/**
 	 * Runs the {@link BAMtoscIDX#processREADS()} and {@link BAMtoscIDX#processMIDPOINT()} method and checks that inputs are valid
 	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		// Set-up Output PrintStream

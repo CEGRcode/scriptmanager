@@ -29,6 +29,11 @@ import scriptmanager.util.GZipUtilities;
 public class ConvertChrNames {
 
 	/**
+	 * Creates a new ConvertChrNames object
+	 */
+	public ConvertChrNames(){}
+
+	/**
 	 * Helper method to generate the roman --&gt; arabic numeral chromosome name
 	 * map.
 	 * 
