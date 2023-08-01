@@ -1,14 +1,18 @@
 package scriptmanager.scripts.Read_Analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import scriptmanager.util.ArrayUtilities;
 import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.GZipUtilities;
 
 public class AggregateData {
 
@@ -47,15 +51,21 @@ public class AggregateData {
 			ArrayList<ArrayList<Double>> MATRIX = new ArrayList<ArrayList<Double>>();
 			ArrayList<ArrayList<String>> MATRIXID = new ArrayList<ArrayList<String>>();
 			for (int x = 0; x < INPUT.size(); x++) {
-				Scanner scan = new Scanner(INPUT.get(x));
+				// Check if file is gzipped and instantiate appropriate BufferedReader
+				BufferedReader br;
+				if(GZipUtilities.isGZipped(INPUT.get(x))) {
+					br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(INPUT.get(x))), "UTF-8"));
+				} else {
+					br = new BufferedReader(new InputStreamReader(new FileInputStream(INPUT.get(x)), "UTF-8"));
+				}
 				ArrayList<Double> scorearray = new ArrayList<Double>();
 				ArrayList<String> idarray = new ArrayList<String>();
 				int count = 0;
-				while (scan.hasNextLine()) {
-					String line = scan.nextLine(); // Line 0
+				String line;
+				while ((line = br.readLine()) != null) {
 					// Skip lines until desired row start
 					while (count < ROWSTART) {
-						line = scan.nextLine();
+						line = br.readLine();
 						count++;
 					}
 
@@ -88,7 +98,7 @@ public class AggregateData {
 					}
 					count++;
 				}
-				scan.close();
+				br.close();
 				MATRIX.add(scorearray);
 				MATRIXID.add(idarray);
 			}
@@ -165,13 +175,19 @@ public class AggregateData {
 			OUT.println("\tPositionalVariance");
 		}
 
-		Scanner scan = new Scanner(IN);
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(IN)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(IN)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(IN), "UTF-8"));
+		}
 		int count = 0;
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
+		String line;
+		while ((line = br.readLine()) != null) {
 			// Skip lines until desired row start
 			while (count < ROWSTART) {
-				line = scan.nextLine();
+				line = br.readLine();
 				count++;
 			}
 
@@ -201,7 +217,7 @@ public class AggregateData {
 			}
 			count++;
 		}
-		scan.close();
+		br.close();
 		OUT.close();
 	}
 }

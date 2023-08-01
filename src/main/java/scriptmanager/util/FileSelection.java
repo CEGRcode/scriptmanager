@@ -90,7 +90,7 @@ public class FileSelection {
 	 * Extension-based multi-file FileSelector for retrieving a set of files with a
 	 * specific extension.
 	 * 
-	 * @param fc
+	 * @param fc 
 	 * @param ext the extension to restrict file selection options by
 	 * @return a list of files with a specific extension (see "ext")
 	 */

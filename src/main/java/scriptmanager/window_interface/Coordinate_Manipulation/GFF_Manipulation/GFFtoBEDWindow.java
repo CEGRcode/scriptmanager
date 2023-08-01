@@ -28,7 +28,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.GZipUtilities;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
 @SuppressWarnings("serial")
@@ -56,8 +58,14 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 			setProgress(0);
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
-				// Set outfilepath
-				String OUTPUT = (XGFF.getName()).substring(0, XGFF.getName().length() - 4) + ".bed";
+				// Check if file is gzipped and assigns appropriate file name
+				String OUTPUT; 
+				if (GZipUtilities.isGZipped(XGFF)){
+					OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed";
+				}
+				else {
+					OUTPUT = ExtensionFileFilter.stripExtension(XGFF) + ".bed";
+				}
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
@@ -104,7 +112,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getFiles(fc, "gff");
+				File[] newGFFFiles = FileSelection.getFiles(fc, "gff", true);
 				if (newGFFFiles != null) {
 					for (int x = 0; x < newGFFFiles.length; x++) {
 						BEDFiles.add(newGFFFiles[x]);

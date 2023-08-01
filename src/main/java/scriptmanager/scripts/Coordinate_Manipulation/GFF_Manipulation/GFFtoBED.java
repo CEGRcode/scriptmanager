@@ -1,23 +1,36 @@
 package scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
+
+import scriptmanager.util.GZipUtilities;
+
 
 public class GFFtoBED {
 	public static void convertGFFtoBED(File out_filepath, File input) throws IOException {
 		// GFF: chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
 		// BED: chr12 605113 605120 region_0 0 +
 
-		Scanner scan = new Scanner(input);
 		PrintStream OUT = System.out;
 		if (out_filepath != null)
 			OUT = new PrintStream(out_filepath);
 
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
+		// Checks if file is gzipped and instantiate appropriate BufferedReader
+		String line;
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(input)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
+		}
+		while ((line = br.readLine()) != null) {
+			String[] temp = line.split("\t");
 			if (temp[0].toLowerCase().contains("track") || temp[0].startsWith("#")) {
 				OUT.println(String.join("\t", temp));
 			} else {
@@ -39,7 +52,7 @@ public class GFFtoBED {
 				}
 			}
 		}
-		scan.close();
+		br.close();
 		OUT.close();
 	}
 }

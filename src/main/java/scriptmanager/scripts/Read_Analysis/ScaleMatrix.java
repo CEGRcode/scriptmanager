@@ -1,13 +1,18 @@
 package scriptmanager.scripts.Read_Analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import javax.swing.JOptionPane;
+
+import scriptmanager.util.GZipUtilities;
 
 public class ScaleMatrix {
 
@@ -37,12 +42,19 @@ public class ScaleMatrix {
 		System.err.println("Starting row index:\t" + ROWINDEX);
 		System.err.println("Starting column index:\t" + COLINDEX);
 
+		// Parse, scale, and output tab-delimited matrix on the fly
 		try {
-			// Parse, scale, and output tab-delimited matrix on the fly
-			Scanner SCAN = new Scanner(MATRIX);
+			// Check if file is gzipped and instantiate appropriate BufferedReader
+			BufferedReader br;
+			if(GZipUtilities.isGZipped(MATRIX)) {
+				br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(MATRIX)), "UTF-8"));
+			} else {
+				br = new BufferedReader(new InputStreamReader(new FileInputStream(MATRIX), "UTF-8"));
+			}
 			int counter = 0;
-			while (SCAN.hasNextLine()) {
-				String[] temp = SCAN.nextLine().split("\t");
+			String line;
+			while ((line = br.readLine()) != null) {
+				String[] temp = line.split("\t");
 				if (counter < ROWINDEX) {
 					OUT.println(String.join("\t", temp));
 				} else {
@@ -63,7 +75,7 @@ public class ScaleMatrix {
 					System.err.println("Rows processed: " + counter);
 				}
 			}
-			SCAN.close();
+			br.close();
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, MATRIX.getName() + " contains non-numbers in indexes selected!!!");
 		}

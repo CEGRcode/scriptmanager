@@ -6,9 +6,12 @@ import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,9 +20,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import scriptmanager.charts.CompositePlot;
+import  scriptmanager.scripts.File_Utilities.GZipFiles;
 import scriptmanager.util.FASTAUtilities;
+import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.DNAShapeReference;
 
 /**
@@ -348,13 +354,20 @@ public class DNAShapefromBED {
 	 * 
 	 * @param INPUT a BED-formatted file
 	 * @return the parsed BED coordinate objects
-	 * @throws FileNotFoundException
+	 * @throws IOException 
 	 */
-	public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
-		Scanner scan = new Scanner(INPUT);
+	public ArrayList<BEDCoord> loadCoord(File INPUT) throws IOException{
+		String line;
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(INPUT)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(INPUT)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(INPUT), "UTF-8"));
+		}
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
+		while ((line = br.readLine()) != null) {
+			String[] temp = line.split("\t");
 			if (temp.length > 2) {
 				if (!temp[0].contains("track") && !temp[0].contains("#")) {
 					String name = "";
@@ -377,7 +390,7 @@ public class DNAShapefromBED {
 				}
 			}
 		}
-		scan.close();
+		br.close();
 		return COORD;
 	}
 
