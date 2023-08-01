@@ -78,6 +78,11 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 					for (int gfile = 0; gfile < GenomeFiles.size(); gfile++) {
 						SearchMotifOutput search = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(),
 								Integer.parseInt(txtMismatch.getText()), OUT_DIR, chckbxGzipOutput.isSelected());
+						search.addPropertyChangeListener("log", new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent evt) {
+								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+							}
+						});
 						search.setVisible(true);
 						search.run();
 						int percentComplete = (int) (((double) (gfile + 1) / (GenomeFiles.size())) * 100);
@@ -249,6 +254,8 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

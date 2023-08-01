@@ -89,4 +89,14 @@ public class FASTAExtractCLI implements Callable<Integer> {
 
 		return (r);
 	}
+	public static String getCLIcommand(File FASTA, File BED, File output, boolean header, boolean forceStrand, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis FASTAExtract";
+		command += " " + FASTA.getAbsolutePath();
+		command += " " + BED.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		command += " -c " + header;
+		command += " -n " + forceStrand;
+		command += gzOutput ? " -z" : "";
+		return command;
+	}
 }

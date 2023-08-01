@@ -4,12 +4,17 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI;
+import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 import scriptmanager.util.ExtensionFileFilter;
 
@@ -72,6 +77,7 @@ public class SearchMotifOutput extends JFrame {
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {
+		LogItem old_li = null;
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		String BASENAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
 				+ ExtensionFileFilter.stripExtension(INPUTFILE) + ".bed";
@@ -79,11 +85,19 @@ public class SearchMotifOutput extends JFrame {
 			BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 		}
 		BASENAME += gzOutput ? ".gz" : "";
-
+		old_li = new LogItem("");
+		// Initialize LogItem
+		String command = SearchMotifCLI.getCLIcommand(INPUTFILE, new File(BASENAME), motif, ALLOWED_MISMATCH, gzOutput);
+		LogItem new_li = new LogItem(command);
+		firePropertyChange("log", old_li, new_li);
 		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS, gzOutput);
 		script_obj.run();
-
+		// Update log item
+		new_li.setStopTime(new Timestamp(new Date().getTime()));
+		new_li.setStatus(0);
+		old_li = new_li;
 		Thread.sleep(2000);
+		firePropertyChange("log", old_li, null);
 		dispose();
 	}
 }

@@ -7,13 +7,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scriptmanager.cli.Sequence_Analysis.FASTAExtractCLI;
+import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
@@ -75,9 +80,11 @@ public class FASTAExtractOutput extends JFrame {
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {
+		LogItem old_li = null;
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		try {
 			for (int x = 0; x < BED.size(); x++) {
+				old_li = new LogItem("");
 				// Open Output File
 				File OUTFILE;
 				String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
@@ -87,13 +94,21 @@ public class FASTAExtractOutput extends JFrame {
 				NAME += gzOutput ? ".gz" : "";
 				OUTFILE = new File(NAME);
 				PS.println("Proccessing File: " + BED.get(x).getName());
-
+				// Initialize LogItem
+				String command = FASTAExtractCLI.getCLIcommand(GENOME, BED.get(x), OUTFILE, HEADER, STRAND, gzOutput);
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
 				// Execute Script object
 				FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS, gzOutput);
 				script_obj.run();
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
 				// Update progress
 				firePropertyChange("fa", x, x + 1);
 			}
+			firePropertyChange("log", old_li, null);
 			PS.println("Extraction Complete");
 		} catch (IllegalArgumentException e) {
 			PS.println(e.getMessage());

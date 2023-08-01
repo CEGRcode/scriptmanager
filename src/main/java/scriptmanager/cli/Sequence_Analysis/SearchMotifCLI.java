@@ -112,4 +112,14 @@ public class SearchMotifCLI implements Callable<Integer> {
 
 		return (r);
 	}
+
+	public static String getCLIcommand(File input, File output, String motif, int mismatch, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis SearchMotif";
+		command += " " + input.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		command += " -m " + motif;
+		command += " -n " + mismatch;
+		command += gzOutput ? " -z" : "";
+		return command;
+	}
 }

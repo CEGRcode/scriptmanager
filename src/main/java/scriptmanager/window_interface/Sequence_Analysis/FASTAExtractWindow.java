@@ -89,6 +89,11 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 							setProgress(percentComplete);
 						}
 					});
+					signal.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
 
 					signal.setVisible(true);
 					signal.run();
@@ -276,6 +281,8 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
