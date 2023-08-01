@@ -2,6 +2,7 @@ package scriptmanager.window_interface.Coordinate_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.swing.border.EmptyBorder;
@@ -36,7 +37,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Date;
 
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI;
+import scriptmanager.cli.Coordinate_Manipulation.ShiftCoordCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -90,6 +95,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 					JOptionPane.showMessageDialog(null, "These shifts of 0 bp will generate identical files...");
 				}
 				setProgress(0);
+				LogItem old_li = new LogItem("");
 				if (rdbtnBed.isSelected()) {
 					for (int x = 0; x < BEDFiles.size(); x++) {
 						// Save current BED to temp variable
@@ -107,13 +113,21 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
 						}
 						System.out.println("Input: " + XBED.getName());
+						// Initialize LogItem
+						String command = ShiftCoordCLI.getCLIcommand(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected(), false);
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
 						ShiftCoord.shiftBEDInterval(new File(OUTPUT + SUFFIX), XBED, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
-
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 						// Update progress bar
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
+					firePropertyChange("log", old_li, null);
 				} else {
 					for (int x = 0; x < GFFFiles.size(); x++) {
 						// Save current BED to temp variable
@@ -131,13 +145,21 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
 						}
 						System.out.println("Input: " + XGFF.getName());
+						// Initialize LogItem
+						String command = ShiftCoordCLI.getCLIcommand(XGFF, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected(), true);
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
 						ShiftCoord.shiftGFFInterval(new File(OUTPUT + SUFFIX), XGFF, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
-
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 						// Update progress bar
 						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
+					firePropertyChange("log", old_li, null);
 				}
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Shift Complete");
@@ -388,6 +410,8 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
