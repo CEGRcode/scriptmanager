@@ -83,6 +83,6 @@
     </outputs>
     <help>
     **What it does**
-Convert BAM file to BED file.
+    Convert BAM file to BED file.
     </help>
 </tool>
