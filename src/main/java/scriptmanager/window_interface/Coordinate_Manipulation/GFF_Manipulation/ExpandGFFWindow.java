@@ -35,7 +35,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
 import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;

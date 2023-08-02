@@ -7,7 +7,6 @@ import picocli.CommandLine.Parameters;
 import java.lang.NullPointerException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;

@@ -32,7 +32,6 @@ import javax.swing.border.EmptyBorder;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
 import scriptmanager.cli.BAM_Manipulation.MergeBAMCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;

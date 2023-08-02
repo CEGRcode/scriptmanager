@@ -30,7 +30,6 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
 import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;

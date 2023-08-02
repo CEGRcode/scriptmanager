@@ -38,7 +38,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import jdk.internal.net.http.common.Log;
 import scriptmanager.objects.LogItem;
 import scriptmanager.cli.BAM_Format_Converter.BAMtoscIDXCLI;
 import scriptmanager.util.FileSelection;

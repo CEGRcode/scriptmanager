@@ -37,7 +37,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
 import scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;

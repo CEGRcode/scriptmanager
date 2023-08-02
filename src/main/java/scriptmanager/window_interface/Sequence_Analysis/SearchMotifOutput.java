@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI;
 import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;

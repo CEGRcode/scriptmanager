@@ -14,7 +14,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
-import scriptmanager.cli.Figure_Generation.MergeHeatMapCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.objects.LogItem;

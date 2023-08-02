@@ -35,7 +35,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI;
-import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;

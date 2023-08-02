@@ -33,7 +33,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
 import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.CDTUtilities;

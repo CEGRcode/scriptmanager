@@ -16,7 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import scriptmanager.cli.Sequence_Analysis.FASTAExtractCLI;
-import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;

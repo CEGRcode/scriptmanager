@@ -32,7 +32,6 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
 import scriptmanager.cli.BAM_Manipulation.SortBAMCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;

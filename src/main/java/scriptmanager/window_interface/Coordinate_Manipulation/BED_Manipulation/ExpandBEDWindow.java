@@ -37,7 +37,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
-import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
