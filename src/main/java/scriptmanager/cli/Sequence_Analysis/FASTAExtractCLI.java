@@ -94,8 +94,8 @@ public class FASTAExtractCLI implements Callable<Integer> {
 		command += " " + FASTA.getAbsolutePath();
 		command += " " + BED.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
-		command += " -c " + header;
-		command += " -n " + forceStrand;
+		command += header ? " -c " : "";
+		command += forceStrand ? " -n " : "";
 		command += gzOutput ? " -z" : "";
 		return command;
 	}

@@ -179,7 +179,7 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 		} else if (color == Color.BLUE) {
 			command += " --blue ";
 		} else {
-			String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+			String hex = Integer.toHexString(color.getRGB()).substring(2);
 			command += " -c " + hex;
 		}
 		command += " -r " + startROW;
@@ -189,7 +189,7 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 		command += " -z " + scaleType;
 		command += " -a " + absolute;
 		command += " -p " + quant;
-		command += " -t " + trans;
+		command += trans ? " -t " : "";
 		return command;
 	}
 }

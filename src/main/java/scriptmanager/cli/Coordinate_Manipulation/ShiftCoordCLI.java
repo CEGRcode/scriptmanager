@@ -94,8 +94,8 @@ public class ShiftCoordCLI implements Callable<Integer> {
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		command += " -t " + shift;
-		command += " -u " + stranded;
-		command += " --gff " + isGFF;
+		command += stranded ? " -u " : "";
+		command += isGFF ? " --gff " : "";
 		command += gzOutput ? " -z " : "";
 		return command;
 	}

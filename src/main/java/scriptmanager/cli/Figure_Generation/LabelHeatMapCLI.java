@@ -121,7 +121,7 @@ public class LabelHeatMapCLI implements Callable<Integer> {
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		// Converts RGB format color to hexadecimal
-		String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+		String hex = Integer.toHexString(color.getRGB()).substring(2);
 		command += " -c " + hex;
 		command += " -w " + borderWidth;
 		command += " -t " + xTickHeight;

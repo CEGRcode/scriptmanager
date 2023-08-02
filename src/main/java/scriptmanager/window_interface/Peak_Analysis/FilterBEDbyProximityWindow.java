@@ -60,7 +60,12 @@ public Task task;
         			setProgress(0);
         			FilterBEDbyProximityOutput filter;
     				for(int gfile = 0; gfile < BEDFiles.size(); gfile++) {
-    					filter = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), Integer.parseInt(txtCutoff.getText()), OUTPUT_PATH);	
+    					filter = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), Integer.parseInt(txtCutoff.getText()), OUTPUT_PATH);
+						filter.addPropertyChangeListener("log", new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent evt) {
+								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+							}
+						});
     					filter.setVisible(true);
     					filter.run();
         	        	int percentComplete = (int)(((double)(gfile + 1) / (BEDFiles.size())) * 100);
@@ -204,7 +209,9 @@ public Task task;
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
-        }
+        } else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
     }
 	
 	public void massXable(Container con, boolean status) {
