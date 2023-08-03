@@ -7,16 +7,20 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.zip.GZIPOutputStream;
 
 public class BAMtobedGraph {
 	private File BAM = null;
+	private boolean OUTPUT_GZIP;
 	private String OUTBASENAME = null;
 	private PrintStream OUTF = null;
 	private PrintStream OUTR = null;
@@ -37,7 +41,7 @@ public class BAMtobedGraph {
 
 	private int CHROMSTOP = -999;
 
-	public BAMtobedGraph(File b, String o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
+	public BAMtobedGraph(File b, String o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTBASENAME = o;
 		PS = ps;
@@ -54,6 +58,7 @@ public class BAMtobedGraph {
 		} else if (STRAND == 3) {
 			READ = "MIDPOINT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	public void run() throws IOException, InterruptedException {
@@ -61,11 +66,21 @@ public class BAMtobedGraph {
 		// Open Output File
 		if (OUTBASENAME != null) {
 			try {
-				if (STRAND <= 2) {
+				if (OUTPUT_GZIP) {
+					if (STRAND <= 2) {
+						OUTF = new PrintStream(new GZIPOutputStream(new FileOutputStream(new File(OUTBASENAME + "_forward.bedGraph.gz"))));
+						OUTR = new PrintStream(new GZIPOutputStream(new FileOutputStream(new File(OUTBASENAME + "_reverse.bedGraph.gz"))));
+					} else {
+						OUTF = new PrintStream(new GZIPOutputStream(new FileOutputStream(new File(OUTBASENAME + "_midpoint.bedGraph.gz"))));
+					}
+				}
+				else{
+					if (STRAND <= 2) {
 					OUTF = new PrintStream(new File(OUTBASENAME + "_forward.bedGraph"));
 					OUTR = new PrintStream(new File(OUTBASENAME + "_reverse.bedGraph"));
-				} else {
+					} else {
 					OUTF = new PrintStream(new File(OUTBASENAME + "_midpoint.bedGraph"));
+					}
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -103,6 +118,12 @@ public class BAMtobedGraph {
 				printPS("Maximum insert size required to output: NaN");
 			} else {
 				printPS("Maximum insert size required to output: " + MAX_INSERT);
+			}
+
+			if (OUTPUT_GZIP){
+				printPS("Output Gzip: yes");
+			} else{
+				printPS("Output Gzip: no");
 			}
 
 			// Print Header

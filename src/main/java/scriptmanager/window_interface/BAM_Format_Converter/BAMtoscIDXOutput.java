@@ -16,6 +16,7 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
 public class BAMtoscIDXOutput extends JFrame {
 	private File BAM = null;
 	private File OUT_DIR = null;
+	private static boolean OUTPUT_GZIP = false;
 	private int STRAND = 0;
 	private String READ = "READ1";
 
@@ -25,7 +26,7 @@ public class BAMtoscIDXOutput extends JFrame {
 
 	private JTextArea textArea;
 
-	public BAMtoscIDXOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
+	public BAMtoscIDXOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
 		setTitle("BAM to scIDX Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -52,6 +53,7 @@ public class BAMtoscIDXOutput extends JFrame {
 		} else if (STRAND == 3) {
 			READ = "MIDPOINT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	public void run() throws IOException, InterruptedException {
@@ -60,11 +62,15 @@ public class BAMtoscIDXOutput extends JFrame {
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
+		//Adds .gz extension if needed
+		if (OUTPUT_GZIP){
+			OUTPUT += ".gz";
+		}
 
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		PS.println(OUTPUT);
-		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS, OUTPUT_GZIP);
 		script_obj.run();
 
 		Thread.sleep(2000);

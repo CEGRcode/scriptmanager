@@ -7,16 +7,20 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.zip.GZIPOutputStream;
 
 public class BAMtoBED {
 	private File BAM = null;
 	private File OUTFILE = null;
+	private boolean OUTPUT_GZIP;
 	private PrintStream OUT = null;
 	private PrintStream PS = null;
 
@@ -30,7 +34,7 @@ public class BAMtoBED {
 
 	private int CHROMSTOP = -999;
 
-	public BAMtoBED(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
+	public BAMtoBED(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTFILE = o;
 		PS = ps;
@@ -49,13 +53,19 @@ public class BAMtoBED {
 		} else if (STRAND == 4) {
 			READ = "FRAGMENT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	public void run() throws IOException, InterruptedException {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
 			try {
-				OUT = new PrintStream(OUTFILE);
+				if (OUTPUT_GZIP) {
+					OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(OUTFILE))));
+				} 
+				else {
+					OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(OUTFILE)));
+				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -94,6 +104,12 @@ public class BAMtoBED {
 				printPS("Maximum insert size required to output: NaN");
 			} else {
 				printPS("Maximum insert size required to output: " + MAX_INSERT);
+			}
+			
+			if (OUTPUT_GZIP){
+				printPS("Output Gzip: yes");
+			} else{
+				printPS("Output Gzip: no");
 			}
 
 			// Build&Print Header
