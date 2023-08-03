@@ -1,11 +1,17 @@
 package scriptmanager.scripts.Sequence_Analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
+
+import scriptmanager.util.GZipUtilities;
 
 /**
  * This script randomizes a FASTA sequence file by shuffling the nucleotides
@@ -33,12 +39,20 @@ public class RandomizeFASTA {
 			randnum.setSeed(seed);
 		}
 		PrintStream OUT = new PrintStream(RANDOUT);
-		Scanner scan = new Scanner(FASTA);
-		while (scan.hasNextLine()) {
-			String HEADER = scan.nextLine();
+
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(FASTA)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(FASTA)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(FASTA), "UTF-8"));
+		}
+		String line;
+		while ((line = br.readLine()) != null) {
+			String HEADER = line;
 			OUT.println(HEADER);
 			if (HEADER.contains(">")) {
-				String[] SEQ = scan.nextLine().split("");
+				String[] SEQ = br.readLine().split("");
 				ArrayList<String> SEQ_ARRAY = new ArrayList<String>();
 				for (int x = 0; x < SEQ.length; x++) {
 					SEQ_ARRAY.add(SEQ[x]);
@@ -56,7 +70,7 @@ public class RandomizeFASTA {
 		}
 
 		OUT.close();
-		scan.close();
+		br.close();
 		return RANDOUT;
 	}
 

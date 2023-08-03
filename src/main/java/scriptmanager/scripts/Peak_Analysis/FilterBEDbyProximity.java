@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.util.GZipUtilities;
 
 public class FilterBEDbyProximity{
 	
@@ -28,7 +30,13 @@ public class FilterBEDbyProximity{
 	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps) throws IOException {
 		CUTOFF = cutoff;
 		PS = ps;
-		inputStream = new FileInputStream(input);
+		//Check if input file is compressed and assign appropriate input stream
+		if (GZipUtilities.isGZipped(input)){
+			inputStream = new GZIPInputStream(new FileInputStream(input));
+		}
+		else{
+			inputStream = new FileInputStream(input);
+		}
 		INPUTNAME = input.getName();
 		try{
 			if(outputBase == null) {

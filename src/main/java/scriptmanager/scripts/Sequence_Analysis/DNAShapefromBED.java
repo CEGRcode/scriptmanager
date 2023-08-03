@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.zip.GZIPInputStream;
 
 import scriptmanager.charts.CompositePlot;
@@ -27,6 +26,7 @@ import  scriptmanager.scripts.File_Utilities.GZipFiles;
 import scriptmanager.util.FASTAUtilities;
 import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.DNAShapeReference;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * This script calculates various aspects of DNA shape across a set of BED

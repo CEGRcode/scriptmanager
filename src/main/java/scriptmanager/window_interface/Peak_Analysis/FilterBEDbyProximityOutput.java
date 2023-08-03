@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
+import scriptmanager.util.ExtensionFileFilter;
 
 @SuppressWarnings({"serial"})
 public class FilterBEDbyProximityOutput extends JFrame{
@@ -36,11 +37,11 @@ public class FilterBEDbyProximityOutput extends JFrame{
 		CUTOFF = cutoff;
 		INPUT = input;
 		
-		String INPUTNAME = input.getName();
+		String INPUTNAME = ExtensionFileFilter.stripExtensionIgnoreGZ(input);
 		if(output!=null){
-			OUTBASE = output.getCanonicalPath() + File.separator + INPUTNAME.substring(0, INPUTNAME.lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
+			OUTBASE = output.getCanonicalPath() + File.separator + INPUTNAME + "_" + Integer.toString(CUTOFF) + "bp";
 		}else{
-			OUTBASE = INPUTNAME.substring(0, INPUTNAME.lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
+			OUTBASE = INPUTNAME + "_" + Integer.toString(CUTOFF) + "bp";
 		}
 	}
 	

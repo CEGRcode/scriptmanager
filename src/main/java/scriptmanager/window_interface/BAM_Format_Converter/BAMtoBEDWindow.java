@@ -152,7 +152,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBAMFiles = FileSelection.getFiles(fc, "bam");
+				File[] newBAMFiles = FileSelection.getFiles(fc, "bam", true);
 				if (newBAMFiles != null) {
 					for (int x = 0; x < newBAMFiles.length; x++) {
 						BAMFiles.add(newBAMFiles[x]);

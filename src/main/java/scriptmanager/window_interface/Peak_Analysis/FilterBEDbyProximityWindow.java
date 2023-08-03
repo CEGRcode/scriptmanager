@@ -95,7 +95,7 @@ public Task task;
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 5, SpringLayout.WEST, contentPane);
 		btnLoadBedFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGenomeFiles = FileSelection.getFiles(fc,"bed");
+				File[] newGenomeFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newGenomeFiles != null) {
 					for(int x = 0; x < newGenomeFiles.length; x++) { 
 						BEDFiles.add(newGenomeFiles[x]);

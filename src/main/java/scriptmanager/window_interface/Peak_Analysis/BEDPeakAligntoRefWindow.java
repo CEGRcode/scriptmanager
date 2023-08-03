@@ -123,7 +123,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		
 		btnLoadPeakBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						PeakFiles.add(newBEDFiles[x]);
@@ -168,7 +168,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		
 		btnLoadRefBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						RefFiles.add(newBEDFiles[x]);

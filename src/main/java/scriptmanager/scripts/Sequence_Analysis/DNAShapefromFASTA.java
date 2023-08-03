@@ -1,19 +1,23 @@
 package scriptmanager.scripts.Sequence_Analysis;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import scriptmanager.charts.CompositePlot;
 import scriptmanager.util.DNAShapeReference;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * This script calculates the various aspects of DNA shape across a set of FASTA
@@ -85,13 +89,20 @@ public class DNAShapefromFASTA {
 		}
 		openOutputFiles();
 
-		Scanner scan = new Scanner(FASTA);
 		int counter = 0;
-		while (scan.hasNextLine()) {
-			String HEADER = scan.nextLine();
+		String line;
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br;
+		if(GZipUtilities.isGZipped(FASTA)) {
+			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(FASTA)), "UTF-8"));
+		} else {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(FASTA), "UTF-8"));
+		}
+		while ((line = br.readLine()) != null) {
+			String HEADER = line;
 			if (HEADER.contains(">")) {
 				HEADER = HEADER.substring(1, HEADER.length());
-				String seq = scan.nextLine();
+				String seq = br.readLine();
 				if (!seq.contains("N")) {
 					// Populate array for each FASTA line
 					List<Double> MGW = new ArrayList<Double>();
@@ -177,7 +188,7 @@ public class DNAShapefromFASTA {
 				System.out.println("ERROR: Invalid FASTA sequence\n" + HEADER);
 			}
 		}
-		scan.close();
+		br.close();
 
 		// Convert average and statistics to output tabs panes
 		if (OUTPUT_TYPE[0]) {

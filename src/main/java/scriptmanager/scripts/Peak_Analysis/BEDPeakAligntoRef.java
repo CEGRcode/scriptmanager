@@ -15,6 +15,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+
+import scriptmanager.util.GZipUtilities;
 
 public class BEDPeakAligntoRef {
 	private String peakPath = null;
@@ -37,7 +40,14 @@ public class BEDPeakAligntoRef {
 		
 		int counter = 0;
 		InputStream inputStream = new FileInputStream(peakPath);
-	    BufferedReader buff = new BufferedReader(new InputStreamReader(inputStream), 100); 
+	    BufferedReader buff;
+		//Checks if BED file is compressed, creates appropriate input stream
+		if (GZipUtilities.isGZipped(new File(peakPath))){
+			buff = new BufferedReader(new InputStreamReader(new GZIPInputStream(inputStream)), 100);
+		}
+		else{
+			buff = new BufferedReader(new InputStreamReader(inputStream), 100); 
+		}
 		
 		String key ;
 //--------------
@@ -59,7 +69,13 @@ public class BEDPeakAligntoRef {
 	
 //============
 		inputStream = new FileInputStream(refPath);
-	    buff = new BufferedReader(new InputStreamReader(inputStream), 100);
+		//Checks if BED file is compressed, creates appropriate input stream
+		if (GZipUtilities.isGZipped(new File(peakPath))){
+			buff = new BufferedReader(new InputStreamReader(new GZIPInputStream(inputStream)), 100);
+		}
+		else{
+			buff = new BufferedReader(new InputStreamReader(inputStream), 100); 
+		}
 	    
 	    for (String line; (line = buff.readLine()) != null; ) {
 		    	String[] str = line.split("\t");
