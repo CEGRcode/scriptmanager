@@ -15,6 +15,7 @@ import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 /**
  * Output wrapper for running BEDPeakAligntoRef script and reporting when the process is completed
  * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
  */
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefOutput extends JFrame{

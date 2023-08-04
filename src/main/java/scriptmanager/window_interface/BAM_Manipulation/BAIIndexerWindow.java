@@ -32,8 +32,8 @@ import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 /**
  * Graphical window for user argument selection and execution of the BAIIndexer script
+ * @see scriptmanager.scripts.BAM_Manipulation.BAIIndexer
  * @see scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI
- * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWindow
  */
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {

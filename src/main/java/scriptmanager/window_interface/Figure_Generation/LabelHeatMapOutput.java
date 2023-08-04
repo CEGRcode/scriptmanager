@@ -19,7 +19,7 @@ import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 
 /**
  * Output wrapper for running LabelHeatMap script and reporting when the process is completed
- * @see scriptmanager.scripts.Figure_Generation
+ * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
  * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapWindow
  */
 @SuppressWarnings("serial")

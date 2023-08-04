@@ -14,7 +14,7 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 /**
- * Command line interface class for converting chromsome names of BED file by
+ * Command line interface class for converting chromsome names of BED files by
  * calling method implemented in the scripts package.
  * 
  * @author Olivia Lang

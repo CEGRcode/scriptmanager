@@ -33,6 +33,7 @@ import scriptmanager.util.FileSelection;
 /**
  * GUI for collecting inputs to be processed by FilterBEDbyProximity script
  * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
  */
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {

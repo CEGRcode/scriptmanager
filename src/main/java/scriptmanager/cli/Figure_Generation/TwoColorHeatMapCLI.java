@@ -22,7 +22,7 @@ import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
  * sequence plots.
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
+ * @see scriptmanager.scripts.Figure_Generation.TwoColorHeatMap
  */
 @Command(name = "heatmap",
 	mixinStandardHelpOptions = true,

@@ -32,6 +32,7 @@ import scriptmanager.util.FileSelection;
 /**
  * GUI for collecting inputs to be processed by MergeHeatMapPlot script
  * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
  */
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, PropertyChangeListener {

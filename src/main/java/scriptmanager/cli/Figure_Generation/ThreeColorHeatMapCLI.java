@@ -23,7 +23,7 @@ import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
  * Command line interface class for generating three color heat maps
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
+ * @see scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap
  */
 @Command(name = "three-color", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.threecolorheatmap_description,

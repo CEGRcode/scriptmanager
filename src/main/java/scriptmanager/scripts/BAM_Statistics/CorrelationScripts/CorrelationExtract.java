@@ -35,10 +35,10 @@ public class CorrelationExtract implements Runnable {
 	 * @param r Which reads to correlate 
 	 * @param s The tag shift in #of base pairs
 	 * @param b The bin size in #of base pairs
-	 * @param current Specifies the current  
-	 * @param sub ️
-	 * @param e1 First SAM file
-	 * @param e2 Second SAM file
+	 * @param current Specifies the starting index
+	 * @param sub ️The subset size
+	 * @param e1 First BAM file
+	 * @param e2 Second BAM file
 	 */
 	public CorrelationExtract(Vector<CorrelationCoord> win, int r, int s, int b, int current, int sub, File e1, File e2) {
 		ALLNodes = win;
@@ -52,7 +52,7 @@ public class CorrelationExtract implements Runnable {
 	}
 	
 	/**
-	 * Runs the correlation analysis between the two SAM files
+	 * Runs the correlation analysis between the two BAM files
 	 */
 	public void run() {
 		for(int x = INDEX; x < INDEX + SUBSETSIZE; x++) {

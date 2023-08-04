@@ -17,7 +17,7 @@ import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
  * Command line interface class for merging two heat maps
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
+ * @see scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot
  */
 @Command(name = "merge-heatmap",
 	mixinStandardHelpOptions = true,

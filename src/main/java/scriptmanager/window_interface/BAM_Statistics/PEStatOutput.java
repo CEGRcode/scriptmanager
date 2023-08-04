@@ -21,10 +21,9 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
 
 /**
- * Graphical window for viewing results form the PEStats script
- * @see scriptmanager.scripts.BAM_Statistics.SEStats
- * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
- * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
+ * Graphical window for running and viewing results form the PEStats script
+ * @see scriptmanager.scripts.BAM_Statistics.PEStats
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
  */
 @SuppressWarnings("serial")
 public class PEStatOutput extends JFrame {

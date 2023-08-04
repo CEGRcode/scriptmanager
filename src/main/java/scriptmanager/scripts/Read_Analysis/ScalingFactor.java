@@ -532,6 +532,11 @@ public class ScalingFactor {
 	public static class PairedCounts implements Comparable<PairedCounts> {
 		public Double x, y;
 
+		/**
+		 * Creates a new PaireCounts object
+		 * @param a The value of X
+		 * @param b The value of Y
+		 */
 		public PairedCounts(double a, double b) {
 			x = a;
 			y = b;

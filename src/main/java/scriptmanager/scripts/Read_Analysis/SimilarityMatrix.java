@@ -158,7 +158,7 @@ public class SimilarityMatrix {
 	/**
 	 * Outputs resulting matrix to same directory as original matrix
 	 * @param matrix Matrix to output
-	 * @param id
+	 * @param id ID's of rows and columns
 	 * @throws IOException Invalid file or parameters
 	 */
 	public void outputMatrix(double[][] matrix, ArrayList<String> id) throws IOException {

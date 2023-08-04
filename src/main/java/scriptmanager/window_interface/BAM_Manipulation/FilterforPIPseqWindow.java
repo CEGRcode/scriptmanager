@@ -38,7 +38,7 @@ import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 /**
  * Graphical window for user argument selection and execution of the FilterforPIPseq script
  * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
- * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow
+ * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqOutput
  */
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {

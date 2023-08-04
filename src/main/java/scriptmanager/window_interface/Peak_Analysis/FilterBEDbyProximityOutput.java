@@ -15,6 +15,7 @@ import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 /**
  * Output wrapper for running FilterBEDbyProximity script and reporting when the process is completed
  * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
  */
 @SuppressWarnings({"serial"})
 public class FilterBEDbyProximityOutput extends JFrame{

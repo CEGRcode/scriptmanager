@@ -28,6 +28,14 @@ public class FilterBEDbyProximity{
 	private PrintStream OUT_Cluster = null;
 	private PrintStream PS = null;
 	
+	/**
+	 * Creates a new instance of a FilterBEDbyProximity script
+	 * @param input BED file to filter
+	 * @param cutoff Exclusion distance (bp)
+	 * @param outputBase Base name for the output files
+	 * @param ps Output PrintStream
+	 * @throws IOException Invalid file or parameters
+	 */
 	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps) throws IOException {
 		CUTOFF = cutoff;
 		PS = ps;

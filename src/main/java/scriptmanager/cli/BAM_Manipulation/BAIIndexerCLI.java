@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
- * Print a message redirecting user to the original CLI tool.
+ * Prints a message redirecting user to the original CLI tool.
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.BAM_Manipulation.BAIIndexer

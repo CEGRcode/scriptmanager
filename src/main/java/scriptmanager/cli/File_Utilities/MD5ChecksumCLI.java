@@ -13,7 +13,7 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
 /**
- * Print a message redirecting user to the original CLI tool.
+ * Prints a message redirecting user to the original CLI tool.
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.File_Utilities.MD5Checksum

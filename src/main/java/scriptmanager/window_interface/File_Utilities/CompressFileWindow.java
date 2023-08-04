@@ -32,7 +32,7 @@ import scriptmanager.scripts.File_Utilities.GZipFiles;
  * Graphical interface window for calling static gzip compressing method implemented in the scripts package.
  * 
  * @author Olivia Lang
- *
+ * @see scriptmanager.scripts.File_Utilities.GZipFiles
  */
 @SuppressWarnings("serial")
 public class CompressFileWindow extends JFrame implements ActionListener, PropertyChangeListener {

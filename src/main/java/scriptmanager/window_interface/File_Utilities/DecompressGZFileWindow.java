@@ -32,7 +32,7 @@ import scriptmanager.scripts.File_Utilities.GZipFiles;
  * Graphical interface window for calling static gzip decompressing method implemented in the scripts package.
  * 
  * @author Olivia Lang
- *
+* @see scriptmanager.scripts.File_Utilities.GZipFiles
  */
 @SuppressWarnings("serial")
 public class DecompressGZFileWindow extends JFrame implements ActionListener, PropertyChangeListener {

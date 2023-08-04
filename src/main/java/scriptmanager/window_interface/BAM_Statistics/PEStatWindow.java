@@ -37,8 +37,8 @@ import scriptmanager.util.FileSelection;
 
 /**
  * Graphical window for user argument selection and execution of the PEStats script
- * @see scriptmanager.scripts.BAM_Statistics.SEStats
- * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
+ * @see scriptmanager.scripts.BAM_Statistics.PEStats
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
  */
 @SuppressWarnings("serial")
 public class PEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {

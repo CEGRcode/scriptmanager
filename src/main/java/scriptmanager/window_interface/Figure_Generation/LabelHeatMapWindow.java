@@ -44,8 +44,8 @@ import scriptmanager.util.FileSelection;
  * into a user-friendly layout of fields and labels.
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.PlotComposite
- * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeOutput
+ * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapOutput
  */
 @SuppressWarnings("serial")
 public class LabelHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
