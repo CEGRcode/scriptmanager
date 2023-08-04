@@ -55,7 +55,7 @@
             <option value="fragment" >Fragment (Require PE) </option>
         </param>
 
-        <param type="boolean" name="mate_pair" truevalue="No" falsevalue="Yes" label="Require proper mate-pair" />
+        <param type="boolean" name="mate_pair" truevalue="Yes" falsevalue="No" label="Require proper mate-pair" />
 
         <conditional name="filter_by_min">
         <param type="boolean" name="filter_min" truevalue="Yes" falsevalue="No" label="Filter by min insert size (bp)" >
