@@ -1,0 +1,67 @@
+<tool id="bamcorrelation_test" name="ScriptManager: BAM Correlation" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+    <description> Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files. </description>
+    <requirements>
+        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <requirement type="package" version="1.9">samtools</requirement>
+    </requirements>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <command detect_errors="exit_code"><![CDATA[
+        ln -s '$BAM' bamfile.bam &&
+        ln -s '$output1' output1.tab &&
+        #if $BAM.is_of_type('bam'):
+            #if str( $BAM.metadata.bam_index ) != "None":
+                    ln -s '${BAM.metadata.bam_index}' bamfile.bam.bai &&
+            #else:
+                    samtools index bamfile.bam bamfile.bai &&
+            #end if
+        #end if
+
+        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar bam-statistics bam-correlation 
+
+        
+        #if str($read) == "read_1" :
+            -1
+        #else if str($read) == "read_2" :
+            -2
+        #else if str($read) == "all_reads" :
+            -a
+        #else if str($read) == "midpoint" :
+            -m
+        #end if
+
+        -b "$bin_size"
+        --cpu "$cpu"
+        
+        '$output1' 
+        
+        -t "$tag_shift"
+        
+        bamfile.bam
+
+        
+    ]]></command>
+    <inputs>
+        <param type="data" name="BAM" format="bam" multiple="True" label="Input BAM files"/>
+
+        <param name="read" type="select" label="Select which read to correlate" >
+            <option value="read_1" selected="True">Read 1</option>
+            <option value="read_2" >Read 2</option>
+            <option value="all_reads">All reads</option>
+            <option value="midpoint">Midpoint (Requires PE)</option>
+        </param>
+
+        <param name="tag_shift" type="integer" value="0" label="Tag shift (bp)" />
+        <param name="bin_size" type="integer" value="10" label="Bin size (bp)" />
+        <param name="cpu" type="integer" value="1" label="CPU's to Use" />
+    </inputs>
+    <outputs>
+        <data name="output1" format="data" />
+    </outputs>
+    <help>
+**What it does**
+Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.
+
+    </help>
+</tool>
