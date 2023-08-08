@@ -57,6 +57,7 @@ import scriptmanager.cli.Read_Analysis.ScaleMatrixCLI;
 import scriptmanager.cli.Read_Analysis.ScalingFactorCLI;
 //import cli.Read_Analysis.SimilarityMatrixCLI;
 import scriptmanager.cli.Read_Analysis.TagPileupCLI;
+import scriptmanager.cli.Read_Analysis.TransposeMatrixCLI;
 
 import scriptmanager.cli.Sequence_Analysis.DNAShapefromBEDCLI;
 import scriptmanager.cli.Sequence_Analysis.DNAShapefromFASTACLI;
@@ -214,9 +215,10 @@ class Peak_CallingCLI extends SubcommandCLI {}
 			ScaleMatrixCLI.class,
 			ScalingFactorCLI.class,
 // 			SimilarityMatrixCLI.class,
-			TagPileupCLI.class
+			TagPileupCLI.class,
+			TransposeMatrixCLI.class
 		},
-		description = "Includes tools like AggregateDataCLI, ScaleMatrixCLI, ScalingFactorCLI, SimilarityMatrixCLI, and TagPileupCLI.")
+		description = "Includes tools like AggregateDataCLI, ScaleMatrixCLI, ScalingFactorCLI, SimilarityMatrixCLI, TagPileupCLI and TransposeMatrix.")
 class Read_AnalysisCLI extends SubcommandCLI {}
 
 

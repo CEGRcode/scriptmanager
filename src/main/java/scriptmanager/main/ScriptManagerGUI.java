@@ -52,6 +52,7 @@ import scriptmanager.window_interface.File_Utilities.CompressFileWindow;
 import scriptmanager.window_interface.File_Utilities.DecompressGZFileWindow;
 import scriptmanager.window_interface.Read_Analysis.AggregateDataWindow;
 import scriptmanager.window_interface.Read_Analysis.ScaleMatrixWindow;
+import scriptmanager.window_interface.Read_Analysis.TransposeMatrixWindow;
 import scriptmanager.window_interface.Read_Analysis.ScalingFactorWindow;
 import scriptmanager.window_interface.Read_Analysis.TagPileupWindow;
 import scriptmanager.window_interface.Sequence_Analysis.DNAShapefromBEDWindow;
@@ -1223,6 +1224,35 @@ public class ScriptManagerGUI {
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnAggregateData, 10, SpringLayout.WEST, pnlReadAnalysis);
 		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtAggregateData, 10, SpringLayout.EAST, btnAggregateData);
 		pnlReadAnalysis.add(btnAggregateData);
+
+		// >TransposeMatrix
+		JTextArea txtTransposeMatrix = new JTextArea();
+		initializeTextArea(txtTransposeMatrix);
+		txtTransposeMatrix.setText(ToolDescriptions.transpose_matrix_description);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, txtTransposeMatrix, 10, SpringLayout.SOUTH,
+				txtAggregateData);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.EAST, txtTransposeMatrix, -10, SpringLayout.EAST, pnlReadAnalysis);
+		pnlReadAnalysis.add(txtTransposeMatrix);
+
+		JButton btnTransposeMatrix = new JButton("Transpose Matrix");
+		btnTransposeMatrix.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							TransposeMatrixWindow frame = new TransposeMatrixWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.NORTH, btnTransposeMatrix, 0, SpringLayout.NORTH, txtTransposeMatrix);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, btnTransposeMatrix, 10, SpringLayout.WEST, pnlReadAnalysis);
+		sl_pnlReadAnalysis.putConstraint(SpringLayout.WEST, txtTransposeMatrix, 10, SpringLayout.EAST, btnTransposeMatrix);
+		pnlReadAnalysis.add(btnTransposeMatrix);
 
 		// >>>>>>>> Sequence_Analysis <<<<<<<<
 		JPanel pnlSeqAnalysis = new JPanel();
