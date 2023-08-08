@@ -6,17 +6,15 @@ import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
+import scriptmanager.util.GZipUtilities;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.zip.GZIPOutputStream;
 
 public class BAMtobedGraph {
 	private File BAM = null;
@@ -66,21 +64,11 @@ public class BAMtobedGraph {
 		// Open Output File
 		if (OUTBASENAME != null) {
 			try {
-				if (OUTPUT_GZIP) {
-					if (STRAND <= 2) {
-						OUTF = new PrintStream(new GZIPOutputStream(new FileOutputStream(new File(OUTBASENAME + "_forward.bedGraph.gz"))));
-						OUTR = new PrintStream(new GZIPOutputStream(new FileOutputStream(new File(OUTBASENAME + "_reverse.bedGraph.gz"))));
-					} else {
-						OUTF = new PrintStream(new GZIPOutputStream(new FileOutputStream(new File(OUTBASENAME + "_midpoint.bedGraph.gz"))));
-					}
-				}
-				else{
-					if (STRAND <= 2) {
-					OUTF = new PrintStream(new File(OUTBASENAME + "_forward.bedGraph"));
-					OUTR = new PrintStream(new File(OUTBASENAME + "_reverse.bedGraph"));
-					} else {
-					OUTF = new PrintStream(new File(OUTBASENAME + "_midpoint.bedGraph"));
-					}
+				if (STRAND <= 2) {
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_forward.bedGraph.gz"), OUTPUT_GZIP);
+					OUTR = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_reverse.bedGraph.gz") , OUTPUT_GZIP);
+				} else {
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_midpoint.bedGraph.gz"), OUTPUT_GZIP);
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

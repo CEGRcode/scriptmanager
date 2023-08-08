@@ -6,17 +6,15 @@ import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
+import scriptmanager.util.GZipUtilities;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.zip.GZIPOutputStream;
 
 public class BAMtoscIDX {
 	private File BAM = null;
@@ -64,12 +62,7 @@ public class BAMtoscIDX {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
 			try {
-				if (OUTPUT_GZIP) {
-					OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(OUTFILE))));
-				} 
-				else {
-					OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(OUTFILE)));
-				}
+				OUT = GZipUtilities.makePrintStream(OUTFILE, OUTPUT_GZIP);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

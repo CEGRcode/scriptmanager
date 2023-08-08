@@ -359,12 +359,7 @@ public class DNAShapefromBED {
 	public ArrayList<BEDCoord> loadCoord(File INPUT) throws IOException{
 		String line;
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(INPUT)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(INPUT)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(INPUT), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(INPUT);
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\t");

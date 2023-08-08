@@ -2,13 +2,9 @@ package scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.zip.GZIPInputStream;
-
 import scriptmanager.util.GZipUtilities;
 
 
@@ -23,12 +19,7 @@ public class GFFtoBED {
 
 		// Checks if file is gzipped and instantiate appropriate BufferedReader
 		String line;
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(input)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(input);
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\t");
 			if (temp[0].toLowerCase().contains("track") || temp[0].startsWith("#")) {

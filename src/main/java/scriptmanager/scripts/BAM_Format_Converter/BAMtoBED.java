@@ -6,6 +6,7 @@ import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
+import scriptmanager.util.GZipUtilities;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -60,12 +61,7 @@ public class BAMtoBED {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
 			try {
-				if (OUTPUT_GZIP) {
-					OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(OUTFILE))));
-				} 
-				else {
-					OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(OUTFILE)));
-				}
+				OUT = GZipUtilities.makePrintStream(OUTFILE, OUTPUT_GZIP);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

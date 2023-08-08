@@ -2,14 +2,10 @@ package scriptmanager.scripts.Read_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
-
 import scriptmanager.util.ArrayUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.GZipUtilities;
@@ -52,12 +48,7 @@ public class AggregateData {
 			ArrayList<ArrayList<String>> MATRIXID = new ArrayList<ArrayList<String>>();
 			for (int x = 0; x < INPUT.size(); x++) {
 				// Check if file is gzipped and instantiate appropriate BufferedReader
-				BufferedReader br;
-				if(GZipUtilities.isGZipped(INPUT.get(x))) {
-					br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(INPUT.get(x))), "UTF-8"));
-				} else {
-					br = new BufferedReader(new InputStreamReader(new FileInputStream(INPUT.get(x)), "UTF-8"));
-				}
+				BufferedReader br = GZipUtilities.makeReader(INPUT.get(x));
 				ArrayList<Double> scorearray = new ArrayList<Double>();
 				ArrayList<String> idarray = new ArrayList<String>();
 				int count = 0;
@@ -176,12 +167,7 @@ public class AggregateData {
 		}
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(IN)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(IN)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(IN), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(IN);
 		int count = 0;
 		String line;
 		while ((line = br.readLine()) != null) {

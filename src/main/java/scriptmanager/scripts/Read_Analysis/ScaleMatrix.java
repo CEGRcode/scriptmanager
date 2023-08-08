@@ -45,12 +45,7 @@ public class ScaleMatrix {
 		// Parse, scale, and output tab-delimited matrix on the fly
 		try {
 			// Check if file is gzipped and instantiate appropriate BufferedReader
-			BufferedReader br;
-			if(GZipUtilities.isGZipped(MATRIX)) {
-				br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(MATRIX)), "UTF-8"));
-			} else {
-				br = new BufferedReader(new InputStreamReader(new FileInputStream(MATRIX), "UTF-8"));
-			}
+			BufferedReader br = GZipUtilities.makeReader(MATRIX);
 			int counter = 0;
 			String line;
 			while ((line = br.readLine()) != null) {
