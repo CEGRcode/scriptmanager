@@ -20,14 +20,16 @@ public class AggregateData {
 	private int METRIC = 0;
 	private PrintStream OUT;
 	private String endMessage = "";
+	private boolean OUTPUT_GZIP;
 
-	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
+	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index, boolean gzOutput) {
 		INPUT = in;
 		OUT_PATH = out;
 		MERGE = m;
 		ROWSTART = r;
 		COLSTART = c;
 		METRIC = index;
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	public void run() throws IOException {
@@ -41,7 +43,7 @@ public class AggregateData {
 			} else if (INPUT.size() == 1) {
 				outputFileScore(INPUT.get(0));
 			} else {
-				System.err.println("Cannot accept non-directory filename with multi-file input when merge is not flaggeds.");
+				System.err.println("Cannot accept non-directory filename with multi-file input when merge is not flagged.");
 			}
 		} else {
 			ArrayList<ArrayList<Double>> MATRIX = new ArrayList<ArrayList<Double>>();
@@ -96,11 +98,11 @@ public class AggregateData {
 
 			String name = "ALL_SCORES.out";
 			if (OUT_PATH == null) {
-				OUT = new PrintStream(new File(name));
+				OUT = GZipUtilities.makePrintStream(new File(name + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
 			} else if (!OUT_PATH.isDirectory()) {
-				OUT = new PrintStream(OUT_PATH);
+				OUT = GZipUtilities.makePrintStream(OUT_PATH, OUTPUT_GZIP);
 			} else {
-				OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name));
+				OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
 			}
 
 			// Check all arrays are the same size
@@ -142,9 +144,9 @@ public class AggregateData {
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
 		String NEWNAME = ExtensionFileFilter.stripExtension(IN);
 		if (OUT_PATH != null) {
-			OUT = new PrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + "_SCORES.out"));
+			OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + "_SCORES.out" + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
 		} else {
-			OUT = new PrintStream(new File(NEWNAME + "_SCORES.out"));
+			OUT = GZipUtilities.makePrintStream(new File(NEWNAME + "_SCORES.out" + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
 		}
 		outputFileScore(IN, OUT);
 	}

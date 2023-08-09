@@ -49,6 +49,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	private JButton btnRemoveCDT;
 	private JButton btnConvert;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JProgressBar progressBar;
 	private JLabel lblRowStart;
 	private JLabel lblColumnStart;
@@ -76,7 +77,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 				} else {
 					AggregateData script_obj = new AggregateData(SUMFiles, OUT_DIR, chckbxMergeToOne.isSelected(),
 							Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()),
-							cmbMethod.getSelectedIndex());
+							cmbMethod.getSelectedIndex(), chckbxGzipOutput.isSelected());
 					script_obj.run();
 
 // 					parse.addPropertyChangeListener("file", new PropertyChangeListener() {
@@ -244,6 +245,11 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		contentPane.add(lblMathematicalFunction);
 
 		btnConvert.addActionListener(this);
+
+		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 0, SpringLayout.WEST, chckbxMergeToOne);
+		contentPane.add(chckbxGzipOutput);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Read_Analysis.AggregateData;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
 	Read_AnalysisCLI/AggregateDataCLI
@@ -32,6 +33,8 @@ public class AggregateDataCLI implements Callable<Integer> {
 	private boolean fileList = false;
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <input1>_SCORES.out, <input2_SCORES.out, ... or ALL_SCORES.out if -m flag is used)")
 	private File output;
+	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
+	private boolean zip = false;
 	
 	@ArgGroup(exclusive = true, heading = "Aggregation Method%n")
 	AggType aggr = new AggType();
@@ -72,7 +75,7 @@ public class AggregateDataCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		AggregateData script_obj = new AggregateData(matFiles, output, merge, startROW, startCOL, aggType);
+		AggregateData script_obj = new AggregateData(matFiles, output, merge, startROW, startCOL, aggType, zip);
 		script_obj.run();
 		
 		System.err.println(script_obj.getMessage());
@@ -128,6 +131,10 @@ public class AggregateDataCLI implements Callable<Integer> {
 				//validate file if merge, copy error message otherwise
 				if( merge ){
 					if( output.getParent()==null ){
+						//Adds .gz extension if needed
+						if (zip && !ExtensionFileFilter.getExtension(output).equals("gz")){
+							output = new File(output.getAbsolutePath() + ".gz");
+						}
 // 						System.err.println("output file to current working directory");
 					} else if(!new File(output.getParent()).exists()){
 						r += "(!)Check directory of output file exists: " + output.getParent() + "\n";

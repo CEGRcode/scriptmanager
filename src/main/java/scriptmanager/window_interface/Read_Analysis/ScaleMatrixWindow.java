@@ -23,6 +23,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -58,6 +59,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
 	private JProgressBar progressBar;
@@ -114,20 +116,14 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							// Check if file is gzipped and assigns appropriate file name
 							String OUTPUT;
 							File XTAB = TABFiles.get(x);
-							if (GZipUtilities.isGZipped(XTAB)){
 								OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_SCALE."
-										+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
-							}
-							else {
-								OUTPUT = ExtensionFileFilter.stripExtension(XTAB) + "_SCALE."
-										+ ExtensionFileFilter.getExtension(XTAB);
-							}
+										+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB) + (chckbxGzipOutput.isSelected()? ".gz": "");
 							if (OUT_DIR != null) {
 								OUTPUT = OUT_DIR + File.separator + OUTPUT;
 							}
 
 							ScaleMatrix scale = new ScaleMatrix(XTAB, new File(OUTPUT), SCALE,
-									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
+									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
 							scale.run();
 
 							int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
@@ -265,6 +261,11 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 			}
 		});
 		contentPane.add(btnOutput);
+
+		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		rdbtnFilespecifcScaling = new JRadioButton("File-specifc Scaling");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnFilespecifcScaling, 8, SpringLayout.SOUTH, scrollPane);
