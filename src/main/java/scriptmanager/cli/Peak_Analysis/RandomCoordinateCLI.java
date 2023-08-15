@@ -87,4 +87,13 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 		
 		return(r);
 	}
+	public static String getCLIcommand(String genomeName, File output, boolean formatIsBed, int numSites, int window) {
+		String command = "java -jar $SCRIPTMANAGER peak-analysis RandomCoordinate";
+		command += " " + genomeName;
+		command += " -o " + output.getAbsolutePath();
+		command += formatIsBed ? "" : " -f ";
+		command += " -n " + numSites;
+		command += " -w " + window;
+		return command;
+	}
 }

@@ -10,6 +10,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -26,6 +28,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+
+import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
@@ -55,6 +60,7 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
 	        	try {
+					LogItem old_li = new LogItem("");
 	        		if(txtSites.getText().isEmpty()) {
 	    				JOptionPane.showMessageDialog(null, "No Sites Entered!!!");
 	        		} else if(Integer.parseInt(txtSites.getText()) < 0) {
@@ -74,9 +80,19 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 						}else{
 							OUTFILE = new File(randomName);
 						}
+						// Initialize LogItem
+						String command = RandomCoordinateCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUTFILE, bedStatus, Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()));
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
+						// Execute Script and update progress
 						RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
 	        			JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 	        		}
+					firePropertyChange("log", old_li, null);
 	        	} catch(NumberFormatException nfe){
 					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (IllegalArgumentException iae) {

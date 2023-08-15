@@ -31,8 +31,8 @@ public class BAIIndexerCLI implements Callable<Integer> {
 
 	public static String getCLIcommand(File BAM) {
 		String command = "java -jar $PICARD BuildBamIndex";
-		command += " INPUT=" + BAM.getAbsolutePath();
-		command += " OUTPUT=" + BAM.getAbsolutePath() + ".bai";
+		command += "INPUT=" + BAM.getAbsolutePath();
+		command += "OUTPUT=" + BAM.getAbsolutePath() + ".bai";
 		return command;
 	}
 
