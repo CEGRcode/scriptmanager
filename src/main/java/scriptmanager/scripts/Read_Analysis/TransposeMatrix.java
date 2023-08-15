@@ -64,36 +64,34 @@ public class TransposeMatrix {
 
 			br = makeReader();
 			PrintStream OUT = makePrintStream(OUTFILE, OUTPUT_GZIP);
-			//Directly transfer skipped rows and create variable for keeping track of current output row
+			//Load original matrix into String[][]
 			for (int i = 1; i <= ROWINDEX; i++){
 				OUT.println(br.readLine());
 			}
+			String[][] originalMatrix = new String[numRows - ROWINDEX][numCols];
+			String line;
+			int row = 0;
+			while ((line = br.readLine()) != null){
+				originalMatrix[row++] = line.split("\t");
+			}
 			int outputRow = ROWINDEX;
+			br.close();
 
 			//Iterate through the original file's columns
 			for (int currentCol = COLINDEX; currentCol < numCols; currentCol++) {
-				//Skip rows
-				br = makeReader();
-				for (int i = 1; i <= ROWINDEX; i++){
-					br.readLine();
-				}
-
-				//Create a newLine array to represent a column of the original file
+				//Create a newLine array to represent a row of output file
 				String[] newLine = new String[numRows - ROWINDEX + COLINDEX];
 				int outputCol = COLINDEX;
 				for (int currentRow = ROWINDEX; currentRow < numRows; currentRow++){
-					String[] line = br.readLine().split("\t");
 					//Get skipped columns from appropriate row
 					if (outputRow == currentRow){
 						for(int i = 0; i < COLINDEX; i++){
-							newLine[i] = line[i];
+							newLine[i] = originalMatrix[currentRow - ROWINDEX][i];
 						}
 					} 
-					newLine[outputCol] = line[currentCol];
+					newLine[outputCol] = originalMatrix[currentRow - ROWINDEX][currentCol];
 					outputCol++;
 				}
-				br.close();
-
 				//Write the column to the new file as a row
 				for(int val = 0; val < newLine.length; val++){
 					if(newLine[val] == null){
@@ -103,26 +101,20 @@ public class TransposeMatrix {
 				}
 				outputRow++;
 			}
+			
 			//If rows are left over after transposing (due to labels)
 			if (numRows > numCols){
-				br = makeReader();
-				//Skip transposed lines
-				for (int i = 0; i < outputRow; i++){
-					br.readLine();
-				}
 				//Directly print the remaining rows to the output file
 				for(int remainingRows = outputRow; remainingRows < numRows; remainingRows++){
 					String[] newLine = new String[COLINDEX];
-					String[] line = br.readLine().split("\t");
 					for(int i = 0; i < COLINDEX; i++){
-							newLine[i] = line[i];
+						newLine[i] = originalMatrix[remainingRows - ROWINDEX][i];
 					}
 					for(int val = 0; val < newLine.length; val++){
 						OUT.print(newLine[val] + ((val == newLine.length - 1) ? "\n" : "\t"));
 					}
 				}
 			}
-			br.close();
 			OUT.close();
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, MATRIX.getName() + " contains non-numbers in indexes selected!!!");
@@ -149,6 +141,5 @@ public class TransposeMatrix {
 		} else {
 			return new PrintStream(new BufferedOutputStream(new FileOutputStream(o)));
 		}
-
 	}
 }
