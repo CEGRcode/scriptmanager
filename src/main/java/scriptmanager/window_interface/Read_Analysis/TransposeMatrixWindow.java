@@ -29,10 +29,14 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
+import java.sql.Timestamp;
+import java.util.Date;
 
+import scriptmanager.cli.Read_Analysis.TransposeMatrixCLI;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.util.GZipUtilities;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Read_Analysis.TransposeMatrix;
 
 /**
@@ -77,37 +81,44 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 				} else if (Integer.parseInt(txtCol.getText()) < 0) {
 					JOptionPane.showMessageDialog(null, "Invalid Row Index Selected!!! Must be at least 0");
 				} else {
-					// Check that all scaling numbers are valid
-					boolean ALLNUM = true;
-
-					if (ALLNUM) {
-						setProgress(0);
-
-						for (int x = 0; x < TABFiles.size(); x++) {
-							String OUTPUT;
-							File XTAB = TABFiles.get(x);
-							if (GZipUtilities.isGZipped(XTAB)){
-								OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_TRANSPOSE."
-										+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
-							}
-							else {
-								OUTPUT = ExtensionFileFilter.stripExtension(XTAB) + "_TRANSPOSE."
-										+ ExtensionFileFilter.getExtension(XTAB);
-							}
-							if (OUT_DIR != null) {
-								OUTPUT = OUT_DIR + File.separator + OUTPUT + (chckbxGzipOutput.isSelected()? ".gz" : "");
-							}
-
-							TransposeMatrix transpose = new TransposeMatrix(XTAB, new File(OUTPUT),
-									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
-							transpose.run();
-
-							int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
-							setProgress(percentComplete);
+					setProgress(0);
+					LogItem old_li = null;
+					
+					for (int x = 0; x < TABFiles.size(); x++) {
+						String OUTPUT;
+						File XTAB = TABFiles.get(x);
+						if (GZipUtilities.isGZipped(XTAB)){
+							OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_TRANSPOSE."
+									+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
 						}
-						setProgress(100);
-						JOptionPane.showMessageDialog(null, "All Matrices Transposed");
+						else {
+							OUTPUT = ExtensionFileFilter.stripExtension(XTAB) + "_TRANSPOSE."
+									+ ExtensionFileFilter.getExtension(XTAB);
+						}
+						if (OUT_DIR != null) {
+							OUTPUT = OUT_DIR + File.separator + OUTPUT + (chckbxGzipOutput.isSelected()? ".gz" : "");
+						}
+						// Initialize LogItem
+						String command = TransposeMatrixCLI.getCLIcommand(XTAB, new File(OUTPUT),
+											Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
+						// Execute Script and update progress
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
+
+						TransposeMatrix transpose = new TransposeMatrix(XTAB, new File(OUTPUT),
+								Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
+						transpose.run();
+
+						int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
+						setProgress(percentComplete);
 					}
+					firePropertyChange("log", old_li, null);
+					setProgress(100);
+					JOptionPane.showMessageDialog(null, "All Matrices Transposed");
 				}
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Invalid Scaling Factor!!! Must be number");
@@ -272,6 +283,8 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()){
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

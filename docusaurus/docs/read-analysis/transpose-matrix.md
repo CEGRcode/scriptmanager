@@ -14,7 +14,7 @@ Interchange the rows and columns of a matrix, while optionally preserving labels
 
 Usage:
 ```bash
-java -jar ScriptManager.jar read-analysis transpose-matrix [-hV] [-l=<startCOL>]
+java -jar ScriptManager.jar read-analysis transpose-matrix [-hV] [-z] [-l=<startCOL>]
 [-o=<output>] [-r=<startROW>] <matrix>
 ```
 
@@ -28,6 +28,7 @@ This tool takes a single matrix file for input.
 | Option | Description |
 | ------ | ----------- |
 | `-o, --output=<output>` | specify output filename |
+| `-z, --compress` | output compressed .gz file |
 
 
 ### Coord Start Options

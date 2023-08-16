@@ -17,7 +17,7 @@ import scriptmanager.scripts.Read_Analysis.TransposeMatrix;
 	Read_AnalysisCLI/TransposeMatrixCLI
 */
 @Command(name = "transpose-matrix", mixinStandardHelpOptions = true,
-	description = ToolDescriptions.scale_matrix_description,
+	description = ToolDescriptions.transpose_matrix_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
@@ -89,5 +89,18 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 		if(startCOL<0){ r += "(!)Column start must not be less than zero\n"; }
 		
 		return(r);
+	}
+
+	public static String getCLIcommand(File matrix, File output, int startROW, int startCOL, boolean gzOutput){
+		String command = "java -jar $SCRIPTMANAGER read-analysis transpose-matrix";
+		if (gzOutput){
+			command += " -z";
+		}
+		command += " -l " + startCOL;
+		command += " -o " + output.getAbsolutePath();
+		command += " -r " + startROW;
+		command += " " + matrix.getAbsolutePath();
+		System.err.print(command);
+		return command;
 	}
 }
