@@ -29,9 +29,9 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <matrixFilename>_TRANPOSE.tab)")
 	private File output = null;
-	@Option(names = {"-r", "--start-row"}, description = "")
+	@Option(names = {"-r", "--start-row"}, description = "Row to start transposing the matrix (zero indexed)")
 	private int startROW = 1;
-	@Option(names = {"-l", "--start-col"}, description = "")
+	@Option(names = {"-l", "--start-col"}, description = "Column to start transposing the matrix (zero indexed)")
 	private int startCOL = 2;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed file" )
 	private boolean gzOutput = false;
@@ -73,7 +73,7 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 			//no check ext
 			//check directory
 			if(output.getParent()==null){
-// 				System.err.println("default to current directory");
+			//System.err.println("default to current directory");
 			} else if(!new File(output.getParent()).exists()){
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}

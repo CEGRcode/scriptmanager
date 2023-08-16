@@ -120,6 +120,7 @@ Related Tools:
 | [`heatmap`][heatmap] |  |
 |  | [`peak-align-ref`][peak-align-ref] |
 | [`scale-matrix`][scale-matrix] | [`scale-matrix`][scale-matrix] |
+| [`transpose-matrix`][transpose-matrix] | [`transpose-matrix`][transpose-matrix] |
 | [`sort-bed`][sort-bed] |  |
 |  | [`tag-pileup`][tag-pileup] |
 
@@ -203,6 +204,7 @@ Related Tools:
 [`randomize-fasta`][randomize-fasta]
 [`remove-duplicates`][remove-duplicates]
 [`scale-matrix`][scale-matrix]
+[`transpose-matrix`][transpose-matrix]
 [`scaling-factor`][scaling-factor]
 [`se-stat`][se-stat]
 [`search-motif`][search-motif]
@@ -256,6 +258,7 @@ Related Tools:
 [randomize-fasta]:sequence-analysis/randomize-fasta
 [remove-duplicates]:bam-manipulation/remove-duplicates
 [scale-matrix]:read-analysis/scale-matrix
+[transpose-matrix]:read-analysis/transpose-matrix
 [scaling-factor]:read-analysis/scaling-factor
 [se-stat]:bam-statistics/se-stat
 [search-motif]:sequence-analysis/search-motif

@@ -44,7 +44,7 @@ This tool takes a single matrix file for input.
 
 | Option | Description |
 | ------ | ----------- |
-| `-r, --start-row` |  |
-| `-l, --start-col` |  |
+| `-r, --start-row` | row to start scaling the matrix (zero indexed) |
+| `-l, --start-col` | column to start scaling the matrix (zero indexed) |
 
 [file-format]:file-formats.md
