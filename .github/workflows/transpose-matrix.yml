@@ -7,13 +7,11 @@
 
 # Modified to matrix test across three OS and two Temurin distributions of Java - two LTS versions (11 and 17)
 
-name: Java CI with Gradle
+name: transpose-matrix-test
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "transpose-matrix" ]
 
 permissions:
   contents: read
@@ -38,3 +36,4 @@ jobs:
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
+  
