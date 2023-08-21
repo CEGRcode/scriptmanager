@@ -25,6 +25,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
@@ -64,6 +65,8 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	private JCheckBox chckbxHelicalTwist;
 	private JCheckBox chckbxPropellerTwist;
 
+	private JRadioButton btnOutputAverages;
+
 	public Task task;
 
 	/**
@@ -86,7 +89,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 					OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
-					DNAShapefromFASTAOutput signal = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE);
+					DNAShapefromFASTAOutput signal = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE, btnOutputAverages.isSelected());
 
 					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -142,7 +145,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa");
+				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa", true);
 				if (newFASTAFiles != null) {
 					for (int x = 0; x < newFASTAFiles.length; x++) {
 						FASTAFiles.add(newFASTAFiles[x]);
@@ -271,6 +274,12 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 			}
 		});
 		contentPane.add(chckbxAll);
+
+		btnOutputAverages = new JRadioButton("Composites CDT");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputAverages, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputAverages, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(btnOutputAverages);
+
 		btnCalculate.addActionListener(this);
 	}
 
