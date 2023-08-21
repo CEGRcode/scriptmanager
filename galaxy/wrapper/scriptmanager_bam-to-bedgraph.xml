@@ -1,0 +1,89 @@
+<tool id="scriptmanager_bam-to-bedgraph" name="ScriptManager: Convert BAM to bedGraph" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+    <description> Convert BAM file to bedGraph file </description>
+    <requirements>
+        <requirement type="package" version="11.0.11">openjdk</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        ln -s '$BAM' bamfile.bam &&
+        ln -s '$output1' output_forward.bedgraph &&
+        ln -s '$output2' output_reverse.bedgraph &&
+
+        #if $BAM.is_of_type('bam'):
+            #if str( $BAM.metadata.bam_index ) != "None":
+                    ln -s '${BAM.metadata.bam_index}' bamfile.bam.bai &&
+            #else:
+                    samtools index bamfile.bam bamfile.bai &&
+            #end if
+        #end if
+
+        java -jar $__tool_directory__/ScriptManager-v0.14.jar bam-format-converter bam-to-bedgraph
+        
+        #if str($read) == "read_1" :
+            -1
+        #else if str($read) == "read_2" :
+            -2
+        #else if str($read) == "combined" :
+            -a
+        #else if str($read) == "midpoint" :
+            -m
+        #end if
+
+        #if str($mate_pair) == "Yes" :
+            -p
+        #end if
+
+        #if str($filter_by_min.filter_min) == "Yes" :
+            -n "$filter_by_min.min_insert"
+        #end if
+
+        -o output
+
+        #if str($filter_by_max.filter_max) == "Yes" :
+            -x "$filter_by_max.max_insert"
+        #end if
+        
+        bamfile.bam
+    ]]></command>
+    <inputs>
+        <param type="data" name="BAM" format="bam" label="Input BAM file"/>
+
+        <param type="select" name="read" label="Select which read to output">
+            <option value="read_1" selected="True" >Read 1</option>
+            <option value="read_2" >Read 2</option>
+            <option value="combined" >Combined </option>
+            <option value="midpoint" >Midpoint (Require PE) </option>
+        </param>
+
+        <param type="boolean" name="mate_pair" truevalue="Yes" falsevalue="No" label="Require proper mate-pair" />
+
+        <conditional name="filter_by_min">
+        <param type="boolean" name="filter_min" truevalue="Yes" falsevalue="No" label="Filter by min insert size (bp)" >
+            </param>
+            <when value="Yes">
+                <param type="integer" name="min_insert" value="0" label="Min insert size (bp)" />
+            </when>
+            <when value="No">
+            </when>
+        </conditional>
+
+        <conditional name="filter_by_max">
+        <param type="boolean" name="filter_max" truevalue="Yes" falsevalue="No" label="Filter by max insert size (bp)" >
+        </param>
+            <when value="Yes">
+                <param type="integer" name="max_insert" value="1000" label="Max insert size (bp)" />
+            </when>
+            <when value="No">
+            </when>
+        </conditional>
+
+
+    </inputs>
+    <outputs>
+        <data name="output1" format="bedgraph" label="${tool.name} (forward) on ${on_string}"></data>
+        <data name="output2" format="bedgraph" label="${tool.name} (reverse) on ${on_string}"></data>
+    </outputs>
+    <help>
+    **What it does**
+    Convert BAM file to bedGraph file.
+    </help>
+</tool>
