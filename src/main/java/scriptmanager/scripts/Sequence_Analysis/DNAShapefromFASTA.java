@@ -1,7 +1,6 @@
 package scriptmanager.scripts.Sequence_Analysis;
 
 import java.awt.Component;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.util.Scanner;
 
 import scriptmanager.charts.CompositePlot;
 import scriptmanager.util.DNAShapeReference;
-import scriptmanager.util.GZipUtilities;
 
 /**
  * This script calculates the various aspects of DNA shape across a set of FASTA
@@ -31,9 +29,9 @@ public class DNAShapefromFASTA {
 	private String OUTBASENAME = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private File FASTA = null;
-	private boolean COMPOSITE_MATRIX = false;
+	private boolean AVERAGE_MATRIX = false;
 
-	private PrintStream OUT_C = null;
+	private PrintStream OUT_A = null;
 	private PrintStream OUT_M = null;
 	private PrintStream OUT_P = null;
 	private PrintStream OUT_H = null;
@@ -62,14 +60,14 @@ public class DNAShapefromFASTA {
 	 *             (no enforcement on size)
 	 * @param ps   list of four PrintStream objects corresponding to each shape type
 	 *             (for GUI)
-	 * @param compositeMatrix whether to output an "COMPOSITE_MATRIX" cdt
+	 * @param averageMatrix whether to output an "averages" cdt
 	 */
-	public DNAShapefromFASTA(File fa, String out, boolean[] type, PrintStream[] ps, boolean compositeMatrix) {
+	public DNAShapefromFASTA(File fa, String out, boolean[] type, PrintStream[] ps, boolean averageMatrix) {
 		FASTA = fa;
 		OUTBASENAME = out;
 		OUTPUT_TYPE = type;
 		PS = ps;
-		COMPOSITE_MATRIX = compositeMatrix;
+		AVERAGE_MATRIX = averageMatrix;
 
 		STRUCTURE = DNAShapeReference.InitializeStructure();
 	}
@@ -239,34 +237,34 @@ public class DNAShapefromFASTA {
 			chart_R = CompositePlot.createCompositePlot(DOMAIN_Roll, AVG_Roll, NAME + " Roll");
 		}
 
-		if (COMPOSITE_MATRIX){
-			OUT_C.print("YORF\tNAME");
+		if (AVERAGE_MATRIX){
+			OUT_A.print("YORF\tNAME");
 			int longest = Math.max(Math.max(AVG_MGW.length, AVG_PropT.length), Math.max(AVG_HelT.length, AVG_Roll.length));
 			for (int z = 0; z < longest; z++) {
-				OUT_C.print("\t" + z + ((z == longest - 1)? "\n" : ""));
+				OUT_A.print("\t" + z + ((z == longest - 1)? "\n" : ""));
 			}
 			if (OUTPUT_TYPE[0]){
-				OUT_C.print("MGW\tMGW");
+				OUT_A.print("MGW\tMGW");
 				for (int z = 0; z < AVG_MGW.length; z++) {
-					OUT_C.print("\t" + AVG_MGW[z] +  ((z == AVG_MGW.length - 1)? "\n" : ""));
+					OUT_A.print("\t" + AVG_MGW[z] +  ((z == AVG_MGW.length - 1)? "\n" : ""));
 				}
 			}
 			if (OUTPUT_TYPE[1]){
-				OUT_C.print("PropT\tPropT");
+				OUT_A.print("PropT\tPropT");
 				for (int z = 0; z < AVG_PropT.length; z++) {
-					OUT_C.print("\t" + AVG_PropT[z] +  ((z == AVG_PropT.length - 1)? "\n" : ""));
+					OUT_A.print("\t" + AVG_PropT[z] +  ((z == AVG_PropT.length - 1)? "\n" : ""));
 				}
 			}
 			if (OUTPUT_TYPE[2]){
-				OUT_C.print("HelT\tHelT");
+				OUT_A.print("HelT\tHelT");
 				for (int z = 0; z < AVG_HelT.length; z++) {
-					OUT_C.print("\t" + AVG_HelT[z] +  ((z == AVG_HelT.length - 1)? "\n" : ""));
+					OUT_A.print("\t" + AVG_HelT[z] +  ((z == AVG_HelT.length - 1)? "\n" : ""));
 				}
 			}
 			if (OUTPUT_TYPE[3]){
-				OUT_C.print("Roll\tRoll");
+				OUT_A.print("Roll\tRoll");
 				for (int z = 0; z < AVG_Roll.length; z++) {
-					OUT_C.print("\t" + AVG_Roll[z] +  ((z == AVG_Roll.length - 1)? "\n" : ""));
+					OUT_A.print("\t" + AVG_Roll[z] +  ((z == AVG_Roll.length - 1)? "\n" : ""));
 				}
 			}
 		}
@@ -351,8 +349,8 @@ public class DNAShapefromFASTA {
 			if (OUTPUT_TYPE[3]) {
 				OUT_R = new PrintStream(new File(OUTBASENAME + "_Roll.cdt"));
 			}
-			if (COMPOSITE_MATRIX){
-				OUT_C = new PrintStream(new File(OUTBASENAME + "_Composite.cdt"));
+			if (AVERAGE_MATRIX){
+				OUT_A = new PrintStream(new File(OUTBASENAME + "_Averages.cdt"));
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

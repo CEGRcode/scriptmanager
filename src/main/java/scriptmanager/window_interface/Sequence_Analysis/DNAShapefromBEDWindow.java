@@ -25,7 +25,6 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
@@ -65,10 +64,10 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 	private JCheckBox chckbxStrand;
 	private JCheckBox chckbxAll;
 	private JCheckBox chckbxMinorGrooveWidth;
+	private JCheckBox ckbxOutputAverages;
 	private JCheckBox chckbxRoll;
 	private JCheckBox chckbxHelicalTwist;
 	private JCheckBox chckbxPropellerTwist;
-	private JRadioButton btnOutputAverages;
 
 	public Task task;
 
@@ -95,7 +94,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
 					DNAShapefromBEDOutput signal = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUT_DIR, OUTPUT_TYPE,
-							chckbxStrand.isSelected(), btnOutputAverages.isSelected());
+							chckbxStrand.isSelected(), ckbxOutputAverages.isSelected());
 
 					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -152,7 +151,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc, "bed", true);
+				File[] newBEDFiles = FileSelection.getFiles(fc, "bed");
 				if (newBEDFiles != null) {
 					for (int x = 0; x < newBEDFiles.length; x++) {
 						BEDFiles.add(newBEDFiles[x]);
@@ -309,10 +308,11 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		});
 		btnCalculate.addActionListener(this);
 
-		btnOutputAverages = new JRadioButton("Composites CDT");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputAverages, 0, SpringLayout.NORTH, btnCalculate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputAverages, 10, SpringLayout.WEST, contentPane);
-		contentPane.add(btnOutputAverages);
+		ckbxOutputAverages = new JCheckBox("Averages CDT");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, ckbxOutputAverages, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, ckbxOutputAverages, 10, SpringLayout.WEST, contentPane);
+		ckbxOutputAverages.setSelected(rootPaneCheckingEnabled);
+		contentPane.add(ckbxOutputAverages);
 	}
 
 	@Override
