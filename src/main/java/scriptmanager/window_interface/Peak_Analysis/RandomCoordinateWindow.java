@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -39,6 +40,7 @@ import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 public class RandomCoordinateWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
+	private JCheckBox chckbxGzipOutput;
 	private JPanel contentPane;
 	private JTextField txtSites;
 	private JTextField txtSize;
@@ -69,12 +71,14 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 						if(bedStatus){ randomName += ".bed"; }
 						else{ randomName += ".gff"; }
 						File OUTFILE;
+						if (chckbxGzipOutput.isSelected()){ randomName += ".gz"; }
 						if(OUTPUT_PATH != null){
 							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
 						}else{
 							OUTFILE = new File(randomName);
 						}
-						RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
+						RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), 
+													bedStatus, OUTFILE, chckbxGzipOutput.isSelected());
 	        			JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
 	        		}
 	        	} catch(NumberFormatException nfe){
@@ -94,7 +98,7 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	public RandomCoordinateWindow() {
 		setTitle("Random Coordinate Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 315, 300);
+		setBounds(100, 100, 315, 340);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -146,13 +150,6 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
         });
 		contentPane.add(btnOutputDirectory);
 		
-		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
-		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblCurrentOutputDirectory);	
-		
 		JButton btnRandom = new JButton("Randomize");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnRandom, 100, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnRandom, -5, SpringLayout.SOUTH, contentPane);
@@ -160,6 +157,13 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		contentPane.add(btnRandom);
 		btnRandom.setActionCommand("start");
 		btnRandom.addActionListener(this);
+
+		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, -80, SpringLayout.SOUTH, btnRandom);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
+		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblCurrentOutputDirectory);	
 		
 		cmbGenome = new JComboBox<String>();
 		for(int x = 0; x < genomeBuilds.length; x++) { cmbGenome.addItem(genomeBuilds[x]); }
@@ -196,6 +200,11 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		OutputFormat.add(rdbtnBed);
 		OutputFormat.add(rdbtnGff);
 		rdbtnBed.setSelected(true);
+
+		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 105, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 	}
 
 	@Override
