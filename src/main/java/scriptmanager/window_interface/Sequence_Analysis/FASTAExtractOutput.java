@@ -84,7 +84,6 @@ public class FASTAExtractOutput extends JFrame {
 				if (OUT_DIR != null) {
 					NAME = OUT_DIR.getCanonicalPath() + File.separator + NAME;
 				}
-				NAME += gzOutput ? ".gz" : "";
 				OUTFILE = new File(NAME);
 				PS.println("Proccessing File: " + BED.get(x).getName());
 

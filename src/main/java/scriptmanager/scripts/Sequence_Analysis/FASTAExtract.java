@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.zip.GZIPOutputStream;
 
 import scriptmanager.util.FASTAUtilities;
+import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.BEDUtilities;
 
 /**
@@ -84,12 +85,7 @@ public class FASTAExtract {
 			// Initialize output writer
 			PrintStream OUT = System.out;
 			if (OUTFILE != null) {
-				if (gzOutput) {
-					OUT = new PrintStream(
-							new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(OUTFILE))));
-				} else {
-					OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(OUTFILE)));
-				}
+				OUT = GZipUtilities.makePrintStream(OUTFILE, gzOutput);
 			}
 
 			ArrayList<BEDCoord> BED_Coord = BEDUtilities.loadCoord(BED, HEADER);

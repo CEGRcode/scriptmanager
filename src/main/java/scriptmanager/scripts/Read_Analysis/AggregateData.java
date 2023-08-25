@@ -98,11 +98,11 @@ public class AggregateData {
 
 			String name = "ALL_SCORES.out";
 			if (OUT_PATH == null) {
-				OUT = GZipUtilities.makePrintStream(new File(name + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
+				OUT = GZipUtilities.makePrintStream(new File(name), OUTPUT_GZIP);
 			} else if (!OUT_PATH.isDirectory()) {
 				OUT = GZipUtilities.makePrintStream(OUT_PATH, OUTPUT_GZIP);
 			} else {
-				OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
+				OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name), OUTPUT_GZIP);
 			}
 
 			// Check all arrays are the same size
@@ -144,9 +144,9 @@ public class AggregateData {
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
 		String NEWNAME = ExtensionFileFilter.stripExtension(IN);
 		if (OUT_PATH != null) {
-			OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + "_SCORES.out" + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
+			OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + "_SCORES.out"), OUTPUT_GZIP);
 		} else {
-			OUT = GZipUtilities.makePrintStream(new File(NEWNAME + "_SCORES.out" + (OUTPUT_GZIP? ".gz" : "")), OUTPUT_GZIP);
+			OUT = GZipUtilities.makePrintStream(new File(NEWNAME + "_SCORES.out"), OUTPUT_GZIP);
 		}
 		outputFileScore(IN, OUT);
 	}

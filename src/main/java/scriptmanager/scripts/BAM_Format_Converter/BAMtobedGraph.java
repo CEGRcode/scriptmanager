@@ -65,10 +65,10 @@ public class BAMtobedGraph {
 		if (OUTBASENAME != null) {
 			try {
 				if (STRAND <= 2) {
-					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_forward.bedGraph.gz"), OUTPUT_GZIP);
-					OUTR = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_reverse.bedGraph.gz") , OUTPUT_GZIP);
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_forward.bedGraph"), OUTPUT_GZIP);
+					OUTR = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_reverse.bedGraph") , OUTPUT_GZIP);
 				} else {
-					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_midpoint.bedGraph.gz"), OUTPUT_GZIP);
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_midpoint.bedGraph"), OUTPUT_GZIP);
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

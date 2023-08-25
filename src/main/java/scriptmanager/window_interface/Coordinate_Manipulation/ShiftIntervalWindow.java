@@ -96,15 +96,10 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						File XBED = BEDFiles.get(x);
 						// Set suffix format
 						String SUFFIX = SHIFT < 0 ? "_shift" + txtShift.getText() + "bp.bed" : "_shift+" + txtShift.getText() + "bp.bed";
-						SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
 						// Set output filepath with name and output directory
-						String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
-						}
-						// Strip second extension if input has ".gz" first extension
-						if (XBED.getName().endsWith(".bed.gz")) {
-							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
 						}
 						System.out.println("Input: " + XBED.getName());
 						// Execute expansion and update progress
@@ -120,15 +115,10 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						File XGFF = GFFFiles.get(x);
 						// Set suffix format
 						String SUFFIX = SHIFT < 0 ? "_shift" + txtShift.getText() + "bp.gff" : "_shift+" + txtShift.getText() + "bp.gff";
-						SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
 						// Set output filepath with name and output directory
-						String OUTPUT = ExtensionFileFilter.stripExtension(XGFF);
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
-						}
-						// Strip second extension if input has ".gz" first extension
-						if (XGFF.getName().endsWith(".gff.gz")) {
-							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
 						}
 						System.out.println("Input: " + XGFF.getName());
 						// Execute expansion and update progress

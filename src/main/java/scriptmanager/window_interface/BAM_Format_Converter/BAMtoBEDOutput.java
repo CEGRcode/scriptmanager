@@ -26,7 +26,6 @@ public class BAMtoBEDOutput extends JFrame {
 
 	private JTextArea textArea;
 
-
 	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
 		setTitle("BAM to BED Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -64,10 +63,6 @@ public class BAMtoBEDOutput extends JFrame {
 		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
-		}
-		//Adds .gz extension if needed
-		if (OUTPUT_GZIP){
-			OUTPUT += ".gz";
 		}
 
 		// Call script here, pass in ps and OUT

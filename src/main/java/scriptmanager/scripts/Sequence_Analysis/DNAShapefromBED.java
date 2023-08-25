@@ -8,10 +8,8 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -19,14 +17,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
 import scriptmanager.charts.CompositePlot;
-import  scriptmanager.scripts.File_Utilities.GZipFiles;
 import scriptmanager.util.FASTAUtilities;
 import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.DNAShapeReference;
-import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * This script calculates various aspects of DNA shape across a set of BED

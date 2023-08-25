@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -45,6 +46,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	private JButton btnLoad;
 	private JButton btnRemoveGFF;
 	private JButton btnConvert;
+	private JCheckBox chckbxGzipOutput;
 
 	private JProgressBar progressBar;
 	public Task task;
@@ -59,19 +61,13 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
 				// Check if file is gzipped and assigns appropriate file name
-				String OUTPUT; 
-				if (GZipUtilities.isGZipped(XGFF)){
-					OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed";
-				}
-				else {
-					OUTPUT = ExtensionFileFilter.stripExtension(XGFF) + ".bed";
-				}
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed";
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
 
 				// Execute conversion and update progress
-				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF);
+				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF, chckbxGzipOutput.isSelected());
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 				setProgress(percentComplete);
 			}
@@ -177,7 +173,13 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
-		btnConvert.addActionListener(this);
+
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
+		btnConvert.addActionListener(this);	
 	}
 
 	@Override

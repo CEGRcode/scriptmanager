@@ -41,12 +41,7 @@ public class SortBED {
 		HashMap<String, String> CDTFile = new HashMap<String, String>();
 		String CDTHeader = "";
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(cdt)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(cdt)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(cdt), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(cdt);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		while (line != null) {
@@ -69,11 +64,7 @@ public class SortBED {
 
 		PrintStream OUT;
 		// Initialize output writer
-		if (gzOutput) {
-			OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(outbase + ".cdt.gz"))));
-		} else {
-			OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(outbase + ".cdt")));
-		}
+		OUT = GZipUtilities.makePrintStream(new File(outbase + ".cdt"), gzOutput);
 		// Output sorted CDT File
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {

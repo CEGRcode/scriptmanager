@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,6 +40,7 @@ public class FilterBEDbyProximityWindow extends JFrame implements ActionListener
 	ArrayList<File> BEDFiles = new ArrayList<File>();
 	private File OUTPUT_PATH = null;
 	
+	private JCheckBox chckbxGzipOutput;
 	private JPanel contentPane;
 	private JTextField txtCutoff;
 	JProgressBar progressBar;
@@ -60,7 +62,7 @@ public Task task;
         			setProgress(0);
         			FilterBEDbyProximityOutput filter;
     				for(int gfile = 0; gfile < BEDFiles.size(); gfile++) {
-    					filter = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), Integer.parseInt(txtCutoff.getText()), OUTPUT_PATH);	
+    					filter = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), Integer.parseInt(txtCutoff.getText()), OUTPUT_PATH, chckbxGzipOutput.isSelected());	
     					filter.setVisible(true);
     					filter.run();
         	        	int percentComplete = (int)(((double)(gfile + 1) / (BEDFiles.size())) * 100);
@@ -179,6 +181,11 @@ public Task task;
 		contentPane.add(btnFilter);
 		btnFilter.setActionCommand("start");
 		btnFilter.addActionListener(this);
+
+		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnFilter);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 		
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 0, SpringLayout.NORTH, btnFilter);

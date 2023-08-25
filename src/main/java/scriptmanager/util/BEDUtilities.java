@@ -34,11 +34,7 @@ public class BEDUtilities {
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
 		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br;
-		if (GZipUtilities.isGZipped(input)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
-		}
+		br = GZipUtilities.makeReader(input);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		while (line != null) {

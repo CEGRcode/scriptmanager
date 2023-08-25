@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.zip.GZIPInputStream;
 
 import scriptmanager.util.GZipUtilities;

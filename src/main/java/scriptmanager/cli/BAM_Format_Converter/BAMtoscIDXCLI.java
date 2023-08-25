@@ -127,10 +127,6 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}
 		}
-		//Adds .gz extension if needed
-		if (gzOutput && !ExtensionFileFilter.getExtension(output).equals("gz")){
-			output = new File(output.getAbsolutePath() + ".gz");
-		}
 		
 		// validate insert sizes
 		if( MIN_INSERT<0 && MIN_INSERT!=-9999 ){ r += "MIN_INSERT must be a positive integer value: " + MIN_INSERT + "\n"; }

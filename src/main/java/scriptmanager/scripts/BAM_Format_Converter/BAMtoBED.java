@@ -8,15 +8,12 @@ import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 import scriptmanager.util.GZipUtilities;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.zip.GZIPOutputStream;
 
 public class BAMtoBED {
 	private File BAM = null;

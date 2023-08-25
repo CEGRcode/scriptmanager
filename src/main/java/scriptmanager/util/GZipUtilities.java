@@ -95,12 +95,18 @@ public final class GZipUtilities {
 	}
 
 	/**
-	 * Creates a new PrintStream for writing compressed or uncompressed data to a given file
+	 * Creates a new PrintStream for writing compressed or uncompressed data to a given file, and adds or strips ".gz" extension if needed
 	 * @param f File to write
 	 * @return PrintStream which outputs compressed or uncompressed data to given file
 	 * @throws IOException Invalid file
 	 */
 	public static PrintStream makePrintStream(File o, boolean gzip) throws IOException{
+		if (!ExtensionFileFilter.getExtension(o).equals("gz") && gzip){
+			o = new File(o.getCanonicalPath() + ".gz");
+		} 
+		else if (ExtensionFileFilter.getExtension(o).equals("gz") && !gzip) {
+			o = new File(ExtensionFileFilter.stripExtension(o)); 
+		}
 		if(gzip){
 			return new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(o)))); 
 		} else {

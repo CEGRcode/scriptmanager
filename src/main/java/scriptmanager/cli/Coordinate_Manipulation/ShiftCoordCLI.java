@@ -74,8 +74,7 @@ public class ShiftCoordCLI implements Callable<Integer> {
 		if(outputFilepath==null){
 			String SUFFIX = shift < 0 ? "_shift" + shift + "bp." : "_shift+" + shift + "bp.";
 			SUFFIX += isGFF ? "gff" : "bed";
-			SUFFIX += gzOutput ? ".gz" : "";
-			outputFilepath = ExtensionFileFilter.stripExtension(input) + SUFFIX;
+			outputFilepath = ExtensionFileFilter.stripExtensionIgnoreGZ(input) + SUFFIX;
 		//check output filename is valid
 		}else{
 			//no extension check

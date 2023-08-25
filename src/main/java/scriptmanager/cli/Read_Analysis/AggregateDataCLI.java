@@ -131,10 +131,6 @@ public class AggregateDataCLI implements Callable<Integer> {
 				//validate file if merge, copy error message otherwise
 				if( merge ){
 					if( output.getParent()==null ){
-						//Adds .gz extension if needed
-						if (zip && !ExtensionFileFilter.getExtension(output).equals("gz")){
-							output = new File(output.getAbsolutePath() + ".gz");
-						}
 // 						System.err.println("output file to current working directory");
 					} else if(!new File(output.getParent()).exists()){
 						r += "(!)Check directory of output file exists: " + output.getParent() + "\n";

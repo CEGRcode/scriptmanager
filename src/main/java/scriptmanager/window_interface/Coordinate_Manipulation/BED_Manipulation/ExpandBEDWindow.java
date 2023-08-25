@@ -95,7 +95,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						}
 						// Add suffix
 						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
-						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
 
 						// Execute expansion and update progress
 						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());

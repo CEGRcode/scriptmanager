@@ -9,13 +9,13 @@ import scriptmanager.util.GZipUtilities;
 
 
 public class GFFtoBED {
-	public static void convertGFFtoBED(File out_filepath, File input) throws IOException {
+	public static void convertGFFtoBED(File out_filepath, File input, boolean outputGzip) throws IOException {
 		// GFF: chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
 		// BED: chr12 605113 605120 region_0 0 +
 
 		PrintStream OUT = System.out;
 		if (out_filepath != null)
-			OUT = new PrintStream(out_filepath);
+			OUT = GZipUtilities.makePrintStream(out_filepath, outputGzip);
 
 		// Checks if file is gzipped and instantiate appropriate BufferedReader
 		String line;

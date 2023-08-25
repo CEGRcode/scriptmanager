@@ -68,13 +68,8 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 				File XBED = BEDFiles.get(x);
 				// Set suffix format
 				String SUFFIX = rdbtnA2R.isSelected() ? "_toRoman.bed" : "_toArabic.bed";
-				SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
 				// Set output filepath with name and output directory
-				String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
-				// Strip second extension if input has ".gz" first extension
-				if (XBED.getName().endsWith(".bed.gz")) {
-					OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-				}
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED);
 				// Add user-selected directory
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
@@ -187,7 +182,7 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 
 		chckbxGzipOutput = new JCheckBox("Output GZIP");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, chckbxChrmt);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, 10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 
 		btnOutput = new JButton("Output Directory");

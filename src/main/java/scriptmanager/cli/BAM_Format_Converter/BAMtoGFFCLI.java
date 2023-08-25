@@ -97,7 +97,7 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 			return(r);
 		}
 		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtensionIgnoreGZ(output))){
+		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
 			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
 		}
 		//check BAI exists
@@ -130,10 +130,6 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 			} else if(!new File(output.getParent()).exists()){
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}
-		}
-		//Adds .gz extension if needed
-		if (gzOutput && !ExtensionFileFilter.getExtension(output).equals("gz")){
-			output = new File(output.getAbsolutePath() + ".gz");
 		}
 		
 		// validate insert sizes

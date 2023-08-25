@@ -71,7 +71,6 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 						if(bedStatus){ randomName += ".bed"; }
 						else{ randomName += ".gff"; }
 						File OUTFILE;
-						if (chckbxGzipOutput.isSelected()){ randomName += ".gz"; }
 						if(OUTPUT_PATH != null){
 							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
 						}else{
@@ -149,6 +148,13 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
         	}
         });
 		contentPane.add(btnOutputDirectory);
+
+		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
+		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblCurrentOutputDirectory);
 		
 		JButton btnRandom = new JButton("Randomize");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnRandom, 100, SpringLayout.WEST, contentPane);
@@ -157,13 +163,6 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		contentPane.add(btnRandom);
 		btnRandom.setActionCommand("start");
 		btnRandom.addActionListener(this);
-
-		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, -80, SpringLayout.SOUTH, btnRandom);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
-		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblCurrentOutputDirectory);	
 		
 		cmbGenome = new JComboBox<String>();
 		for(int x = 0; x < genomeBuilds.length; x++) { cmbGenome.addItem(genomeBuilds[x]); }

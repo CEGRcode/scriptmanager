@@ -44,7 +44,6 @@ import javax.swing.table.DefaultTableModel;
 
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
-import scriptmanager.util.GZipUtilities;
 import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
 @SuppressWarnings("serial")
@@ -117,7 +116,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							String OUTPUT;
 							File XTAB = TABFiles.get(x);
 								OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_SCALE."
-										+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB) + (chckbxGzipOutput.isSelected()? ".gz": "");
+										+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
 							if (OUT_DIR != null) {
 								OUTPUT = OUT_DIR + File.separator + OUTPUT;
 							}

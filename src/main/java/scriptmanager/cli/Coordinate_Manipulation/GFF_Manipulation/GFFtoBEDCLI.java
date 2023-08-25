@@ -31,6 +31,8 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
+	@Option(names = {"-z", "--compression"}, description = "Output compressed BED file" )
+	private boolean gzOutput = false;
 	
 	@Override
 	public Integer call() throws Exception {
@@ -42,7 +44,7 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		GFFtoBED.convertGFFtoBED(output, gffFile);
+		GFFtoBED.convertGFFtoBED(output, gffFile, gzOutput);
 		
 		System.err.println("Conversion Complete");
 		return(0);

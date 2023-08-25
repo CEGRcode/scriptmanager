@@ -62,10 +62,6 @@ public class BAMtoscIDXOutput extends JFrame {
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
-		//Adds .gz extension if needed
-		if (OUTPUT_GZIP){
-			OUTPUT += ".gz";
-		}
 
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

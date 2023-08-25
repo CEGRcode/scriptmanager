@@ -38,6 +38,7 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 	
 	@Option(names = {"-m", "--chrmt"}, description = "converter will map \"chrM\" --> \"chrmt\" (default with no flag is \"chrmt\" --> \"chrM\")")
 	private boolean useChrmt = false;
+	
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
@@ -80,13 +81,8 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 		if (output == null) {
 			// Set suffix format
 			String SUFFIX = toArabic ? "_toRoman.bed" : "_toArabic.bed";
-			SUFFIX += gzOutput ? ".gz" : "";
 			// Set output filepath with name and output directory
-			String OUTPUT = ExtensionFileFilter.stripExtension(coordFile);
-			// Strip second extension if input has ".gz" first extension
-			if (coordFile.getName().endsWith(".bed.gz")) {
-				OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-			}
+			String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile);
 			output = new File(OUTPUT + SUFFIX);
 		}else{
 			//check directory

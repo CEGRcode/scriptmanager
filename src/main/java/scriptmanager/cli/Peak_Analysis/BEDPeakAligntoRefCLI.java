@@ -31,6 +31,8 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peakBED>_<refBED>_Output.cdt)")
 	private File output = null;
+	@Option(names = {"-z", "--compression"}, description = "Output compressed BED file" )
+	private boolean gzOutput = false;
 	
 	@Override
 	public Integer call() throws Exception {
@@ -42,7 +44,7 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(refBED, peakBED, output, null);
+		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(refBED, peakBED, output, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println( "Peak Align Complete." );	
