@@ -89,7 +89,7 @@ public class SortBEDCLI implements Callable<Integer> {
 
 		//set default output filename
 		if(outputBasename==null){
-			outputBasename = ExtensionFileFilter.stripExtension(bedFile) + "_SORT";
+			outputBasename = ExtensionFileFilter.stripExtensionIgnoreGZ(bedFile) + "_SORT";
 		//check output filename is valid
 		}else{
 			//no extension check

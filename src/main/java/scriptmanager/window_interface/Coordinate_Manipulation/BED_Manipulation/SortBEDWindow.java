@@ -34,6 +34,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.CDTUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.GZipUtilities;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 
 

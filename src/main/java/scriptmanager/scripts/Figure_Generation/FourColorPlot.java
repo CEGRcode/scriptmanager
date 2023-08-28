@@ -42,8 +42,7 @@ public class FourColorPlot {
 		int maxLen = 0;
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		br = GZipUtilities.makeReader(input);
+		BufferedReader br = GZipUtilities.makeReader(input);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		while (line != null) {

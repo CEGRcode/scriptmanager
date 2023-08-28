@@ -33,6 +33,8 @@ public class SortGFFCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "specify output file basename with no .cdt/.gff/.jtv extension (default=<gffFile>_SORT")
 	private String outputBasename = null;
+	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
+	private boolean gzOutput = false;
 	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
 	private int center = -999;
 	@Option(names = {"-x", "--index"}, description = "sort by index from the specified start to the specified stop (0-indexed and half-open interval)",
@@ -57,7 +59,7 @@ public class SortGFFCLI implements Callable<Integer> {
 			index[1] = (CDT_SIZE / 2) + (center / 2);
 		}
 		
-		SortGFF.sortGFFbyCDT(outputBasename, gffFile, cdtFile, index[0], index[1]);
+		SortGFF.sortGFFbyCDT(outputBasename, gffFile, cdtFile, index[0], index[1], gzOutput);
 		
 		System.err.println("Sort Complete");
 		return(0);
@@ -75,10 +77,10 @@ public class SortGFFCLI implements Callable<Integer> {
 		}
 		if(!"".equals(r)){ return(r); }
 		//check input extensions
-		if(!"gff".equals(ExtensionFileFilter.getExtension(gffFile))){
+		if(!"gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(gffFile))){
 			r += "(!)Is this a GFF file? Check extension: " + gffFile.getName() + "\n";
 		}
-		if(!"cdt".equals(ExtensionFileFilter.getExtension(cdtFile))){
+		if(!"cdt".equals(ExtensionFileFilter.getExtensionIgnoreGZ(cdtFile))){
 			r += "(!)Is this a CDT file? Check extension: " + cdtFile.getName() + "\n";
 		}
 		// validate CDT as file, with consistent row size, and save row_size value

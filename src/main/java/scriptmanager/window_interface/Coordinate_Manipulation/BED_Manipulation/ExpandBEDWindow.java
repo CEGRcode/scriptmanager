@@ -85,13 +85,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						File XBED = BEDFiles.get(x);
 						System.out.println("Input: " + XBED.getName());
 						// Set output filepath with name and output directory
-						String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
-						}
-						// Strip second extension if input has ".gz" first extension
-						if (XBED.getName().endsWith(".bed.gz")) {
-							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
 						}
 						// Add suffix
 						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";

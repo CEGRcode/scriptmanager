@@ -32,6 +32,8 @@ public class ExpandGFFCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	@ArgGroup(validate = false, heading = "%nType of Expansion%n")
 	ExpandType expandType = new ExpandType();
@@ -55,7 +57,7 @@ public class ExpandGFFCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		ExpandGFF.expandGFFBorders(output, gffFile, SIZE, byCenter);
+		ExpandGFF.expandGFFBorders(output, gffFile, SIZE, byCenter, gzOutput);
 		
 		System.err.println("Expansion Complete");
 		return(0);

@@ -31,7 +31,6 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
-import scriptmanager.util.GZipUtilities;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
 @SuppressWarnings("serial")

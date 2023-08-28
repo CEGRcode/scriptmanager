@@ -129,13 +129,6 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
         });
 		contentPane.add(btnOutputDirectory);
 
-		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, -75, SpringLayout.SOUTH, btnTile);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
-		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblCurrentOutputDirectory);	
-		
 		JButton btnTile = new JButton("Tile Genome");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnTile, 100, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnTile, -5, SpringLayout.SOUTH, contentPane);
@@ -143,6 +136,13 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		contentPane.add(btnTile);
 		btnTile.setActionCommand("start");
 		btnTile.addActionListener(this);
+		
+		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, -75, SpringLayout.SOUTH, btnTile);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
+		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblCurrentOutputDirectory);	
 		
 		cmbGenome = new JComboBox<String>();
 		sl_contentPane.putConstraint(SpringLayout.WEST, cmbGenome, 0, SpringLayout.WEST, txtSize);

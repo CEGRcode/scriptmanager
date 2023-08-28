@@ -2,10 +2,8 @@ package scriptmanager.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,7 +11,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
-import java.util.zip.GZIPInputStream;
 
 /**
  * This class was created to parse and validate CDT files and counting the
@@ -43,12 +40,7 @@ public class CDTUtilities {
 		invalidMessage = "";
 		
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(CDT)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(CDT)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(CDT), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(CDT);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		int currentRow = 1;

@@ -40,12 +40,7 @@ public class RandomizeFASTA {
 		PrintStream OUT = new PrintStream(RANDOUT);
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(FASTA)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(FASTA)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(FASTA), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(FASTA);
 		String line;
 		while ((line = br.readLine()) != null) {
 			String HEADER = line;
