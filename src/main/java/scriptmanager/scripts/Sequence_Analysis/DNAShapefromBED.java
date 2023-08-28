@@ -38,6 +38,7 @@ public class DNAShapefromBED {
 	private String OUTBASENAME = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private File BED = null;
+	private boolean GZIP_OUTPUT;
 
 	private boolean STRAND = true;
 	private boolean INDEX = true;
@@ -73,9 +74,10 @@ public class DNAShapefromBED {
 	 * @param str  force strandedness (true=forced, false=not forced)
 	 * @param ps   list of four PrintStream objects corresponding to each shape type
 	 *             (for GUI)
+	 * @param gzOutput Whether to output compressed file
 	 * @throws IOException
 	 */
-	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps)
+	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps, boolean gzOutput)
 			throws IOException {
 		GENOME = gen;
 		BED = b;
@@ -83,6 +85,7 @@ public class DNAShapefromBED {
 		OUTPUT_TYPE = type;
 		STRAND = str;
 		PS = ps;
+		GZIP_OUTPUT = gzOutput;
 
 		File FAI = new File(GENOME + ".fai");
 		// Check if FAI index file exists
@@ -394,18 +397,18 @@ public class DNAShapefromBED {
 		// Open Output File
 		try {
 			if (OUTPUT_TYPE[0]) {
-				OUT_M = new PrintStream(new File(OUTBASENAME + "_MGW.cdt"));
+				OUT_M = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_MGW.cdt"), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[1]) {
-				OUT_P = new PrintStream(new File(OUTBASENAME + "_PropT.cdt"));
+				OUT_P = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_PropT.cdt"), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[2]) {
-				OUT_H = new PrintStream(new File(OUTBASENAME + "_HelT.cdt"));
+				OUT_H = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_HelT.cdt"), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[3]) {
-				OUT_R = new PrintStream(new File(OUTBASENAME + "_Roll.cdt"));
+				OUT_R = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_Roll.cdt"), GZIP_OUTPUT);
 			}
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

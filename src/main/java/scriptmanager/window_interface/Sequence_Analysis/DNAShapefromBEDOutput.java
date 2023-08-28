@@ -34,6 +34,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 	private File OUT_DIR = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private ArrayList<File> BED = null;
+	private boolean OUTPUT_GZIP;
 
 	private boolean STRAND = true;
 
@@ -51,8 +52,9 @@ public class DNAShapefromBEDOutput extends JFrame {
 	 * @param out_dir the output directory to save output files to
 	 * @param type    the information on the shape types to generate
 	 * @param str     the force-strandedness to pass to the script
+	 * @param gzOutput Whether to output compressed file
 	 */
-	public DNAShapefromBEDOutput(File gen, ArrayList<File> b, File out_dir, boolean[] type, boolean str) {
+	public DNAShapefromBEDOutput(File gen, ArrayList<File> b, File out_dir, boolean[] type, boolean str, boolean gzOutput) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -80,6 +82,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 		OUT_DIR = out_dir;
 		OUTPUT_TYPE = type;
 		STRAND = str;
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -134,7 +137,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 				}
 
 				// Initialize Script Object and execute calculations
-				DNAShapefromBED script_obj = new DNAShapefromBED(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND, PS);
+				DNAShapefromBED script_obj = new DNAShapefromBED(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND, PS, OUTPUT_GZIP);
 				script_obj.run();
 
 				// Exit if FAI failed checks

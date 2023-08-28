@@ -2,14 +2,10 @@ package scriptmanager.scripts.Sequence_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.zip.GZIPInputStream;
-
 import scriptmanager.util.GZipUtilities;
 
 /**
@@ -28,16 +24,17 @@ public class RandomizeFASTA {
 	 * @param FASTA filepath to FASTA-formatted sequences to randomize
 	 * @param RANDOUT filepath to write randomized sequences to
 	 * @param seed set a random seed
+	 * @param gzOutput Whether to output a compressed file
 	 * @return name of output filename
 	 * @throws IOException
 	 */
-	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed) throws IOException {
+	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed, boolean gzOutput) throws IOException {
 		Random randnum = new Random();
 		if( seed != null) {
 			System.err.println("Set Seed=" + seed);
 			randnum.setSeed(seed);
 		}
-		PrintStream OUT = new PrintStream(RANDOUT);
+		PrintStream OUT = GZipUtilities.makePrintStream(RANDOUT, gzOutput);
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br = GZipUtilities.makeReader(FASTA);

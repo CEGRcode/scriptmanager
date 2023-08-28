@@ -1,12 +1,12 @@
 package scriptmanager.scripts.Figure_Generation;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -16,6 +16,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import scriptmanager.charts.CompositePlot;
 import scriptmanager.util.ColorSeries;
 import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * The script class to create/display line plot images based on the output files
@@ -64,11 +65,13 @@ public class PlotComposite {
 	 * @throws FileNotFoundException
 	 */
 	public static JFreeChart plotCompositeFile(File input, File OUT_PATH, boolean outputImage, String title, ArrayList<Color> COLORS, boolean legend, int pxHeight, int pxWidth) throws IOException, IllegalArgumentException, FileNotFoundException {
-		Scanner scan = new Scanner(input);
+		BufferedReader br = GZipUtilities.makeReader(input);
 		// parse x values
-		String[] tokens = scan.nextLine().split("\t");
+		String line;
+		String[] tokens = {""};
+		if ((line = br.readLine()) != null){ tokens = line.split("\t"); }
 		if (!tokens[0].equals("")) {
-			scan.close();
+			br.close();
 			throw new IllegalArgumentException("(!) First row of input file must have an empty first column (as x-values)");
 		}
 		double[] x = new double[tokens.length - 1];
@@ -81,11 +84,11 @@ public class PlotComposite {
 
 		XYSeries s;
 		// line-by-line through file
-		while (scan.hasNextLine()) {
-			tokens = scan.nextLine().split("\t");
+		while ((line = br.readLine()) != null) {
+			tokens = line.split("\t");
 			// check for format consistency: number of x-values matches y-values
 			if (tokens.length - 1 != x.length) {
-				scan.close();
+				br.close();
 				throw new IllegalArgumentException("(!) Check number of x-values matches number of y-values");
 			}
 			// skip any rows with blank labels
@@ -94,7 +97,7 @@ public class PlotComposite {
 					if (x[i - 1] != Double.parseDouble(tokens[i])) {
 						System.err.println(x[i - 1]);
 						System.err.println(tokens[i]);
-						scan.close();
+						br.close();
 						throw new IllegalArgumentException("(!) Check dataseries based on same x-scale file");
 					}
 				}
@@ -108,7 +111,7 @@ public class PlotComposite {
 			}
 			dataset.addSeries(s);
 		}
-		scan.close();
+		br.close();
 
 		// Set-up colors
 		if (COLORS==null) {
