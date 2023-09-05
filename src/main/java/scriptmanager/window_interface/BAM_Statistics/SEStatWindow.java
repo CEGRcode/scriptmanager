@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.Font;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Vector;
 
@@ -170,6 +172,11 @@ public class SEStatWindow extends JFrame {
 					if(OUTPUT_PATH != null) { stat = new SEStatOutput(BAMFiles, new File(OUTPUT_PATH + File.separator + txtOutputName.getText())); }
 					else { stat = new SEStatOutput(BAMFiles, new File(txtOutputName.getText())); }
 				} else { stat = new SEStatOutput(BAMFiles, null); }
+				stat.addPropertyChangeListener("log", new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+					}
+				});
 				stat.setVisible(true);
 				stat.run();
 			}

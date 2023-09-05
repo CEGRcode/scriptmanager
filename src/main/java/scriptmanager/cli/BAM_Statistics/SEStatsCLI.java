@@ -79,4 +79,10 @@ public class SEStatsCLI implements Callable<Integer> {
 	
 		return(r);
 	}
+	public static String getCLIcommand(File BAMFile, File outputBasename) {
+		String command = "java -jar $SCRIPTMANAGER bam-statistics PEStats";
+		command += " " + BAMFile.getAbsolutePath();
+		command += " -o " + outputBasename.getAbsolutePath();
+		return command;
+	}
 }

@@ -20,7 +20,6 @@ import javax.swing.SpringLayout;
 import org.jfree.chart.ChartPanel;
 
 import scriptmanager.cli.BAM_Statistics.PEStatsCLI;
-import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
