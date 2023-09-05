@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -17,7 +19,10 @@ import javax.swing.SpringLayout;
 
 import org.jfree.chart.ChartPanel;
 
+import scriptmanager.cli.BAM_Statistics.PEStatsCLI;
+import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
 
 @SuppressWarnings("serial")
@@ -75,6 +80,7 @@ public class PEStatOutput extends JFrame {
 	}
 	
 	public void run() throws IOException {
+		LogItem old_li = null;
 		// Check if BAI index file exists for all BAM files
 		boolean[] BAMvalid = new boolean[bamFiles.size()];
 		for (int z = 0; z < bamFiles.size(); z++) {
@@ -91,6 +97,7 @@ public class PEStatOutput extends JFrame {
 		//Iterate through all BAM files in Vector
 		for(int x = 0; x < bamFiles.size(); x++) {
 			if (BAMvalid[x]) {
+				old_li = new LogItem("");
 				// Construct Basename
 				File OUT_BASENAME = null;
 				if(OUTPUT_STATUS){
@@ -113,10 +120,17 @@ public class PEStatOutput extends JFrame {
 					DUP_STATS.setEditable(false);
 					ps_dup = new PrintStream(new CustomOutputStream( DUP_STATS ));
 				}
+				// Initialize LogItem
+				String command = PEStatsCLI.getCLIcommand(bamFiles.get(x), OUT_BASENAME, MIN_INSERT, MAX_INSERT, DUP_STATUS, false);
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
 
 				//Call public static method from scripts
 				Vector<ChartPanel> charts = PEStats.getPEStats( OUT_BASENAME, bamFiles.get(x), DUP_STATUS, MIN_INSERT, MAX_INSERT, ps_insert, ps_dup, false );
-
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
 				//Add pe stats to tabbed pane
 				PE_STATS.setCaretPosition(0);
 				JScrollPane pe_pane = new JScrollPane(PE_STATS, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -136,6 +150,7 @@ public class PEStatOutput extends JFrame {
 
 				firePropertyChange("bam",x, x + 1);
 			}
+			firePropertyChange("log", old_li, null);
 		}
 	}
 }

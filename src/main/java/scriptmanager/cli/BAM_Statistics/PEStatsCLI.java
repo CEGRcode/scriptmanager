@@ -93,4 +93,15 @@ public class PEStatsCLI implements Callable<Integer> {
 		
 		return(r);
 	}
+	public static String getCLIcommand(File BAMFile, File outputBasename, int min, int max, boolean dup, boolean sum) {
+		String command = "java -jar $SCRIPTMANAGER bam-statistics PEStats";
+		command += " " + BAMFile.getAbsolutePath();
+		command += " -o " + outputBasename.getAbsolutePath();
+		command += " -n " + min;
+		command += " -x " + max;
+		command += sum ? " -s " : "";
+		command += dup ? " -d " : "";
+		return command;
+	}
+
 }

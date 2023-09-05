@@ -79,6 +79,11 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 							setProgress(percentComplete);
 						}
 					});
+					stat.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
 					stat.setVisible(true);
 					stat.run();
 				}
@@ -271,7 +276,9 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
-        }
+        } else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
     }
 	
 	public void massXable(Container con, boolean status) {
