@@ -35,6 +35,7 @@ import scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow;
 import scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityWindow;
 import scriptmanager.window_interface.Peak_Analysis.RandomCoordinateWindow;
 import scriptmanager.window_interface.Peak_Analysis.SignalDuplicationWindow;
+import scriptmanager.window_interface.Peak_Analysis.SortByRefWindow;
 import scriptmanager.window_interface.Peak_Analysis.TileGenomeWindow;
 import scriptmanager.window_interface.Peak_Calling.GeneTrackWindow;
 import scriptmanager.window_interface.Peak_Calling.PeakPairWindow;
@@ -924,6 +925,40 @@ public class ScriptManagerGUI {
 		sl_pnlPeakAnalysis.putConstraint(SpringLayout.WEST, txtOutputSignalDuplication, 10, SpringLayout.EAST,
 				btnSignalDuplication);
 		pnlPeakAnalysis.add(btnSignalDuplication);
+
+		// >Sort_By_Reference
+		JTextArea txtSortByRef = new JTextArea();
+		initializeTextArea(txtSortByRef);
+		txtSortByRef.setText(ToolDescriptions.sort_by_ref_description);
+		sl_pnlPeakAnalysis.putConstraint(SpringLayout.NORTH, txtSortByRef, 10, SpringLayout.SOUTH,
+				btnSignalDuplication);
+		sl_pnlPeakAnalysis.putConstraint(SpringLayout.EAST, txtSortByRef, -10, SpringLayout.EAST,
+				pnlPeakAnalysis);
+		pnlPeakAnalysis.add(txtSortByRef);
+
+		JButton btnSortByRef = new JButton("Sort Coordinates By Reference");
+		btnSortByRef.setToolTipText("Sort BED/GFF files by reference BED/GFF");
+		btnSortByRef.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SortByRefWindow frame = new SortByRefWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		sl_pnlPeakAnalysis.putConstraint(SpringLayout.NORTH, btnSortByRef, 0, SpringLayout.NORTH,
+				txtSortByRef);
+		sl_pnlPeakAnalysis.putConstraint(SpringLayout.WEST, btnSortByRef, 10, SpringLayout.WEST,
+				pnlPeakAnalysis);
+		sl_pnlPeakAnalysis.putConstraint(SpringLayout.WEST, txtSortByRef, 10, SpringLayout.EAST,
+				btnSortByRef);
+		pnlPeakAnalysis.add(btnSortByRef);
 
 		// >>>>>>>> Coordinate_Manipulation <<<<<<<<
 		JPanel pnlCoordManip = new JPanel();
