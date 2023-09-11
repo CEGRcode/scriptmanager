@@ -25,7 +25,7 @@ import scriptmanager.scripts.Peak_Analysis.SortByRef;
 public class SortByRefCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "The BED peak file")
-	private File peak;
+	private File peak = null;
 	@Parameters( index = "1", description = "The BED reference file")
 	private File ref = null;
 	
@@ -71,13 +71,13 @@ public class SortByRefCLI implements Callable<Integer> {
 		}
 		if(!r.equals("")){ return(r); }
 		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)) || !"gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak))){
+		if(!("bed".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)) || "gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)))){
 			r += "(!)Is this a coordinate file? Check extension: " + peak.getName() + "\n";
 		}
-		if(!"bed".equals(ExtensionFileFilter.getExtensionIgnoreGZ(ref)) || !"gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(ref))){
+		if(!("bed".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)) || "gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)))){
 			r += "(!)Is this a coordinate file? Check extension: " + ref.getName() + "\n";
 		}
-		if(ExtensionFileFilter.getExtensionIgnoreGZ(peak).equals(ExtensionFileFilter.getExtensionIgnoreGZ(ref))){
+		if(!ExtensionFileFilter.getExtensionIgnoreGZ(peak).equals(ExtensionFileFilter.getExtensionIgnoreGZ(ref))){
 			r += "(!)Format of the peak and reference don't match \n";
 		}
 		//set default output filename

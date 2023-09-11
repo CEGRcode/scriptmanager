@@ -61,28 +61,39 @@ public class BEDPeakAligntoRef {
 		inputStream = new FileInputStream(refPath);
 	    buff = new BufferedReader(new InputStreamReader(inputStream), 100);
 	    
+		//Go through reference file line-by-line
 	    for (String line; (line = buff.readLine()) != null; ) {
 		    	String[] str = line.split("\t");
 		    	String chr = str[0];
 			String[] peakLine;
 			int cdtLength = (Integer.parseInt(str[2])) - (Integer.parseInt(str[1]));
 			int cdtArr[] = new int[cdtLength];
+			//If the peakMap contains the matching chromosome
 			if(peakMap.containsKey(chr))
 			{
+				//Iterate through all coords in a given chromosome
 				for(int i = 0; i < peakMap.get(chr).size(); i++)
 				{
-					peakLine = peakMap.get(chr).get(i).split("\t");	
+					peakLine = peakMap.get(chr).get(i).split("\t");
+					//If ref start is between two peak coords
 					if(Integer.parseInt(peakLine[1]) <= Integer.parseInt(str[2]) && Integer.parseInt(peakLine[1]) >= Integer.parseInt(str[1])) {
+						//START = peak start - reference start
 						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
+						//STOP  = START + peak stop - reference stop
 						int STOP = START + (Integer.parseInt(peakLine[2]) - Integer.parseInt(peakLine[1]));
+						//Iterate through the CDT, assigning 1 to cell
 						for(int x = START; x <= STOP; x++) {
 	    					if(x >= 0 && x < cdtLength) { cdtArr[x]++; }
 	    					}
 						}
+					//If ref end is between two peak coords
 					else if(Integer.parseInt(peakLine[2]) >= Integer.parseInt(str[1]) && Integer.parseInt(peakLine[2]) <= Integer.parseInt(str[2]))
 					{
+						//START = peak start - reference start
 						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
+						//STOP  = START + peak stop - reference stop
 						int STOP = START + (Integer.parseInt(peakLine[2]) - Integer.parseInt(peakLine[1]));
+						//Iterate through the CDT, assigning 1 to cell
 						for(int c = START; c <= STOP; c++) {
 							if(c >= 0 && c < cdtLength) { cdtArr[c]++; }
 							}
@@ -90,6 +101,7 @@ public class BEDPeakAligntoRef {
 					}
 			}
 			
+			//Make header line
 			if(counter == 0) {
 				OUT.print("YORF" + "\t" + "NAME");
 				for(int j = 0; j < cdtLength; j++) { OUT.print("\t" + j); }

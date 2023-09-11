@@ -48,6 +48,7 @@ import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
 import scriptmanager.cli.Peak_Analysis.SignalDuplicationCLI;
 import scriptmanager.cli.Peak_Analysis.TileGenomeCLI;
+import scriptmanager.cli.Peak_Analysis.SortByRefCLI;
 
 import scriptmanager.cli.Peak_Calling.GeneTrackCLI;
 import scriptmanager.cli.Peak_Calling.PeakPairCLI;
@@ -193,6 +194,7 @@ class File_UtilitiesCLI extends SubcommandCLI {}
 			FilterBEDbyProximityCLI.class,
 			RandomCoordinateCLI.class,
 			SignalDuplicationCLI.class,
+			SortByRefCLI.class,
 			TileGenomeCLI.class
 		},
 		description = "Includes tools like BEDPeakAligntoRefCLI, FilterBEDbyProximityCLI, RandomCoordinateCLI, SignalDuplicationCLI, and TileGenomeCLI.")

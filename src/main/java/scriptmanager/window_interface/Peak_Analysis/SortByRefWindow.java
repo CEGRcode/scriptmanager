@@ -136,7 +136,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 	}
 	
 	public SortByRefWindow() {
-		setTitle("BED Peaks Alignment");
+		setTitle("Sort Coordinate By Reference");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 500, 570);
 		contentPane = new JPanel();
