@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -16,8 +18,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
+import scriptmanager.cli.BAM_Statistics.CrossCorrelationCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.ArchTEx.CorrParameter;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
@@ -88,6 +92,7 @@ public class CrossCorrelationOutput extends JFrame {
 	 * @throws IOException
 	 */
 	public void run() throws IOException {
+		LogItem old_li = null;
 		// Check if BAI index file exists for all BAM files
 		boolean[] BAMvalid = new boolean[bamFiles.size()];
 		for (int z = 0; z < bamFiles.size(); z++) {
@@ -106,6 +111,7 @@ public class CrossCorrelationOutput extends JFrame {
 			System.out.println("Cross-Correlation: " + bamFiles.get(x).getName());
 			
 			if (BAMvalid[x]) {
+				old_li = new LogItem("");
 				// Construct Basename
 				File OUT_FILEPATH = null;
 				if(OUTPUT_STATUS){
@@ -125,14 +131,22 @@ public class CrossCorrelationOutput extends JFrame {
 				CC_DATA.setEditable(false);
 				ps_ccdata = new PrintStream(new CustomOutputStream( CC_DATA ));
 				tabbedPane_CCData.add(bamFiles.get(x).getName(), new JScrollPane(CC_DATA, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-				
+
+				// Initialize LogItem
+				String command = CrossCorrelationCLI.getCLIcommand(OUT_FILEPATH, bamFiles.get(x), PARAM);
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
 				//Call public static method from scripts
 				Component chart = CrossCorrelation.correlate(OUT_FILEPATH, bamFiles.get(x), PARAM, ps_ccdata);
 				tabbedPane_CCPlots.add(bamFiles.get(x).getName(), chart);
-
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
 				ps_ccdata.close();
 				firePropertyChange("bam",x, x + 1);
 			}
+			firePropertyChange("log", old_li, null);
 		}
 	}
 	

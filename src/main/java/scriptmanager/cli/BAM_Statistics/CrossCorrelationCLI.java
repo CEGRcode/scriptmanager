@@ -123,4 +123,14 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 
 		return(r);
 	}
+	public static String getCLIcommand(File OUTPUT, File bamFile, CorrParameter param) {
+		String command = "java -jar $SCRIPTMANAGER bam-statistics CrossCorrelation";
+		command += " " + bamFile.getAbsolutePath();
+		command += " -o " + OUTPUT.getAbsolutePath();
+		command += param.getCorrType() ? " -g " : " -r ";
+		command += " -t " + param.getThreads();
+		command += param.getCorrType() ? " -w " + param.getCorrWindow() : "";
+		command += param.getCorrType() ? " -i " + param.getIterations() : "";
+		return command;
+	}
 }

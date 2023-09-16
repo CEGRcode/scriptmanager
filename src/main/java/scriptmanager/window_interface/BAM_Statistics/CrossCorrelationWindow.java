@@ -119,6 +119,11 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 							setProgress(percentComplete);
 						}
 					});
+					script_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
 					script_obj.setVisible(true);
 					script_obj.run();
 				}
@@ -402,6 +407,8 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
