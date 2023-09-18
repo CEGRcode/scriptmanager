@@ -6,6 +6,8 @@ import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
 
+import javax.swing.JOptionPane;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -31,6 +33,10 @@ public class SortByRefCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peak>_<ref>_Output.bed/gff)")
 	private File output = null;
+	@Option(names = {"-lb"}, description = "Maximum distance to left of peak (positive integer, default = no maximum)")
+	private String leftBound = "";
+	@Option(names = {"-rb"}, description = "Maximum distance to right of peak (positive integer, default = no maximum)")
+	private String rightBound = "";
 	@Option(names = {"-p", "--proper-strands"}, description = "Require proper strand direction" )
 	private boolean properStrands = false;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
@@ -48,7 +54,7 @@ public class SortByRefCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SortByRef script_obj = new SortByRef(ref, peak, output, properStrands, gzOutput, null);
+		SortByRef script_obj = new SortByRef(ref, peak, output, properStrands, gzOutput, null, leftBound, rightBound);
 		if (isGFF){
 			script_obj.sortGFF();
 		} else { 
@@ -61,7 +67,7 @@ public class SortByRefCLI implements Callable<Integer> {
 	
 	private String validateInput() throws IOException {
 		String r = "";
-		
+
 		//check inputs exist
 		if(!peak.exists()){
 			r += "(!)Coordinate-peak file does not exist: " + peak.getName() + "\n";
@@ -97,6 +103,13 @@ public class SortByRefCLI implements Callable<Integer> {
 			} else if(!new File(output.getParent()).exists()){
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}
+		}
+
+		//check bounds
+		boolean validLeftBound = leftBound.equals("") || Integer.parseInt(leftBound) >= 0;
+		boolean validRightBound = rightBound.equals("") || Integer.parseInt(rightBound) >= 0;
+		if (!validLeftBound || !validRightBound){
+			r += "Bounds must be positive integers";
 		}
 		
 		return(r);

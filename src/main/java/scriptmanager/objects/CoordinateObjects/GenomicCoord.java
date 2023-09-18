@@ -19,6 +19,9 @@ public interface GenomicCoord {
 	public String getName();
 	public void setName(String na);
 
+	public long getMid();
+	public void calcMid();
+
 	public String toString();
 		
 }

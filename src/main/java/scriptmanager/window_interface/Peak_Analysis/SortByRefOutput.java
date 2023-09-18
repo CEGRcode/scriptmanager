@@ -21,10 +21,12 @@ public class SortByRefOutput extends JFrame{
 	private Boolean PROPER_STRAND = false;
 	private Boolean GZIP_OUTPUT = false;
 	private Boolean GFF = false;
-
+	private String LEFT_BOUND = "";
+	private String RIGHT_BOUND = "";
+	
 	private JTextArea textArea;
 		
-	public SortByRefOutput(File ref, File peak, File outpath, boolean properStrands, boolean gzOutput, boolean gff) throws IOException {
+	public SortByRefOutput(File ref, File peak, File outpath, boolean properStrands, boolean gzOutput, boolean gff, String leftBound, String rightBound) throws IOException {
 		setTitle("BED Align to Reference Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -41,6 +43,8 @@ public class SortByRefOutput extends JFrame{
 		GFF = gff;
 		PROPER_STRAND = properStrands;
 		GZIP_OUTPUT = gzOutput;
+		LEFT_BOUND = (leftBound.equals("n/a"))? "": leftBound;
+		RIGHT_BOUND = (rightBound.equals("n/a"))? "": rightBound;
 		
 		if(outpath != null) {
 			OUTFILE = new File(outpath.getCanonicalPath() + File.separator + PEAK.getName().split("\\.")[0] + "_" + 
@@ -53,7 +57,7 @@ public class SortByRefOutput extends JFrame{
 		
 	public void run() throws IOException, InterruptedException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		SortByRef script_obj = new SortByRef(REF, PEAK, OUTFILE, PROPER_STRAND, GZIP_OUTPUT, PS);
+		SortByRef script_obj = new SortByRef(REF, PEAK, OUTFILE, PROPER_STRAND, GZIP_OUTPUT, PS, LEFT_BOUND, RIGHT_BOUND);
 		if (GFF) {	
 			script_obj.sortGFF(); 
 		} else {

@@ -29,7 +29,9 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
@@ -50,6 +52,8 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 	ArrayList<File> RefBEDFiles = new ArrayList<File>();
 	ArrayList<File> RefGFFFiles = new ArrayList<File>();
 	private File OUTPUT_PATH = null;
+	String LEFT_BOUND = "";
+	String RIGHT_BOUND = "";
 	
 	private JButton btnLoadPeakBed;
 	private JButton btnLoadPeakGff;
@@ -69,6 +73,8 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 
 	private JRadioButton rdbtnBed;
 	private JRadioButton rdbtnGff;
+	private JTextField txtLeftBound;
+	private JTextField txtRightBound;
 	
 	public Task task;
 	
@@ -76,6 +82,13 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
         	try {
+			LEFT_BOUND = txtLeftBound.getText();
+			RIGHT_BOUND = txtRightBound.getText();
+			boolean validLeftBound = LEFT_BOUND.equals("n/a") || LEFT_BOUND.equals("") || Integer.parseInt(LEFT_BOUND) >= 0;
+			boolean validRightBound = RIGHT_BOUND.equals("n/a") || RIGHT_BOUND.equals("") || Integer.parseInt(RIGHT_BOUND) >= 0;
+			if (!validLeftBound || !validRightBound){
+				JOptionPane.showMessageDialog(null, "Bounds must be positive integers, blank or \"n/a\"");
+			}
 			if (rdbtnBed.isSelected()) {
 					if(PeakBEDFiles.size() < 1 || RefBEDFiles.size() < 1) {
 						JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
@@ -89,7 +102,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 							for(int p=0; p < PeakBEDFiles.size(); p++)
 							{
 								align = new SortByRefOutput(RefBEDFiles.get(r), PeakBEDFiles.get(p), OUTPUT_PATH, chckbxProperStrands.isSelected(),
-								chckbxGzipOutput.isSelected(), false);	
+								chckbxGzipOutput.isSelected(), false, txtLeftBound.getText(), txtRightBound.getText());	
 								align.setVisible(true);
 								align.run();
 								counter++;
@@ -112,7 +125,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 							for(int p=0; p < PeakGFFFiles.size(); p++)
 							{
 								align = new SortByRefOutput(RefGFFFiles.get(r), PeakGFFFiles.get(p), OUTPUT_PATH, chckbxProperStrands.isSelected(), 
-								chckbxGzipOutput.isSelected(), true);	
+								chckbxGzipOutput.isSelected(), true, txtLeftBound.getText(), txtRightBound.getText());	
 								align.setVisible(true);
 								align.run();
 								counter++;
@@ -124,7 +137,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 					}
 				}
         	} catch(NumberFormatException nfe){
-				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+				JOptionPane.showMessageDialog(null, "Bounds must be positive integers, blank or \"n/a\"");
 			}
         	return null;
         }
@@ -138,7 +151,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 	public SortByRefWindow() {
 		setTitle("Sort Coordinate By Reference");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 500, 570);
+		setBounds(100, 100, 500, 620);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -164,7 +177,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, inputCards, 10, SpringLayout.SOUTH, rdbtnBed);
 		sl_contentPane.putConstraint(SpringLayout.WEST, inputCards, 0, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, inputCards, 0, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -145, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -195, SpringLayout.SOUTH, contentPane);
 		contentPane.add(inputCards);
 
 		JPanel bedInputPane = new JPanel();
@@ -354,19 +367,58 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
 		gffInputPane.add(btnRemoveReGff);
+		
+		//Initialize left bound text input
+		JLabel lblLeftBound = new JLabel("Maximum distance to left of peak:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblLeftBound, 3, SpringLayout.SOUTH, inputCards);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblLeftBound, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(lblLeftBound);
+
+		txtLeftBound = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtLeftBound, 3, SpringLayout.SOUTH, lblLeftBound);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtLeftBound, 0, SpringLayout.WEST, lblLeftBound);
+		txtLeftBound.setToolTipText("Must be positive integer");
+		txtLeftBound.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLeftBound.setColumns(10);
+		txtLeftBound.setText("n/a");
+		contentPane.add(txtLeftBound);
+
+		JLabel bpLeft = new JLabel("bp");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bpLeft, 0, SpringLayout.NORTH, txtLeftBound);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bpLeft, 3, SpringLayout.EAST, txtLeftBound);
+		contentPane.add(bpLeft);
+
+		//Initialize right bound text input
+		JLabel lblRightBound = new JLabel("Maximum distance to right of peak:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblRightBound, 3, SpringLayout.SOUTH, txtLeftBound);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblRightBound, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(lblRightBound);
+
+		txtRightBound = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtRightBound, 3, SpringLayout.SOUTH, lblRightBound);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtRightBound, 0, SpringLayout.WEST, lblRightBound);
+		txtRightBound.setToolTipText("Must be positive integer");
+		txtRightBound.setHorizontalAlignment(SwingConstants.CENTER);
+		txtRightBound.setColumns(10);
+		txtRightBound.setText("n/a");
+		contentPane.add(txtRightBound);
+
+		JLabel bpRight = new JLabel("bp");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bpRight, 0, SpringLayout.NORTH, txtRightBound);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bpRight, 3, SpringLayout.EAST, txtRightBound);
+		contentPane.add(bpRight);
 
 		//Initialize proper strandedness checkbox
 		chckbxProperStrands = new JCheckBox("Require Proper Strand Direction");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxProperStrands, 6, SpringLayout.SOUTH, inputCards);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxProperStrands, 130, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxProperStrands, -130, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxProperStrands, 3, SpringLayout.SOUTH, inputCards);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxProperStrands, -10, SpringLayout.EAST, contentPane);
  		contentPane.add(chckbxProperStrands);
 
 		//Initialize output directory
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 175, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -175, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 6, SpringLayout.SOUTH, chckbxProperStrands);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 3, SpringLayout.SOUTH, txtRightBound);
 		btnOutputDirectory.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		OUTPUT_PATH = FileSelection.getOutputDir(fc);
@@ -405,6 +457,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(btnCalculate);
 		btnCalculate.setActionCommand("start");
 
+		//Initialize GZip checkbox
 		chckbxGzipOutput = new JCheckBox("Output GZIP");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 31, SpringLayout.WEST, contentPane);
