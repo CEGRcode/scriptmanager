@@ -100,7 +100,6 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 		command += " -o " + output.getAbsolutePath();
 		command += " -r " + startROW;
 		command += " " + matrix.getAbsolutePath();
-		System.err.print(command);
 		return command;
 	}
 }
