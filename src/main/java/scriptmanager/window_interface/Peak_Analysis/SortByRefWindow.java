@@ -52,8 +52,8 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 	ArrayList<File> RefBEDFiles = new ArrayList<File>();
 	ArrayList<File> RefGFFFiles = new ArrayList<File>();
 	private File OUTPUT_PATH = null;
-	String LEFT_BOUND = "";
-	String RIGHT_BOUND = "";
+	String UPSTREAM = "";
+	String DOWNSTREAM = "";
 	
 	private JButton btnLoadPeakBed;
 	private JButton btnLoadPeakGff;
@@ -73,8 +73,8 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 
 	private JRadioButton rdbtnBed;
 	private JRadioButton rdbtnGff;
-	private JTextField txtLeftBound;
-	private JTextField txtRightBound;
+	private JTextField txtUpstream;
+	private JTextField txtDownstream;
 	
 	public Task task;
 	
@@ -82,13 +82,20 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
         	try {
-			LEFT_BOUND = txtLeftBound.getText();
-			RIGHT_BOUND = txtRightBound.getText();
-			boolean validLeftBound = LEFT_BOUND.equals("n/a") || LEFT_BOUND.equals("") || Integer.parseInt(LEFT_BOUND) >= 0;
-			boolean validRightBound = RIGHT_BOUND.equals("n/a") || RIGHT_BOUND.equals("") || Integer.parseInt(RIGHT_BOUND) >= 0;
-			if (!validLeftBound || !validRightBound){
-				JOptionPane.showMessageDialog(null, "Bounds must be positive integers, blank or \"n/a\"");
+			UPSTREAM = txtUpstream.getText();
+			DOWNSTREAM = txtDownstream.getText();
+			boolean validUpstream = UPSTREAM.equals("n/a") || UPSTREAM.equals("") || Integer.parseInt(UPSTREAM) <= 0;
+			boolean validDownstream= DOWNSTREAM.equals("n/a") || DOWNSTREAM.equals("") || Integer.parseInt(DOWNSTREAM) >= 0;
+			if (!validUpstream){
+				JOptionPane.showMessageDialog(null, "Upstream bound must be a negative integer, blank or \"n/a\"");
+				throw new NumberFormatException();
 			}
+			else if (!validDownstream){
+				JOptionPane.showMessageDialog(null, "Downstream must be a positive integer, blank or \"n/a\"");
+				throw new NumberFormatException();
+			}
+			UPSTREAM = UPSTREAM.equals("")? "n/a": UPSTREAM;
+			DOWNSTREAM = DOWNSTREAM.equals("")? "n/a": DOWNSTREAM;
 			if (rdbtnBed.isSelected()) {
 					if(PeakBEDFiles.size() < 1 || RefBEDFiles.size() < 1) {
 						JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
@@ -101,15 +108,22 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 						{
 							for(int p=0; p < PeakBEDFiles.size(); p++)
 							{
+								// Execute Script and update progress
 								align = new SortByRefOutput(RefBEDFiles.get(r), PeakBEDFiles.get(p), OUTPUT_PATH, chckbxProperStrands.isSelected(),
-								chckbxGzipOutput.isSelected(), false, txtLeftBound.getText(), txtRightBound.getText());	
+								chckbxGzipOutput.isSelected(), false, UPSTREAM, DOWNSTREAM);	
+								align.addPropertyChangeListener("log", new PropertyChangeListener() {
+									public void propertyChange(PropertyChangeEvent evt) {
+										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+									}
+								});
 								align.setVisible(true);
 								align.run();
 								counter++;
-							int percentComplete = (int)(((double)(counter) / (PeakBEDFiles.size()*RefBEDFiles.size())) * 100);
+							int percentComplete = (int)(((double)(counter) / (PeakBEDFiles.size() * RefBEDFiles.size())) * 100);
 							setProgress(percentComplete);	
 							}	
 					}
+						setProgress(100);
 						JOptionPane.showMessageDialog(null, "Alignment Complete");
 					}
 				} else {
@@ -124,8 +138,14 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 						{
 							for(int p=0; p < PeakGFFFiles.size(); p++)
 							{
+								// Execute Script and update progress
 								align = new SortByRefOutput(RefGFFFiles.get(r), PeakGFFFiles.get(p), OUTPUT_PATH, chckbxProperStrands.isSelected(), 
-								chckbxGzipOutput.isSelected(), true, txtLeftBound.getText(), txtRightBound.getText());	
+								chckbxGzipOutput.isSelected(), true, UPSTREAM, DOWNSTREAM);	
+								align.addPropertyChangeListener("log", new PropertyChangeListener() {
+									public void propertyChange(PropertyChangeEvent evt) {
+										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+									}
+								});
 								align.setVisible(true);
 								align.run();
 								counter++;
@@ -133,11 +153,11 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 							setProgress(percentComplete);	
 							}	
 					}
+						setProgress(100);
 						JOptionPane.showMessageDialog(null, "Alignment Complete");
 					}
 				}
         	} catch(NumberFormatException nfe){
-				JOptionPane.showMessageDialog(null, "Bounds must be positive integers, blank or \"n/a\"");
 			}
         	return null;
         }
@@ -368,48 +388,48 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 		});
 		gffInputPane.add(btnRemoveReGff);
 		
-		//Initialize left bound text input
-		JLabel lblLeftBound = new JLabel("Maximum distance to left of peak:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblLeftBound, 3, SpringLayout.SOUTH, inputCards);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblLeftBound, 10, SpringLayout.WEST, contentPane);
-		contentPane.add(lblLeftBound);
+		//Initialize upstream text input
+		JLabel lblUpstream = new JLabel("Maximum distance upstream of peak:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpstream, 3, SpringLayout.SOUTH, inputCards);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblUpstream, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(lblUpstream);
 
-		txtLeftBound = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtLeftBound, 3, SpringLayout.SOUTH, lblLeftBound);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtLeftBound, 0, SpringLayout.WEST, lblLeftBound);
-		txtLeftBound.setToolTipText("Must be positive integer");
-		txtLeftBound.setHorizontalAlignment(SwingConstants.CENTER);
-		txtLeftBound.setColumns(10);
-		txtLeftBound.setText("n/a");
-		contentPane.add(txtLeftBound);
+		txtUpstream = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtUpstream, 3, SpringLayout.SOUTH, lblUpstream);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtUpstream, 0, SpringLayout.WEST, lblUpstream);
+		txtUpstream.setToolTipText("Must be a negative integer");
+		txtUpstream.setHorizontalAlignment(SwingConstants.CENTER);
+		txtUpstream.setColumns(10);
+		txtUpstream.setText("n/a");
+		contentPane.add(txtUpstream);
 
-		JLabel bpLeft = new JLabel("bp");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bpLeft, 0, SpringLayout.NORTH, txtLeftBound);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bpLeft, 3, SpringLayout.EAST, txtLeftBound);
-		contentPane.add(bpLeft);
+		JLabel bpUpstream = new JLabel("bp");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bpUpstream, 0, SpringLayout.NORTH, txtUpstream);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bpUpstream, 3, SpringLayout.EAST, txtUpstream);
+		contentPane.add(bpUpstream);
 
-		//Initialize right bound text input
-		JLabel lblRightBound = new JLabel("Maximum distance to right of peak:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblRightBound, 3, SpringLayout.SOUTH, txtLeftBound);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblRightBound, 10, SpringLayout.WEST, contentPane);
-		contentPane.add(lblRightBound);
+		//Initialize downstream text input
+		JLabel lblDownstream= new JLabel("Maximum distance downstream of peak:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDownstream, 3, SpringLayout.SOUTH, txtUpstream);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblDownstream, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(lblDownstream);
 
-		txtRightBound = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtRightBound, 3, SpringLayout.SOUTH, lblRightBound);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtRightBound, 0, SpringLayout.WEST, lblRightBound);
-		txtRightBound.setToolTipText("Must be positive integer");
-		txtRightBound.setHorizontalAlignment(SwingConstants.CENTER);
-		txtRightBound.setColumns(10);
-		txtRightBound.setText("n/a");
-		contentPane.add(txtRightBound);
+		txtDownstream= new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtDownstream, 3, SpringLayout.SOUTH, lblDownstream);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtDownstream, 0, SpringLayout.WEST, lblDownstream);
+		txtDownstream.setToolTipText("Must be a positive integer");
+		txtDownstream.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDownstream.setColumns(10);
+		txtDownstream.setText("n/a");
+		contentPane.add(txtDownstream);
 
-		JLabel bpRight = new JLabel("bp");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bpRight, 0, SpringLayout.NORTH, txtRightBound);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bpRight, 3, SpringLayout.EAST, txtRightBound);
-		contentPane.add(bpRight);
+		JLabel bpDownstream = new JLabel("bp");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bpDownstream, 0, SpringLayout.NORTH, txtDownstream);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bpDownstream, 3, SpringLayout.EAST, txtDownstream);
+		contentPane.add(bpDownstream);
 
 		//Initialize proper strandedness checkbox
-		chckbxProperStrands = new JCheckBox("Require Proper Strand Direction");
+		chckbxProperStrands = new JCheckBox("<html>Require Proper Strand<br>Direction");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxProperStrands, 3, SpringLayout.SOUTH, inputCards);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxProperStrands, -10, SpringLayout.EAST, contentPane);
  		contentPane.add(chckbxProperStrands);
@@ -418,7 +438,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 175, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -175, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 3, SpringLayout.SOUTH, txtRightBound);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 3, SpringLayout.SOUTH, txtDownstream);
 		btnOutputDirectory.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		OUTPUT_PATH = FileSelection.getOutputDir(fc);
@@ -497,10 +517,12 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
      * Invoked when task's progress property changes.
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()){
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
     }
 	
 	public void massXable(Container con, boolean status) {

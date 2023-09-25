@@ -25,26 +25,24 @@ public class SortByRef {
 	private File PEAK = null;
 	private File REF = null;
 	private boolean PROPER_STRANDED = false;
-	private long MAX_LEFT = 0;
-	private long MAX_RIGHT = 0;
-	private boolean BOUNDED_LEFT = false;
-	private boolean BOUNDED_RIGHT = false;
-
-	private long[][] matches = null;
+	private long MAX_UPSTREAM = 0;
+	private long MAX_DOWNSTREAM = 0;
+	private boolean BOUNDED_UPSTREAM = false;
+	private boolean BOUNDED_DOWNSTREAM = false;
 	
-	public SortByRef(File ref, File peak, File out, boolean properStrands, boolean gzOutput, PrintStream ps, String leftBound, String rightBound) throws IOException {
+	public SortByRef(File ref, File peak, File out, boolean properStrands, boolean gzOutput, PrintStream ps, String upstream, String downstream) throws IOException {
 		PS = ps;
 		OUT = GZipUtilities.makePrintStream(out, gzOutput);
 		PEAK = peak;
 		REF = ref;
 		PROPER_STRANDED = properStrands;
-		if (!leftBound.equals("")){
-			BOUNDED_LEFT = true;
-			MAX_LEFT = Long.parseLong(leftBound);
+		if (!upstream.equals("n/a")){
+			BOUNDED_UPSTREAM = true;
+			MAX_UPSTREAM = Long.parseLong(upstream);
 		}
-		if (!rightBound.equals("")){
-			BOUNDED_RIGHT = true;
-			MAX_RIGHT= Long.parseLong(rightBound);
+		if (!downstream.equals("n/a")){
+			BOUNDED_DOWNSTREAM = true;
+			MAX_DOWNSTREAM= Long.parseLong(downstream);
 		}
 	}
 		
@@ -224,7 +222,6 @@ public class SortByRef {
 				OUT.println(refCoords.get((int)coord[2]));
 			}
 		}
-		System.out.println(refCoords.size());
 		OUT.close();
 
 		printPS("Completing: " + getTimeStamp());
@@ -234,10 +231,10 @@ public class SortByRef {
 		boolean properDir = (!PROPER_STRANDED || peak.getDir().equals(ref.getDir()));
 		boolean closer = (minDistance >= Math.abs(peak.getMid() - ref.getMid()));
 		boolean inBounds = true;
-		if (peak.getMid() <= ref.getMid() && BOUNDED_RIGHT){
-			inBounds = ref.getMid() - peak.getMid() <= MAX_RIGHT;
-		} else if (BOUNDED_LEFT) {
-			inBounds = peak.getMid() - ref.getMid() <= MAX_LEFT;
+		if (peak.getMid() <= ref.getMid() && BOUNDED_DOWNSTREAM){
+			inBounds = ref.getMid() - peak.getMid() <= MAX_DOWNSTREAM;
+		} else if (BOUNDED_UPSTREAM) {
+			inBounds = ref.getMid() - peak.getMid() >= MAX_UPSTREAM;
 		}
 		return properDir && closer && inBounds;
 	}

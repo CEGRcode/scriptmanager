@@ -6,8 +6,6 @@ import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
 
-import javax.swing.JOptionPane;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -26,17 +24,17 @@ import scriptmanager.scripts.Peak_Analysis.SortByRef;
 	exitCodeOnExecutionException = 1)
 public class SortByRefCLI implements Callable<Integer> {
 	
-	@Parameters( index = "0", description = "The BED peak file")
+	@Parameters( index = "0", description = "The coordinate peak file")
 	private File peak = null;
-	@Parameters( index = "1", description = "The BED reference file")
+	@Parameters( index = "1", description = "The coordinate reference file")
 	private File ref = null;
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peak>_<ref>_Output.bed/gff)")
 	private File output = null;
-	@Option(names = {"-lb"}, description = "Maximum distance to left of peak (positive integer, default = no maximum)")
-	private String leftBound = "";
-	@Option(names = {"-rb"}, description = "Maximum distance to right of peak (positive integer, default = no maximum)")
-	private String rightBound = "";
+	@Option(names = {"-u"}, description = "Maximum distance to upstream of peak (negative integer, default = no maximum)")
+	private String upstreamBound = "n/a";
+	@Option(names = {"-d"}, description = "Maximum distance to downstream of peak (positive integer, default = no maximum)")
+	private String downstreamBound = "n/a";
 	@Option(names = {"-p", "--proper-strands"}, description = "Require proper strand direction" )
 	private boolean properStrands = false;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
@@ -54,7 +52,7 @@ public class SortByRefCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SortByRef script_obj = new SortByRef(ref, peak, output, properStrands, gzOutput, null, leftBound, rightBound);
+		SortByRef script_obj = new SortByRef(ref, peak, output, properStrands, gzOutput, null, upstreamBound, downstreamBound);
 		if (isGFF){
 			script_obj.sortGFF();
 		} else { 
@@ -106,12 +104,34 @@ public class SortByRefCLI implements Callable<Integer> {
 		}
 
 		//check bounds
-		boolean validLeftBound = leftBound.equals("") || Integer.parseInt(leftBound) >= 0;
-		boolean validRightBound = rightBound.equals("") || Integer.parseInt(rightBound) >= 0;
-		if (!validLeftBound || !validRightBound){
-			r += "Bounds must be positive integers";
+		boolean validUpstream = upstreamBound.equals("n/a");
+		if (!upstreamBound.equals("n/a")){
+			validUpstream = Integer.parseInt(upstreamBound) <= 0;
+		}
+		if (!validUpstream){
+			r += "Upstream bound must be a negative integer or or \"n/a\"";
+		}
+		boolean validDownstream = downstreamBound.equals("n/a");
+		if (!downstreamBound.equals("n/a")){
+			validDownstream = Integer.parseInt(downstreamBound) >= 0;
+		}		
+		if (!validDownstream){
+			r += "Downstream bound must be a positive integer or \"n/a\"";
 		}
 		
 		return(r);
+	}
+
+	public static String getCLIcommand(File ref, File peak, File out, boolean gff, boolean gzOutput, boolean properStrand, String upstream, String downstream){
+		String command = "java -jar $SCRIPTMANAGER peak-analysis sort-by-ref";
+		command += gff? " --gff": "";
+		command += gzOutput? " -z": "";
+		command += properStrand? " -p":"";
+		command += " -u " + ((upstream.equals(""))? "n/a": upstream);
+		command += " -d " + ((downstream.equals(""))? "n/a": downstream);
+		command += " -o " + out.getAbsolutePath();
+		command += " " + peak.getAbsolutePath();
+		command += " " + ref.getAbsolutePath();
+		return command;
 	}
 }
