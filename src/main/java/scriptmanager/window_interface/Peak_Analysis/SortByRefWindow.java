@@ -52,8 +52,8 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 	ArrayList<File> RefBEDFiles = new ArrayList<File>();
 	ArrayList<File> RefGFFFiles = new ArrayList<File>();
 	private File OUTPUT_PATH = null;
-	String UPSTREAM = "";
-	String DOWNSTREAM = "";
+	Long UPSTREAM = null;
+	Long DOWNSTREAM = null;
 	
 	private JButton btnLoadPeakBed;
 	private JButton btnLoadPeakGff;
@@ -65,8 +65,8 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveReGff;
 	private JButton btnOutputDirectory;
 	private JButton btnCalculate;
-	private JCheckBox chckbxProperStrands;
 	private JCheckBox chckbxGzipOutput;
+	private JCheckBox chckbxRestrictDistance;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
@@ -82,20 +82,16 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
         	try {
-			UPSTREAM = txtUpstream.getText();
-			DOWNSTREAM = txtDownstream.getText();
-			boolean validUpstream = UPSTREAM.equals("n/a") || UPSTREAM.equals("") || Integer.parseInt(UPSTREAM) <= 0;
-			boolean validDownstream= DOWNSTREAM.equals("n/a") || DOWNSTREAM.equals("") || Integer.parseInt(DOWNSTREAM) >= 0;
+			UPSTREAM = txtUpstream.getText().equals("")? null: Long.parseLong(txtUpstream.getText());
+			DOWNSTREAM = txtDownstream.getText().equals("")? null: Long.parseLong(txtDownstream.getText());
+			boolean validUpstream = UPSTREAM.equals("") || UPSTREAM <= 0;
+			boolean validDownstream= DOWNSTREAM.equals("") || DOWNSTREAM >= 0;
 			if (!validUpstream){
-				JOptionPane.showMessageDialog(null, "Upstream bound must be a negative integer, blank or \"n/a\"");
-				throw new NumberFormatException();
+				throw new NumberFormatException("upstream");
 			}
 			else if (!validDownstream){
-				JOptionPane.showMessageDialog(null, "Downstream must be a positive integer, blank or \"n/a\"");
-				throw new NumberFormatException();
+				throw new NumberFormatException("downstream");
 			}
-			UPSTREAM = UPSTREAM.equals("")? "n/a": UPSTREAM;
-			DOWNSTREAM = DOWNSTREAM.equals("")? "n/a": DOWNSTREAM;
 			if (rdbtnBed.isSelected()) {
 					if(PeakBEDFiles.size() < 1 || RefBEDFiles.size() < 1) {
 						JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
@@ -109,7 +105,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 							for(int p=0; p < PeakBEDFiles.size(); p++)
 							{
 								// Execute Script and update progress
-								align = new SortByRefOutput(RefBEDFiles.get(r), PeakBEDFiles.get(p), OUTPUT_PATH, chckbxProperStrands.isSelected(),
+								align = new SortByRefOutput(RefBEDFiles.get(r), PeakBEDFiles.get(p), OUTPUT_PATH,
 								chckbxGzipOutput.isSelected(), false, UPSTREAM, DOWNSTREAM);	
 								align.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
@@ -139,7 +135,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 							for(int p=0; p < PeakGFFFiles.size(); p++)
 							{
 								// Execute Script and update progress
-								align = new SortByRefOutput(RefGFFFiles.get(r), PeakGFFFiles.get(p), OUTPUT_PATH, chckbxProperStrands.isSelected(), 
+								align = new SortByRefOutput(RefGFFFiles.get(r), PeakGFFFiles.get(p), OUTPUT_PATH, 
 								chckbxGzipOutput.isSelected(), true, UPSTREAM, DOWNSTREAM);	
 								align.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
@@ -158,6 +154,13 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 					}
 				}
         	} catch(NumberFormatException nfe){
+				if (nfe.getMessage().equals("upstream")){
+					JOptionPane.showMessageDialog(null, "Upstream bound must be a negative integer");
+				} else if (nfe.getMessage().equals("downstream")) {
+					JOptionPane.showMessageDialog(null, "Downstream must be a positive integer");
+				} else {
+					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+				}
 			}
         	return null;
         }
@@ -171,7 +174,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 	public SortByRefWindow() {
 		setTitle("Sort Coordinate By Reference");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 500, 620);
+		setBounds(100, 100, 500, 630);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -197,7 +200,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, inputCards, 10, SpringLayout.SOUTH, rdbtnBed);
 		sl_contentPane.putConstraint(SpringLayout.WEST, inputCards, 0, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, inputCards, 0, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -195, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -205, SpringLayout.SOUTH, contentPane);
 		contentPane.add(inputCards);
 
 		JPanel bedInputPane = new JPanel();
@@ -387,58 +390,85 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
 		gffInputPane.add(btnRemoveReGff);
+
+		//Initialize restrict distance checkbox
+		chckbxRestrictDistance = new JCheckBox("Restrict maximum distance from peak");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRestrictDistance, 3, SpringLayout.SOUTH, inputCards);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRestrictDistance, 105, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxRestrictDistance, -105, SpringLayout.EAST, contentPane);
 		
 		//Initialize upstream text input
-		JLabel lblUpstream = new JLabel("Maximum distance upstream of peak:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpstream, 3, SpringLayout.SOUTH, inputCards);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblUpstream, 10, SpringLayout.WEST, contentPane);
+		JLabel lblUpstream = new JLabel("<html><font color='gray'>Max distance upstream:</font></html>");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpstream, 3, SpringLayout.SOUTH, chckbxRestrictDistance);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblUpstream, 20, SpringLayout.WEST, contentPane);
 		contentPane.add(lblUpstream);
 
 		txtUpstream = new JTextField();
+		txtUpstream.setEnabled(false);
+		txtUpstream.setColumns(10);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtUpstream, 3, SpringLayout.SOUTH, lblUpstream);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtUpstream, 0, SpringLayout.WEST, lblUpstream);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtUpstream, 20, SpringLayout.WEST, lblUpstream);
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtUpstream, -20, SpringLayout.EAST, lblUpstream);
 		txtUpstream.setToolTipText("Must be a negative integer");
 		txtUpstream.setHorizontalAlignment(SwingConstants.CENTER);
-		txtUpstream.setColumns(10);
-		txtUpstream.setText("n/a");
+		txtUpstream.setText("");
 		contentPane.add(txtUpstream);
 
-		JLabel bpUpstream = new JLabel("bp");
+		JLabel bpUpstream = new JLabel("<html><font color='gray'>bp</font></html>");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, bpUpstream, 0, SpringLayout.NORTH, txtUpstream);
 		sl_contentPane.putConstraint(SpringLayout.WEST, bpUpstream, 3, SpringLayout.EAST, txtUpstream);
 		contentPane.add(bpUpstream);
 
 		//Initialize downstream text input
-		JLabel lblDownstream= new JLabel("Maximum distance downstream of peak:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDownstream, 3, SpringLayout.SOUTH, txtUpstream);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblDownstream, 10, SpringLayout.WEST, contentPane);
+		JLabel lblDownstream= new JLabel("<html><font color='gray'>Max distance downstream:</font></html>");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDownstream, 3, SpringLayout.SOUTH, chckbxRestrictDistance);
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDownstream, -20, SpringLayout.EAST, contentPane);
 		contentPane.add(lblDownstream);
 
-		txtDownstream= new JTextField();
+		txtDownstream = new JTextField();
+		txtDownstream.setEnabled(false);
+		txtDownstream.setColumns(10);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtDownstream, 3, SpringLayout.SOUTH, lblDownstream);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtDownstream, 0, SpringLayout.WEST, lblDownstream);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtDownstream, 30, SpringLayout.WEST, lblDownstream);
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtDownstream, -30, SpringLayout.EAST, lblDownstream);
 		txtDownstream.setToolTipText("Must be a positive integer");
 		txtDownstream.setHorizontalAlignment(SwingConstants.CENTER);
-		txtDownstream.setColumns(10);
-		txtDownstream.setText("n/a");
+		txtDownstream.setText("");
 		contentPane.add(txtDownstream);
 
-		JLabel bpDownstream = new JLabel("bp");
+		JLabel bpDownstream = new JLabel("<html><font color='gray'>bp</font></html>");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, bpDownstream, 0, SpringLayout.NORTH, txtDownstream);
 		sl_contentPane.putConstraint(SpringLayout.WEST, bpDownstream, 3, SpringLayout.EAST, txtDownstream);
 		contentPane.add(bpDownstream);
 
-		//Initialize proper strandedness checkbox
-		chckbxProperStrands = new JCheckBox("<html>Require Proper Strand<br>Direction");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxProperStrands, 3, SpringLayout.SOUTH, inputCards);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxProperStrands, -10, SpringLayout.EAST, contentPane);
- 		contentPane.add(chckbxProperStrands);
+		chckbxRestrictDistance.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (chckbxRestrictDistance.isSelected()) {
+					txtUpstream.setEnabled(true);
+					lblUpstream.setText("<html><font color='black'>Max distance upstream:</font></html>");
+					bpUpstream.setText("<html><font color='black'>bp</font></html>");
+					txtDownstream.setEnabled(true);
+					lblDownstream.setText("<html><font color='black'>Max distance downstream:</font></html>");
+					bpDownstream.setText("<html><font color='black'>bp</font></html>");
+				} else {
+					txtUpstream.setEnabled(false);
+					txtUpstream.setText("");
+					lblUpstream.setText("<html><font color='gray'>Max distance upstream:</font></html>");
+					bpUpstream.setText("<html><font color='gray'>bp</font></html>");
+					txtDownstream.setEnabled(false);
+					txtDownstream.setText("");
+					lblDownstream.setText("<html><font color='gray'>Max distance downstream:</font></html>");
+					bpDownstream.setText("<html><font color='gray'>bp</font></html>");
+				}
+			}
+		});
+		contentPane.add(chckbxRestrictDistance);
 
 		//Initialize output directory
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 175, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -175, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 3, SpringLayout.SOUTH, txtDownstream);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, txtDownstream);
 		btnOutputDirectory.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		OUTPUT_PATH = FileSelection.getOutputDir(fc);

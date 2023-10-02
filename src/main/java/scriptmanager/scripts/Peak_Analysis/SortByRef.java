@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,25 +23,24 @@ public class SortByRef {
 	private PrintStream OUT = null;
 	private File PEAK = null;
 	private File REF = null;
-	private boolean PROPER_STRANDED = false;
+
 	private long MAX_UPSTREAM = 0;
 	private long MAX_DOWNSTREAM = 0;
 	private boolean BOUNDED_UPSTREAM = false;
 	private boolean BOUNDED_DOWNSTREAM = false;
 	
-	public SortByRef(File ref, File peak, File out, boolean properStrands, boolean gzOutput, PrintStream ps, String upstream, String downstream) throws IOException {
+	public SortByRef(File ref, File peak, File out, boolean gzOutput, PrintStream ps, Long upstream, Long downstream) throws IOException {
 		PS = ps;
 		OUT = GZipUtilities.makePrintStream(out, gzOutput);
 		PEAK = peak;
 		REF = ref;
-		PROPER_STRANDED = properStrands;
-		if (!upstream.equals("n/a")){
+		if (!upstream.equals(null)){
 			BOUNDED_UPSTREAM = true;
-			MAX_UPSTREAM = Long.parseLong(upstream);
+			MAX_UPSTREAM = upstream;
 		}
-		if (!downstream.equals("n/a")){
+		if (!downstream.equals(null)){
 			BOUNDED_DOWNSTREAM = true;
-			MAX_DOWNSTREAM= Long.parseLong(downstream);
+			MAX_DOWNSTREAM= downstream;
 		}
 	}
 		
@@ -102,7 +100,6 @@ public class SortByRef {
 				}
 			}
 			matches[i] = new long[] {minDiff, peakIndex, i};
-			System.out.println(Arrays.toString(matches[i]));
 		}
 
 		//Go through all peak values
@@ -131,7 +128,6 @@ public class SortByRef {
 				OUT.println(refCoords.get((int)coord[2]));
 			}
 		}
-		System.out.println(refCoords.size());
 		OUT.close();
 		
 		printPS("Completing: " + getTimeStamp());
@@ -193,7 +189,6 @@ public class SortByRef {
 				}
 			}
 			matches[i] = new long[] {minDiff, peakIndex, i};
-			System.out.println(Arrays.toString(matches[i]));
 		}
 
 		//Go through all peak values
@@ -228,15 +223,29 @@ public class SortByRef {
 	}
 
 	private boolean validateCoord(GenomicCoord peak, GenomicCoord ref, long minDistance){
-		boolean properDir = (!PROPER_STRANDED || peak.getDir().equals(ref.getDir()));
 		boolean closer = (minDistance >= Math.abs(peak.getMid() - ref.getMid()));
 		boolean inBounds = true;
-		if (peak.getMid() <= ref.getMid() && BOUNDED_DOWNSTREAM){
-			inBounds = ref.getMid() - peak.getMid() <= MAX_DOWNSTREAM;
-		} else if (BOUNDED_UPSTREAM) {
-			inBounds = ref.getMid() - peak.getMid() >= MAX_UPSTREAM;
+		//If ref strand is negative
+		if(ref.getDir().equals("-")){
+			//If ref is downstream
+			if (ref.getMid() <= peak.getMid() && BOUNDED_DOWNSTREAM){
+				//MAX_DOWNSTREAM is positive int
+				inBounds = peak.getMid() - ref.getMid() <= MAX_DOWNSTREAM;
+			} else if (BOUNDED_UPSTREAM) {
+				//MAX_UPSTREAM is negative int, and peak is greater than ref
+				inBounds = peak.getMid() - ref.getMid() >= MAX_UPSTREAM;
+			}
+		} else {
+			//If ref is downstream
+			if (ref.getMid() >= peak.getMid() && BOUNDED_DOWNSTREAM){
+				//MAX_DOWNSTREAM is positive int
+				inBounds = ref.getMid() - peak.getMid() <= MAX_DOWNSTREAM;
+			} else if (BOUNDED_UPSTREAM) {
+				//MAX_UPSTREAM is negative int, and peak is less than than ref
+				inBounds = peak.getMid() - ref.getMid() >= MAX_UPSTREAM;
+			}
 		}
-		return properDir && closer && inBounds;
+		return closer && inBounds;
 	}
 
 

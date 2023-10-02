@@ -32,11 +32,9 @@ public class SortByRefCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peak>_<ref>_Output.bed/gff)")
 	private File output = null;
 	@Option(names = {"-u"}, description = "Maximum distance to upstream of peak (negative integer, default = no maximum)")
-	private String upstreamBound = "n/a";
+	private Long upstreamBound = null;
 	@Option(names = {"-d"}, description = "Maximum distance to downstream of peak (positive integer, default = no maximum)")
-	private String downstreamBound = "n/a";
-	@Option(names = {"-p", "--proper-strands"}, description = "Require proper strand direction" )
-	private boolean properStrands = false;
+	private Long downstreamBound = null;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
 	private boolean gzOutput = false;
 	@Option(names = {"--gff"}, description = "input is GFF format (default=BED format)")
@@ -52,7 +50,7 @@ public class SortByRefCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SortByRef script_obj = new SortByRef(ref, peak, output, properStrands, gzOutput, null, upstreamBound, downstreamBound);
+		SortByRef script_obj = new SortByRef(ref, peak, output, gzOutput, null, upstreamBound, downstreamBound);
 		if (isGFF){
 			script_obj.sortGFF();
 		} else { 
@@ -104,31 +102,30 @@ public class SortByRefCLI implements Callable<Integer> {
 		}
 
 		//check bounds
-		boolean validUpstream = upstreamBound.equals("n/a");
-		if (!upstreamBound.equals("n/a")){
-			validUpstream = Integer.parseInt(upstreamBound) <= 0;
+		boolean validUpstream = upstreamBound.equals("");
+		if (!upstreamBound.equals(null)){
+			validUpstream = upstreamBound <= 0;
 		}
 		if (!validUpstream){
-			r += "Upstream bound must be a negative integer or or \"n/a\"";
+			r += "Upstream bound must be a negative integer";
 		}
-		boolean validDownstream = downstreamBound.equals("n/a");
-		if (!downstreamBound.equals("n/a")){
-			validDownstream = Integer.parseInt(downstreamBound) >= 0;
+		boolean validDownstream = downstreamBound.equals("");
+		if (!downstreamBound.equals(null)){
+			validDownstream = downstreamBound >= 0;
 		}		
 		if (!validDownstream){
-			r += "Downstream bound must be a positive integer or \"n/a\"";
+			r += "Downstream bound must be a positive integer";
 		}
 		
 		return(r);
 	}
 
-	public static String getCLIcommand(File ref, File peak, File out, boolean gff, boolean gzOutput, boolean properStrand, String upstream, String downstream){
+	public static String getCLIcommand(File ref, File peak, File out, boolean gff, boolean gzOutput, Long upstream, Long downstream){
 		String command = "java -jar $SCRIPTMANAGER peak-analysis sort-by-ref";
 		command += gff? " --gff": "";
 		command += gzOutput? " -z": "";
-		command += properStrand? " -p":"";
-		command += " -u " + ((upstream.equals(""))? "n/a": upstream);
-		command += " -d " + ((downstream.equals(""))? "n/a": downstream);
+		command += upstream.equals("")? "": " -u " + upstream;
+		command += downstream.equals("")? "": " -d " + downstream;
 		command += " -o " + out.getAbsolutePath();
 		command += " " + peak.getAbsolutePath();
 		command += " " + ref.getAbsolutePath();
