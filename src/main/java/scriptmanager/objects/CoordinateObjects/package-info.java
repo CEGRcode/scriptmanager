@@ -1,4 +1,4 @@
 /**
- * Package containing classes which store geneomic coordinate information
+ * Genomic coordinate information storage classes
  */
 package scriptmanager.objects.CoordinateObjects;

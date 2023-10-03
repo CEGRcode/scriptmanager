@@ -1,4 +1,4 @@
 /**
- * Package containing classes that provide static helper methods
+ * Utilities that provide static helper methods
  */
 package scriptmanager.util;

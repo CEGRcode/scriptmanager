@@ -1,4 +1,4 @@
 /**
- * Package containing custom exceptions
+ * Custom exceptions created for ScriptManager tools
  */
 package scriptmanager.objects.CustomExceptions;

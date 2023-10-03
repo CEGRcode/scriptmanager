@@ -1,4 +1,5 @@
 /**
- * Provides GUI's for running scripts in {@link scriptmanager.scripts.BAM_Manipulation}
+ * Graphical interfaces (GUI) for running scripts in
+ * {@link scriptmanager.scripts.BAM_Manipulation}
  */
 package scriptmanager.window_interface.BAM_Manipulation;

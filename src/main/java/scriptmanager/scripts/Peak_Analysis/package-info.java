@@ -1,4 +1,4 @@
 /**
- * Package containing scripts which are useful for peak analysis with BAM and BED files 
+ * Scripts which are useful for analyzing peak BED files
  */
 package scriptmanager.scripts.Peak_Analysis;

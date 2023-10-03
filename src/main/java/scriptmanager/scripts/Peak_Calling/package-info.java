@@ -1,4 +1,4 @@
 /**
- * Under-development package containing script used for peak calling during ChIP-seq analysis
+ * Scripts used for peak calling on genomic (particularly ChIP-based) data
  */
 package scriptmanager.scripts.Peak_Calling;

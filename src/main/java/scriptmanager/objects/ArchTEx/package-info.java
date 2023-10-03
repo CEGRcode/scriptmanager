@@ -1,4 +1,5 @@
 /**
- * Package containing helper classes for {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation}
+ * Helper classes for
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation}
  */
 package scriptmanager.objects.ArchTEx;
