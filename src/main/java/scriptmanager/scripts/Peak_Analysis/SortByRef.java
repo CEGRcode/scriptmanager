@@ -34,13 +34,13 @@ public class SortByRef {
 		OUT = GZipUtilities.makePrintStream(out, gzOutput);
 		PEAK = peak;
 		REF = ref;
-		if (!upstream.equals(null)){
+		if (!(upstream == null)){
 			BOUNDED_UPSTREAM = true;
-			MAX_UPSTREAM = upstream;
+			MAX_UPSTREAM = upstream.longValue();
 		}
-		if (!downstream.equals(null)){
+		if (!(downstream == null)){
 			BOUNDED_DOWNSTREAM = true;
-			MAX_DOWNSTREAM= downstream;
+			MAX_DOWNSTREAM = downstream.longValue();
 		}
 	}
 		
@@ -100,6 +100,7 @@ public class SortByRef {
 				}
 			}
 			matches[i] = new long[] {minDiff, peakIndex, i};
+			printPS(matches[i][0] + "," + matches[i][1] + "," + matches[i][2]);
 		}
 
 		//Go through all peak values

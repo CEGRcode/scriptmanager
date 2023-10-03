@@ -124,8 +124,8 @@ public class SortByRefCLI implements Callable<Integer> {
 		String command = "java -jar $SCRIPTMANAGER peak-analysis sort-by-ref";
 		command += gff? " --gff": "";
 		command += gzOutput? " -z": "";
-		command += upstream.equals("")? "": " -u " + upstream;
-		command += downstream.equals("")? "": " -d " + downstream;
+		command += upstream == null? "": " -u " + upstream;
+		command += downstream == null? "": " -d " + downstream;
 		command += " -o " + out.getAbsolutePath();
 		command += " " + peak.getAbsolutePath();
 		command += " " + ref.getAbsolutePath();

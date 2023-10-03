@@ -82,10 +82,10 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
         	try {
-			UPSTREAM = txtUpstream.getText().equals("")? null: Long.parseLong(txtUpstream.getText());
-			DOWNSTREAM = txtDownstream.getText().equals("")? null: Long.parseLong(txtDownstream.getText());
-			boolean validUpstream = UPSTREAM.equals("") || UPSTREAM <= 0;
-			boolean validDownstream= DOWNSTREAM.equals("") || DOWNSTREAM >= 0;
+			UPSTREAM = (txtUpstream.getText().equals(""))? null: Long.parseLong(txtUpstream.getText());
+			DOWNSTREAM = (txtDownstream.getText().equals(""))? null: Long.parseLong(txtDownstream.getText());
+			boolean validUpstream = UPSTREAM == null || UPSTREAM <= 0;
+			boolean validDownstream = DOWNSTREAM == null || DOWNSTREAM >= 0;
 			if (!validUpstream){
 				throw new NumberFormatException("upstream");
 			}
