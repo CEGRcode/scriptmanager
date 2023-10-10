@@ -29,9 +29,7 @@ import scriptmanager.charts.ScalingPlotter;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 /**
- * The script class for calculating various kinds of normalization factors from
- * a BAM file. Used to normalize for various kinds of analysis.
- * <br>
+ * Calculate various kinds of normalization factors from a BAM file. <br>
  * NCIS code adapted from Mahony Lab <a href=
  * "https://github.com/seqcode/seqcode-core">https://github.com/seqcode/seqcode-core</a>
  * <br>
@@ -73,29 +71,21 @@ public class ScalingFactor {
 	/**
 	 * Initialize scaling factor parameters in this constructor
 	 * 
-	 * @param bamFile
-	 *            the BAM file to calculate a scaling factor from
-	 * @param bl
-	 *            the BED formatted blacklist file for excluding specific
-	 *            regions from the calculation
-	 * @param c
-	 *            the control BAM file that is used by the NCIS strategy to
-	 *            determine background signal
-	 * @param out_basename
-	 *            the filepath base name (the script will append suffixes) for
-	 *            the output files
-	 * @param out
-	 *            whether or not to write the output (write =true, don't write =
-	 *            false)
-	 * @param scale
-	 *            an integer value encoding the scaling type strategy to use
-	 *            (1=Total Tag, 2=NCIS, 3=NCISwithTotal)
-	 * @param win
-	 *            the NCIS parameter for the window/bin size (only used if
-	 *            scale!=1)
-	 * @param min
-	 *            the NCIS parameter for the minimum fraction (only used if
-	 *            scale!=1)
+	 * @param bamFile      the BAM file to calculate a scaling factor from
+	 * @param bl           the BED formatted blacklist file for excluding specific
+	 *                     regions from the calculation
+	 * @param c            the control BAM file that is used by the NCIS strategy to
+	 *                     determine background signal
+	 * @param out_basename the filepath base name (the script will append suffixes)
+	 *                     for the output files
+	 * @param out          whether or not to write the output (write =true, don't
+	 *                     write = false)
+	 * @param scale        an integer value encoding the scaling type strategy to
+	 *                     use (1=Total Tag, 2=NCIS, 3=NCISwithTotal)
+	 * @param win          the NCIS parameter for the window/bin size (only used if
+	 *                     scale!=1)
+	 * @param min          the NCIS parameter for the minimum fraction (only used if
+	 *                     scale!=1)
 	 */
 	public ScalingFactor(File bamFile, File bl, File c, String out_basename, boolean out, int scale, int win,
 			double min) {
@@ -264,10 +254,12 @@ public class ScalingFactor {
 
 	/**
 	 * Sets blacklisted to NaN
-	 * @param chrom Chromosome to be processed
-	 * @param chromSize Length of the chromsome
-	 * @param windowSize The window/bin size 
-	 * @return An array representing the chromosome, with blacklisted regions being represented as NaN and valid regions being zero 
+	 * 
+	 * @param chrom      Chromosome to be processed
+	 * @param chromSize  Length of the chromsome
+	 * @param windowSize The window/bin size
+	 * @return An array representing the chromosome, with blacklisted regions being
+	 *         represented as NaN and valid regions being zero
 	 */
 	public float[] maskChrom(String chrom, long chromSize, int windowSize) {
 		float[] chromArray = new float[(int) (chromSize / windowSize) + 1];
@@ -290,6 +282,7 @@ public class ScalingFactor {
 
 	/**
 	 * Loads the blacklisted coordinates from a BED file
+	 * 
 	 * @param BLACKFile BED file with blacklisted coordinates
 	 * @throws FileNotFoundException Script could not find valid input file
 	 */
@@ -331,8 +324,10 @@ public class ScalingFactor {
 	}
 
 	/**
-	 * Initialized chromName and cromLength variables, with the name and length of each chromosome respectively
-	 * @param BAM File to be used for initialization 
+	 * Initialized chromName and cromLength variables, with the name and length of
+	 * each chromosome respectively
+	 * 
+	 * @param BAM File to be used for initialization
 	 * @throws IOException Invalid file or parameters
 	 */
 	public void initalizeGenomeMetainformation(File BAM) throws IOException {
@@ -461,13 +456,14 @@ public class ScalingFactor {
 	 * windows in the Lists. Uses ratios that are based on at least 75% of genomic
 	 * regions by default.
 	 * 
-	 * @param setA       signal list
-	 * @param setB       control list
-	 * @param totalA Total number of A reads
-	 * @param totalB Total number of B reads 
+	 * @param setA    signal list
+	 * @param setB    control list
+	 * @param totalA  Total number of A reads
+	 * @param totalB  Total number of B reads
 	 * @param outpath optional file that will contain the data
-	 * @param fileid Name of file to be used when titling plots
-	 * @param minFrac Minimum ratio of paired counts / num pairs for analysis to start
+	 * @param fileid  Name of file to be used when titling plots
+	 * @param minFrac Minimum ratio of paired counts / num pairs for analysis to
+	 *                start
 	 * @return
 	 */
 	public double scalingRatioByHitRatioAndNCIS(List<Float> setA, List<Float> setB, double totalA, double totalB,
@@ -577,12 +573,14 @@ public class ScalingFactor {
 
 	/**
 	 * Generates scatter plots, assigning them to CC_plot and M_plot respectively
-	 * @param counts List of PairedCounts
+	 * 
+	 * @param counts         List of PairedCounts
 	 * @param totalAtScaling Draw a red line at the y-axis for this value
-	 * @param scalingRatio Draw a red line at the x-axis for this value
-	 * @param outbase Base name for output files
-	 * @param fileid Name of file to be used when titling chart
-	 * @param scaletype Type of scaling to use (1=Total Tag, 2=NCIS, 3=NCISwithTotal)
+	 * @param scalingRatio   Draw a red line at the x-axis for this value
+	 * @param outbase        Base name for output files
+	 * @param fileid         Name of file to be used when titling chart
+	 * @param scaletype      Type of scaling to use (1=Total Tag, 2=NCIS,
+	 *                       3=NCISwithTotal)
 	 */
 	public void plotGraphs(List<PairedCounts> counts, double totalAtScaling, double scalingRatio, String outbase,
 			String fileid, String scaletype) {
@@ -646,6 +644,7 @@ public class ScalingFactor {
 
 	/**
 	 * Returns the cumulative plot
+	 * 
 	 * @return
 	 */
 	public ChartPanel getCCPlot() {
@@ -654,6 +653,7 @@ public class ScalingFactor {
 
 	/**
 	 * Returns the marginal plot
+	 * 
 	 * @return The marginal plot
 	 */
 	public ChartPanel getMPlot() {
@@ -662,6 +662,7 @@ public class ScalingFactor {
 
 	/**
 	 * Returns the scaling factor
+	 * 
 	 * @return The scaling factor
 	 */
 	public double getScalingFactor() {
@@ -670,6 +671,7 @@ public class ScalingFactor {
 
 	/**
 	 * Returns the lastest error message
+	 * 
 	 * @return the lastest error message
 	 */
 	public String getDialogMessage() {

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Picard wrapper for MergeSamFiles SortSam
+ * Picard wrapper for SortSam
  * 
  * @author Erik Pavloski
  * @see scriptmanager.window_interface.BAM_Manipulation.SortBAMWindow

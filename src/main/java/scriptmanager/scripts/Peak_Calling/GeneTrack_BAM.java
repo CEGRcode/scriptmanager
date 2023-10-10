@@ -24,7 +24,7 @@ import scriptmanager.objects.GenetrackParameters;
 import scriptmanager.objects.Peak;
 
 /**
- * GUI for running a gene track window with a given BAM file
+ * (Dev) GUI for running a gene track window based on a (BAM input).
  */
 @SuppressWarnings("serial")
 public class GeneTrack_BAM extends JFrame {

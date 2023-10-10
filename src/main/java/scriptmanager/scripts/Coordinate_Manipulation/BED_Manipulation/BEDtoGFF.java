@@ -15,17 +15,13 @@ import java.util.zip.GZIPOutputStream;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This script converts a BED-formatted coordinate file too the GFF-format.
+ * Convert a BED-formatted coordinate file to the GFF-format
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI
  * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow
  */
 public class BEDtoGFF {
-	/**
-	 * Creates a new BED to GFF object
-	 */
-	public BEDtoGFF(){}
 
 	/**
 	 * Read the BED-formatted input file and write it as a GFF-formatted output file.

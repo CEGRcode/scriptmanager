@@ -20,8 +20,8 @@ import java.util.zip.GZIPOutputStream;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This script creates a BED coordinate file of every instance of the
- * user-provided IUPAC motif in a user-provided genomic sequence.
+ * Create a BED coordinate file of every instance of the user-provided IUPAC
+ * motif in a user-provided genomic sequence.
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Sequence_Analysis.SearchMotifCLI

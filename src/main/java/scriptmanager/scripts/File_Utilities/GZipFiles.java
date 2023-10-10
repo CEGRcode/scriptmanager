@@ -13,8 +13,7 @@ import java.util.zip.GZIPOutputStream;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Class to contain all static "gzipping" and "ungzipping" methods with
- * customizable buffer sizes.
+ * Gzip compressing and decompressing methods with customizable buffer sizes.
  * 
  * @author Olivia Lang
  * @see scriptmanager.window_interface.File_Utilities.CompressFileWindow

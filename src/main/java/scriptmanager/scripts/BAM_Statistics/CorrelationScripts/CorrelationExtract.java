@@ -10,7 +10,8 @@ import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
 
 /**
- * Class for calculating correlation between two CorrelationCoords
+ * Calculate correlation between two CorrelationCoords
+ * 
  * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
  * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
  */
@@ -26,19 +27,20 @@ public class CorrelationExtract implements Runnable {
 	
 	private int INDEX;
 	private int SUBSETSIZE;
-	
+
 	SamReader inputSam;
-	
+
 	/**
 	 * Creates a new CorrelationExtract object given parameters
-	 * @param win Set of CorrelationCoords to compare
-	 * @param r Which reads to correlate 
-	 * @param s The tag shift in #of base pairs
-	 * @param b The bin size in #of base pairs
+	 * 
+	 * @param win     Set of CorrelationCoords to compare
+	 * @param r       Which reads to correlate
+	 * @param s       The tag shift in #of base pairs
+	 * @param b       The bin size in #of base pairs
 	 * @param current Specifies the starting index
-	 * @param sub ️The subset size
-	 * @param e1 First BAM file
-	 * @param e2 Second BAM file
+	 * @param sub     ️The subset size
+	 * @param e1      First BAM file
+	 * @param e2      Second BAM file
 	 */
 	public CorrelationExtract(Vector<CorrelationCoord> win, int r, int s, int b, int current, int sub, File e1, File e2) {
 		ALLNodes = win;

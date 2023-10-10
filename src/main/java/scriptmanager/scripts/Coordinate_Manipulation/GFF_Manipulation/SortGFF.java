@@ -11,7 +11,7 @@ import java.util.Scanner;
 import scriptmanager.objects.CoordinateObjects.GFFCoord;
 
 /**
- * This class contains scripts for sorting coordinate intervals (BED/GFF) by the tag counts of a CDT matrix file.
+ * Sort coordinate intervals (GFF) by the tag counts of a CDT matrix file.
  *
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI

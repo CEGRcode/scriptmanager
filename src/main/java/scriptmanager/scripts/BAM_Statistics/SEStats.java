@@ -14,18 +14,21 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
-* Script to output BAM header and parameters given by indexed (BAI) BAM file.
-* @see scriptmanager.cli.BAM_Statistics.SEStatsCLI
-* @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
-* @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
-*/
+ * Write BAM header of per-chromosome mapped read counts.
+ * 
+ * @see scriptmanager.cli.BAM_Statistics.SEStatsCLI
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
+ */
 public class SEStats {
-	
+
 	/**
-	 * Outputs BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File
+	 * Outputs BAM Header including alignment statistics and parameters given any
+	 * indexed (BAI) BAM File
+	 * 
 	 * @param out_filepath File path to output text file to
-	 * @param bamFile BAM file to be analyzed
-	 * @param ps Output print stream
+	 * @param bamFile      input BAM file (indexed)
+	 * @param ps           Output print stream
 	 */
 	public static void getSEStats( File out_filepath, File bamFile, PrintStream ps ) {
 		

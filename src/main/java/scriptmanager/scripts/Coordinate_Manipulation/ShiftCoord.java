@@ -15,7 +15,7 @@ import java.util.zip.GZIPOutputStream;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This class contains scripts for shifting coordinate intervals (BED/GFF) by a user-defined direction and distance.
+ * Shift coordinate intervals (BED/GFF) by a user-defined direction and distance.
  *
  * @author Olivia Lang
  * @see scriptmanager.cli.Coordinate_Manipulation.ShiftCoordCLI

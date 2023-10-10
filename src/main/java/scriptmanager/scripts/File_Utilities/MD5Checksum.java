@@ -7,7 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Class providing a static method which generates a file's MD5 code
+ * Generate a file's MD5 (GEO requirement)
  * 
  * @author Olivia Lang
  * @see scriptmanager.window_interface.File_Utilities.CompressFileWindow
@@ -16,12 +16,8 @@ import java.security.NoSuchAlgorithmException;
 public class MD5Checksum {
 
 	/**
-	 * Creates a new MD5Checksum object
-	 */
-	public MD5Checksum(){}
-
-	/**
 	 * Calculates the MD5 Checksum for a given input file
+	 * 
 	 * @param input BAM
 	 * @return
 	 * @throws IOException

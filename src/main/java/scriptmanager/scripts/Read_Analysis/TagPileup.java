@@ -30,7 +30,8 @@ import scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract;
 import scriptmanager.util.ArrayUtilities;
 
 /**
- * A script for running Pileup analysis on a pair of BED and BAM files
+ * Pileup tags or user-defined encodings around a set of reference points
+ * 
  * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
  */
 public class TagPileup {
@@ -53,11 +54,13 @@ public class TagPileup {
 
 	/**
 	 * Creates a new instance of the TagPileup script
-	 * @param be BED file to be used in Pileup 
-	 * @param ba BAM file to be used in Pileup 
-	 * @param param Set of parameters for Pileup analysis (specified by user with GUI)
+	 * 
+	 * @param be              BED file to be used in Pileup
+	 * @param ba              BAM file to be used in Pileup
+	 * @param param           Set of parameters for Pileup analysis (specified by
+	 *                        user with GUI)
 	 * @param outputwindow_ps Output to be displayed to user
-	 * @param outMat Base name of the output matrix
+	 * @param outMat          Base name of the output matrix
 	 */
 	public TagPileup(File be, File ba, PileupParameters param, PrintStream outputwindow_ps, String outMat) {
 		BED = be;
@@ -69,6 +72,7 @@ public class TagPileup {
 
 	/**
 	 * Runs the TagPileup script
+	 * 
 	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {

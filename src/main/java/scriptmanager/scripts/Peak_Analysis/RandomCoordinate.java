@@ -12,7 +12,7 @@ import scriptmanager.objects.CoordinateObjects.GenericCoord;
 import scriptmanager.util.GenomeSizeReference;
 
 /**
- * Class with static method for creating a coordinate file of random sites across a genome.
+ * Randomly sample sites across a genome.
  * 
  * @author William KM Lai
  * @see scriptmanager.util.GenomeSizeReference

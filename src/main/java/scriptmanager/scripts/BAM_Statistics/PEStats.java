@@ -24,26 +24,34 @@ import scriptmanager.charts.Histogram;
 import scriptmanager.charts.LineChart;
 
 /**
- * Provides methods for generating Insert-size Histogram statistics (GEO requirement) and alignment statistics 
- * and parameters given a sorted and indexed (BAI) paired-end BAM File.
+ * Tally insert-size statistics by generating insert histogram and tally counts
+ * (GEO requirement) along with alignment statistics and parameters from
+ * paired-end BAM files.
+ * 
  * @author Olivia Lang
  * @see scriptmanager.cli.BAM_Statistics.PEStatsCLI
  * @see scriptmanager.window_interface.BAM_Statistics.PEStatWindow
  * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
  */
 public class PEStats {
-	
+
 	/**
-	 * Creates Insert-size Histograms and print alignment statistics to window and output file (if provided)
-	 * @param out_basename Name of output file (without extensions)
-	 * @param bamFile BAM file to be analyzed
-	 * @param DUP_STATUS Boolean specifying if duplication statistics and chart should be generated
-	 * @param MIN_INSERT Maximum histogram range
-	 * @param MAX_INSERT Minimum histogram range
-	 * @param PS_INSERT PrintStream for insert statistics (should be null)
-	 * @param PS_DUP  PrintStream for duplication statistics (should be null)
-	 * @param SUM_STATUS Boolean specifying if an insert summary should be generated
-	 * @return
+	 * Creates Insert-size Histograms and print alignment statistics to window and
+	 * output file (if provided)
+	 * 
+	 * @param out_basename name of output file (without extensions)
+	 * @param bamFile      BAM file to be analyzed (indexed)
+	 * @param DUP_STATUS   specifies if duplication statistics and chart should be
+	 *                     generated
+	 * @param MIN_INSERT   maximum histogram range
+	 * @param MAX_INSERT   minimum histogram range
+	 * @param PS_INSERT    destination for writing insert statistics (does not write
+	 *                     if null)
+	 * @param PS_DUP       destination for writing duplication statistics (does not
+	 *                     write if null null)
+	 * @param SUM_STATUS   specifies if an insert summary should be generated
+	 * @return two-item list of charts to display (0=insert size chart,
+	 *         1=duplication chart if DUP_STATUS=true)
 	 */
 	public static Vector<ChartPanel> getPEStats( File out_basename, File bamFile, boolean DUP_STATUS, int MIN_INSERT, int MAX_INSERT, PrintStream PS_INSERT, PrintStream PS_DUP, boolean SUM_STATUS ){
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);

@@ -14,7 +14,8 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.ArrayUtilities;
 
 /**
- * Provides helper methods for {@link scriptmanager.scripts.Read_Analysis.TagPileup}
+ * Helper methods for {@link scriptmanager.scripts.Read_Analysis.TagPileup}
+ * 
  * @see scriptmanager.scripts.Read_Analysis.TagPileup
  */
 public class PileupExtract implements Runnable{
@@ -40,11 +41,12 @@ public class PileupExtract implements Runnable{
 	
 	/**
 	 * Creates a new instance of a PileupExtract
-	 * @param p Parameters to be used with the extraction
-	 * @param b BAM file to be extracted
-	 * @param i Input BEDCoords
+	 * 
+	 * @param p       Parameters to be used with the extraction
+	 * @param b       BAM file to be extracted
+	 * @param i       Input BEDCoords
 	 * @param current Starting nucleotide
-	 * @param length Number of BEDCoords to be processed by each thread
+	 * @param length  Number of BEDCoords to be processed by each thread
 	 */
 	public PileupExtract(PileupParameters p, File b, Vector<BEDCoord> i, int current, int length) {
 		param = p;
@@ -56,6 +58,7 @@ public class PileupExtract implements Runnable{
 
 	/**
 	 * Extracts Pileup stats for a single BEDCoord
+	 * 
 	 * @param coord BEDCoord to be extracted
 	 */
 	public void extract(BEDCoord coord) {

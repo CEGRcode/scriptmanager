@@ -8,8 +8,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * This script randomizes a FASTA sequence file by shuffling the nucleotides
- * within each FASTA sequence.
+ * Randomize a FASTA sequence file by shuffling the nucleotides within each
+ * FASTA sequence.
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI

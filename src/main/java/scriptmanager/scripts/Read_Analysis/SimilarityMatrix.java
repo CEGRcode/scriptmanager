@@ -10,7 +10,8 @@ import java.util.Scanner;
 import scriptmanager.util.SimilarityMetric;
 
 /**
- * Deprecated tool used to create a similarity matrix and outputting it to a new file
+ * (Dev) Deprecated tool used to create a similarity matrix and outputting it to
+ * a new file
  */
 public class SimilarityMatrix {
 
@@ -21,10 +22,13 @@ public class SimilarityMatrix {
 
 	/**
 	 * Creates a new instance of the SimilarityMatrix script with a given matrix
-	 * @param in Input matrix as a TAB file
+	 * 
+	 * @param in       Input matrix as a TAB file
 	 * @param out_path Output directory
-	 * @param m Similarity metric (0 = pearson, 1 = reflective, 2 = spearman, 3 = euclidean, 4 = manhattan)
-	 * @param col Whether columns or rows should be correlated (true = columns, false = rows)
+	 * @param m        Similarity metric (0 = pearson, 1 = reflective, 2 = spearman,
+	 *                 3 = euclidean, 4 = manhattan)
+	 * @param col      Whether columns or rows should be correlated (true = columns,
+	 *                 false = rows)
 	 */
 	public SimilarityMatrix(File in, File out_path, int m, boolean col) {
 		INPUT = in;

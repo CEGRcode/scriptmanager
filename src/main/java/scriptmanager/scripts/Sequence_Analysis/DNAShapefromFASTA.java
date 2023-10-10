@@ -16,7 +16,7 @@ import scriptmanager.charts.CompositePlot;
 import scriptmanager.util.DNAShapeReference;
 
 /**
- * This script calculates the various aspects of DNA shape across a set of FASTA
+ * Calculate and score various aspects of DNA shape across a set of FASTA
  * sequences.
  * 
  * @author William KM Lai

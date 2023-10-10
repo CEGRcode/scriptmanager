@@ -26,7 +26,9 @@ import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord;
 import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract;
 
 /**
- * Provides methods for Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files
+ * Perform genome-genome correlations for replicate comparisons on multiple BAM
+ * files
+ * 
  * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord
  * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
  * @see scriptmanager.cli.BAM_Statistics.BAMGenomeCorrelationCLI
@@ -53,13 +55,14 @@ public class BAMGenomeCorrelation extends Component {
 	
 	/**
 	 * Creates a new BAMGenomeCorrelation object given parameters
-	 * @param input Vector containing bam files
-	 * @param o Base name for output files
-	 * @param s The tag shift in #of base pairs
-	 * @param b The bin size in #of base pairs
-	 * @param c Number of CPU's to use
-	 * @param r Specifies which reads to correlate 
-	 * @param cs Color scale to use when generating heatmap
+	 * 
+	 * @param input list of indexed BAM files to correlate
+	 * @param o     Base name for output files
+	 * @param s     The tag shift in #of base pairs
+	 * @param b     The bin size in #of base pairs
+	 * @param c     Number of CPU's to use
+	 * @param r     Specifies which reads to correlate
+	 * @param cs    Color scale to use when generating heatmap
 	 */
 	public BAMGenomeCorrelation(Vector<File> input, File o, int s, int b, int c, int r, short cs ){
 		//Load in bamFiles

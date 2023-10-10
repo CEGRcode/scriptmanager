@@ -8,8 +8,7 @@ import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.util.GenomeSizeReference;
 
 /**
- * Class with static method for creating a coordinate file of tiles across a
- * genome.
+ * Tile coordinate intervals across a genome.
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Peak_Analysis.TileGenomeCLI

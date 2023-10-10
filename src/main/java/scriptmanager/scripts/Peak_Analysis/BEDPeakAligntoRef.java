@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Aligns BED peaks to a reference BED file, creating a CDT file
+ * Align BED peaks to a reference BED file and create a CDT file
  */
 public class BEDPeakAligntoRef {
 	private String peakPath = null;
@@ -26,26 +26,32 @@ public class BEDPeakAligntoRef {
 	private PrintStream PS = null;
 	
 	/**
-	 * Creates a new instance of a BEDPeakAligntoRef script
-	 * @param ref Reference BAM file
-	 * @param peak BAM file to be alligned
+	 * Create a new instance of a BEDPeakAligntoRef script
+	 * 
+	 * @param ref    Reference BAM file
+	 * @param peak   BAM file to be alligned
 	 * @param output Output CDT file
-	 * @param ps PrintStream for reporting process
+	 * @param ps     PrintStream for reporting process
 	 * @throws IOException Invalid file or parameters
 	 */
 	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps) throws IOException {
 		refPath = ref.getCanonicalPath();
 		peakPath = peak.getCanonicalPath();
 		PS = ps;
-		
-		try {OUT = new PrintStream(output); }
-		catch (FileNotFoundException e) { e.printStackTrace(); }
+
+		try {
+			OUT = new PrintStream(output);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * Runs the peak alignment, writing to output file and reporting progress
-	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 * 
+	 * @throws IOException          Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the
+	 *                              same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		printPS("Mapping: " + peakPath + " to " + refPath);

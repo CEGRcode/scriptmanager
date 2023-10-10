@@ -16,9 +16,9 @@ import java.util.zip.GZIPOutputStream;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * Class to contain all static chromosome name conversion methods. Primarily a
- * utility for renaming sacCer3 chromosomes in coordinate files between the two
- * alternative chromosome naming systems.
+ * Convert chromosome names (roman &rarr; arabic and arabic &rarr; roman
+ * numerals). Primarily a utility for renaming sacCer3 chromosomes in coordinate
+ * files between the two alternative chromosome naming systems.
  * 
  * @author Olivia Lang
  * @see scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI
@@ -27,11 +27,6 @@ import scriptmanager.util.GZipUtilities;
  * @see scriptmanager.window_interface.File_Utilities.ConvertGFFChrNamesWindow
  */
 public class ConvertChrNames {
-
-	/**
-	 * Creates a new ConvertChrNames object
-	 */
-	public ConvertChrNames(){}
 
 	/**
 	 * Helper method to generate the roman --&gt; arabic numeral chromosome name
@@ -43,7 +38,7 @@ public class ConvertChrNames {
 	 *         roman numeral chrname with mitochondrial chr map
 	 */
 	public static HashMap<String, String> getR2A(boolean useChrmt) {
-		HashMap<String,String> R2A = new HashMap<String, String>();
+		HashMap<String, String> R2A = new HashMap<String, String>();
 		R2A.put("chrXVI", "chr16");
 		R2A.put("chrXV", "chr15");
 		R2A.put("chrXIV", "chr14");

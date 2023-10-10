@@ -15,7 +15,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * Script to convert BAM file to GFF file
+ * Convert BAM file to GFF file
+ * 
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFOutput
  * @see scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI
@@ -38,13 +39,15 @@ public class BAMtoGFF {
 
 	/**
 	 * Creates a new instance of a BAMtoGFF script with a single BAM file
-	 * @param b BAM file
-	 * @param o Output file
-	 * @param s Specifies which reads to output
-	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
-	 * @param min_size Minimum acceptable insert size
-	 * @param max_size Maximum acceptable insert size
-	 * @param ps PrintStream to output results
+	 * 
+	 * @param b           BAM file
+	 * @param o           output GFF file
+	 * @param s           Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required,
+	 *                    !0 = required)
+	 * @param min_size    minimum acceptable insert size
+	 * @param max_size    maximum acceptable insert size
+	 * @param ps          PrintStream to output results
 	 */
 	public BAMtoGFF(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;

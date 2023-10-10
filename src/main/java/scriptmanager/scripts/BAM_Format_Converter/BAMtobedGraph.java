@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Script to convert BAM file to bedGraph file
+ * Convert BAM file to bedGraph file
+ * 
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
  * @see scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI
@@ -45,13 +46,15 @@ public class BAMtobedGraph {
 
 	/**
 	 * Creates a new instance of a BAMtobedGraph script with a single BAM file
-	 * @param b BAM file
-	 * @param o Output file
-	 * @param s Specifies which reads to output
-	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
-	 * @param min_size Minimum acceptable insert size
-	 * @param max_size Maximum acceptable insert size
-	 * @param ps PrintStream to output results
+	 * 
+	 * @param b           BAM file
+	 * @param o           output BedGraph file
+	 * @param s           Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required,
+	 *                    !0 = required)
+	 * @param min_size    minimum acceptable insert size
+	 * @param max_size    maximum acceptable insert size
+	 * @param ps          PrintStream to output results
 	 */
 	public BAMtobedGraph(File b, String o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
 		BAM = b;

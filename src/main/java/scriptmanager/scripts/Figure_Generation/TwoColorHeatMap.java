@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * The script to generate a two-color heamap PNG from a matrix of values in a given text file
+ * Generate a two-color heatmap PNG from a matrix of values in a given text file
  * 
  * @see scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI
  * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapOutput
@@ -56,18 +56,20 @@ public class TwoColorHeatMap {
 
 	/**
 	 * Creates a new instance of a TwoColorHeatMap with given attributes
-	 * @param in Matrix file for heat map to represent
-	 * @param c Color to represent maximum values
-	 * @param startR Starting row of the CDT file (Zero indexed)
-	 * @param startC Starting column of the CDT file (Zero indexed)
-	 * @param pHeight Height of resulting heat map (# pixels)
-	 * @param pWidth Width of resulting heat map (# pixels)
-	 * @param scale Scale compression type
-	 * @param abs The difference in values for each step of the color scale
-	 * @param quant The difference in percent of values for each step of the color scale
-	 * @param output Directory to output PNG to
-	 * @param outstatus Whether or not to output a PNG
-	 * @param trans If min values should be transparent
+	 * 
+	 * @param in        matrix file for heat map to represent
+	 * @param c         color to represent maximum values
+	 * @param startR    starting row of the CDT file (Zero indexed)
+	 * @param startC    starting column of the CDT file (Zero indexed)
+	 * @param pHeight   height of resulting heat map (# pixels)
+	 * @param pWidth    width of resulting heat map (# pixels)
+	 * @param scale     scale compression type
+	 * @param abs       the difference in values for each step of the color scale
+	 * @param quant     the difference in percent of values for each step of the
+	 *                  color scale
+	 * @param output    directory to output PNG to
+	 * @param outstatus whether or not to output a PNG
+	 * @param trans     specifies if min values should be transparent
 	 */
 	public TwoColorHeatMap(File in, Color c, int startR, int startC, int pHeight, int pWidth, String scale, double abs,
 			double quant, File output, boolean outstatus, boolean trans) {
@@ -92,7 +94,9 @@ public class TwoColorHeatMap {
 	}
 
 	/**
-	 * Runs the {@link TwoColorHeatMap#generateHeatMap(ArrayList) script and manages the image output}
+	 * Runs the {@link TwoColorHeatMap#generateHeatMap(ArrayList) script and manages
+	 * the image output}
+	 * 
 	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
@@ -141,7 +145,9 @@ public class TwoColorHeatMap {
 	}
 
 	/**
-	 * Generates the two color heat map with the matrix of values parsed with {@link TwoColorHeatMap#loadMatrix(File)}
+	 * Generates the two color heat map with the matrix of values parsed with
+	 * {@link TwoColorHeatMap#loadMatrix(File)}
+	 * 
 	 * @param matrix Matrix of values to create heat map with
 	 * @return The heat map as a BufferedImage object
 	 * @throws FileNotFoundException Script could not find valid input file
@@ -185,7 +191,8 @@ public class TwoColorHeatMap {
 
 	/**
 	 * Resizes the heat map to fit within specified dimensions
-	 * @param img BufferedImage to be resized
+	 * 
+	 * @param img  BufferedImage to be resized
 	 * @param newW The width of the new buffered image (# of pixels)
 	 * @param newH The height of the new buffered image (# of pixels)
 	 * @return
@@ -206,7 +213,9 @@ public class TwoColorHeatMap {
 	}
 
 	/**
-	 * Expands or compresses the given matrix by duplicating rows/columns or averaging values respectively
+	 * Expands or compresses the given matrix by duplicating rows/columns or
+	 * averaging values respectively
+	 * 
 	 * @param oldmatrix Matrix to be compressed or expanded
 	 * @return A new matrix with the appropriate values and dimensions
 	 */
@@ -361,28 +370,30 @@ public class TwoColorHeatMap {
 	}
 
 	/**
+	 * Returns an array of n values from min to max that are spaced evenly apart.
 	 * 
-	 * @param min
-	 * @param max
-	 * @param points
-	 * @return
+	 * @param min lower bound value of array
+	 * @param max upper bound value of array
+	 * @param n   the number of points in the array
+	 * @return list of n points with value evenly spaced from min to max
 	 */
-	public static int[] linspace(int min, int max, int points) {
-		int[] d = new int[points];
-		if (points < 0) {
-			System.err.println("Invalid number of points to parse!!!\n" + points);
+	public static int[] linspace(int min, int max, int n) {
+		int[] d = new int[n];
+		if (n < 0) {
+			System.err.println("Invalid number of points to parse!!! " + n + "\n");
 			System.exit(1);
 		}
-		for (int i = 1; i < points; i++) {
-			d[i] = min + i * (max - min) / (points - 1);
+		for (int i = 1; i < n; i++) {
+			d[i] = min + i * (max - min) / (n - 1);
 		}
 		return d;
 	}
 
 	/**
-	 * Returns a new array that's a copy of the original but all values are increased by 1
-	 * @param orig Original array
-	 * @return The new array
+	 * Returns a copy of the original array with all values incremented by 1
+	 * 
+	 * @param orig array to increment
+	 * @return incremented array
 	 */
 	public static int[] frameshift(int[] orig) {
 		int[] newarray = new int[orig.length];
@@ -394,6 +405,7 @@ public class TwoColorHeatMap {
 
 	/**
 	 * Returns the average of arrays in a matrix, ignoring zero-values
+	 * 
 	 * @param matrix Matrix to be averaged
 	 * @return Average of the matrix, ignoring zero-values
 	 */
@@ -416,8 +428,10 @@ public class TwoColorHeatMap {
 	}
 
 	/**
-	 * Returns the highest value in a certain percent of the matrix values (excluding zeros)
-	 * @param matrix Matrix with values
+	 * Returns the highest value in a certain percent of the matrix values
+	 * (excluding zeros)
+	 * 
+	 * @param matrix  Matrix with values
 	 * @param percent Percent of matrix values to analyze
 	 * @return The highest value in a percent of matrix values
 	 */
@@ -437,11 +451,13 @@ public class TwoColorHeatMap {
 	}
 
 	/**
-	 * Takes an input file and returns an ArrayList &lt;double[]&gt; with the values from the input file
+	 * Takes an input file and returns an ArrayList &lt;double[]&gt; with the values
+	 * from the input file
+	 * 
 	 * @param input Input file
 	 * @return An ArrayList &lt;double[]&gt; with the values from the input file
 	 * @throws UnsupportedEncodingException
-	 * @throws IOException Invalid file or parameters
+	 * @throws IOException                  Invalid file or parameters
 	 */
 	public static ArrayList<double[]> loadMatrix(File input) throws UnsupportedEncodingException, IOException {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();
@@ -479,10 +495,10 @@ public class TwoColorHeatMap {
 
 	/**
 	 * Returns the two color heat map as a JLabel object
+	 * 
 	 * @return the two color heat map
 	 */
 	public JLabel getImg() {
 		return (picLabel);
 	}
-
 }

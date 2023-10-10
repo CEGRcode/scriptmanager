@@ -15,17 +15,14 @@ import java.util.zip.GZIPOutputStream;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * Class that contains method for expanding (BED) coordinate intervals from the center/border by a user-defined direction and distance.
+ * Expand (BED) coordinate intervals from the center/border by a user-defined size.
  *
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI
  * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow
  */
 public class ExpandBED {
-	/**
-	 * Creates a new ExpandBED object
-	 */
-	public ExpandBED(){}
+
 	/**
 	 * Self-contained method for expanding the BED-formatted intervals in a BED file by user-specified distance and strategy. This method accounts for even-sized BED interval expansion in midpoint calculations by using the strand-aware downstream nucleotide between the two center nucleotides.
 	 * 

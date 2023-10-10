@@ -23,7 +23,7 @@ import scriptmanager.util.FASTAUtilities;
 import scriptmanager.util.DNAShapeReference;
 
 /**
- * This script calculates various aspects of DNA shape across a set of BED
+ * Calculate and score various aspects of DNA shape across a set of BED
  * intervals.
  * 
  * @author William KM Lai

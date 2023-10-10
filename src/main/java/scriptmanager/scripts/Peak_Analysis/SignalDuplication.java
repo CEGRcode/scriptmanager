@@ -34,32 +34,33 @@ import javax.swing.JTabbedPane;
 import scriptmanager.charts.LineChart;
 
 /**
- * Under-development tool for calculating duplication statistics at user-specified regions
+ * (Dev) Calculate duplication statistics at user-specified regions
  */
 @SuppressWarnings("serial")
 public class SignalDuplication extends JFrame {
 	Vector<File> bamFiles = null;
 	ArrayList<GFFCoord> COORD = null;
 	ArrayList<GFFCoord> GENOME = null;
-	
+
 	File input = null;
 	private double WINDOW = 0;
-	
+
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 
 	PrintStream OUT = null;
-	
+
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
 	final JTabbedPane tabbedPane_Duplication;
 	final JTabbedPane tabbedPane_DupStats;
-	
+
 	/**
-	 * Creates a new "SignalDuplicationRate" window with a given GFF file 
-	 * @param in GFF file to analyze
+	 * Creates a new "SignalDuplicationRate" window with a given GFF file
+	 * 
+	 * @param in  GFF file to analyze
 	 * @param bam BAM files to analyze
-	 * @param w Size of the analysis window (# of BP) 
+	 * @param w   Size of the analysis window (# of BP)
 	 */
 	public SignalDuplication(File in, Vector<File> bam, double w) {
 		setTitle("Signal Duplication Rate");

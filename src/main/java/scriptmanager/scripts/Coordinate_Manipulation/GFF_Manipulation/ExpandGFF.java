@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- * Class that contains method for expanding (GFF) coordinate intervals from the center/border by a user-defined direction and distance.
+ * Expand (GFF) coordinate intervals from the center/border by a user-defined size.
  *
  * @see scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI
  * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow

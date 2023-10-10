@@ -20,7 +20,8 @@ import java.io.PrintStream;
 import scriptmanager.util.FASTAUtilities;
 
 /**
- * Script for filtering a BAM file and outputting reads which have a specific nucleotide at the -1 position
+ * Filter a BAM file for reads with a specific upstream genomic sequence
+ * 
  * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow
  * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqOutput
  * @see scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI

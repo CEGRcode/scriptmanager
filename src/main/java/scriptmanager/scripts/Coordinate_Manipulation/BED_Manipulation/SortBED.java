@@ -18,7 +18,7 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This class contains scripts for sorting coordinate intervals (BED/GFF) by the tag counts of a CDT matrix file.
+ * Sort coordinate intervals (BED) by the tag counts of a CDT matrix file.
  *
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI

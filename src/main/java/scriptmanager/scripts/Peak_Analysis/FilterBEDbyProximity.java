@@ -17,23 +17,24 @@ import java.util.List;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 /**
- * Filters reads in BED file for peaks in quality based on given exclusion distance and quality scores in BED file
+ * Filter coordinate peaks in a BED file by a given exclusion distance
  */
-public class FilterBEDbyProximity{
-	
+public class FilterBEDbyProximity {
+
 	private int CUTOFF;
 	private InputStream inputStream;
 	private String INPUTNAME = null;
 	private PrintStream OUT_Filter = null;
 	private PrintStream OUT_Cluster = null;
 	private PrintStream PS = null;
-	
+
 	/**
 	 * Creates a new instance of a FilterBEDbyProximity script
-	 * @param input BED file to filter
-	 * @param cutoff Exclusion distance (bp)
+	 * 
+	 * @param input      BED file to filter
+	 * @param cutoff     Exclusion distance (bp)
 	 * @param outputBase Base name for the output files
-	 * @param ps Output PrintStream
+	 * @param ps         Output PrintStream
 	 * @throws IOException Invalid file or parameters
 	 */
 	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps) throws IOException {
@@ -51,9 +52,12 @@ public class FilterBEDbyProximity{
 	}
 	
 	/**
-	 * Runs the filtering operation, outputting peaks to "-FILTER.bed" and other reads to "-CLUSTER.bed"
-	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 * Runs the filtering operation, outputting peaks to "-FILTER.bed" and other
+	 * reads to "-CLUSTER.bed"
+	 * 
+	 * @throws IOException          Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the
+	 *                              same time
 	 */
 	public void run() throws IOException, InterruptedException
 	{

@@ -11,7 +11,9 @@ import scriptmanager.util.ArrayUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Script for combining multiple TAB/CDT files into one file with a given operation
+ * Combine multiple TAB/CDT files into site-specific scores using a given
+ * operation
+ * 
  * @see scriptmanager.window_interface.Read_Analysis.AggregateDataWindow
  * @see scriptmanager.cli.Read_Analysis.AggregateDataCLI
  */
@@ -28,12 +30,14 @@ public class AggregateData {
 
 	/**
 	 * Creates a new instance of the AggregateData script
-	 * @param in ArrayList of TAB files to be processed
-	 * @param out Output directory
-	 * @param m Whether results should be merged into one file
-	 * @param r Starting row (1-indexed)
-	 * @param c Starting column (1-indexed)
-	 * @param index Operation to be performed (0 = sum, 1 = average, 2 = median, 3 = mode, 4 = min, 5 = max, 6 = positional variance)
+	 * 
+	 * @param in    ArrayList of TAB files to be processed
+	 * @param out   Output directory
+	 * @param m     Whether results should be merged into one file
+	 * @param r     Starting row (1-indexed)
+	 * @param c     Starting column (1-indexed)
+	 * @param index Operation to be performed (0 = sum, 1 = average, 2 = median, 3 =
+	 *              mode, 4 = min, 5 = max, 6 = positional variance)
 	 */
 	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
 		INPUT = in;
@@ -46,6 +50,7 @@ public class AggregateData {
 
 	/**
 	 * Runs the aggregation with the specified parameters
+	 * 
 	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {

@@ -18,7 +18,7 @@ import scriptmanager.util.FASTAUtilities;
 import scriptmanager.util.BEDUtilities;
 
 /**
- * This script retrieves the genomic sequences from a BED coordinate file.
+ * Retrieve the genomic sequences from the coordinates in a BED file.
  * 
  * @author William KM Lai
  * @see scriptmanager.util.FASTAUtilities

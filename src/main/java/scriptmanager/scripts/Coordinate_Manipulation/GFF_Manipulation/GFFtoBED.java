@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- * This script converts a GFF-file too the BED-format.
+ * Convert a GFF-formatted coordinate file to the BED-format
  * 
  * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED
  * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow
