@@ -30,7 +30,7 @@ public class ExpandGFFCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "specify output filename (name will be same as original with coordinate info appended)")
 	private File output = null;
-	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
+	@Option(names = {"-s", "--stdout"}, description = "output gff to STDOUT")
 	private boolean stdout = false;
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
@@ -72,7 +72,7 @@ public class ExpandGFFCLI implements Callable<Integer> {
 			return(r);
 		}
 		//check input extensions
-		if(!"gff".equals(ExtensionFileFilter.getExtension(gffFile))){
+		if(!"gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(gffFile))){
 			r += "(!)Is this a GFF file? Check extension: " + gffFile.getName() + "\n";
 		}
 		

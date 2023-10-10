@@ -45,13 +45,13 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	private JButton btnLoad;
 	private JButton btnRemoveGFF;
 	private JButton btnConvert;
-	private JCheckBox chckbxGzipOutput;
 
 	private JProgressBar progressBar;
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutput;
+	private static JCheckBox chckbxGzipOutput;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -59,7 +59,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 			setProgress(0);
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
-				// Check if file is gzipped and assigns appropriate file name
+				// Set outfilepath
 				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed";
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
@@ -172,13 +172,12 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
+		btnConvert.addActionListener(this);
 
 		chckbxGzipOutput = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 36, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
-
-		btnConvert.addActionListener(this);	
 	}
 
 	@Override

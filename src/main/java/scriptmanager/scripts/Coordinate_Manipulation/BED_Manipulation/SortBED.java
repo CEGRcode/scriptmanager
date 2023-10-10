@@ -78,6 +78,7 @@ public class SortBED {
 			if (!ID.contains("YORF") && !ID.contains("NAME")) {
 				BEDFile.put(ID, line);
 			}
+			line = br.readLine();
 		}
 		br.close();
 

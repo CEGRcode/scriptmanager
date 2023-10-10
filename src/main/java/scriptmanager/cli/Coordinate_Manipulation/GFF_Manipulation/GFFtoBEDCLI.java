@@ -60,7 +60,7 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if(output==null && !stdout){
-			output = new File(ExtensionFileFilter.stripExtension(gffFile) + ".bed");
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(gffFile) + ".bed");
 		//check stdout and output not both selected
 		}else if(stdout){
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }

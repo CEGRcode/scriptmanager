@@ -1,9 +1,7 @@
 package scriptmanager.scripts.Sequence_Analysis;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
@@ -12,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.GZIPOutputStream;
 
 import scriptmanager.util.GZipUtilities;
 
@@ -126,12 +123,7 @@ public class SearchMotif {
 		// Initialize output writer
 		PrintStream OUT = System.out;
 		if (out_filepath != null) {
-			if (gzOutput) {
-				OUT = new PrintStream(
-						new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(out_filepath))));
-			} else {
-				OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(out_filepath)));
-			}
+			OUT = GZipUtilities.makePrintStream(out_filepath, gzOutput);
 		}
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader

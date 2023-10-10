@@ -106,8 +106,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 						STOP_INDEX = Integer.parseInt(txtStop.getText());
 					}
 
-					String OUTPUT = ExtensionFileFilter.stripExtension(txtOutput.getText());
-					OUTPUT = txtOutput.getText().endsWith(".gz") ? ExtensionFileFilter.stripExtension(OUTPUT) : OUTPUT;
+					String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(BED_File);
 					if (OUT_DIR != null) {
 						OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 					}
@@ -328,11 +327,13 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 					lblBEDFile.setText(BED_File.getName());
 					txtOutput.setEnabled(true);
 					// Set default output filename
-					String NAME = ExtensionFileFilter.stripExtension(BED_File.getName());
-					NAME = BED_File.getName().endsWith(".bed.gz") ? ExtensionFileFilter.stripExtension(NAME) : NAME;
-					NAME += "_SORT.bed";
-					NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
-					txtOutput.setText(NAME);
+					String sortName = "";
+					try {
+						sortName = ExtensionFileFilter.stripExtensionIgnoreGZ(BED_File) + "_SORT.bed";
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, "Invalid BED");
+					};
+					txtOutput.setText(sortName);
 				}
 			}
 		});

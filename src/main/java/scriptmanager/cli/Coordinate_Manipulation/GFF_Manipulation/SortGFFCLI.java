@@ -33,7 +33,7 @@ public class SortGFFCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "specify output file basename with no .cdt/.gff/.jtv extension (default=<gffFile>_SORT")
 	private String outputBasename = null;
-	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
 	private int center = -999;
@@ -93,7 +93,7 @@ public class SortGFFCLI implements Callable<Integer> {
 		
 		//set default output filename
 		if(outputBasename==null){
-			outputBasename = ExtensionFileFilter.stripExtension(gffFile) + "_SORT";
+			outputBasename = ExtensionFileFilter.stripExtensionIgnoreGZ(gffFile) + "_SORT";
 		//check output filename is valid
 		}else{
 			//no extension check

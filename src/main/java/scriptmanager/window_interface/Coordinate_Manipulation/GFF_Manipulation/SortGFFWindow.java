@@ -95,7 +95,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 						STOP_INDEX = Integer.parseInt(txtStop.getText());
 					}
 
-					String OUTPUT = txtOutput.getText();
+					String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(GFF_File);
 					if (OUT_DIR != null) {
 						OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 					}
@@ -171,6 +171,22 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);
+
+		chckbxGzipOutput.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				String NAME = txtOutput.getText();
+				if (chckbxGzipOutput.isSelected()) {
+					if (!NAME.endsWith(".gz")) {
+						txtOutput.setText(NAME + ".gz");
+					}
+				} else {
+					if (NAME.endsWith(".gz")) {
+						NAME = ExtensionFileFilter.stripExtension(NAME);
+						txtOutput.setText(NAME);
+					}
+				}
+			}
+		});
 
 		rdbtnSortbyCenter = new JRadioButton("Sort by Center");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSortbyCenter, 129, SpringLayout.NORTH, contentPane);
@@ -293,11 +309,12 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 					GFF_File = newGFFFile;
 					lblGFFFile.setText(GFF_File.getName());
 					txtOutput.setEnabled(true);
+					// Set default output filename
 					String sortName = "";
 					try {
-						sortName = ExtensionFileFilter.stripExtensionIgnoreGZ(GFF_File) + "_SORT";
+						sortName = ExtensionFileFilter.stripExtensionIgnoreGZ(GFF_File) + "_SORT.gff";
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Invalid GFF");
 					}
 					txtOutput.setText(sortName);
 				}

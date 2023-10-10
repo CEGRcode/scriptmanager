@@ -17,10 +17,11 @@ public class SortGFF {
 		ArrayList<GFFCoord> SORT = new ArrayList<GFFCoord>();
 		HashMap<String, String> CDTFile = new HashMap<String, String>();
 		String CDTHeader = "";
-		// Parse CDT File first
-		String line;
+		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br = GZipUtilities.makeReader(cdt);
-		while ((line = br.readLine()) != null) {
+		// Parse CDT File first
+		String line = br.readLine();
+		while (line != null) {
 			String[] ID = line.split("\t");
 			if (!ID[0].contains("YORF") && !ID[0].contains("NAME")) {
 				double count = 0;
@@ -32,14 +33,14 @@ public class SortGFF {
 			} else {
 				CDTHeader = line;
 			}
+			line = br.readLine();
 		}
 		br.close();
 		// Sort by score
 		Collections.sort(SORT, GFFCoord.ScoreComparator);
 
 		// Output sorted CDT File
-		String newCDT = outname + ".cdt";
-		PrintStream OUT = GZipUtilities.makePrintStream(new File(newCDT), gzOutput);
+		PrintStream OUT = GZipUtilities.makePrintStream(new File(outname + ".cdt"), gzOutput);
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(CDTFile.get(SORT.get(x).getName()));
@@ -49,18 +50,21 @@ public class SortGFF {
 
 		// Match to gff file after
 		HashMap<String, String> GFFFile = new HashMap<String, String>();
-		line = null;
+		// Check if file is gzipped and instantiate appropriate BufferedReader
 		br = GZipUtilities.makeReader(gff);
-		while ((line = br.readLine()) != null) {
-			String ID = line.split("\t")[8].split(";")[0];
+		// Initialize line variable to loop through
+		line = br.readLine();
+		while (line != null) {
+			String ID = line.split("\t")[3];
 			if (!ID.contains("YORF") && !ID.contains("NAME")) {
 				GFFFile.put(ID, line);
 			}
+			line = br.readLine();
 		}
 		br.close();
+
 		// Output sorted GFF File
-		String newGFF = outname + ".gff";
-		OUT = GZipUtilities.makePrintStream(new File(newGFF), gzOutput);
+		OUT = GZipUtilities.makePrintStream(new File(outname + ".gff"), gzOutput);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(GFFFile.get(SORT.get(x).getName()));
 		}

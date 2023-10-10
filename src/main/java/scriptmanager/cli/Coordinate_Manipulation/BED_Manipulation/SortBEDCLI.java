@@ -36,10 +36,10 @@ public class SortBEDCLI implements Callable<Integer> {
 
 	@Option(names = {"-o", "--output"}, description = "specify output file basename with no .cdt/.bed/.jtv extension (default=<bedFile>_SORT")
 	private String outputBasename = null;
-	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
-	private int center = -999;
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
+	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
+	private int center = -999;
 	@Option(names = {"-x", "--index"}, description = "sort by index from the specified start to the specified stop (0-indexed and half-open interval)",
 		arity = "2")
 	private int[] index = {-999, -999};

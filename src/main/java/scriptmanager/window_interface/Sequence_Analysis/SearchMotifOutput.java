@@ -78,7 +78,6 @@ public class SearchMotifOutput extends JFrame {
 		if (OUT_DIR != null) {
 			BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 		}
-		BASENAME += gzOutput ? ".gz" : "";
 
 		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS, gzOutput);
 		script_obj.run();

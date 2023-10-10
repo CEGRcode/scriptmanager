@@ -75,11 +75,10 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XBED = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = ExtensionFileFilter.stripExtension(XBED) + ".gff";
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED) + ".gff";
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
-				OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
 				// Initialize LogItem
 				String command = BEDtoGFFCLI.getCLIcommand(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
 				LogItem new_li = new LogItem(command);
@@ -203,8 +202,8 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		btnConvert.addActionListener(this);
 
 		chckbxGzipOutput = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 36, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 	}
 
