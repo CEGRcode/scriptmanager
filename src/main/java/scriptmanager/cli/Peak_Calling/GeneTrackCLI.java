@@ -8,9 +8,10 @@ import java.io.IOException;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
- * Command line interface class that provides access to the GeneTrack script
- * @see scriptmanager.scripts.Peak_Calling.GeneTrack
- * @see scriptmanager.window_interface.Peak_Calling.GeneTrackWindow
+ * (Dev) Unfinished command line interface for
+ * {@link scriptmanager.scripts.Peak_Calling.GeneTrack}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "gene-track", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.gene_track_description,
@@ -37,6 +38,7 @@ public class GeneTrackCLI implements Callable<Integer> {
 		//SEStats.getSEStats( output, bamFile, null );
 		
 		//System.err.println("Calculations Complete");
+		System.err.println("CLI GeneTrack not yet implemented");
 		return(0);
 	}
 	

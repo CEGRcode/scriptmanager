@@ -18,11 +18,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 
 /**
- * Command line interface class for calling the script to generate two color heatmaps
- * sequence plots.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Figure_Generation.TwoColorHeatMap}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.TwoColorHeatMap
  */
 @Command(name = "heatmap",
 	mixinStandardHelpOptions = true,

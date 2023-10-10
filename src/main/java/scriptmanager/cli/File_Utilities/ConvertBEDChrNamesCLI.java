@@ -14,11 +14,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 /**
- * Command line interface class for converting chromsome names of BED files by
- * calling method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.File_Utilities.ConvertChrNames}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
  */
 @Command(name = "convert-bed-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.convertBEDChrNamesDescription,

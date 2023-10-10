@@ -13,14 +13,17 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
- * Command line interface class for extracting genomic sequences by calling a
- * script implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.FASTAExtract}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
  */
-@Command(name = "fasta-extract", mixinStandardHelpOptions = true, description = ToolDescriptions.fasta_extract_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "fasta-extract", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.fasta_extract_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class FASTAExtractCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "reference genome FASTA file")

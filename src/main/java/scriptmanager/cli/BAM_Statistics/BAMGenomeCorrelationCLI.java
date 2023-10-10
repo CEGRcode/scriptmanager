@@ -18,8 +18,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 /**
- * Command line interface class for performing Genome-Genome correlations for replicate comparisons
- * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "bam-correlation", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_correlation_description,

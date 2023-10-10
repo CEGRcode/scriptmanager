@@ -14,15 +14,17 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
- * Command line interface class for randomizing sequences (shuffling
- * nucleotides) in a FASTA file by calling the methods implemented in the
- * scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA
  */
-@Command(name = "randomize-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.randomize_fasta_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "randomize-fasta", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.randomize_fasta_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class RandomizeFASTACLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "the FASTA file ")

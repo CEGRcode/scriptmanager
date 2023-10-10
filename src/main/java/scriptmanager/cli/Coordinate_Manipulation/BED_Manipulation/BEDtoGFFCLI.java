@@ -14,11 +14,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
- * Command line interface class for converting BED-formatted coordinates to
- * GFF-format by calling a script implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
  */
 @Command(name = "bed-to-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bed_to_gff_description,

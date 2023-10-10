@@ -18,11 +18,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.FourColorPlot;
 
 /**
- * Command line interface class for calling the script to creating four color
- * sequence plots.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Figure_Generation.FourColorPlot}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
  */
 @Command(name = "four-color", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.four_color_description,

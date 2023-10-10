@@ -15,9 +15,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph;
 
 /**
- * Command line interface class for running BAMtobedGraph script with user defined arguments
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph}
+ * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph
  */
 @Command(name = "bam-to-bedgraph", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_bedgraph_description,

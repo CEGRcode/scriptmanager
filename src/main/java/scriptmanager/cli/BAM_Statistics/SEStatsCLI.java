@@ -14,9 +14,10 @@ import scriptmanager.scripts.BAM_Statistics.SEStats;
 	
 
 /**
- * Command line interface class for printing out BAM header by calling a script implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.SEStats}
+ * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.BAM_Statistics.SEStats
  */
 @Command(name = "se-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.se_stat_description,

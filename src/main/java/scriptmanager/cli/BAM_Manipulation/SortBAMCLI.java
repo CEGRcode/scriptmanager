@@ -8,7 +8,8 @@ import java.util.concurrent.Callable;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
- * Prints a message redirecting user to the original CLI tool.
+ * Prints a message redirecting user to the original CLI tool (Picard
+ * {@link picard.sam.SortSam})
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.BAM_Manipulation.BAMFileSort

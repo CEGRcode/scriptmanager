@@ -14,10 +14,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord;
 
 /**
- * Command line interface class for shifting coordinate intervals up/downstream by calling method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord
  */
 @Command(name = "shift-coord", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.shift_coordinate_description,

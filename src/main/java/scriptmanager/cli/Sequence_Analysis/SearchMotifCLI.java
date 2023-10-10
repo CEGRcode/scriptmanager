@@ -15,14 +15,17 @@ import scriptmanager.util.FASTAUtilities;
 import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 
 /**
- * Command line interface class for searching a genomic sequence for a motif by
- * calling the methods implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.SearchMotif}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
  */
-@Command(name = "search-motif", mixinStandardHelpOptions = true, description = ToolDescriptions.search_motif_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "search-motif", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.search_motif_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class SearchMotifCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "The FASTA file in which to search for the motif.")

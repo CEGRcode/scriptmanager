@@ -15,9 +15,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 
 /**
- * Command line interface class for running BAMtoGFF script with user defined arguments
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF}
+ * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF
  */
 @Command(name = "bam-to-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_gff_description,

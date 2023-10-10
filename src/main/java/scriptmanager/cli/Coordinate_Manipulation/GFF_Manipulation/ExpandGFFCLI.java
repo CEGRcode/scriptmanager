@@ -15,9 +15,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 
 /**
- * Command line interface class for the size expansion of GFF coordinate interval files by calling the method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED}
  * 
- * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
+ * @author Olivia Lang
  */
 @Command(name = "expand-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_gff_description,

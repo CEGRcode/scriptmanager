@@ -14,8 +14,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
- * Command line interface class for creating a coordinate file of tiles across a genome with TileGenome script
- * @see scriptmanager.scripts.Peak_Analysis.TileGenome
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.TileGenome}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "tile-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tile_genome_description,

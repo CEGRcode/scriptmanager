@@ -8,17 +8,18 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.ArchTEx.CorrParameter;
 import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Command line interface class for performing the ArchTEX cross correlation
- * analysis by calling a method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation}
+ * 
  * @author Olivia Lang
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
  */
 @Command(name = "cross-corr", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.archtex_crosscorrelation_description,

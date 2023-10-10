@@ -9,9 +9,10 @@ import java.io.IOException;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
- * Command line interface class that provides access to the PeackPair script
- * @see scriptmanager.scripts.Peak_Calling.PeakPair
- * @see scriptmanager.window_interface.Peak_Calling.PeakPairWindow
+ * (Dev) Unfinished command line interface for
+ * {@link scriptmanager.scripts.Peak_Calling.PeakPair}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "peak-pair", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_pairing_description,
@@ -38,6 +39,7 @@ public class PeakPairCLI implements Callable<Integer> {
 		//SEStats.getSEStats( output, bamFile, null );
 		
 		//System.err.println("Calculations Complete");
+		System.err.println("CLI Peak Pair not yet implemented");
 		return(0);
 	}
 	

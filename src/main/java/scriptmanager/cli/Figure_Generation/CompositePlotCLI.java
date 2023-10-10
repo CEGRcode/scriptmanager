@@ -16,12 +16,9 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
- * Command line interface class to create line plot images based on composite
- * data files formatted like the output of TagPileup.
+ * Command line interface for {@link scriptmanager.scripts.Figure_Generation.PlotComposite}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.PlotComposite
- * @see scriptmanager.scripts.Read_Analysis.TagPileup
  */
 @Command(name = "composite-plot", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.composite_description,

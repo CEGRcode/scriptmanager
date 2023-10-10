@@ -14,14 +14,14 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 /**
- * Command line interface class for converting chromsome names of GFF files by
- * calling method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.File_Utilities.ConvertChrNames}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
  */
 @Command(name = "convert-gff-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.convertGFFChrNamesDescription,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)

@@ -15,8 +15,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 /**
- * Command line interface class for providing access to the ScalingFactor script
- * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ * Command line interface for
+ * {@link scriptmanager.scripts.Read_Analysis.ScalingFactor}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "scaling-factor", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scaling_factor_description,

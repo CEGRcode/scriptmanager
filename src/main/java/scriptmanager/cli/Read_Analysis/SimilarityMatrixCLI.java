@@ -9,8 +9,10 @@ import scriptmanager.objects.ToolDescriptions;
 import java.io.IOException;
 
 /**
- * Command line interface class for generating a similarity matrix
- * @see scriptmanager.scripts.Read_Analysis.SimilarityMatrix
+ * Command line interface for
+ * {@link scriptmanager.scripts.Read_Analysis.SimilarityMatrix}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "similarity-matrix", mixinStandardHelpOptions = true,
 	description = "",

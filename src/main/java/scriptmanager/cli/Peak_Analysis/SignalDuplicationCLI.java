@@ -7,10 +7,12 @@ import java.util.concurrent.Callable;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
-	
+
 /**
- * Command line interface class for creating a coordinate file of random sites across a genome with SignalDuplication script
- * @see scriptmanager.scripts.Peak_Analysis.SignalDuplication
+ * (Dev) Unfinished command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.SignalDuplication}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "signal-dup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.signal_dup_description,
@@ -37,6 +39,7 @@ public class SignalDuplicationCLI implements Callable<Integer> {
 		//SEStats.getSEStats( output, bamFile, null );
 		
 		//System.err.println("Calculations Complete");
+		System.err.println("CLI Signal Duplication not yet implemented");
 		return(0);
 	}
 	

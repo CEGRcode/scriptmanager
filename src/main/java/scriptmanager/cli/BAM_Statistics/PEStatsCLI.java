@@ -13,10 +13,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
 
 /**
- * Command line interface class for generating pair end insert frequency histogram and printing pair end statistics 
- * by calling a script implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.PEStats}
+ * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.BAM_Statistics.PEStats
  */
 @Command(name = "pe-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.pe_stat_description,

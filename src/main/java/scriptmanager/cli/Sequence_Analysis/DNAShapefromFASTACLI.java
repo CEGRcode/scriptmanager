@@ -17,15 +17,17 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 /**
- * Command line interface class for calculating various aspects of DNA shape
- * across a set of FASTA sequences by calling the methods implemented in the
- * scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
  */
-@Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_fasta_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.dna_shape_from_fasta_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class DNAShapefromFASTACLI implements Callable<Integer> {
 
 	/**

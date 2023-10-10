@@ -18,8 +18,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq;
 
 /**
- * Command line interface class for running FilterforPIPseq script and outputting results
- * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "filter-pip-seq", mixinStandardHelpOptions = true, description = ToolDescriptions.filter_pip_seq_description
 		+ "\n"

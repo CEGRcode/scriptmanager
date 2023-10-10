@@ -15,10 +15,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 
 /**
- * Command line interface class for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
  */
 @Command(name = "expand-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_bed_description,

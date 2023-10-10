@@ -16,10 +16,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
 /**
- * Command line interface class for sorting GFF coordinate interval files by CDT matrix occupancies by calling the method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
  */
 @Command(name = "sort-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_gff_description,
