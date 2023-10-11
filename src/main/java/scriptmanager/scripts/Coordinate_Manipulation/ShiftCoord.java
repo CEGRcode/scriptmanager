@@ -16,7 +16,7 @@ import scriptmanager.util.GZipUtilities;
 
 /**
  * Shift coordinate intervals (BED/GFF) by a user-defined direction and distance.
- *
+ * 
  * @author Olivia Lang
  * @see scriptmanager.cli.Coordinate_Manipulation.ShiftCoordCLI
  * @see scriptmanager.window_interface.Coordinate_Manipulation.ShiftIntervalWindow

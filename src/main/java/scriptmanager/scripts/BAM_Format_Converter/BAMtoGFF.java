@@ -17,9 +17,10 @@ import java.util.Date;
 /**
  * Convert BAM file to GFF file
  * 
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFOutput
+ * @author William KM Lai
  * @see scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFOutput
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow
  */
 public class BAMtoGFF {
 	private File BAM = null;

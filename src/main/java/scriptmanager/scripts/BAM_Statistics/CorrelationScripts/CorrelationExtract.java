@@ -12,8 +12,9 @@ import htsjdk.samtools.util.CloseableIterator;
 /**
  * Calculate correlation between two CorrelationCoords
  * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
- * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
+ * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord
  */
 public class CorrelationExtract implements Runnable {
 	Vector<CorrelationCoord> ALLNodes;	

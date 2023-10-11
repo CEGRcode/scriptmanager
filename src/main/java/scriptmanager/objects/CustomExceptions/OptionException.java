@@ -1,9 +1,9 @@
 package scriptmanager.objects.CustomExceptions;
 
-
 /**
  * Custom exception used with LabelHeatmap and ThreeColorHeatMap tools
  * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
  * @see scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap
  * @see scriptmanager.cli.Figure_Generation.LabelHeatMapCLI
@@ -13,13 +13,14 @@ package scriptmanager.objects.CustomExceptions;
  */
 @SuppressWarnings("serial")
 public class OptionException extends Exception {
-	
+
 	/**
 	 * Creates a new OptionException with a given message
+	 * 
 	 * @param message Message to output
 	 */
 	public OptionException(String message) {
 		super(message);
 	}
-	
+
 }

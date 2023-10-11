@@ -5,7 +5,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 
 /**
- * Various kinds of file selectors used by the window_interface objects to
+ * Various kinds of file selectors used by the `window_interface` objects to
  * restrict user input selection options. Used across many classes in the
  * window_interface package.
  * 

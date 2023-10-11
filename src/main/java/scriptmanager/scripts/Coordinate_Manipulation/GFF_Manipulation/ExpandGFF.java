@@ -8,7 +8,8 @@ import java.util.Scanner;
 
 /**
  * Expand (GFF) coordinate intervals from the center/border by a user-defined size.
- *
+ * 
+ * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI
  * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFWindow
  */

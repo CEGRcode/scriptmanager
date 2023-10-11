@@ -32,7 +32,11 @@ import scriptmanager.util.ArrayUtilities;
 /**
  * Pileup tags or user-defined encodings around a set of reference points
  * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract
+ * @see scriptmanager.cli.Read_Analysis.TagPileupCLI
+ * @see scriptmanager.window_interface.Read_Analysis.TagPileupOutput
+ * @see scriptmanager.window_interface.Read_Analysis.TagPileupWindow
  */
 public class TagPileup {
 	File BED = null;

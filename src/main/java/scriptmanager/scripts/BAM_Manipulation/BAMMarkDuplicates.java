@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 
 /**
  * Picard wrapper for MarkDuplicates
+ * 
+ * @author Erik Pavloski
  * @see scriptmanager.window_interface.BAM_Manipulation.BAMMarkDupWindow
  */
 @SuppressWarnings("serial")

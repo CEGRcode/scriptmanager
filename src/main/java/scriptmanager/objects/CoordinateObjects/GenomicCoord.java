@@ -2,6 +2,8 @@ package scriptmanager.objects.CoordinateObjects;
 
 /**
  * Interface used by coordinate classes
+ * 
+ * @author William KM Lai
  * @see scriptmanager.objects.CoordinateObjects.BEDCoord
  * @see scriptmanager.objects.CoordinateObjects.GenericCoord
  * @see scriptmanager.objects.CoordinateObjects.GFFCoord

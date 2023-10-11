@@ -20,6 +20,8 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 /**
  * Class containing a set of shared methods to be used across script classes.
+ * 
+ * @author William KM Lai
  */
 public class BAMUtilities {
 	

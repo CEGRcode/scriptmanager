@@ -11,6 +11,10 @@ import javax.swing.JOptionPane;
 
 /**
  * Performs scalar multiplication on given matrix
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Read_Analysis.ScaleMatrixCLI
+ * @see scriptmanager.window_interface.Read_Analysis.ScaleMatrixWindow
  */
 public class ScaleMatrix {
 

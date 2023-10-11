@@ -16,6 +16,7 @@ import scriptmanager.util.ArrayUtilities;
 /**
  * Helper methods for {@link scriptmanager.scripts.Read_Analysis.TagPileup}
  * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.TagPileup
  */
 public class PileupExtract implements Runnable{

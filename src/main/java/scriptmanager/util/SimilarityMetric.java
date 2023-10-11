@@ -3,7 +3,10 @@ package scriptmanager.util;
 import java.text.DecimalFormat;
 
 /**
- * Calculates the correlation coefficient for two matrices based on different methods
+ * Calculates the correlation coefficient for two matrices based on different
+ * methods
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.SimilarityMatrix
  */
 public class SimilarityMetric {

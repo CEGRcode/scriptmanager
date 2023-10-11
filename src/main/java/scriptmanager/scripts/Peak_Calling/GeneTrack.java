@@ -16,7 +16,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
- * (Dev) GUI for running a gene track window 
+ * (Dev) GUI for running a gene track window
+ * 
+ * @author William KM Lai
  */
 @SuppressWarnings("serial")
 public class GeneTrack extends JFrame {

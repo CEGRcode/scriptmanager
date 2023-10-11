@@ -4,8 +4,10 @@ import java.util.Vector;
 
 /**
  * Stores one instance of correlation data for a specific chromosome
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
- * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord
+ * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
  */
 public class CorrelationCoord {
 	private String uniqID = "";

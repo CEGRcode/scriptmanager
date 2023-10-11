@@ -64,6 +64,12 @@ import scriptmanager.cli.Sequence_Analysis.FASTAExtractCLI;
 import scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI;
 import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 
+
+/**
+ * Provides command line access to ScriptManager sub-commands
+ * 
+ * @author William KM Lai
+ */
 @Command(name = "script-manager",
 		subcommands = {
 			BAM_Format_ConverterCLI.class,
@@ -82,10 +88,6 @@ import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 		description = "Choose a tool directory from below to see more command-line tool options.",
 		exitCodeOnInvalidInput = 1,
 		exitCodeOnExecutionException = 1)
-
-/**
- * Provides command line access to Script Manager sub-commands
- */
 public class ScriptManager implements Callable<Integer> {
 
 	@Override

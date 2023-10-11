@@ -18,6 +18,11 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 /**
  * Filter coordinate peaks in a BED file by a given exclusion distance
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI
+ * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityOutput
+ * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityWindow
  */
 public class FilterBEDbyProximity {
 

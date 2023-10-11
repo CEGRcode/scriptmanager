@@ -12,7 +12,7 @@ import scriptmanager.objects.CoordinateObjects.GFFCoord;
 
 /**
  * Sort coordinate intervals (GFF) by the tag counts of a CDT matrix file.
- *
+ * 
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI
  * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow

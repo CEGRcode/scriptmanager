@@ -18,6 +18,11 @@ import java.util.Map;
 
 /**
  * Align BED peaks to a reference BED file and create a CDT file
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
  */
 public class BEDPeakAligntoRef {
 	private String peakPath = null;

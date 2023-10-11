@@ -22,6 +22,7 @@ import scriptmanager.util.FASTAUtilities;
 /**
  * Filter a BAM file for reads with a specific upstream genomic sequence
  * 
+ * @author William KM Lai
  * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow
  * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqOutput
  * @see scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI

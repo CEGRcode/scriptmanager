@@ -35,6 +35,7 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
  * <br>
  * NCIS algorithm from Liang &amp; Keles (BMC Bioinformatics 2012)
  * 
+ * @author William KM Lai
  * @see scriptmanager.cli.Read_Analysis.ScalingFactorCLI
  * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorOutput
  * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorWindow

@@ -25,6 +25,7 @@ import scriptmanager.util.GZipUtilities;
 /**
  * Generate a two-color heatmap PNG from a matrix of values in a given text file
  * 
+ * @author William KM Lai
  * @see scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI
  * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapOutput
  * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapWindow

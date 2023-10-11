@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import scriptmanager.objects.Peak;
 /**
  * (Dev) Pair called peaks (designed for ChIP-exo analysis)
+ * 
  * @author William KM Lai
  */
 @SuppressWarnings("serial")

@@ -29,6 +29,7 @@ import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtrac
  * Perform genome-genome correlations for replicate comparisons on multiple BAM
  * files
  * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord
  * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
  * @see scriptmanager.cli.BAM_Statistics.BAMGenomeCorrelationCLI

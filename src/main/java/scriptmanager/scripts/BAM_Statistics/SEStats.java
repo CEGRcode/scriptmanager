@@ -16,6 +16,7 @@ import java.util.Date;
 /**
  * Write BAM header of per-chromosome mapped read counts.
  * 
+ * @author William KM Lai
  * @see scriptmanager.cli.BAM_Statistics.SEStatsCLI
  * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
  * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput

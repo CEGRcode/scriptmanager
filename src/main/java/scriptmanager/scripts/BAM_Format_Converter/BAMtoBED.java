@@ -17,9 +17,10 @@ import java.util.Date;
 /**
  * Convert a BAM file to BED file
  * 
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
+ * @author William KM Lai
  * @see scriptmanager.cli.BAM_Format_Converter.BAMtoBEDCLI
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDOutput
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
  */
 public class BAMtoBED {
 	private File BAM = null;

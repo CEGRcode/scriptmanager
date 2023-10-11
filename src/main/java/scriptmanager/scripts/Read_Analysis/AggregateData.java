@@ -14,8 +14,9 @@ import scriptmanager.util.ExtensionFileFilter;
  * Combine multiple TAB/CDT files into site-specific scores using a given
  * operation
  * 
- * @see scriptmanager.window_interface.Read_Analysis.AggregateDataWindow
+ * @author William KM Lai
  * @see scriptmanager.cli.Read_Analysis.AggregateDataCLI
+ * @see scriptmanager.window_interface.Read_Analysis.AggregateDataWindow
  */
 public class AggregateData {
 

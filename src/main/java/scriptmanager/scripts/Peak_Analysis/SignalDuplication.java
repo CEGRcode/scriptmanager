@@ -35,6 +35,8 @@ import scriptmanager.charts.LineChart;
 
 /**
  * (Dev) Calculate duplication statistics at user-specified regions
+ * 
+ * @author William KM Lai
  */
 @SuppressWarnings("serial")
 public class SignalDuplication extends JFrame {

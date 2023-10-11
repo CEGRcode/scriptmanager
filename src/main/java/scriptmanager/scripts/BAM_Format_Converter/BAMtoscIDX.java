@@ -18,9 +18,10 @@ import java.util.Date;
 /**
  * Convert BAM file to scIDX file
  * 
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXWindow
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXOutput
+ * @author William KM Lai
  * @see scriptmanager.cli.BAM_Format_Converter.BAMtoscIDXCLI
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXOutput
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXWindow
  */
 public class BAMtoscIDX {
 	private File BAM = null;

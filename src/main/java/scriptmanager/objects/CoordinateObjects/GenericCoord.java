@@ -4,6 +4,8 @@ import java.util.Comparator;
 
 /**
  * Object for storing generic reads
+ * 
+ * @author William KM Lais
  * @see scriptmanager.objects.CoordinateObjects.GenomicCoord
  */
 public class GenericCoord implements GenomicCoord {

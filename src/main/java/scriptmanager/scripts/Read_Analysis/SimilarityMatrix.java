@@ -12,6 +12,8 @@ import scriptmanager.util.SimilarityMetric;
 /**
  * (Dev) Deprecated tool used to create a similarity matrix and outputting it to
  * a new file
+ * 
+ * @author William KM Lai
  */
 public class SimilarityMatrix {
 

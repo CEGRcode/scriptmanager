@@ -4,6 +4,8 @@ import java.util.Comparator;
 
 /**
  * Object for storing reads of a GFF file
+ * 
+ * @author William KM Lai
  * @see scriptmanager.objects.CoordinateObjects.GenomicCoord
  */
 public class GFFCoord implements GenomicCoord {

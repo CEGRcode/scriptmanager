@@ -18,9 +18,10 @@ import java.util.Date;
 /**
  * Convert BAM file to bedGraph file
  * 
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
+ * @author William KM Lai
  * @see scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphOutput
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
  */
 public class BAMtobedGraph {
 	private File BAM = null;
