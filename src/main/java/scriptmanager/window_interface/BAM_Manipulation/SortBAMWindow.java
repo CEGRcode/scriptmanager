@@ -34,9 +34,11 @@ import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the BAMFileSort script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.BAMFileSort}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Manipulation.BAMFileSort
- * @see scriptmanager.cli.BAM_Manipulation.SortBAMCLI
  */
 @SuppressWarnings("serial")
 public class SortBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {

@@ -17,8 +17,9 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
- * Graphical window for displaying progress as genomic sequence is extracted
- * from a set of coordinates.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.FASTAExtract} and reporting
+ * progress
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract

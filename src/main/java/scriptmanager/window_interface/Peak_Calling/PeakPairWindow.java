@@ -38,7 +38,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Calling.PeakPair;
 
 /**
- * Graphical interface window for calling the PeakPair script
+ * (Dev) Unfinished GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Calling.PeakPair}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Calling.PeakPair
  */
 @SuppressWarnings("serial")

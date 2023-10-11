@@ -13,8 +13,13 @@ import javax.swing.JTextArea;
 
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Statistics.SEStats;
+
 /**
- * Graphical window for viewing results form the SEStats script
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.SEStats} and reporting the
+ * statistics
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Statistics.SEStats
  * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
  */

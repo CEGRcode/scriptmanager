@@ -31,7 +31,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * GUI for collecting inputs to be processed by FilterBEDbyProximity script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
  * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
  */

@@ -14,7 +14,13 @@ import java.util.ArrayList;
 import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 
 /**
- * Wrapper for running the MergeHeatMapPlot script given inputs from MergeHeatMapWindow
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot} and
+ * reporting progress
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot
+ * @see scriptmanager.window_interface.Figure_Generation.MergeHeatMapWindow
  */
 @SuppressWarnings("serial")
 public class MergeHeatMapOutput extends JFrame {

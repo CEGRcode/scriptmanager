@@ -27,7 +27,9 @@ import scriptmanager.scripts.Read_Analysis.TagPileup;
 import scriptmanager.util.BAMUtilities;
 
 /**
- * Graphical window for displaying composite results of TagPileup's output.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Read_Analysis.TagPileup} and reporting composite
+ * results
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.TagPileup

@@ -36,7 +36,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 /**
- * Graphical window for user argument selection and execution of the FilterforPIPseq script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
  * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqOutput
  */

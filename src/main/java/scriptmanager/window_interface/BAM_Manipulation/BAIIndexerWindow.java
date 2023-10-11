@@ -31,9 +31,11 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
 /**
- * Graphical window for user argument selection and execution of the BAIIndexer script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.BAIIndexer}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Manipulation.BAIIndexer
- * @see scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI
  */
 @SuppressWarnings("serial")
 public class BAIIndexerWindow extends JFrame implements ActionListener, PropertyChangeListener {

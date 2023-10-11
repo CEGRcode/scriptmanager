@@ -13,9 +13,13 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph;
 
 /**
- * Output window wrapper for executing the BAMtobedGraph script given arguments provided by BAMtobedGraphWindow and displaying output
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph} and
+ * reporting progress
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphOutput	
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow
  */
 @SuppressWarnings("serial")
 public class BAMtobedGraphOutput extends JFrame {

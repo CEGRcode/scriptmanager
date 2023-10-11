@@ -34,9 +34,8 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical interface window for calculating various aspects of DNA shape
- * across a set of FASTA sequences by calling the methods implemented in the
- * scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
@@ -72,9 +71,6 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	 */
 	public Task task;
 
-	/**
-	 * Organize user inputs for calling script
-	 */
 	/**
 	 * Organizes user inputs for calling script
 	 */

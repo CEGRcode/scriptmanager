@@ -35,8 +35,10 @@ import java.beans.PropertyChangeListener;
 
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 import scriptmanager.util.FileSelection;
+
 /**
- * Graphical interface window for the size expansion of GFF files by calling the method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF

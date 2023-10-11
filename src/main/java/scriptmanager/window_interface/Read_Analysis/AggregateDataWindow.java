@@ -37,7 +37,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Read_Analysis.AggregateData;
 
 /**
- * GUI for collecting inputs to be processed by the AggregateData script 
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.AggregateData}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.AggregateData
  */
 @SuppressWarnings("serial")

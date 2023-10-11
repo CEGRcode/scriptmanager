@@ -16,7 +16,11 @@ import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
 
 /**
- * Output wrapper for running ThreeColorHeatMap script and reporting when script is completed
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap} and
+ * reporting heatmap results
+ * 
+ * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap
  * @see scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapWindow
  */

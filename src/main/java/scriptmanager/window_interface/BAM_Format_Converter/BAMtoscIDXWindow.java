@@ -38,7 +38,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Output window wrapper for executing the BAMtobedGraph script given arguments provided by BAMtobedGraph and displaying output
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXOutput
  */

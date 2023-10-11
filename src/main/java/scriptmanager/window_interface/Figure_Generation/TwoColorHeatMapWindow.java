@@ -40,8 +40,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * TwoColorHeatMap GUI window. User inputs for calling the script are organized and passed into {@link scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapOutput}
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Figure_Generation.TwoColorHeatMap}
  * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Figure_Generation.TwoColorHeatMap
  * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapOutput
  */

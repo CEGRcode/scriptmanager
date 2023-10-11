@@ -44,7 +44,10 @@ import scriptmanager.charts.HeatMap;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for collecting user argument selection to be used with the BAMGenomeCorrelation script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
  * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationOutput
  */

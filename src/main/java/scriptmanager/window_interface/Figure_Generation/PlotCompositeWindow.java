@@ -36,8 +36,8 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * PlotComposite GUI window. User inputs for calling the script are organized
- * into a user-friendly layout of fields and labels.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Figure_Generation.PlotComposite}
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.PlotComposite

@@ -36,7 +36,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 /**
- * Graphical interface window for calling static ConvertChrNames in scripts package on BED files
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.File_Utilities.ConvertChrNames}
+ * 
+ * @author Olivia Lang
  * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
  */
 @SuppressWarnings("serial")

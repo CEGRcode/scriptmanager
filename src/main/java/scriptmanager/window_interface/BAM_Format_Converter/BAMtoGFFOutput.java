@@ -13,7 +13,11 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 
 /**
- * Output window wrapper for executing the BAMtoGFF script given arguments provided by BAMtoGFF and displaying output
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF} and reporting
+ * progress
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow
  */

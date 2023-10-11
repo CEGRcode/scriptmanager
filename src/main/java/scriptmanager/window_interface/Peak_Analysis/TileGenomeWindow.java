@@ -30,7 +30,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
- * Graphical interface window for generating coordinate interval files that tile a genome.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.TileGenome}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.TileGenome

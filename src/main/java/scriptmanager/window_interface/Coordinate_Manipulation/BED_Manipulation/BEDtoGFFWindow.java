@@ -38,8 +38,8 @@ import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
- * Graphical interface window for converting BED-formatted coordinates to
- * GFF-format by calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF

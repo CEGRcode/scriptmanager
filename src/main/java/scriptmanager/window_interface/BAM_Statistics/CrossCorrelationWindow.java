@@ -43,8 +43,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the
- * CrossCorrelation script <br>
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation} <br>
  * Code largely sourced from ArchTEx.components.CorrelationParametersWindow in
  * <a href=
  * "https://github.com/WilliamKMLai/ArchTEx">https://github.com/WilliamKMLai/ArchTEx</a>

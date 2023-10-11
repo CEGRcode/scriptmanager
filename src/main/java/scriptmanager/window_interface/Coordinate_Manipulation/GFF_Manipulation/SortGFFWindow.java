@@ -35,7 +35,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
 /**
- * Graphical interface window for sorting GFF files by CDT matrix occupancies by calling the method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF

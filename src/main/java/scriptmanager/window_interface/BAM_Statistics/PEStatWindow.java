@@ -36,7 +36,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the PEStats script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Statistics.PEStats}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Statistics.PEStats
  * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
  */

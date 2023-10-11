@@ -52,9 +52,10 @@ import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
 /**
- * Graphical interface window for piling up aligned tags around reference
- * coordinates by calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.TagPileup}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.TagPileup

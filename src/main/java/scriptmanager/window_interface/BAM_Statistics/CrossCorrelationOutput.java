@@ -22,9 +22,10 @@ import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Graphical window for running the CrossCorrelation script and
- * displaying the Tag Shift-to-Correlation plots, the raw Tag
- * Shift-to-Correlation values, and script progress.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation} and reporting
+ * the Tag Shift-to-Correlation plots, the raw Tag Shift-to-Correlation values,
+ * and progress.
  * 
  * @author William KM Lai
  * @see scriptmanager.objects.ArchTEx.CorrParameter

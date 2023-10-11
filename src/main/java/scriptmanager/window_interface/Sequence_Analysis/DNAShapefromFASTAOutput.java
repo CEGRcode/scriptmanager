@@ -18,8 +18,9 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 /**
- * Graphical window for displaying the DNA shape scores and charts for the set
- * of input FASTA sequences.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA} and
+ * reporting composite results
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA

@@ -30,7 +30,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
 /**
- * Graphical interface window for generating random coordinate interval files.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.RandomCoordinate}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.RandomCoordinate

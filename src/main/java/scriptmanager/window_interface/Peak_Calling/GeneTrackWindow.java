@@ -36,7 +36,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Calling.GeneTrack;
 
 /**
- * Graphical interface window for calling the GeneTrack script
+ * (Dev) Unfinished GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Calling.GeneTrack}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Calling.GeneTrack
  * @see scriptmanager.scripts.Peak_Calling.GeneTrack_BAM
  */

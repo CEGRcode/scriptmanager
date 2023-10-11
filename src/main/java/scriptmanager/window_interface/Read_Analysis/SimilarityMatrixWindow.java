@@ -36,7 +36,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Read_Analysis.SimilarityMatrix;
 
 /**
- * GUI for collecting inputs and processing them with the ScalingFactor script 
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.SimilarityMatrix}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.SimilarityMatrix
  */
 @SuppressWarnings("serial")

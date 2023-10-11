@@ -18,7 +18,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 /**
- * Output wrapper for running ScalingFactor script and reporting when the process is completed
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Read_Analysis.ScalingFactor} and reporting
+ * progress
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
  * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorWindow
  */

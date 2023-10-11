@@ -16,7 +16,11 @@ import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Output wrapper for running TwoColorHeatMap script and reporting when script is completed
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.TwoColorHeatMap} and reporting
+ * heatmap results
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Figure_Generation.TwoColorHeatMap
  * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapWindow
  */

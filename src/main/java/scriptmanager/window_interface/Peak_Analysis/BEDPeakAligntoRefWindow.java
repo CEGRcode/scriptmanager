@@ -30,7 +30,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * GUI for collecting inputs to be processed by MergeHeatMapPlot script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
  * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
  */

@@ -19,7 +19,11 @@ import javax.swing.SpringLayout;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 /**
- * Output window for executing the BAMGenomeCorrelation script given arguments provided by BAMGenomeCorrelationWindow and displaying output
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation} and
+ * reporting the correlation heatmap and values
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
  * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow
  */

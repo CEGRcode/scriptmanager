@@ -13,7 +13,11 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
 
 /**
- * Output window wrapper for executing the BAMtoscIDX script given arguments provided by BAMtoscIDX and displaying output
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX} and
+ * reporting progress
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXWindow
  */

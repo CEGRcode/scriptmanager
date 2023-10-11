@@ -13,7 +13,11 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 
 /**
- * Output window wrapper for executing the BAMtoBED script given arguments provided by BAMtoBEDWindow and displaying output
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoBED} and reporting
+ * progress
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoBED
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
  */

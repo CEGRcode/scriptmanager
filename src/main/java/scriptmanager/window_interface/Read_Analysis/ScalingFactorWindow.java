@@ -38,7 +38,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * GUI for collecting inputs to be processed by the ScalingFactor script 
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.ScalingFactor}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
  * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorOutput
  */

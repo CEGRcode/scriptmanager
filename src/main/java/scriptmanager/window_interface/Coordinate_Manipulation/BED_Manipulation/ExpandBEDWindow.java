@@ -37,8 +37,10 @@ import java.beans.PropertyChangeListener;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
 /**
- * Graphical interface window for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED

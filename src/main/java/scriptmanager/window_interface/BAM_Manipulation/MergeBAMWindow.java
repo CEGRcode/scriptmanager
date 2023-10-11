@@ -35,9 +35,11 @@ import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
 
 /**
- * Graphical window for user argument selection and execution of the MergeBAM script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.MergeBAM}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Manipulation.MergeBAM
- * @see scriptmanager.cli.BAM_Manipulation.MergeBAMCLI
  */
 @SuppressWarnings("serial")
 public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {

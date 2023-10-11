@@ -38,7 +38,10 @@ import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
 /**
- * Graphical window for user argument selection and execution of the BAMMarkDuplicates script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates
  */
 @SuppressWarnings("serial")

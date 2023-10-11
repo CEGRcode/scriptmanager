@@ -15,8 +15,9 @@ import org.jfree.chart.ChartPanel;
 import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
- * Call script on each input and display chart results in a tabbed window where
- * all composite data images can be viewed.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.PlotComposite} and
+ * reporting composite results
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.PlotComposite

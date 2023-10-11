@@ -38,8 +38,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
- * Graphical interface window for randomizing sequences (shuffling nucleotides)
- * in a FASTA file by calling the methods implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA
@@ -72,9 +72,6 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 	 */
 	public Task task;
 
-	/**
-	 * Organize user inputs for calling script
-	 */
 	/**
 	 * Organizes user inputs for calling script
 	 */

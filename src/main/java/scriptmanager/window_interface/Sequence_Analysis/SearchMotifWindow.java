@@ -33,8 +33,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.util.FASTAUtilities;
 
 /**
- * Graphical interface window for searching for genomic motif sequences by
- * calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Sequence_Analysis.SearchMotif}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif

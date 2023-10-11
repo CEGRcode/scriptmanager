@@ -32,7 +32,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.SignalDuplication;
 
 /**
- * GUI for collecting inputs to be processed by the SignalDuplication script
+ * (Dev) Unfinished GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.SignalDuplication}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.SignalDuplication
  */
 @SuppressWarnings("serial")

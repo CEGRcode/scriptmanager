@@ -34,7 +34,10 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
 /**
- * Graphical interface window for calling {@link scriptmanager.scripts.File_Utilities.MD5Checksum#calculateMD5(String)} method and directing output
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.File_Utilities.MD5Checksum}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.File_Utilities.MD5Checksum
  */
 @SuppressWarnings("serial")

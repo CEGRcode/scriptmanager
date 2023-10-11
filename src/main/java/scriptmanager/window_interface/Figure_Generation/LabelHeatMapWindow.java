@@ -40,8 +40,8 @@ import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
 /**
- * LabelHeatmap GUI window. User inputs for calling the script are organized
- * into a user-friendly layout of fields and labels.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Figure_Generation.LabelHeatMap}
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap

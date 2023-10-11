@@ -34,9 +34,8 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical interface window for calculating various aspects of DNA shape
- * across a set of BED intervals by calling a script implemented in the scripts
- * package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
@@ -76,9 +75,6 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 	 */
 	public Task task;
 
-	/**
-	 * Organize user inputs for calling script
-	 */
 	/**
 	 * Organizes user inputs for calling script
 	 */

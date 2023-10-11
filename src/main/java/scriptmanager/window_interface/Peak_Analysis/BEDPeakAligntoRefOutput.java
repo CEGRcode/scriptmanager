@@ -13,7 +13,11 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 
 /**
- * Output wrapper for running BEDPeakAligntoRef script and reporting when the process is completed
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef} and reporting
+ * progress
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
  * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
  */

@@ -38,7 +38,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection of the BAMtoGFF script
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF}
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFOutput
  */

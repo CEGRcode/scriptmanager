@@ -14,8 +14,9 @@ import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Graphical window for displaying progress as genome sequences are searched for
- * a given motif.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.SearchMotif} and reporting
+ * progress
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif

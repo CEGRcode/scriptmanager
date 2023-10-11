@@ -42,7 +42,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical interface window for shifting coordinate intervals up/downstream by calling method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord}
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord

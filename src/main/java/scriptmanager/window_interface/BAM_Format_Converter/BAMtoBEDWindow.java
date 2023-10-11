@@ -38,8 +38,11 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the BAMtoBEDOutput script
- * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoBED}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoBED
  * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDOutput
  */
 @SuppressWarnings("serial")

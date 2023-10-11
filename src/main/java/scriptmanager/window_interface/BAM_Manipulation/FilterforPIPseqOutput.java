@@ -14,7 +14,11 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq;
 
 /**
- * Output window for executing the FilterforPIPseq script given arguments provided by FilterforPIPseqWindow and displaying output
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq} and reporting
+ * progress
+ * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
  * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow
  */

@@ -18,7 +18,11 @@ import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 
 /**
- * Output wrapper for running LabelHeatMap script and reporting when the process is completed
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.LabelHeatMap} and
+ * reporting composite results
+ * 
+ * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
  * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapWindow
  */

@@ -40,8 +40,10 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * ThreeColorHeatMap GUI window. User inputs for calling the script are organized and passed into {@link scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapOutput}
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap}
  * 
+ * @author William KM Lai
  * @see scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap
  * @see scriptmanager.window_interface.Figure_Generation.ThreeColorHeatMapOutput
  */

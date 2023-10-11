@@ -32,8 +32,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
 /**
- * Graphical interface window for converting GFF files to
- * BED-format by calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED
