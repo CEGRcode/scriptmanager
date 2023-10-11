@@ -16,12 +16,9 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
- * Command line interface class to create line plot images based on composite
- * data files formatted like the output of TagPileup.
+ * Command line interface for {@link scriptmanager.scripts.Figure_Generation.PlotComposite}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.PlotComposite
- * @see scriptmanager.scripts.Read_Analysis.TagPileup
  */
 @Command(name = "composite-plot", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.composite_description,
@@ -30,6 +27,11 @@ import scriptmanager.scripts.Figure_Generation.PlotComposite;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class CompositePlotCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a CompositePlotCLI object
+	 */
+	public CompositePlotCLI(){}
 
 	@Parameters(index = "0", description = "Composite data to plot. (formatted like TagPileup composite output)")
 	private File inputComposite;
@@ -53,6 +55,10 @@ public class CompositePlotCLI implements Callable<Integer> {
 
 	private ArrayList<Color> COLORS = new ArrayList<Color>();
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">CompositePlotCLI.call()");
@@ -73,7 +79,7 @@ public class CompositePlotCLI implements Callable<Integer> {
 	/**
 	 * Validate input values and create user-readable error messages.
 	 * @return
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

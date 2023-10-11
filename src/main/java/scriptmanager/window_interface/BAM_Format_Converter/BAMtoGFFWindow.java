@@ -37,9 +37,20 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFOutput
+ */
 @SuppressWarnings("serial")
 public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -64,8 +75,14 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	private JTextField txtMax;
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -129,6 +146,9 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Creates a new BAMtoGFFWindow
+	 */
 	public BAMtoGFFWindow() {
 		setTitle("BAM to GFF Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -352,6 +372,9 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		});
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -363,7 +386,7 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress changes, updating the progress bar.
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -372,6 +395,11 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

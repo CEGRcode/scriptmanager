@@ -17,16 +17,23 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 /**
- * Command line interface class for calculating various aspects of DNA shape
- * across a set of FASTA sequences by calling the methods implemented in the
- * scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
  */
-@Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_fasta_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.dna_shape_from_fasta_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class DNAShapefromFASTACLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new DNAShapefromFASTACLI object
+	 */
+	public DNAShapefromFASTACLI(){}
 
 	@Parameters(index = "0", description = "FASTA sequence file")
 	private File fastaFile;
@@ -56,6 +63,10 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 
 	private boolean[] OUTPUT_TYPE = new boolean[] { false, false, false, false };
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">DNAShapefromFASTACLI.call()");
@@ -101,10 +112,10 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

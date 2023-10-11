@@ -21,14 +21,19 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 public class BEDUtilities {
 
 	/**
+	 * Creates a new BEDUtilities object
+	 */
+	public BEDUtilities(){}
+	
+	/**
 	 * Load a list of BEDCoord objects from a file.
 	 * 
 	 * @param input  the BED-formatted input file to load
 	 * @param HEADER the style of FASTA-header to use for the output (true = BED
 	 *               coord name, false = use Genomic Coordinate)
-	 * @return
-	 * @throws IOException 
-	 * @throws UnsupportedEncodingException 
+	 * @return Returns a ArraList&lt;BEDCoord&gt; representing the input BED file
+	 * @throws IOException Invalid file or parameters 
+	 * @throws UnsupportedEncodingException File has unsupported encoding format (see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">Supported Encodings</a> )
 	 */
 	public static ArrayList<BEDCoord> loadCoord(File input, boolean HEADER) throws UnsupportedEncodingException, IOException {
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();

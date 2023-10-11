@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 	
 /**
-	Peak_AnalysisCLI/FilterBEDbyProximityCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "filter-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.filter_bed_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -32,6 +35,10 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 	@Option(names = {"-e", "--exclusion"}, description = "exclusion distance in bp (default=100)")
 	private int exclusion = 100;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">FilterBEDbyProximityCLI.call()" );

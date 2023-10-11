@@ -15,8 +15,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 
 /**
-	BAM_Format_ConverterCLI/SEStatsCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "bam-to-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_gff_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -24,6 +27,11 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtoGFFCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMtoGFFCLI object
+	 */
+	public BAMtoGFFCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
 	private File bamFile;
@@ -59,6 +67,10 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 	private int STRAND = -9999;
 	private int PAIR;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file type 
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BAMtoGFFCLI.call()" );

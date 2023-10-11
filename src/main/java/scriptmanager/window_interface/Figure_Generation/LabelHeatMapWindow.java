@@ -39,9 +39,20 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Figure_Generation.LabelHeatMap}
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapOutput
+ */
 @SuppressWarnings("serial")
 public class LabelHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -52,6 +63,9 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 	private JButton btnGen;
 	private JProgressBar progressBar;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JTextField txtBorderWidth;
 	private JTextField txtXTickHeight;
@@ -69,6 +83,9 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 
 	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -119,6 +136,9 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 
+	/**
+	 * Creates a new LabelHeatMapWindow
+	 */
 	public LabelHeatMapWindow() {
 		setTitle("Labeled Heatmap Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -429,12 +449,20 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 		btnGen.addActionListener(this);
 	}
 
+	
+	/**
+	 * Deprecated method for displaying output
+	 * @param activate 
+	 */
 	public void activateOutput(boolean activate) {
 		btnOutput.setEnabled(activate);
 		lblOutput.setEnabled(activate);
 		lblCurrentOutput.setEnabled(activate);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -455,6 +483,11 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

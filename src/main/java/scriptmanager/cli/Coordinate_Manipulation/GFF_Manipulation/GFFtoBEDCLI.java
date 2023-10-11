@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
 /**
-	Coordinate_ManipulationCLI/GFFtoBEDCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "gff-to-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.gff_to_bed_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -32,6 +35,10 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">GFFtoBEDCLI.call()" );

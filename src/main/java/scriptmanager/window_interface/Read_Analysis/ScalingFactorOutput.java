@@ -17,6 +17,15 @@ import javax.swing.SpringLayout;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Read_Analysis.ScalingFactor} and reporting
+ * progress
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorWindow
+ */
 @SuppressWarnings("serial")
 public class ScalingFactorOutput extends JFrame {
 
@@ -37,6 +46,17 @@ public class ScalingFactorOutput extends JFrame {
 	final JTabbedPane tabbedPane_CummulativeScatterplot;
 	final JTabbedPane tabbedPane_MarginalScatterplot;
 
+	/**
+	 * Creates a new ScalingFactorOutput window
+	 * @param b ArrayList of bam files to be processed
+	 * @param bl BED file with blacklisted coordinates
+	 * @param c The control BAM file
+	 * @param out_dir The filepath base name
+	 * @param out Whether or not to write the output
+	 * @param scale An integer value encoding the scaling type strategy to use (1=Total Tag, 2=NCIS, 3=NCISwithTotal)
+	 * @param win The NCIS parameter for the window/bin size (only used if scale!=1)
+	 * @param min The NCIS parameter for the minimum fraction (only used if scale!=1)
+	 */
 	public ScalingFactorOutput(ArrayList<File> b, File bl, File c, File out_dir, boolean out, int scale, int win,
 			double min) {
 		setTitle("Scaling Factor");
@@ -72,6 +92,10 @@ public class ScalingFactorOutput extends JFrame {
 		}
 	}
 
+	/**
+	 * Runs the ScalingFactor script
+	 * @throws IOException Invalid file or parameters
+	 */
 	public void run() throws IOException {
 		for (int z = 0; z < BAMFiles.size(); z++) {
 			File SAMPLE = BAMFiles.get(z); // Pull current BAM file
@@ -108,6 +132,11 @@ public class ScalingFactorOutput extends JFrame {
 		tabbedPane.addTab("Scaling Factor", makeTablePanel(SCALINGFACTORS));
 	}
 
+	/**
+	 * Creates and returns a "Scaling Factors" table
+	 * @param SCALE Scale to be displayed
+	 * @return An initialized scaling factors table
+	 */
 	public JScrollPane makeTablePanel(ArrayList<Double> SCALE) {
 		JTable table = new JTable(SCALE.size(), 2);
 		table.setName("Scaling Factors");

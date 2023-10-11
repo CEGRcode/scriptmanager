@@ -17,8 +17,9 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
- * Graphical window for displaying progress as genomic sequence is extracted
- * from a set of coordinates.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.FASTAExtract} and reporting
+ * progress
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
@@ -71,8 +72,8 @@ public class FASTAExtractOutput extends JFrame {
 	 * sequence/chromosome name within the FASTA file and dispose the window after
 	 * the script finishes.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

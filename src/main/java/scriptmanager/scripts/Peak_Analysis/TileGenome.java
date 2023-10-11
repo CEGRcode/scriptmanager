@@ -8,8 +8,7 @@ import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.util.GenomeSizeReference;
 
 /**
- * Class with static method for creating a coordinate file of tiles across a
- * genome.
+ * Tile coordinate intervals across a genome.
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Peak_Analysis.TileGenomeCLI
@@ -34,7 +33,7 @@ import scriptmanager.util.GenomeSizeReference;
 	 * @param OUTPUT     the file to write the coordinate tile output to (if null, a
 	 *                   default filename is determined using
 	 *                   &lt;GENOME&gt;_&lt;windowSize&gt;bp.&lt;ext&gt;)
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws IllegalArgumentException
 	 */
 	public static void execute(String GENOME, int windowSize, boolean BEDout, File OUTPUT) throws IOException, IllegalArgumentException {

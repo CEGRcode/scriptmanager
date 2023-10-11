@@ -20,6 +20,15 @@ import org.jfree.chart.ChartPanel;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.PEStats} and reporting the
+ * histograms and statistics
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.PEStats
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
+ */
 @SuppressWarnings("serial")
 public class PEStatOutput extends JFrame {
 	

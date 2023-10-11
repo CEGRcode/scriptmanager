@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 	
 /**
-	Peak_AnalysisCLI/BEDPeakAligntoRefCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "peak-align-ref", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_align_ref_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -23,6 +26,10 @@ import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BEDPeakAligntoRefCLI implements Callable<Integer> {
+	/**
+	 * Creates a new BEDPeakAligntoRefCLI object
+	 */
+	public BEDPeakAligntoRefCLI(){}
 	
 	@Parameters( index = "0", description = "The BED peak file")
 	private File peakBED;
@@ -32,6 +39,10 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peakBED>_<refBED>_Output.cdt)")
 	private File output = null;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BEDPeakAligntoRefCLI.call()" );

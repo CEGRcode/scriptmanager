@@ -18,8 +18,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 /**
-	BAM_StatisticsCLI/SEStats
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "bam-correlation", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_correlation_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -27,6 +30,11 @@ import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMGenomeCorrelationCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMGenomeCorrelationCLI object
+	 */
+	public BAMGenomeCorrelationCLI(){}
 	
 	@Parameters( index = "0..", description = "The BAM file whose statistics we want.")
 	private File[] inputFiles;
@@ -70,6 +78,10 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 	private short colorScale = HeatMap.BLUEWHITERED;
 	private Vector<File> bamFiles = new Vector<File>();
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BAMGenomeCorrelationCLI.call()" );

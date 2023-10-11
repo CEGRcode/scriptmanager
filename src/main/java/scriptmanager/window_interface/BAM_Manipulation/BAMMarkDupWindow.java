@@ -37,9 +37,19 @@ import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates
+ */
 @SuppressWarnings("serial")
 public class BAMMarkDupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> expList;
@@ -51,6 +61,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	private JButton btnSort;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JButton btnOutput;
 	private JLabel label;
@@ -58,6 +71,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	private JCheckBox chckbxGenerateBaiIndex;
 	private JCheckBox chckbxRemoveDuplicates;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws Exception {
@@ -104,6 +120,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         }
 	}
 	
+	/**
+	 * Creates a new  BAMMarkDupWinow
+	 */
 	public BAMMarkDupWindow() {
 		setTitle("BAM MarkDuplicates (picard)");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -212,6 +231,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 		contentPane.add(chckbxRemoveDuplicates);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -222,6 +244,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         task.execute();
 	}
 	
+	/**
+	 * Invoked when task's progress changes, updating the progress bar.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
@@ -233,6 +258,11 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         }
 	}
 	
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

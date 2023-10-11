@@ -9,8 +9,11 @@ import java.io.IOException;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
-	Peak_CallingCLI/PeakPairCLI
-*/
+ * (Dev) Unfinished command line interface for
+ * {@link scriptmanager.scripts.Peak_Calling.PeakPair}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "peak-pair", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_pairing_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -19,6 +22,10 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnExecutionException = 1)
 public class PeakPairCLI implements Callable<Integer> {
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.out.println( ">PeakPairCLI.call()" );
@@ -32,6 +39,7 @@ public class PeakPairCLI implements Callable<Integer> {
 		//SEStats.getSEStats( output, bamFile, null );
 		
 		//System.err.println("Calculations Complete");
+		System.err.println("CLI Peak Pair not yet implemented");
 		return(0);
 	}
 	

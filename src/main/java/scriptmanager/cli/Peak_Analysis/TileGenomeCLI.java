@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
-	Peak_AnalysisCLI/TileGenomeCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.TileGenome}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "tile-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tile_genome_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -34,6 +37,10 @@ public class TileGenomeCLI implements Callable<Integer> {
 	@Option(names = {"-w", "--window"}, description = "window size in bp (default=200)")
 	private int window = 200;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">TileGenomeCLI.call()" );

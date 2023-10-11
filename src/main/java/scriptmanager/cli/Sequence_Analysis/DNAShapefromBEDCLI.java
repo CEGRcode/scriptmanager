@@ -17,16 +17,19 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
- * Command line interface class for calculating various aspects of DNA shape
- * across a set of BED intervals by calling a script implemented in the scripts
- * package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
  */
 @Command(name = "dna-shape-bed", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_bed_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
 public class DNAShapefromBEDCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new DNAShapefromBEDCLI object
+	 */
+	public DNAShapefromBEDCLI(){}
 
 	@Parameters(index = "0", description = "reference genome FASTA file")
 	private File genomeFASTA;
@@ -60,6 +63,10 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 
 	private boolean[] OUTPUT_TYPE = new boolean[] { false, false, false, false };
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">DNAShapefromBEDCLI.call()");
@@ -105,10 +112,10 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

@@ -12,7 +12,7 @@ import scriptmanager.objects.CoordinateObjects.GenericCoord;
 import scriptmanager.util.GenomeSizeReference;
 
 /**
- * Class with static method for creating a coordinate file of random sites across a genome.
+ * Randomly sample sites across a genome.
  * 
  * @author William KM Lai
  * @see scriptmanager.util.GenomeSizeReference
@@ -37,7 +37,7 @@ public class RandomCoordinate {
 	 * @param OUTPUT     the file to write the coordinate tile output to (if null, a
 	 *                   default filename is determined using
 	 *                   &lt;GENOME&gt;_&lt;numSites&gt;SITES_&lt;windowSize&gt;bp.&lt;ext&gt;)
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 * @throws IllegalArgumentException
 	 */
 	public static void execute(String GENOME, int numSites, int windowSize, boolean BEDout, File OUTPUT) throws IOException, IllegalArgumentException {
