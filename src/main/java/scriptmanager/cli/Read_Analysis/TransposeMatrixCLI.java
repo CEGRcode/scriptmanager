@@ -30,9 +30,9 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <matrixFilename>_TRANPOSE.tab)")
 	private File output = null;
 	@Option(names = {"-r", "--start-row"}, description = "Row to start transposing the matrix (zero indexed)")
-	private int startROW = 1;
+	private int startROW = 0;
 	@Option(names = {"-l", "--start-col"}, description = "Column to start transposing the matrix (zero indexed)")
-	private int startCOL = 2;
+	private int startCOL = 0;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed file" )
 	private boolean gzOutput = false;
 	

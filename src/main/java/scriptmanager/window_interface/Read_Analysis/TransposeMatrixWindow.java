@@ -243,7 +243,8 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtRow, -2, SpringLayout.NORTH, lblRow);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtRow, 76, SpringLayout.EAST, lblRow);
 		txtRow.setHorizontalAlignment(SwingConstants.CENTER);
-		txtRow.setText("1");
+		txtRow.setText("0");
+		txtRow.setToolTipText("zero-indexed");
 		contentPane.add(txtRow);
 		txtRow.setColumns(10);
 
@@ -252,7 +253,8 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtCol, 8, SpringLayout.EAST, lblCol);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtCol, 76, SpringLayout.EAST, lblCol);
 		txtCol.setHorizontalAlignment(SwingConstants.CENTER);
-		txtCol.setText("2");
+		txtCol.setText("0");
+		txtCol.setToolTipText("zero-indexed");
 		contentPane.add(txtCol);
 		txtCol.setColumns(10);
 

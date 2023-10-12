@@ -29,16 +29,16 @@ public class TransposeMatrix {
 	 * Creates a new instance of the TransposeMatrix script with a given input file
 	 * @param m TAB file to be scaled
 	 * @param o Output directory/file
-	 * @param r Starting row (1-indexed)
-	 * @param c Starting column (1-indexed)
+	 * @param r Starting row (zero-indexed)
+	 * @param c Starting column (zero-indexed)
 	 * @param z Output Gzip
 	 */
-	public TransposeMatrix(File m, File o, int r, int c, boolean z) {
-		MATRIX = m;
-		OUTFILE = o;
-		ROWINDEX = r;
-		COLINDEX = c;
-		OUTPUT_GZIP = z;
+	public TransposeMatrix(File matrix, File output, int row, int column, boolean gzOutput) {
+		MATRIX = matrix;
+		OUTFILE = output;
+		ROWINDEX = row;
+		COLINDEX = column;
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -64,10 +64,11 @@ public class TransposeMatrix {
 
 			br = makeReader();
 			PrintStream OUT = makePrintStream(OUTFILE, OUTPUT_GZIP);
-			//Load original matrix into String[][]
+			//Transfer not-transposed rows
 			for (int i = 1; i <= ROWINDEX; i++){
 				OUT.println(br.readLine());
 			}
+			//Load original matrix into array
 			String[][] originalMatrix = new String[numRows - ROWINDEX][numCols];
 			String line;
 			int row = 0;
