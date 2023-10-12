@@ -15,8 +15,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 /**
-	Read_AnalysisCLI/ScalingFactorCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Read_Analysis.ScalingFactor}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "scaling-factor", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scaling_factor_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -54,6 +57,10 @@ public class ScalingFactorCLI implements Callable<Integer> {
 	
 	private int scaleType = 1;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ScalingFactorCLI.call()" );

@@ -45,9 +45,20 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.ScaleMatrix}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorOutput
+ */
 @SuppressWarnings("serial")
 public class ScaleMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	ArrayList<File> TABFiles = new ArrayList<File>();
@@ -71,10 +82,13 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 
 	private DefaultTableModel expTable;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -346,6 +360,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		lblCurrent.setEnabled(activate);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -366,6 +383,11 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

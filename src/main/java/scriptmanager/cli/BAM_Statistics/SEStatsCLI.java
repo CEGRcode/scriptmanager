@@ -12,9 +12,13 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.SEStats;
 	
+
 /**
-	BAM_StatisticsCLI/SEStatsCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.SEStats}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "se-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.se_stat_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -29,6 +33,10 @@ public class SEStatsCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "Specify output file ")
 	private File output;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SEStatsCLI.call()" );

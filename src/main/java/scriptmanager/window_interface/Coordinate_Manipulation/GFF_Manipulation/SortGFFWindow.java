@@ -34,9 +34,19 @@ import scriptmanager.util.CDTUtilities;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF
+ */
 @SuppressWarnings("serial")
 public class SortGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private static File OUT_DIR = null;
@@ -54,6 +64,9 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	private JButton btnConvert;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -73,6 +86,9 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	private JLabel lblIndexStart;
 	private JLabel lblIndexStop;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -332,6 +348,9 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(btnLoadCdtFile);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -343,7 +362,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -352,6 +371,11 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

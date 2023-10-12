@@ -35,9 +35,19 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.File_Utilities.ConvertChrNames}
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
+ */
 @SuppressWarnings("serial")
 public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -54,11 +64,17 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 	private JCheckBox chckbxGzipOutput;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutput;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -100,6 +116,9 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		}
 	}
 
+	/**
+	 * Creates a new ConvertBEDChrNamesWindow
+	 */
 	public ConvertBEDChrNamesWindow() {
 		setTitle("Convert Yeast Reference Genome for BED Files");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -223,6 +242,9 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		btnConvert.addActionListener(this);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -242,6 +264,11 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

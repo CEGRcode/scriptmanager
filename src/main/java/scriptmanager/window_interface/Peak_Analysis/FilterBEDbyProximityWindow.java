@@ -30,9 +30,20 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ */
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> bedList;
@@ -46,6 +57,9 @@ public class FilterBEDbyProximityWindow extends JFrame implements ActionListener
 	
 public Task task;
 	
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
@@ -190,6 +204,9 @@ public Task task;
 	}
 
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -200,6 +217,9 @@ public Task task;
         task.execute();
 	}
 	
+	/**
+	 * Invoked when task's progress property changes and updates progress bar.
+	 */
 	public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
@@ -207,6 +227,11 @@ public Task task;
         }
     }
 	
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

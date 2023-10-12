@@ -8,8 +8,22 @@ import java.util.ArrayList;
 
 import htsjdk.samtools.SAMException;
 
+/**
+ * Picard wrapper for MarkDuplicates
+ * 
+ * @author Erik Pavloski
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAMMarkDupWindow
+ */
 public class BAMMarkDuplicates {
-		
+	
+	/**
+	 * Runs MarkDuplicates picard tool
+	 * @param in BAM file to be marked
+	 * @param remove Removes duplicates instead of marking them if true
+	 * @param out Output BAM file
+	 * @param met .metrics file for outputting stats
+	 * @throws IOException Invalid file or parameters If BAM file doesn't have corresponding .BAI Index file
+	 */
 	public static void mark(File bamFile, boolean removeDuplicates, File output, File metrics) throws IOException {
 		//Check if BAI index file exists
 		File f = new File(bamFile + ".bai");

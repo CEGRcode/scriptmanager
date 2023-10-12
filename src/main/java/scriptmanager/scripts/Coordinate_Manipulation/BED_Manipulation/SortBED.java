@@ -18,7 +18,7 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This class contains scripts for sorting coordinate intervals (BED/GFF) by the tag counts of a CDT matrix file.
+ * Sort coordinate intervals (BED) by the tag counts of a CDT matrix file.
  *
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI
@@ -34,7 +34,7 @@ public class SortBED {
 	 * @param START_INDEX the start column to consider when summing values to sort
 	 * @param STOP_INDEX
 	 * @param gzOutput if true, the output files will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void sortBEDbyCDT(String outbase, File bed, File cdt, int START_INDEX, int STOP_INDEX, boolean gzOutput ) throws IOException {
 		ArrayList<BEDCoord> SORT = new ArrayList<BEDCoord>();

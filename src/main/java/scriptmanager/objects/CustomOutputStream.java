@@ -14,10 +14,17 @@ import javax.swing.JTextArea;
 public class CustomOutputStream extends OutputStream {
 	private JTextArea textArea;
 
+	/**
+	 * Creates a CustomOutputStream
+	 * @param textArea Text area to place the output stream
+	 */
 	public CustomOutputStream(JTextArea textArea) {
 		this.textArea = textArea;
 	}
 
+	/**
+	 * Writes integers to the JTextArea
+	 */
 	@Override
 	public void write(int b) throws IOException {
 		// redirects data to the text area

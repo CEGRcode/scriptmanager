@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
 /**
-	Peak_AnalysisCLI/RandomCoordinateCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.RandomCoordinate}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "rand-coord", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.rand_coord_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -36,6 +39,10 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	@Option(names = {"-w", "--window"}, description = "window size in bp (default=200)")
 	private int window = 200;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">RandomCoordinateCLI.call()" );

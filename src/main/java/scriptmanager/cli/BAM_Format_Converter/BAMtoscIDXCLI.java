@@ -15,8 +15,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
 
 /**
-	BAM_Format_ConverterCLI/BAMtosciIDXCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "bam-to-scidx", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_scidx_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -24,6 +27,11 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtoscIDXCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMtoscIDXCLI object
+	 */
+	public BAMtoscIDXCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
 	private File bamFile;
@@ -57,6 +65,10 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 	private int STRAND = -9999;
 	private int PAIR;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BAMtoscIDXCLI.call()" );

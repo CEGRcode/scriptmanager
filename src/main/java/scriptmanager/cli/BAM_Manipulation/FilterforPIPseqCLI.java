@@ -18,7 +18,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq;
 
 /**
- * BAM_ManipulatioCLIn/FilterforPIPseqCLI
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "filter-pip-seq", mixinStandardHelpOptions = true, description = ToolDescriptions.filter_pip_seq_description
 		+ "\n"
@@ -37,6 +40,10 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 			"--filter" }, description = "filter by upstream sequence, works only for single-nucleotide A,T,C, or G. (default seq ='T')")
 	private String filterString = "T";
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">FilterforPIPseqCLI.call()");
@@ -55,10 +62,10 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

@@ -46,11 +46,24 @@ public class CorrParameter {
 //	public int getExp() {
 //		return currentExp;
 //	}
+
+	/**
+	 * Creates a new CorrParameter object
+	 */
+	public CorrParameter(){}
 	
+	/**
+	 * Returns whether coordinates are randomly or completely sampled
+	 * @return False = randomly sampled, True = completely sampled
+	 */
 	public boolean getCorrType() {
 		return corrType;
 	}
 	
+	/**
+	 * Sets whether coordinates are randomly or completely sampled
+	 * @param newtype False = randomly sampled, True = completely sampled
+	 */
 	public void setCorrType(boolean newtype) {
 		corrType = newtype;
 	}
@@ -87,46 +100,90 @@ public class CorrParameter {
 //		index.add(newinput);		
 //	}
 
+	/**
+	 * Returns the size of the window frame
+	 * @return The size of the window frame in # of bp
+	 */
 	public int getWindow() {
 		return windowSize;		
 	}
 
+	/**
+	 * Sets the size of the window frame
+	 * @param newwindow The new size of the window frame
+	 */
 	public void setWindow(int newwindow) {
 		windowSize = newwindow;		
 	}
 
+	/**
+	 * Returns the number of random iterations per chromosome
+	 * @return The number of random iterations per chromosome 
+	 */
 	public int getIterations() {
 		return iterations;		
 	}
 
+	/**
+	 * Sets the number of random iterations per chromosome
+	 * @param newiter The new number of random iterations per chrosmosome
+	 */
 	public void setIterations(int newiter) {
 		iterations = newiter;		
 	}
 
+	/**
+	 * Returns the correlation resolution
+	 * @return The correlation resolution
+	 */
 	public int getResolution() {
 		return resolution;		
 	}
 
+	/**
+	 * Sets the correlation resolution
+	 * @param newresolution The new correlation resolution
+	 */
 	public void setResolution(int newresolution) {
 		resolution = newresolution;		
 	}
 
+	/**
+	 * Returns the size of the theoretical sliding window
+	 * @return The size of the theoretical sliding window
+	 */
 	public int getCorrWindow() {
 		return corrWindow;		
 	}
 
+	/**
+	 * Sets the size of the theoretical sliding window
+	 * @param newcorrWindow The new size of the theroretical sliding window
+	 */
 	public void setCorrWindow(int newcorrWindow) {
 		corrWindow = newcorrWindow;		
 	}
 
+	/**
+	 * Returns the number of CPU's to use
+	 * @return The number of CPU's to use
+	 */
 	public int getThreads() {
 		return threads;		
 	}
 
+	/**
+	 * Sets the number of CPU's to use
+	 * @param newthreads The new number of CPU's to use
+	 */
 	public void setThreads(int newthreads) {
 		threads = newthreads;		
 	}
 
+	/**
+	 * Returns the different variables of a CorrParameter represented by a string
+	 * @return The different variables of a CorrParameter represented by a string
+	 */
 	public String printStats() {
 		String OUTPUT = "";
 //		if(input == null)	OUTPUT += "Input file: NONE\n";

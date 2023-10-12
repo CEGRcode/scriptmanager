@@ -16,8 +16,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
 /**
-	Coordinate_ManipulationCLI/SortGFFCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "sort-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_gff_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -42,6 +45,10 @@ public class SortGFFCLI implements Callable<Integer> {
 	private int CDT_SIZE = -999;
 	private boolean byCenter = false;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SortGFFCLI.call()" );

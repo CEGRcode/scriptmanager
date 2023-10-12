@@ -29,10 +29,21 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ */
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> peakList;
@@ -51,8 +62,14 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
 	
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
@@ -90,6 +107,9 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
         }
 	}
 	
+	/**
+	 * Creates a new BEDPeakAligntoRefWindow
+	 */
 	public BEDPeakAligntoRefWindow() {
 		setTitle("BED Peaks Alignment");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -234,6 +254,9 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		btnCalculate.addActionListener(this);
 	}
 	
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -245,7 +268,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	}
 	
 	/**
-     * Invoked when task's progress property changes.
+     * Invoked when task's progress property changes and updates progress bar.
      */
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
@@ -254,6 +277,11 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
         }
     }
 	
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

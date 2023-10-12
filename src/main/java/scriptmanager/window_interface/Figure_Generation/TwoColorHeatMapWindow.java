@@ -39,9 +39,20 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Figure_Generation.TwoColorHeatMap}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Figure_Generation.TwoColorHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapOutput
+ */
 @SuppressWarnings("serial")
 public class TwoColorHeatMapWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -52,6 +63,9 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 	private JButton btnGen;
 	private JProgressBar progressBar;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JTextField txtRow;
 	private JTextField txtCol;
@@ -75,6 +89,9 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 
 	private File OUT_DIR = null;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -514,12 +531,19 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 		btnGen.addActionListener(this);
 	}
 
+	/**
+	 * Activates the appropriate settings for outputting a PNG
+	 * @param activate Whether a heat map PNG should be output
+	 */
 	public void activateOutput(boolean activate) {
 		btnOutput.setEnabled(activate);
 		lblOutput.setEnabled(activate);
 		lblCurrentOutput.setEnabled(activate);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -531,7 +555,7 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar.
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -540,6 +564,11 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

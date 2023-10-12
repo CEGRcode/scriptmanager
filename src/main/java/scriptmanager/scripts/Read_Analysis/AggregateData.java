@@ -10,6 +10,14 @@ import java.util.Scanner;
 import scriptmanager.util.ArrayUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 
+/**
+ * Combine multiple TAB/CDT files into site-specific scores using a given
+ * operation
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Read_Analysis.AggregateDataCLI
+ * @see scriptmanager.window_interface.Read_Analysis.AggregateDataWindow
+ */
 public class AggregateData {
 
 	private ArrayList<File> INPUT = null;
@@ -21,6 +29,17 @@ public class AggregateData {
 	private PrintStream OUT;
 	private String endMessage = "";
 
+	/**
+	 * Creates a new instance of the AggregateData script
+	 * 
+	 * @param in    ArrayList of TAB files to be processed
+	 * @param out   Output directory
+	 * @param m     Whether results should be merged into one file
+	 * @param r     Starting row (1-indexed)
+	 * @param c     Starting column (1-indexed)
+	 * @param index Operation to be performed (0 = sum, 1 = average, 2 = median, 3 =
+	 *              mode, 4 = min, 5 = max, 6 = positional variance)
+	 */
 	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
 		INPUT = in;
 		OUT_PATH = out;
@@ -30,6 +49,11 @@ public class AggregateData {
 		METRIC = index;
 	}
 
+	/**
+	 * Runs the aggregation with the specified parameters
+	 * 
+	 * @throws IOException Invalid file or parameters
+	 */
 	public void run() throws IOException {
 		if (!MERGE) {
 			if (OUT_PATH == null || OUT_PATH.isDirectory()) {
@@ -134,10 +158,20 @@ public class AggregateData {
 		endMessage = "Data Parsed";
 	}
 
+	/**
+	 * Returns "Data Parsed," or an error message if script failed
+	 * @return "Data Parsed," or an error message if script failed
+	 */
 	public String getMessage() {
 		return (endMessage);
 	}
 
+	/**
+	 * Calls {@link AggregateData#outputFileScore(File, PrintStream)} but outputs results to a new file if a PrintStream is not provided
+	 * @param IN Input file (used to generate output file's name)
+	 * @throws FileNotFoundException Script could not find valid input file
+	 * @throws IOException Invalid file or parameters
+	 */
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
 		String NEWNAME = ExtensionFileFilter.stripExtension(IN);
 		if (OUT_PATH != null) {
@@ -148,6 +182,13 @@ public class AggregateData {
 		outputFileScore(IN, OUT);
 	}
 
+	/**
+	 * Outputs the first value in a given row and the result of the selected operation for each line of a file
+	 * @param IN TAB file to be scored
+	 * @param OUT Print stream to output scores
+	 * @throws FileNotFoundException Script could not find valid input file
+	 * @throws IOException Invalid file or parameters
+	 */
 	public void outputFileScore(File IN, PrintStream OUT) throws FileNotFoundException, IOException {
 		if (METRIC == 0) {
 			OUT.println("\tSum");

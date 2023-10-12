@@ -19,8 +19,11 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Read_Analysis.TagPileup;
 
 /**
-	Read_AnalysisCLI/TagPileupCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Read_Analysis.TagPileup}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "tag-pileup", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tag_pileup_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -130,9 +133,15 @@ public class TagPileupCLI implements Callable<Integer> {
 		@Option(names = {"-x", "--max-insert"}, description = "filter by maximum insert size in bp, require PE (default=no maximum)")
 		private int MAX_INSERT = -9999;
 	}
-	
+
 	PileupParameters p;
-	
+
+	/**
+	 * Runs when this subcommand is called, running script in respective script
+	 * package with user defined arguments
+	 * 
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">TagPileupCLI.call()" );
@@ -156,10 +165,10 @@ public class TagPileupCLI implements Callable<Integer> {
 		System.err.println( "Calculations complete" );
 		return(0);
 	}
-	
+
 	private String validateInput() throws IOException {
 		String r = "";
-		
+
 		// Set ASPECT
 		if(aspectType.fiveprime) { p.setAspect(PileupParameters.FIVE); }
 		else if(aspectType.threeprime) { p.setAspect(PileupParameters.THREE); }
@@ -170,7 +179,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		if(readType.read1){ p.setRead(PileupParameters.READ1); }
 		else if(readType.read2){ p.setRead(PileupParameters.READ2); }
 		else if(readType.allreads){ p.setRead(PileupParameters.ALLREADS); }
-		
+
 		//check inputs exist
 		if(!bedFile.exists()){
 			r += "(!)BED file does not exist: " + bedFile.getCanonicalPath() +  "\n";
@@ -184,7 +193,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		if(!f.exists() || f.isDirectory()){
 			r += "(!)BAI Index File does not exist for: " + bamFile.getName() +  "\n";
 		}
-		
+
 		//set default output COMPOSITE filename (done by picocli)
 		//check output COMPOSITE filename is valid
 		if(outputOptions.outputComposite!="composite_average.out"){
@@ -196,7 +205,7 @@ public class TagPileupCLI implements Callable<Integer> {
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}
 		}
-		
+
 		//validate smooth params
 		if(smoothType.winVals!=-9999 && smoothType.winVals<1){ r += "(!)Invalid Smoothing Window Size. Must be larger than 0 bins, winSize=" + smoothType.winVals + "\n"; }
 		if(smoothType.winVals!=-9999 && smoothType.winVals%2==0){ r += "(!)Invalid Smoothing Window Size. Must be odd for symmetrical smoothing (so that the window is centered properly), winSize=" + smoothType.winVals + "\n"; }
@@ -246,15 +255,15 @@ public class TagPileupCLI implements Callable<Integer> {
 				}
 			}
 		}
-		
+
 		//Set COMPOSITE file
 		p.setOutputCompositeStatus(true);
 		p.setCompositePrintStream(new PrintStream(outputOptions.outputComposite));
-		
+
 		//Set STRAND
 		p.setStrand(PileupParameters.SEPARATE);
 		if(combStatus || p.getAspect() == PileupParameters.MIDPOINT) { p.setStrand(PileupParameters.COMBINED); }
-		
+
 		//Set smooth type and parameters
 		if(smoothType.noSmooth){			//default behavior
 			p.setTrans(PileupParameters.NO_SMOOTH);
@@ -273,20 +282,20 @@ public class TagPileupCLI implements Callable<Integer> {
 			p.setStdSize(smoothType.gaussVals[0]);
 			p.setStdNum(smoothType.gaussVals[1]);
 		}else{ p.setTrans(0); }      //default behavior
-		
+
 		//Set SHIFT, BIN, CPU
 		p.setShift(calcOptions.shift);
 		p.setBin(calcOptions.binSize);
 		p.setTagExtend(calcOptions.tagExtend);
 		p.setCPU(calcOptions.cpu);
-		
+
 		//Set BLACKLIST & STANDARD
 		p.setBlacklist(filterOptions.blacklistFilter);
 		p.setStandard(calcOptions.tagsEqual);
-		
+
 		//Set output statuses
 		p.setGZIPstatus(outputOptions.zip);
-		
+
 		//Set Ratio (code to standardize tags sequenced to genome size (1 tag / 1 bp))
 		if( p.getStandard() && filterOptions.blacklistFilter!=null ){
 			p.setRatio(BAMUtilities.calculateStandardizationRatio(bamFile, filterOptions.blacklistFilter, p.getRead()));

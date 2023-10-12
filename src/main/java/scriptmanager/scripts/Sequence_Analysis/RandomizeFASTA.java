@@ -8,8 +8,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * This script randomizes a FASTA sequence file by shuffling the nucleotides
- * within each FASTA sequence.
+ * Randomize a FASTA sequence file by shuffling the nucleotides within each
+ * FASTA sequence.
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI
@@ -24,7 +24,7 @@ public class RandomizeFASTA {
 	 * @param RANDOUT filepath to write randomized sequences to
 	 * @param seed set a random seed
 	 * @return name of output filename
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed) throws IOException {
 		Random randnum = new Random();

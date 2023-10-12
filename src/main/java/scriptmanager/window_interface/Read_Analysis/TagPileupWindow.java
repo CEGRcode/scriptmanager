@@ -52,9 +52,10 @@ import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
 /**
- * Graphical interface window for piling up aligned tags around reference
- * coordinates by calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.TagPileup}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.TagPileup
@@ -63,6 +64,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class TagPileupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -125,10 +129,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private String[] transformationOptions = {"None", "Sliding Window", "Gaussian Smooth"};
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -261,7 +268,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Instantiate window with graphical interface design.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public TagPileupWindow() throws IOException {
 		setTitle("Tag Pileup");
@@ -1032,7 +1039,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Extract read aspect and read output to upddate the cartoon accordingly.
+	 * Extract read aspect and read output to update the cartoon accordingly.
 	 */
 	public void updateCartoon() {
 		int aspect = cbox_ReadAspect.getSelectedIndex();
@@ -1051,6 +1058,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		readCartoon.redrawArrows(aspect, read);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -1061,6 +1071,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		task.execute();
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		Component[] components = con.getComponents();
 		for (Component component : components) {
