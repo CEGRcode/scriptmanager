@@ -93,12 +93,10 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 
 	public static String getCLIcommand(File matrix, File output, int startROW, int startCOL, boolean gzOutput){
 		String command = "java -jar $SCRIPTMANAGER read-analysis transpose-matrix";
-		if (gzOutput){
-			command += " -z";
-		}
-		command += " -l " + startCOL;
+		command += gzOutput? " -z": "";
+		command += startCOL != 0? " -l " + startCOL: "";
 		command += " -o " + output.getAbsolutePath();
-		command += " -r " + startROW;
+		command += startROW != 0? " -r " + startROW: "";
 		command += " " + matrix.getAbsolutePath();
 		return command;
 	}
