@@ -1,7 +1,7 @@
 <tool id="scriptmanager_tagpileup" name="ScriptManager: TagPileup" version="1.0.0">
     <description>Generates tagpileup based on BAM file and coordinate file.</description>
     <macros>
-        <import>macros.xml</import>
+        <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
 	     <requirement type="package" version="8.0.112">openjdk</requirement>

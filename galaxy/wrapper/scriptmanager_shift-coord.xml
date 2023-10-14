@@ -1,7 +1,7 @@
 <tool id="scriptmanager_shift-coord" name="ScriptManager: Shift BED or GFF" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description>Shift coordinate intervals up/downstream.</description>
     <macros>
-        <import>macros.xml</import>
+        <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
 	     <requirement type="package" version="8.0.112">openjdk</requirement>

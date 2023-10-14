@@ -1,7 +1,7 @@
 <tool id="scriptmanager_heatmap" name="ScriptManager: Two-color Heatmap" version="0.0.1">
     <description>Generate heat map using CDT files.</description>
     <macros>
-        <import>macros.xml</import>
+        <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
