@@ -90,8 +90,8 @@
         ]]>
     </command>
     <inputs>
-        <param name="input_bed" type="data" format="bed"      label="input bed file" />
-        <param name="input_bam" type="data" format ="bam"     label="input bam file" />
+        <param name="input_bed" type="data" format="bed"      label="Input BED file" />
+        <param name="input_bam" type="data" format ="bam"     label="Input BAM file" />
         <conditional name="level_options">
 
             <param name="level" type="select" label="use bioinformatic default or advance options">

@@ -6,10 +6,10 @@
     <requirements>
         <requirement type="package" version="8.0.112">openjdk</requirement>
     </requirements>
-    
+
     <command detect_errors="exit_code"><![CDATA[
             java -jar $__tool_directory__/ScriptManager-v0.14.jar figure-generation label-heatmap
-            
+
             #if str($heatmap_color.color) == "h_color" :
                 -c "$heatmap_color.color_h"
             #else:
@@ -29,7 +29,7 @@
             '$input_img'
     ]]></command>
     <inputs>
-        <param name="input_img" type="data" format="png" label="Input image in PNG format" />
+        <param name="input_img" type="data" format="png" label="Input PNG file" />
 
         <conditional name="heatmap_color">
             <param name="color" type="select" label="Select color or specify hexadecimal color code?">

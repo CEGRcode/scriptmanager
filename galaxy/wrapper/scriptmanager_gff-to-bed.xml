@@ -7,7 +7,7 @@
         java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation gff-to-bed -o '$output' '$input'
     ]]></command>
 <inputs>
-     <param name="input" type="data" format="gff" label="Input file in GFF format"/>
+     <param name="input" type="data" format="gff" label="Input GFF file"/>
      </inputs>
 
 <outputs>
