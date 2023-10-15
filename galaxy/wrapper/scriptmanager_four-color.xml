@@ -10,7 +10,7 @@
 
     <command detect_errors="exit_code"><![CDATA[
         #set output_dir = $output.files_path
-        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar figure-generation four-color 
+        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar figure-generation four-color
         -o '$output'
         -x $pixel_width
         -y $pixel_height
@@ -47,7 +47,7 @@
 
     <param name="pixel_height" type="integer" value="1" min="1" label="Pixel height per nucleotide" />
     <param name="pixel_width"  type="integer" value="1" min="1" label="Pixel width per nucleotide" />
-    
+
     <conditional name="a_select_color_cond">
             <param name="a_select_color" type="select" label="A nucleotide: select color or specify hexadecimal color code?">
                 <option value="a_color" selected="True"> select color</option>
@@ -55,11 +55,11 @@
             </param>
             <when value="a_color">
                 <param name="color_a" type="select" label="Color">
-                    <expand macro="color_selector_default_red" />
+                    <expand macro="four_color_plot_selector_default_red" />
                 </param>
             </when>
             <when value="a_hex">
-                <param name="a_hex" type="text" value="FF0000" label="Hexadecimal code" />
+                <param name="a_hex" type="text" value="D00000" label="Hexadecimal code" />
             </when>
         </conditional>
 
@@ -70,11 +70,11 @@
             </param>
             <when value="t_color">
                 <param name="color_t" type="select" label="Color">
-                    <expand macro="color_selector_default_green" />
+                    <expand macro="four_color_plot_selector_default_green" />
                 </param>
             </when>
             <when value="t_hex">
-                <param name="t_hex" type="text" value="00FF00" label="Hexadecimal code" />
+                <param name="t_hex" type="text" value="00D000" label="Hexadecimal code" />
             </when>
         </conditional>
 
@@ -85,11 +85,11 @@
             </param>
             <when value="g_color">
                 <param name="color_g" type="select" label="Color">
-                    <expand macro="color_selector_default_yellow" />
+                    <expand macro="four_color_plot_selector_default_yellow" />
                 </param>
             </when>
             <when value="g_hex">
-                <param name="g_hex" type="text" value="FFFF00" label="Hexadecimal code" />
+                <param name="g_hex" type="text" value="FFB400" label="Hexadecimal code" />
             </when>
         </conditional>
 
@@ -100,11 +100,11 @@
             </param>
             <when value="c_color">
                 <param name="color_c" type="select" label="Color">
-                    <expand macro="color_selector_default_blue" />
+                    <expand macro="four_color_plot_selector_default_blue" />
                 </param>
             </when>
             <when value="c_hex">
-                <param name="c_hex" type="text" value="0000FF" label="Hexadecimal code" />
+                <param name="c_hex" type="text" value="0000D0" label="Hexadecimal code" />
             </when>
         </conditional>
 
@@ -115,7 +115,7 @@
             </param>
             <when value="n_color">
                 <param name="color_n" type="select" label="Color">
-                    <expand macro="color_selector_default_gray" />
+                    <expand macro="four_color_plot_selector_default_gray" />
                 </param>
             </when>
             <when value="n_hex">

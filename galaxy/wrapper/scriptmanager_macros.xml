@@ -8,6 +8,56 @@
             <requirement type="package">samtools</requirement>
         </requirements>
     </xml>
+    <xml name="four_color_plot_selector_default_red">
+        <option value="D00000" selected="True">red</option>
+        <option value="00D000">green</option>
+        <option value="0000D0">blue</option>
+        <option value="FFB400">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000">black</option>
+    </xml>
+   <xml name="four_color_plot_selector_default_green">
+       <option value="D00000">red</option>
+       <option value="00D000" selected="True">green</option>
+       <option value="0000D0">blue</option>
+       <option value="FFB400">yellow</option>
+       <option value="6600FF">purple</option>
+       <option value="FF6600">orange</option>
+       <option value="808080">gray</option>
+       <option value="000000">black</option>
+    </xml>
+    <xml name="four_color_plot_selector_default_yellow">
+        <option value="D00000">red</option>
+        <option value="00D000">green</option>
+        <option value="0000D0">blue</option>
+        <option value="FFB400" selected="True">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000">black</option>
+    </xml>
+    <xml name="four_color_plot_selector_default_blue">
+        <option value="D00000">red</option>
+        <option value="00D000">green</option>
+        <option value="0000D0" selected="True">blue</option>
+        <option value="FFB400">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080">gray</option>
+        <option value="000000">black</option>
+    </xml>
+    <xml name="four_color_plot_selector_default_gray">
+        <option value="D00000">red</option>
+        <option value="00D000">green</option>
+        <option value="0000D0">blue</option>
+        <option value="FFB400">yellow</option>
+        <option value="6600FF">purple</option>
+        <option value="FF6600">orange</option>
+        <option value="808080" selected="True">gray</option>
+        <option value="000000">black</option>
+    </xml>
     <xml name="color_selector_default_red">
         <option value="FF0000" selected="True">red</option>
         <option value="00FF00">green</option>
@@ -16,50 +66,20 @@
         <option value="6600FF">purple</option>
         <option value="FF6600">orange</option>
         <option value="808080">gray</option>
-        <option value="000000">black</option>
-    </xml>
-   <xml name="color_selector_default_green">
-        <option value="FF0000" >red</option>
-        <option value="00FF00" selected="True">green</option>
-        <option value="0000FF">blue</option>
-        <option value="FFFF00">yellow</option>
-        <option value="6600FF">purple</option>
-        <option value="FF6600">orange</option>
-        <option value="808080">gray</option>
-        <option value="000000">black</option>
-    </xml>
-    <xml name="color_selector_default_yellow">
-        <option value="FF0000">red</option>
-        <option value="00FF00">green</option>
-        <option value="0000FF">blue</option>
-        <option value="FFFF00" selected="True" >yellow</option>
-        <option value="6600FF">purple</option>
-        <option value="FF6600">orange</option>
-        <option value="808080">gray</option>
-        <option value="000000">black</option>
+        <option value="000000" selected="True">black</option>
     </xml>
     <xml name="color_selector_default_blue">
-        <option value="FF0000" >red</option>
+        <option value="FF0000">red</option>
         <option value="00FF00">green</option>
         <option value="0000FF" selected="True">blue</option>
         <option value="FFFF00">yellow</option>
         <option value="6600FF">purple</option>
         <option value="FF6600">orange</option>
         <option value="808080">gray</option>
-        <option value="000000">black</option>
-    </xml>
-    <xml name="color_selector_default_gray">
-        <option value="FF0000" >red</option>
-        <option value="00FF00">green</option>
-        <option value="0000FF">blue</option>
-        <option value="FFFF00">yellow</option>
-        <option value="6600FF">purple</option>
-        <option value="FF6600">orange</option>
-        <option value="808080" selected="True">gray</option>
-        <option value="000000">black</option>
+        <option value="000000" selected="True">black</option>
     </xml>
     <xml name="color_selector_default_black">
-        <option value="FF0000" >red</option>
+        <option value="FF0000">red</option>
         <option value="00FF00">green</option>
         <option value="0000FF">blue</option>
         <option value="FFFF00">yellow</option>
@@ -68,7 +88,6 @@
         <option value="808080">gray</option>
         <option value="000000" selected="True">black</option>
     </xml>
-
 
     <xml name="stdio">
         <stdio>
@@ -89,7 +108,7 @@
                 url = {http://www.huck.psu.edu/content/research/independent-centers-excellence/center-for-eukaryotic-gene-regulation}
             }</citation>
         </citations>
-    </xml>    
+    </xml>
     <xml name="citations_two">
         <citations>
             <citation type="bibtex">
