@@ -53,68 +53,45 @@ public class TransposeMatrix {
 		System.err.println("Starting column index:\t" + COLINDEX);
 
 		try {
-			// Parse, scale, and output tab-delimited matrix on the fly
+			// Parse, transpose, and output tab-delimited matrix on the fly
 			BufferedReader br = makeReader();
+			PrintStream OUT = makePrintStream(OUTFILE, OUTPUT_GZIP);
 			//Determine number of rows and columns
 			int numCols = br.readLine().split("\t").length;
 			int numRows = 1;
 			while (br.readLine() != null){
 				numRows++;
 			}
-
+			//Skip rows less than ROWINDEX
 			br = makeReader();
-			PrintStream OUT = makePrintStream(OUTFILE, OUTPUT_GZIP);
-			//Transfer not-transposed rows
-			for (int i = 1; i <= ROWINDEX; i++){
-				OUT.println(br.readLine());
+			int row;
+			for (row = 0; row < ROWINDEX; row++){
+				br.readLine();
 			}
 			//Load original matrix into array
-			String[][] originalMatrix = new String[numRows - ROWINDEX][numCols];
+			String[][] originalMatrix = new String[numRows - ROWINDEX][numCols - COLINDEX];
+			String[][] newMatrix = new String[numCols - COLINDEX][numRows - ROWINDEX];
 			String line;
-			int row = 0;
+			row = 0;
 			while ((line = br.readLine()) != null){
-				originalMatrix[row++] = line.split("\t");
+				//Skip columns less than COLINDEX
+				String[] originalLine = line.split("\t");
+				String[] croppedLine = new String[numCols - COLINDEX];
+				for (int i = originalLine.length - 1; i >= COLINDEX; i--){
+					croppedLine[i - COLINDEX] = originalLine[i];
+				}
+				originalMatrix[row++] = croppedLine;
 			}
-			int outputRow = ROWINDEX;
 			br.close();
-
-			//Iterate through the original file's columns
-			for (int currentCol = COLINDEX; currentCol < numCols; currentCol++) {
-				//Create a newLine array to represent a row of output file
-				String[] newLine = new String[numRows - ROWINDEX + COLINDEX];
-				int outputCol = COLINDEX;
-				for (int currentRow = ROWINDEX; currentRow < numRows; currentRow++){
-					//Get skipped columns from appropriate row
-					if (outputRow == currentRow){
-						for(int i = 0; i < COLINDEX; i++){
-							newLine[i] = originalMatrix[currentRow - ROWINDEX][i];
-						}
-					} 
-					newLine[outputCol] = originalMatrix[currentRow - ROWINDEX][currentCol];
-					outputCol++;
+			//Transfer rows of original matrix to new matrix and vice-versa
+			for (row = 0; row < originalMatrix.length; row++){
+				for (int col = 0; col < originalMatrix[0].length; col++){
+					newMatrix[col][row] = originalMatrix[row][col];
 				}
-				//Write the column to the new file as a row
-				for(int val = 0; val < newLine.length; val++){
-					if(newLine[val] == null){
-						newLine[val] = "";
-					}
-					OUT.print(newLine[val] + ((val == newLine.length - 1) ? "\n" : "\t"));
-				}
-				outputRow++;
 			}
-			
-			//If rows are left over after transposing (due to labels)
-			if (numRows > numCols){
-				//Directly print the remaining rows to the output file
-				for(int remainingRows = outputRow; remainingRows < numRows; remainingRows++){
-					String[] newLine = new String[COLINDEX];
-					for(int i = 0; i < COLINDEX; i++){
-						newLine[i] = originalMatrix[remainingRows - ROWINDEX][i];
-					}
-					for(int val = 0; val < newLine.length; val++){
-						OUT.print(newLine[val] + ((val == newLine.length - 1) ? "\n" : "\t"));
-					}
-				}
+			//Write new matrix to output file
+			for (row = 0; row < newMatrix.length; row++){
+				OUT.println(String.join("\t", newMatrix[row]));
 			}
 			OUT.close();
 		} catch (NumberFormatException e) {
