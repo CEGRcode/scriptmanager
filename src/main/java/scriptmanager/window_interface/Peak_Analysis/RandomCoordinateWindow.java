@@ -60,7 +60,6 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
 	        	try {
-					LogItem old_li = new LogItem("");
 	        		if(txtSites.getText().isEmpty()) {
 	    				JOptionPane.showMessageDialog(null, "No Sites Entered!!!");
 	        		} else if(Integer.parseInt(txtSites.getText()) < 0) {
@@ -83,16 +82,15 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 						// Initialize LogItem
 						String command = RandomCoordinateCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUTFILE, bedStatus, Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()));
 						LogItem new_li = new LogItem(command);
-						firePropertyChange("log", old_li, new_li);
+						firePropertyChange("log", null, new_li);
 						// Execute Script and update progress
 						RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
 	        			JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));
 						new_li.setStatus(0);
-						old_li = new_li;
+						firePropertyChange("log", new_li, null);
 	        		}
-					firePropertyChange("log", old_li, null);
 	        	} catch(NumberFormatException nfe){
 					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (IllegalArgumentException iae) {
@@ -223,10 +221,12 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
         task.addPropertyChangeListener(this);
         task.execute();
 	}
-	
-	public void propertyChange(PropertyChangeEvent evt) {
 
-    }
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
+	}
 	
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {

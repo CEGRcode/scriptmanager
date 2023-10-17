@@ -26,7 +26,7 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "reference genome [sacCer3|sacCer3_cegr|hg38|hg38_contigs|hg19|hg19_contigs|mm10]")
 	private String genomeName;
-	
+
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be random_coordinates_<genomeName>_<window>bp.<ext>")
 	private File output = null;
 	@Option(names = {"-f", "--gff"}, description = "file format output as GFF (default format as BED)")
@@ -88,10 +88,10 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 		return(r);
 	}
 	public static String getCLIcommand(String genomeName, File output, boolean formatIsBed, int numSites, int window) {
-		String command = "java -jar $SCRIPTMANAGER peak-analysis RandomCoordinate";
+		String command = "java -jar $SCRIPTMANAGER peak-analysis rand-coord";
 		command += " " + genomeName;
 		command += " -o " + output.getAbsolutePath();
-		command += formatIsBed ? "" : " -f ";
+		command += formatIsBed ? "" : " --gff";
 		command += " -n " + numSites;
 		command += " -w " + window;
 		return command;

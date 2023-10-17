@@ -90,7 +90,7 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	}
 
 	public static String getCLIcommand(File peakBED, File refBED, File output) {
-		String command = "java -jar $SCRIPTMANAGER peak-analysis BEDPeakAlignToRef";
+		String command = "java -jar $SCRIPTMANAGER peak-analysis peak-align-ref";
 		command += " " + peakBED.getAbsolutePath();
 		command += " " + refBED.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
