@@ -116,7 +116,7 @@ public class LabelHeatMapCLI implements Callable<Integer> {
 	public static String getCLIcommand(File input, File output, Color color, int borderWidth,
 									   int xTickHeight, int fontSize, String llabel, String mlabel,
 									   String rlabel, String xlabel, String ylabel) {
-		String command = "java -jar $SCRIPTMANAGER figure-generation LabelHeatMap";
+		String command = "java -jar $SCRIPTMANAGER figure-generation label-heatmap";
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		// Converts RGB format color to hexadecimal

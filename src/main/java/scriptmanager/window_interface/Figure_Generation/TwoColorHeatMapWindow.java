@@ -37,6 +37,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -147,6 +148,8 @@ public class TwoColorHeatMapWindow extends JFrame implements ActionListener, Pro
 				return null;
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (OptionException oe) {
+				JOptionPane.showMessageDialog(null, oe.getMessage());
 			}
 			return null;
 		}

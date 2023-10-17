@@ -99,7 +99,7 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 	}
 
 	public static String getCLIcommand(File senseFile, File antiFile, File outdir) {
-		String command = "java -jar $SCRIPTMANAGER figure-generation MergeHeatMap";
+		String command = "java -jar $SCRIPTMANAGER figure-generation merge-heatmap";
 		command += " " + antiFile.getAbsolutePath();
 		command += " " + senseFile.getAbsolutePath();
 		command += " -o " + outdir.getAbsolutePath() + "merge.png";

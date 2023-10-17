@@ -14,6 +14,7 @@ import javax.swing.JTabbedPane;
 
 import scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 import scriptmanager.util.ExtensionFileFilter;
 
@@ -66,7 +67,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 		OUTPUTSTATUS = outstatus;
 	}
 
-	public void run() throws IOException {
+	public void run() throws IOException, OptionException {
 		LogItem old_li = null;
 		for (int x = 0; x < SAMPLE.size(); x++) {
 			File OUTPUT = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(SAMPLE.get(x)) + "_" + scaleType + ".png");
@@ -75,10 +76,10 @@ public class TwoColorHeatMapOutput extends JFrame {
 			}
 			old_li = new LogItem("");
 			// Initialize LogItem
-			String command = TwoColorHeatMapCLI.getCLIcommand(SAMPLE.get(x), OUTPUT, MAXCOLOR, startROW, startCOL,
-					pixelHeight, pixelWidth, scaleType, absolute, quantile, transparentBackground);
+			String command = TwoColorHeatMapCLI.getCLIcommand(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
+					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, transparentBackground);
 			LogItem new_li = new LogItem(command);
-			firePropertyChange("log", old_li, new_li);
+			if (OUTPUTSTATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
 			TwoColorHeatMap script_object = new TwoColorHeatMap(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
 					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, OUTPUTSTATUS, transparentBackground);
@@ -93,7 +94,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 			firePropertyChange("heat", x, x + 1);
 		}
-		firePropertyChange("log", old_li, null);
+		if (OUTPUTSTATUS) { firePropertyChange("log", old_li, null); }
 		System.out.println("Program Complete");
 		System.out.println(getTimeStamp());
 	}
