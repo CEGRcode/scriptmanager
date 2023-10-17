@@ -118,7 +118,7 @@ public class ExpandGFFCLI implements Callable<Integer> {
 		return(r);
 	}
 	public static String getCLIcommand(File bedFile, File output, int size, boolean byCenter) {
-		String command = "java -jar $SCRIPTMANAGER gff-manipulation expand-gff";
+		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation expand-gff";
 		command += " " + bedFile.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		command += byCenter ? " -c " + size : " -b " + size;

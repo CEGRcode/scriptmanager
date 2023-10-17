@@ -122,7 +122,7 @@ public class SortGFFCLI implements Callable<Integer> {
 		return(r);
 	}
 	public static String getCLIcommand(File OUTPUT, File BED, File CDT, int startidx, int stopidx) {
-		String command = "java -jar $SCRIPTMANAGER gff-manipulation sortGFF";
+		String command = "java -jar $SCRIPTMANAGER coordinatesort-manipulation sort-gff";
 		command += " " + BED.getAbsolutePath();
 		command += " " + CDT.getAbsolutePath();
 		command += " -x " + startidx + " " + stopidx;

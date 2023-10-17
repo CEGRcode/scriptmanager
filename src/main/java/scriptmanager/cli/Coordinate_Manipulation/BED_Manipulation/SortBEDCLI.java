@@ -121,7 +121,7 @@ public class SortBEDCLI implements Callable<Integer> {
 	}
 
 	public static String getCLIcommand(File OUTPUT, File BED, File CDT, int startidx, int stopidx, boolean gzOutput) {
-		String command = "java -jar $SCRIPTMANAGER bed-manipulation sortBED";
+		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation sort-bed";
 		command += " " + BED.getAbsolutePath();
 		command += " " + CDT.getAbsolutePath();
 		command += " -x " + startidx + " " + stopidx;
