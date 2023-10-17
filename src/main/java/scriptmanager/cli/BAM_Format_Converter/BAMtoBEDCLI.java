@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
@@ -139,7 +140,7 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 		
 		return(r);
 	}
-	public static String getCLIcommand(File BAM, File output, int pair, int strand, int min, int max){
+	public static String getCLIcommand(File BAM, File output, int strand, int pair, int min, int max) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bam-to-bed";
 		command += " " + BAM.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
@@ -154,11 +155,12 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 		} else if (strand == 4)  {
 			command += " -f ";
 		}
-		if (pair != 0) {
-			command += " -p";
+		command += pair != 0 ? " -p" : "";
+		if (min != -9999) {
+			command += " -n " + min;
+		} else if (max != -9999) {
+			command += " -x " + max;
 		}
-		command += " -n " + min;
-		command += " -x " + max;
 		return command;
 	}
 }

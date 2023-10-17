@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 
 @SuppressWarnings("serial")
@@ -66,8 +70,20 @@ public class BAMtoGFFOutput extends JFrame {
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		PS.println(OUTPUT);
+		
+		// Initialize LogItem
+		String command = BAMtoGFFCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT);
+		LogItem new_li = new LogItem(command);
+		firePropertyChange("log", null, new_li);
+
+		// Execute script
 		BAMtoGFF script_obj = new BAMtoGFF(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
 		script_obj.run();
+
+		// Update LogItem
+		new_li.setStopTime(new Timestamp(new Date().getTime()));
+		new_li.setStatus(0);
+		firePropertyChange("log", new_li, null);
 
 		Thread.sleep(2000);
 		dispose();

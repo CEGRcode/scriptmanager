@@ -86,7 +86,6 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 							"Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!");
 				} else {
 					setProgress(0);
-					LogItem old_li = null;
 					if (rdbtnRead1.isSelected()) {
 						STRAND = 0;
 					} else if (rdbtnRead2.isSelected()) {
@@ -111,22 +110,18 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 					}
 
 					for (int x = 0; x < BAMFiles.size(); x++) {
-						// Initialize LogItem
-						String command = BAMtoscIDXCLI.getCLIcommand(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX);
-						LogItem new_li = new LogItem(command);
-						firePropertyChange("log", old_li, new_li);
-						BAMtoscIDXOutput convert = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN,
-								MAX);
+						BAMtoscIDXOutput convert = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX);
+						convert.addPropertyChangeListener("log", new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent evt) {
+								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+							}
+						});
 						convert.setVisible(true);
 						convert.run();
-						// Update LogItem
-						new_li.setStopTime(new Timestamp(new Date().getTime()));
-						new_li.setStatus(0);
-						old_li = new_li;
+						
 						int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
-					firePropertyChange("log", old_li, null);
 					setProgress(100);
 					return null;
 				}

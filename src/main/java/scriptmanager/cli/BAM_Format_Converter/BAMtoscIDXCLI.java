@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
@@ -135,8 +136,10 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		PAIR = matePair ? 1 : 0;
 		return(r);
 	}
-	public static String getCLIcommand(File BAM, File output, int pair, int strand, int min, int max){
-		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bam-to-scIDX";
+	public static String getCLIcommand(File BAM, File output, int strand, int pair, int min, int max) {
+		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bam-to-scidx";
+		System.out.println(output);
+		System.out.println(BAM);
 		command += " " + BAM.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		if (strand == 0) {
@@ -148,11 +151,12 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		} else if (strand == 3 )  {
 			command += " -m ";
 		}
- 		if (pair != 0) {
-			command += " -p ";
+		command += pair != 0 ? " -p" : "";
+		if (min != -9999) {
+			command += " -n " + min;
+		} else if (max != -9999) {
+			command += " -x " + max;
 		}
-		command += " -n " + min;
-		command += " -x " + max;
 		return command;
 	}
 }
