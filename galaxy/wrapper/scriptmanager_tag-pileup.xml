@@ -1,4 +1,4 @@
-<tool id="scriptmanager_tagpileup" name="ScriptManager: TagPileup" version="1.0.0">
+<tool id="scriptmanager_tag-pileup" name="ScriptManager: TagPileup" version="1.0.0">
     <description>Generates tagpileup based on BAM file and coordinate file.</description>
     <macros>
         <import>scriptmanager_macros.xml</import>
@@ -9,176 +9,175 @@
 
     <command detect_errors="aggressive">
         <![CDATA[
-          ln -s '$BAM' bamfile.bam &&
-          ln -s '$BED' input.bed &&
-          #if $BAM.is_of_type('bam'):
-              #if str( $BAM.metadata.bam_index ) != "None":
-                        ln -s '${BAM.metadata.bam_index}' bamfile.bam.bai &&
+          ln -s '$input_bam' bamfile.bam &&
+          ln -s '$input_bed' input.bed &&
+          #if $input.is_of_type('bam'):
+              #if str( $input.metadata.bam_index ) != "None":
+                        ln -s '${input.metadata.bam_index}' bamfile.bam.bai &&
               #else:
                         samtools index bamfile.bam bamfile.bai &&
               #end if
           #end if
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar read-analysis tag-pileup input.bed bamfile.bam
-          -M pileup
+        java -jar $__tool_directory__/ScriptManager-v0.14.jar read-analysis tag-pileup
+            input.bed
+            bamfile.bam
+            -M matrix
+            -o "$composite"
 
-    #if str($level_options.level) == "advance" :
-          #if str($level_options.read) == "read1"  :
-              --read1
-          #end if
-          #if str($level_options.read) == "read2"  :
-              --read2
-          #end if
-          #if str($level_options.read) == "all_reads"  :
-              --all-reads
-          #end if        
-
-          #if str($level_options.read_aspect) == "5end"  :
+          #if str($read_aspect) == "5end"  :
             -5
           #end if
-          #if str($level_options.read_aspect) == "3end"  :
+          #if str($read_aspect) == "3end"  :
             -3
           #end if
-          #if str($level_options.read_aspect) == "midpoint"  :
+          #if str($read_aspect) == "midpoint"  :
             -m
           #end if
-
-          #if str($level_options.read_aspect) == "full_fragment"  :
+          #if str($read_aspect) == "full_fragment"  :
             --full-fragment
           #end if
 
-          #if str($level_options.output_strands.strand) == "combined" :
+          #if str($read_output) == "read1"  :
+              --read1
+          #end if
+          #if str($read_output) == "read2"  :
+              --read2
+          #end if
+          #if str($read_output) == "all_reads"  :
+              --all-reads
+          #end if
+
+          #if str($output_strands.strand) == "combined" :
             --combined
           #end if
 
-          #if str($level_options.composite_transformation.composite_options) == "none" :
+          #if str($composite_transformation.composite_options) == "none" :
             -N
-          #else if str($level_options.composite_transformation.composite_options) == "window" and str($level_options.composite_transformation.window_size) == '3':
+          #else if str($composite_transformation.composite_options) == "window" and str($composite_transformation.window_size) == '3':
             -w
-          #else if str($level_options.composite_transformation.composite_options) == "window" and str($level_options.composite_transformation.window_size) != '3':
-            -W "$level_options.composite_transformation.window_size"
-          #else if str($level_options.composite_transformation.composite_options) == "gaussian" and str(level_options.composite_transformation.std_dev_size) == "5" and str($level_options.composite_transformation.std_dev_number) == "3" :
+          #else if str($composite_transformation.composite_options) == "window" and str($composite_transformation.window_size) != '3':
+            -W "$composite_transformation.window_size"
+          #else if str($composite_transformation.composite_options) == "gaussian" and str(composite_transformation.std_dev_size) == "5" and str($composite_transformation.std_dev_number) == "3" :
             -g
-          #else if str($level_options.composite_transformation.composite_options) == "gaussian" and str($level_options.composite_transformation.std_dev_size) != "5" :
-            -G "$level_options.composite_transformation.std_dev_size" "$level_options.composite_transformation.std_dev_number"
-          #else if str($level_options.composite_transformation.composite_options) == "gaussian" and str($level_options.composite_transformation.std_dev_number) != "3" :
-            -G "$level_options.composite_transformation.std_dev_size" "$level_options.composite_transformation.std_dev_number"
+          #else if str($composite_transformation.composite_options) == "gaussian" and str($composite_transformation.std_dev_size) != "5" :
+            -G "$composite_transformation.std_dev_size" "$composite_transformation.std_dev_number"
+          #else if str($composite_transformation.composite_options) == "gaussian" and str($composite_transformation.std_dev_number) != "3" :
+            -G "$composite_transformation.std_dev_size" "$composite_transformation.std_dev_number"
           #end if
 
-          -s "$level_options.SHIFT"
-          -b "$level_options.BINSIZE"
-          --cpu "$level_options.CPU"
-          -o "$COMPOSITE"
+          -s "$SHIFT"
+          -b "$BINSIZE"
+          --cpu "$CPU"
 
-          #if str($level_options.blacklist.equal_tags) == "Yes" :
+          #if str($blacklist.equal_tags) == "Yes" :
             -t
-            #if str($level_options.blacklist.blacklist_yes.blacklist_option) == "Yes" :
-                -f "$level_options.blacklist.blacklist_yes.blacklist_filter"
+            #if str($blacklist.blacklist_yes.blacklist_option) == "Yes" :
+                -f "$blacklist.blacklist_yes.blacklist_filter"
             #end if
           #end if
 
-          #if str($level_options.filter_min.min_insert) == "Yes" :
-            -n "$level_options.filter_min.min"
+          #if str($require_paired_end.mate_pair) == "Yes" :
+              -p
           #end if
 
-          #if str($level_options.filter_max.max_insert) == "Yes" :
-            -x "$level_options.filter_max.max"
+          #if str($require_paired_end.filter_by_min.filter_min) == "Yes" :
+              -n "$require_paired_end.filter_by_min.min_insert"
           #end if
 
-    #end if
+          #if str($require_paired_end.filter_by_max.filter_max) == "Yes" :
+              -x "$require_paired_end.filter_by_max.max_insert"
+          #end if
+
+          #if str($output_strands.strand) == "combined" :
+              && cp matrix_combined.cdt $matrix_combined
+          #end if
+
+          #if str($output_strands.strand) == "separate" :
+              && cp matrix_sense.cdt $matrix_sense
+              && cp matrix_anti.cdt $matrix_anti
+          #end if
+
         ]]>
     </command>
     <inputs>
-        <param name="BED" type="data" format="bed" label="Input BED file" />
-        <param name="BAM" type="data" format="bam" label="Input BAM file" />
-
-        <conditional name="level_options">
-            <param name="level" type="select" label="Use bioinformatic default or advanced options">
-                <option value="default" selected = "True" >default options</option>
-                <option value="advance" >advanced options</option>
-            </param>
-
-            <when value="default">
-                <!-- do nothing here -->
-            </when>
-
-            <when value="advance">
+        <param name="input_bed" type="data" format="bed" label="Input BED file" />
+        <param name="input_bam" type="data" format="bam" label="Input BAM file" />
 
         <param name="read_aspect" type="select" label="Select Read Aspect to analyze">
-            <option value="5end" selected="True">Pileup of 5' end </option>
-            <option value="3end" >Pileup of 3' end </option>
-            <option value="midpoint" >Pileup midpoint </option>
-            <option value="full_fragment" >Pileup full fragment </option>
+            <option value="5end" selected="True" >Pileup of 5' end</option>
+            <option value="3end" >Pileup of 3' end</option>
+            <option value="midpoint" >Pileup midpoint</option>
+            <option value="full_fragment" >Pileup full fragment</option>
         </param>
 
-        <param name="read" type="select" label="Select Read to output">
-          <option value="read1" selected="true"> Read 1</option>
-          <option value="read2"> Read 2 </option>
-          <option value="all_reads"> All Reads</option>
+        <param name="read_output" type="select" label="Select Read to output">
+          <option value="read1" selected="True" >Read 1</option>
+          <option value="read2" >Read 2 </option>
+          <option value="all_reads" >All Reads</option>
         </param>
-
 
         <conditional name="output_strands">
             <param name="strand" type="select" label="Select output strands">
-                <option value="separate" selected="True">Separate </option>
+                <option value="separate" selected="True">Separate</option>
                 <option value="combined" >Combined</option>
             </param>
-            <when value="separate">
-            <conditional name="sense_conditional">
-                <param name="sense" type="select" label="Sense color: select color or specify hexadecimal code">
-                    <option value="sense_color" selected="True"> select color</option>
-                    <option value="sense_hex" >specify hexadecimal color code</option>
-                </param>
-                <when value="sense_color">
-                    <param name="color_sense" type="select" label="Color">
-                        <expand macro="color_selector_default_blue" />
-                    </param>
-                </when>
-                <when value="sense_hex">
-                    <param name="sense_hex" type="text" value="0000FF" label="Hexadecimal code" />
-                </when>
-            </conditional>
 
-            <conditional name="anti_conditional">
-                <param name="anti" type="select" label="Anti color: select color or specify hexadecimal code">
-                    <option value="anti_color" selected="True"> select color</option>
-                    <option value="anti_hex" >specify hexadecimal color code</option>
-                </param>
-                <when value="anti_color">
-                    <param name="color_anti" type="select" label="Color">
-                        <expand macro="color_selector_default_red" />
+            <when value="separate">
+                <conditional name="sense_conditional">
+                    <param name="sense" type="select" label="Sense color: select color or specify hexadecimal code">
+                        <option value="sense_color" selected="True" >preset colors</option>
+                        <option value="sense_hex" >specify hexadecimal color code</option>
                     </param>
-                </when>
-                <when value="anti_hex">
-                    <param name="anti_hex" type="text" value="FF0000" label="Hexadecimal code" />
-                </when>
-            </conditional>
+                    <when value="sense_color">
+                        <param name="color_sense" type="select" label="Color">
+                            <expand macro="color_selector_default_blue" />
+                        </param>
+                    </when>
+                    <when value="sense_hex">
+                        <param name="sense_hex" type="text" value="0000FF" label="Hexadecimal code" />
+                    </when>
+                </conditional>
+
+                <conditional name="anti_conditional">
+                    <param name="anti" type="select" label="Anti color: select color or specify hexadecimal code">
+                        <option value="anti_color" selected="True" >preset colors</option>
+                        <option value="anti_hex" >specify hexadecimal color code</option>
+                    </param>
+                    <when value="anti_color">
+                        <param name="color_anti" type="select" label="Color">
+                            <expand macro="color_selector_default_red" />
+                        </param>
+                    </when>
+                    <when value="anti_hex">
+                        <param name="anti_hex" type="text" value="FF0000" label="Hexadecimal code" />
+                    </when>
+                </conditional>
             </when>
 
             <when value="combined">
                 <conditional name="combined_conditional">
-                <param name="combined" type="select" label="Combined color: select color or specify hexadecimal code">
-                    <option value="combined_color" selected="True"> select color</option>
-                    <option value="combined_hex" >specify hexadecimal color code</option>
-                </param>
-                <when value="combined_color">
-                    <param name="color_combined" type="select" label="Color">
-                        <expand macro="color_selector_default_black" />
+                    <param name="combined" type="select" label="Combined color: select color or specify hexadecimal code">
+                        <option value="combined_color" selected="True" >preset colors</option>
+                        <option value="combined_hex" >specify hexadecimal color code</option>
                     </param>
-                </when>
-                <when value="combined_hex">
-                    <param name="combined_hex" type="text" value="000000" label="Hexadecimal code" />
-                </when>
+                    <when value="combined_color">
+                        <param name="color_combined" type="select" label="Color">
+                            <expand macro="color_selector_default_black" />
+                        </param>
+                    </when>
+                    <when value="combined_hex">
+                        <param name="combined_hex" type="text" value="000000" label="Hexadecimal code" />
+                    </when>
                 </conditional>
             </when>
-
         </conditional>
 
         <conditional name="composite_transformation">
             <param name="composite_options" type="select" label="Select a smoothing option for the composite plot output">
-                <option value="none" selected="True"> None </option>
-                <option value="window" >Sliding Window </option>
-                <option value="gaussian">Gaussian Smooth </option>
+                <option value="none" selected="True" >None</option>
+                <option value="window" >Sliding Window</option>
+                <option value="gaussian">Gaussian Smooth</option>
             </param>
 
             <when value="none">
@@ -192,17 +191,14 @@
                 <param name="std_dev_size" type="integer" value="5" label="Standard deviation size (Bin #)" />
                 <param name="std_dev_number" type="integer" value="3" label="Number of standard deviations" />
             </when>
-
         </conditional>
-
 
         <param name="SHIFT" type="integer" value="0"      label="Set a shift in bp" />
         <param name="BINSIZE" type="integer" value="1"      label="Bin size for output file" />
         <param name="CPU" type="integer" value="1"      label="Number of CPUs to run tag pileup" />
 
         <conditional name="blacklist">
-            <param name="equal_tags" type="boolean" truevalue="Yes" falsevalue="No" label="Set tags to be equal" >
-            </param>
+            <param name="equal_tags" type="boolean" truevalue="Yes" falsevalue="No" label="Set tags to be equal" />
 
             <when value="Yes">
                 <conditional name="blacklist_yes">
@@ -223,44 +219,38 @@
             </when>
         </conditional>
 
-        <param name="require_pe" type="boolean" truevalue="Yes" falsevalue="No" label="Require proper paired ends">
-        </param>
-
-        <conditional name="filter_min">
-            <param name="min_insert" type="boolean" truevalue="Yes" falsevalue="No" label="Filter by min insert size (bp)" >
-            </param>
-
+        <conditional name="require_paired_end">
+            <param type="boolean" name="mate_pair" truevalue="Yes" falsevalue="No" label="Require proper mate-pair" />
             <when value="Yes">
-                <param name="min" type="integer" value="0" label="Min insert size (bp)" />
-            </when>
-
-            <when value="No">
-                <!-- do nothing here -->
-            </when>
-        </conditional>
-
-        <conditional name="filter_max">
-            <param name="max_insert" type="boolean" truevalue="Yes" falsevalue="No" label="Filter by max insert size (bp)" >
-            </param>
-
-            <when value="Yes">
-                <param name="max" type="integer" value="1000" label="Max insert size (bp)" />
-            </when>
-
-            <when value="No">
-                <!-- do nothing here -->
+                <conditional name="filter_by_min">
+                    <param type="boolean" name="filter_min" truevalue="Yes" falsevalue="No" label="Filter by min insert size (bp)" />
+                    <when value="Yes">
+                        <param type="integer" name="min_insert" value="0" label="Min insert size (bp)" />
+                    </when>
+                    <when value="No" />
+                </conditional>
+                <conditional name="filter_by_max">
+                    <param type="boolean" name="filter_max" truevalue="Yes" falsevalue="No" label="Filter by max insert size (bp)" />
+                    <when value="Yes">
+                        <param type="integer" name="max_insert" value="1000" label="Max insert size (bp)" />
+                    </when>
+                    <when value="No" />
+                </conditional>
             </when>
         </conditional>
-
-
-            </when>
-
-        </conditional>
-
     </inputs>
 
     <outputs>
-        <data name="COMPOSITE" format="tabular" label="${tool.name} (composite) on ${on_string}"></data>
+        <data name="composite" format="tabular" label="${tool.name} (composite) on ${on_string}"></data>
+        <data name="matrix_sense" format="tabular" label="${tool.name} (sense matrix) on ${on_string}">
+            <filter>output_strands['strand'] == 'separate'</filter>
+        </data>
+        <data name="matrix_anti" format="tabular" label="${tool.name} (anti matrix) on ${on_string}">
+            <filter>output_strands['strand'] == 'separate'</filter>
+        </data>
+        <data name="matrix_combined" format="tabular" label="${tool.name} (combined matrix) on ${on_string}">
+            <filter>output_strands['strand'] == 'combined'</filter>
+        </data>
     </outputs>
 
     <tests>
@@ -268,10 +258,9 @@
 
     <help>
 **What it does**
-Performs tag-pileup
+Performs tag-pileup of BAM reads around a reference point.
 
-
-
+https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/read-analysis/tag-pileup
     </help>
-    <expand macro="citations_two" />
+    <expand macro="citations_pearc" />
 </tool>
