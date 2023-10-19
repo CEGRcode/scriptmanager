@@ -9,8 +9,8 @@
 
     <command detect_errors="aggressive">
         <![CDATA[
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation shift-coord 
-        
+        java -jar $__tool_directory__/@JAR_FILENAME@ coordinate-manipulation shift-coord
+
         #if str($bed_or_gff.input) == "gff" :
             --gff
         #end if

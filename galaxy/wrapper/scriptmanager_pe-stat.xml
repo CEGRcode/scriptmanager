@@ -1,5 +1,8 @@
 <tool id="scriptmanager_pe-stat" name="ScriptManager: Paired-End Statistics" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description>Generates Insert-size Histogram statistics (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.</description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
         <requirement type="package" version="1.9">samtools</requirement>
@@ -8,7 +11,7 @@
 	<![CDATA[
             cp $input tmp.bam
             && samtools index tmp.bam
-            && java -jar $__tool_directory__/ScriptManager-v0.14.jar bam-statistics pe-stat tmp.bam
+            && java -jar $__tool_directory__/@JAR_FILENAME@ bam-statistics pe-stat tmp.bam
 
             #if str($dup_stats) == "Yes" :
                 -d

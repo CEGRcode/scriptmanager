@@ -1,11 +1,14 @@
 <tool id="scriptmanager_sort-bed" name="ScriptManager: Sort BED by CDT" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Sort BED file by CDT file statistics. </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
     </requirements>
 
     <command detect_errors="exit_code"><![CDATA[
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation sort-bed
+        java -jar $__tool_directory__/@JAR_FILENAME@ coordinate-manipulation sort-bed
 
         #if str($sort_options.sort) == "center" :
             -c "$sort_options.size_expansion"

@@ -1,5 +1,8 @@
 <tool id="scriptmanager_bam-to-bedgraph" name="ScriptManager: Convert BAM to bedGraph" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Convert BAM file to bedGraph file </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
     </requirements>
@@ -16,8 +19,8 @@
             #end if
         #end if
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar bam-format-converter bam-to-bedgraph
-        
+        java -jar $__tool_directory__/@JAR_FILENAME@ bam-format-converter bam-to-bedgraph
+
         #if str($read) == "read_1" :
             -1
         #else if str($read) == "read_2" :

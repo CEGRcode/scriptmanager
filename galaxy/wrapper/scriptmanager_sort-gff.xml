@@ -1,5 +1,8 @@
 <tool id="scriptmanager_sort-gff" name="ScriptManager: Sort GFF by CDT" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Sort GFF file by CDT file statistics. </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
     </requirements>
@@ -9,7 +12,7 @@
         ln -s '$input2' file.cdt &&
         ln -s '$output1' output.gff &&
         ln -s '$output2' output.cdt &&
-        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar coordinate-manipulation sort-gff
+        java -jar $__tool_directory__/@JAR_FILENAME@ coordinate-manipulation sort-gff
 
         #if str($sort_options.sort) == "center" :
             -c "$sort_options.size_expansion"

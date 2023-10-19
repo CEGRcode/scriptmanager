@@ -10,7 +10,7 @@
 
     <command detect_errors="exit_code"><![CDATA[
         #set output_dir = $output.files_path
-        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar figure-generation four-color
+        java -jar $__tool_directory__/@JAR_FILENAME@ figure-generation four-color
         -o '$output'
         -x $pixel_width
         -y $pixel_height

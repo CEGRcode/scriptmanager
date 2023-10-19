@@ -1,5 +1,8 @@
 <tool id="scriptmanager_bam-to-scidx" name="ScriptManager: Convert BAM to scIDX" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Convert BAM file to scIDX file </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
     </requirements>
@@ -14,7 +17,7 @@
             #end if
         #end if
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar bam-format-converter bam-to-scidx
+        java -jar $__tool_directory__/@JAR_FILENAME@ bam-format-converter bam-to-scidx
 
         #if str($read) == "read_1" :
             -1

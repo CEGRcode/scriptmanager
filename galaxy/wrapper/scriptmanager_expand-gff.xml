@@ -1,14 +1,16 @@
 <tool id="scriptmanager_expand-gff" name="ScriptManager: Expand GFF File" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description>Expands input GFF file by adding positions to the border or around the center.</description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
         <requirement type="package" version="11.0.11">openjdk</requirement>
     </requirements>
-
     <command detect_errors="exit_code"><![CDATA[
         ln -s '$input' file.gff &&
         ln -s '$output' output.gff &&
 
-        java -jar $__tool_directory__/scriptmanager-v0.14-dev.jar coordinate-manipulation expand-gff 
+        java -jar $__tool_directory__/@JAR_FILENAME@ coordinate-manipulation expand-gff
 
         #if str($expansion_select) == "center" :
             -c

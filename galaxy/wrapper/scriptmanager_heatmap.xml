@@ -17,7 +17,7 @@
         && cp $input_bam 'tmp2.bam'
         && samtools index tmp2.bam tmp2.bam.bai
         && python $__tool_directory__/sleep.py
-        && java -jar $__tool_directory__/ScriptManager_owlangFork-0.121-dev.jar  read-analysis tag-pileup
+        && java -jar $__tool_directory__/@JAR_FILENAME@ read-analysis tag-pileup
         'tmp.bed'
         'tmp2.bam'
         -M pileup

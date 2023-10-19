@@ -19,7 +19,7 @@
               #end if
           #end if
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar read-analysis tag-pileup
+        java -jar $__tool_directory__/@JAR_FILENAME@ read-analysis tag-pileup
             input.bed
             bamfile.bam
             -M matrix

@@ -8,7 +8,7 @@
     </requirements>
 
     <command detect_errors="exit_code"><![CDATA[
-            java -jar $__tool_directory__/ScriptManager-v0.14.jar figure-generation label-heatmap
+            java -jar $__tool_directory__/@JAR_FILENAME@ figure-generation label-heatmap
 
             #if str($heatmap_color.color) == "h_color" :
                 -c "$heatmap_color.color_h"

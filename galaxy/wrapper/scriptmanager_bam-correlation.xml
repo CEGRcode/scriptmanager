@@ -18,7 +18,8 @@
             #end if
         #end if
 
-        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar bam-statistics bam-correlation 
+        java -jar $__tool_directory__/@JAR_FILENAME@ bam-statistics bam-correlation 
+
 
         
         #if str($read) == "read_1" :

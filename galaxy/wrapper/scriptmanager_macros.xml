@@ -3,6 +3,7 @@
     <token name="@WRAPPER_VERSION@">1.0</token>
     <token name="@JAVA_VERSION@">11.0</token>
     <token name="@TOOL_VERSION@">0.14</token>
+    <token name="@JAR_FILENAME@">ScriptManager-v0.14.jar</token>
     <xml name="requirements">
         <requirements>
             <requirement type="package">samtools</requirement>
