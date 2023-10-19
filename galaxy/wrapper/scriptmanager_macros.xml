@@ -121,7 +121,7 @@
             }</citation>
         </citations>
     </xml>
-       <xml name="citations_three">
+    <xml name="citations_three">
         <citations>
             <citation type="bibtex">
                 @unpublished{None,
@@ -130,6 +130,28 @@
                 year = {None},
                 eprint = {None},
                 url = {http://pughlab.mbg.cornell.edu/}
+            }</citation>
+        </citations>
+    </xml>
+    <xml name="citations_pearc">
+        <citations>
+            <citation type="bibtex">
+                @inproceedings{10.1145/3491418.3535161,
+                author = {Lang, Olivia and Pugh, B Franklin and Lai, William KM},
+                title = {ScriptManager: An Interactive Platform for Reducing Barriers to Genomics Analysis},
+                year = {2022},
+                isbn = {9781450391610},
+                publisher = {Association for Computing Machinery},
+                address = {New York, NY, USA},
+                url = {https://doi.org/10.1145/3491418.3535161},
+                doi = {10.1145/3491418.3535161},
+                abstract = {ScriptManager was built to be a lightweight and easy to use genomics analysis tool for novice bioinformaticians. It includes both a graphical interface for easy navigation of inputs and options while also supporting a command line interface for automation and integration with workflow managers like Galaxy. We describe here how a user unfamiliar with the command line can leverage national supercomputing resources using a graphical desktop interface like Open OnDemand to perform their analyses and generate publication quality figures for their research. Widespread adoption of this tool in the genomics community would lower technical barriers to accessing supercomputing resources and allow biochemists to prototype their own workflows that can be integrated into large scale production pipelines. Source code and precompiled binaries available at https://github.com/CEGRcode/scriptmanager.},
+                booktitle = {Practice and Experience in Advanced Research Computing},
+                articleno = {33},
+                numpages = {6},
+                keywords = {XSEDE, high performance/throughput computing, sequencing, workflow, genomics, Galaxy, supercomputing, Graphical interface/GUI, Java application, OSG, Open OnDemand},
+                location = {Boston, MA, USA},
+                series = {PEARC '22}
             }</citation>
         </citations>
     </xml>
