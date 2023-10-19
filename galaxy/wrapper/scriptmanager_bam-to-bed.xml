@@ -85,7 +85,9 @@
         <data name="output1" format="bed" label="${tool.name} (composite) on ${on_string}"/>
     </outputs>
     <help>
-    **What it does**
-    Convert BAM file to BED file.
+**What it does**
+
+Convert BAM file to BED file.
     </help>
+    <expand macro="citations_pearc" />
 </tool>

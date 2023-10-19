@@ -19,9 +19,9 @@
         #else if str($sort_options.sort) == "index" :
             -x "$sort_options.index_start" "$sort_options.index_stop"
         #end if
-        
+
         -o output
-        
+
         file.gff
         file.cdt
     ]]></command>
@@ -53,6 +53,8 @@
     </outputs>
     <help>
 **What it does**
+
 Sort a CDT file and its corresponding GFF file by the total score in the CDT file across the specified interval.
-</help>
+    </help>
+    <expand macro="citations_pearc" />
 </tool>

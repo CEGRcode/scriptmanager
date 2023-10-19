@@ -48,18 +48,8 @@
     </tests>
     <help>
 **What it does**
-Generates Insert-size Histogram statistics
 
+Generates Insert-size Histogram statistics
    </help>
-   <citations>
-	   <citation type="bibtex">
-                @ARTICLE{Audrey_Ali,
-                author = {Audrey Adjekai Sackey, Ali Nematbakhsh},
-                title = {None},
-                year = {None},
-                eprint = {None},
-                url = {https://www.biotech.cornell.edu/core-facilities-brc/facilities/epigenomics-facility}
-		}
-		 </citation>
-   </citations>
+   <expand macro="citations_pearc" />
 </tool>

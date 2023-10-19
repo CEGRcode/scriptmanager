@@ -138,11 +138,8 @@
     </tests>
     <help>
 **What it does**
+
 Plot four-color graph based on input FASTA file.
-
-
-
-
     </help>
     <expand macro="citations_two" />
 </tool>

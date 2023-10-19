@@ -62,4 +62,5 @@ Generate a heatmap from a tab-delimited matrix file.
 
 http://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/figure-generation/heatmap
     </help>
+    <expand macro="citations_pearc" />
 </tool>

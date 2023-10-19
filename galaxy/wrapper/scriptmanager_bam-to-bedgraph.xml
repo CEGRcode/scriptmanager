@@ -44,7 +44,7 @@
         #if str($filter_by_max.filter_max) == "Yes" :
             -x "$filter_by_max.max_insert"
         #end if
-        
+
         bamfile.bam
     ]]></command>
     <inputs>
@@ -86,7 +86,9 @@
         <data name="output2" format="bedgraph" label="${tool.name} (reverse) on ${on_string}"></data>
     </outputs>
     <help>
-    **What it does**
-    Convert BAM file to bedGraph file.
+**What it does**
+
+Convert BAM file to bedGraph file.
     </help>
+    <expand macro="citations_pearc" />
 </tool>

@@ -45,6 +45,8 @@
 
     <help>
 **What it does**
+
 Expand BED file given user-defined criteria.
     </help>
+    <expand macro="citations_pearc" />
 </tool>

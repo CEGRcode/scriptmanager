@@ -15,9 +15,9 @@
         #else if str($sort_options.sort) == "index" :
             -x "$sort_options.index_start" "$sort_options.index_stop"
         #end if
-        
+
         -o output
-        
+
         '$input1' '$input2'
     ]]></command>
     <inputs>
@@ -48,6 +48,8 @@
     </outputs>
     <help>
 **What it does**
+
 Sort a CDT file and its corresponding BED file by the total score in the CDT file across the specified interval.
-</help>
+    </help>
+    <expand macro="citations_pearc" />
 </tool>

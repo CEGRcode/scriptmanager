@@ -26,8 +26,8 @@
 
     <help>
     **What it does**
+
     Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.
-
-
     </help>
+    <expand macro="citations_pearc" />
 </tool>

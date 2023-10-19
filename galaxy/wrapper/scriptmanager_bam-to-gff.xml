@@ -44,7 +44,7 @@
         #if str($filter_by_max.filter_max) == "Yes" :
             -x "$filter_by_max.max_insert"
         #end if
-        
+
         bamfile.bam
     ]]></command>
     <inputs>
@@ -86,7 +86,9 @@
         <data name="output1" format="gff" label="${tool.name} (composite) on ${on_string}"></data>
     </outputs>
     <help>
-    **What it does**
-    Convert BAM file to GFF file.
+**What it does**
+
+Convert BAM file to GFF file.
     </help>
+    <expand macro="citations_pearc" />
 </tool>

@@ -16,9 +16,9 @@
         #end if
 
         -o '$output1'
-        
+
         -t "$SHIFT"
-        
+
         '$input1'
     ]]></command>
     <inputs>
@@ -29,7 +29,7 @@
             </param>
 
             <when value="bed">
-                <param name="input1" type="data" format="bed" label="Input BED file"> 
+                <param name="input1" type="data" format="bed" label="Input BED file">
                 </param>
             </when>
 
@@ -37,7 +37,7 @@
                 <param name="input1" type="data" format="gff" label="Input GFF file">
                 </param>
             </when>
-            
+
         </conditional>
 
         <param name="SHIFT" type="integer" value="0" label="Set a shift distance in bp (upstream: - and downstream: +)" />
@@ -55,7 +55,8 @@
 
     <help>
 **What it does**
-Shifts coordinate intervals
 
+Shifts coordinate intervals
     </help>
+    <expand macro="citations_pearc" />
 </tool>

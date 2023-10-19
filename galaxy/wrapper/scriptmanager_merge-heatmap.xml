@@ -25,6 +25,8 @@
     </outputs>
     <help>
 **What it does**
+
 Merges two PNG files into a third PNG file that is an average of each corresponding pair of pixels from the input files.
     </help>
+    <expand macro="citations_pearc" />
 </tool>
