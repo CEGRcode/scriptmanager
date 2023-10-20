@@ -135,9 +135,6 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 			//check input exists
 			if(!BAM.exists()|| BAM.isDirectory()){
 				r += "(!)BAM[" + x + "] file does not exist: " + BAM.getName() + "\n";
-			//check input extensions
-			}else if(!"bam".equals(ExtensionFileFilter.getExtension(BAM))){
-				r += "(!)Is this a BAM file? Check extension: " + BAM.getName() + "\n";
 			//check BAI exists
 			}else if(!BAI.exists() || BAI.isDirectory()){
 				r += "(!)BAI Index File does not exist for: " + BAM.getName() + "\n";
@@ -149,7 +146,6 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 			outputBasename = new File("correlation_matrix");
 		//check output filename is valid
 		}else{
-			//no check ext
 			//check directory
 			if(outputBasename.getParent()==null){
 // 				System.err.println("default to current directory");

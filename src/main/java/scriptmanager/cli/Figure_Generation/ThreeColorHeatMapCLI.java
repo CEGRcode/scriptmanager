@@ -171,26 +171,12 @@ public class ThreeColorHeatMapCLI implements Callable<Integer> {
 			r += "(!)CDT file does not exist: " + CDT.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		if (!"cdt".equals(ExtensionFileFilter.getExtension(CDT))) {
-			r += "(!)Is this a CDT file? Check extension: " + CDT.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtension(CDT);
 			output = new File(NAME + "_" + scaleType + ".png");
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"png".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".png\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output
-						+ ".png\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

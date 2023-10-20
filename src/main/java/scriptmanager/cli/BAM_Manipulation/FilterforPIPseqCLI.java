@@ -80,14 +80,6 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 		if (!r.equals("")) {
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(genomeFASTA)) {
-			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
-		}
-		if (!"bam".equals(ExtensionFileFilter.getExtension(bamFile))) {
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
-		}
 		// check BAI exists
 		File f = new File(bamFile + ".bai");
 		if (!f.exists() || f.isDirectory()) {
@@ -105,16 +97,6 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 			output = new File(ExtensionFileFilter.stripExtension(bamFile) + "_PSfilter.bam");
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"bam".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use BAM extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".bam\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use BAM extension for output filename. Try: "
-						+ ExtensionFileFilter.stripExtension(output) + ".bam\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 					System.err.println("default to current directory");

@@ -71,24 +71,11 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 			r += "(!)BED-ref file does not exist: " + refBED.getName() + "\n";
 		}
 		if(!r.equals("")){ return(r); }
-		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtension(peakBED))){
-			r += "(!)Is this a BED file? Check extension: " + peakBED.getName() + "\n";
-		}
-		if(!"bed".equals(ExtensionFileFilter.getExtension(refBED))){
-			r += "(!)Is this a BED file? Check extension: " + refBED.getName() + "\n";
-		}
 		//set default output filename
 		if(output==null){
 			output = new File(ExtensionFileFilter.stripExtension(peakBED) + "_" + ExtensionFileFilter.stripExtension(refBED) + "_Output.cdt");
 		//check output filename is valid
 		}else{
-			//check ext
-			try{
-				if(!"cdt".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use CDT extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".cdt\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use CDT extension for output filename. Try: " + output + ".cdt\n"; }
 			//check directory
 			if(output.getParent()==null){
 // 				System.err.println("default to current directory");

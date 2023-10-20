@@ -69,10 +69,6 @@ public class PEStatsCLI implements Callable<Integer> {
 			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
-		}
 		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
@@ -84,7 +80,6 @@ public class PEStatsCLI implements Callable<Integer> {
 			outputBasename = new File(ExtensionFileFilter.stripExtension(bamFile));
 		//check output filename is valid
 		}else{
-			//no check ext
 			//check directory
 			if(outputBasename.getParent()==null){
 // 				System.err.println("default to current directory");

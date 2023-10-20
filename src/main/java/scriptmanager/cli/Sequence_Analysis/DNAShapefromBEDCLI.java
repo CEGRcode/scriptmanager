@@ -131,14 +131,6 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		if (!r.equals("")) {
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(genomeFASTA)) {
-			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
-		}
-		if (!"bed".equals(ExtensionFileFilter.getExtension(bedFile))) {
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
-		}
 		// set default output filename
 		if (outputBasename == null) {
 			outputBasename = ExtensionFileFilter.stripExtension(bedFile);

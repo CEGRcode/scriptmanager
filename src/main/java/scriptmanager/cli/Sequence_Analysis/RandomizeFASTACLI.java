@@ -70,27 +70,12 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
 			return (r);
 		}
-		// check input extension
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(fastaFile)) {
-			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtension(fastaFile) + "_RAND.fa";
 			output = new File(NAME);
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!faFilter.accept(output)) {
-					r += "(!)Use FASTA extension for output filename. Try: "
-							+ ExtensionFileFilter.stripExtension(output) + ".fa\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use \".fa\" extension for output filename. Try: " + output
-						+ ".fa\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 				// System.err.println("default to current directory");

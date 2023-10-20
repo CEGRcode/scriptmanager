@@ -1,5 +1,7 @@
 package scriptmanager.window_interface.BAM_Manipulation;
 
+import htsjdk.samtools.SAMException;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Color;
@@ -33,8 +35,8 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
-import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
+import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
 
 /**
@@ -78,38 +80,48 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         @Override
         public Void doInBackground() throws Exception {
         	setProgress(0);
-        	LogItem old_li = null;
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-        		String[] NAME = BAMFiles.get(x).getName().split("\\.");
-        	    File OUTPUT = null;
-        	    File METRICS = null;
-        	    if(OUTPUT_PATH != null) {
-        	    	OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam");
-        	    	METRICS = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.metrics");
-        	    } else {
-        	    	OUTPUT = new File(NAME[0] + "_dedup.bam");
-        	    	METRICS = new File(NAME[0] + "_dedup.metrics");
-        	    }
+			LogItem old_li = new LogItem("");
+			try {
+				for(int x = 0; x < BAMFiles.size(); x++) {
+					String[] NAME = BAMFiles.get(x).getName().split("\\.");
+					File OUTPUT = null;
+					File METRICS = null;
 
-				// Initialize LogItem
-        	    String command = BAMRemoveDupCLI.getCLIcommand(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
-				LogItem new_li = new LogItem(command);
-				firePropertyChange("log", old_li, new_li);
-        	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
-        	    dedup.run();
+					if(OUTPUT_PATH != null) {
+						OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam");
+						METRICS = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.metrics");
+					} else {
+						OUTPUT = new File(NAME[0] + "_dedup.bam");
+						METRICS = new File(NAME[0] + "_dedup.metrics");
+					}
+					
 
-				// Update log item
-				new_li.setStopTime(new Timestamp(new Date().getTime()));
-				new_li.setStatus(0);
-				old_li = new_li;
+					// Initialize LogItem
+					String command = BAMRemoveDupCLI.getCLIcommand(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					
+					// Run script
+					BAMMarkDuplicates.mark(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
+					
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
+					
+					// Index output if selected
+					if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT); }
 
-        	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
-
-        	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-        		setProgress(percentComplete);
-        	}
+					// Update progress
+					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
+					setProgress(percentComplete);
+				}
+			} catch (SAMException se){
+				JOptionPane.showMessageDialog(null, se.getMessage());
+			}
 			firePropertyChange("log", old_li, null);
-        	setProgress(100);
+			setProgress(100);
+
 			JOptionPane.showMessageDialog(null, "Mark Duplicates Complete");
         	return null;
         }

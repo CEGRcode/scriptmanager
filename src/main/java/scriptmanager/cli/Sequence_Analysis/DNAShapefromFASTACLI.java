@@ -125,18 +125,12 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(fastaFile)) {
-			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
-		}
 		// set default output filename
 		if (outputBasename == null) {
 			outputBasename = ExtensionFileFilter.stripExtension(fastaFile);
 			// check output filename is valid
 		} else {
 			String outParent = new File(outputBasename).getParent();
-			// no extension check
 			// check directory
 			if (outParent == null) {
 // 				System.err.println("default to current directory");

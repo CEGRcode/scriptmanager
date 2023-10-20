@@ -106,10 +106,6 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
-		}
 		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
@@ -128,12 +124,6 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
 		//check output filename is valid
 		}else{
-			//check ext
-			try{
-				if(!"gff".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use GFF extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".gff\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use GFF extension for output filename. Try: " + output + ".gff\n"; }
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");
