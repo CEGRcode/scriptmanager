@@ -141,7 +141,7 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 		return(r);
 	}
 	public static String getCLIcommand(File BAM, File output, int strand, int pair, int min, int max) {
-		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bam-to-gff";
+		String command = "java -jar $SCRIPTMANAGER bam-format-converter bam-to-gff";
 		command += " " + BAM.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		if (strand == 0) {
