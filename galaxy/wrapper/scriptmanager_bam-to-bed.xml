@@ -4,7 +4,7 @@
         <import>scriptmanager_macros.xml</import>
     </macros>
    <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s '$BAM' bamfile.bam &&

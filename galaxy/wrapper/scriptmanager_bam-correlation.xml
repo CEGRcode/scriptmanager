@@ -1,11 +1,11 @@
-<tool id="bamcorrelation_test" name="ScriptManager: BAM Correlation" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_bam-correlation" name="ScriptManager: BAM Correlation" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files. </description>
     <macros>
         <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
-        <requirement type="package" version="1.9">samtools</requirement>
+        <expand macro="requirement_openjdk" />
+        <expand macro="requirement_samtools" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s '$BAM' bamfile.bam &&

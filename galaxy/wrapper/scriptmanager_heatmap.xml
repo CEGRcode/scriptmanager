@@ -4,7 +4,7 @@
         <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="aggressive"><![CDATA[
         java -jar $__tool_directory__/@JAR_FILENAME@ figure-generation heatmap 'pileup_sense.cdt'

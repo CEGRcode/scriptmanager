@@ -4,11 +4,14 @@
     <token name="@JAVA_VERSION@">11.0</token>
     <token name="@TOOL_VERSION@">0.14</token>
     <token name="@JAR_FILENAME@">ScriptManager-v0.14.jar</token>
-    <xml name="requirements">
-        <requirements>
-            <requirement type="package">samtools</requirement>
-        </requirements>
+    <xml name="requirement_openjdk">
+        <requirement type="package" version="11.0.1" >openjdk</requirement>
     </xml>
+    <xml name="requirement_samtools">
+        <requirement type="package" version="1.9" >samtools</requirement>
+        <requirement type="package" version="1.0" >openssl</requirement>
+    </xml>
+
     <xml name="four_color_plot_selector_default_red">
         <option value="D00000" selected="True">red</option>
         <option value="00D000">green</option>

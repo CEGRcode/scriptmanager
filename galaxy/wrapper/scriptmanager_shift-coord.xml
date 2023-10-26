@@ -4,7 +4,7 @@
         <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
-	     <requirement type="package" version="8.0.112">openjdk</requirement>
+	     <expand macro="requirement_openjdk" />
     </requirements>
 
     <command detect_errors="aggressive">

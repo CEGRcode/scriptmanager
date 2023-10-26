@@ -4,8 +4,8 @@
         <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
-        <requirement type="package" version="1.9">samtools</requirement>
+        <expand macro="requirement_openjdk" />
+        <expand macro="requirement_samtools" />
     </requirements>
     <command>
 	<![CDATA[
