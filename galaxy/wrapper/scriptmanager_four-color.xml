@@ -1,4 +1,4 @@
-<tool id="scriptmanager_four-color" name="ScriptManager: Four Color Sequence Plot" version="0.0.1">
+<tool id="scriptmanager_four-color" name="ScriptManager: Four Color Sequence Plot" version="0.1.0" profile="22.01" >
     <description>Generate 4Color sequence plot given FASTA file and user-defined RGB colors.</description>
     <macros>
         <import>scriptmanager_macros.xml</import>

@@ -1,4 +1,4 @@
-<tool id="scriptmanager_pe-stat" name="ScriptManager: Paired-End Statistics" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_pe-stat" name="ScriptManager: Paired-End Statistics" version="0.1.0" profile="22.01" >
     <description>Generates Insert-size Histogram statistics (GEO requirement) and outputs BAM Header including alignment statistics and parameters given a sorted and indexed (BAI) paired-end BAM File.</description>
     <macros>
         <import>scriptmanager_macros.xml</import>

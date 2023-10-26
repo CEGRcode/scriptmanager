@@ -1,4 +1,4 @@
-<tool id="scriptmanager_sort-bed" name="ScriptManager: Sort BED by CDT" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_sort-bed" name="ScriptManager: Sort BED by CDT" version="0.1.0" profile="22.01" >
     <description> Sort BED file by CDT file statistics. </description>
     <macros>
         <import>scriptmanager_macros.xml</import>

@@ -1,4 +1,4 @@
-<tool id="scriptmanager_heatmap" name="ScriptManager: Two-color Heatmap" version="0.0.1">
+<tool id="scriptmanager_heatmap" name="ScriptManager: Two-color Heatmap" version="0.1.0" profile="22.01" >
     <description>Generate heat map using CDT/tabular files.</description>
     <macros>
         <import>scriptmanager_macros.xml</import>

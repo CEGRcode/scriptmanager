@@ -1,11 +1,11 @@
-<tool id="scriptmanager_tag-pileup" name="ScriptManager: TagPileup" version="1.0.0">
+<tool id="scriptmanager_tag-pileup" name="ScriptManager: TagPileup" version="0.1.0" profile="22.01" >
     <description>Generates tagpileup based on BAM file and coordinate file.</description>
     <macros>
         <import>scriptmanager_macros.xml</import>
     </macros>
     <requirements>
         <expand macro="requirement_openjdk" />
-        <expand macro="requirement_samtools" />    
+        <expand macro="requirement_samtools" />
     </requirements>
 
     <command detect_errors="aggressive">

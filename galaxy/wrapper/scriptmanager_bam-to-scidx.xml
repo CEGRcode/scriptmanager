@@ -1,4 +1,4 @@
-<tool id="scriptmanager_bam-to-scidx" name="ScriptManager: Convert BAM to scIDX" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_bam-to-scidx" name="ScriptManager: Convert BAM to scIDX" version="0.1.0" profile="22.01" >
     <description> Convert BAM file to scIDX file </description>
     <macros>
         <import>scriptmanager_macros.xml</import>

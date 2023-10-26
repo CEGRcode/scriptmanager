@@ -1,4 +1,4 @@
-<tool id="scriptmanager_sort-gff" name="ScriptManager: Sort GFF by CDT" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_sort-gff" name="ScriptManager: Sort GFF by CDT" version="0.1.0" profile="22.01" >
     <description> Sort GFF file by CDT file statistics. </description>
     <macros>
         <import>scriptmanager_macros.xml</import>

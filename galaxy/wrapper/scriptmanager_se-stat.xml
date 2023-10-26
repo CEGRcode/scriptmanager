@@ -1,4 +1,4 @@
-<tool id="scriptmanager_se-stat" name="ScriptManager: Single-End Statistics" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_se-stat" name="ScriptManager: Single-End Statistics" version="0.1.0" profile="22.01" >
     <description> Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File. </description>
     <macros>
         <import>scriptmanager_macros.xml</import>

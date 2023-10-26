@@ -1,4 +1,4 @@
-<tool id="scriptmanager_expand-bed" name="ScriptManager: Expand BED File" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_expand-bed" name="ScriptManager: Expand BED File" version="0.1.0" profile="22.01" >
     <description>Expands input BED file by adding positions to the border or around the center.</description>
     <macros>
         <import>scriptmanager_macros.xml</import>

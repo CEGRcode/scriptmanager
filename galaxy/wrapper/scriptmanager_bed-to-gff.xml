@@ -1,4 +1,4 @@
-<tool id="scriptmanager_bed-to-gff" name="ScriptManager: Convert BED to GFF" version="0.0.1">
+<tool id="scriptmanager_bed-to-gff" name="ScriptManager: Convert BED to GFF" version="0.1.0" profile="22.01" >
     <description>Convert BED file to GFF file.</description>
     <macros>
         <import>scriptmanager_macros.xml</import>
