@@ -76,27 +76,27 @@ public class SearchMotifOutput extends JFrame {
 	 * @throws InterruptedException
 	 */
 	public void run() throws IOException, InterruptedException {
-		LogItem old_li = null;
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
+		// Construct output filename
 		String BASENAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
 				+ ExtensionFileFilter.stripExtension(INPUTFILE) + ".bed";
 		if (OUT_DIR != null) {
 			BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 		}
 		BASENAME += gzOutput ? ".gz" : "";
-		old_li = new LogItem("");
 		// Initialize LogItem
 		String command = SearchMotifCLI.getCLIcommand(INPUTFILE, new File(BASENAME), motif, ALLOWED_MISMATCH, gzOutput);
-		LogItem new_li = new LogItem(command);
-		firePropertyChange("log", old_li, new_li);
+		LogItem li = new LogItem(command);
+		firePropertyChange("log", null, li);
+		// Execute script
 		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS, gzOutput);
 		script_obj.run();
 		// Update log item
-		new_li.setStopTime(new Timestamp(new Date().getTime()));
-		new_li.setStatus(0);
-		old_li = new_li;
+		li.setStopTime(new Timestamp(new Date().getTime()));
+		li.setStatus(0);
+		firePropertyChange("log", li, null);
+		// Sleep and dispose
 		Thread.sleep(2000);
-		firePropertyChange("log", old_li, null);
 		dispose();
 	}
 }

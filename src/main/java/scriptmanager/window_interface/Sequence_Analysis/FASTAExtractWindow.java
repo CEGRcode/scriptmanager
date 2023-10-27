@@ -82,7 +82,7 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 					FASTAExtractOutput signal = new FASTAExtractOutput(INPUT, BEDFiles, OUT_DIR,
 							chckbxStrand.isSelected(), rdbtnBedName.isSelected(), chckbxGzipOutput.isSelected());
 
-					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
+					signal.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double) (temp) / BEDFiles.size()) * 100);
@@ -94,16 +94,15 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 						}
 					});
-
 					signal.setVisible(true);
 					signal.run();
-
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			setProgress(100);
 			return null;
 		}
 

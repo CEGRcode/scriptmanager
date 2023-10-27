@@ -85,14 +85,17 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 						});
 						search.setVisible(true);
 						search.run();
+						// Update progress
 						int percentComplete = (int) (((double) (gfile + 1) / (GenomeFiles.size())) * 100);
 						setProgress(percentComplete);
 					}
+					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Search Complete");
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			}
+			setProgress(100);
 			return null;
 		}
 

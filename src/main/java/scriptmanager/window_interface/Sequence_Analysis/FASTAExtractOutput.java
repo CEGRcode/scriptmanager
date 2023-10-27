@@ -83,7 +83,6 @@ public class FASTAExtractOutput extends JFrame {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		try {
 			for (int x = 0; x < BED.size(); x++) {
-				old_li = new LogItem("");
 				// Open Output File
 				File OUTFILE;
 				String NAME = BED.get(x).getName().split("\\.")[0] + ".fa";
@@ -94,7 +93,7 @@ public class FASTAExtractOutput extends JFrame {
 				OUTFILE = new File(NAME);
 				PS.println("Proccessing File: " + BED.get(x).getName());
 				// Initialize LogItem
-				String command = FASTAExtractCLI.getCLIcommand(GENOME, BED.get(x), OUTFILE, HEADER, STRAND, gzOutput);
+				String command = FASTAExtractCLI.getCLIcommand(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, gzOutput);
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
 				// Execute Script object
@@ -105,7 +104,7 @@ public class FASTAExtractOutput extends JFrame {
 				new_li.setStatus(0);
 				old_li = new_li;
 				// Update progress
-				firePropertyChange("fa", x, x + 1);
+				firePropertyChange("progress", x, x + 1);
 			}
 			firePropertyChange("log", old_li, null);
 			PS.println("Extraction Complete");
