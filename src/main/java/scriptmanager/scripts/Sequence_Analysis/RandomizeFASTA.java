@@ -20,20 +20,20 @@ public class RandomizeFASTA {
 	/**
 	 * Static method to call for randomizing FASTA sequences.
 	 * 
-	 * @param FASTA filepath to FASTA-formatted sequences to randomize
-	 * @param RANDOUT filepath to write randomized sequences to
-	 * @param seed set a random seed
+	 * @param input  filepath to FASTA-formatted sequences to randomize
+	 * @param output filepath to write randomized sequences to
+	 * @param seed   set a random seed
 	 * @return name of output filename
 	 * @throws IOException
 	 */
-	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed) throws IOException {
+	public static File randomizeFASTA(File input, File output, Integer seed) throws IOException {
 		Random randnum = new Random();
-		if( seed != null) {
+		if (seed != null) {
 			System.err.println("Set Seed=" + seed);
 			randnum.setSeed(seed);
 		}
-		PrintStream OUT = new PrintStream(RANDOUT);
-		Scanner scan = new Scanner(FASTA);
+		PrintStream OUT = new PrintStream(output);
+		Scanner scan = new Scanner(input);
 		while (scan.hasNextLine()) {
 			String HEADER = scan.nextLine();
 			OUT.println(HEADER);
@@ -57,7 +57,7 @@ public class RandomizeFASTA {
 
 		OUT.close();
 		scan.close();
-		return RANDOUT;
+		return output;
 	}
-
+	
 }
