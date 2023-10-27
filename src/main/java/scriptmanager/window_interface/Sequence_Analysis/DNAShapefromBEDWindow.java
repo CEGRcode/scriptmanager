@@ -92,26 +92,28 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 					OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
-					DNAShapefromBEDOutput signal = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUT_DIR, OUTPUT_TYPE,
-							chckbxStrand.isSelected());
-
-					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
+					DNAShapefromBEDOutput output_obj = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUT_DIR, OUTPUT_TYPE, chckbxStrand.isSelected());
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double) (temp) / BEDFiles.size()) * 100);
 							setProgress(percentComplete);
 						}
 					});
-
-					signal.setVisible(true);
-					signal.run();
-
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -321,10 +323,13 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

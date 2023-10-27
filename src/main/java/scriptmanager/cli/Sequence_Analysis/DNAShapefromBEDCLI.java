@@ -53,8 +53,7 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		private boolean propeller = false;
 		@Option(names = { "-l", "--helical" }, description = "output helical twist")
 		private boolean helical = false;
-		@Option(names = { "-a",
-				"--all" }, description = "output groove, roll, propeller twist, and helical twist (equivalent to -grpl).")
+		@Option(names = { "-a", "--all" }, description = "output groove, roll, propeller twist, and helical twist (equivalent to -grpl).")
 		private boolean all = false;
 	}
 
@@ -172,5 +171,31 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		}
 
 		return (r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param gen   the reference genome sequence in FASTA-format (FAI will be
+	 *              automatically generated)
+	 * @param input the BED-formatted coordinate intervals to extract sequence from
+	 * @param out   the output file name base (to add _&lt;shapetype&gt;.cdt suffix
+	 *              to)
+	 * @param type  a four-element boolean list for specifying shape type to output
+	 *              (no enforcement on size)
+	 * @param str  force strandedness (true=forced, false=not forced)
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File gen, File input, String out, boolean[] type, boolean str) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis dna-shape-bed";
+		command += " -o " + out;
+		command += type[0] ? " --groove" : "";
+		command += type[1] ? " --propeller" : "";
+		command += type[2] ? " --helical" : "";
+		command += type[3] ? " --roll" : "";
+		command += str ? "" : "--no-force";
+		command += " " + gen;
+		command += " " + input;
+		return (command);
 	}
 }

@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -14,8 +16,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
+import scriptmanager.cli.Sequence_Analysis.DNAShapefromFASTACLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Graphical window for displaying the DNA shape scores and charts for the set
@@ -82,6 +87,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 	 */
 	public void run() throws IOException, InterruptedException {
 
+		LogItem old_li = null;
 		for (int x = 0; x < FASTA.size(); x++) {
 			JTextArea STATS_MGW = null;
 			JTextArea STATS_PropT = null;
@@ -110,20 +116,23 @@ public class DNAShapefromFASTAOutput extends JFrame {
 			}
 
 			// Open Output File
-			String BASENAME = FASTA.get(x).getName().split("\\.")[0];
-			try {
-				if (OUT_DIR != null) {
-					BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			String BASENAME = ExtensionFileFilter.stripExtension(FASTA.get(x));
+			if (OUT_DIR != null) {
+				BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 			}
+			// Initialize LogItem
+			String command = DNAShapefromFASTACLI.getCLIcommand(FASTA.get(x), BASENAME, OUTPUT_TYPE);
+			LogItem new_li = new LogItem(command);
+			firePropertyChange("log", old_li, new_li);
 
 			// Initialize Script Object and execute calculations
 			DNAShapefromFASTA script_obj = new DNAShapefromFASTA(FASTA.get(x), BASENAME, OUTPUT_TYPE, PS);
 			script_obj.run();
+
+			// Update LogItem
+			new_li.setStopTime(new Timestamp(new Date().getTime()));
+			new_li.setStatus(0);
+			old_li = new_li;
 
 			// Convert average and statistics to output tabs panes
 			if (OUTPUT_TYPE[0]) {
@@ -154,7 +163,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 						JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				tabbedPane_Statistics.add("Roll", Rollpane);
 			}
-			firePropertyChange("fa", x, x + 1);
+			firePropertyChange("progress", x, x + 1);
 		}
 	}
 }

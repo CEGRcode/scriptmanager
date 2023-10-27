@@ -86,23 +86,28 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 					OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
-					DNAShapefromFASTAOutput signal = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE);
-
-					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
+					DNAShapefromFASTAOutput output_obj = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE);
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double) (temp) / FASTAFiles.size()) * 100);
 							setProgress(percentComplete);
 						}
 					});
-
-					signal.setVisible(true);
-					signal.run();
-
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -287,10 +292,13 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
