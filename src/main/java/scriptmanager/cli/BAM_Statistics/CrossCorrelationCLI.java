@@ -47,7 +47,7 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 	@Option(names = {"-t", "--cpu"}, description = "set number of threads for performance tuning (default=1)")
 	private int cpu = 1;
 
-	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nRandom Sampling Options:%n\t@|fg(red) (ignored if full genome correlation method selected)|@%n")
+	@ArgGroup(exclusive = false, multiplicity = "0..1", heading = "%nRandom Sampling Options:%n\t@|fg(red) (ignored if full genome correlation method selected)|@%n")
 	SamplingParams samplingParams = new SamplingParams();
 	static class SamplingParams {
 		@Option(names = {"-w", "--window"}, description = "set window frame size for each extraction (default=50kb)")
@@ -123,14 +123,27 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 
 		return(r);
 	}
-	public static String getCLIcommand(File OUTPUT, File bamFile, CorrParameter param) {
-		String command = "java -jar $SCRIPTMANAGER bam-statistics CrossCorrelation";
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param bamFile BAM file to get statistics on
+	 * @param output  text file to write output to
+	 * @param param   cross correlation parameters
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File bamFile, File output, CorrParameter param) {
+		String command = "java -jar $SCRIPTMANAGER bam-statistics cross-corr";
 		command += " " + bamFile.getAbsolutePath();
-		command += " -o " + OUTPUT.getAbsolutePath();
-		command += param.getCorrType() ? " -g " : " -r ";
-		command += " -t " + param.getThreads();
-		command += param.getCorrType() ? " -w " + param.getCorrWindow() : "";
-		command += param.getCorrType() ? " -i " + param.getIterations() : "";
+		command += " -o " + output.getAbsolutePath();
+		command += " --cpu " + param.getThreads();
+		if (param.getCorrType()) {
+			command += " -g";
+		} else {
+			command += " -r";
+			command += " -w " + param.getCorrWindow();
+			command += " -i " + param.getIterations();
+		}
 		return command;
 	}
 }

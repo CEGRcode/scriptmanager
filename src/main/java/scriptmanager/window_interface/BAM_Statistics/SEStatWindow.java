@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
@@ -48,20 +49,20 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	private File OUT_DIR = new File(System.getProperty("user.dir"));
+	private File OUTPUT_DIR = new File(System.getProperty("user.dir"));
 
 	JProgressBar progressBar;
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			setProgress(0);
 			try {
 				if (expList.size() < 1) {
 					JOptionPane.showMessageDialog(null, "Must load at least one BAM file");
 				} else {
-					SEStatOutput output_obj = new SEStatOutput(BAMFiles, OUT_DIR, chckbxOutputStatistics.isSelected());
+					SEStatOutput output_obj = new SEStatOutput(BAMFiles, OUTPUT_DIR, chckbxOutputStatistics.isSelected());
 					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -69,16 +70,20 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 							setProgress(percentComplete);
 						}
 					});
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
 					output_obj.setVisible(true);
 					output_obj.run();
 				}
-			} catch (NumberFormatException nfe){
+			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			}
-
 			setProgress(100);
 			return null;
 		}
@@ -107,8 +112,8 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane, -5, SpringLayout.EAST, contentPane);
 		contentPane.add(scrollPane);
-		
-      	expList = new DefaultListModel<String>();
+
+		expList = new DefaultListModel<String>();
 		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
@@ -169,9 +174,9 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 		btnOutputDirectory.setEnabled(false);
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUT_DIR = FileSelection.getOutputDir(fc);
-				if(OUT_DIR != null) {
-					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				OUTPUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUTPUT_DIR != null) {
+					lblDefaultToLocal.setText(OUTPUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -228,6 +233,8 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

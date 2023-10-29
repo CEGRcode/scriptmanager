@@ -2,6 +2,7 @@ package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.BorderLayout;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
@@ -37,10 +38,6 @@ public class SEStatOutput extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
 
-		bamFiles = input;
-		OUT_DIR = o;
-		OUTPUT_STATUS = o_status;
-
 		layeredPane = new JLayeredPane();
 		getContentPane().add(layeredPane, BorderLayout.CENTER);
 		SpringLayout sl_layeredPane = new SpringLayout();
@@ -52,6 +49,10 @@ public class SEStatOutput extends JFrame {
 		sl_layeredPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -6, SpringLayout.SOUTH, layeredPane);
 		sl_layeredPane.putConstraint(SpringLayout.EAST, tabbedPane, -6, SpringLayout.EAST, layeredPane);
 		layeredPane.add(tabbedPane);
+
+		bamFiles = input;
+		OUT_DIR = o;
+		OUTPUT_STATUS = o_status;
 	}
 	
 	public void run() throws IOException {
@@ -62,36 +63,33 @@ public class SEStatOutput extends JFrame {
 			String NAME = ExtensionFileFilter.stripExtension(bamFiles.get(x).getName()) + "_SE-stats.txt";
 			File OUT_FILEPATH = new File(NAME);
 			if (OUT_DIR != null) {
-				OUT_FILEPATH = new File( OUT_DIR.getCanonicalPath() + File.separator + NAME);
+				OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 			}
 			// Initialize PrintStream and TextArea for SE stats
 			PrintStream ps_stats = null;
 			JTextArea txtArea_Statistics = new JTextArea();
 			txtArea_Statistics.setEditable(false);
 			ps_stats = new PrintStream(new CustomOutputStream( txtArea_Statistics ));
-			old_li = new LogItem("");
+			// Add JTextArea to JScrollPane in JTabbedPane
+			JScrollPane se_pane = new JScrollPane(txtArea_Statistics, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			tabbedPane.add(bamFiles.get(x).getName(), se_pane);
 			// Initialize LogItem
 			String command = SEStatsCLI.getCLIcommand(bamFiles.get(x), OUT_FILEPATH);
 			LogItem new_li = new LogItem(command);
-			firePropertyChange("log", old_li, new_li);
-			// Use script and pass PrintStream object that sends to JTextArea
-			SEStats.getSEStats(bamFiles.get(x), OUT_FILEPATH, OUTPUT_STATUS, ps_stats );
+			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
+			// Execute script
+			SEStats.getSEStats(bamFiles.get(x), new File(OUT_DIR + File.separator + NAME), OUTPUT_STATUS, ps_stats);
 			// Update log item
 			new_li.setStopTime(new Timestamp(new Date().getTime()));
 			new_li.setStatus(0);
 			old_li = new_li;
-			// Add JTextArea to JScrollPane in JTabbedPane
-			JScrollPane se_pane = new JScrollPane(txtArea_Statistics, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			tabbedPane.add(bamFiles.get(x).getName(), se_pane);
-			// Execute script
-			SEStats.getSEStats(bamFiles.get(x), OUT_FILEPATH, OUTPUT_STATUS, ps_stats);
-			// Close stats PrintStream
+			// Close streams
 			ps_stats.close();
 			// Update progress
 			firePropertyChange("progress", x-1, x);
 		}
-		//BAMIndexMetaData.printIndexStats(bamFiles.get(x))
-		firePropertyChange("log", old_li, null);
+		// Update log after final input
+		if (OUTPUT_STATUS) { firePropertyChange("log", old_li, null); }
 	}
 
 	public static void main(String[] args) {

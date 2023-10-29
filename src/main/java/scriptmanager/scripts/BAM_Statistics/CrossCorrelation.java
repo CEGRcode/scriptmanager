@@ -39,10 +39,10 @@ public class CrossCorrelation {
 	 * correlating forward and reverse strand pileups at various tag shifts to
 	 * determine the tag shift with the strongest correlation between strands.
 	 * 
-	 * @param outfilepath the output file to write TagShift--&gt;Correlation score
-	 *                    pair results
 	 * @param bamFile     the BAM file to determine the best strand correlated tag
 	 *                    shift for
+	 * @param output      the output file to write TagShift--&gt;Correlation score
+	 *                    pair results
 	 * @param param       the object for storing user-defined parameters for the
 	 *                    cross-correlation
 	 * @param PS_CCDATA   where progress updates and raw correlation scores are
@@ -50,7 +50,7 @@ public class CrossCorrelation {
 	 * @return the JFreeChart-based line plot of corrlation (y-axis) scores for a
 	 *         range of shifts (x-axis)
 	 */
-	public static Component correlate(File outfilepath, File bamFile, CorrParameter param, PrintStream PS_CCDATA){
+	public static Component correlate(File bamFile, File output, CorrParameter param, PrintStream PS_CCDATA) {
 		//Check if BAI index file exists
 		File f = new File(bamFile + ".bai");
 		if(!f.exists() || f.isDirectory()) {
@@ -58,16 +58,16 @@ public class CrossCorrelation {
 			System.err.println("BAI Index File does not exist for: " + bamFile.getName());
 			return(null);
 		}
+		System.out.println("Cross-Correlation: " + bamFile);
 
 		// Output files to be saved
 		PrintStream OUT_CCDATA = null;
 		
 		// Set output file printstream
-		if( outfilepath!=null ) {
+		if( output!=null ) {
 			try {
-				OUT_CCDATA = new PrintStream(outfilepath);
-			}
-			catch (IOException ioe) { ioe.printStackTrace(); }
+				OUT_CCDATA = new PrintStream(output);
+			} catch (IOException ioe) { ioe.printStackTrace(); }
 		}
 
 		// Start timestamp
