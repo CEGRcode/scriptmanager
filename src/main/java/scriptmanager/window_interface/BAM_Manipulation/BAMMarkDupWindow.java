@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.LogItem;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
@@ -43,7 +45,7 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> expList;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	List<File> BAMFiles = new ArrayList<File>();
 
 	private JButton btnLoad;
@@ -59,42 +61,46 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	private JCheckBox chckbxRemoveDuplicates;
 
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws Exception {
+		@Override
+		public Void doInBackground() {
+			try {
         	setProgress(0);
         	LogItem old_li = null;
-        	for(int x = 0; x < BAMFiles.size(); x++) {
-        		String[] NAME = BAMFiles.get(x).getName().split("\\.");
-        	    File OUTPUT = null;
-        	    File METRICS = null;
-        	    if(OUTPUT_PATH != null) {
-        	    	OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam");
-        	    	METRICS = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.metrics");
-        	    } else {
-        	    	OUTPUT = new File(NAME[0] + "_dedup.bam");
-        	    	METRICS = new File(NAME[0] + "_dedup.metrics");
-        	    }
-
+			for (int x = 0; x < BAMFiles.size(); x++) {
+				// Construct output filenames
+				String NAME = ExtensionFileFilter.stripExtension(BAMFiles.get(x).getName());
+				File OUTPUT = new File(NAME + "_dedup.bam");
+				File METRICS = new File(NAME + "_dedup.metrics");
+				if (OUT_DIR != null) {
+					OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME + "_dedup.bam");
+					METRICS = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME + "_dedup.metrics");
+				}
 				// Initialize LogItem
         	    String command = BAMRemoveDupCLI.getCLIcommand(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
-        	    BAMMarkDuplicates dedup = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
-        	    dedup.run();
+				BAMMarkDuplicates script_obj = new BAMMarkDuplicates(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
+				script_obj.run();
 
 				// Update log item
 				new_li.setStopTime(new Timestamp(new Date().getTime()));
 				new_li.setStatus(0);
 				old_li = new_li;
-
-        	    if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT);	}
-
-        	    int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-        		setProgress(percentComplete);
-        	}
+				// Generate index on output
+				if (chckbxGenerateBaiIndex.isSelected()) {
+					BAIIndexer.generateIndex(OUTPUT);
+				}
+				// Update progress
+				int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
+				setProgress(percentComplete);
+			}
 			firePropertyChange("log", old_li, null);
         	setProgress(100);
 			JOptionPane.showMessageDialog(null, "Mark Duplicates Complete");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			}
         	return null;
         }
         
@@ -176,9 +182,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -72, SpringLayout.NORTH, btnOutput);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if(OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -221,12 +227,15 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         task.addPropertyChangeListener(this);
         task.execute();
 	}
-	
+
+	/**
+	 * Invoked when task's progress property changes.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
 		} else if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
         }

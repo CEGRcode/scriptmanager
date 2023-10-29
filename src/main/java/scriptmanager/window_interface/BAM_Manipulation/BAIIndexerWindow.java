@@ -51,10 +51,10 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException {
-        	setProgress(0);
-			LogItem old_li = null;
+        public Void doInBackground() {
 			try {
+				setProgress(0);
+				LogItem old_li = null;
 				for(int x = 0; x < BAMFiles.size(); x++) {
 					// Initialize LogItem
 					String command = BAIIndexerCLI.getCLIcommand(BAMFiles.get(x));
@@ -73,9 +73,13 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Indexing Complete");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (SAMException se) {
 				JOptionPane.showMessageDialog(null, se.getMessage());
-    		}
+			}
+			setProgress(100);
         	return null;
         }
         
@@ -164,13 +168,14 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 	}
 	
 	/**
-     * Invoked when task's progress property changes.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        } else if ("log" == evt.getPropertyName()) {
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
     }

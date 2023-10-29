@@ -30,12 +30,24 @@ public class MergeBAMCLI implements Callable<Integer> {
 		return(1);
 	}
 
-	public static String getCLIcommand(ArrayList<File> BAMFiles, File OUTPUT) {
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param inputs          the list of input BAM files to merge (corresponds to
+	 *                        several INPUT values)
+	 * @param output          the output file for the merged BAM file (corresponds
+	 *                        to OUTPUT)
+	 * @param useMultipleCpus whether or not to parallelize (corresponds to
+	 *                        USE_THREADING)
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(ArrayList<File> inputs, File output, boolean useMultipleCpus) {
 		String command = "java -jar $PICARD MergeSamFiles";
-		for (File input : BAMFiles) {
-			command += "INPUT=" + input.getAbsolutePath();
+		for (File in : inputs) {
+			command += " INPUT=" + in.getAbsolutePath();
 		}
-		command += "OUTPUT=" + OUTPUT.getAbsolutePath();
+		command += " OUTPUT=" + output.getAbsolutePath();
+		command += useMultipleCpus ? " USE_THREADING=true" : " USE_THREADING=false";
 		return command;
 	}
 }

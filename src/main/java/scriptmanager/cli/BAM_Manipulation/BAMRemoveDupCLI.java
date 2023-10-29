@@ -31,12 +31,22 @@ public class BAMRemoveDupCLI implements Callable<Integer> {
 		return(1);
 	}
 
-	public static String getCLIcommand(File BAM, boolean removeDuplicates, File OUTPUT, File METRICS) {
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input            the BAM file to mark/remove duplicates for
+	 * @param removeDuplicates whether to remove or just mark duplicates
+	 * @param output           the marked/filtered BAM output file
+	 * @param metrics          the output metrics file with information about the
+	 *                         deduplicates
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, boolean removeDuplicates, File output, File metrics) {
 		String command = "java -jar $PICARD MarkDuplicates";
-		command += " INPUT=" + BAM.getAbsolutePath();
-		command += " OUTPUT=" + OUTPUT.getAbsolutePath();
-		command += " METRICS_FILE=" + METRICS.getAbsolutePath();
-		command += removeDuplicates ? "REMOVE_DUPLICATES=true" : "REMOVE_DUPLICATES=false";
+		command += " INPUT=" + input.getAbsolutePath();
+		command += " OUTPUT=" + output.getAbsolutePath();
+		command += " METRICS_FILE=" + metrics.getAbsolutePath();
+		command += removeDuplicates ? " REMOVE_DUPLICATES=true" : " REMOVE_DUPLICATES=false";
 		return(command);
 	}
 }

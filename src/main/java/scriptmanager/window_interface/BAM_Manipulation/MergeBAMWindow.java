@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
@@ -45,7 +46,6 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	
 	final DefaultListModel<String> expList;
 	ArrayList<File> BAMFiles = new ArrayList<File>();
-    private File OUTPUT = null;
 	private File OUT_DIR = null;
 
 	private JButton btnLoad;
@@ -61,16 +61,18 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws Exception {
-        	setProgress(0);
+		@Override
+		public Void doInBackground() {
+			setProgress(0);
 			LogItem old_li = null;
 			try {
-				// Build output filepath
-				if(OUT_DIR != null) { OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + txtOutput.getText()); }
-				else { OUTPUT = new File(txtOutput.getText()); }
+				// Construct output filename
+				File OUTPUT = new File(txtOutput.getText());
+				if(OUT_DIR != null) {
+					OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + txtOutput.getText());
+				}
 				// Initialize LogItem
-				String command = MergeBAMCLI.getCLIcommand(BAMFiles, OUTPUT);
+				String command = MergeBAMCLI.getCLIcommand(BAMFiles, OUTPUT,  chckbxUseMultipleCpus.isSelected());
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
 				// Execute Picard wrapper
@@ -83,12 +85,18 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 				if(chckbxGenerateBaiindex.isSelected()) {
 					BAIIndexer.generateIndex(OUTPUT);
 				}
+				// Update log after final input
 				firePropertyChange("log", old_li, null);
+				// Update progress
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Merging Complete");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (SAMException se) {
 				JOptionPane.showMessageDialog(null, se.getMessage());
 			}
+			setProgress(100);
         	return null;
         }
         
@@ -228,15 +236,18 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         task.addPropertyChangeListener(this);
         task.execute();
 	}
-	
+
+	/**
+	 * Invoked when task's progress property changes.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        } else if ("log" == evt.getPropertyName()) {
-		firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
-	}
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
 	}
 	
 	public void massXable(Container con, boolean status) {
