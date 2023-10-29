@@ -39,7 +39,7 @@ public class SEStatsCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		SEStats.getSEStats( output, bamFile, null );
+		SEStats.getSEStats(bamFile, output, true, null);
 		
 		System.err.println("Calculations Complete");
 		return(0);

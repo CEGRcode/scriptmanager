@@ -7,7 +7,6 @@ import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
@@ -15,20 +14,15 @@ import java.util.Date;
 
 public class SEStats {
 	
-	public static void getSEStats( File out_filepath, File bamFile, PrintStream ps ) {
+	public static void getSEStats(File bamFile, File output, boolean OUTPUT_STATUS, PrintStream ps ) throws IOException {
 		
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 		
 		//Check and set output files (STDOUT if not specified)
 		PrintStream OUT = null;
-		if(out_filepath != null) {
-			try {
-				OUT = new PrintStream(out_filepath);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else{ OUT = System.out; }
+		if (OUTPUT_STATUS) {
+			OUT = new PrintStream(output);
+		}
 		
 		//Print TimeStamp
 		String time = getTimeStamp();
@@ -71,27 +65,22 @@ public class SEStats {
 			}
 			
 			printBoth( ps, OUT, "" );
-			
-			try {
-				reader.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			// Close streams
+			reader.close();
 			bai.close();
 		
 		//Print message reminder to index BAM files
 		} else { printBoth( ps, OUT, "BAI Index File does not exist for: " + bamFile.getName() + "\n" ); }
-		
-		if(out_filepath != null) OUT.close();
+
+		if (OUTPUT_STATUS) { OUT.close(); }
 		//BAMIndexMetaData.printIndexStats(bamFiles.get(x))
 	}	
 	
 	//Helper method to de-clutter method above:
 	//Prints output to both pop-up window (for GUI) and output file (GUI and CLI)
 	private static void printBoth( PrintStream p, PrintStream out, String line ){
-		out.println( line );
-		if( p != null ){ p.println( line ); }
+		if (p != null) { p.println( line ); }
+		if (out != null) { out.println( line ); }
 	}
 	
 	//Returns Timestamp for printing to the output

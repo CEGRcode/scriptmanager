@@ -1,6 +1,9 @@
 package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -9,6 +12,7 @@ import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -18,28 +22,76 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
-public class SEStatWindow extends JFrame {
+public class SEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
-	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
-		
-	private JTextField txtOutputName;
-	private JLabel lblOutputName;
+	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	private JCheckBox chckbxOutputStatistics;
-	
+	private JButton btnLoad;
+	private JButton btnRemoveBam;
+	private JButton btnOutputDirectory;
+	private JButton btnRun;
+
+	private JLabel lblCurrentOutput;
+	private JLabel lblDefaultToLocal;
+
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
+	JProgressBar progressBar;
+	public Task task;
+
+	class Task extends SwingWorker<Void, Void> {
+		@Override
+		public Void doInBackground() throws IOException {
+			setProgress(0);
+			try {
+				if (expList.size() < 1) {
+					JOptionPane.showMessageDialog(null, "Must load at least one BAM file");
+				} else {
+					SEStatOutput output_obj = new SEStatOutput(BAMFiles, OUT_DIR, chckbxOutputStatistics.isSelected());
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+							int temp = (Integer) propertyChangeEvent.getNewValue();
+							int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
+							setProgress(percentComplete);
+						}
+					});
+					output_obj.setVisible(true);
+					output_obj.run();
+				}
+			} catch (NumberFormatException nfe){
+				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			}
+
+			setProgress(100);
+			return null;
+		}
+
+		public void done() {
+			massXable(contentPane, true);
+			setCursor(null); //turn off the wait cursor
+		}
+	}
+
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public SEStatWindow() {
 		setTitle("BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -60,12 +112,12 @@ public class SEStatWindow extends JFrame {
 		final JList<String> listExp = new JList<String>(expList);
 		listExp.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(listExp);
-		
-		JButton btnLoad = new JButton("Load BAM Files");
+
+		btnLoad = new JButton("Load BAM Files");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 0, SpringLayout.WEST, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				File[] newBAMFiles = FileSelection.getFiles(fc,"bam");
 				if(newBAMFiles != null) {
 					for(int x = 0; x < newBAMFiles.length; x++) {
@@ -76,8 +128,8 @@ public class SEStatWindow extends JFrame {
 			}
 		});
 		contentPane.add(btnLoad);
-					
-		JButton btnRemoveBam = new JButton("Remove BAM");
+
+		btnRemoveBam = new JButton("Remove BAM");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRemoveBam, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoad, 0, SpringLayout.NORTH, btnRemoveBam);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRemoveBam, 0, SpringLayout.EAST, scrollPane);
@@ -88,99 +140,108 @@ public class SEStatWindow extends JFrame {
 					expList.remove(listExp.getSelectedIndex());
 				}
 			}
-		});		
+		});
 		contentPane.add(btnRemoveBam);
-		
-		lblOutputName = new JLabel("Output File Name:");
-		lblOutputName.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutputName, 0, SpringLayout.WEST, scrollPane);
-		lblOutputName.setEnabled(false);
-		contentPane.add(lblOutputName);
 
 		chckbxOutputStatistics = new JCheckBox("Output Statistics");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 199, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -6, SpringLayout.NORTH, chckbxOutputStatistics);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 6, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputStatistics, 0, SpringLayout.WEST, scrollPane);
+		chckbxOutputStatistics.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(chckbxOutputStatistics.isSelected()) {
+					btnOutputDirectory.setEnabled(true);
+					lblCurrentOutput.setEnabled(true);
+					lblDefaultToLocal.setEnabled(true);
+				} else {
+					btnOutputDirectory.setEnabled(false);
+					lblCurrentOutput.setEnabled(false);
+					lblDefaultToLocal.setEnabled(false);
+				}
+			}
+		});
 		contentPane.add(chckbxOutputStatistics);
-				
-		txtOutputName = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtOutputName, -2, SpringLayout.NORTH, lblOutputName);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtOutputName, 6, SpringLayout.EAST, lblOutputName);
-		txtOutputName.setText("output_bam_stats.txt");
-		txtOutputName.setColumns(10);
-		txtOutputName.setEnabled(false);
-		contentPane.add(txtOutputName);
-				
-		JLabel lblCurrentOutput = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutputName, 10, SpringLayout.SOUTH, lblCurrentOutput);
+
+		btnOutputDirectory = new JButton("Output Directory");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 6, SpringLayout.SOUTH, scrollPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 150, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -150, SpringLayout.EAST, contentPane);
+		btnOutputDirectory.setEnabled(false);
+		btnOutputDirectory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				}
+			}
+		});
+		contentPane.add(btnOutputDirectory);
+		
+		lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 10, SpringLayout.SOUTH, chckbxOutputStatistics);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
 		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblCurrentOutput.setEnabled(false);
 		contentPane.add(lblCurrentOutput);
-		
-		JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
+
+		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
 		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		lblDefaultToLocal.setEnabled(false);
 		contentPane.add(lblDefaultToLocal);
-		
-		JButton btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtOutputName, 56, SpringLayout.EAST, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 6, SpringLayout.SOUTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
-		btnOutput.setEnabled(false);
-		btnOutput.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
-    			}
-        	}
-        });
-		contentPane.add(btnOutput);
-		
-		chckbxOutputStatistics.addItemListener(new ItemListener() {
-		      public void itemStateChanged(ItemEvent e) {
-		        if(chckbxOutputStatistics.isSelected()) {
-		        	btnOutput.setEnabled(true);
-		        	lblOutputName.setEnabled(true);
-		        	txtOutputName.setEnabled(true);
-		        	lblCurrentOutput.setEnabled(true);
-		        	lblDefaultToLocal.setEnabled(true);
-		        } else {
-		        	btnOutput.setEnabled(false);
-		        	lblOutputName.setEnabled(false);
-		        	txtOutputName.setEnabled(false);
-		        	lblCurrentOutput.setEnabled(false);
-		        	lblDefaultToLocal.setEnabled(false);   	
-		        }
-		      }
-		    });
-		
-		JButton btnRun = new JButton("Run");
+
+		btnRun = new JButton("Run");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, 90, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnRun, 171, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -171, SpringLayout.EAST, contentPane);
-		btnRun.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-				SEStatOutput stat;
-				if(chckbxOutputStatistics.isSelected()) { 
-					if(OUTPUT_PATH != null) { stat = new SEStatOutput(BAMFiles, new File(OUTPUT_PATH + File.separator + txtOutputName.getText())); }
-					else { stat = new SEStatOutput(BAMFiles, new File(txtOutputName.getText())); }
-				} else { stat = new SEStatOutput(BAMFiles, null); }
-				stat.addPropertyChangeListener("log", new PropertyChangeListener() {
-					public void propertyChange(PropertyChangeEvent evt) {
-						firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
-					}
-				});
-				stat.setVisible(true);
-				stat.run();
-			}
-		});
 		contentPane.add(btnRun);
+
+		progressBar = new JProgressBar();
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -8, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, -3, SpringLayout.NORTH, progressBar);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -18, SpringLayout.WEST, progressBar);
+		progressBar.setStringPainted(true);
+		contentPane.add(progressBar);
+
+		btnRun.addActionListener(this);
+		btnRun.setActionCommand("start");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		massXable(contentPane, false);
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
+	}
+
+	/**
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		}
+	}
+
+	public void massXable(Container con, boolean status) {
+		for(Component c : con.getComponents()) {
+			c.setEnabled(status);
+			if(c instanceof Container) { massXable((Container)c, status); }
+		}
+		if(status) {
+			if(!chckbxOutputStatistics.isSelected()) {
+				btnOutputDirectory.setEnabled(false);
+				lblCurrentOutput.setEnabled(false);
+				lblDefaultToLocal.setEnabled(false);
+			}
+		}
 	}
 }
