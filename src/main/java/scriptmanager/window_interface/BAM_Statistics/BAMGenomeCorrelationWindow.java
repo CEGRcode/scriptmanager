@@ -41,6 +41,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import scriptmanager.charts.HeatMap;
+import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -97,25 +98,34 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		        	else if(rdbtnAllReads.isSelected()) { READ = 2; }
 		        	else if(rdbtnMidpoint.isSelected()) { READ = 3; }
 
-        			short COLORSCALE = 0;
-        			if (rdbtnClassicCS.isSelected()) { COLORSCALE = HeatMap.BLUEWHITERED; }
-        			else if (rdbtnJetLikeCS.isSelected()) { COLORSCALE = HeatMap.JETLIKE; }
+					short COLORSCALE = 0;
+					if (rdbtnClassicCS.isSelected()) { COLORSCALE = HeatMap.BLUEWHITERED; }
+					else if (rdbtnJetLikeCS.isSelected()) { COLORSCALE = HeatMap.JETLIKE; }
 
-					BAMGenomeCorrelationOutput corr = new BAMGenomeCorrelationOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ, COLORSCALE);
-					corr.addPropertyChangeListener("progress", new PropertyChangeListener() {
+					BAMGenomeCorrelationOutput output_obj = new BAMGenomeCorrelationOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), SHIFT, BIN, CPU, READ, COLORSCALE);
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double)(temp) / (((BAMFiles.size() * BAMFiles.size()) - BAMFiles.size()) / 2)) * 100);
 							setProgress(percentComplete);
 						}
 					});
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
 
-					corr.run();
+					output_obj.run();
 				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (OptionException oe) {
+				oe.printStackTrace();
+				JOptionPane.showMessageDialog(null, oe.getMessage());
 			}
 			setProgress(100);
 			return null;
@@ -394,15 +404,17 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
         task.addPropertyChangeListener(this);
         task.execute();
 	}
-	
 
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
