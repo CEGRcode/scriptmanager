@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.CustomExceptions.ScriptManagerException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.TransposeMatrix;
 
@@ -38,18 +39,17 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 	
 	
 	@Override
-	public Integer call() throws Exception {
+	public Integer call() throws IOException, ScriptManagerException {
 		System.err.println( ">TransposeMatrixCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			System.exit(1);
-		}		
-		
-		TransposeMatrix script_obj = new TransposeMatrix(matrixFile, output, startROW, startCOL, gzOutput);
-		script_obj.run();
-		
+		}
+		// Execute script
+		TransposeMatrix.transpose(matrixFile, output, startROW, startCOL, gzOutput);
+
 		System.err.println("All Matrices Transposed.");
 		return(0);
 	}
@@ -78,16 +78,10 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}
 		}
-
-		//Adds .gz extension if needed
-		if (gzOutput && !ExtensionFileFilter.getExtension(output).equals("gz")){
-			output = new File(output.getAbsolutePath() + ".gz");
-		}
-		
 		//validate row&column start indexes
 		if(startROW<0){ r += "(!)Row start must not be less than zero\n"; }
 		if(startCOL<0){ r += "(!)Column start must not be less than zero\n"; }
-		
+
 		return(r);
 	}
 

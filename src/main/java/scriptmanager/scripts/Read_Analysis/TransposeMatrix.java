@@ -13,39 +13,22 @@ import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import javax.swing.JOptionPane;
-
+import scriptmanager.objects.CustomExceptions.ScriptManagerException;
 import scriptmanager.util.GZipUtilities;
 
 public class TransposeMatrix {
 
-	private File MATRIX = null;
-	private File OUTFILE = null;
-	private int ROWINDEX = 0;
-	private int COLINDEX = 0;
-	private boolean OUTPUT_GZIP = false;
-
 	/**
 	 * Creates a new instance of the TransposeMatrix script with a given input file
-	 * @param m TAB file to be scaled
-	 * @param o Output directory/file
-	 * @param r Starting row (zero-indexed)
-	 * @param c Starting column (zero-indexed)
-	 * @param z Output Gzip
-	 */
-	public TransposeMatrix(File matrix, File output, int row, int column, boolean gzOutput) {
-		MATRIX = matrix;
-		OUTFILE = output;
-		ROWINDEX = row;
-		COLINDEX = column;
-		OUTPUT_GZIP = gzOutput;
-	}
-
-	/**
-	 * Transposes the given matrix
+	 * 
+	 * @param MATRIX TAB file to be scaled
+	 * @param OUTFILE Output directory/file
+	 * @param ROWINDEX Starting row (zero-indexed)
+	 * @param COLINDEX Starting column (zero-indexed)
+	 * @param OUTPUT_GZIP Output Gzip
 	 * @throws IOException Invalid file or parameters
 	 */
-	public void run() throws IOException {
+	public static void transpose(File MATRIX, File OUTFILE, int ROWINDEX, int COLINDEX, boolean OUTPUT_GZIP) throws IOException, ScriptManagerException {
 
 		System.err.println(getTimeStamp());
 		System.err.println("Processing file:\t" + MATRIX.getName());
@@ -54,7 +37,7 @@ public class TransposeMatrix {
 
 		try {
 			// Parse, transpose, and output tab-delimited matrix on the fly
-			BufferedReader br = makeReader();
+			BufferedReader br = makeReader(MATRIX);
 			PrintStream OUT = makePrintStream(OUTFILE, OUTPUT_GZIP);
 			//Determine number of rows and columns
 			int numCols = br.readLine().split("\t").length;
@@ -63,7 +46,7 @@ public class TransposeMatrix {
 				numRows++;
 			}
 			//Skip rows less than ROWINDEX
-			br = makeReader();
+			br = makeReader(MATRIX);
 			int row;
 			for (row = 0; row < ROWINDEX; row++){
 				br.readLine();
@@ -94,8 +77,8 @@ public class TransposeMatrix {
 				OUT.println(String.join("\t", newMatrix[row]));
 			}
 			OUT.close();
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, MATRIX.getName() + " contains non-numbers in indexes selected!!!");
+		} catch (ArrayIndexOutOfBoundsException nfe) {
+			throw new ScriptManagerException(MATRIX.getName() + " contains inconsistent columns per row!!!");
 		}
 	}
 
@@ -105,7 +88,7 @@ public class TransposeMatrix {
 		return time;
 	}
 
-	private BufferedReader makeReader() throws IOException{
+	private static BufferedReader makeReader(File MATRIX) throws IOException{
 		if(GZipUtilities.isGZipped(MATRIX)) {
 			return new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(MATRIX)), "UTF-8"));
 		} else {
@@ -113,7 +96,7 @@ public class TransposeMatrix {
 		}
 	}
 
-	private PrintStream makePrintStream(File o, boolean gzip) throws IOException{
+	private static PrintStream makePrintStream(File o, boolean gzip) throws IOException{
 		if(gzip){
 			return new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(o)))); 
 		} else {

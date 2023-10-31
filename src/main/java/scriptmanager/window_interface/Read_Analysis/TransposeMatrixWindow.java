@@ -37,6 +37,7 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.util.GZipUtilities;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.CustomExceptions.ScriptManagerException;
 import scriptmanager.scripts.Read_Analysis.TransposeMatrix;
 
 /**
@@ -85,34 +86,27 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 					LogItem old_li = null;
 					
 					for (int x = 0; x < TABFiles.size(); x++) {
-						String OUTPUT;
 						File XTAB = TABFiles.get(x);
-						if (GZipUtilities.isGZipped(XTAB)){
-							OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_TRANSPOSE."
-									+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
-						}
-						else {
-							OUTPUT = ExtensionFileFilter.stripExtension(XTAB) + "_TRANSPOSE."
-									+ ExtensionFileFilter.getExtension(XTAB);
-						}
+						// Construct output filename
+						String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_TRANSPOSE." + ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
+						NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
+						File OUT_FILEPATH = new File(NAME);
 						if (OUT_DIR != null) {
-							OUTPUT = OUT_DIR + File.separator + OUTPUT + (chckbxGzipOutput.isSelected()? ".gz" : "");
+							OUT_FILEPATH = new File(OUT_DIR + File.separator + NAME);
 						}
 						// Initialize LogItem
-						String command = TransposeMatrixCLI.getCLIcommand(XTAB, new File(OUTPUT),
-											Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
+						String command = TransposeMatrixCLI.getCLIcommand(XTAB, OUT_FILEPATH,
+								Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
-						// Execute Script and update progress
+						// Execute script
+						TransposeMatrix.transpose(XTAB, OUT_FILEPATH,
+								Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));
 						new_li.setStatus(0);
 						old_li = new_li;
-
-						TransposeMatrix transpose = new TransposeMatrix(XTAB, new File(OUTPUT),
-								Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
-						transpose.run();
-
+						// Update progress
 						int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
@@ -122,7 +116,11 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 				}
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Invalid Scaling Factor!!! Must be number");
+			} catch (ScriptManagerException sme) {
+				sme.printStackTrace();
+				JOptionPane.showMessageDialog(null, sme.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 
