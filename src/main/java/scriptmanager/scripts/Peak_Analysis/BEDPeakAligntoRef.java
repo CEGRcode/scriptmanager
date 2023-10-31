@@ -17,21 +17,21 @@ import java.util.List;
 import java.util.Map;
 
 public class BEDPeakAligntoRef {
-	private String peakPath = null;
-	private String refPath = null;
-	private PrintStream OUT = null;
+	private File refPath = null;
+	private File peakPath = null;
+	private File OUT_FILEPATH = null;
 	private PrintStream PS = null;
-	
-	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps) throws IOException {
-		refPath = ref.getCanonicalPath();
-		peakPath = peak.getCanonicalPath();
+
+	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps) {
+		refPath = ref;
+		peakPath = peak;
+		OUT_FILEPATH = output;
 		PS = ps;
-		
-		try {OUT = new PrintStream(output); }
-		catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
-		
-	public void run() throws IOException, InterruptedException {
+
+	public void run() throws FileNotFoundException, IOException, InterruptedException {
+		PrintStream OUT = new PrintStream(OUT_FILEPATH);
+
 		printPS("Mapping: " + peakPath + " to " + refPath);
 		printPS("Starting: " + getTimeStamp());
 		
@@ -48,9 +48,7 @@ public class BEDPeakAligntoRef {
 			if(!peakMap.containsKey(key)) {
 				peakMap.put(key, new ArrayList<String>());
 				peakMap.get(key).add(line);
-			}
-			else
-			{
+			} else {
 				peakMap.get(key).add(line + "\t");
 			}
 		}
@@ -59,56 +57,64 @@ public class BEDPeakAligntoRef {
 	
 //============
 		inputStream = new FileInputStream(refPath);
-	    buff = new BufferedReader(new InputStreamReader(inputStream), 100);
-	    
-	    for (String line; (line = buff.readLine()) != null; ) {
-		    	String[] str = line.split("\t");
-		    	String chr = str[0];
+		buff = new BufferedReader(new InputStreamReader(inputStream), 100);
+
+		for (String line; (line = buff.readLine()) != null;) {
+			String[] str = line.split("\t");
+			String chr = str[0];
 			String[] peakLine;
 			int cdtLength = (Integer.parseInt(str[2])) - (Integer.parseInt(str[1]));
 			int cdtArr[] = new int[cdtLength];
-			if(peakMap.containsKey(chr))
-			{
-				for(int i = 0; i < peakMap.get(chr).size(); i++)
-				{
-					peakLine = peakMap.get(chr).get(i).split("\t");	
-					if(Integer.parseInt(peakLine[1]) <= Integer.parseInt(str[2]) && Integer.parseInt(peakLine[1]) >= Integer.parseInt(str[1])) {
+			if (peakMap.containsKey(chr)) {
+				for (int i = 0; i < peakMap.get(chr).size(); i++) {
+					peakLine = peakMap.get(chr).get(i).split("\t");
+					if (Integer.parseInt(peakLine[1]) <= Integer.parseInt(str[2]) && Integer.parseInt(peakLine[1]) >= Integer.parseInt(str[1])) {
 						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
 						int STOP = START + (Integer.parseInt(peakLine[2]) - Integer.parseInt(peakLine[1]));
 						for(int x = START; x <= STOP; x++) {
 	    					if(x >= 0 && x < cdtLength) { cdtArr[x]++; }
-	    					}
 						}
-					else if(Integer.parseInt(peakLine[2]) >= Integer.parseInt(str[1]) && Integer.parseInt(peakLine[2]) <= Integer.parseInt(str[2]))
-					{
+					} else if (Integer.parseInt(peakLine[2]) >= Integer.parseInt(str[1]) && Integer.parseInt(peakLine[2]) <= Integer.parseInt(str[2])) {
 						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
 						int STOP = START + (Integer.parseInt(peakLine[2]) - Integer.parseInt(peakLine[1]));
-						for(int c = START; c <= STOP; c++) {
-							if(c >= 0 && c < cdtLength) { cdtArr[c]++; }
+						for (int c = START; c <= STOP; c++) {
+							if (c >= 0 && c < cdtLength) {
+								cdtArr[c]++;
 							}
 						}
 					}
+				}
 			}
-			
-			if(counter == 0) {
+			if (counter == 0) {
 				OUT.print("YORF" + "\t" + "NAME");
-				for(int j = 0; j < cdtLength; j++) { OUT.print("\t" + j); }
-				OUT.print("\n");}
+				for (int j = 0; j < cdtLength; j++) {
+					OUT.print("\t" + j);
+				}
+				OUT.print("\n");
+			}
 			OUT.print(str[3] + "\t" + str[3]);
-			if(str[5].equalsIgnoreCase("+")) { for(int i = 0; i < cdtLength; i++) { OUT.print("\t" + cdtArr[i]); } }
-			else { for(int j = cdtLength-1; j >= 0; j--) { OUT.print("\t" + cdtArr[j]); } }
+			if (str[5].equalsIgnoreCase("+")) {
+				for (int i = 0; i < cdtLength; i++) {
+					OUT.print("\t" + cdtArr[i]);
+				}
+			} else {
+				for (int j = cdtLength - 1; j >= 0; j--) {
+					OUT.print("\t" + cdtArr[j]);
+				}
+			}
 			OUT.print("\n");
 			counter++;
 			
 			if(counter % 1000 == 0) {
 				printPS("Reference rows processed: " + counter);
 			}
-	    }
-	    buff.close();
-	    inputStream.close();
-	    
+		}
+		buff.close();
+		inputStream.close();
+		OUT.close();
+		// Print update
 		printPS("Completing: " + getTimeStamp());
-	    }
+	}
 
 	private static String getTimeStamp() {
 		Date date= new Date();

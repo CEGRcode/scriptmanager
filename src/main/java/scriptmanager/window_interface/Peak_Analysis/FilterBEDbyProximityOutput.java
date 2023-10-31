@@ -15,17 +15,18 @@ import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
+import scriptmanager.util.ExtensionFileFilter;
 
 @SuppressWarnings({"serial"})
 public class FilterBEDbyProximityOutput extends JFrame{
 	
 	private int CUTOFF;
 	private File INPUT;
-	private String OUTBASE = null;
+	private File OUT_DIR = null;
 	
 	private JTextArea textArea;
 	
-	public FilterBEDbyProximityOutput(File input, int cutoff, File output) throws IOException {
+	public FilterBEDbyProximityOutput(File input, File output, int cutoff) {
 		setTitle("BED File Filter Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -39,32 +40,31 @@ public class FilterBEDbyProximityOutput extends JFrame{
 		
 		CUTOFF = cutoff;
 		INPUT = input;
-		
-		String INPUTNAME = input.getName();
-		if(output!=null){
-			OUTBASE = output.getCanonicalPath() + File.separator + INPUTNAME.substring(0, INPUTNAME.lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
-		}else{
-			OUTBASE = INPUTNAME.substring(0, INPUTNAME.lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
-		}
+		OUT_DIR = output;
 	}
 	
-	public void run() throws IOException, InterruptedException
-	{
-		LogItem old_li = new LogItem("");
+	public void run() throws IOException, InterruptedException {
+		// Construct output basename
+		String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(INPUT) + "_" + Integer.toString(CUTOFF) + "bp";
+		File OUT_BASENAME = new File(NAME);
+		if (OUT_DIR != null) {
+			OUT_BASENAME = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
+		}
 		// Initialize LogItem
-		String command = FilterBEDbyProximityCLI.getCLIcommand(INPUT, OUTBASE, CUTOFF);
-		LogItem new_li = new LogItem(command);
-		firePropertyChange("log", old_li, new_li);
-		// Execute script
+		String command = FilterBEDbyProximityCLI.getCLIcommand(INPUT, OUT_BASENAME, CUTOFF);
+		LogItem li = new LogItem(command);
+		firePropertyChange("log", null, li);
+		// Set-up display stream
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(INPUT, CUTOFF, OUTBASE, PS);
+		// Execute script
+		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(INPUT, OUT_BASENAME, CUTOFF, PS);
 		script_obj.run();
 		// Update log item
-		new_li.setStopTime(new Timestamp(new Date().getTime()));
-		new_li.setStatus(0);
-		old_li = new_li;
+		li.setStopTime(new Timestamp(new Date().getTime()));
+		li.setStatus(0);
+		firePropertyChange("log", li, null);
+		// wait before disposing
 		Thread.sleep(1000);
 		dispose();
-		firePropertyChange("log", old_li, null);
 	}
 }

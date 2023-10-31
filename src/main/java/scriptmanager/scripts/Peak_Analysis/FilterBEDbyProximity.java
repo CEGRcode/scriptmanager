@@ -15,35 +15,34 @@ import java.util.Date;
 import java.util.List;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.util.ExtensionFileFilter;
 
 public class FilterBEDbyProximity{
 	
+	private File INPUT;
+	private File OUT_BASENAME = null;
 	private int CUTOFF;
-	private InputStream inputStream;
-	private String INPUTNAME = null;
-	private PrintStream OUT_Filter = null;
-	private PrintStream OUT_Cluster = null;
 	private PrintStream PS = null;
 	
-	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps) throws IOException {
+	public FilterBEDbyProximity(File input, File output, int cutoff, PrintStream ps) {
+		INPUT = input;
+		OUT_BASENAME = output;
 		CUTOFF = cutoff;
 		PS = ps;
-		inputStream = new FileInputStream(input);
-		INPUTNAME = input.getName();
-		try{
-			if(outputBase == null) {
-				outputBase = INPUTNAME.substring(0, input.getName().lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
-			}
-			OUT_Filter = new PrintStream(new File(outputBase + "-FILTER" + ".bed")); 
-			OUT_Cluster = new PrintStream(new File(outputBase + "-CLUSTER" + ".bed"));
-		}catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
 	
-	public void run() throws IOException, InterruptedException
-	{
-		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTNAME);
+	public void run() throws FileNotFoundException, IOException, InterruptedException {
+		// Construct output name
+		if(OUT_BASENAME == null) {
+			OUT_BASENAME = new File(ExtensionFileFilter.stripExtension(INPUT) + "_" + Integer.toString(CUTOFF) + "bp");
+		}
+		PrintStream OUT_Filter = new PrintStream(new File(OUT_BASENAME.getAbsoluteFile() + "-FILTER" + ".bed")); 
+		PrintStream OUT_Cluster = new PrintStream(new File(OUT_BASENAME.getAbsoluteFile() + "-CLUSTER" + ".bed"));
+		// Print update
+		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUT.getName());
 		printPS("Starting: " + getTimeStamp());
-		
+		// Open input file as stream
+		InputStream inputStream = new FileInputStream(INPUT);
 	    BufferedReader lines = new BufferedReader(new InputStreamReader(inputStream), 100);
 	    List<BEDCoord> bedArray = new ArrayList<BEDCoord>();
 	    List<Integer> failArray = new ArrayList<Integer>();
@@ -111,10 +110,11 @@ public class FilterBEDbyProximity{
 				OUT_Cluster.println(bedArray.get(x).toString()); 
 			}
 		}
+		// close streams
+		inputStream.close();
 		OUT_Filter.close();
 		OUT_Cluster.close();
-		
-		inputStream.close();
+		// Print update
 		printPS("Completing: " + getTimeStamp());
 	}
 

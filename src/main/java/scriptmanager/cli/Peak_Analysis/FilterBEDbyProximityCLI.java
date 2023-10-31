@@ -28,7 +28,7 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 	private File bedFile;
 	
 	@Option(names = {"-o", "--output"}, description = "Specify basename for output files (default = <bedFilename>_<exclusionNum>bp)")
-	private String outputBasename = null;
+	private File outputBasename = null;
 	@Option(names = {"-e", "--exclusion"}, description = "exclusion distance in bp (default=100)")
 	private int exclusion = 100;
 	
@@ -42,7 +42,7 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(bedFile, exclusion, outputBasename, null);
+		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(bedFile, outputBasename, exclusion, null);
 		script_obj.run();
 		
 		System.err.println( "Filter Complete." );
@@ -62,17 +62,16 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
 		}
 		//set default output filename
-		if(outputBasename==null){
-			outputBasename = ExtensionFileFilter.stripExtension(bedFile) + "_" + Integer.toString(exclusion) + "bp";
+		if (outputBasename==null) {
+			outputBasename = new File(ExtensionFileFilter.stripExtension(bedFile) + "_" + Integer.toString(exclusion) + "bp");
 		//check output filename is valid
 		}else{
 			//no check ext
 			//check directory
-			File tmpOut = new File(outputBasename);
-			if(tmpOut.getParent()==null){
+			if (outputBasename.getParent()==null){
 	// 			System.err.println("default to current directory");
-			} else if(!new File(tmpOut.getParent()).exists()){
-				r += "(!)Check output directory exists: " + tmpOut.getParent() + "\n";
+			} else if(! new File(outputBasename.getParent()).exists()){
+				r += "(!)Check output directory exists: " + outputBasename.getParent() + "\n";
 			}
 		}
 		
@@ -82,12 +81,20 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 		}
 		
 		return(r);
-	
 	}
-	public static String getCLIcommand(File input, String outputBasename, int exclusion) {
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input the BED file to filter using an exclusion distance
+	 * @param outputBasename the basename for output BED-formatted *-FILTER.bed and *-CLUSTER.bed files
+	 * @param exclusion the number of bp distance to filter by/size of exclusion zone
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output, int exclusion) {
 		String command = "java -jar $SCRIPTMANAGER peak-analysis filter-bed";
 		command += " " + input.getAbsolutePath();
-		command += " -o " + outputBasename;
+		command += " -o " + output.getAbsolutePath();
 		command += " -e " + exclusion;
 		return command;
 	}

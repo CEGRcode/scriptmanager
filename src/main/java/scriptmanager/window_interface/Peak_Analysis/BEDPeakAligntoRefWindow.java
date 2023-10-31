@@ -11,7 +11,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -27,6 +29,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
@@ -39,7 +43,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	final DefaultListModel<String> refList;
 	ArrayList<File> PeakFiles = new ArrayList<File>();
 	ArrayList<File> RefFiles = new ArrayList<File>();
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	
 	private JButton btnLoadPeakBed;
 	private JButton btnRemoveBedFile;
@@ -55,38 +59,43 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException, InterruptedException {
+        public Void doInBackground() {
         	try {
         		if(PeakFiles.size() < 1 || RefFiles.size() < 1) {
         			JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
         		} else {
         			setProgress(0);
-        			BEDPeakAligntoRefOutput align;
         			int counter = 0;
-
-    				for(int r = 0; r < RefFiles.size(); r++)
-    				{
-    					for(int p=0; p < PeakFiles.size(); p++)
-    					{
-							align = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH);
-							align.addPropertyChangeListener("log", new PropertyChangeListener() {
+					for (int r = 0; r < RefFiles.size(); r++) {
+						for (int p=0; p < PeakFiles.size(); p++) {
+							// Execute script
+							BEDPeakAligntoRefOutput output_obj = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUT_DIR);
+							output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 								public void propertyChange(PropertyChangeEvent evt) {
 									firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 								}
 							});
-							align.setVisible(true);
-							align.run();
+							output_obj.setVisible(true);
+							output_obj.run();
+							// Update progress
 							counter++;
-						int percentComplete = (int)(((double)(counter) / (PeakFiles.size()*RefFiles.size())) * 100);
-					    setProgress(percentComplete);	
-    					}	
-    			}
-    				JOptionPane.showMessageDialog(null, "Alignment Complete");
-        		}
-        	} catch(NumberFormatException nfe){
+							int percentComplete = (int) (((double) (counter) / (PeakFiles.size() * RefFiles.size())) * 100);
+							setProgress(percentComplete);
+						}
+					}
+					setProgress(100);
+					JOptionPane.showMessageDialog(null, "Alignment Complete");
+				}
+			} catch (NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (InterruptedException ie) {
+				JOptionPane.showMessageDialog(null, ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			}
-        	return null;
+			setProgress(100);
+			return null;
         }
         
         public void done() {
@@ -200,13 +209,13 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -175, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, scrollPane_Ref);
 		btnOutputDirectory.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
-    			}
-        	}
-        });
+			public void actionPerformed(ActionEvent e) {
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				}
+			}
+		});
 		contentPane.add(btnOutputDirectory);
 		
 		lblCurrentOutput = new JLabel("Current Output:");
@@ -238,29 +247,30 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		btnCalculate.setActionCommand("start");
 		btnCalculate.addActionListener(this);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
-    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
 	}
-	
+
 	/**
-     * Invoked when task's progress property changes.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        } else if ("log" == evt.getPropertyName()) {
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
-    }
-	
+	}
+
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

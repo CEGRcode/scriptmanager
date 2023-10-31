@@ -31,6 +31,8 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
@@ -52,57 +54,61 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	private String[] genomeBuilds = { "sacCer3", "sacCer3_cegr", "hg38", "hg38_contigs", "hg19", "hg19_contigs", "mm10" };
 	private JComboBox<String> cmbGenome;
 
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
-	        	try {
-	        		if(txtSites.getText().isEmpty()) {
-	    				JOptionPane.showMessageDialog(null, "No Sites Entered!!!");
-	        		} else if(Integer.parseInt(txtSites.getText()) < 0) {
-	    				JOptionPane.showMessageDialog(null, "Invalid Number of Sites Entered!!!");
-	        		} else if(txtSize.getText().isEmpty()) {
-	    				JOptionPane.showMessageDialog(null, "No Window Size Entered!!!");
-	        		} else if(Integer.parseInt(txtSize.getText()) < 1) {
-	    				JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
-	        		} else {
-						boolean bedStatus = rdbtnBed.isSelected();
-						String randomName = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSites.getText()) + "SITES_" + Integer.parseInt(txtSize.getText()) + "bp";
-						if(bedStatus){ randomName += ".bed"; }
-						else{ randomName += ".gff"; }
-						File OUTFILE;
-						if(OUTPUT_PATH != null){
-							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
-						}else{
-							OUTFILE = new File(randomName);
+		public Void doInBackground() {
+			try {
+				if(txtSites.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "No Sites Entered!!!");
+				} else if(Integer.parseInt(txtSites.getText()) < 0) {
+					JOptionPane.showMessageDialog(null, "Invalid Number of Sites Entered!!!");
+				} else if(txtSize.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "No Window Size Entered!!!");
+				} else if(Integer.parseInt(txtSize.getText()) < 1) {
+					JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
+				} else {
+					// Construct output filename
+					String NAME = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSites.getText()) + "SITES_" + Integer.parseInt(txtSize.getText()) + "bp";
+					NAME += rdbtnBed.isSelected() ? ".bed" : ".gff";
+					File OUT_FILEPATH = new File(NAME);
+						if (OUT_DIR != null) {
+							OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 						}
 						// Initialize LogItem
-						String command = RandomCoordinateCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUTFILE, bedStatus, Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()));
-						LogItem new_li = new LogItem(command);
-						firePropertyChange("log", null, new_li);
-						// Execute Script and update progress
-						RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
-	        			JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
+					String command = RandomCoordinateCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()));
+					LogItem li = new LogItem(command);
+					firePropertyChange("log", null, li);
+					// Execute script
+					RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()));
 						// Update log item
-						new_li.setStopTime(new Timestamp(new Date().getTime()));
-						new_li.setStatus(0);
-						firePropertyChange("log", new_li, null);
-	        		}
-	        	} catch(NumberFormatException nfe){
-					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+					li.setStopTime(new Timestamp(new Date().getTime()));
+					li.setStatus(0);
+					firePropertyChange("log", li, null);
+					// Pop-up completion
+					JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
+				}
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(null, iae.getMessage());
+			} catch (OptionException oe) {
+				oe.printStackTrace();
+				JOptionPane.showMessageDialog(null, oe.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			}
-	        	return null;
+			return null;
         }
         
         public void done() {
-        	massXable(contentPane, true);
-            setCursor(null); //turn off the wait cursor
-        }
+			massXable(contentPane, true);
+			setCursor(null); //turn off the wait cursor
+		}
 	}
 	
 	public RandomCoordinateWindow() {
@@ -152,9 +158,9 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -80, SpringLayout.EAST, contentPane);
 		btnOutputDirectory.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+        		OUT_DIR = FileSelection.getOutputDir(fc);
+    			if(OUT_DIR != null) {
+    				lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
     			}
         	}
         });
@@ -216,18 +222,22 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
 	}
 
+	/**
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
-	
+
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

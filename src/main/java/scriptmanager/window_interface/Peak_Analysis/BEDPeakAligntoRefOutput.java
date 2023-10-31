@@ -47,21 +47,21 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	}
 		
 	public void run() throws IOException, InterruptedException {
-		LogItem old_li = new LogItem("");
 		// Initialize LogItem
-		String command = BEDPeakAligntoRefCLI.getCLIcommand(PEAK, REF, OUTFILE);
-		LogItem new_li = new LogItem(command);
-		firePropertyChange("log", old_li, new_li);
-		// Execute script
+		String command = BEDPeakAligntoRefCLI.getCLIcommand(REF, PEAK, OUTFILE);
+		LogItem li = new LogItem(command);
+		firePropertyChange("log", null, li);
+		// Set-up display stream
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
+		// Execute script
 		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUTFILE, PS);
 		script_obj.run();
 		// Update log item
-		new_li.setStopTime(new Timestamp(new Date().getTime()));
-		new_li.setStatus(0);
-		old_li = new_li;
+		li.setStopTime(new Timestamp(new Date().getTime()));
+		li.setStatus(0);
+		firePropertyChange("log", li, null);
+		// wait before disposing
 		Thread.sleep(2000);
 		dispose();
-		firePropertyChange("log", old_li, null);
 	}
 }

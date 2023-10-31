@@ -89,7 +89,15 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 		return(r);
 	}
 
-	public static String getCLIcommand(File peakBED, File refBED, File output) {
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param refBED the reference BED windows to align to
+	 * @param peakBED the BED coordinate signal to mark the reference windows with
+	 * @param output the aligned output matrix file
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File refBED, File peakBED, File output) {
 		String command = "java -jar $SCRIPTMANAGER peak-analysis peak-align-ref";
 		command += " " + peakBED.getAbsolutePath();
 		command += " " + refBED.getAbsolutePath();

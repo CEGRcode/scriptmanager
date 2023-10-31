@@ -37,7 +37,7 @@ public class FilterBEDbyProximityWindow extends JFrame implements ActionListener
 	
 	final DefaultListModel<String> bedList;
 	ArrayList<File> BEDFiles = new ArrayList<File>();
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	
 	private JPanel contentPane;
 	private JTextField txtCutoff;
@@ -48,7 +48,7 @@ public Task task;
 	
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException, InterruptedException {
+        public Void doInBackground() {
         	try {
         		if(BEDFiles.size() < 1) {
         			JOptionPane.showMessageDialog(null, "No BED Files Selected!!!");
@@ -58,25 +58,32 @@ public Task task;
     				JOptionPane.showMessageDialog(null, "Invalid Cutoff Value Entered!!!");
         		} else {
         			setProgress(0);
-        			FilterBEDbyProximityOutput filter;
     				for(int gfile = 0; gfile < BEDFiles.size(); gfile++) {
-    					filter = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), Integer.parseInt(txtCutoff.getText()), OUTPUT_PATH);
-						filter.addPropertyChangeListener("log", new PropertyChangeListener() {
+						FilterBEDbyProximityOutput output_obj = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), OUT_DIR, Integer.parseInt(txtCutoff.getText()));
+						output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent evt) {
 								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 							}
 						});
-    					filter.setVisible(true);
-    					filter.run();
-        	        	int percentComplete = (int)(((double)(gfile + 1) / (BEDFiles.size())) * 100);
-        	        	setProgress(percentComplete);		
-    				}
+						output_obj.setVisible(true);
+						output_obj.run();
+						// Update progress
+						int percentComplete = (int) (((double) (gfile + 1) / (BEDFiles.size())) * 100);
+						setProgress(percentComplete);
+					}
+					setProgress(100);
     				JOptionPane.showMessageDialog(null, "Proximity Filter Complete");
         		}
-        	} catch(NumberFormatException nfe){
+			} catch(NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (InterruptedException ie) {
+				JOptionPane.showMessageDialog(null, ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			}
-        	return null;
+			setProgress(100);
+			return null;
         }
         
         public void done() {
@@ -160,13 +167,13 @@ public Task task;
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 150, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -150, SpringLayout.EAST, contentPane);
 		btnOutputDirectory.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
-    			}
-        	}
-        });
+			public void actionPerformed(ActionEvent e) {
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				}
+			}
+		});
 		contentPane.add(btnOutputDirectory);
 		
 		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
@@ -194,31 +201,34 @@ public Task task;
 		contentPane.add(progressBar);
 	}
 
-
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
-    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
 	}
-	
+
+	/**
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        } else if ("log" == evt.getPropertyName()) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
-    }
-	
+	}
+
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);
 			if(c instanceof Container) { massXable((Container)c, status); }
 		}
 	}
-	
+
 }
