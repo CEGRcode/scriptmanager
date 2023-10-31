@@ -44,7 +44,7 @@ public class TileGenomeCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		TileGenome.execute(genomeName, window, formatIsBed, output);
+		TileGenome.execute(genomeName, output, formatIsBed, window);
 		
 		System.err.println( "Genomic Tiling Complete." );
 		return(0);
@@ -80,5 +80,23 @@ public class TileGenomeCLI implements Callable<Integer> {
 		}
 		
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param genomeName the genome build to tile coordinates from
+	 * @param output the text file of the tiled coordinates
+	 * @param formatIsBed the format of the coordinate output (BED or GFF)
+	 * @param window the size of the tiles sampled
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(String genomeName, File output, boolean formatIsBed, int window) {
+		String command = "java -jar $SCRIPTMANAGER peak-analysis tile-genome";
+		command += " " + genomeName;
+		command += " -o " + output.getAbsolutePath();
+		command += formatIsBed ? "" : " --gff";
+		command += " -w " + window;
+		return command;
 	}
 }

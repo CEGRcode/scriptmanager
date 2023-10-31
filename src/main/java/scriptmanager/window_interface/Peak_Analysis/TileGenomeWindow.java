@@ -10,6 +10,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -27,6 +29,8 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.Peak_Analysis.TileGenomeCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
@@ -46,40 +50,50 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	private String[] genomeBuilds = { "sacCer3", "sacCer3_cegr", "hg38", "hg38_contigs", "hg19", "hg19_contigs", "mm10" };
 	private JComboBox<String> cmbGenome;
 
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
-	        	try {
-	        		if(txtSize.getText().isEmpty()) {
-	    				JOptionPane.showMessageDialog(null, "No Window Size Entered!!!");
-	        		} else if(Integer.parseInt(txtSize.getText()) < 1) {
-	    				JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
-	        		} else {
-	        			boolean bedStatus = rdbtnBed.isSelected();
-						String randomName = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp";
-						if(bedStatus){ randomName += ".bed"; }
-						else{ randomName += ".gff"; }
-						File OUTFILE;
-						if(OUTPUT_PATH != null){
-							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
-						}else{
-							OUTFILE = new File(randomName);
-						}
-						TileGenome.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
-	    				JOptionPane.showMessageDialog(null, "Genomic Tiling Complete");
-	        		}
-	        	} catch(NumberFormatException nfe){
-					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+		public Void doInBackground() {
+			try {
+				if(txtSize.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "No Window Size Entered!!!");
+				} else if(Integer.parseInt(txtSize.getText()) < 1) {
+					JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
+				} else {
+					// Construct output filename
+					String NAME = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp";
+					NAME += rdbtnBed.isSelected() ? ".bed" : ".gff";
+					File OUT_FILEPATH = new File(NAME);
+					if (OUT_DIR != null) {
+						OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
+					}
+					// Initialize LogItem
+					String command = TileGenomeCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()));
+					LogItem li = new LogItem(command);
+					firePropertyChange("log", null, li);
+					// Execute script
+					TileGenome.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()));
+					// Update log item
+					li.setStopTime(new Timestamp(new Date().getTime()));
+					li.setStatus(0);
+					firePropertyChange("log", li, null);
+					// Pop-up completion
+					JOptionPane.showMessageDialog(null, "Genomic Tiling Complete");
+				}
+			} catch(NumberFormatException nfe){
+				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (IllegalArgumentException iae) {
 				JOptionPane.showMessageDialog(null, iae.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			}
-	        	return null;
-        }
-        
+			return null;
+		}
+
         public void done() {
         	massXable(contentPane, true);
             setCursor(null); //turn off the wait cursor
@@ -118,13 +132,13 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 100, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -100, SpringLayout.EAST, contentPane);
 		btnOutputDirectory.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
-    			}
-        	}
-        });
+			public void actionPerformed(ActionEvent e) {
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				}
+			}
+		});
 		contentPane.add(btnOutputDirectory);
 		
 		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
@@ -182,16 +196,22 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
-	}
-	
-	public void propertyChange(PropertyChangeEvent evt) {
 
-    }
-	
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
+	}
+
+	/**
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
+	}
+
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);
