@@ -108,7 +108,7 @@ Others manipulate files to calculate normalization factors, normalize the data, 
 | [`scaling-factor`][scaling-factor] | [BAM][bam-format] | [TXT][txt-format] | Calculate the factor as either total tag normalization or normalization of ChIP-seq data with control. (PMID:22883957) |
 | [`scale-matrix`][scale-matrix] | \[[CDT][cdt-format]\|[TAB][mat-format]\] | [TAB][mat-format]\[..\] | Apply a user-specified scaling factor to tab-delimited matrix data. |
 | [`aggregate-data`][aggregate-data] | \[[CDT][cdt-format]\|[TAB][mat-format]\]\[..\] | [TAB][mat-format]\[..\] | The AggregateData tool is used to process a bunch of matrix files into one matrix file. |
-
+| [`transpose-matrix`][scale-matrix] | \[[CDT][cdt-format]\|[TAB][mat-format]\] | \[[CDT][cdt-format]\|[TAB][mat-format]\] | Interchange the rows and columns of a matrix |
 
 ## Sequence Analysis
 
@@ -165,6 +165,7 @@ _Sequence Analysis tools description_
 [scaling-factor]:read-analysis/scaling-factor.md
 [similarity-matrix]:read-analysis/similarity-matrix.md
 [tag-pileup]:read-analysis/tag-pileup.md
+[transpose-matrix]:read-analysis/transpose-matrix.md
 
 [dna-shape-bed]:sequence-analysis/dna-shape-bed.md
 [dna-shape-fasta]:sequence-analysis/dna-shape-fasta.md

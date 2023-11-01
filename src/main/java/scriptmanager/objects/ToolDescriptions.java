@@ -76,6 +76,8 @@ public class ToolDescriptions {
 	public static final String scaling_factor_description = "Calculate scaling factor as either total tag normalization or normalization of ChIP-seq data with control. (PMID: 22883957)";
 	public static final String scale_matrix_description = "Apply a user-specified scaling factor to tab-delimited matrix data.";
 	public static final String aggregate_data_description = "Compile data from tab-delimited file into matrix according to user-specified metric.";
+	public static final String transpose_matrix_description = "Interchange the rows and columns of tab-delimited matrix data.";
+
 
 	// Sequence Analysis
 	public static final String fasta_extract_description = "Generate FASTA file from indexed Genome FASTA file and BED file. Script will generate FAI index if not present in Genome FASTA folder.";
