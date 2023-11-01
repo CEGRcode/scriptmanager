@@ -71,10 +71,9 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
-			setProgress(0);
-
+		public Void doInBackground() {
 			try {
+				setProgress(0);
 				// Parse inputs from window fields
 				Color color = btnColor.getForeground();
 				int borderWidth = Integer.parseInt(txtBorderWidth.getText());
@@ -86,35 +85,38 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 				String ylabel = txtYLabel.getText();
 				int fontSize = Integer.parseInt(txtFontSize.getText());
 				// Make script object and run
-				LabelHeatMapOutput out_win = new LabelHeatMapOutput(txtFiles, OUT_DIR, color,
+				LabelHeatMapOutput output_obj = new LabelHeatMapOutput(txtFiles, OUT_DIR, color,
 						borderWidth, xTickHeight, fontSize,
 						llabel, mlabel, rlabel,
 						xlabel, ylabel);
-				out_win.run();
-				out_win.addPropertyChangeListener("heat", new PropertyChangeListener() {
+				output_obj.run();
+				output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 						int temp = (Integer) propertyChangeEvent.getNewValue();
 						int percentComplete = (int) (((double) (temp) / (txtFiles.size())) * 100);
 						setProgress(percentComplete);
 					}
 				});
-				out_win.addPropertyChangeListener("log", new PropertyChangeListener() {
+				output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent evt) {
 						firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 					}
 				});
-				out_win.setVisible(true);
-				out_win.run();
-
+				output_obj.setVisible(true);
+				output_obj.run();
+				// Update progress
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Generation Complete");
-				return null;
 			}
 			catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (OptionException oe) {
 				JOptionPane.showMessageDialog(null, oe.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 

@@ -35,7 +35,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 	public static Color MAXCOLOR = new Color(255, 0, 0);
 	public boolean transparentBackground = false;
 
-	protected static boolean OUTPUTSTATUS = false;
+	protected static boolean OUTPUT_STATUS = false;
 	protected static File OUT_DIR = null;
 
 	public static double COLOR_RATIO = 1;
@@ -64,25 +64,26 @@ public class TwoColorHeatMapOutput extends JFrame {
 		quantile = quant;
 
 		OUT_DIR = out_dir;
-		OUTPUTSTATUS = outstatus;
+		OUTPUT_STATUS = outstatus;
 	}
 
 	public void run() throws IOException, OptionException {
 		LogItem old_li = null;
 		for (int x = 0; x < SAMPLE.size(); x++) {
-			File OUTPUT = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(SAMPLE.get(x)) + "_" + scaleType + ".png");
+			// Construct output filename
+			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(SAMPLE.get(x)) + "_" + scaleType + ".png";
+			File OUT_FILEPATH = new File(NAME);
 			if (OUT_DIR != null) {
-				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT.getName());
+				OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 			}
-			old_li = new LogItem("");
 			// Initialize LogItem
 			String command = TwoColorHeatMapCLI.getCLIcommand(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
-					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, transparentBackground);
+					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUT_FILEPATH, transparentBackground);
 			LogItem new_li = new LogItem(command);
-			if (OUTPUTSTATUS) { firePropertyChange("log", old_li, new_li); }
+			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
 			TwoColorHeatMap script_object = new TwoColorHeatMap(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
-					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUTPUT, OUTPUTSTATUS, transparentBackground);
+					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUT_FILEPATH, OUTPUT_STATUS, transparentBackground);
 			script_object.run();
 			JLabel picLabel = script_object.getImg();
 			// Update log item
@@ -90,19 +91,11 @@ public class TwoColorHeatMapOutput extends JFrame {
 			new_li.setStatus(0);
 			old_li = new_li;
 			// Output image/error to GUI
-			newpane.addTab(OUTPUT.getName(), new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-			firePropertyChange("heat", x, x + 1);
+			newpane.addTab(OUT_FILEPATH.getName(), new JScrollPane(picLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+			// Update progress
+			firePropertyChange("progress", x, x + 1);
 		}
-		if (OUTPUTSTATUS) { firePropertyChange("log", old_li, null); }
-		System.out.println("Program Complete");
-		System.out.println(getTimeStamp());
+		// Update log at completion
+		if (OUTPUT_STATUS) { firePropertyChange("log", old_li, null); }
 	}
-
-	private static String getTimeStamp() {
-		Date date = new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
-	}
-
 }

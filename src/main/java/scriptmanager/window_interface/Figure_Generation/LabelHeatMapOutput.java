@@ -18,6 +18,7 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
+import scriptmanager.util.ExtensionFileFilter;
 
 @SuppressWarnings("serial")
 public class LabelHeatMapOutput extends JFrame {
@@ -70,24 +71,25 @@ public class LabelHeatMapOutput extends JFrame {
 	public void run() throws IOException, OptionException {
 		LogItem old_li = null;
 		for (int x = 0; x < SAMPLE.size(); x++) {
-			File OUTPUT = new File(SAMPLE.get(x).getName().split("\\.")[0] + "_label.svg");
+			// Construct output filename
+			String NAME = ExtensionFileFilter.stripExtension(SAMPLE.get(x)) + "_label.svg";
+			File OUT_FILEPATH = new File(NAME);
 			if (OUT_DIR != null) {
-				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT.getName());
+				OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 			}
-			old_li = new LogItem("");
+			// Set-up output log
 			JTextArea textArea = new JTextArea();
-			// Output image/error to GUI
-			newpane.addTab(OUTPUT.getName(), new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+			newpane.addTab(OUT_FILEPATH.getName(), new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 			PrintStream jtxtPrintStream = new PrintStream(new CustomOutputStream(textArea));
 			// Initialize LogItem
-			String command = LabelHeatMapCLI.getCLIcommand(SAMPLE.get(x), OUTPUT, color,
+			String command = LabelHeatMapCLI.getCLIcommand(SAMPLE.get(x), OUT_FILEPATH, color,
 					borderWidth, xTickHeight, fontSize,
 					xLeftLabel, xMidLabel, xRightLabel,
 					xLabel, yLabel);
 			LogItem new_li = new LogItem(command);
 			firePropertyChange("log", old_li, new_li);
 			// Execute script
-			LabelHeatMap script_obj = new LabelHeatMap(SAMPLE.get(x), OUTPUT, color,
+			LabelHeatMap script_obj = new LabelHeatMap(SAMPLE.get(x), OUT_FILEPATH, color,
 					borderWidth, xTickHeight, fontSize,
 					xLeftLabel, xMidLabel, xRightLabel,
 					xLabel, yLabel, jtxtPrintStream);
@@ -96,17 +98,10 @@ public class LabelHeatMapOutput extends JFrame {
 			new_li.setStopTime(new Timestamp(new Date().getTime()));
 			new_li.setStatus(0);
 			old_li = new_li;
-			firePropertyChange("heat", x, x + 1);
+			// Update progress
+			firePropertyChange("progress", x, x + 1);
 		}
+		// Update log at completion
 		firePropertyChange("log", old_li, null);
-		System.out.println("Program Complete");
-		System.out.println(getTimeStamp());
 	}
-
-	private static String getTimeStamp() {
-		Date date = new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
-	}
-
 }

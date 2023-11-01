@@ -163,6 +163,25 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 		return (r);
 	}
 
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input   the input matrix/CDT to generate a heatmap from
+	 * @param color   the max-value color to use
+	 * @param startR  the index of the starting row
+	 * @param startC  the index of the starting column
+	 * @param pHeight the height (in pixels) of the output image
+	 * @param pWidth  the width (in pixels) of the output image
+	 * @param scale   the image compression strategy (e.g. "treeview")
+	 * @param abs     the matrix value corresponding to the maximum color value
+	 *                (absolute strategy)
+	 * @param quant   the matrix percentile value corresponding to the maximum color
+	 *                value (quantile strategy)
+	 * @param output  the output PNG file
+	 * @param trans   whether or not to use transparent (vs white) min-value color
+	 * @return command line to execute with formatted inputs
+	 * @throws OptionException
+	 */
 	public static String getCLIcommand(File input, Color color, int startR, int startC, int pHeight, int pWidth, String scale,
 			double abs, double quant, File output, boolean trans) throws OptionException {
 		String command = "java -jar $SCRIPTMANAGER figure-generation heatmap";

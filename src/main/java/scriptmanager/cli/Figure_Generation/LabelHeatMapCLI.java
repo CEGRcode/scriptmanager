@@ -113,9 +113,26 @@ public class LabelHeatMapCLI implements Callable<Integer> {
 		return(r);
 	}
 
-	public static String getCLIcommand(File input, File output, Color color, int borderWidth,
-									   int xTickHeight, int fontSize, String llabel, String mlabel,
-									   String rlabel, String xlabel, String ylabel) {
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input       the PNG file to label
+	 * @param output      the output PNG file to generate
+	 * @param color       the color of SVG annotation and outline elements
+	 * @param borderWidth the thickness of the PNG border
+	 * @param xTickHeight the height of the tickmarks along the bottom of the PNG
+	 * @param fontSize    the size of font to use for annotations
+	 * @param llabel      the text labeling the left bound of the bottom axis
+	 * @param mlabel      the text labeling the middle of the bottom axis
+	 * @param rlabel      the text labeling the right bound of the bottom axis
+	 * @param xlabel      the bottom/x-axis text label
+	 * @param ylabel      the left/y-axis text label
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output, Color color,
+				int borderWidth, int xTickHeight, int fontSize,
+				String llabel, String mlabel, String rlabel,
+				String xlabel, String ylabel) {
 		String command = "java -jar $SCRIPTMANAGER figure-generation label-heatmap";
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
