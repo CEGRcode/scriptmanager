@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import org.jfree.chart.ChartPanel;
 
+import scriptmanager.cli.Figure_Generation.CompositePlotCLI;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
@@ -28,7 +29,7 @@ public class PlotCompositeOutput extends JFrame {
 
 	protected static ArrayList<File> SAMPLE = null;
 	protected static File OUT_DIR;
-	protected static boolean outputImg;
+	protected static boolean OUTPUT_STATUS;
 	
 	protected static boolean includeLegend = true;
 	protected static int pxHeight;
@@ -56,7 +57,7 @@ public class PlotCompositeOutput extends JFrame {
 
 		SAMPLE = in;
 		OUT_DIR = o_dir;
-		outputImg = o;
+		OUTPUT_STATUS = o;
 		includeLegend = l;
 		pxHeight = ph;
 		pxWidth = pw;
@@ -75,26 +76,25 @@ public class PlotCompositeOutput extends JFrame {
 	 * @throws IOException
 	 */
 	public void run() throws IOException {
+		LogItem old_li = null;
 		for (int x = 0; x < SAMPLE.size(); x++) {
-			try {
-				// Execute script
-				ChartPanel chart = new ChartPanel(PlotComposite.plotCompositeFile(SAMPLE.get(x), OUT_DIR, outputImg, SAMPLE.get(x).getName(), null, includeLegend, pxHeight, pxWidth));
-				chart.setPreferredSize(new java.awt.Dimension(500, 270));
-				// Output image/error to GUI
-				newpane.addTab(SAMPLE.get(x).getName(), chart);
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
-			}
-			
-			firePropertyChange("composite", x, x + 1);
+			// Initialize LogItem
+			String command = CompositePlotCLI.getCLIcommand(SAMPLE.get(x), OUT_DIR, SAMPLE.get(x).getName(), null, includeLegend, pxHeight, pxWidth);
+			LogItem new_li = new LogItem(command);
+			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
+			// Execute script
+			ChartPanel chart = new ChartPanel(PlotComposite.plotCompositeFile(SAMPLE.get(x), OUT_DIR, OUTPUT_STATUS, SAMPLE.get(x).getName(), null, includeLegend, pxHeight, pxWidth));
+			// Update log item
+			new_li.setStopTime(new Timestamp(new Date().getTime()));
+			new_li.setStatus(0);
+			old_li = new_li;
+			// Output image to display
+			chart.setPreferredSize(new java.awt.Dimension(500, 270));
+			newpane.addTab(SAMPLE.get(x).getName(), chart);
+			// Update progress
+			firePropertyChange("progress", x, x + 1);
 		}
-		System.out.println("Program Complete");
-		System.out.println(getTimeStamp());
-	}
-
-	private static String getTimeStamp() {
-		Date date = new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
+		// Update log at completion
+		if (OUTPUT_STATUS) { firePropertyChange("log", old_li, null); }
 	}
 }
