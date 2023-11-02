@@ -61,17 +61,19 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	        		} else if(Integer.parseInt(txtSize.getText()) < 1) {
 	    				JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
 	        		} else {
+						boolean GZIP = chckbxGzipOutput.isSelected();
 	        			boolean bedStatus = rdbtnBed.isSelected();
 						String randomName = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp";
 						if(bedStatus){ randomName += ".bed"; }
 						else{ randomName += ".gff"; }
+						if(GZIP){ randomName += ".gz"; }
 						File OUTFILE;
 						if(OUTPUT_PATH != null){
 							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
 						}else{
 							OUTFILE = new File(randomName);
 						}
-						TileGenome.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE, chckbxGzipOutput.isSelected());
+						TileGenome.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE, GZIP);
 	    				JOptionPane.showMessageDialog(null, "Genomic Tiling Complete");
 	        		}
 	        	} catch(NumberFormatException nfe){
@@ -179,7 +181,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		OutputFormat.add(rdbtnGff);
 		rdbtnBed.setSelected(true);
 
-		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 133, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);

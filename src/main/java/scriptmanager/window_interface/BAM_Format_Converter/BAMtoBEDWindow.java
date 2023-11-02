@@ -268,7 +268,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -250, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutputDirectory);
 
-		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnIndex);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -83, SpringLayout.WEST, btnOutputDirectory);
 		contentPane.add(chckbxGzipOutput);

@@ -190,7 +190,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnOutput);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);

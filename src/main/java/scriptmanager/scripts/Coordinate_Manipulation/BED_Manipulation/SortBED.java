@@ -12,7 +12,7 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This class contains scripts for sorting coordinate intervals (BED/GFF) by the tag counts of a CDT matrix file.
+ * Sort coordinate intervals (BED) by the tag counts of a CDT matrix file.
  *
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI
@@ -28,7 +28,7 @@ public class SortBED {
 	 * @param START_INDEX the start column to consider when summing values to sort
 	 * @param STOP_INDEX
 	 * @param gzOutput if true, the output files will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void sortBEDbyCDT(String outbase, File bed, File cdt, int START_INDEX, int STOP_INDEX, boolean gzOutput ) throws IOException {
 		ArrayList<BEDCoord> SORT = new ArrayList<BEDCoord>();
@@ -38,7 +38,7 @@ public class SortBED {
 		BufferedReader br = GZipUtilities.makeReader(cdt);
 		// Initialize line variable to loop through
 		String line = br.readLine();
-		while ((line = br.readLine()) != null) {
+		while (line != null) {
 			String[] ID = line.split("\t");
 			if (!ID[0].contains("YORF") && !ID[0].contains("NAME")) {
 				double count = 0;
@@ -50,6 +50,7 @@ public class SortBED {
 			} else {
 				CDTHeader = line;
 			}
+			line = br.readLine();
 		}
 		br.close();
 		// Sort by score
@@ -57,7 +58,8 @@ public class SortBED {
 
 		PrintStream OUT;
 		// Initialize output writer
-		OUT = GZipUtilities.makePrintStream(new File(outbase + ".cdt"), gzOutput);
+		String suffix = ".cdt" + (gzOutput? ".gz": "");
+		OUT = GZipUtilities.makePrintStream(new File(outbase + suffix), gzOutput);
 		// Output sorted CDT File
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {
@@ -73,7 +75,7 @@ public class SortBED {
 		br = GZipUtilities.makeReader(bed);
 		// Initialize line variable to loop through
 		line = br.readLine();
-		while ((line = br.readLine()) != null) {
+		while (line != null) {
 			String ID = line.split("\t")[3];
 			if (!ID.contains("YORF") && !ID.contains("NAME")) {
 				BEDFile.put(ID, line);
@@ -83,7 +85,8 @@ public class SortBED {
 		br.close();
 
 		// Initialize output writer
-		OUT = GZipUtilities.makePrintStream(new File(outbase + ".bed"), gzOutput);
+		suffix = ".bed" + (gzOutput? ".gz": "");
+		OUT = GZipUtilities.makePrintStream(new File(outbase + suffix), gzOutput);
 		// Output sorted BED File
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(BEDFile.get(SORT.get(x).getName()));

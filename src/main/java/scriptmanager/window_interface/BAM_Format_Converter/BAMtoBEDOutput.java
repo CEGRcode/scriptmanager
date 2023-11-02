@@ -61,6 +61,7 @@ public class BAMtoBEDOutput extends JFrame {
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
 		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
+		OUTPUT += (OUTPUT_GZIP? ".gz": "");
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}

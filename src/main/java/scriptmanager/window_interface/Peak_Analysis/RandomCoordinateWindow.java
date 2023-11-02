@@ -66,10 +66,12 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	        		} else if(Integer.parseInt(txtSize.getText()) < 1) {
 	    				JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
 	        		} else {
+						boolean GZIP = chckbxGzipOutput.isSelected();
 						boolean bedStatus = rdbtnBed.isSelected();
 						String randomName = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSites.getText()) + "SITES_" + Integer.parseInt(txtSize.getText()) + "bp";
 						if(bedStatus){ randomName += ".bed"; }
 						else{ randomName += ".gff"; }
+						if(GZIP){ randomName += ".gz"; }
 						File OUTFILE;
 						if(OUTPUT_PATH != null){
 							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
@@ -77,7 +79,7 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 							OUTFILE = new File(randomName);
 						}
 						RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), 
-													bedStatus, OUTFILE, chckbxGzipOutput.isSelected());
+													bedStatus, OUTFILE, GZIP);
 	        			JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
 	        		}
 	        	} catch(NumberFormatException nfe){
@@ -149,8 +151,13 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
         });
 		contentPane.add(btnOutputDirectory);
 
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 105, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
 		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, chckbxGzipOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
 		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -199,11 +206,6 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		OutputFormat.add(rdbtnBed);
 		OutputFormat.add(rdbtnGff);
 		rdbtnBed.setSelected(true);
-
-		chckbxGzipOutput = new JCheckBox("Output Gzip");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 105, SpringLayout.WEST, contentPane);
-		contentPane.add(chckbxGzipOutput);
 	}
 
 	@Override

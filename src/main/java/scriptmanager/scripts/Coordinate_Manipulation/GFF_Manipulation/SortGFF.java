@@ -40,7 +40,8 @@ public class SortGFF {
 		Collections.sort(SORT, GFFCoord.ScoreComparator);
 
 		// Output sorted CDT File
-		PrintStream OUT = GZipUtilities.makePrintStream(new File(outname + ".cdt"), gzOutput);
+		String SUFFIX = ".cdt" + (gzOutput? ".gz": "");
+		PrintStream OUT = GZipUtilities.makePrintStream(new File(outname + SUFFIX), gzOutput);
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(CDTFile.get(SORT.get(x).getName()));
@@ -64,7 +65,8 @@ public class SortGFF {
 		br.close();
 
 		// Output sorted GFF File
-		OUT = GZipUtilities.makePrintStream(new File(outname + ".gff"), gzOutput);
+		SUFFIX = ".gff" + (gzOutput? ".gz": "");
+		OUT = GZipUtilities.makePrintStream(new File(outname + SUFFIX), gzOutput);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(GFFFile.get(SORT.get(x).getName()));
 		}

@@ -235,9 +235,9 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		btnCalculate.setActionCommand("start");
 		btnCalculate.addActionListener(this);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 31, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 	}
 	

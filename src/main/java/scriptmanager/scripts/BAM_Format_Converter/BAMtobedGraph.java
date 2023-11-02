@@ -64,11 +64,12 @@ public class BAMtobedGraph {
 		// Open Output File
 		if (OUTBASENAME != null) {
 			try {
+				String SUFFIX = ".bedGraph" + (OUTPUT_GZIP? ".gz": "");
 				if (STRAND <= 2) {
-					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_forward.bedGraph"), OUTPUT_GZIP);
-					OUTR = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_reverse.bedGraph") , OUTPUT_GZIP);
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_forward" + SUFFIX), OUTPUT_GZIP);
+					OUTR = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_reverse" + SUFFIX) , OUTPUT_GZIP);
 				} else {
-					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_midpoint.bedGraph"), OUTPUT_GZIP);
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_midpoint" + SUFFIX), OUTPUT_GZIP);
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -109,9 +110,9 @@ public class BAMtobedGraph {
 			}
 
 			if (OUTPUT_GZIP){
-				printPS("Output Gzip: yes");
-			} else{
-				printPS("Output Gzip: no");
+				printPS("Output GZip: yes");
+			} else {
+				printPS("Output GZip: no");
 			}
 
 			// Print Header

@@ -167,7 +167,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		});
 		contentPane.add(btnOutput);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);

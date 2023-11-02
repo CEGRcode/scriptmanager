@@ -56,17 +56,18 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
+			boolean GZIP = chckbxGzipOutput.isSelected();
 			setProgress(0);
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed";
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed" + (GZIP? ".gz": "");
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
 
 				// Execute conversion and update progress
-				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF, chckbxGzipOutput.isSelected());
+				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF, GZIP);
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 				setProgress(percentComplete);
 			}
@@ -174,7 +175,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnOutput);
 		btnConvert.addActionListener(this);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 36, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);

@@ -79,6 +79,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				if (SIZE < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Expansion Size!!! Must be larger than 0 bp");
 				} else {
+					boolean GZIP = chckbxGzipOutput.isSelected();
 					setProgress(0);
 					for (int x = 0; x < BEDFiles.size(); x++) {
 						// Save current BED to temp variable
@@ -90,10 +91,10 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
 						// Add suffix
-						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
+						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed" + (GZIP? ".gz": "");
 
 						// Execute expansion and update progress
-						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
+						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), GZIP);
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
@@ -203,7 +204,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnOutput);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);

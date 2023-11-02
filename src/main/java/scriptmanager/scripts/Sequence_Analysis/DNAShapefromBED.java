@@ -396,17 +396,18 @@ public class DNAShapefromBED {
 		}
 		// Open Output File
 		try {
+			String SUFFIX = ".cdt" + (GZIP_OUTPUT? ".gz": "");
 			if (OUTPUT_TYPE[0]) {
-				OUT_M = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_MGW.cdt"), GZIP_OUTPUT);
+				OUT_M = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_MGW" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[1]) {
-				OUT_P = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_PropT.cdt"), GZIP_OUTPUT);
+				OUT_P = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_PropT" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[2]) {
-				OUT_H = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_HelT.cdt"), GZIP_OUTPUT);
+				OUT_H = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_HelT" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[3]) {
-				OUT_R = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_Roll.cdt"), GZIP_OUTPUT);
+				OUT_R = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_Roll" + SUFFIX), GZIP_OUTPUT);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

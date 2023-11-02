@@ -215,9 +215,9 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 		});
 		contentPane.add(btnOutput);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 
 		chckbxStrand = new JCheckBox("Force Strandedness");

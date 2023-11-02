@@ -182,9 +182,9 @@ public Task task;
 		btnFilter.setActionCommand("start");
 		btnFilter.addActionListener(this);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnFilter);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 25, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 		
 		progressBar = new JProgressBar();

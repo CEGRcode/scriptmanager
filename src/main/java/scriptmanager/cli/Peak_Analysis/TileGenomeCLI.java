@@ -30,7 +30,7 @@ public class TileGenomeCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be genome_tiles_<genomeName>_<window>bp.<ext>")
 	private File output = null;
 	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
-	private boolean zip = false;
+	private boolean gzOutput = false;
 	@Option(names = {"-f", "--gff"}, description = "file format output as GFF (default format as BED)")
 	private boolean formatIsBed = true;
 	@Option(names = {"-w", "--window"}, description = "window size in bp (default=200)")
@@ -46,7 +46,7 @@ public class TileGenomeCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		TileGenome.execute(genomeName, window, formatIsBed, output, zip);
+		TileGenome.execute(genomeName, window, formatIsBed, output, gzOutput);
 		
 		System.err.println( "Genomic Tiling Complete." );
 		return(0);

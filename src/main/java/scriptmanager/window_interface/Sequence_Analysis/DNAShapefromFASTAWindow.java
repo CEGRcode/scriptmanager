@@ -174,7 +174,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -165, SpringLayout.EAST, contentPane);
 		contentPane.add(btnCalculate);
 
-		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);

@@ -100,9 +100,9 @@ public class BAMtoGFF {
 			}
 			
 			if (OUTPUT_GZIP){
-				printPS("Output Gzip: yes");
-			} else{
-				printPS("Output Gzip: no");
+				printPS("Output GZip: yes");
+			} else {
+				printPS("Output GZip: no");
 			}
 
 			// Build&Print Header

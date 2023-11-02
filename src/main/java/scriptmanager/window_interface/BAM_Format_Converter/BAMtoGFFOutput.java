@@ -64,6 +64,7 @@ public class BAMtoGFFOutput extends JFrame {
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
+		OUTPUT = OUTPUT + (OUTPUT_GZIP? ".gz": "");
 
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

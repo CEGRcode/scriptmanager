@@ -108,6 +108,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							SCALE = Double.parseDouble(txtUniform.getText());
 						}
 
+						boolean GZIP = chckbxGzipOutput.isSelected();
 						for (int x = 0; x < TABFiles.size(); x++) {
 							if (rdbtnFilespecifcScaling.isSelected()) {
 								SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString());
@@ -120,9 +121,12 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							if (OUT_DIR != null) {
 								OUTPUT = OUT_DIR + File.separator + OUTPUT;
 							}
+							if (GZIP) {
+								OUTPUT += ".gz";
+							}
 
 							ScaleMatrix scale = new ScaleMatrix(XTAB, new File(OUTPUT), SCALE,
-									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
+									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), GZIP);
 							scale.run();
 
 							int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
@@ -261,7 +265,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		});
 		contentPane.add(btnOutput);
 
-		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
@@ -299,6 +303,13 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		txtUniform.setText("1");
 		contentPane.add(txtUniform);
 		txtUniform.setColumns(10);
+		txtUniform.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int x = 0; x < expTable.getRowCount(); x++) {
+					expTable.setValueAt(txtUniform.getText(), x, 1);
+				}
+        	}
+		});
 
 		JLabel lblRow = new JLabel("Start at Row:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblRow, 10, SpringLayout.SOUTH, lblUniformScalingFactor);

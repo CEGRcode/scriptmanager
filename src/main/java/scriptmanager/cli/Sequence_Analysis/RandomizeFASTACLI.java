@@ -34,7 +34,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	@Option(names = {"-s", "--seed"}, description = "specify an integer seed for reproducible outputs")
 	private Integer seed = null;
 	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
-	private boolean zip = false;
+	private boolean gzOutput = false;
 
 	@Override
 	public Integer call() throws Exception {
@@ -46,7 +46,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		RandomizeFASTA.randomizeFASTA(fastaFile, output, seed, zip);
+		RandomizeFASTA.randomizeFASTA(fastaFile, output, seed, gzOutput);
 
 		System.err.println("Randomization Complete.");
 		return (0);
@@ -73,7 +73,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 		}
 		// set default output filename
 		if (output == null) {
-			String NAME = ExtensionFileFilter.stripExtension(fastaFile) + "_RAND.fa";
+			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile) + "_RAND.fa";
 			output = new File(NAME);
 			// check output filename is valid
 		} else {
@@ -81,7 +81,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 			try {
 				if (!faFilter.accept(output)) {
 					r += "(!)Use FASTA extension for output filename. Try: "
-							+ ExtensionFileFilter.stripExtension(output) + ".fa\n";
+							+ ExtensionFileFilter.stripExtensionIgnoreGZ(output) + ".fa\n";
 				}
 			} catch (NullPointerException e) {
 				r += "(!)Output filename must have extension: use \".fa\" extension for output filename. Try: " + output

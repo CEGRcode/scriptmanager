@@ -36,11 +36,13 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		REF = ref;
 		PEAK = peak;
 		OUTPUT_GZIP = gzOutput;
-		
 		if(outpath != null) {
 			OUTFILE = new File(outpath.getCanonicalPath() + File.separator + PEAK.getName().split("\\.")[0] + "_" + REF.getName().split("\\.")[0] + "_Output.cdt");
 		} else {
 			OUTFILE = new File(PEAK.getName().split("\\.")[0] + "_" + REF.getName().split("\\.")[0] + "_Output.cdt");
+		}
+		if (OUTPUT_GZIP){
+			OUTFILE = new File(OUTFILE.getAbsolutePath() + ".gz");
 		}
 	}
 		

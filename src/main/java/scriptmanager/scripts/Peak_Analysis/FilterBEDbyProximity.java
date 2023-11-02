@@ -34,8 +34,8 @@ public class FilterBEDbyProximity{
 			if(outputBase == null) {
 				outputBase = ExtensionFileFilter.stripExtensionIgnoreGZ(input) + "_" + Integer.toString(CUTOFF) + "bp";
 			}
-			OUT_Filter = GZipUtilities.makePrintStream(new File(outputBase + "-FILTER" + ".bed"), gzOutput); 
-			OUT_Cluster = GZipUtilities.makePrintStream(new File(outputBase + "-CLUSTER" + ".bed"), gzOutput);
+			OUT_Filter = GZipUtilities.makePrintStream(new File(outputBase + "-FILTER.bed" + (gzOutput? ".gz": "")), gzOutput); 
+			OUT_Cluster = GZipUtilities.makePrintStream(new File(outputBase + "-CLUSTER.bed" + (gzOutput? ".gz": "")), gzOutput);
 		}catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
 	

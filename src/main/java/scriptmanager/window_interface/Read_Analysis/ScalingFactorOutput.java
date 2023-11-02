@@ -80,6 +80,7 @@ public class ScalingFactorOutput extends JFrame {
 			if(OUT_DIR != null) {
 				OUTBASE = OUT_DIR.getAbsolutePath() + File.separator + OUTBASE;
 			}
+			
 
 			ScalingFactor script_obj = new ScalingFactor(SAMPLE, BLACKLISTFile, CONTROL, OUTBASE, OUTPUTSTATUS,
 					scaleType, windowSize, minFraction);

@@ -246,9 +246,9 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 
 		btnConvert.addActionListener(this);
 
-		chckbxGzipOutput = new JCheckBox("Output Gzip");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 0, SpringLayout.WEST, chckbxMergeToOne);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 25, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 	}
 
