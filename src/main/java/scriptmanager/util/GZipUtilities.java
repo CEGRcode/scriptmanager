@@ -101,17 +101,10 @@ public final class GZipUtilities {
 	 * @throws IOException Invalid file
 	 */
 	public static PrintStream makePrintStream(File o, boolean gzip) throws IOException{
-		if (!ExtensionFileFilter.getExtension(o).equals("gz") && gzip){
-			o = new File(o.getCanonicalPath() + ".gz");
-		} 
-		else if (ExtensionFileFilter.getExtension(o).equals("gz") && !gzip) {
-			o = new File(ExtensionFileFilter.stripExtension(o)); 
-		}
 		if(gzip){
 			return new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(o)))); 
 		} else {
 			return new PrintStream(new BufferedOutputStream(new FileOutputStream(o)));
 		}
-
 	}
 }
