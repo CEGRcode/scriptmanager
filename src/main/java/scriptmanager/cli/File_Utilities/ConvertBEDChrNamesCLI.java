@@ -99,4 +99,24 @@ public class ConvertBEDChrNamesCLI implements Callable<Integer> {
 
 		return(r);
 	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param AtoR whether to do a arabic to roman numeral conversion (vs roman to arabic numeral)
+	 * @param input the BED file to convert chr names of
+	 * @param output the output GFF file of converted coords
+	 * @param useChrmt whether or not to use "chrmt"
+	 * @param gzOutput gzip output
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(boolean AtoR, File input, File output, boolean useChrmt, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER file-utilities convert-bed-genome";
+		command += AtoR ? "" : " --to-arabic" ;
+		command += " -o " + output.getAbsolutePath();
+		command += useChrmt ? " --chrmt" : "";
+		command += gzOutput ? " --gzip" : "";
+		command += " " + input.getAbsolutePath();
+		return command;
+	}
 }

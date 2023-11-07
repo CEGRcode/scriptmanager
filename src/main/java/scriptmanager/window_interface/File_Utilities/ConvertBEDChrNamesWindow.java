@@ -11,6 +11,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -31,8 +33,11 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
+import scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 @SuppressWarnings("serial")
@@ -61,36 +66,48 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
-			setProgress(0);
-			// apply to each fil in vector
-			for (int x = 0; x < BEDFiles.size(); x++) {
-				File XBED = BEDFiles.get(x);
-				// Set suffix format
-				String SUFFIX = rdbtnA2R.isSelected() ? "_toRoman.bed" : "_toArabic.bed";
-				SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
-				// Set output filepath with name and output directory
-				String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
-				// Strip second extension if input has ".gz" first extension
-				if (XBED.getName().endsWith(".bed.gz")) {
-					OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
+		public Void doInBackground() {
+			try {
+				setProgress(0);
+				LogItem old_li = null;
+				// apply to each fil in vector
+				for (int x = 0; x < BEDFiles.size(); x++) {
+					File XBED = BEDFiles.get(x);
+					// Construct output filename
+					String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED);
+					NAME += rdbtnA2R.isSelected() ? "_toRoman.bed" : "_toArabic.bed";
+					NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
+					File OUT_FILEPATH = new File(NAME);
+					if (OUT_DIR != null) {
+						OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
+					}
+					// Initialize LogItem
+					String command = ConvertBEDChrNamesCLI.getCLIcommand(rdbtnA2R.isSelected(), XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					// Execute script
+					if (rdbtnA2R.isSelected()) {
+						ConvertChrNames.convert_ArabictoRoman(XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					} else {
+						ConvertChrNames.convert_RomantoArabic(XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					}
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
+					// Update progress
+					int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
+					setProgress(percentComplete);
 				}
-				// Add user-selected directory
-				if (OUT_DIR != null) {
-					OUTPUT = OUT_DIR + File.separator + OUTPUT;
-				}
-				// Execute conversion and update progress
-				if (rdbtnA2R.isSelected()) {
-					ConvertChrNames.convert_ArabictoRoman(XBED, new File(OUTPUT + SUFFIX), chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
-				} else {
-					ConvertChrNames.convert_RomantoArabic(XBED, new File(OUTPUT + SUFFIX), chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
-				}
-				// Update progress bar
-				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
-				setProgress(percentComplete);
+				// Update log at completion
+				firePropertyChange("log", old_li, null);
+				setProgress(100);
+				JOptionPane.showMessageDialog(null, "Conversion Complete");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			}
 			setProgress(100);
-			JOptionPane.showMessageDialog(null, "Conversion Complete");
 			return null;
 		}
 
@@ -235,10 +252,13 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
