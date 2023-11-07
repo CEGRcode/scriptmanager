@@ -1736,6 +1736,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ThreeColorHeatMapWindow frame = new ThreeColorHeatMapWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
