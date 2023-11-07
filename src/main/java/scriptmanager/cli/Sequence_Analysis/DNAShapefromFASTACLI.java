@@ -36,7 +36,7 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	private String outputBasename = null;
 	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;
-	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
 	@ArgGroup(validate = false, heading = "Shape Options%n")

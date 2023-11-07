@@ -31,7 +31,7 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
-	@Option(names = {"-z", "--compression"}, description = "Output compressed BED file" )
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	
 	@Override

@@ -30,7 +30,7 @@ public class SearchMotifCLI implements Callable<Integer> {
 
 	@Option(names = { "-o", "--output" }, description = "Specify output filename (default = <motif>_<num>Mismatch_<fastaFilename>.bed)")
 	private File output = null;
-	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	@Option(names = { "-z", "--gzip" }, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	@Option(names = { "-m", "--motif" }, required = true, description = "the IUPAC motif to search for")
 	private String motif;

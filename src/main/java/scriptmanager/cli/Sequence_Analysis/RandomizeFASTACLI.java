@@ -33,7 +33,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	private File output;
 	@Option(names = {"-s", "--seed"}, description = "specify an integer seed for reproducible outputs")
 	private Integer seed = null;
-	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
 	@Override

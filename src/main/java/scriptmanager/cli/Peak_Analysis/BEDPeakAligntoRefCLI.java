@@ -31,7 +31,7 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peakBED>_<refBED>_Output.cdt)")
 	private File output = null;
-	@Option(names = {"-z", "--compression"}, description = "Output compressed BED file" )
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	
 	@Override

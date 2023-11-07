@@ -29,7 +29,7 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be random_coordinates_<genomeName>_<window>bp.<ext>")
 	private File output = null;
-	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	@Option(names = {"-f", "--gff"}, description = "file format output as GFF (default format as BED)")
 	private boolean formatIsBed = true;

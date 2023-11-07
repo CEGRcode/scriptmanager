@@ -29,7 +29,7 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify basename for output files (default = <bedFilename>_<exclusionNum>bp)")
 	private String outputBasename = null;
-	@Option(names = {"-z", "--compression"}, description = "Output compressed BED file" )
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	@Option(names = {"-e", "--exclusion"}, description = "exclusion distance in bp (default=100)")
 	private int exclusion = 100;

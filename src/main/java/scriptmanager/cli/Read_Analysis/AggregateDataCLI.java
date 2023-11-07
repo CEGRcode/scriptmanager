@@ -32,7 +32,7 @@ public class AggregateDataCLI implements Callable<Integer> {
 	private boolean fileList = false;
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <input1>_SCORES.out, <input2_SCORES.out, ... or ALL_SCORES.out if -m flag is used)")
 	private File output;
-	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	
 	@ArgGroup(exclusive = true, heading = "Aggregation Method%n")

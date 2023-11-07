@@ -36,7 +36,7 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	@Option(names = { "-o",
 			"--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
-	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;

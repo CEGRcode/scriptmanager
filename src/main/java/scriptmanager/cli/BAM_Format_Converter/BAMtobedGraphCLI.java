@@ -31,7 +31,7 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with _<strand>.bedgraph ext)" )
 	private String outputBasename = null;
 
-	@Option(names = {"-z", "--compression"}, description = "Output compressed bedGraph file" )
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	
 	//Read

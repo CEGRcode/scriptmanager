@@ -29,7 +29,7 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <matrixFilename>_SCALE.tab)")
 	private File output = null;
-	@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	@Option(names = {"-s", "--scaling-factor"}, description = "scaling factor (default=1)")
 	private double scale = 1;
