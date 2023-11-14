@@ -5,7 +5,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
-
 import java.io.File;
 import java.io.PrintStream;
 
@@ -30,15 +29,31 @@ public class MD5ChecksumCLI implements Callable<Integer> {
 	private File input;
 
 	@Option(names = {"-o", "--output"}, description = "specify output filepath")
-	private File output = new File("md5checksum.txt");
+	private File output = null;
 	
 	@Override
 	public Integer call() throws Exception {
 		String md5hash = MD5Checksum.calculateMD5(input.getAbsolutePath());
-		PrintStream OUT = new PrintStream( output );
+		PrintStream OUT = System.out;
+		if (output != null) {
+			OUT = new PrintStream( output );
+		}
 		OUT.println("MD5 (" + input.getName() + ") = " + md5hash);
 		OUT.close();
 		return(0);
 	}
-}
 
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input the file to get checksums from
+	 * @param output the file checksums are written to
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output) {
+		String command = "java -jar $SCRIPTMANAGER file-utilities md5checksum";
+		command += " " + input.getAbsolutePath();
+		command += " >> " + output;
+		return command;
+	}
+}
