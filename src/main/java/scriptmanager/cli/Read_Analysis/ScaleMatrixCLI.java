@@ -85,4 +85,24 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 		
 		return(r);
 	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input         the tab-delimited matrix file to scale
+	 * @param output        the output file for the scaled matrix
+	 * @param scalingFactor the factor to scale the matrix by
+	 * @param rowStart      the matrix row start
+	 * @param colStart      the matrix col start
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output, double scalingFactor, int rowStart, int colStart) {
+		String command = "java -jar $SCRIPTMANAGER read-analysis scale-matrix";
+		command += " " + input.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		command += " -s " + scalingFactor;
+		command += " -r " + rowStart;
+		command += " -l " + colStart;
+		return command;
+	}
 }
