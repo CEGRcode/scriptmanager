@@ -46,7 +46,7 @@ public class ScalingFactor {
 	private File BAMFile = null;
 	private File BLACKLISTFile = null;
 	private File CONTROL = null;
-	private String OUTBASENAME = null;
+	private File OUT_BASENAME = null;
 	private boolean OUTPUTSTATUS = false;
 	private String FILEID = null;
 
@@ -69,6 +69,10 @@ public class ScalingFactor {
 	private ChartPanel M_plot; // Marginal Plot
 
 	private String dialogMessage = null;
+
+	public static final short TOTAL_TAG = 1;
+	public static final short NCIS = 2;
+	public static final short NCIS_W_TOTAL_TAG = 3;
 
 	/**
 	 * Initialize scaling factor parameters in this constructor
@@ -97,12 +101,11 @@ public class ScalingFactor {
 	 *            the NCIS parameter for the minimum fraction (only used if
 	 *            scale!=1)
 	 */
-	public ScalingFactor(File bamFile, File bl, File c, String out_basename, boolean out, int scale, int win,
-			double min) {
+	public ScalingFactor(File bamFile, File bl, File c, File out_basename, int scale, int win, double min, boolean out) {
 		BAMFile = bamFile;
 		BLACKLISTFile = bl;
 		CONTROL = c;
-		OUTBASENAME = out_basename;
+		OUT_BASENAME = out_basename;
 		OUTPUTSTATUS = out;
 		scaleType = scale;
 		windowSize = win;
@@ -122,7 +125,7 @@ public class ScalingFactor {
 		}
 
 		// Load up the Control File once per run
-		if (scaleType != 1) {
+		if (scaleType != TOTAL_TAG) {
 			System.err.println(getTimeStamp() + "\nLoading control genome array...");
 			initalizeGenomeMetainformation(CONTROL);
 			Cgenome = initializeList(CONTROL, false);
@@ -143,7 +146,7 @@ public class ScalingFactor {
 			}
 
 			SCALE = 1;
-			if (scaleType == 1) {
+			if (scaleType == TOTAL_TAG) {
 				initalizeGenomeMetainformation(BAMFile);
 				Sgenome = initializeList(BAMFile, true);
 				double genomeSize = 0;
@@ -165,13 +168,13 @@ public class ScalingFactor {
 					System.err.println("Control tags: " + CTagcount);
 					System.err.println("Bin count: " + Sgenome.size());
 
-					if (scaleType == 2) {
+					if (scaleType == NCIS) {
 						System.err.println("\nCalculating NCIS scaling ratio...");
-						SCALE = 1 / scalingRatioByNCIS(Sgenome, Cgenome, OUTBASENAME, FILEID, minFraction);
+						SCALE = 1 / scalingRatioByNCIS(Sgenome, Cgenome, OUT_BASENAME, FILEID, minFraction);
 						System.err.println("NCIS sample scaling ratio: " + SCALE);
-					} else if (scaleType == 3) {
+					} else if (scaleType == NCIS_W_TOTAL_TAG) {
 						System.err.println("\nCalculating Total tag NCIS scaling ratio...");
-						SCALE = 1 / scalingRatioByHitRatioAndNCIS(Sgenome, Cgenome, STagcount, CTagcount, OUTBASENAME,
+						SCALE = 1 / scalingRatioByHitRatioAndNCIS(Sgenome, Cgenome, STagcount, CTagcount, OUT_BASENAME,
 								FILEID, minFraction);
 						System.err.println("NCIS with Total Tag sample scaling ratio: " + SCALE);
 					}
@@ -182,15 +185,15 @@ public class ScalingFactor {
 
 			// Output scaling factor is user-specified
 			if (OUTPUTSTATUS) {
-				PrintStream OUT = new PrintStream(new File(OUTBASENAME + "_ScalingFactors.out"));
+				PrintStream OUT = new PrintStream(OUT_BASENAME + "_ScalingFactors.out");
 				OUT.println("Sample file:\t" + BAMFile.getCanonicalPath());
-				if (scaleType == 1) {
+				if (scaleType == TOTAL_TAG) {
 					OUT.println("Scaling type:\tTotalTag");
 				} else {
 					OUT.println("Control file:\t" + CONTROL);
-					if (scaleType == 2) {
+					if (scaleType == NCIS) {
 						OUT.println("Scaling type:\tNCIS");
-					} else if (scaleType == 3) {
+					} else if (scaleType == NCIS_W_TOTAL_TAG) {
 						OUT.println("Scaling type:\tTotalTag with NCIS");
 					}
 					OUT.println("Window size (bp):\t" + windowSize);
@@ -380,7 +383,7 @@ public class ScalingFactor {
 	 * @param minFrac
 	 * @return
 	 */
-	public double scalingRatioByNCIS(List<Float> setA, List<Float> setB, String outpath, String fileid,
+	public double scalingRatioByNCIS(List<Float> setA, List<Float> setB, File outpath, String fileid,
 			double minFrac) {
 		double scalingRatio = 1;
 		double totalAtScaling = 0;
@@ -443,7 +446,7 @@ public class ScalingFactor {
 	 * @return
 	 */
 	public double scalingRatioByHitRatioAndNCIS(List<Float> setA, List<Float> setB, double totalA, double totalB,
-			String outpath, String fileid, double minFrac) {
+			File outpath, String fileid, double minFrac) {
 		double scalingRatio = 1;
 		double totalAtScaling = 0;
 		if (setA.size() != setB.size()) {
@@ -542,7 +545,7 @@ public class ScalingFactor {
 
 	}
 
-	public void plotGraphs(List<PairedCounts> counts, double totalAtScaling, double scalingRatio, String outbase,
+	public void plotGraphs(List<PairedCounts> counts, double totalAtScaling, double scalingRatio, File outbase,
 			String fileid, String scaletype) {
 		// Scaling plot generation
 		// Cumulative ratio vs bin total
@@ -586,12 +589,12 @@ public class ScalingFactor {
 		if (OUTPUTSTATUS) {
 			// Print data points to files
 			try {
-				FileWriter Cfout = new FileWriter(outbase + "." + scaletype + "_scaling-ccr.count");
+				FileWriter Cfout = new FileWriter(outbase.getAbsolutePath() + "." + scaletype + "_scaling-ccr.count");
 				for (int d = 0; d < bintotals.size(); d++) {
 					Cfout.write(bintotals.get(d) + "\t" + ratios.get(d) + "\n");
 				}
 				Cfout.close();
-				FileWriter Mfout = new FileWriter(outbase + "." + scaletype + "_scaling-marginal.count");
+				FileWriter Mfout = new FileWriter(outbase.getAbsolutePath() + "." + scaletype + "_scaling-marginal.count");
 				for (int d = 0; d < bintot.size(); d++) {
 					Mfout.write(bintot.get(d) + "\t" + mratios.get(d) + "\n");
 				}

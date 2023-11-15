@@ -35,7 +35,10 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
+
+import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 @SuppressWarnings("serial")
 public class ScalingFactorWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -76,45 +79,58 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
-			if (BAMFiles.size() < 1) {
-				JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
-			} else if (!rdbtnTotalTag.isSelected() && lblNoControlLoaded.getText().equals("No Control Loaded")) {
-				JOptionPane.showMessageDialog(null, "No Control File Loaded!!!");
-			} else if (!rdbtnTotalTag.isSelected() && Integer.parseInt(txtWindow.getText()) <= 0) {
-				JOptionPane.showMessageDialog(null, "Invalid Window Size Selected!!!");
-			} else if (!rdbtnTotalTag.isSelected() && (Double.parseDouble(txtFraction.getText()) >= 1
-					|| Double.parseDouble(txtFraction.getText()) <= 0)) {
-				JOptionPane.showMessageDialog(null, "Invalid Minimum Fraction Selected!!! Must be between 0 & 1");
-			} else {
-				setProgress(0);
+		public Void doInBackground() {
+			try {
+				if (BAMFiles.size() < 1) {
+					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
+				} else if (!rdbtnTotalTag.isSelected() && lblNoControlLoaded.getText().equals("No Control Loaded")) {
+					JOptionPane.showMessageDialog(null, "No Control File Loaded!!!");
+				} else if (!rdbtnTotalTag.isSelected() && Integer.parseInt(txtWindow.getText()) <= 0) {
+					JOptionPane.showMessageDialog(null, "Invalid Window Size Selected!!!");
+				} else if (!rdbtnTotalTag.isSelected() && (Double.parseDouble(txtFraction.getText()) >= 1
+						|| Double.parseDouble(txtFraction.getText()) <= 0)) {
+					JOptionPane.showMessageDialog(null, "Invalid Minimum Fraction Selected!!! Must be between 0 & 1");
+				} else {
+					setProgress(0);
 
-				int scaleType = 0;
-				if (rdbtnTotalTag.isSelected()) {
-					scaleType = 1;
-					CONTROL = null;
-				} else if (rdbtnNCIS.isSelected()) {
-					scaleType = 2;
-				} else if (rdbtnNcisWithTotal.isSelected()) {
-					scaleType = 3;
-				}
-
-				ScalingFactorOutput scale = new ScalingFactorOutput(BAMFiles, BLACKLIST, CONTROL,
-						OUT_DIR, chckbxOutputStatistics.isSelected(), scaleType,
-						Integer.parseInt(txtWindow.getText()), Double.parseDouble(txtFraction.getText()));
-				scale.addPropertyChangeListener("scale", new PropertyChangeListener() {
-					public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-						int temp = (Integer) propertyChangeEvent.getNewValue();
-						int percentComplete = (int) (((double) (temp) / BAMFiles.size()) * 100);
-						setProgress(percentComplete);
+					int scaleType = 0;
+					if (rdbtnTotalTag.isSelected()) {
+						scaleType = ScalingFactor.TOTAL_TAG;
+						CONTROL = null;
+					} else if (rdbtnNCIS.isSelected()) {
+						scaleType = ScalingFactor.NCIS;
+					} else if (rdbtnNcisWithTotal.isSelected()) {
+						scaleType = ScalingFactor.NCIS_W_TOTAL_TAG;
 					}
-				});
-				// scale.setVisible(true);
-				scale.run();
-
-				setProgress(100);
-				JOptionPane.showMessageDialog(null, "All Scaling Factors Calculated");
+					// Execute script
+					ScalingFactorOutput output_obj = new ScalingFactorOutput(BAMFiles, BLACKLIST, CONTROL,
+							OUT_DIR, scaleType, Integer.parseInt(txtWindow.getText()),
+							Double.parseDouble(txtFraction.getText()), chckbxOutputStatistics.isSelected());
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+							int temp = (Integer) propertyChangeEvent.getNewValue();
+							int percentComplete = (int) (((double) (temp) / BAMFiles.size()) * 100);
+							setProgress(percentComplete);
+						}
+					});
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
+					output_obj.run();
+					output_obj.setVisible(true);
+					JOptionPane.showMessageDialog(null, "All Scaling Factors Calculated");
+				}
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (OptionException oe) {
+				oe.printStackTrace();
+				JOptionPane.showMessageDialog(null, oe.getMessage());
 			}
+			// Update progress
+			setProgress(100);
 			return null;
 		}
 
@@ -406,10 +422,13 @@ public class ScalingFactorWindow extends JFrame implements ActionListener, Prope
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
