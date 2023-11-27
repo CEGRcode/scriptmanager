@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,6 +32,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.CDTUtilities;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
@@ -62,6 +64,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	private JButton btnLoadCdtFile;
 	private JButton btnOutput;
 	private JButton btnConvert;
+	private JCheckBox chckbxGzipOutput;
 
 	private JProgressBar progressBar;
 	/**
@@ -108,13 +111,13 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 						STOP_INDEX = Integer.parseInt(txtStop.getText());
 					}
 
-					String OUTPUT = txtOutput.getText();
+					String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(GFF_File);
 					if (OUT_DIR != null) {
 						OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 					}
 
 					setProgress(0);
-					SortGFF.sortGFFbyCDT(OUTPUT, GFF_File, CDT_File, START_INDEX, STOP_INDEX);
+					SortGFF.sortGFFbyCDT(OUTPUT, GFF_File, CDT_File, START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Sort Complete");
 				}
@@ -168,9 +171,8 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -6, SpringLayout.NORTH, lblDefaultToLocal);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
@@ -180,6 +182,27 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 			}
 		});
 		contentPane.add(btnOutput);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
+		chckbxGzipOutput.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				String NAME = txtOutput.getText();
+				if (chckbxGzipOutput.isSelected()) {
+					if (!NAME.endsWith(".gz")) {
+						txtOutput.setText(NAME + ".gz");
+					}
+				} else {
+					if (NAME.endsWith(".gz")) {
+						NAME = ExtensionFileFilter.stripExtension(NAME);
+						txtOutput.setText(NAME);
+					}
+				}
+			}
+		});
 
 		rdbtnSortbyCenter = new JRadioButton("Sort by Center");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSortbyCenter, 129, SpringLayout.NORTH, contentPane);
@@ -205,7 +228,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtMid, 6, SpringLayout.EAST, lblSizeOfExpansion);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtMid, 59, SpringLayout.EAST, lblSizeOfExpansion);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblSizeOfExpansion, 4, SpringLayout.NORTH, rdbtnSortbyCenter);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 0, SpringLayout.WEST, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 150, SpringLayout.WEST, contentPane);
 		contentPane.add(lblSizeOfExpansion);
 
 		txtOutput = new JTextField();
@@ -253,7 +276,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		lblIndexStart.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtStart, 6, SpringLayout.EAST, lblIndexStart);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblIndexStart, 4, SpringLayout.NORTH, rdbtnSortbyIndex);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblIndexStart, 0, SpringLayout.WEST, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblIndexStart, 150, SpringLayout.WEST, contentPane);
 		contentPane.add(lblIndexStart);
 
 		lblIndexStop = new JLabel("Index Stop:");
@@ -297,12 +320,18 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadGFFFile, 10, SpringLayout.NORTH, contentPane);
 		btnLoadGFFFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File newGFFFile = FileSelection.getFile(fc, "gff");
+				File newGFFFile = FileSelection.getFile(fc, "gff", true);
 				if (newGFFFile != null) {
 					GFF_File = newGFFFile;
 					lblGFFFile.setText(GFF_File.getName());
 					txtOutput.setEnabled(true);
-					String sortName = (GFF_File.getName()).substring(0, GFF_File.getName().length() - 4) + "_SORT";
+					// Set default output filename
+					String sortName = "";
+					try {
+						sortName = ExtensionFileFilter.stripExtensionIgnoreGZ(GFF_File) + "_SORT.gff";
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, "Invalid GFF");
+					}
 					txtOutput.setText(sortName);
 				}
 			}
@@ -316,7 +345,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadCdtFile, 0, SpringLayout.WEST, rdbtnSortbyCenter);
 		btnLoadCdtFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File newCDTFile = FileSelection.getFile(fc, "cdt");
+				File newCDTFile = FileSelection.getFile(fc, "cdt", true);
 				if (newCDTFile != null) {
 					try {
 						CDT_File = newCDTFile;

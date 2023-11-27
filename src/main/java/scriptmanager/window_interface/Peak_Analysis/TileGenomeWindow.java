@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -43,6 +44,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	 * FileChooser which opens to user's directory
 	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
+	private JCheckBox chckbxGzipOutput;
 	private JPanel contentPane;
 	private JTextField txtSize;
 	private JRadioButton rdbtnGff;
@@ -69,17 +71,19 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	        		} else if(Integer.parseInt(txtSize.getText()) < 1) {
 	    				JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
 	        		} else {
+						boolean GZIP = chckbxGzipOutput.isSelected();
 	        			boolean bedStatus = rdbtnBed.isSelected();
 						String randomName = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp";
 						if(bedStatus){ randomName += ".bed"; }
 						else{ randomName += ".gff"; }
+						if(GZIP){ randomName += ".gz"; }
 						File OUTFILE;
 						if(OUTPUT_PATH != null){
 							OUTFILE = new File(OUTPUT_PATH + File.separator + randomName);
 						}else{
 							OUTFILE = new File(randomName);
 						}
-						TileGenome.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE);
+						TileGenome.execute((String)cmbGenome.getSelectedItem(), Integer.parseInt(txtSize.getText()), bedStatus, OUTFILE, GZIP);
 	    				JOptionPane.showMessageDialog(null, "Genomic Tiling Complete");
 	        		}
 	        	} catch(NumberFormatException nfe){
@@ -99,7 +103,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	public TileGenomeWindow() {
 		setTitle("Genomic Coordinate Tiling Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 375, 260);
+		setBounds(100, 100, 375, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -136,14 +140,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
         	}
         });
 		contentPane.add(btnOutputDirectory);
-		
-		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
-		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblCurrentOutputDirectory);	
-		
+
 		JButton btnTile = new JButton("Tile Genome");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnTile, 100, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnTile, -5, SpringLayout.SOUTH, contentPane);
@@ -151,6 +148,13 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		contentPane.add(btnTile);
 		btnTile.setActionCommand("start");
 		btnTile.addActionListener(this);
+		
+		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, -75, SpringLayout.SOUTH, btnTile);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
+		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblCurrentOutputDirectory);	
 		
 		cmbGenome = new JComboBox<String>();
 		sl_contentPane.putConstraint(SpringLayout.WEST, cmbGenome, 0, SpringLayout.WEST, txtSize);
@@ -186,6 +190,11 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		OutputFormat.add(rdbtnBed);
 		OutputFormat.add(rdbtnGff);
 		rdbtnBed.setSelected(true);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 133, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 	}
 
 	/**

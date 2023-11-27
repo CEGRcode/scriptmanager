@@ -60,6 +60,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JCheckBox chckbxSetSeed;
 	
 	private JLabel lblDefaultToLocal;
@@ -84,19 +85,23 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 				setProgress(0);
 
 				try {
+				boolean GZIP = chckbxGzipOutput.isSelected();
 				for (int x = 0; x < FASTAFiles.size(); x++) {
-					String OUTPUT = ExtensionFileFilter.stripExtension(FASTAFiles.get(x)) + "_RAND.fa";
+					String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(FASTAFiles.get(x)) + "_RAND.fa";
 					Integer SEED = null;
 					if(chckbxSetSeed.isSelected()) {
 						SEED = Integer.valueOf(txtSeed.getText());
-						OUTPUT = ExtensionFileFilter.stripExtension(FASTAFiles.get(x)) + "_s" + SEED + "_RAND.fa";
+						OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(FASTAFiles.get(x)) + "_s" + SEED + "_RAND.fa";
+					}
+					if(GZIP){
+						OUTPUT += ".gz";
 					}
 
 					if (OUT_DIR != null) {
 						OUTPUT = OUT_DIR + File.separator + OUTPUT;
 					}
 
-					RandomizeFASTA.randomizeFASTA(FASTAFiles.get(x), new File(OUTPUT), SEED);
+					RandomizeFASTA.randomizeFASTA(FASTAFiles.get(x), new File(OUTPUT), SEED, GZIP);
 
 					int percentComplete = (int) (((double) (x + 1) / FASTAFiles.size()) * 100);
 					setProgress(percentComplete);
@@ -146,7 +151,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa");
+				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa", true);
 				if (newFASTAFiles != null) {
 					for (int x = 0; x < newFASTAFiles.length; x++) {
 						FASTAFiles.add(newFASTAFiles[x]);
@@ -174,6 +179,12 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnCalculate, 163, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -167, SpringLayout.EAST, contentPane);
 		contentPane.add(btnCalculate);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		chckbxGzipOutput.setEnabled(false);
+		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnCalculate);

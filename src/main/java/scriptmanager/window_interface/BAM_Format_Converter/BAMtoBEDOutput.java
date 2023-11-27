@@ -25,6 +25,7 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 public class BAMtoBEDOutput extends JFrame {
 	private File BAM = null;
 	private File OUT_DIR = null;
+	private boolean OUTPUT_GZIP;
 	private int STRAND = 0;
 	private String READ = "READ1";
 
@@ -43,7 +44,7 @@ public class BAMtoBEDOutput extends JFrame {
 	 * @param min_size Minimum acceptable insert size
 	 * @param max_size Maximum acceptable insert size
 	 */
-	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
+	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
 		setTitle("BAM to BED Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -72,6 +73,7 @@ public class BAMtoBEDOutput extends JFrame {
 		} else if (STRAND == 4) {
 			READ = "FRAGMENT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -82,6 +84,7 @@ public class BAMtoBEDOutput extends JFrame {
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
 		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
+		OUTPUT += (OUTPUT_GZIP? ".gz": "");
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
@@ -89,7 +92,7 @@ public class BAMtoBEDOutput extends JFrame {
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		PS.println(OUTPUT);
-		BAMtoBED script_obj = new BAMtoBED(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		BAMtoBED script_obj = new BAMtoBED(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS, OUTPUT_GZIP);
 		script_obj.run();
 
 		Thread.sleep(2000);

@@ -1,14 +1,14 @@
 package scriptmanager.scripts.Read_Analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import scriptmanager.util.ArrayUtilities;
 import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Combine multiple TAB/CDT files into site-specific scores using a given
@@ -28,6 +28,7 @@ public class AggregateData {
 	private int METRIC = 0;
 	private PrintStream OUT;
 	private String endMessage = "";
+	private boolean OUTPUT_GZIP;
 
 	/**
 	 * Creates a new instance of the AggregateData script
@@ -40,13 +41,14 @@ public class AggregateData {
 	 * @param index Operation to be performed (0 = sum, 1 = average, 2 = median, 3 =
 	 *              mode, 4 = min, 5 = max, 6 = positional variance)
 	 */
-	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index) {
+	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index, boolean gzOutput) {
 		INPUT = in;
 		OUT_PATH = out;
 		MERGE = m;
 		ROWSTART = r;
 		COLSTART = c;
 		METRIC = index;
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -65,21 +67,22 @@ public class AggregateData {
 			} else if (INPUT.size() == 1) {
 				outputFileScore(INPUT.get(0));
 			} else {
-				System.err.println("Cannot accept non-directory filename with multi-file input when merge is not flaggeds.");
+				System.err.println("Cannot accept non-directory filename with multi-file input when merge is not flagged.");
 			}
 		} else {
 			ArrayList<ArrayList<Double>> MATRIX = new ArrayList<ArrayList<Double>>();
 			ArrayList<ArrayList<String>> MATRIXID = new ArrayList<ArrayList<String>>();
 			for (int x = 0; x < INPUT.size(); x++) {
-				Scanner scan = new Scanner(INPUT.get(x));
+				// Check if file is gzipped and instantiate appropriate BufferedReader
+				BufferedReader br = GZipUtilities.makeReader(INPUT.get(x));
 				ArrayList<Double> scorearray = new ArrayList<Double>();
 				ArrayList<String> idarray = new ArrayList<String>();
 				int count = 0;
-				while (scan.hasNextLine()) {
-					String line = scan.nextLine(); // Line 0
+				String line;
+				while ((line = br.readLine()) != null) {
 					// Skip lines until desired row start
 					while (count < ROWSTART) {
-						line = scan.nextLine();
+						line = br.readLine();
 						count++;
 					}
 
@@ -112,18 +115,18 @@ public class AggregateData {
 					}
 					count++;
 				}
-				scan.close();
+				br.close();
 				MATRIX.add(scorearray);
 				MATRIXID.add(idarray);
 			}
 
 			String name = "ALL_SCORES.out";
 			if (OUT_PATH == null) {
-				OUT = new PrintStream(new File(name));
+				OUT = GZipUtilities.makePrintStream(new File(name + (OUTPUT_GZIP? ".gz": "")), OUTPUT_GZIP);
 			} else if (!OUT_PATH.isDirectory()) {
-				OUT = new PrintStream(OUT_PATH);
+				OUT = GZipUtilities.makePrintStream(OUT_PATH, OUTPUT_GZIP);
 			} else {
-				OUT = new PrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name));
+				OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getCanonicalPath() + File.separator + name + (OUTPUT_GZIP? ".gz": "")), OUTPUT_GZIP);
 			}
 
 			// Check all arrays are the same size
@@ -173,11 +176,11 @@ public class AggregateData {
 	 * @throws IOException Invalid file or parameters
 	 */
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
-		String NEWNAME = ExtensionFileFilter.stripExtension(IN);
+		String NEWNAME = ExtensionFileFilter.stripExtension(IN) + "_SCORES.out";
 		if (OUT_PATH != null) {
-			OUT = new PrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + "_SCORES.out"));
+			OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + (OUTPUT_GZIP? ".gz": "")), OUTPUT_GZIP);
 		} else {
-			OUT = new PrintStream(new File(NEWNAME + "_SCORES.out"));
+			OUT = GZipUtilities.makePrintStream(new File(NEWNAME + (OUTPUT_GZIP? ".gz": "")), OUTPUT_GZIP);
 		}
 		outputFileScore(IN, OUT);
 	}
@@ -206,13 +209,14 @@ public class AggregateData {
 			OUT.println("\tPositionalVariance");
 		}
 
-		Scanner scan = new Scanner(IN);
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br = GZipUtilities.makeReader(IN);
 		int count = 0;
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
+		String line;
+		while ((line = br.readLine()) != null) {
 			// Skip lines until desired row start
 			while (count < ROWSTART) {
-				line = scan.nextLine();
+				line = br.readLine();
 				count++;
 			}
 
@@ -242,7 +246,7 @@ public class AggregateData {
 			}
 			count++;
 		}
-		scan.close();
+		br.close();
 		OUT.close();
 	}
 }

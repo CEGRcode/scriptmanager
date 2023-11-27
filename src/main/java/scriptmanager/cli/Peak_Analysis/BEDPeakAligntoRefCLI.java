@@ -38,6 +38,8 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peakBED>_<refBED>_Output.cdt)")
 	private File output = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	/**
 	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
@@ -53,7 +55,7 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(refBED, peakBED, output, null);
+		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(refBED, peakBED, output, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println( "Peak Align Complete." );	

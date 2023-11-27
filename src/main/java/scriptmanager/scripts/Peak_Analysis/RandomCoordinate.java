@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.objects.CoordinateObjects.GenericCoord;
+import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.GenomeSizeReference;
 
 /**
@@ -37,10 +38,11 @@ public class RandomCoordinate {
 	 * @param OUTPUT     the file to write the coordinate tile output to (if null, a
 	 *                   default filename is determined using
 	 *                   &lt;GENOME&gt;_&lt;numSites&gt;SITES_&lt;windowSize&gt;bp.&lt;ext&gt;)
+	 * @param gzOutput   whether or not to gzip output
 	 * @throws IOException Invalid file or parameters
 	 * @throws IllegalArgumentException
 	 */
-	public static void execute(String GENOME, int numSites, int windowSize, boolean BEDout, File OUTPUT) throws IOException, IllegalArgumentException {
+	public static void execute(String GENOME, int numSites, int windowSize, boolean BEDout, File OUTPUT, boolean gzOutput) throws IOException, IllegalArgumentException {
 		GenomeSizeReference coord = new GenomeSizeReference(GENOME);
 	    if(!coord.isSmaller(windowSize)) {
 	    	System.err.println("Window size is too large for selected genome!!!\n");
@@ -53,9 +55,9 @@ public class RandomCoordinate {
 		    String randomName = GENOME + "_" + numSites + "SITES_" + windowSize + "bp" + EXTENSION;
 		    PrintStream OUT = null;
 			if (OUTPUT == null) {
-				OUT = new PrintStream(randomName);
+				OUT = GZipUtilities.makePrintStream(new File(randomName), gzOutput);
 			} else {
-				OUT = new PrintStream(OUTPUT);
+				OUT = GZipUtilities.makePrintStream(OUTPUT, gzOutput);
 			}
 		    for(int x = 0; x < numSites; x++) {
 		    	GenericCoord temp = coord.generateRandomCoord(windowSize);

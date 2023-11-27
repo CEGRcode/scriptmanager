@@ -35,6 +35,8 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	private File output;
 	@Option(names = {"-s", "--seed"}, description = "specify an integer seed for reproducible outputs")
 	private Integer seed = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 
 	/**
 	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
@@ -50,7 +52,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		RandomizeFASTA.randomizeFASTA(fastaFile, output, seed);
+		RandomizeFASTA.randomizeFASTA(fastaFile, output, seed, gzOutput);
 
 		System.err.println("Randomization Complete.");
 		return (0);
@@ -72,7 +74,7 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 		}
 		// set default output filename
 		if (output == null) {
-			String NAME = ExtensionFileFilter.stripExtension(fastaFile) + "_RAND.fa";
+			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile) + "_RAND.fa";
 			output = new File(NAME);
 			// check output filename is valid
 		} else {

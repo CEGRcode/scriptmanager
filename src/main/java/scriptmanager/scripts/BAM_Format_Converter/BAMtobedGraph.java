@@ -6,6 +6,7 @@ import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
+import scriptmanager.util.GZipUtilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ import java.util.Date;
  */
 public class BAMtobedGraph {
 	private File BAM = null;
+	private boolean OUTPUT_GZIP;
 	private String OUTBASENAME = null;
 	private PrintStream OUTF = null;
 	private PrintStream OUTR = null;
@@ -56,8 +58,9 @@ public class BAMtobedGraph {
 	 * @param min_size    minimum acceptable insert size
 	 * @param max_size    maximum acceptable insert size
 	 * @param ps          PrintStream to output results
+	 * @param gzOutput    whether or not to gzip output
 	 */
-	public BAMtobedGraph(File b, String o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
+	public BAMtobedGraph(File b, String o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTBASENAME = o;
 		PS = ps;
@@ -74,6 +77,7 @@ public class BAMtobedGraph {
 		} else if (STRAND == 3) {
 			READ = "MIDPOINT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -86,11 +90,12 @@ public class BAMtobedGraph {
 		// Open Output File
 		if (OUTBASENAME != null) {
 			try {
+				String SUFFIX = ".bedGraph" + (OUTPUT_GZIP? ".gz": "");
 				if (STRAND <= 2) {
-					OUTF = new PrintStream(new File(OUTBASENAME + "_forward.bedGraph"));
-					OUTR = new PrintStream(new File(OUTBASENAME + "_reverse.bedGraph"));
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_forward" + SUFFIX), OUTPUT_GZIP);
+					OUTR = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_reverse" + SUFFIX) , OUTPUT_GZIP);
 				} else {
-					OUTF = new PrintStream(new File(OUTBASENAME + "_midpoint.bedGraph"));
+					OUTF = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_midpoint" + SUFFIX), OUTPUT_GZIP);
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -128,6 +133,12 @@ public class BAMtobedGraph {
 				printPS("Maximum insert size required to output: NaN");
 			} else {
 				printPS("Maximum insert size required to output: " + MAX_INSERT);
+			}
+
+			if (OUTPUT_GZIP){
+				printPS("Output GZip: yes");
+			} else {
+				printPS("Output GZip: no");
 			}
 
 			// Print Header

@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Generate a three-color heamap PNG (with a an adjustable middling value for
@@ -527,8 +528,7 @@ public class ThreeColorHeatMap {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();
 		int currentRow = 0;
 		if (input.getAbsoluteFile().toString().endsWith(".gz")) {
-			BufferedReader scan = new BufferedReader(
-					new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
+			BufferedReader scan = GZipUtilities.makeReader(input);
 			String line = scan.readLine();
 			while (line != null) {
 				String[] temp = line.split("\t");

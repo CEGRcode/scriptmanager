@@ -23,6 +23,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -68,6 +69,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
 	private JProgressBar progressBar;
@@ -120,20 +122,25 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							SCALE = Double.parseDouble(txtUniform.getText());
 						}
 
+						boolean GZIP = chckbxGzipOutput.isSelected();
 						for (int x = 0; x < TABFiles.size(); x++) {
 							if (rdbtnFilespecifcScaling.isSelected()) {
 								SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString());
 							}
-
+							// Check if file is gzipped and assigns appropriate file name
+							String OUTPUT;
 							File XTAB = TABFiles.get(x);
-							String OUTPUT = ExtensionFileFilter.stripExtension(XTAB) + "_SCALE."
-									+ ExtensionFileFilter.getExtension(XTAB);
+								OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_SCALE."
+										+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
 							if (OUT_DIR != null) {
 								OUTPUT = OUT_DIR + File.separator + OUTPUT;
 							}
+							if (GZIP) {
+								OUTPUT += ".gz";
+							}
 
 							ScaleMatrix scale = new ScaleMatrix(XTAB, new File(OUTPUT), SCALE,
-									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
+									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), GZIP);
 							scale.run();
 
 							int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
@@ -272,6 +279,11 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		});
 		contentPane.add(btnOutput);
 
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
 		rdbtnFilespecifcScaling = new JRadioButton("File-specifc Scaling");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnFilespecifcScaling, 8, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnFilespecifcScaling, -66, SpringLayout.EAST, contentPane);
@@ -305,6 +317,13 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		txtUniform.setText("1");
 		contentPane.add(txtUniform);
 		txtUniform.setColumns(10);
+		txtUniform.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int x = 0; x < expTable.getRowCount(); x++) {
+					expTable.setValueAt(txtUniform.getText(), x, 1);
+				}
+        	}
+		});
 
 		JLabel lblRow = new JLabel("Start at Row:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblRow, 10, SpringLayout.SOUTH, lblUniformScalingFactor);

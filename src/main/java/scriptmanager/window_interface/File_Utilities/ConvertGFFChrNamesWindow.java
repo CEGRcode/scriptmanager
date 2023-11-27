@@ -78,28 +78,24 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
+			boolean GZIP = chckbxGzipOutput.isSelected();
 			setProgress(0);
 			// apply to each fil in vector
 			for (int x = 0; x < GFFFiles.size(); x++) {
 				File XGFF = GFFFiles.get(x);
 				// Set suffix format
-				String SUFFIX = rdbtnA2R.isSelected() ? "_toRoman.gff" : "_toArabic.gff";
-				SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
+				String SUFFIX = (rdbtnA2R.isSelected() ? "_toRoman.gff" : "_toArabic.gff") + (GZIP? ".gz": "");
 				// Set output filepath with name and output directory
-				String OUTPUT = ExtensionFileFilter.stripExtension(XGFF);
-				// Strip second extension if input has ".gz" first extension
-				if (XGFF.getName().endsWith(".gff.gz")) {
-					OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-				}
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF);
 				// Add user-selected directory
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
 				// Execute conversion and update progress
 				if (rdbtnA2R.isSelected()) {
-					ConvertChrNames.convert_ArabictoRoman(XGFF, new File(OUTPUT + SUFFIX), chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					ConvertChrNames.convert_ArabictoRoman(XGFF, new File(OUTPUT + SUFFIX), chckbxChrmt.isSelected(), GZIP);
 				} else {
-					ConvertChrNames.convert_RomantoArabic(XGFF, new File(OUTPUT + SUFFIX), chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					ConvertChrNames.convert_RomantoArabic(XGFF, new File(OUTPUT + SUFFIX), chckbxChrmt.isSelected(), GZIP);
 				}
 				// Update progress bar
 				int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
@@ -204,9 +200,9 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxChrmt, 0, SpringLayout.WEST, rdbtnA2R);
 		contentPane.add(chckbxChrmt);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, chckbxChrmt);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, 10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 
 		btnOutput = new JButton("Output Directory");

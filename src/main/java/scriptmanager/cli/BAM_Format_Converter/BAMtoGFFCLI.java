@@ -40,6 +40,8 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "stream output file to STDOUT (cannot be used with \"-o\" flag)" )
 	private boolean stdout = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	//Read
 	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
@@ -81,7 +83,7 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BAMtoGFF script_obj = new BAMtoGFF(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+		BAMtoGFF script_obj = new BAMtoGFF(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println("Conversion Complete");

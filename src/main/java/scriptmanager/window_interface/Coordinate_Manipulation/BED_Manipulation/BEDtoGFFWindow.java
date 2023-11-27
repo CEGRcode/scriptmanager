@@ -79,22 +79,22 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
+			boolean GZIP = chckbxGzipOutput.isSelected();
 			setProgress(0);
 			LogItem old_li = new LogItem("");
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XBED = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = ExtensionFileFilter.stripExtension(XBED) + ".gff";
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED) + ".gff" + (GZIP? ".gz": "");
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
-				OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
 				// Initialize LogItem
-				String command = BEDtoGFFCLI.getCLIcommand(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
+				String command = BEDtoGFFCLI.getCLIcommand(new File(OUTPUT), XBED, GZIP);
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
 				// Execute conversion and update progress
-				BEDtoGFF.convertBEDtoGFF(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
+				BEDtoGFF.convertBEDtoGFF(new File(OUTPUT), XBED, GZIP);
 				// Update log item
 				new_li.setStopTime(new Timestamp(new Date().getTime()));
 				new_li.setStatus(0);
@@ -211,9 +211,9 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnOutput);
 		btnConvert.addActionListener(this);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 36, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 	}
 

@@ -38,6 +38,9 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "specify output directory (name will be same as original with _<strand>.bedgraph ext)" )
 	private String outputBasename = null;
+
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	//Read
 	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
@@ -77,7 +80,7 @@ public class BAMtobedGraphCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BAMtobedGraph script_obj = new BAMtobedGraph(bamFile, outputBasename, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+		BAMtobedGraph script_obj = new BAMtobedGraph(bamFile, outputBasename, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println("Conversion Complete");

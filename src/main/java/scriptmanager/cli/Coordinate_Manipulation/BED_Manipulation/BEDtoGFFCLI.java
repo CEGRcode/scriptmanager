@@ -71,7 +71,7 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if(output==null && !stdout){
-			String NAME = ExtensionFileFilter.stripExtension(bedFile) + ".gff";
+			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(bedFile) + ".gff";
 			NAME += gzOutput ? ".gz" : "";
 			output = new File(NAME);
 		//check stdout and output not both selected

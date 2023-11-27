@@ -25,6 +25,7 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
 public class BAMtoGFFOutput extends JFrame {
 	private File BAM = null;
 	private File OUT_DIR = null;
+	private boolean OUTPUT_GZIP;
 	private int STRAND = 0;
 	private String READ = "READ1";
 
@@ -43,7 +44,7 @@ public class BAMtoGFFOutput extends JFrame {
 	 * @param min_size Minimum acceptable insert size
 	 * @param max_size Maximum acceptable insert size
 	 */
-	public BAMtoGFFOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
+	public BAMtoGFFOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
 		setTitle("BAM to GFF Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -72,8 +73,9 @@ public class BAMtoGFFOutput extends JFrame {
 		} else if (STRAND == 4) {
 			READ = "FRAGMENT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
-	
+
 	/**
 	 * Runs the BAMtoGFF script
 	 * @throws IOException Invalid file or parameters
@@ -85,11 +87,12 @@ public class BAMtoGFFOutput extends JFrame {
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
+		OUTPUT = OUTPUT + (OUTPUT_GZIP? ".gz": "");
 
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		PS.println(OUTPUT);
-		BAMtoGFF script_obj = new BAMtoGFF(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		BAMtoGFF script_obj = new BAMtoGFF(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS, OUTPUT_GZIP);
 		script_obj.run();
 
 		Thread.sleep(2000);

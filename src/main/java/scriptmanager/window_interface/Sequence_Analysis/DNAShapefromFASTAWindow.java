@@ -57,6 +57,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
 	private JProgressBar progressBar;
@@ -91,7 +92,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 					OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
-					DNAShapefromFASTAOutput signal = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE);
+					DNAShapefromFASTAOutput signal = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE, chckbxGzipOutput.isSelected());
 
 					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -147,7 +148,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa");
+				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa", true);
 				if (newFASTAFiles != null) {
 					for (int x = 0; x < newFASTAFiles.length; x++) {
 						FASTAFiles.add(newFASTAFiles[x]);
@@ -177,6 +178,11 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnCalculate, 165, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -165, SpringLayout.EAST, contentPane);
 		contentPane.add(btnCalculate);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -58,6 +59,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	private JButton btnRemoveRefBed;
 	private JButton btnOutputDirectory;
 	private JButton btnCalculate;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
@@ -85,7 +87,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
     				{
     					for(int p=0; p < PeakFiles.size(); p++)
     					{
-							align = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH);	
+							align = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH, chckbxGzipOutput.isSelected());	
 							align.setVisible(true);
 							align.run();
 							counter++;
@@ -143,7 +145,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		
 		btnLoadPeakBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						PeakFiles.add(newBEDFiles[x]);
@@ -188,7 +190,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		
 		btnLoadRefBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						RefFiles.add(newBEDFiles[x]);
@@ -252,6 +254,11 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		contentPane.add(btnCalculate);
 		btnCalculate.setActionCommand("start");
 		btnCalculate.addActionListener(this);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 31, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 	}
 	
 	/**

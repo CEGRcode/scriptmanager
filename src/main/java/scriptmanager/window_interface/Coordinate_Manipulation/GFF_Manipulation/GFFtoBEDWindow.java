@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +29,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
@@ -62,6 +64,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutput;
+	private static JCheckBox chckbxGzipOutput;
 
 	/**
 	 * Organizes user inputs for calling script
@@ -69,17 +72,18 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
+			boolean GZIP = chckbxGzipOutput.isSelected();
 			setProgress(0);
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = (XGFF.getName()).substring(0, XGFF.getName().length() - 4) + ".bed";
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed" + (GZIP? ".gz": "");
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
 
 				// Execute conversion and update progress
-				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF);
+				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF, GZIP);
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 				setProgress(percentComplete);
 			}
@@ -120,7 +124,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane, 6, SpringLayout.SOUTH, btnLoad);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getFiles(fc, "gff");
+				File[] newGFFFiles = FileSelection.getFiles(fc, "gff", true);
 				if (newGFFFiles != null) {
 					for (int x = 0; x < newGFFFiles.length; x++) {
 						BEDFiles.add(newGFFFiles[x]);
@@ -186,6 +190,11 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
 		btnConvert.addActionListener(this);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 36, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 	}
 
 /**

@@ -6,6 +6,7 @@ import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
+import scriptmanager.util.GZipUtilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ public class BAMtoscIDX {
 	private File BAM = null;
 	private File OUTFILE = null;
 	private PrintStream OUT = null;
+	private boolean OUTPUT_GZIP;
 	private PrintStream PS = null;
 
 	private int STRAND = 0;
@@ -55,8 +57,9 @@ public class BAMtoscIDX {
 	 * @param min_size    minimum acceptable insert size
 	 * @param max_size    maximum acceptable insert size
 	 * @param ps          PrintStream to output results
+	 * @param gzOutput    whether or not to gzip output
 	 */
-	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
+	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTFILE = o;
 		PS = ps;
@@ -73,6 +76,7 @@ public class BAMtoscIDX {
 		} else if (STRAND == 3) {
 			READ = "MIDPOINT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -84,7 +88,7 @@ public class BAMtoscIDX {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
 			try {
-				OUT = new PrintStream(OUTFILE);
+				OUT = GZipUtilities.makePrintStream(OUTFILE, OUTPUT_GZIP);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -123,6 +127,12 @@ public class BAMtoscIDX {
 				printPS("Maximum insert size required to output: NaN");
 			} else {
 				printPS("Maximum insert size required to output: " + MAX_INSERT);
+			}
+
+			if (OUTPUT_GZIP){
+				printPS("Output GZip: yes");
+			} else {
+				printPS("Output GZip: no");
 			}
 
 			// Print Header

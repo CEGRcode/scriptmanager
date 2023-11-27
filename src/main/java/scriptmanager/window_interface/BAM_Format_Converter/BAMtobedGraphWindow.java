@@ -62,6 +62,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnOutputDirectory;
+	private JCheckBox chckbxGzipOutput;
 	private JRadioButton rdbtnRead1;
 	private JRadioButton rdbtnRead2;
 	private JRadioButton rdbtnCombined;
@@ -123,7 +124,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 
 					for (int x = 0; x < BAMFiles.size(); x++) {
 						BAMtobedGraphOutput convert = new BAMtobedGraphOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR,
-								MIN, MAX);
+								MIN, MAX, chckbxGzipOutput.isSelected());
 						convert.setVisible(true);
 						convert.run();
 						int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
@@ -268,6 +269,11 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutputDirectory, -57, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -250, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutputDirectory);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnIndex);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -83, SpringLayout.WEST, btnOutputDirectory);
+		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnIndex);

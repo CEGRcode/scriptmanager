@@ -1,8 +1,8 @@
 package scriptmanager.scripts.Sequence_Analysis;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import scriptmanager.charts.CompositePlot;
 import scriptmanager.util.DNAShapeReference;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Calculate and score various aspects of DNA shape across a set of FASTA
@@ -29,6 +29,7 @@ public class DNAShapefromFASTA {
 	private String OUTBASENAME = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private File FASTA = null;
+	private boolean GZIP_OUTPUT;
 
 	private PrintStream OUT_M = null;
 	private PrintStream OUT_P = null;
@@ -58,12 +59,14 @@ public class DNAShapefromFASTA {
 	 *             (no enforcement on size)
 	 * @param ps   list of four PrintStream objects corresponding to each shape type
 	 *             (for GUI)
+	 * @param gzOutput Whether to output compressed file
 	 */
-	public DNAShapefromFASTA(File fa, String out, boolean[] type, PrintStream[] ps) {
+	public DNAShapefromFASTA(File fa, String out, boolean[] type, PrintStream[] ps, boolean gzOutput) {
 		FASTA = fa;
 		OUTBASENAME = out;
 		OUTPUT_TYPE = type;
 		PS = ps;
+		GZIP_OUTPUT = gzOutput;
 
 		STRUCTURE = DNAShapeReference.InitializeStructure();
 	}
@@ -85,13 +88,15 @@ public class DNAShapefromFASTA {
 		}
 		openOutputFiles();
 
-		Scanner scan = new Scanner(FASTA);
 		int counter = 0;
-		while (scan.hasNextLine()) {
-			String HEADER = scan.nextLine();
+		String line;
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br = GZipUtilities.makeReader(FASTA);
+		while ((line = br.readLine()) != null) {
+			String HEADER = line;
 			if (HEADER.contains(">")) {
 				HEADER = HEADER.substring(1, HEADER.length());
-				String seq = scan.nextLine();
+				String seq = br.readLine();
 				if (!seq.contains("N")) {
 					// Populate array for each FASTA line
 					List<Double> MGW = new ArrayList<Double>();
@@ -177,7 +182,7 @@ public class DNAShapefromFASTA {
 				System.out.println("ERROR: Invalid FASTA sequence\n" + HEADER);
 			}
 		}
-		scan.close();
+		br.close();
 
 		// Convert average and statistics to output tabs panes
 		if (OUTPUT_TYPE[0]) {
@@ -301,19 +306,20 @@ public class DNAShapefromFASTA {
 		}
 		// Open Output File
 		try {
+			String SUFFIX = ".cdt" + (GZIP_OUTPUT? ".gz": "");
 			if (OUTPUT_TYPE[0]) {
-				OUT_M = new PrintStream(new File(OUTBASENAME + "_MGW.cdt"));
+				OUT_M = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_MGW" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[1]) {
-				OUT_P = new PrintStream(new File(OUTBASENAME + "_PropT.cdt"));
+				OUT_P = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_PropT" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[2]) {
-				OUT_H = new PrintStream(new File(OUTBASENAME + "_HelT.cdt"));
+				OUT_H = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_HelT" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[3]) {
-				OUT_R = new PrintStream(new File(OUTBASENAME + "_Roll.cdt"));
+				OUT_R = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_Roll" + SUFFIX), GZIP_OUTPUT);
 			}
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

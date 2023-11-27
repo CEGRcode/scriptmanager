@@ -75,11 +75,13 @@ public class SearchMotifOutput extends JFrame {
 	public void run() throws IOException, InterruptedException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		String BASENAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
-				+ ExtensionFileFilter.stripExtension(INPUTFILE) + ".bed";
+				+ ExtensionFileFilter.stripExtensionIgnoreGZ(INPUTFILE) + ".bed";
+		if (gzOutput){
+			BASENAME += ".gz";
+		}
 		if (OUT_DIR != null) {
 			BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 		}
-		BASENAME += gzOutput ? ".gz" : "";
 
 		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS, gzOutput);
 		script_obj.run();

@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
@@ -34,6 +35,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -72,6 +74,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 
 	private static JRadioButton rdbtnExpandFromCenter;
 	private static JRadioButton rdbtnAddToBorder;
+	private static JCheckBox chckbxGzipOutput;
 
 	/**
 	 * Organizes user inputs for calling script
@@ -89,14 +92,14 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 						File XGFF = GFFFiles.get(x);
 
 						// Set outfilepath
-						String OUTPUT = (XGFF.getName()).substring(0, XGFF.getName().length() - 4) + "_"
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + "_"
 								+ Integer.toString(SIZE) + "bp.gff";
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
 
 						// Execute expansion and update progress
-						ExpandGFF.expandGFFBorders(new File(OUTPUT), XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
+						ExpandGFF.expandGFFBorders(new File(OUTPUT), XGFF, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
@@ -145,7 +148,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getFiles(fc, "gff");
+				File[] newGFFFiles = FileSelection.getFiles(fc, "gff", true);
 				if (newGFFFiles != null) {
 					for (int x = 0; x < newGFFFiles.length; x++) {
 						GFFFiles.add(newGFFFiles[x]);
@@ -195,8 +198,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 143, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -157, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 10, SpringLayout.WEST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
@@ -206,6 +208,11 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
 		contentPane.add(btnOutput);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		rdbtnExpandFromCenter = new JRadioButton("Expand from Center");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnExpandFromCenter, 6, SpringLayout.SOUTH, scrollPane);

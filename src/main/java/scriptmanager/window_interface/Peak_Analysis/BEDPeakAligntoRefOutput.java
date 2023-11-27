@@ -26,9 +26,11 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	private File PEAK = null;
 	private File REF = null;
 	private File OUTFILE = null;
+	private boolean OUTPUT_GZIP = false;
 
 	private JTextArea textArea;
-		
+
+	public BEDPeakAligntoRefOutput(File ref, File peak, File outpath, boolean gzOutput) throws IOException {
 	/**
 	 * Creates a new BEDPeakAligntoRefOutput with two BED files and an output directory
 	 * @param ref Reference BAM file
@@ -36,7 +38,6 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	 * @param outpath Output directory
 	 * @throws IOException Invalid file or parameters
 	 */
-	public BEDPeakAligntoRefOutput(File ref, File peak, File outpath) throws IOException {
 		setTitle("BED Align to Reference Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -50,11 +51,14 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		
 		REF = ref;
 		PEAK = peak;
-		
+		OUTPUT_GZIP = gzOutput;
 		if(outpath != null) {
 			OUTFILE = new File(outpath.getCanonicalPath() + File.separator + PEAK.getName().split("\\.")[0] + "_" + REF.getName().split("\\.")[0] + "_Output.cdt");
 		} else {
 			OUTFILE = new File(PEAK.getName().split("\\.")[0] + "_" + REF.getName().split("\\.")[0] + "_Output.cdt");
+		}
+		if (OUTPUT_GZIP){
+			OUTFILE = new File(OUTFILE.getAbsolutePath() + ".gz");
 		}
 	}
 		
@@ -66,7 +70,7 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	public void run() throws IOException, InterruptedException {
 		
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUTFILE, PS);
+		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUTFILE, PS, OUTPUT_GZIP);
 		script_obj.run();
 		
 		Thread.sleep(2000);

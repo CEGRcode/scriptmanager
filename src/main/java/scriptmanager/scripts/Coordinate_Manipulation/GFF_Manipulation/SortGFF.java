@@ -1,14 +1,15 @@
 package scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import scriptmanager.objects.CoordinateObjects.GFFCoord;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Sort coordinate intervals (GFF) by the tag counts of a CDT matrix file.
@@ -18,6 +19,7 @@ import scriptmanager.objects.CoordinateObjects.GFFCoord;
  * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow
  */
 public class SortGFF {
+
 	/**
 	 * Sort a GFF file by the values from a CDT matrix file. 
 	 * 
@@ -26,16 +28,18 @@ public class SortGFF {
 	 * @param cdt input CDT file with values to sort by
 	 * @param START_INDEX the start column to consider when summing values to sort
 	 * @param STOP_INDEX The last column to consider when summing values (non-inclusive)
+	 * @param gzOutput whether or not to gzip output
 	 */
-	public static void sortGFFbyCDT(String outname, File gff, File cdt, int START_INDEX, int STOP_INDEX)
+	public static void sortGFFbyCDT(String outname, File gff, File cdt, int START_INDEX, int STOP_INDEX, boolean gzOutput)
 			throws IOException {
 		ArrayList<GFFCoord> SORT = new ArrayList<GFFCoord>();
 		HashMap<String, String> CDTFile = new HashMap<String, String>();
 		String CDTHeader = "";
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br = GZipUtilities.makeReader(cdt);
 		// Parse CDT File first
-		Scanner scan = new Scanner(cdt);
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
+		String line = br.readLine();
+		while (line != null) {
 			String[] ID = line.split("\t");
 			if (!ID[0].contains("YORF") && !ID[0].contains("NAME")) {
 				double count = 0;
@@ -47,14 +51,15 @@ public class SortGFF {
 			} else {
 				CDTHeader = line;
 			}
+			line = br.readLine();
 		}
-		scan.close();
+		br.close();
 		// Sort by score
 		Collections.sort(SORT, GFFCoord.ScoreComparator);
 
 		// Output sorted CDT File
-		String newCDT = outname + ".cdt";
-		PrintStream OUT = new PrintStream(newCDT);
+		String SUFFIX = ".cdt" + (gzOutput? ".gz": "");
+		PrintStream OUT = GZipUtilities.makePrintStream(new File(outname + SUFFIX), gzOutput);
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(CDTFile.get(SORT.get(x).getName()));
@@ -64,18 +69,22 @@ public class SortGFF {
 
 		// Match to gff file after
 		HashMap<String, String> GFFFile = new HashMap<String, String>();
-		scan = new Scanner(gff);
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
-			String ID = line.split("\t")[8].split(";")[0];
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		br = GZipUtilities.makeReader(gff);
+		// Initialize line variable to loop through
+		line = br.readLine();
+		while (line != null) {
+			String ID = line.split("\t")[3];
 			if (!ID.contains("YORF") && !ID.contains("NAME")) {
 				GFFFile.put(ID, line);
 			}
+			line = br.readLine();
 		}
-		scan.close();
+		br.close();
+
 		// Output sorted GFF File
-		String newGFF = outname + ".gff";
-		OUT = new PrintStream(newGFF);
+		SUFFIX = ".gff" + (gzOutput? ".gz": "");
+		OUT = GZipUtilities.makePrintStream(new File(outname + SUFFIX), gzOutput);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(GFFFile.get(SORT.get(x).getName()));
 		}

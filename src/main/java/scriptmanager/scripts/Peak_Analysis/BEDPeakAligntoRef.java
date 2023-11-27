@@ -2,11 +2,8 @@ package scriptmanager.scripts.Peak_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 
@@ -15,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Align BED peaks to a reference BED file and create a CDT file
@@ -29,7 +27,7 @@ public class BEDPeakAligntoRef {
 	private String refPath = null;
 	private PrintStream OUT = null;
 	private PrintStream PS = null;
-	
+
 	/**
 	 * Create a new instance of a BEDPeakAligntoRef script
 	 * 
@@ -37,18 +35,20 @@ public class BEDPeakAligntoRef {
 	 * @param peak   BAM file to be alligned
 	 * @param output Output CDT file
 	 * @param ps     PrintStream for reporting process
+	 * @param gzOutput    whether or not to gzip output
 	 * @throws IOException Invalid file or parameters
 	 */
-	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps) throws IOException {
+	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps, boolean gzOutput) throws FileNotFoundException, IOException {
 		refPath = ref.getCanonicalPath();
 		peakPath = peak.getCanonicalPath();
 		PS = ps;
 
-		try {
-			OUT = new PrintStream(output);
+		try { OUT = new PrintStream(output);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+
+		OUT = GZipUtilities.makePrintStream(output, gzOutput);
 	}
 
 	/**
@@ -63,12 +63,11 @@ public class BEDPeakAligntoRef {
 		printPS("Starting: " + getTimeStamp());
 		
 		int counter = 0;
-		InputStream inputStream = new FileInputStream(peakPath);
-	    BufferedReader buff = new BufferedReader(new InputStreamReader(inputStream), 100); 
+		//Checks if BED file is compressed, creates appropriate input stream
+		BufferedReader buff = GZipUtilities.makeReader(new File(peakPath));
 		
 		String key ;
 //--------------
-		buff = new BufferedReader(new InputStreamReader(inputStream), 100);
 		Map<String, List<String>> peakMap = new HashMap<>();
 		for (String line; (line = buff.readLine()) != null; ) {
 			key = line.split("\t")[0];
@@ -82,11 +81,10 @@ public class BEDPeakAligntoRef {
 			}
 		}
 		buff.close();
-		inputStream.close();
 	
 //============
-		inputStream = new FileInputStream(refPath);
-	    buff = new BufferedReader(new InputStreamReader(inputStream), 100);
+		//Checks if BED file is compressed, creates appropriate input stream
+		buff = GZipUtilities.makeReader(new File(refPath));
 	    
 	    for (String line; (line = buff.readLine()) != null; ) {
 		    	String[] str = line.split("\t");
@@ -132,7 +130,7 @@ public class BEDPeakAligntoRef {
 			}
 	    }
 	    buff.close();
-	    inputStream.close();
+		OUT.close();
 	    
 		printPS("Completing: " + getTimeStamp());
 	    }

@@ -40,6 +40,8 @@ public class AggregateDataCLI implements Callable<Integer> {
 	private boolean fileList = false;
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <input1>_SCORES.out, <input2_SCORES.out, ... or ALL_SCORES.out if -m flag is used)")
 	private File output;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	@ArgGroup(exclusive = true, heading = "Aggregation Method%n")
 	AggType aggr = new AggType();
@@ -84,7 +86,7 @@ public class AggregateDataCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		AggregateData script_obj = new AggregateData(matFiles, output, merge, startROW, startCOL, aggType);
+		AggregateData script_obj = new AggregateData(matFiles, output, merge, startROW, startCOL, aggType, gzOutput);
 		script_obj.run();
 		
 		System.err.println(script_obj.getMessage());

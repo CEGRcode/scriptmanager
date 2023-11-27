@@ -7,14 +7,11 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -464,12 +461,7 @@ public class TwoColorHeatMap {
 		ArrayList<double[]> matrix = new ArrayList<double[]>();
 		int currentRow = 0;
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(input)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(input);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		while (line != null) {

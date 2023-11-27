@@ -65,6 +65,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 
 	private JCheckBox chckbxStrand;
 	private JCheckBox chckbxAll;
+	private JCheckBox chckbxGzipOutput;
 	private JCheckBox chckbxMinorGrooveWidth;
 	private JCheckBox chckbxRoll;
 	private JCheckBox chckbxHelicalTwist;
@@ -98,7 +99,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
 					DNAShapefromBEDOutput signal = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUT_DIR, OUTPUT_TYPE,
-							chckbxStrand.isSelected());
+							chckbxStrand.isSelected(), chckbxGzipOutput.isSelected());
 
 					signal.addPropertyChangeListener("fa", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -155,7 +156,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc, "bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc, "bed", true);
 				if (newBEDFiles != null) {
 					for (int x = 0; x < newBEDFiles.length; x++) {
 						BEDFiles.add(newBEDFiles[x]);
@@ -186,6 +187,11 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -165, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnCalculate, -10, SpringLayout.SOUTH, contentPane);
 		contentPane.add(btnCalculate);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);

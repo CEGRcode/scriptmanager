@@ -53,7 +53,7 @@ public class TagPileupCLI implements Callable<Integer> {
 			arity="0..1")
 		private ArrayList<String> outputMatrix = new ArrayList<String>(Arrays.asList("no","matrix","output"));
 		@Option(names = {"-z", "--gzip"}, description = "output compressed output (default=false)")
-		private boolean zip = false;
+		private boolean gzOutput = false;
 		@Option(names = {"--cdt"}, description = "output matrix in cdt format (default)")
 		private boolean cdt = false;
 		@Option(names = {"--tab"}, description = "output matrix in tab format")
@@ -294,7 +294,7 @@ public class TagPileupCLI implements Callable<Integer> {
 		p.setStandard(calcOptions.tagsEqual);
 
 		//Set output statuses
-		p.setGZIPstatus(outputOptions.zip);
+		p.setGZIPstatus(outputOptions.gzOutput);
 
 		//Set Ratio (code to standardize tags sequenced to genome size (1 tag / 1 bp))
 		if( p.getStandard() && filterOptions.blacklistFilter!=null ){

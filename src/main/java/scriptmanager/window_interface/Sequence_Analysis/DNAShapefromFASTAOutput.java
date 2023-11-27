@@ -31,6 +31,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 	private File OUT_DIR = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private ArrayList<File> FASTA = null;
+	private boolean OUTPUT_GZIP;
 
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
@@ -44,8 +45,9 @@ public class DNAShapefromFASTAOutput extends JFrame {
 	 * @param fa the FASTA-formatted sequences to generate the shape scores from
 	 * @param out_dir the output directory to save output files to
 	 * @param type the shape types to generate
+	 * @param gzOutput Whether to output compressed file
 	 */
-	public DNAShapefromFASTAOutput(ArrayList<File> fa, File out_dir, boolean[] type) {
+	public DNAShapefromFASTAOutput(ArrayList<File> fa, File out_dir, boolean[] type, boolean gzOutput) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -71,6 +73,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 		FASTA = fa;
 		OUT_DIR = out_dir;
 		OUTPUT_TYPE = type;
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -123,7 +126,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 			}
 
 			// Initialize Script Object and execute calculations
-			DNAShapefromFASTA script_obj = new DNAShapefromFASTA(FASTA.get(x), BASENAME, OUTPUT_TYPE, PS);
+			DNAShapefromFASTA script_obj = new DNAShapefromFASTA(FASTA.get(x), BASENAME, OUTPUT_TYPE, PS, OUTPUT_GZIP);
 			script_obj.run();
 
 			// Convert average and statistics to output tabs panes

@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.jar.Attributes.Name;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -85,7 +86,9 @@ public class FASTAExtractOutput extends JFrame {
 				if (OUT_DIR != null) {
 					NAME = OUT_DIR.getCanonicalPath() + File.separator + NAME;
 				}
-				NAME += gzOutput ? ".gz" : "";
+				if (gzOutput){
+					NAME += ".gz";
+				}
 				OUTFILE = new File(NAME);
 				PS.println("Proccessing File: " + BED.get(x).getName());
 

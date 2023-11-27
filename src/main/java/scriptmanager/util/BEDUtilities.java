@@ -2,13 +2,10 @@ package scriptmanager.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.zip.GZIPInputStream;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
@@ -38,12 +35,7 @@ public class BEDUtilities {
 	public static ArrayList<BEDCoord> loadCoord(File input, boolean HEADER) throws UnsupportedEncodingException, IOException {
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if (GZipUtilities.isGZipped(input)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(input)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(input);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		while (line != null) {

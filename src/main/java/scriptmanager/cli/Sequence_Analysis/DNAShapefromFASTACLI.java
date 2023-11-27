@@ -43,6 +43,8 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	private String outputBasename = null;
 	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 
 	@ArgGroup(validate = false, heading = "Shape Options%n")
 	ShapeType shape = new ShapeType();
@@ -79,7 +81,7 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 
 		// Generate Composite Plot
 		DNAShapefromFASTA script_obj = new DNAShapefromFASTA(fastaFile, outputBasename, OUTPUT_TYPE,
-				new PrintStream[] { null, null, null, null });
+				new PrintStream[] { null, null, null, null }, gzOutput);
 		script_obj.run();
 
 		// Print Composite Scores

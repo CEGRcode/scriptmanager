@@ -32,6 +32,8 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be random_coordinates_<genomeName>_<window>bp.<ext>")
 	private File output = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = {"-f", "--gff"}, description = "file format output as GFF (default format as BED)")
 	private boolean formatIsBed = true;
 	@Option(names = {"-n", "--num-sites"}, description = "number of sites (default=1000)")
@@ -53,7 +55,7 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		RandomCoordinate.execute(genomeName, numSites, window, formatIsBed, output); 
+		RandomCoordinate.execute(genomeName, numSites, window, formatIsBed, output, gzOutput); 
 		
 		System.err.println( "Random Coordinate Generation Complete." );
 		return(0);

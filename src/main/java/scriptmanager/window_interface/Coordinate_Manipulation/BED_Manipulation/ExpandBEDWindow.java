@@ -90,26 +90,22 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				if (SIZE < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Expansion Size!!! Must be larger than 0 bp");
 				} else {
+					boolean GZIP = chckbxGzipOutput.isSelected();
 					setProgress(0);
 					for (int x = 0; x < BEDFiles.size(); x++) {
 						// Save current BED to temp variable
 						File XBED = BEDFiles.get(x);
 						System.out.println("Input: " + XBED.getName());
 						// Set output filepath with name and output directory
-						String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
-						// Strip second extension if input has ".gz" first extension
-						if (XBED.getName().endsWith(".bed.gz")) {
-							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-						}
 						// Add suffix
-						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
-						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
+						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed" + (GZIP? ".gz": "");
 
 						// Execute expansion and update progress
-						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
+						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), GZIP);
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
@@ -219,7 +215,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnOutput);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);

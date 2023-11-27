@@ -1,18 +1,12 @@
 package scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.GZipUtilities;
@@ -41,12 +35,7 @@ public class SortBED {
 		HashMap<String, String> CDTFile = new HashMap<String, String>();
 		String CDTHeader = "";
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br;
-		if(GZipUtilities.isGZipped(cdt)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(cdt)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(cdt), "UTF-8"));
-		}
+		BufferedReader br = GZipUtilities.makeReader(cdt);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		while (line != null) {
@@ -69,11 +58,8 @@ public class SortBED {
 
 		PrintStream OUT;
 		// Initialize output writer
-		if (gzOutput) {
-			OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(outbase + ".cdt.gz"))));
-		} else {
-			OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(outbase + ".cdt")));
-		}
+		String suffix = ".cdt" + (gzOutput? ".gz": "");
+		OUT = GZipUtilities.makePrintStream(new File(outbase + suffix), gzOutput);
 		// Output sorted CDT File
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {
@@ -86,11 +72,7 @@ public class SortBED {
 		HashMap<String, String> BEDFile = new HashMap<String, String>();
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		if(GZipUtilities.isGZipped(bed)) {
-			br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(bed)), "UTF-8"));
-		} else {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(bed), "UTF-8"));
-		}
+		br = GZipUtilities.makeReader(bed);
 		// Initialize line variable to loop through
 		line = br.readLine();
 		while (line != null) {
@@ -103,11 +85,8 @@ public class SortBED {
 		br.close();
 
 		// Initialize output writer
-		if (gzOutput) {
-			OUT = new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(outbase + ".bed.gz"))));
-		} else {
-			OUT = new PrintStream(new BufferedOutputStream(new FileOutputStream(outbase + ".bed")));
-		}
+		suffix = ".bed" + (gzOutput? ".gz": "");
+		OUT = GZipUtilities.makePrintStream(new File(outbase + suffix), gzOutput);
 		// Output sorted BED File
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(BEDFile.get(SORT.get(x).getName()));

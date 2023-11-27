@@ -2,11 +2,8 @@ package scriptmanager.scripts.Peak_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -15,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.util.GZipUtilities;
 
 /**
  * Filter coordinate peaks in a BED file by a given exclusion distance
@@ -27,7 +26,7 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 public class FilterBEDbyProximity {
 
 	private int CUTOFF;
-	private InputStream inputStream;
+	private File INPUT;
 	private String INPUTNAME = null;
 	private PrintStream OUT_Filter = null;
 	private PrintStream OUT_Cluster = null;
@@ -40,19 +39,21 @@ public class FilterBEDbyProximity {
 	 * @param cutoff     Exclusion distance (bp)
 	 * @param outputBase Base name for the output files
 	 * @param ps         Output PrintStream
+	 * @param gzOutput    whether or not to gzip output
 	 * @throws IOException Invalid file or parameters
 	 */
-	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps) throws IOException {
+	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps, boolean gzOutput) throws IOException {
 		CUTOFF = cutoff;
 		PS = ps;
-		inputStream = new FileInputStream(input);
+		
+		INPUT = input;
 		INPUTNAME = input.getName();
 		try{
 			if(outputBase == null) {
-				outputBase = INPUTNAME.substring(0, input.getName().lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
+				outputBase = ExtensionFileFilter.stripExtensionIgnoreGZ(input) + "_" + Integer.toString(CUTOFF) + "bp";
 			}
-			OUT_Filter = new PrintStream(new File(outputBase + "-FILTER" + ".bed")); 
-			OUT_Cluster = new PrintStream(new File(outputBase + "-CLUSTER" + ".bed"));
+			OUT_Filter = GZipUtilities.makePrintStream(new File(outputBase + "-FILTER.bed" + (gzOutput? ".gz": "")), gzOutput); 
+			OUT_Cluster = GZipUtilities.makePrintStream(new File(outputBase + "-CLUSTER.bed" + (gzOutput? ".gz": "")), gzOutput);
 		}catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
 	
@@ -69,7 +70,8 @@ public class FilterBEDbyProximity {
 		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTNAME);
 		printPS("Starting: " + getTimeStamp());
 		
-	    BufferedReader lines = new BufferedReader(new InputStreamReader(inputStream), 100);
+		//Check if input file is compressed and assign appropriate input stream
+	    BufferedReader lines = GZipUtilities.makeReader(INPUT);
 	    List<BEDCoord> bedArray = new ArrayList<BEDCoord>();
 	    List<Integer> failArray = new ArrayList<Integer>();
 		
@@ -138,8 +140,6 @@ public class FilterBEDbyProximity {
 		}
 		OUT_Filter.close();
 		OUT_Cluster.close();
-		
-		inputStream.close();
 		printPS("Completing: " + getTimeStamp());
 	}
 

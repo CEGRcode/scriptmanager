@@ -111,7 +111,6 @@ public class ExpandBEDCLI implements Callable<Integer> {
 			if (!stdout) {
 				String NAME = ExtensionFileFilter.stripExtension(bedFile);
 				NAME += byCenter ? "_" + Integer.toString(SIZE) + "bp.bed" : "_border_" + Integer.toString(SIZE) + "bp.bed";
-				NAME += gzOutput ? ".gz" : "";
 				output = new File(NAME);
 			//check stdout and output not both selected
 			} else {

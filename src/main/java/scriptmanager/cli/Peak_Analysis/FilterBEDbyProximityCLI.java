@@ -32,6 +32,8 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify basename for output files (default = <bedFilename>_<exclusionNum>bp)")
 	private String outputBasename = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = {"-e", "--exclusion"}, description = "exclusion distance in bp (default=100)")
 	private int exclusion = 100;
 	
@@ -49,7 +51,7 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(bedFile, exclusion, outputBasename, null);
+		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(bedFile, exclusion, outputBasename, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println( "Filter Complete." );

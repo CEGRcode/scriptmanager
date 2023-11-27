@@ -39,6 +39,8 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	@Option(names = { "-o",
 			"--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;
 	@Option(names = { "-n", "--no-force" }, description = "don't force-strandedness (default is to force strandedness)")
@@ -81,7 +83,7 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		try {
 			// Generate Composite Plot
 			DNAShapefromBED script_obj = new DNAShapefromBED(genomeFASTA, bedFile, outputBasename, OUTPUT_TYPE,
-					forceStrand, new PrintStream[] { null, null, null, null });
+					forceStrand, new PrintStream[] { null, null, null, null }, gzOutput);
 			script_obj.run();
 
 			if (avgComposite) {

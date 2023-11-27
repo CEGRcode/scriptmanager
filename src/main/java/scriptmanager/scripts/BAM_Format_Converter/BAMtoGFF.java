@@ -6,6 +6,7 @@ import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloseableIterator;
+import scriptmanager.util.GZipUtilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ import java.util.Date;
 public class BAMtoGFF {
 	private File BAM = null;
 	private File OUTFILE = null;
+	private boolean OUTPUT_GZIP;
 	private PrintStream OUT = null;
 	private PrintStream PS = null;
 
@@ -49,8 +51,9 @@ public class BAMtoGFF {
 	 * @param min_size    minimum acceptable insert size
 	 * @param max_size    maximum acceptable insert size
 	 * @param ps          PrintStream to output results
+	 * @param gzOutput    whether or not to gzip output
 	 */
-	public BAMtoGFF(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps) {
+	public BAMtoGFF(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTFILE = o;
 		PS = ps;
@@ -69,6 +72,7 @@ public class BAMtoGFF {
 		} else if (STRAND == 4) {
 			READ = "FRAGMENT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -80,7 +84,7 @@ public class BAMtoGFF {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
 			try {
-				OUT = new PrintStream(OUTFILE);
+				OUT = GZipUtilities.makePrintStream(OUTFILE, OUTPUT_GZIP);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -119,6 +123,12 @@ public class BAMtoGFF {
 				printPS("Maximum insert size required to output: NaN");
 			} else {
 				printPS("Maximum insert size required to output: " + MAX_INSERT);
+			}
+			
+			if (OUTPUT_GZIP){
+				printPS("Output GZip: yes");
+			} else {
+				printPS("Output GZip: no");
 			}
 
 			// Build&Print Header

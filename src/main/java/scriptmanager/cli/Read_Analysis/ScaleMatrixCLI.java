@@ -32,6 +32,8 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <matrixFilename>_SCALE.tab)")
 	private File output = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = {"-s", "--scaling-factor"}, description = "scaling factor (default=1)")
 	private double scale = 1;
 	@Option(names = {"-r", "--start-row"}, description = "")
@@ -54,7 +56,7 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 			System.exit(1);
 		}		
 		
-		ScaleMatrix script_obj = new ScaleMatrix(matrixFile, output, scale, startROW, startCOL);
+		ScaleMatrix script_obj = new ScaleMatrix(matrixFile, output, scale, startROW, startCOL, gzOutput);
 		script_obj.run();
 		
 		System.err.println("All Matrices Scaled.");
@@ -72,7 +74,7 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 		//no check ext
 		//set default output filename
 		if(output==null){
-			output = new File(ExtensionFileFilter.stripExtension(matrixFile) + "_SCALE." + ExtensionFileFilter.getExtension(matrixFile)); 
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(matrixFile) + "_SCALE." + ExtensionFileFilter.getExtensionIgnoreGZ(matrixFile)); 
 		//check output filename is valid
 		}else if( output.isDirectory() ){
 			r += "(!)Must indicate file (not a directory) for your output.";

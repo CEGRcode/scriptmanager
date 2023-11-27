@@ -855,7 +855,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		output.add(tglCdt);
 		tglCdt.setSelected(true);
 
-		chckbxOutputGzip = new JCheckBox("Output GZIP");
+		chckbxOutputGzip = new JCheckBox("Output GZip");
 		sl_OutputOptions.putConstraint(SpringLayout.NORTH, chckbxOutputGzip, 0, SpringLayout.NORTH, chckbxOutputData);
 		sl_OutputOptions.putConstraint(SpringLayout.WEST, chckbxOutputGzip, 6, SpringLayout.EAST, tglTab);
 		pnlOutputOptions.add(chckbxOutputGzip);

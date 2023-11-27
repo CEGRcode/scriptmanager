@@ -34,6 +34,8 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "output bed to STDOUT")
 	private boolean stdout = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	/**
 	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
@@ -49,7 +51,7 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		GFFtoBED.convertGFFtoBED(output, gffFile);
+		GFFtoBED.convertGFFtoBED(output, gffFile, gzOutput);
 		
 		System.err.println("Conversion Complete");
 		return(0);
@@ -65,7 +67,7 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if(output==null && !stdout){
-			output = new File(ExtensionFileFilter.stripExtension(gffFile) + ".bed");
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(gffFile) + ".bed");
 		//check stdout and output not both selected
 		}else if(stdout){
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }

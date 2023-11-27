@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Output wrapper for running
@@ -27,10 +28,11 @@ public class FilterBEDbyProximityOutput extends JFrame{
 	private int CUTOFF;
 	private File INPUT;
 	private String OUTBASE = null;
+	private boolean OUTPUT_GZIP;
 	
 	private JTextArea textArea;
 	
-	public FilterBEDbyProximityOutput(File input, int cutoff, File output) throws IOException {
+	public FilterBEDbyProximityOutput(File input, int cutoff, File output, boolean gzOutput) throws IOException {
 		setTitle("BED File Filter Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -45,12 +47,13 @@ public class FilterBEDbyProximityOutput extends JFrame{
 		CUTOFF = cutoff;
 		INPUT = input;
 		
-		String INPUTNAME = input.getName();
+		String INPUTNAME = ExtensionFileFilter.stripExtensionIgnoreGZ(input);
 		if(output!=null){
-			OUTBASE = output.getCanonicalPath() + File.separator + INPUTNAME.substring(0, INPUTNAME.lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
+			OUTBASE = output.getCanonicalPath() + File.separator + INPUTNAME + "_" + Integer.toString(CUTOFF) + "bp";
 		}else{
-			OUTBASE = INPUTNAME.substring(0, INPUTNAME.lastIndexOf('.')) + "_" + Integer.toString(CUTOFF) + "bp";
+			OUTBASE = INPUTNAME + "_" + Integer.toString(CUTOFF) + "bp";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 	
 	/**
@@ -62,7 +65,7 @@ public class FilterBEDbyProximityOutput extends JFrame{
 	{
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		
-		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(INPUT, CUTOFF, OUTBASE, PS);
+		FilterBEDbyProximity script_obj = new FilterBEDbyProximity(INPUT, CUTOFF, OUTBASE, PS, OUTPUT_GZIP);
 		script_obj.run();
 		
 		Thread.sleep(1000);

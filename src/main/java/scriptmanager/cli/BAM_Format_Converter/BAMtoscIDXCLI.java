@@ -40,7 +40,8 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "stream output file to STDOUT (cannot be used with \"-o\" flag)" )
 	private boolean stdout = false;
-	
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	//Read
 	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
 	ReadType readType = new ReadType();
@@ -78,8 +79,8 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			System.exit(1);
 		}
-		
-		BAMtoscIDX script_obj = new BAMtoscIDX(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+
+		BAMtoscIDX script_obj = new BAMtoscIDX(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println("Conversion Complete");
@@ -120,7 +121,7 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		}else if(stdout){
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
 		//check output filename is valid
-		}else{
+		} else {
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");
