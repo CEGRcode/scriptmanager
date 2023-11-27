@@ -17,7 +17,10 @@ import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 
 /**
- * Figure_GenerationCLI/LabelHeatMapCLI
+ * Command line interface for
+ * {@link scriptmanager.scripts.Figure_Generation.LabelHeatMap}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "label-heatmap", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.label_heatmap_description,

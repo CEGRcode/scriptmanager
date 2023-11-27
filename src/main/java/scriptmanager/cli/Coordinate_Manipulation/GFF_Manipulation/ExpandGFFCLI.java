@@ -15,8 +15,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 
 /**
-	Coordinate_ManipulationCLI/ExpandGFFCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "expand-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.expand_gff_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -24,6 +27,11 @@ import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class ExpandGFFCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new ExpandGFFCLI object
+	 */
+	public ExpandGFFCLI(){}
 	
 	@Parameters( index = "0", description = "the GFF file to expand on")
 	private File gffFile;
@@ -47,6 +55,10 @@ public class ExpandGFFCLI implements Callable<Integer> {
 	private boolean byCenter = true;
 	private int SIZE = 250;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ExpandGFFCLI.call()" );

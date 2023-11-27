@@ -15,7 +15,7 @@ import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.BEDUtilities;
 
 /**
- * This script retrieves the genomic sequences from a BED coordinate file.
+ * Retrieve the genomic sequences from the coordinates in a BED file.
  * 
  * @author William KM Lai
  * @see scriptmanager.util.FASTAUtilities
@@ -45,7 +45,7 @@ public class FASTAExtract {
 	 *             name, false = use Genomic Coordinate)
 	 * @param ps   a PrintStream object for printing progress updates (for GUI)
 	 * @param gz   If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public FASTAExtract(File gen, File b, File out, boolean str, boolean head, PrintStream ps, boolean gz)
 			throws IOException {
@@ -67,8 +67,8 @@ public class FASTAExtract {
 	/**
 	 * Execute script to extract the genomic sequences.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		PS.println("STRAND:" + STRAND);

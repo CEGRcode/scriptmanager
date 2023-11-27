@@ -24,7 +24,7 @@ import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.DNAShapeReference;
 
 /**
- * This script calculates various aspects of DNA shape across a set of BED
+ * Calculate and score various aspects of DNA shape across a set of BED
  * intervals.
  * 
  * @author William KM Lai
@@ -75,7 +75,7 @@ public class DNAShapefromBED {
 	 * @param ps   list of four PrintStream objects corresponding to each shape type
 	 *             (for GUI)
 	 * @param gzOutput Whether to output compressed file
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps, boolean gzOutput)
 			throws IOException {
@@ -100,8 +100,8 @@ public class DNAShapefromBED {
 	 * Execute script to calculate DNA shape for all types across the input
 	 * sequence.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		try {
@@ -282,7 +282,7 @@ public class DNAShapefromBED {
 	 * SAMException thrown by FastaSequenceIndexCreator to account for malformed
 	 * FASTA file.
 	 * 
-	 * @return
+	 * @return Returns true
 	 */
 	public boolean getFAIstatus() {
 		return INDEX;
@@ -352,7 +352,7 @@ public class DNAShapefromBED {
 	 * 
 	 * @param INPUT a BED-formatted file
 	 * @return the parsed BED coordinate objects
-	 * @throws IOException 
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
 	public ArrayList<BEDCoord> loadCoord(File INPUT) throws IOException{
 		String line;

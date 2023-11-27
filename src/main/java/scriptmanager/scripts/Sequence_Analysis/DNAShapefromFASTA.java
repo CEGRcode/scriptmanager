@@ -16,7 +16,7 @@ import scriptmanager.util.DNAShapeReference;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This script calculates the various aspects of DNA shape across a set of FASTA
+ * Calculate and score various aspects of DNA shape across a set of FASTA
  * sequences.
  * 
  * @author William KM Lai
@@ -75,8 +75,8 @@ public class DNAShapefromFASTA {
 	 * Execute script to calculate DNA shape for all types across the input
 	 * sequence.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		String NAME = FASTA.getName().split("\\.")[0];

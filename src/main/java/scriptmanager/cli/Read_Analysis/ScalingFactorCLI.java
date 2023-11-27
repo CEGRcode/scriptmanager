@@ -15,8 +15,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 /**
-	Read_AnalysisCLI/ScalingFactorCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Read_Analysis.ScalingFactor}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "scaling-factor", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scaling_factor_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -54,6 +57,10 @@ public class ScalingFactorCLI implements Callable<Integer> {
 	
 	private int scaleType = 1;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ScalingFactorCLI.call()" );
@@ -86,18 +93,10 @@ public class ScalingFactorCLI implements Callable<Integer> {
 			if(!controlBAM.exists()){ r += "(!)BAM(control) file does not exist: " + controlBAM.getName() + "\n"; }
 		}
 		if(!r.equals("")){ return(r); }
-		//check input extensions & BAI exists
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM(input) file? Check extension: " + bamFile.getName() + "\n";
-		}
+		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
 			r += "(!)BAI Index File does not exist for: " + bamFile.getName() + "\n";
-		}
-		if(blacklistFilter!=null){
-			if(!"bed".equals(ExtensionFileFilter.getExtension(blacklistFilter))){
-				r += "(!)Is this a BED file? Check extension: " + blacklistFilter.getName() + "\n";
-			}
 		}
 		if(controlBAM!=null){
 			if(!"bam".equals(ExtensionFileFilter.getExtension(controlBAM))){
@@ -114,7 +113,6 @@ public class ScalingFactorCLI implements Callable<Integer> {
 		//check output filename is valid
 		}else{
 			File tempOut = new File(outputBasename);
-			//no check ext
 			//check directory
 			if(tempOut.getParent()==null){
 // 				System.err.println("default to current directory");

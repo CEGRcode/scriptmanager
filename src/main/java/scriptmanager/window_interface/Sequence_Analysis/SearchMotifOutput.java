@@ -14,8 +14,9 @@ import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Graphical window for displaying progress as genome sequences are searched for
- * a given motif.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.SearchMotif} and reporting
+ * progress
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
@@ -34,14 +35,14 @@ public class SearchMotifOutput extends JFrame {
 
 	/**
 	 * Initialize a scrollable JTextArea window to display progress and save inputs
-	 * for calling the script.
+	 * for calling the script
 	 * 
 	 * @param input
 	 * @param mot
 	 * @param num
 	 * @param out_dir
 	 * @param gz If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public SearchMotifOutput(File input, String mot, int num, File out_dir, boolean gz) throws IOException {
 		setTitle("Motif Search Progress");
@@ -68,8 +69,8 @@ public class SearchMotifOutput extends JFrame {
 	 * sequence/chromosome name within the FASTA file and dispose the window after
 	 * the script finishes.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

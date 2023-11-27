@@ -9,8 +9,11 @@ import scriptmanager.objects.ToolDescriptions;
 import java.io.IOException;
 
 /**
-	Read_AnalysisCLI/SimilarityMatrixCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Read_Analysis.SimilarityMatrix}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "similarity-matrix", mixinStandardHelpOptions = true,
 	description = "",
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -19,6 +22,10 @@ import java.io.IOException;
 	exitCodeOnExecutionException = 1)
 public class SimilarityMatrixCLI implements Callable<Integer> {
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SimilarityMatrixCLI.call()" );

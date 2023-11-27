@@ -35,11 +35,11 @@ import scriptmanager.util.GenomeSizeReference;
 	 * @param OUTPUT     the file to write the coordinate tile output to (if null, a
 	 *                   default filename is determined using
 	 *                   &lt;GENOME&gt;_&lt;windowSize&gt;bp.&lt;ext&gt;)
-	 * @param outputGzip Whether to compress output
-	 * @throws IOException
+	 * @param gzOutput   whether or not to gzip output
+	 * @throws IOException Invalid file or parameters
 	 * @throws IllegalArgumentException
 	 */
-	public static void execute(String GENOME, int windowSize, boolean BEDout, File OUTPUT, boolean outputGzip) throws IOException, IllegalArgumentException {
+	public static void execute(String GENOME, int windowSize, boolean BEDout, File OUTPUT, boolean gzOutput) throws IOException, IllegalArgumentException {
 		GenomeSizeReference coord = new GenomeSizeReference(GENOME);
 		String EXTENSION = ".gff";
 		if (BEDout) {
@@ -48,9 +48,9 @@ import scriptmanager.util.GenomeSizeReference;
 		String fileName = GENOME + "_" + windowSize + "bp" + EXTENSION;
 		PrintStream OUT = null;
 		if (OUTPUT == null) {
-			OUT = GZipUtilities.makePrintStream(new File(fileName), outputGzip);
+			OUT = GZipUtilities.makePrintStream(new File(fileName), gzOutput);
 		} else {
-			OUT = GZipUtilities.makePrintStream(OUTPUT, outputGzip);
+			OUT = GZipUtilities.makePrintStream(OUTPUT, gzOutput);
 		}
 
 		for(int x = 0; x < coord.getChrom().size(); x++) {

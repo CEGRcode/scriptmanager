@@ -15,15 +15,33 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.GZipUtilities;
 
-public class FilterBEDbyProximity{
-	
+/**
+ * Filter coordinate peaks in a BED file by a given exclusion distance
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI
+ * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityOutput
+ * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityWindow
+ */
+public class FilterBEDbyProximity {
+
 	private int CUTOFF;
 	private File INPUT;
 	private String INPUTNAME = null;
 	private PrintStream OUT_Filter = null;
 	private PrintStream OUT_Cluster = null;
 	private PrintStream PS = null;
-	
+
+	/**
+	 * Creates a new instance of a FilterBEDbyProximity script
+	 * 
+	 * @param input      BED file to filter
+	 * @param cutoff     Exclusion distance (bp)
+	 * @param outputBase Base name for the output files
+	 * @param ps         Output PrintStream
+	 * @param gzOutput    whether or not to gzip output
+	 * @throws IOException Invalid file or parameters
+	 */
 	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps, boolean gzOutput) throws IOException {
 		CUTOFF = cutoff;
 		PS = ps;
@@ -39,6 +57,14 @@ public class FilterBEDbyProximity{
 		}catch (FileNotFoundException e) { e.printStackTrace(); }
 	}
 	
+	/**
+	 * Runs the filtering operation, outputting peaks to "-FILTER.bed" and other
+	 * reads to "-CLUSTER.bed"
+	 * 
+	 * @throws IOException          Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the
+	 *                              same time
+	 */
 	public void run() throws IOException, InterruptedException
 	{
 		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTNAME);

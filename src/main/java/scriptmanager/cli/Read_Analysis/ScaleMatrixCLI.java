@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
 /**
-	Read_AnalysisCLI/ScaleMatrixCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Read_Analysis.ScaleMatrix}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "scale-matrix", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.scale_matrix_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -39,6 +42,10 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 	private int startCOL = 2;
 	
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ScaleMatrixCLI.call()" );

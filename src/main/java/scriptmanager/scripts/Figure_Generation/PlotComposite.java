@@ -19,8 +19,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * The script class to create/display line plot images based on the output files
- * of scripts.Figure_Generation.TagPileup.
+ * Create/display line plot images based on the composite output files from
+ * {@link scriptmanager.scripts.Read_Analysis.TagPileup}).
  * 
  * @author Olivia Lang
  * @see scriptmanager.util.ColorSeries
@@ -32,37 +32,31 @@ import scriptmanager.util.GZipUtilities;
 public class PlotComposite {
 
 	/**
-	 * Static method that parses the input composite data (formatted like output
-	 * of TagPileup), determines the default color palette if none specified,
-	 * and plots the line chart, saving the image file to the appropriate output
-	 * if indicated.
+	 * Parse the input composite data (formatted like output of
+	 * {@link scriptmanager.scripts.Read_Analysis.TagPileup}), determine the
+	 * default color palette if none specified, and plot the line chart. Then save
+	 * the image file to the appropriate output if indicated.
 	 * 
-	 * @param input
-	 *            a tab-delimited file containing the composite information in
-	 *            the format of scripts.Figure_Generation.TagPileup's output
-	 * @param OUT_PATH
-	 *            filepath to save composite image to. if null, defaults to
-	 *            &lt;InputWithoutExtension&gt;_plot.png.
-	 * @param outputImage
-	 *            to save image (true) or not (false)
-	 * @param title
-	 *            the string to include at the top of the line chart
-	 * @param COLORS
-	 *            the color palette list of colors to plot. If null, then a
-	 *            different color palette is chosen based on the number of lines
-	 *            parsed from the composite input file: if n=1, then black is
-	 *            used, if n=2, then the first plot is blue and the second is
-	 *            red, if n&gt;2, then the YEP color pallete is used.
-	 * @param legend
-	 *            to include the legend in the chart (true) or not (false)
-	 * @param pxHeight
-	 *            height of image to save
-	 * @param pxWidth
-	 *            width of image to save
-	 * @return
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 * @throws FileNotFoundException
+	 * @param input       a tab-delimited file containing the composite information
+	 *                    in the format of scripts.Figure_Generation.TagPileup's
+	 *                    output
+	 * @param OUT_PATH    filepath to save composite image to. if null, defaults to
+	 *                    &lt;InputWithoutExtension&gt;_plot.png.
+	 * @param outputImage to save image (true) or not (false)
+	 * @param title       the string to include at the top of the line chart
+	 * @param COLORS      the color palette list of colors to plot. If null, then a
+	 *                    different color palette is chosen based on the number of
+	 *                    lines parsed from the composite input file: if n=1, then
+	 *                    black is used, if n=2, then the first plot is blue and the
+	 *                    second is red, if n&gt;2, then the YEP color pallete is
+	 *                    used.
+	 * @param legend      to include the legend in the chart (true) or not (false)
+	 * @param pxHeight    height of image to save
+	 * @param pxWidth     width of image to save
+	 * @return The composite plot
+	 * @throws IOException              Invalid file or parameters
+	 * @throws IllegalArgumentException File is not formatted properly
+	 * @throws FileNotFoundException    Script could not find valid input file
 	 */
 	public static JFreeChart plotCompositeFile(File input, File OUT_PATH, boolean outputImage, String title, ArrayList<Color> COLORS, boolean legend, int pxHeight, int pxWidth) throws IOException, IllegalArgumentException, FileNotFoundException {
 		BufferedReader br = GZipUtilities.makeReader(input);

@@ -37,8 +37,10 @@ import java.beans.PropertyChangeListener;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
 /**
- * Graphical interface window for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
@@ -47,6 +49,9 @@ import scriptmanager.util.FileSelection;
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -58,6 +63,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveBED;
 	private JButton btnExecute;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -69,7 +77,10 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
+	 */
+	/**
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -244,6 +255,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		btnExecute.addActionListener(this);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -255,7 +269,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -264,6 +278,14 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Invoked when task's progress property changes and updates the progress bar
+	 */
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

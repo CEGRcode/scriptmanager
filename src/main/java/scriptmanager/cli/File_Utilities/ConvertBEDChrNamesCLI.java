@@ -14,11 +14,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 /**
- * Command line interface class for converting chromsome names of BED file by
- * calling method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.File_Utilities.ConvertChrNames}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
  */
 @Command(name = "convert-bed-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.convertBEDChrNamesDescription,
@@ -26,6 +25,11 @@ import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class ConvertBEDChrNamesCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a ConvertBEDChrNamesCLI object
+	 */
+	public ConvertBEDChrNamesCLI(){}
 
 	@Parameters( index = "0", description = "the BED coordinate file to convert")
 	private File coordFile;
@@ -42,6 +46,10 @@ public class ConvertBEDChrNamesCLI implements Callable<Integer> {
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ConvertBEDChrNamesCLI.call()" );
@@ -64,10 +72,10 @@ public class ConvertBEDChrNamesCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

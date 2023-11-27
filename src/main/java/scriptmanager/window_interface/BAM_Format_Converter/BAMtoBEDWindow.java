@@ -37,9 +37,20 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoBED}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoBED
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDOutput
+ */
 @SuppressWarnings("serial")
 public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -65,8 +76,14 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	private JTextField txtMax;
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -130,6 +147,9 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Creates a new BAMtoBEDWindow
+	 */
 	public BAMtoBEDWindow() {
 		setTitle("BAM to BED Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -358,6 +378,9 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		});
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -369,7 +392,7 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when the task's progress changes
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -378,6 +401,11 @@ public class BAMtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

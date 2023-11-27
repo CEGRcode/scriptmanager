@@ -14,15 +14,17 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
- * Command line interface class for randomizing sequences (shuffling
- * nucleotides) in a FASTA file by calling the methods implemented in the
- * scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA
  */
-@Command(name = "randomize-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.randomize_fasta_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "randomize-fasta", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.randomize_fasta_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class RandomizeFASTACLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "the FASTA file ")
@@ -36,6 +38,10 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">RandomizeFASTACLI.call()");
@@ -53,10 +59,10 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";
@@ -66,27 +72,12 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
 			return (r);
 		}
-		// check input extension
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(fastaFile)) {
-			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile) + "_RAND.fa";
 			output = new File(NAME);
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!faFilter.accept(output)) {
-					r += "(!)Use FASTA extension for output filename. Try: "
-							+ ExtensionFileFilter.stripExtensionIgnoreGZ(output) + ".fa\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use \".fa\" extension for output filename. Try: " + output
-						+ ".fa\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 				// System.err.println("default to current directory");

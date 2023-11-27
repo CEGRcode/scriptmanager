@@ -13,8 +13,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
 
 /**
-	BAM_StatisticsCLI/PEStatsCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.PEStats}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "pe-stat", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.pe_stat_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -38,6 +41,10 @@ public class PEStatsCLI implements Callable<Integer> {
 	@Option(names = {"-d", "--duplication-stats"}, description = "calculate duplication statistics if this flag is used (default false)")
 	private boolean dup = false;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">PEStatsCLI.call()" );
@@ -62,10 +69,6 @@ public class PEStatsCLI implements Callable<Integer> {
 			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
-		}
 		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
@@ -77,7 +80,6 @@ public class PEStatsCLI implements Callable<Integer> {
 			outputBasename = new File(ExtensionFileFilter.stripExtension(bamFile));
 		//check output filename is valid
 		}else{
-			//no check ext
 			//check directory
 			if(outputBasename.getParent()==null){
 // 				System.err.println("default to current directory");

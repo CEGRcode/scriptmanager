@@ -21,8 +21,9 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
- * Graphical window for displaying the DNA shape scores and charts for the set
- * of input BED intervals.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED} and reporting
+ * composite results
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
@@ -90,8 +91,8 @@ public class DNAShapefromBEDOutput extends JFrame {
 	 * for each shape type under the "DNA Shape Statistics" tab and append each
 	 * chart generated under the "DNA Shape Plot" tab.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		try {

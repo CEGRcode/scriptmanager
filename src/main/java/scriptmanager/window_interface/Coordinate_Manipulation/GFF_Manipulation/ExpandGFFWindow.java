@@ -38,10 +38,20 @@ import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF
+ */
 @SuppressWarnings("serial")
 public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -53,6 +63,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveGFF;
 	private JButton btnConvert;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -63,6 +76,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	private static JRadioButton rdbtnAddToBorder;
 	private static JCheckBox chckbxGzipOutput;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -102,6 +118,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Creates a new ExpandGFFWindow
+	 */
 	public ExpandGFFWindow() {
 		setTitle("Expand GFF File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -229,6 +248,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		btnConvert.addActionListener(this);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -240,7 +262,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -249,6 +271,11 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

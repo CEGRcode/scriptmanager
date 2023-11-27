@@ -14,8 +14,8 @@ import java.util.Map;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This script creates a BED coordinate file of every instance of the
- * user-provided IUPAC motif in a user-provided genomic sequence.
+ * Create a BED coordinate file of every instance of the user-provided IUPAC
+ * motif in a user-provided genomic sequence.
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Sequence_Analysis.SearchMotifCLI
@@ -89,8 +89,8 @@ public class SearchMotif {
 	 * Execute script to search a genome for motifs. Print the header of each
 	 * sequence (i.e. "chromosome" name) as they are procesed.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		PS.println("Searching motif: " + motif + " in " + input.getName());

@@ -36,9 +36,9 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 
-
 /**
- * Graphical interface window for sorting BED coordinate interval files by CDT matrix occupancies by calling the method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
@@ -46,6 +46,9 @@ import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
 @SuppressWarnings("serial")
 public class SortBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private static File OUT_DIR = null;
@@ -63,6 +66,9 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	private JButton btnExecute;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -84,7 +90,10 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
+	 */
+	/**
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -377,6 +386,9 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(btnLoadCdtFile);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -388,7 +400,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -397,6 +409,11 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

@@ -18,8 +18,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 /**
-	BAM_StatisticsCLI/SEStats
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "bam-correlation", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_correlation_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -27,6 +30,11 @@ import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMGenomeCorrelationCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMGenomeCorrelationCLI object
+	 */
+	public BAMGenomeCorrelationCLI(){}
 	
 	@Parameters( index = "0..", description = "The BAM file whose statistics we want.")
 	private File[] inputFiles;
@@ -70,6 +78,10 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 	private short colorScale = HeatMap.BLUEWHITERED;
 	private Vector<File> bamFiles = new Vector<File>();
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BAMGenomeCorrelationCLI.call()" );
@@ -123,9 +135,6 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 			//check input exists
 			if(!BAM.exists()|| BAM.isDirectory()){
 				r += "(!)BAM[" + x + "] file does not exist: " + BAM.getName() + "\n";
-			//check input extensions
-			}else if(!"bam".equals(ExtensionFileFilter.getExtension(BAM))){
-				r += "(!)Is this a BAM file? Check extension: " + BAM.getName() + "\n";
 			//check BAI exists
 			}else if(!BAI.exists() || BAI.isDirectory()){
 				r += "(!)BAI Index File does not exist for: " + BAM.getName() + "\n";
@@ -137,7 +146,6 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 			outputBasename = new File("correlation_matrix");
 		//check output filename is valid
 		}else{
-			//no check ext
 			//check directory
 			if(outputBasename.getParent()==null){
 // 				System.err.println("default to current directory");

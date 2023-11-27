@@ -23,8 +23,36 @@ import org.jfree.chart.ChartPanel;
 import scriptmanager.charts.Histogram;
 import scriptmanager.charts.LineChart;
 
+/**
+ * Tally insert-size statistics by generating insert histogram and tally counts
+ * (GEO requirement) along with alignment statistics and parameters from
+ * paired-end BAM files.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.cli.BAM_Statistics.PEStatsCLI
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
+ */
 public class PEStats {
-	
+
+	/**
+	 * Creates Insert-size Histograms and print alignment statistics to window and
+	 * output file (if provided)
+	 * 
+	 * @param out_basename name of output file (without extensions)
+	 * @param bamFile      BAM file to be analyzed (indexed)
+	 * @param DUP_STATUS   specifies if duplication statistics and chart should be
+	 *                     generated
+	 * @param MIN_INSERT   maximum histogram range
+	 * @param MAX_INSERT   minimum histogram range
+	 * @param PS_INSERT    destination for writing insert statistics (does not write
+	 *                     if null)
+	 * @param PS_DUP       destination for writing duplication statistics (does not
+	 *                     write if null null)
+	 * @param SUM_STATUS   specifies if an insert summary should be generated
+	 * @return two-item list of charts to display (0=insert size chart,
+	 *         1=duplication chart if DUP_STATUS=true)
+	 */
 	public static Vector<ChartPanel> getPEStats( File out_basename, File bamFile, boolean DUP_STATUS, int MIN_INSERT, int MAX_INSERT, PrintStream PS_INSERT, PrintStream PS_DUP, boolean SUM_STATUS ){
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 		
@@ -236,6 +264,13 @@ public class PEStats {
 		return(charts);
 	}
 	
+	/**
+	 * Returns the median value of values a histogram
+	 * @param histogram Histogram to be analyzed
+	 * @param MIN_INSERT Minimum range of histogram
+	 * @param MAX_INSERT Maximum range of histogram
+	 * @return the median value of values in the histogram
+	 */
 	public static double getMedian(double[] histogram, int MIN_INSERT, int MAX_INSERT) {
 		double sum = 0;
 		for(int x = 0; x < histogram.length; x++) { sum += histogram[x]; }
@@ -261,6 +296,14 @@ public class PEStats {
 		return 0;
 	}
 	
+	/**
+	 * Returns the standard deviation for a histogram
+	 * @param histogram Histogram to be analyzed
+	 * @param avg Average of values in the histogram
+	 * @param MIN_INSERT Minimum range of histogram
+	 * @param MAX_INSERT Maximum range of histogram
+	 * @return The standard deviation for the histogram
+	 */
 	public static double getStdDev(double[] histogram, double avg, int MIN_INSERT, int MAX_INSERT) {
 		double stddev = 0;
 		double sum = 0;
@@ -272,6 +315,11 @@ public class PEStats {
 		else return 0;
 	}
 	
+	/**
+	 * Returns the correct X-value for the Pair-End Duplication Rate plot given a number of duplications
+	 * @param COUNT Frequency/number of duplications
+	 * @return The index/X-value for a given number of duplications
+	 */
 	public static int getBinIndex(int COUNT) {
 		if(COUNT == 1) return 0;
         else if(COUNT >= 2 && COUNT <= 10) return 1;
@@ -291,6 +339,10 @@ public class PEStats {
 		return -999;
 	}
 	
+	/**
+	 * Initializes ArrayList of values (the X-axis) for Pair-End Duplication Rate plot 
+	 * @param BIN ArrayList to be initialized
+	 */
 	public static void initializeBINS(ArrayList<Double> BIN) {
 		BIN.add(Double.valueOf(0)); // Bin 1
 		BIN.add(Double.valueOf(0)); // Bin 2-10
@@ -308,6 +360,10 @@ public class PEStats {
 		BIN.add(Double.valueOf(0)); // Bin 10,000+
 	}
 	
+	/**
+	 * Initializes ArrayList of x-axis labels for Pair-End Duplication Rate plot 
+	 * @return ArrayList of x-axis labels for Pair-End Duplication Rate plot 
+	 */
 	public static String[] initializeBIN_Names() {
 		String[] NAME = new String[14];
 		NAME[0] = "1";

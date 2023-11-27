@@ -9,9 +9,9 @@ import java.util.HashMap;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * Class to contain all static chromosome name conversion methods. Primarily a
- * utility for renaming sacCer3 chromosomes in coordinate files between the two
- * alternative chromosome naming systems.
+ * Convert chromosome names (roman &rarr; arabic and arabic &rarr; roman
+ * numerals). Primarily a utility for renaming sacCer3 chromosomes in coordinate
+ * files between the two alternative chromosome naming systems.
  * 
  * @author Olivia Lang
  * @see scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI
@@ -31,7 +31,7 @@ public class ConvertChrNames {
 	 *         roman numeral chrname with mitochondrial chr map
 	 */
 	public static HashMap<String, String> getR2A(boolean useChrmt) {
-		HashMap<String,String> R2A = new HashMap<String, String>();
+		HashMap<String, String> R2A = new HashMap<String, String>();
 		R2A.put("chrXVI", "chr16");
 		R2A.put("chrXV", "chr15");
 		R2A.put("chrXIV", "chr14");
@@ -101,7 +101,7 @@ public class ConvertChrNames {
 	 * @param useChrmt     Used to generate the chromosome map for the conversion
 	 *                     (see getR2A()).
 	 * @param gzOutput     If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void convert_RomantoArabic(File input, File out_filepath, boolean useChrmt, boolean gzOutput) throws IOException {
 		convertCoordinateFile(input, out_filepath, getR2A(useChrmt), gzOutput);
@@ -117,7 +117,7 @@ public class ConvertChrNames {
 	 * @param useChrmt     Used to generate the chromosome map for the conversion
 	 *                     (see getA2R()).
 	 * @param gzOutput     If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void convert_ArabictoRoman(File input, File out_filepath, boolean useChrmt, boolean gzOutput) throws IOException {
 		convertCoordinateFile(input, out_filepath, getA2R(useChrmt), gzOutput);
@@ -134,7 +134,7 @@ public class ConvertChrNames {
 	 *                     names
 	 * @param chrMap       the HashMap for which conversion direction to implement
 	 * @param gzOutput     If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void convertCoordinateFile(File input, File out_filepath, HashMap<String, String> chrMap, boolean gzOutput) throws IOException {
 		// BED Coords:

@@ -52,9 +52,10 @@ import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
 /**
- * Graphical interface window for piling up aligned tags around reference
- * coordinates by calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.TagPileup}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.TagPileup
@@ -63,6 +64,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class TagPileupWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -120,15 +124,18 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private CompositeCartoon compositeCartoon;
 
 	// Names of fields indexed by PileupParameters constants
-	private String[] readAspectOptions = {"5' End", "3' End", "Midpoint (Require PE)", "Full Fragment (Require PE)"};
+	private String[] readAspectOptions = {"5' End", "3' End", "Midpoint", "Full Fragment"};
 	private String[] readOutputOptions = {"Read 1", "Read 2", "All Reads"};
 	private String[] transformationOptions = {"None", "Sliding Window", "Gaussian Smooth"};
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -136,26 +143,28 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			try {
 				if (Integer.parseInt(txtBin.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
+				} else if (Integer.parseInt(txtTagExtend.getText()) < 0) {
+					JOptionPane.showMessageDialog(null, "Invalid Tag Extend length!!! Must be non-negative bp length" + "\n\n" + "Consider adjusting the shift bp value if you are interested in negative extensions.", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.WINDOW && Integer.parseInt(txtSmooth.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be larger than 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be larger than 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.WINDOW && Integer.parseInt(txtSmooth.getText()) % 2 == 0) {
-					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be odd for symmetrical smoothing (so that the window is centered properly).");
+					JOptionPane.showMessageDialog(null, "Invalid Smoothing Window Size!!! Must be odd for symmetrical smoothing (so that the window is centered properly).", "Validate Options", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.GAUSSIAN && Integer.parseInt(txtStdSize.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Standard Deviation Size!!! Must be larger than 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Standard Deviation Size!!! Must be larger than 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (cbox_Transform.getSelectedIndex()==PileupParameters.GAUSSIAN && Integer.parseInt(txtNumStd.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Number of Standard Deviations!!! Must be larger than 0");
+					JOptionPane.showMessageDialog(null, "Invalid Number of Standard Deviations!!! Must be larger than 0", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (Integer.parseInt(txtCPU.getText()) < 1) {
-					JOptionPane.showMessageDialog(null, "Invalid Number of CPU's!!! Must use at least 1");
+					JOptionPane.showMessageDialog(null, "Invalid Number of CPU's!!! Must use at least 1", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (chckbxFilterByMin.isSelected() && Integer.parseInt(txtMin.getText()) < 0) {
-					JOptionPane.showMessageDialog(null, "Invalid Minimum Insert Size!!! Must be greater than or equal to 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Minimum Insert Size!!! Must be greater than or equal to 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (chckbxFilterByMax.isSelected() && Integer.parseInt(txtMax.getText()) < 0) {
-					JOptionPane.showMessageDialog(null, "Invalid Maximum Insert Size!!! Must be greater than or equal to 0 bp");
+					JOptionPane.showMessageDialog(null, "Invalid Maximum Insert Size!!! Must be greater than or equal to 0 bp", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (chckbxFilterByMin.isSelected() && chckbxFilterByMax.isSelected() && Integer.parseInt(txtMax.getText()) < Integer.parseInt(txtMin.getText())) {
-					JOptionPane.showMessageDialog(null, "Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!");
+					JOptionPane.showMessageDialog(null, "Invalid Maximum & Minimum Insert Sizes!!! Maximum must be larger/equal to Minimum!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (BEDFiles.size() < 1) {
-					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
+					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else if (BAMFiles.size() < 1) {
-					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
+					JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 				} else {
 					setProgress(0);
 					// Load up parameters for the pileup into single object
@@ -243,9 +252,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					return null;
 				}
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (SAMException se) {
-				JOptionPane.showMessageDialog(null, se.getMessage());
+				JOptionPane.showMessageDialog(null, se.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
 			}
 			return null;
 		}
@@ -259,7 +268,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Instantiate window with graphical interface design.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public TagPileupWindow() throws IOException {
 		setTitle("Tag Pileup");
@@ -558,7 +567,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_ReadManipulation.putConstraint(SpringLayout.NORTH, txtTagExtend, -1, SpringLayout.NORTH, lblTagExtend);
 		sl_ReadManipulation.putConstraint(SpringLayout.WEST, txtTagExtend, 120, SpringLayout.WEST, lblTagExtend);
 		sl_ReadManipulation.putConstraint(SpringLayout.EAST, txtTagExtend, -6, SpringLayout.EAST, pnlReadManipulation);
-		txtTagExtend.setText("1");
+		txtTagExtend.setText("0");
 		txtTagExtend.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTagExtend.setColumns(10);
 		pnlReadManipulation.add(txtTagExtend);
@@ -1030,7 +1039,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Extract read aspect and read output to upddate the cartoon accordingly.
+	 * Extract read aspect and read output to update the cartoon accordingly.
 	 */
 	public void updateCartoon() {
 		int aspect = cbox_ReadAspect.getSelectedIndex();
@@ -1049,6 +1058,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		readCartoon.redrawArrows(aspect, read);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -1059,6 +1071,11 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		task.execute();
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		Component[] components = con.getComponents();
 		for (Component component : components) {

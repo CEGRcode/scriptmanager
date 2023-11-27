@@ -14,7 +14,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 
 /**
- * Figure_GenerationCLI/MergeHeatMapCLI
+ * Command line interface for
+ * {@link scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "merge-heatmap",
 	mixinStandardHelpOptions = true,
@@ -25,15 +28,23 @@ import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 	exitCodeOnExecutionException = 1)
 public class MergeHeatMapCLI implements Callable<Integer> {
 
+	/**
+	 * Creates a new MergeHeatMapCLI object
+	 */
+	public MergeHeatMapCLI(){}
+
 	@Parameters(index = "0", description = "First(sense) PNG heatmap to merge, input1")
 	private File senseFile;
 	@Parameters(index = "1", description = "Second(anti) PNG heatmap to merge, input2")
 	private File antiFile;
 
-	@Option(names = { "-o",
-			"--output" }, description = "specify output filename, please use PNG extension\n(default=\"<senseFile>_merged.png\" appended to the name in working directory of ScriptManager")
+	@Option(names = { "-o", "--output" }, description = "specify output filename, please use PNG extension\n(default=\"<senseFile>_merged.png\" appended to the name in working directory of ScriptManager")
 	private File output = null;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">MergeHeatMapCLI.call()");
@@ -64,29 +75,12 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 		if (!r.equals("")) {
 			return (r);
 		}
-		// check input extensions
-		if (!"png".equals(ExtensionFileFilter.getExtension(senseFile))) {
-			r += "(!)Is this a PNG file? Check extension: " + senseFile.getName() + "\n";
-		}
-		if (!"png".equals(ExtensionFileFilter.getExtension(antiFile))) {
-			r += "(!)Is this a PNG file? Check extension: " + antiFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtension(senseFile);
 			output = new File(NAME + "_merged.png");
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"png".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".png\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output
-						+ ".png\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

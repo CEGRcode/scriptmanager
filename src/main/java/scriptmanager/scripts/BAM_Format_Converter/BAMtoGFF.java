@@ -15,6 +15,14 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * Convert BAM file to GFF file
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFOutput
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoGFFWindow
+ */
 public class BAMtoGFF {
 	private File BAM = null;
 	private File OUTFILE = null;
@@ -32,6 +40,19 @@ public class BAMtoGFF {
 
 	private int CHROMSTOP = -999;
 
+	/**
+	 * Creates a new instance of a BAMtoGFF script with a single BAM file
+	 * 
+	 * @param b           BAM file
+	 * @param o           output GFF file
+	 * @param s           Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required,
+	 *                    !0 = required)
+	 * @param min_size    minimum acceptable insert size
+	 * @param max_size    maximum acceptable insert size
+	 * @param ps          PrintStream to output results
+	 * @param gzOutput    whether or not to gzip output
+	 */
 	public BAMtoGFF(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTFILE = o;
@@ -54,6 +75,11 @@ public class BAMtoGFF {
 		OUTPUT_GZIP = gzOutput;
 	}
 
+	/**
+	 * Checks for valid input and runs the {@link BAMtoGFF#processREADS()} method
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 */
 	public void run() throws IOException, InterruptedException {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
@@ -131,6 +157,10 @@ public class BAMtoGFF {
 		printPS(getTimeStamp());
 	}
 
+	/**
+	 * Writes reads to GFF file and output stream
+	 * @param read Read to be written
+	 */
 	public void outputRead(SAMRecord read) {
 		// chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
 		// chr22 TeleGene promoter 10010000 10010100 900 + . touch1
@@ -175,6 +205,9 @@ public class BAMtoGFF {
 		}
 	}
 
+	/**
+	 * Checks if individual reads are valid, sending them to {@link BAMtoGFF#outputRead(SAMRecord)}
+	 */
 	public void processREADS() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();

@@ -57,6 +57,7 @@ module.exports = {
       "read-analysis/scaling-factor",
       "read-analysis/scale-matrix",
       "read-analysis/aggregate-data",
+      "read-analysis/transpose-matrix"
     ],
     "Sequence Analysis": [
       "sequence-analysis/fasta-extract",

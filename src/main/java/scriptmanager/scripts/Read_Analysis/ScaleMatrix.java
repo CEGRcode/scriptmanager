@@ -10,6 +10,13 @@ import javax.swing.JOptionPane;
 
 import scriptmanager.util.GZipUtilities;
 
+/**
+ * Performs scalar multiplication on given matrix
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Read_Analysis.ScaleMatrixCLI
+ * @see scriptmanager.window_interface.Read_Analysis.ScaleMatrixWindow
+ */
 public class ScaleMatrix {
 
 	private File MATRIX = null;
@@ -20,6 +27,14 @@ public class ScaleMatrix {
 	private int ROWINDEX = 0;
 	private int COLINDEX = 0;
 
+	/**
+	 * Creates a new instance of the ScaleMatrix script with a given input file
+	 * @param m TAB file to be scaled
+	 * @param o Output directory
+	 * @param s Scaling factor
+	 * @param r Starting row (1-indexed)
+	 * @param c Starting column (1-indexed)
+	 */
 	public ScaleMatrix(File m, File o, double s, int r, int c, boolean gzOutput) {
 		MATRIX = m;
 		OUTFILE = o;
@@ -30,6 +45,10 @@ public class ScaleMatrix {
 		COLINDEX = c;
 	}
 
+	/**
+	 * Performs the scalar multiplication
+	 * @throws IOException Invalid file or parameters
+	 */
 	public void run() throws IOException {
 		// Open output file
 		PrintStream OUT = GZipUtilities.makePrintStream(OUTFILE, OUTPUT_GZIP);

@@ -9,20 +9,21 @@ import java.util.Arrays;
 import scriptmanager.util.GZipUtilities;
 
 /**
- * This script converts a BED-formatted coordinate file too the GFF-format.
+ * Convert a BED-formatted coordinate file to the GFF-format
  * 
  * @author William KM Lai
  * @see scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI
  * @see scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow
  */
 public class BEDtoGFF {
+
 	/**
 	 * Read the BED-formatted input file and write it as a GFF-formatted output file.
 	 * 
 	 * @param outpath the filepath destination of the GFF-formatted output
 	 * @param input the BED-formatted file to convert
 	 * @param gzOutput If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static void convertBEDtoGFF(File outpath, File input, boolean gzOutput) throws IOException {
 		// chr22 TeleGene enhancer 10000000 10001000 500 + . touch1

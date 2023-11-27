@@ -13,6 +13,15 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 import scriptmanager.util.ExtensionFileFilter;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity} and
+ * reporting progress
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
+ */
 @SuppressWarnings({"serial"})
 public class FilterBEDbyProximityOutput extends JFrame{
 	
@@ -47,6 +56,11 @@ public class FilterBEDbyProximityOutput extends JFrame{
 		OUTPUT_GZIP = gzOutput;
 	}
 	
+	/**
+	 * Runs the FilterBEDbyProximity script
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 */
 	public void run() throws IOException, InterruptedException
 	{
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

@@ -36,9 +36,20 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Read_Analysis.AggregateData;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.AggregateData}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.AggregateData
+ */
 @SuppressWarnings("serial")
 public class AggregateDataWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -58,12 +69,15 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	private JCheckBox chckbxMergeToOne;
 	private JComboBox<String> cmbMethod;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JTextField txtRow;
 	private JTextField txtCol;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -252,6 +266,9 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		contentPane.add(chckbxGzipOutput);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -272,6 +289,11 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

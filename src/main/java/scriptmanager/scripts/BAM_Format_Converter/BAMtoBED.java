@@ -15,6 +15,14 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * Convert a BAM file to BED file
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.BAM_Format_Converter.BAMtoBEDCLI
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDOutput
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
+ */
 public class BAMtoBED {
 	private File BAM = null;
 	private File OUTFILE = null;
@@ -32,6 +40,19 @@ public class BAMtoBED {
 
 	private int CHROMSTOP = -999;
 
+	/**
+	 * Creates a new instance of a BAMtoBED script with a single BAM file
+	 * 
+	 * @param b           BAM file
+	 * @param o           output BED file
+	 * @param s           Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required,
+	 *                    !0 = required)
+	 * @param min_size    minimum acceptable insert size
+	 * @param max_size    maximum acceptable insert size
+	 * @param ps          PrintStream to output results
+	 * @param gzOutput    whether or not to gzip output
+	 */
 	public BAMtoBED(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTFILE = o;
@@ -54,6 +75,11 @@ public class BAMtoBED {
 		OUTPUT_GZIP = gzOutput;
 	}
 
+	/**
+	 * Runs the {@link BAMtoBED#processREADS()} method and checks that data is inputs are valid
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 */
 	public void run() throws IOException, InterruptedException {
 		// Set-up Output PrintStream
 		if (OUTFILE != null) {
@@ -131,6 +157,10 @@ public class BAMtoBED {
 		printPS(getTimeStamp());
 	}
 
+	/**
+	 * Writes reads to BED output file and the output stream
+	 * @param read Read to be written
+	 */
 	public void outputRead(SAMRecord read) {
 		// chr7 118970079 118970129 TUPAC_0001:3:1:0:1452#0/1 37 -
 		// chr7 118965072 118965122 TUPAC_0001:3:1:0:1452#0/2 37 +
@@ -174,6 +204,9 @@ public class BAMtoBED {
 		}
 	}
 
+	/**
+	 * Makes sure reads are valid, and passes them into {@link BAMtoBED#outputRead(SAMRecord)}
+	 */
 	public void processREADS() {
 		inputSam = SamReaderFactory.makeDefault().open(BAM);// factory.open(BAM);
 		AbstractBAMFileIndex bai = (AbstractBAMFileIndex) inputSam.indexing().getIndex();

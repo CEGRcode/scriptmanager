@@ -31,7 +31,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
- * Graphical interface window for generating coordinate interval files that tile a genome.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.TileGenome}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.TileGenome
@@ -39,6 +40,9 @@ import scriptmanager.scripts.Peak_Analysis.TileGenome;
 @SuppressWarnings("serial")
 public class TileGenomeWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	private JCheckBox chckbxGzipOutput;
 	private JPanel contentPane;
@@ -50,8 +54,14 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 
 	private File OUTPUT_PATH = null;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -187,6 +197,9 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		contentPane.add(chckbxGzipOutput);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -197,10 +210,18 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
         task.execute();
 	}
 	
+	/**
+	 * Congrats!  You found the second empty method - Ben
+	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 
     }
 	
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

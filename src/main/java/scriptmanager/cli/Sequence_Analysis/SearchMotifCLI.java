@@ -15,14 +15,17 @@ import scriptmanager.util.FASTAUtilities;
 import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 
 /**
- * Command line interface class for searching a genomic sequence for a motif by
- * calling the methods implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.SearchMotif}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
  */
-@Command(name = "search-motif", mixinStandardHelpOptions = true, description = ToolDescriptions.search_motif_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "search-motif", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.search_motif_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class SearchMotifCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "The FASTA file in which to search for the motif.")
@@ -37,6 +40,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 	@Option(names = { "-n", "--mismatches" }, description = "the number of mismatches allowed (default=0)")
 	private int ALLOWED_MISMATCH = 0;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">SearchMotifCLI.call()");
@@ -55,10 +62,10 @@ public class SearchMotifCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";
@@ -68,28 +75,13 @@ public class SearchMotifCLI implements Callable<Integer> {
 			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(fastaFile)) {
-			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
 					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed";
 			output = new File(NAME);
-			// check output filename is valid
+		// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"bed".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".bed\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use BED extension for output filename. Try: " + output
-						+ ".bed\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

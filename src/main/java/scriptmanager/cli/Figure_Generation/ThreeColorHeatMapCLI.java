@@ -20,7 +20,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
 
 /**
- * Figure_GenerationCLI/ThreeColorHeatMapCLI
+ * Command line interface for
+ * {@link scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "three-color", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.threecolorheatmap_description,
@@ -125,6 +128,10 @@ public class ThreeColorHeatMapCLI implements Callable<Integer> {
 	// 110 --> 6 (Pmax,Pmid,Amin)
 	// 111 --> 7 (Pmax,Pmid,Pmin)
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">ThreeColorHeatMapCLI.call()");
@@ -164,26 +171,12 @@ public class ThreeColorHeatMapCLI implements Callable<Integer> {
 			r += "(!)CDT file does not exist: " + CDT.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		if (!"cdt".equals(ExtensionFileFilter.getExtension(CDT))) {
-			r += "(!)Is this a CDT file? Check extension: " + CDT.getName() + "\n";
-		}
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtension(CDT);
 			output = new File(NAME + "_" + scaleType + ".png");
 			// check output filename is valid
 		} else {
-			// check ext
-			try {
-				if (!"png".equals(ExtensionFileFilter.getExtension(output))) {
-					r += "(!)Use PNG extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output)
-							+ ".png\n";
-				}
-			} catch (NullPointerException e) {
-				r += "(!)Output filename must have extension: use PNG extension for output filename. Try: " + output
-						+ ".png\n";
-			}
 			// check directory
 			if (output.getParent() == null) {
 // 				System.err.println("default to current directory");

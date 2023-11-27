@@ -17,6 +17,15 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.LabelHeatMap} and
+ * reporting composite results
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapWindow
+ */
 @SuppressWarnings("serial")
 public class LabelHeatMapOutput extends JFrame {
 
@@ -65,6 +74,11 @@ public class LabelHeatMapOutput extends JFrame {
 		yLabel = yLABEL;
 	}
 
+	/**
+	 * Runs the LabelHeatMap script and reports when completed
+	 * @throws IOException Invalid file or parameters
+	 * @throws OptionException
+	 */
 	public void run() throws IOException, OptionException {
 		for (int x = 0; x < SAMPLE.size(); x++) {
 			File OUTPUT = new File(SAMPLE.get(x).getName().split("\\.")[0] + "_label.svg");
@@ -89,6 +103,7 @@ public class LabelHeatMapOutput extends JFrame {
 		System.out.println("Program Complete");
 		System.out.println(getTimeStamp());
 	}
+
 
 	private static String getTimeStamp() {
 		Date date = new Date();

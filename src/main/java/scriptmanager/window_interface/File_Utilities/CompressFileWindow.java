@@ -29,14 +29,18 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.File_Utilities.GZipFiles;
 
 /**
- * Graphical interface window for calling static gzip compressing method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.File_Utilities.GZipFiles}
  * 
  * @author Olivia Lang
- *
+ * @see scriptmanager.scripts.File_Utilities.GZipFiles
  */
 @SuppressWarnings("serial")
 public class CompressFileWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 
 	final DefaultListModel<String> expList;
@@ -47,8 +51,14 @@ public class CompressFileWindow extends JFrame implements ActionListener, Proper
 	private JButton btnCompress;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -140,6 +150,9 @@ public class CompressFileWindow extends JFrame implements ActionListener, Proper
 		btnCompress.addActionListener(this);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -160,6 +173,11 @@ public class CompressFileWindow extends JFrame implements ActionListener, Proper
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

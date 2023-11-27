@@ -15,6 +15,15 @@ import javax.swing.JTabbedPane;
 import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 import scriptmanager.util.ExtensionFileFilter;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.TwoColorHeatMap} and reporting
+ * heatmap results
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Figure_Generation.TwoColorHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.TwoColorHeatMapWindow
+ */
 @SuppressWarnings("serial")
 public class TwoColorHeatMapOutput extends JFrame {
 
@@ -39,6 +48,21 @@ public class TwoColorHeatMapOutput extends JFrame {
 
 	JTabbedPane newpane;
 
+	/**
+	 * Creates a new instance of a TwoColorHeatMapOutput with given attributes
+	 * @param in Matrix file for heat map to represent
+	 * @param c Color to represent maximum values
+	 * @param startR Starting row of the CDT file (Zero indexed)
+	 * @param startC Starting column of the CDT file (Zero indexed)
+	 * @param pHeight Height of resulting heat map (# pixels)
+	 * @param pWidth Width of resulting heat map (# pixels)
+	 * @param scale Scale compression type
+	 * @param abs The difference in values for each step of the color scale
+	 * @param quant The difference in percent of values for each step of the color scale
+	 * @param out_dir Directory to output PNG to
+	 * @param outstatus Whether or not to output a PNG
+	 * @param trans If min values should be transparent
+	 */
 	public TwoColorHeatMapOutput(ArrayList<File> in, Color c, int startR, int startC, int pHeight, int pWidth,
 			String scale, double abs, double quant, File out_dir, boolean outstatus, boolean trans) {
 		setTitle("Heatmap");

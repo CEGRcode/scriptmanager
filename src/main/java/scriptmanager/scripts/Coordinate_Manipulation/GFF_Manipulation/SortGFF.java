@@ -11,7 +11,25 @@ import java.util.HashMap;
 import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.util.GZipUtilities;
 
+/**
+ * Sort coordinate intervals (GFF) by the tag counts of a CDT matrix file.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI
+ * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.SortGFFWindow
+ */
 public class SortGFF {
+
+	/**
+	 * Sort a GFF file by the values from a CDT matrix file. 
+	 * 
+	 * @param outname Filepath basename (without ext) to save the sorted GFF (&lt;basename&gt;.gff) and sorted CDT (&lt;basename&gt;.cdt) files.
+	 * @param gff input GFF file to sort
+	 * @param cdt input CDT file with values to sort by
+	 * @param START_INDEX the start column to consider when summing values to sort
+	 * @param STOP_INDEX The last column to consider when summing values (non-inclusive)
+	 * @param gzOutput whether or not to gzip output
+	 */
 	public static void sortGFFbyCDT(String outname, File gff, File cdt, int START_INDEX, int STOP_INDEX, boolean gzOutput)
 			throws IOException {
 		ArrayList<GFFCoord> SORT = new ArrayList<GFFCoord>();

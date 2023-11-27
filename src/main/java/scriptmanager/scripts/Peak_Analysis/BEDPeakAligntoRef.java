@@ -14,21 +14,50 @@ import java.util.List;
 import java.util.Map;
 import scriptmanager.util.GZipUtilities;
 
+/**
+ * Align BED peaks to a reference BED file and create a CDT file
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
+ */
 public class BEDPeakAligntoRef {
 	private String peakPath = null;
 	private String refPath = null;
 	private PrintStream OUT = null;
 	private PrintStream PS = null;
-	
-	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps, boolean gzOutput) throws IOException {
+
+	/**
+	 * Create a new instance of a BEDPeakAligntoRef script
+	 * 
+	 * @param ref    Reference BAM file
+	 * @param peak   BAM file to be alligned
+	 * @param output Output CDT file
+	 * @param ps     PrintStream for reporting process
+	 * @param gzOutput    whether or not to gzip output
+	 * @throws IOException Invalid file or parameters
+	 */
+	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps, boolean gzOutput) throws FileNotFoundException, IOException {
 		refPath = ref.getCanonicalPath();
 		peakPath = peak.getCanonicalPath();
 		PS = ps;
-		
-		try {OUT = GZipUtilities.makePrintStream(output, gzOutput); }
-		catch (FileNotFoundException e) { e.printStackTrace(); }
+
+		try { OUT = new PrintStream(output);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		OUT = GZipUtilities.makePrintStream(output, gzOutput);
 	}
-		
+
+	/**
+	 * Runs the peak alignment, writing to output file and reporting progress
+	 * 
+	 * @throws IOException          Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the
+	 *                              same time
+	 */
 	public void run() throws IOException, InterruptedException {
 		printPS("Mapping: " + peakPath + " to " + refPath);
 		printPS("Starting: " + getTimeStamp());

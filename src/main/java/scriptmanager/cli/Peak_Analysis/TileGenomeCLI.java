@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
-	Peak_AnalysisCLI/TileGenomeCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.TileGenome}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "tile-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.tile_genome_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -36,6 +39,10 @@ public class TileGenomeCLI implements Callable<Integer> {
 	@Option(names = {"-w", "--window"}, description = "window size in bp (default=200)")
 	private int window = 200;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">TileGenomeCLI.call()" );
@@ -62,12 +69,6 @@ public class TileGenomeCLI implements Callable<Integer> {
 			output = new File(genomeName + "_" + window + "bp." + ext);
 		//check output filename is valid
 		}else{
-			//check ext
-			try{
-				if(!ext.equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use \"." + ext.toUpperCase() + "\" extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + "." + ext + "\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use \"." + ext.toUpperCase() + "\" extension for output filename. Try: " + output + "." + ext + "\n"; }
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");
