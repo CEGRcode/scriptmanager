@@ -8,10 +8,11 @@ import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.objects.CoordinateObjects.GenericCoord;
 import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.GenomeSizeReference;
 
 /**
- * Class with static method for creating a coordinate file of random sites across a genome.
+ * Randomly sample sites across a genome.
  * 
  * @author William KM Lai
  * @see scriptmanager.util.GenomeSizeReference
@@ -36,22 +37,17 @@ public class RandomCoordinate {
 	 *                   if true and GFF-format used if false
 	 * @param numSites   the number of random coordinate sites to sample
 	 * @param windowSize the base-pair length of each coordinate interval
-	 * @throws IOException
+	 * @param gzOutput   whether or not to gzip output
+	 * @throws IOException Invalid file or parameters
 	 * @throws IllegalArgumentException
 	 */
-	public static void execute(String GENOME, File OUTPUT, boolean BEDout, int numSites, int windowSize) throws IOException, IllegalArgumentException, OptionException {
+	public static void execute(String GENOME, File output, boolean BEDout, int numSites, int windowSize, boolean gzOutput) throws IOException, IllegalArgumentException, OptionException {
 		GenomeSizeReference coord = new GenomeSizeReference(GENOME);
-		String EXTENSION = BEDout ? ".bed" : ".gff";
-		String fileName = GENOME + "_" + numSites + "SITES_" + windowSize + "bp" + EXTENSION;
 		if (!coord.isSmaller(windowSize)) {
 			throw new OptionException("Invalid Window Size Entered - window size is too large for selected genome!!!");
 		} else {
 			PrintStream OUT = null;
-			if (OUTPUT == null) {
-				OUT = new PrintStream(fileName);
-			} else {
-				OUT = new PrintStream(OUTPUT);
-			}
+			OUT = GZipUtilities.makePrintStream(output, gzOutput);
 			// Iterate each random sample
 		    for(int x = 0; x < numSites; x++) {
 		    	GenericCoord temp = coord.generateRandomCoord(windowSize);

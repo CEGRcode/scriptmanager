@@ -41,8 +41,10 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
 /**
- * Graphical interface window for the size expansion of BED coordinate interval files by calling the method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED
@@ -51,6 +53,9 @@ import scriptmanager.util.FileSelection;
 public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -62,6 +67,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveBED;
 	private JButton btnExecute;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -73,7 +81,10 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
+	 */
+	/**
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -83,6 +94,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				if (SIZE < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Expansion Size!!! Must be larger than 0 bp");
 				} else {
+					boolean GZIP = chckbxGzipOutput.isSelected();
 					setProgress(0);
 					LogItem old_li = new LogItem("");
 					for (int x = 0; x < BEDFiles.size(); x++) {
@@ -90,24 +102,19 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						File XBED = BEDFiles.get(x);
 						System.out.println("Input: " + XBED.getName());
 						// Set output filepath with name and output directory
-						String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
-						// Strip second extension if input has ".gz" first extension
-						if (XBED.getName().endsWith(".bed.gz")) {
-							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-						}
 						// Add suffix
-						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed";
-						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
+						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed" + (GZIP? ".gz": "");
 
 						// Initialize LogItem
 						String command = ExpandBEDCLI.getCLIcommand(XBED, new File(OUTPUT), SIZE, chckbxGzipOutput.isSelected(), rdbtnExpandFromCenter.isSelected());
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
-						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
+						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), GZIP);
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));
@@ -222,7 +229,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		});
 		contentPane.add(btnOutput);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);
@@ -262,6 +269,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		btnExecute.addActionListener(this);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -273,7 +283,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -284,6 +294,14 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Invoked when task's progress property changes and updates the progress bar
+	 */
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

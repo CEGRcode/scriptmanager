@@ -59,6 +59,7 @@ import scriptmanager.cli.Read_Analysis.ScaleMatrixCLI;
 import scriptmanager.cli.Read_Analysis.ScalingFactorCLI;
 //import cli.Read_Analysis.SimilarityMatrixCLI;
 import scriptmanager.cli.Read_Analysis.TagPileupCLI;
+import scriptmanager.cli.Read_Analysis.TransposeMatrixCLI;
 
 import scriptmanager.cli.Sequence_Analysis.DNAShapefromBEDCLI;
 import scriptmanager.cli.Sequence_Analysis.DNAShapefromFASTACLI;
@@ -66,6 +67,12 @@ import scriptmanager.cli.Sequence_Analysis.FASTAExtractCLI;
 import scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI;
 import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 
+
+/**
+ * Provides command line access to ScriptManager sub-commands
+ * 
+ * @author William KM Lai
+ */
 @Command(name = "script-manager",
 		subcommands = {
 			BAM_Format_ConverterCLI.class,
@@ -218,9 +225,10 @@ class Peak_CallingCLI extends SubcommandCLI {}
 			ScaleMatrixCLI.class,
 			ScalingFactorCLI.class,
 // 			SimilarityMatrixCLI.class,
-			TagPileupCLI.class
+			TagPileupCLI.class,
+			TransposeMatrixCLI.class
 		},
-		description = "Includes tools like AggregateDataCLI, ScaleMatrixCLI, ScalingFactorCLI, SimilarityMatrixCLI, and TagPileupCLI.")
+		description = "Includes tools like AggregateDataCLI, ScaleMatrixCLI, ScalingFactorCLI, SimilarityMatrixCLI, TagPileupCLI and TransposeMatrix.")
 class Read_AnalysisCLI extends SubcommandCLI {}
 
 

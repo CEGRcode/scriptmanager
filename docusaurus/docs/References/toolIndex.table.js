@@ -268,6 +268,13 @@ export const toolIndex = [
 		command: "-",
 		url: "docs/peak-analysis/tile-genome",
 	},
+  {
+		name: "Transpose Matrix",
+		group: "RA",
+		description: "Interchange the rows and columns of a matrix.",
+		command: "-",
+		url: "docs/read-analysis/transpose-matrix",
+	},
 ];
 
 

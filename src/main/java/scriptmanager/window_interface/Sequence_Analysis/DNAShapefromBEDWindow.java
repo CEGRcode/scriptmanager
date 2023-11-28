@@ -34,9 +34,8 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical interface window for calculating various aspects of DNA shape
- * across a set of BED intervals by calling a script implemented in the scripts
- * package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
@@ -45,6 +44,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class DNAShapefromBEDWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -63,15 +65,19 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 
 	private JCheckBox chckbxStrand;
 	private JCheckBox chckbxAll;
+	private JCheckBox chckbxGzipOutput;
 	private JCheckBox chckbxMinorGrooveWidth;
 	private JCheckBox chckbxRoll;
 	private JCheckBox chckbxHelicalTwist;
 	private JCheckBox chckbxPropellerTwist;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -92,7 +98,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 					OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
-					DNAShapefromBEDOutput output_obj = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUT_DIR, OUTPUT_TYPE, chckbxStrand.isSelected());
+					DNAShapefromBEDOutput output_obj = new DNAShapefromBEDOutput(INPUT, BEDFiles, OUT_DIR, OUTPUT_TYPE, chckbxStrand.isSelected(), chckbxGzipOutput.isSelected());
 					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -152,7 +158,7 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc, "bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc, "bed", true);
 				if (newBEDFiles != null) {
 					for (int x = 0; x < newBEDFiles.length; x++) {
 						BEDFiles.add(newBEDFiles[x]);
@@ -183,6 +189,11 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -165, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnCalculate, -10, SpringLayout.SOUTH, contentPane);
 		contentPane.add(btnCalculate);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);
@@ -310,6 +321,9 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		btnCalculate.addActionListener(this);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -333,6 +347,11 @@ public class DNAShapefromBEDWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

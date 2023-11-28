@@ -48,6 +48,9 @@ import scriptmanager.objects.ToolDescriptions;
 public class LogManagerWindow extends JFrame {
 
 //	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
@@ -333,7 +336,7 @@ public class LogManagerWindow extends JFrame {
 	/**
 	 * Write the contents of the log as a shell script
 	 *
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void writeLogShell() throws IOException {
 		// Create File & initialize stream

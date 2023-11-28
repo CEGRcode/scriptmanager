@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -22,7 +23,15 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
-// Output Window wrapper for executing the script and displaying output
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation} and
+ * reporting the correlation heatmap and values
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
+ * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow
+ */
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelationOutput extends JFrame {
 	
@@ -38,7 +47,18 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 	
 	final JLayeredPane layeredPane;
 	final JTabbedPane tabbedPane;
-		
+
+	/**
+	 * Creates new BAMGenomeCorrelationOutput
+	 * @param input Vector containing bam files
+	 * @param o Base name for output files
+	 * @param out Specifies if an output file should be generated
+	 * @param s The tag shift in #of base pairs
+	 * @param b The bin size in #of base pairs
+	 * @param c Number of CPU's to use
+	 * @param r Specifies which reads to correlate 
+	 * @param cs Color scale to use when generating heatmap
+	 */
 	public BAMGenomeCorrelationOutput(Vector<File> input, File o, boolean out, int s, int b, int c, int r, short cs) {
 		setTitle("Genome Correlation");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -67,7 +87,13 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 		COLORSCALE = cs;
 	}
 	
-	public void run() throws IOException, OptionException {
+	/**
+	 * Runs the analysis and displays results
+	 * @throws FileNotFoundException
+	 * @throws IOException invalid file or parameters
+	 * @throws OptionException
+	 */
+	public void run() throws FileNotFoundException, IOException, OptionException {
 		// Construct output filename
 		String NAME = "correlation_matrix.txt";
 		File OUT_FILEPATH = new File(NAME);
@@ -103,6 +129,11 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 		if (OUTPUT_STATUS) { firePropertyChange("log", li, null); }
 	}
 		
+	/**
+	 * Makes the matrix panel based on given matrix of correlation data
+	 * @param MATRIX Matrix of correlation data
+	 * @return Matrix correlation panel
+	 */
 	public JScrollPane makeTablePanel(double[][] MATRIX) {
 		JTable table = new JTable(MATRIX.length, MATRIX.length);
 		table.setName("Correlation Matrix");

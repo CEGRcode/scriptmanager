@@ -17,6 +17,7 @@ import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,10 +34,21 @@ import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ */
 @SuppressWarnings("serial")
 public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> peakList;
@@ -51,12 +63,19 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	private JButton btnRemoveRefBed;
 	private JButton btnOutputDirectory;
 	private JButton btnCalculate;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
 	
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
@@ -68,8 +87,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
         			int counter = 0;
 					for (int r = 0; r < RefFiles.size(); r++) {
 						for (int p=0; p < PeakFiles.size(); p++) {
-							// Execute script
-							BEDPeakAligntoRefOutput output_obj = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUT_DIR);
+							BEDPeakAligntoRefOutput output_obj = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUT_DIR, chckbxGzipOutput.isSelected());
 							output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 								public void propertyChange(PropertyChangeEvent evt) {
 									firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -104,6 +122,9 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
         }
 	}
 	
+	/**
+	 * Creates a new BEDPeakAligntoRefWindow
+	 */
 	public BEDPeakAligntoRefWindow() {
 		setTitle("BED Peaks Alignment");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -137,7 +158,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		
 		btnLoadPeakBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						PeakFiles.add(newBEDFiles[x]);
@@ -182,7 +203,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		
 		btnLoadRefBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) { 
 						RefFiles.add(newBEDFiles[x]);
@@ -246,8 +267,16 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		contentPane.add(btnCalculate);
 		btnCalculate.setActionCommand("start");
 		btnCalculate.addActionListener(this);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 31, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -259,7 +288,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates progress bar.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -271,6 +300,11 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

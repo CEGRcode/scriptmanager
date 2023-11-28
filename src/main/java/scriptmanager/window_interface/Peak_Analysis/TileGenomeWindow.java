@@ -15,6 +15,7 @@ import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,7 +35,8 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
- * Graphical interface window for generating coordinate interval files that tile a genome.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.TileGenome}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.TileGenome
@@ -42,7 +44,11 @@ import scriptmanager.scripts.Peak_Analysis.TileGenome;
 @SuppressWarnings("serial")
 public class TileGenomeWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
+	private JCheckBox chckbxGzipOutput;
 	private JPanel contentPane;
 	private JTextField txtSize;
 	private JRadioButton rdbtnGff;
@@ -52,11 +58,17 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 
 	private File OUT_DIR = null;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() {
+		public Void doInBackground() throws IOException, InterruptedException {
 			try {
 				if(txtSize.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "No Window Size Entered!!!");
@@ -66,16 +78,17 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 					// Construct output filename
 					String NAME = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp";
 					NAME += rdbtnBed.isSelected() ? ".bed" : ".gff";
+					NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
 					File OUT_FILEPATH = new File(NAME);
 					if (OUT_DIR != null) {
 						OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 					}
 					// Initialize LogItem
-					String command = TileGenomeCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()));
+					String command = TileGenomeCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());
 					LogItem li = new LogItem(command);
 					firePropertyChange("log", null, li);
 					// Execute script
-					TileGenome.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()));
+					TileGenome.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());
 					// Update log item
 					li.setStopTime(new Timestamp(new Date().getTime()));
 					li.setStatus(0);
@@ -103,7 +116,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	public TileGenomeWindow() {
 		setTitle("Genomic Coordinate Tiling Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 375, 260);
+		setBounds(100, 100, 375, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -140,14 +153,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 			}
 		});
 		contentPane.add(btnOutputDirectory);
-		
-		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
-		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblCurrentOutputDirectory);	
-		
+
 		JButton btnTile = new JButton("Tile Genome");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnTile, 100, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnTile, -5, SpringLayout.SOUTH, contentPane);
@@ -155,6 +161,13 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		contentPane.add(btnTile);
 		btnTile.setActionCommand("start");
 		btnTile.addActionListener(this);
+		
+		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, -75, SpringLayout.SOUTH, btnTile);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
+		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblCurrentOutputDirectory);	
 		
 		cmbGenome = new JComboBox<String>();
 		sl_contentPane.putConstraint(SpringLayout.WEST, cmbGenome, 0, SpringLayout.WEST, txtSize);
@@ -190,8 +203,16 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		OutputFormat.add(rdbtnBed);
 		OutputFormat.add(rdbtnGff);
 		rdbtnBed.setSelected(true);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 133, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -212,6 +233,11 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

@@ -14,18 +14,23 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
 /**
- * Command line interface class for converting chromsome names of GFF file by
- * calling method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.File_Utilities.ConvertChrNames}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
  */
 @Command(name = "convert-gff-genome", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.convertGFFChrNamesDescription,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class ConvertGFFChrNamesCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new ConvertGFFChrNamesCLI object
+	 */
+	public ConvertGFFChrNamesCLI(){}
 
 	@Parameters( index = "0", description = "the GFF coordinate file to convert")
 	private File coordFile;
@@ -38,9 +43,14 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 	
 	@Option(names = {"-m", "--chrmt"}, description = "converter will map \"chrM\" --> \"chrmt\" (default with no flag is \"chrmt\" --> \"chrM\")")
 	private boolean useChrmt = false;
+	
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">ConvertGFFChrNamesCLI.call()" );
@@ -63,10 +73,10 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";
@@ -80,13 +90,8 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 		if (output == null) {
 			// Set suffix format
 			String SUFFIX = toArabic ? "_toRoman.bed" : "_toArabic.bed";
-			SUFFIX += gzOutput ? ".gz" : "";
 			// Set output filepath with name and output directory
-			String OUTPUT = ExtensionFileFilter.stripExtension(coordFile);
-			// Strip second extension if input has ".gz" first extension
-			if (coordFile.getName().endsWith(".bed.gz")) {
-				OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-			}
+			String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile);
 			output = new File(OUTPUT + SUFFIX);
 		}else{
 			//check directory

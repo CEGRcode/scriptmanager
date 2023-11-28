@@ -18,8 +18,9 @@ import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Graphical window for displaying progress as genome sequences are searched for
- * a given motif.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.SearchMotif} and reporting
+ * progress
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
@@ -45,7 +46,7 @@ public class SearchMotifOutput extends JFrame {
 	 * @param num
 	 * @param out_dir
 	 * @param gz If this is true, the output file will be gzipped.
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public SearchMotifOutput(File input, String mot, int num, File out_dir, boolean gz) throws IOException {
 		setTitle("Motif Search Progress");
@@ -72,18 +73,18 @@ public class SearchMotifOutput extends JFrame {
 	 * sequence/chromosome name within the FASTA file and dispose the window after
 	 * the script finishes.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		// Construct output filename
 		String BASENAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
-				+ ExtensionFileFilter.stripExtension(INPUTFILE) + ".bed";
+				+ ExtensionFileFilter.stripExtensionIgnoreGZ(INPUTFILE) + ".bed";
+		BASENAME += gzOutput ? ".gz" : "";
 		if (OUT_DIR != null) {
 			BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 		}
-		BASENAME += gzOutput ? ".gz" : "";
 		// Initialize LogItem
 		String command = SearchMotifCLI.getCLIcommand(INPUTFILE, new File(BASENAME), motif, ALLOWED_MISMATCH, gzOutput);
 		LogItem li = new LogItem(command);

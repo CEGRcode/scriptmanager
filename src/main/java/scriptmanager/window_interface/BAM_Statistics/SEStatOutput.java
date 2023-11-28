@@ -23,6 +23,15 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Statistics.SEStats;
 import scriptmanager.util.ExtensionFileFilter;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.SEStats} and reporting the
+ * statistics
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.SEStats
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
+ */
 @SuppressWarnings("serial")
 public class SEStatOutput extends JFrame {
 	Vector<File> bamFiles = null;

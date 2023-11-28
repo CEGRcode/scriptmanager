@@ -16,8 +16,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.SortGFF;
 
 /**
-	Coordinate_ManipulationCLI/SortGFFCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "sort-gff", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_gff_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -33,6 +36,8 @@ public class SortGFFCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "specify output file basename with no .cdt/.gff/.jtv extension (default=<gffFile>_SORT")
 	private String outputBasename = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
 	private int center = -999;
 	@Option(names = {"-x", "--index"}, description = "sort by index from the specified start to the specified stop (0-indexed and half-open interval)",
@@ -42,6 +47,10 @@ public class SortGFFCLI implements Callable<Integer> {
 	private int CDT_SIZE = -999;
 	private boolean byCenter = false;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">SortGFFCLI.call()" );
@@ -57,7 +66,7 @@ public class SortGFFCLI implements Callable<Integer> {
 			index[1] = (CDT_SIZE / 2) + (center / 2);
 		}
 		
-		SortGFF.sortGFFbyCDT(outputBasename, gffFile, cdtFile, index[0], index[1]);
+		SortGFF.sortGFFbyCDT(outputBasename, gffFile, cdtFile, index[0], index[1], gzOutput);
 		
 		System.err.println("Sort Complete");
 		return(0);
@@ -75,10 +84,10 @@ public class SortGFFCLI implements Callable<Integer> {
 		}
 		if(!"".equals(r)){ return(r); }
 		//check input extensions
-		if(!"gff".equals(ExtensionFileFilter.getExtension(gffFile))){
+		if(!"gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(gffFile))){
 			r += "(!)Is this a GFF file? Check extension: " + gffFile.getName() + "\n";
 		}
-		if(!"cdt".equals(ExtensionFileFilter.getExtension(cdtFile))){
+		if(!"cdt".equals(ExtensionFileFilter.getExtensionIgnoreGZ(cdtFile))){
 			r += "(!)Is this a CDT file? Check extension: " + cdtFile.getName() + "\n";
 		}
 		// validate CDT as file, with consistent row size, and save row_size value
@@ -91,7 +100,7 @@ public class SortGFFCLI implements Callable<Integer> {
 		
 		//set default output filename
 		if(outputBasename==null){
-			outputBasename = ExtensionFileFilter.stripExtension(gffFile) + "_SORT";
+			outputBasename = ExtensionFileFilter.stripExtensionIgnoreGZ(gffFile) + "_SORT";
 		//check output filename is valid
 		}else{
 			//no extension check

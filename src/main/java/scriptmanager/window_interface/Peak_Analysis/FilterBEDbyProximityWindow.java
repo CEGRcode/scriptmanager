@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,15 +31,27 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ */
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> bedList;
 	ArrayList<File> BEDFiles = new ArrayList<File>();
 	private File OUT_DIR = null;
 	
+	private JCheckBox chckbxGzipOutput;
 	private JPanel contentPane;
 	private JTextField txtCutoff;
 	JProgressBar progressBar;
@@ -46,6 +59,9 @@ public class FilterBEDbyProximityWindow extends JFrame implements ActionListener
 	
 public Task task;
 	
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
@@ -59,7 +75,7 @@ public Task task;
         		} else {
         			setProgress(0);
     				for(int gfile = 0; gfile < BEDFiles.size(); gfile++) {
-						FilterBEDbyProximityOutput output_obj = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), OUT_DIR, Integer.parseInt(txtCutoff.getText()));
+						FilterBEDbyProximityOutput output_obj = new FilterBEDbyProximityOutput(BEDFiles.get(gfile), OUT_DIR, Integer.parseInt(txtCutoff.getText()), chckbxGzipOutput.isSelected());	
 						output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent evt) {
 								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -107,7 +123,7 @@ public Task task;
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 5, SpringLayout.WEST, contentPane);
 		btnLoadBedFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-				File[] newGenomeFiles = FileSelection.getFiles(fc,"bed");
+				File[] newGenomeFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newGenomeFiles != null) {
 					for(int x = 0; x < newGenomeFiles.length; x++) { 
 						BEDFiles.add(newGenomeFiles[x]);
@@ -191,6 +207,11 @@ public Task task;
 		contentPane.add(btnFilter);
 		btnFilter.setActionCommand("start");
 		btnFilter.addActionListener(this);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnFilter);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 25, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 		
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 0, SpringLayout.NORTH, btnFilter);
@@ -201,6 +222,9 @@ public Task task;
 		contentPane.add(progressBar);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -224,6 +248,11 @@ public Task task;
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

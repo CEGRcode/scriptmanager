@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -21,8 +22,9 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
- * Graphical window for displaying progress as genomic sequence is extracted
- * from a set of coordinates.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.FASTAExtract} and reporting
+ * progress
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
@@ -75,8 +77,8 @@ public class FASTAExtractOutput extends JFrame {
 	 * sequence/chromosome name within the FASTA file and dispose the window after
 	 * the script finishes.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		LogItem old_li = null;

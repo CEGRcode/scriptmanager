@@ -39,9 +39,19 @@ import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.BAMFileSort}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Manipulation.BAMFileSort
+ */
 @SuppressWarnings("serial")
 public class SortBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -53,11 +63,17 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	private JButton btnSort;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JButton btnOutput;
 	private JLabel label;
 	private JLabel lblDefaultToLocal;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
@@ -104,6 +120,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
         }
 	}
 	
+	/**
+	 * Creates a new SortBAMWindow
+	 */
 	public SortBAMWindow() {
 		setTitle("BAM File Sort");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -200,6 +219,9 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(lblDefaultToLocal);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -211,7 +233,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress changes, updating the progress bar.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -223,6 +245,11 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 		}
 	}
 	
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

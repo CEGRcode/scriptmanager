@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -50,9 +51,20 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.cli.Read_Analysis.ScaleMatrixCLI;
 import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.ScaleMatrix}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorOutput
+ */
 @SuppressWarnings("serial")
 public class ScaleMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	ArrayList<File> TABFiles = new ArrayList<File>();
@@ -62,6 +74,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
 	private JProgressBar progressBar;
@@ -76,10 +89,13 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 
 	private DefaultTableModel expTable;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -114,7 +130,8 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							// Pull input file
 							File XTAB = TABFiles.get(x);
 							// Construct output filename
-							String NAME = ExtensionFileFilter.stripExtension(XTAB) + "_SCALE." + ExtensionFileFilter.getExtension(XTAB);
+							String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_SCALE." + ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
+							NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
 							File OUT_FILEPATH = new File(NAME);
 							if (OUT_DIR != null) {
 								OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
@@ -128,8 +145,8 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							LogItem new_li = new LogItem(command);
 							firePropertyChange("log", old_li, new_li);
 							// Execute script
-							ScaleMatrix scale = new ScaleMatrix(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
-							scale.run();
+							ScaleMatrix script_obj = new ScaleMatrix(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
+							script_obj.run();
 							// Update log item
 							new_li.setStopTime(new Timestamp(new Date().getTime()));
 							new_li.setStatus(0);
@@ -278,6 +295,11 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		});
 		contentPane.add(btnOutput);
 
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
 		rdbtnFilespecifcScaling = new JRadioButton("File-specifc Scaling");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnFilespecifcScaling, 8, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnFilespecifcScaling, -66, SpringLayout.EAST, contentPane);
@@ -311,6 +333,13 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		txtUniform.setText("1");
 		contentPane.add(txtUniform);
 		txtUniform.setColumns(10);
+		txtUniform.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int x = 0; x < expTable.getRowCount(); x++) {
+					expTable.setValueAt(txtUniform.getText(), x, 1);
+				}
+        	}
+		});
 
 		JLabel lblRow = new JLabel("Start at Row:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblRow, 10, SpringLayout.SOUTH, lblUniformScalingFactor);
@@ -366,6 +395,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		lblCurrent.setEnabled(activate);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -389,6 +421,11 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

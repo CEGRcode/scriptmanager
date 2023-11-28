@@ -18,11 +18,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.FourColorPlot;
 
 /**
- * Command line interface class for calling the script to creating four color
- * sequence plots.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Figure_Generation.FourColorPlot}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Figure_Generation.FourColorPlot
  */
 @Command(name = "four-color", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.four_color_description,
@@ -44,6 +43,10 @@ public class FourColorSequenceCLI implements Callable<Integer> {
 	@Option(names = { "-y", "--pixel-height" }, description = "pixel height (default=1)")
 	private int pixelHeight = 1;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">FourColorSequenceCLI.call()");

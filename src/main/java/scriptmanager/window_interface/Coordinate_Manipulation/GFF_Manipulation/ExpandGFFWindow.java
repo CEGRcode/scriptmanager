@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
@@ -38,12 +39,23 @@ import java.beans.PropertyChangeListener;
 import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.ExpandGFFCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF
+ */
 @SuppressWarnings("serial")
 public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -55,6 +67,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveGFF;
 	private JButton btnConvert;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -63,7 +78,11 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 
 	private static JRadioButton rdbtnExpandFromCenter;
 	private static JRadioButton rdbtnAddToBorder;
+	private static JCheckBox chckbxGzipOutput;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
@@ -78,7 +97,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 						File XGFF = GFFFiles.get(x);
 
 						// Set outfilepath
-						String OUTPUT = (XGFF.getName()).substring(0, XGFF.getName().length() - 4) + "_"
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + "_"
 								+ Integer.toString(SIZE) + "bp.gff";
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
@@ -88,7 +107,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
-						ExpandGFF.expandGFFBorders(new File(OUTPUT), XGFF, SIZE, rdbtnExpandFromCenter.isSelected());
+						ExpandGFF.expandGFFBorders(new File(OUTPUT), XGFF, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));
@@ -112,6 +131,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Creates a new ExpandGFFWindow
+	 */
 	public ExpandGFFWindow() {
 		setTitle("Expand GFF File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -139,7 +161,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnLoad, -6, SpringLayout.NORTH, scrollPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getFiles(fc, "gff");
+				File[] newGFFFiles = FileSelection.getFiles(fc, "gff", true);
 				if (newGFFFiles != null) {
 					for (int x = 0; x < newGFFFiles.length; x++) {
 						GFFFiles.add(newGFFFiles[x]);
@@ -189,8 +211,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 143, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -157, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 10, SpringLayout.WEST, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
@@ -200,6 +221,11 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
 		contentPane.add(btnOutput);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		rdbtnExpandFromCenter = new JRadioButton("Expand from Center");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnExpandFromCenter, 6, SpringLayout.SOUTH, scrollPane);
@@ -235,6 +261,9 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		btnConvert.addActionListener(this);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -246,7 +275,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -257,6 +286,11 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

@@ -9,7 +9,8 @@ import java.io.File;
 import scriptmanager.objects.ToolDescriptions;
 
 /**
- * Print a message redirecting user to the original CLI tool.
+ * Prints a message redirecting user to the original CLI tool (Picard
+ * {@link picard.sam.MergeSamFiles})
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.BAM_Manipulation.MergeBAM
@@ -22,6 +23,16 @@ import scriptmanager.objects.ToolDescriptions;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class MergeBAMCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new MergeBAMCLI object
+	 */
+	public MergeBAMCLI(){}
+	
+	/**
+	 * Runs when this subcommand is called, directing user to original tool
+	 * @throws Exception Please use original CLI tool
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println("***Please use the original tool for this job***\n"+

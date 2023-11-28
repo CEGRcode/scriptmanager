@@ -40,9 +40,20 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Manipulation.FilterforPIPseq
+ * @see scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqOutput
+ */
 @SuppressWarnings("serial")
 public class FilterforPIPseqWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -55,6 +66,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	private JButton btnFilter;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JButton btnOutput;
 	private JLabel lblCurrent;
@@ -65,6 +79,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	private JLabel lblFilterByUpstream;
 	private JTextField txtSeq;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() {
@@ -118,6 +135,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 
+	/**
+	 * Creates a new FilterforPIPseqWindow
+	 */
 	public FilterforPIPseqWindow() {
 		setTitle("Filter PIP-seq Reads");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -252,6 +272,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		txtSeq.setColumns(10);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -275,6 +298,11 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

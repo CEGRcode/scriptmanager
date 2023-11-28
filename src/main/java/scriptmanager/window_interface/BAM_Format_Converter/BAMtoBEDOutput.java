@@ -16,10 +16,20 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoBED} and reporting
+ * progress
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoBED
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoBEDWindow
+ */
 @SuppressWarnings("serial")
 public class BAMtoBEDOutput extends JFrame {
 	private File BAM = null;
 	private File OUT_DIR = null;
+	private boolean OUTPUT_GZIP;
 	private int STRAND = 0;
 	private String READ = "READ1";
 
@@ -29,7 +39,16 @@ public class BAMtoBEDOutput extends JFrame {
 
 	private JTextArea textArea;
 
-	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size) {
+	/**
+	 * Creates a new BAMtoBEDOutput window
+	 * @param b BAM file
+	 * @param out_dir Directory to output BED file to
+	 * @param s Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
+	 * @param min_size Minimum acceptable insert size
+	 * @param max_size Maximum acceptable insert size
+	 */
+	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
 		setTitle("BAM to BED Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -58,11 +77,18 @@ public class BAMtoBEDOutput extends JFrame {
 		} else if (STRAND == 4) {
 			READ = "FRAGMENT";
 		}
+		OUTPUT_GZIP = gzOutput;
 	}
 
+	/**
+	 * Runs the BAMtoBED script with the file passed in through the constructor
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 */
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
 		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
+		OUTPUT += (OUTPUT_GZIP? ".gz": "");
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
@@ -70,14 +96,14 @@ public class BAMtoBEDOutput extends JFrame {
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		PS.println(OUTPUT);
-		
+
 		// Initialize LogItem
 		String command = BAMtoBEDCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT);
 		LogItem new_li = new LogItem(command);
 		firePropertyChange("log", null, new_li);
 
 		// Execute script
-		BAMtoBED script_obj = new BAMtoBED(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS);
+		BAMtoBED script_obj = new BAMtoBED(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS, OUTPUT_GZIP);
 		script_obj.run();
 
 		// Update LogItem

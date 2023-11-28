@@ -2,11 +2,8 @@ package scriptmanager.scripts.Peak_Analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 
@@ -15,35 +12,59 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import scriptmanager.util.GZipUtilities;
 
+/**
+ * Align BED peaks to a reference BED file and create a CDT file
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
+ */
 public class BEDPeakAligntoRef {
-	private File refPath = null;
-	private File peakPath = null;
-	private File OUT_FILEPATH = null;
+	private File refBED = null;
+	private File peakBED = null;
 	private PrintStream PS = null;
+	private PrintStream OUT = null;
 
-	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps) {
-		refPath = ref;
-		peakPath = peak;
-		OUT_FILEPATH = output;
+	/**
+	 * Create a new instance of a BEDPeakAligntoRef script
+	 * 
+	 * @param ref    Reference BAM file
+	 * @param peak   BAM file to be alligned
+	 * @param output Output CDT file
+	 * @param ps     PrintStream for reporting process
+	 * @param gzOutput    whether or not to gzip output
+	 * @throws IOException Invalid file or parameters
+	 */
+	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps, boolean gzOutput) throws FileNotFoundException, IOException {
+		refBED = ref;
+		peakBED = peak;
 		PS = ps;
+		OUT = GZipUtilities.makePrintStream(output, gzOutput);
 	}
 
-	public void run() throws FileNotFoundException, IOException, InterruptedException {
-		PrintStream OUT = new PrintStream(OUT_FILEPATH);
+	/**
+	 * Runs the peak alignment, writing to output file and reporting progress
+	 * 
+	 * @throws IOException          Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the
+	 *                              same time
+	 */
+	public void run() throws IOException, InterruptedException {
 
-		printPS("Mapping: " + peakPath + " to " + refPath);
-		printPS("Starting: " + getTimeStamp());
+		printPS("Mapping: " + peakBED.getName() + " to " + refBED.getName());
+		printPS("Starting: " + new Timestamp(new Date().getTime()).toString());
 		
 		int counter = 0;
-		InputStream inputStream = new FileInputStream(peakPath);
-	    BufferedReader buff = new BufferedReader(new InputStreamReader(inputStream), 100); 
+		//Checks if BED file is compressed, creates appropriate input stream
+		BufferedReader br = GZipUtilities.makeReader(peakBED);
 		
 		String key ;
 //--------------
-		buff = new BufferedReader(new InputStreamReader(inputStream), 100);
 		Map<String, List<String>> peakMap = new HashMap<>();
-		for (String line; (line = buff.readLine()) != null; ) {
+		for (String line; (line = br.readLine()) != null; ) {
 			key = line.split("\t")[0];
 			if(!peakMap.containsKey(key)) {
 				peakMap.put(key, new ArrayList<String>());
@@ -52,14 +73,12 @@ public class BEDPeakAligntoRef {
 				peakMap.get(key).add(line + "\t");
 			}
 		}
-		buff.close();
-		inputStream.close();
+		br.close();
 	
 //============
-		inputStream = new FileInputStream(refPath);
-		buff = new BufferedReader(new InputStreamReader(inputStream), 100);
-
-		for (String line; (line = buff.readLine()) != null;) {
+		//Checks if BED file is compressed, creates appropriate input stream
+		br = GZipUtilities.makeReader(refBED);
+		for (String line; (line = br.readLine()) != null;) {
 			String[] str = line.split("\t");
 			String chr = str[0];
 			String[] peakLine;
@@ -72,7 +91,7 @@ public class BEDPeakAligntoRef {
 						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
 						int STOP = START + (Integer.parseInt(peakLine[2]) - Integer.parseInt(peakLine[1]));
 						for(int x = START; x <= STOP; x++) {
-	    					if(x >= 0 && x < cdtLength) { cdtArr[x]++; }
+							if(x >= 0 && x < cdtLength) { cdtArr[x]++; }
 						}
 					} else if (Integer.parseInt(peakLine[2]) >= Integer.parseInt(str[1]) && Integer.parseInt(peakLine[2]) <= Integer.parseInt(str[2])) {
 						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
@@ -109,19 +128,12 @@ public class BEDPeakAligntoRef {
 				printPS("Reference rows processed: " + counter);
 			}
 		}
-		buff.close();
-		inputStream.close();
+		br.close();
 		OUT.close();
 		// Print update
-		printPS("Completing: " + getTimeStamp());
+		printPS("Completing: " + new Timestamp(new Date().getTime()).toString());
 	}
 
-	private static String getTimeStamp() {
-		Date date= new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
-	}
-	
 	private void printPS(String message){
 		if(PS!=null) PS.println(message);
 		System.err.println(message);

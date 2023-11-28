@@ -26,9 +26,10 @@ import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Graphical window for running the CrossCorrelation script and
- * displaying the Tag Shift-to-Correlation plots, the raw Tag
- * Shift-to-Correlation values, and script progress.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation} and reporting
+ * the Tag Shift-to-Correlation plots, the raw Tag Shift-to-Correlation values,
+ * and progress.
  * 
  * @author William KM Lai
  * @see scriptmanager.objects.ArchTEx.CorrParameter
@@ -50,7 +51,7 @@ public class CrossCorrelationOutput extends JFrame {
 
 	/**
 	 * Initialize tab frames for scrollable JTextArea and charts as well as save
-	 * inputs for calling the script.
+	 * inputs for calling the script
 	 * 
 	 * @param input the list of input BAM files to process
 	 * @param o     the output directory to write output to
@@ -90,7 +91,7 @@ public class CrossCorrelationOutput extends JFrame {
 	 * Call script, validate BAI files, build output basename, and display progress
 	 * with results by instantiating results tabs for each input BAM file.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		// Check if BAI index file exists for all BAM files

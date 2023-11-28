@@ -14,14 +14,17 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
 
 /**
- * Command line interface class for extracting genomic sequences by calling a
- * script implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.FASTAExtract}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
  */
-@Command(name = "fasta-extract", mixinStandardHelpOptions = true, description = ToolDescriptions.fasta_extract_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "fasta-extract", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.fasta_extract_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class FASTAExtractCLI implements Callable<Integer> {
 
 	@Parameters(index = "0", description = "reference genome FASTA file")
@@ -38,6 +41,10 @@ public class FASTAExtractCLI implements Callable<Integer> {
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">FASTAExtractCLI.call()");
@@ -56,10 +63,10 @@ public class FASTAExtractCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";
@@ -76,7 +83,6 @@ public class FASTAExtractCLI implements Callable<Integer> {
 		// set default output filename
 		if (output == null) {
 			String NAME = ExtensionFileFilter.stripExtension(bedFile) + ".fa";
-			NAME += gzOutput ? ".gz" : "";
 			output = new File(NAME);
 			// check output filename is valid
 		} else {

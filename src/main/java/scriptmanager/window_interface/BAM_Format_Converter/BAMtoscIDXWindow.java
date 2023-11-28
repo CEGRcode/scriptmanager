@@ -42,9 +42,20 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.cli.BAM_Format_Converter.BAMtoscIDXCLI;
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX
+ * @see scriptmanager.window_interface.BAM_Format_Converter.BAMtoscIDXOutput
+ */
 @SuppressWarnings("serial")
 public class BAMtoscIDXWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -56,6 +67,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	private JButton btnLoad;
 	private JButton btnRemoveBam;
 	private JButton btnOutputDirectory;
+	private JCheckBox chckbxGzipOutput;
 	private JRadioButton rdbtnRead1;
 	private JRadioButton rdbtnRead2;
 	private JRadioButton rdbtnCombined;
@@ -68,8 +80,14 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	private JTextField txtMax;
 
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException, InterruptedException {
@@ -110,12 +128,14 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 					}
 
 					for (int x = 0; x < BAMFiles.size(); x++) {
-						BAMtoscIDXOutput convert = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX);
+
+						BAMtoscIDXOutput convert = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, chckbxGzipOutput.isSelected());
 						convert.addPropertyChangeListener("log", new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent evt) {
 								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 							}
 						});
+
 						convert.setVisible(true);
 						convert.run();
 						
@@ -137,6 +157,9 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		}
 	}
 
+	/**
+	 * Creates a new BAMtoscIDXWindow
+	 */
 	public BAMtoscIDXWindow() {
 		setTitle("BAM to scIDX Converter");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -259,6 +282,11 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -250, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutputDirectory);
 
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnIndex);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -83, SpringLayout.WEST, btnOutputDirectory);
+		contentPane.add(chckbxGzipOutput);
+
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnIndex);
 		sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, 83, SpringLayout.EAST, btnIndex);
@@ -342,6 +370,12 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		});
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task..
+	 */
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -364,6 +398,11 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

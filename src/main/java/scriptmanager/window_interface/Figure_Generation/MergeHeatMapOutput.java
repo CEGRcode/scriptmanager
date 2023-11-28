@@ -15,6 +15,15 @@ import scriptmanager.cli.Figure_Generation.MergeHeatMapCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot} and
+ * reporting progress
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Figure_Generation.MergeHeatMapPlot
+ * @see scriptmanager.window_interface.Figure_Generation.MergeHeatMapWindow
+ */
 @SuppressWarnings("serial")
 public class MergeHeatMapOutput extends JFrame {
 	private ArrayList<File> pngFiles = null;
@@ -24,6 +33,11 @@ public class MergeHeatMapOutput extends JFrame {
 
 	JTabbedPane newpane;
 
+	/**
+	 * Creates a new MergeHeatMapOutput window
+	 * @param in An ArrayList&lt;File&gt; containing two heat maps of the same size
+	 * @param out_dir Output directory for the combned heat map
+	 */
 	public MergeHeatMapOutput(ArrayList<File> in, File out_dir) {
 		setTitle("Merged Heatmap");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -36,6 +50,10 @@ public class MergeHeatMapOutput extends JFrame {
 		OUT_DIR = out_dir;
 	}
 
+	/**
+	 * Runs the MergeHeatMapPlot script
+	 * @throws IOException Invalid file or parameters
+	 */
 	public void run() throws IOException {
 		// Group files into "sense"-containing and "anti"-containing lists
 		senseFile = new ArrayList<File>();

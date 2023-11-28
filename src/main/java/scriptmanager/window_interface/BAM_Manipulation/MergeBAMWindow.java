@@ -39,9 +39,19 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Manipulation.MergeBAM}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Manipulation.MergeBAM
+ */
 @SuppressWarnings("serial")
 public class MergeBAMWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> expList;
@@ -58,8 +68,14 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	private JProgressBar progressBar;
 	private JLabel lblDefaultToLocal;
 	
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() {
@@ -107,6 +123,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         }
 	}
 	
+	/**
+	 * Creates a new MergeBAMWindow
+	 */
 	public MergeBAMWindow() {
 		setTitle("BAM File Replicate Merger");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -227,6 +246,9 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         contentPane.add(btnOutput);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task., running script when 'Merge' is pressed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -250,6 +272,11 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 	
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

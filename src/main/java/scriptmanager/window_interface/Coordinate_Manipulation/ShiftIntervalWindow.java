@@ -47,7 +47,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical interface window for shifting coordinate intervals up/downstream by calling method implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord}
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord
@@ -56,6 +57,9 @@ import scriptmanager.util.FileSelection;
 public class ShiftIntervalWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
 	private JProgressBar progressBar;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -71,6 +75,9 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 
 	private JButton btnExecute;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -84,7 +91,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 	private static JCheckBox chckbxStranded;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -92,33 +99,29 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 			try {
 				int SHIFT = Integer.parseInt(txtShift.getText());
 				if (SHIFT == 0) {
-					JOptionPane.showMessageDialog(null, "These shifts of 0 bp will generate identical files...");
-				}
-				setProgress(0);
-				LogItem old_li = new LogItem("");
-				if (rdbtnBed.isSelected()) {
+					JOptionPane.showMessageDialog(null, "Shift must be non-zero (0 shift would write an identical file)");
+				} else if (rdbtnBed.isSelected()) {
+					setProgress(0);
+					LogItem old_li = null;
+					// Process each file
 					for (int x = 0; x < BEDFiles.size(); x++) {
 						// Save current BED to temp variable
 						File XBED = BEDFiles.get(x);
+						System.out.println("Input: " + XBED.getName());
 						// Set suffix format
 						String SUFFIX = SHIFT < 0 ? "_shift" + txtShift.getText() + "bp.bed" : "_shift+" + txtShift.getText() + "bp.bed";
 						SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
 						// Set output filepath with name and output directory
-						String OUTPUT = ExtensionFileFilter.stripExtension(XBED);
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
-						// Strip second extension if input has ".gz" first extension
-						if (XBED.getName().endsWith(".bed.gz")) {
-							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-						}
-						System.out.println("Input: " + XBED.getName());
 						// Initialize LogItem
-						String command = ShiftCoordCLI.getCLIcommand(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected(), false);
+						String command = ShiftCoordCLI.getCLIcommand(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), false, chckbxGzipOutput.isSelected());
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
-						// Execute expansion and update progress
-						ShiftCoord.shiftBEDInterval(new File(OUTPUT + SUFFIX), XBED, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
+						// Execute script
+						ShiftCoord.shiftBEDInterval(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));
 						new_li.setStatus(0);
@@ -127,30 +130,33 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
+					// final log and progress update
 					firePropertyChange("log", old_li, null);
+					setProgress(100);
+					// Pop-up complete
+					JOptionPane.showMessageDialog(null, "Shift Complete");
 				} else {
+					setProgress(0);
+					LogItem old_li = null;
+					// Process each file
 					for (int x = 0; x < GFFFiles.size(); x++) {
 						// Save current BED to temp variable
 						File XGFF = GFFFiles.get(x);
+						System.out.println("Input: " + XGFF.getName());
 						// Set suffix format
 						String SUFFIX = SHIFT < 0 ? "_shift" + txtShift.getText() + "bp.gff" : "_shift+" + txtShift.getText() + "bp.gff";
 						SUFFIX += chckbxGzipOutput.isSelected() ? ".gz" : "";
 						// Set output filepath with name and output directory
-						String OUTPUT = ExtensionFileFilter.stripExtension(XGFF);
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF);
 						if (OUT_DIR != null) {
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
-						// Strip second extension if input has ".gz" first extension
-						if (XGFF.getName().endsWith(".gff.gz")) {
-							OUTPUT = ExtensionFileFilter.stripExtensionPath(new File(OUTPUT)) ;
-						}
-						System.out.println("Input: " + XGFF.getName());
 						// Initialize LogItem
 						String command = ShiftCoordCLI.getCLIcommand(XGFF, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected(), true);
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
-						// Execute expansion and update progress
-						ShiftCoord.shiftGFFInterval(new File(OUTPUT + SUFFIX), XGFF, SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
+						// Execute script
+						ShiftCoord.shiftGFFInterval(XGFF, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));
 						new_li.setStatus(0);
@@ -159,10 +165,12 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
+					// final log and progress update
 					firePropertyChange("log", old_li, null);
+					setProgress(100);
+					// Pop-up complete
+					JOptionPane.showMessageDialog(null, "Shift Complete");
 				}
-				setProgress(100);
-				JOptionPane.showMessageDialog(null, "Shift Complete");
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			}
@@ -343,7 +351,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		chckbxStranded.setSelected(true);
 		contentPane.add(chckbxStranded);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.SOUTH, chckbxStranded);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 0, SpringLayout.WEST, chckbxStranded);
 		contentPane.add(chckbxGzipOutput);
@@ -393,6 +401,9 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		btnExecute.addActionListener(this);
 	}
 
+/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -404,7 +415,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress property changes and updates the progress bar
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
@@ -415,6 +426,11 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

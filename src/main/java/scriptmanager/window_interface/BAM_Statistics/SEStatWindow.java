@@ -34,9 +34,21 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Statistics.SEStats}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.SEStats
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
+ */
 @SuppressWarnings("serial")
 public class SEStatWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	private JCheckBox chckbxOutputStatistics;
 	private JButton btnLoad;

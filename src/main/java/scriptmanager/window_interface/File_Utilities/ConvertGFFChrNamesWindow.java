@@ -40,9 +40,19 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.File_Utilities.ConvertChrNames}
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.File_Utilities.ConvertChrNames
+ */
 @SuppressWarnings("serial")
 public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -59,14 +69,20 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 	private JCheckBox chckbxGzipOutput;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutput;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() {
+		public Void doInBackground() throws IOException {
 			try {
 				setProgress(0);
 				LogItem old_li = null;
@@ -117,6 +133,9 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 		}
 	}
 
+	/**
+	 * Creates a new ConvertGFFChrNamesWindow object
+	 */
 	public ConvertGFFChrNamesWindow() {
 		setTitle("Convert Yeast Reference Genome for GFF Files");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -202,9 +221,9 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxChrmt, 0, SpringLayout.WEST, rdbtnA2R);
 		contentPane.add(chckbxChrmt);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
+		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, chckbxChrmt);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, 10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 
 		btnOutput = new JButton("Output Directory");
@@ -240,6 +259,9 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 		btnConvert.addActionListener(this);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -262,6 +284,11 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

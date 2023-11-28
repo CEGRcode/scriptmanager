@@ -68,6 +68,7 @@ refer the user to the appropriate tool.
 | | [scaling-factor](https://github.com/CEGRcode/scriptmanager/wiki/Read-Analysis#scaling-factor) |
 | | [similarity-matrix](https://github.com/CEGRcode/scriptmanager/wiki/Read-Analysis#similarity-matrix-suspended) |
 | | [tag-pileup](https://github.com/CEGRcode/scriptmanager/wiki/Read-Analysis#tag-pileup) |
+| | [transpose-matrix](https://github.com/CEGRcode/scriptmanager/wiki/Read-Analysis#transpose-matrix) |
 | **seq-analysis** | [dna-shape-bed](https://github.com/CEGRcode/scriptmanager/wiki/Sequence-Analysis#dna-shape-bed) |
 | | [dna-shape-fasta](https://github.com/CEGRcode/scriptmanager/wiki/Sequence-Analysis#dna-shape-fasta) |
 | | [fasta-extract](https://github.com/CEGRcode/scriptmanager/wiki/Sequence-Analysis#fasta-extract) |

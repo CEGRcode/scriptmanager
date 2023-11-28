@@ -25,6 +25,17 @@ import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord;
 import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract;
 
+/**
+ * Perform genome-genome correlations for replicate comparisons on multiple BAM
+ * files
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord
+ * @see scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract
+ * @see scriptmanager.cli.BAM_Statistics.BAMGenomeCorrelationCLI
+ * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationOutput
+ */
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelation extends Component {
 	
@@ -42,6 +53,17 @@ public class BAMGenomeCorrelation extends Component {
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 	
+	/**
+	 * Creates a new BAMGenomeCorrelation object given parameters
+	 * 
+	 * @param input list of indexed BAM files to correlate
+	 * @param o     Base name for output files
+	 * @param s     The tag shift in #of base pairs
+	 * @param b     The bin size in #of base pairs
+	 * @param c     Number of CPU's to use
+	 * @param r     Specifies which reads to correlate
+	 * @param cs    Color scale to use when generating heatmap
+	 */
 	public BAMGenomeCorrelation(Vector<File> input, File o, int s, int b, int c, int r, short cs ){
 		//Load in bamFiles
 		bamFiles = input;
@@ -56,6 +78,12 @@ public class BAMGenomeCorrelation extends Component {
 		READ = r;
 		COLORSCALE = cs;
 	}
+
+	/**
+	 * Creates correlation matrix 
+	 * @param GUI Specifies if called by window interface or by cli
+	 * @throws IOException Invalid file or parameters
+	 */
 		
 	public void getBAMGenomeCorrelation(boolean GUI) throws IOException, OptionException {
 		System.err.println(getTimeStamp());
@@ -107,6 +135,12 @@ public class BAMGenomeCorrelation extends Component {
 		System.err.println(getTimeStamp());
 	}
 	
+	/**
+	 * Performs reflexive pearson correlation calculations between two given genomes
+	 * @param exp1 First genome
+	 * @param exp2 Second genome
+	 * @return correlation value
+	 */
 	public double correlate(File exp1, File exp2) {
 		System.err.println("Comparing: " + exp1.getName() + "\t-\t" + exp2.getName());
 
@@ -185,6 +219,11 @@ public class BAMGenomeCorrelation extends Component {
 		return correlation;
 	}
 	
+	/**
+	 * Checks if BAI files (index files for BAM files) exist for all BAM files
+	 * @return if all the input BAM files have corresponding BAI files
+	 * @throws IOException Invalid file or parameters 
+	 */
 	private boolean validateBAM() throws IOException, OptionException {
 		//Check if BAI index file exists for all BAM files before we process any of them
 		ArrayList<String> chrName = new ArrayList<String>();
@@ -236,8 +275,16 @@ public class BAMGenomeCorrelation extends Component {
 		return time;
 	}
 	
+	/**
+	 * Returns the correlation matrix
+	 * @return The correlation matrix
+	 */
 	public double[][] getMatrix(){ return(MATRIX); }
 	
+	/**
+	 * Returns the generated correlation heatmap
+	 * @return The generated correlation heatmap
+	 */
 	public ChartPanel getHeatMap(){ return(HEATMAP); }
 	
 }

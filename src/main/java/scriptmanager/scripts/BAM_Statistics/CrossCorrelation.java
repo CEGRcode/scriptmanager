@@ -21,8 +21,7 @@ import scriptmanager.objects.ArchTEx.CorrNode;
 import scriptmanager.objects.ArchTEx.CorrParameter;
 
 /**
- * Class with static method for performing ArchTEx's cross-correlation analysis.
- * <br>
+ * ArchTEx's cross-correlation analysis. <br>
  * Code largely sourced from ArchTEx.analysis.corr.CorrLoad in <a href=
  * "https://github.com/WilliamKMLai/ArchTEx">https://github.com/WilliamKMLai/ArchTEx</a>
  * 

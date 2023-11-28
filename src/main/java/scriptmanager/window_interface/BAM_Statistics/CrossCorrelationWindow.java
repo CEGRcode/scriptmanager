@@ -43,8 +43,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the
- * CrossCorrelation script. <br>
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation} <br>
  * Code largely sourced from ArchTEx.components.CorrelationParametersWindow in
  * <a href=
  * "https://github.com/WilliamKMLai/ArchTEx">https://github.com/WilliamKMLai/ArchTEx</a>
@@ -57,6 +57,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class CrossCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	private JCheckBox chckbxOutputStatistics;
 	private JButton btnLoad;
@@ -79,10 +82,16 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
+	 */
+	/**
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -389,6 +398,9 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 		btnCorrelate.addActionListener(this);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -412,6 +424,11 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

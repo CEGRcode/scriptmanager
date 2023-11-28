@@ -19,7 +19,10 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 
 /**
- * Figure_GenerationCLI/TwoColorHeatMapCLI
+ * Command line interface for
+ * {@link scriptmanager.scripts.Figure_Generation.TwoColorHeatMap}
+ * 
+ * @author Olivia Lang
  */
 @Command(name = "heatmap",
 	mixinStandardHelpOptions = true,
@@ -73,6 +76,10 @@ public class TwoColorHeatMapCLI implements Callable<Integer> {
 	String scaleType = "treeview";
 	Color MAXCOLOR = Color.BLACK;
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">TwoColorHeatMapCLI.call()");

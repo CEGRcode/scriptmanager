@@ -33,8 +33,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.util.FASTAUtilities;
 
 /**
- * Graphical interface window for searching for genomic motif sequences by
- * calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Sequence_Analysis.SearchMotif}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.SearchMotif
@@ -43,6 +43,9 @@ import scriptmanager.util.FASTAUtilities;
 @SuppressWarnings("serial")
 public class SearchMotifWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> genomeList;
@@ -55,10 +58,13 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 	private static JCheckBox chckbxGzipOutput;
 	private JProgressBar progressBar;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -145,12 +151,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 			}
 		});
 		contentPane.add(btnOutputDirectory);
-
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
-		contentPane.add(chckbxGzipOutput);
-
+		
 		JLabel lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblNewLabel, 5, SpringLayout.SOUTH, lblCurrentOutput);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 6, SpringLayout.SOUTH, btnOutputDirectory);
@@ -166,6 +167,11 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 		btnSearch.setActionCommand("start");
 		btnSearch.addActionListener(this);
 
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnSearch);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 25, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+		
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, -125, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);
@@ -240,6 +246,9 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -262,6 +271,11 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

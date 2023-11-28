@@ -15,6 +15,7 @@ import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -37,7 +38,8 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
 /**
- * Graphical interface window for generating random coordinate interval files.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.RandomCoordinate}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Peak_Analysis.RandomCoordinate
@@ -45,7 +47,11 @@ import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 @SuppressWarnings("serial")
 public class RandomCoordinateWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
+	private JCheckBox chckbxGzipOutput;
 	private JPanel contentPane;
 	private JTextField txtSites;
 	private JTextField txtSize;
@@ -56,11 +62,18 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 
 	private File OUT_DIR = null;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() {
+
+		public Void doInBackground() throws IOException, InterruptedException {
 			try {
 				if(txtSites.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "No Sites Entered!!!");
@@ -74,17 +87,18 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 					// Construct output filename
 					String NAME = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSites.getText()) + "SITES_" + Integer.parseInt(txtSize.getText()) + "bp";
 					NAME += rdbtnBed.isSelected() ? ".bed" : ".gff";
+					NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
 					File OUT_FILEPATH = new File(NAME);
-						if (OUT_DIR != null) {
-							OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
-						}
-						// Initialize LogItem
-					String command = RandomCoordinateCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()));
+					if (OUT_DIR != null) {
+						OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
+					}
+					// Initialize LogItem
+					String command = RandomCoordinateCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());
 					LogItem li = new LogItem(command);
 					firePropertyChange("log", null, li);
 					// Execute script
-					RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()));
-						// Update log item
+					RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());
+					// Update log item
 					li.setStopTime(new Timestamp(new Date().getTime()));
 					li.setStatus(0);
 					firePropertyChange("log", li, null);
@@ -114,7 +128,7 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	public RandomCoordinateWindow() {
 		setTitle("Random Coordinate Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 315, 300);
+		setBounds(100, 100, 315, 340);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -165,13 +179,18 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
         	}
         });
 		contentPane.add(btnOutputDirectory);
-		
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 105, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
 		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 10, SpringLayout.SOUTH, chckbxGzipOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
 		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblCurrentOutputDirectory);	
+		contentPane.add(lblCurrentOutputDirectory);
 		
 		JButton btnRandom = new JButton("Randomize");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnRandom, 100, SpringLayout.WEST, contentPane);
@@ -218,6 +237,9 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		rdbtnBed.setSelected(true);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -238,6 +260,11 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

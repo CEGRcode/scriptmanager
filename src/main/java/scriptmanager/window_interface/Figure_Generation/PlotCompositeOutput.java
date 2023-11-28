@@ -16,13 +16,13 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.PlotComposite;
 
 /**
- * Call script on each input and display chart results in a tabbed window where
- * all composite data images can be viewed.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.PlotComposite} and
+ * reporting composite results
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.Figure_Generation.PlotComposite
  * @see scriptmanager.window_interface.Figure_Generation.PlotCompositeWindow
- *
  */
 @SuppressWarnings("serial")
 public class PlotCompositeOutput extends JFrame {
@@ -31,6 +31,9 @@ public class PlotCompositeOutput extends JFrame {
 	protected static File OUT_DIR;
 	protected static boolean OUTPUT_STATUS;
 	
+	/**
+	 * Whether or not to include a legend
+	 */
 	protected static boolean includeLegend = true;
 	protected static int pxHeight;
 	protected static int pxWidth;
@@ -73,7 +76,7 @@ public class PlotCompositeOutput extends JFrame {
 	 * input parameter values, a PNG image is saved to the indicated output
 	 * directory with the passed pixel values for the saved file dimensions.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		LogItem old_li = null;

@@ -44,9 +44,20 @@ import scriptmanager.charts.HeatMap;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation
+ * @see scriptmanager.window_interface.BAM_Statistics.BAMGenomeCorrelationOutput
+ */
 @SuppressWarnings("serial")
 public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	private JCheckBox chckbxOutputStatistics;
 	private JButton btnLoad;
@@ -76,8 +87,14 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 	private int CPU = 1;
 	
 	JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
@@ -137,6 +154,9 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		}
 	}
 	
+	/**
+	 * Creates a new instance of a BAMGenomeCorrelationWindow
+	 */
 	public BAMGenomeCorrelationWindow() {
 		setTitle("BAM Genome Correlation");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -395,6 +415,9 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		btnCorrelate.addActionListener(this);
 	}
 	
+	/**
+	 * Checks if inputs are valid
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -406,7 +429,7 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 	}
 
 	/**
-	 * Invoked when task's progress property changes.
+	 * Invoked when task's progress changes, updating the progress bar.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -418,6 +441,11 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

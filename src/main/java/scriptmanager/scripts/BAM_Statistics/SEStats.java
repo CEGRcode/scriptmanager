@@ -12,8 +12,24 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * Write BAM header of per-chromosome mapped read counts.
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.cli.BAM_Statistics.SEStatsCLI
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatWindow
+ * @see scriptmanager.window_interface.BAM_Statistics.SEStatOutput
+ */
 public class SEStats {
-	
+
+	/**
+	 * Outputs BAM Header including alignment statistics and parameters given any
+	 * indexed (BAI) BAM File
+	 * 
+	 * @param out_filepath File path to output text file to
+	 * @param bamFile      input BAM file (indexed)
+	 * @param ps           Output print stream
+	 */
 	public static void getSEStats(File bamFile, File output, boolean OUTPUT_STATUS, PrintStream ps ) throws IOException {
 		
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
@@ -76,14 +92,23 @@ public class SEStats {
 		//BAMIndexMetaData.printIndexStats(bamFiles.get(x))
 	}	
 	
-	//Helper method to de-clutter method above:
-	//Prints output to both pop-up window (for GUI) and output file (GUI and CLI)
+	/**
+	*Helper method to de-clutter method above:
+	*Prints output to both pop-up window (for GUI) and output file (GUI and CLI)
+	*
+	*@param p PrintStream to GUI output
+	*@param out PrintStream to file
+	*@param line Line to print
+	*/
 	private static void printBoth( PrintStream p, PrintStream out, String line ){
 		if (p != null) { p.println( line ); }
 		if (out != null) { out.println( line ); }
 	}
 	
-	//Returns Timestamp for printing to the output
+	/**
+	 * Returns Timestamp for printing to the output
+	 * @return Timestamp The time at which the BAM file was analyzed
+	 */
 	private static String getTimeStamp() {
 		Date date= new Date();
 		String time = new Timestamp(date.getTime()).toString();

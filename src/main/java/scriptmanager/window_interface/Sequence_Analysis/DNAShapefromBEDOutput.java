@@ -25,8 +25,9 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
- * Graphical window for displaying the DNA shape scores and charts for the set
- * of input BED intervals.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED} and reporting
+ * composite results
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
@@ -38,6 +39,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 	private File OUT_DIR = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private ArrayList<File> BED = null;
+	private boolean OUTPUT_GZIP;
 
 	private boolean STRAND = true;
 
@@ -55,8 +57,9 @@ public class DNAShapefromBEDOutput extends JFrame {
 	 * @param out_dir the output directory to save output files to
 	 * @param type    the information on the shape types to generate
 	 * @param str     the force-strandedness to pass to the script
+	 * @param gzOutput Whether to output compressed file
 	 */
-	public DNAShapefromBEDOutput(File gen, ArrayList<File> b, File out_dir, boolean[] type, boolean str) {
+	public DNAShapefromBEDOutput(File gen, ArrayList<File> b, File out_dir, boolean[] type, boolean str, boolean gzOutput) {
 		setTitle("DNA Shape Prediction Composite");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -84,6 +87,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 		OUT_DIR = out_dir;
 		OUTPUT_TYPE = type;
 		STRAND = str;
+		OUTPUT_GZIP = gzOutput;
 	}
 
 	/**
@@ -91,8 +95,8 @@ public class DNAShapefromBEDOutput extends JFrame {
 	 * for each shape type under the "DNA Shape Statistics" tab and append each
 	 * chart generated under the "DNA Shape Plot" tab.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 			LogItem old_li = null;
@@ -130,11 +134,11 @@ public class DNAShapefromBEDOutput extends JFrame {
 					BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 				}
 				// Initialize LogItem
-				String command = DNAShapefromBEDCLI.getCLIcommand(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND);
+				String command = DNAShapefromBEDCLI.getCLIcommand(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND, OUTPUT_GZIP);
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
 				// Execute script
-				DNAShapefromBED script_obj = new DNAShapefromBED(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND, PS);
+				DNAShapefromBED script_obj = new DNAShapefromBED(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND, PS, OUTPUT_GZIP);
 				script_obj.run();
 
 				// Exit if FAI failed checks

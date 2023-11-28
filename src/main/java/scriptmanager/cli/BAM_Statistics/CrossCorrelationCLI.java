@@ -8,18 +8,18 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.ArchTEx.CorrParameter;
 import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Command line interface class for performing the ArchTEX cross correlation
- * analysis by calling a method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation}
  * 
  * @author Olivia Lang
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
  */
 @Command(name = "cross-corr", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.archtex_crosscorrelation_description,
@@ -28,6 +28,11 @@ import scriptmanager.util.ExtensionFileFilter;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class CrossCorrelationCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new CrossCorrelationCLI object
+	 */
+	public CrossCorrelationCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file to perform the cross-correlation on")
 	private File bamFile;
@@ -58,6 +63,10 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 	
 	CorrParameter param = new CorrParameter();
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">CrossCorrelationCLI.call()" );
@@ -75,10 +84,10 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";

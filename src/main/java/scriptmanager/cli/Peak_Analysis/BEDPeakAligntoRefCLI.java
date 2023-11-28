@@ -14,8 +14,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 	
 /**
-	Peak_AnalysisCLI/BEDPeakAligntoRefCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "peak-align-ref", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.peak_align_ref_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -23,6 +26,10 @@ import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BEDPeakAligntoRefCLI implements Callable<Integer> {
+	/**
+	 * Creates a new BEDPeakAligntoRefCLI object
+	 */
+	public BEDPeakAligntoRefCLI(){}
 	
 	@Parameters( index = "0", description = "The BED peak file")
 	private File peakBED;
@@ -31,7 +38,13 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peakBED>_<refBED>_Output.cdt)")
 	private File output = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BEDPeakAligntoRefCLI.call()" );
@@ -42,7 +55,7 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(refBED, peakBED, output, null);
+		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(refBED, peakBED, output, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println( "Peak Align Complete." );	
@@ -60,24 +73,11 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 			r += "(!)BED-ref file does not exist: " + refBED.getName() + "\n";
 		}
 		if(!r.equals("")){ return(r); }
-		//check input extensions
-		if(!"bed".equals(ExtensionFileFilter.getExtension(peakBED))){
-			r += "(!)Is this a BED file? Check extension: " + peakBED.getName() + "\n";
-		}
-		if(!"bed".equals(ExtensionFileFilter.getExtension(refBED))){
-			r += "(!)Is this a BED file? Check extension: " + refBED.getName() + "\n";
-		}
 		//set default output filename
 		if(output==null){
 			output = new File(ExtensionFileFilter.stripExtension(peakBED) + "_" + ExtensionFileFilter.stripExtension(refBED) + "_Output.cdt");
 		//check output filename is valid
 		}else{
-			//check ext
-			try{
-				if(!"cdt".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use CDT extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".cdt\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use CDT extension for output filename. Try: " + output + ".cdt\n"; }
 			//check directory
 			if(output.getParent()==null){
 // 				System.err.println("default to current directory");

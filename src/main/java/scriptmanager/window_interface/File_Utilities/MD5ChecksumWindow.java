@@ -38,9 +38,19 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.cli.File_Utilities.MD5ChecksumCLI;
 import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.File_Utilities.MD5Checksum}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.File_Utilities.MD5Checksum
+ */
 @SuppressWarnings("serial")
 public class MD5ChecksumWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	
 	private File OUT_DIR = null;
@@ -52,11 +62,17 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
 	private JButton btnConvert;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
 	private JButton btnOutput;
 	
+	/**
+	 * Organizes user inputs for calling script
+	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() {
@@ -105,6 +121,9 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 	
+	/**
+	 * Creates a new MD5ChecksumWindow
+	 */
 	public MD5ChecksumWindow() {
 		setTitle("MD5 Checksum");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -199,6 +218,9 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
         btnConvert.addActionListener(this);
 	}
 	
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -222,6 +244,11 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

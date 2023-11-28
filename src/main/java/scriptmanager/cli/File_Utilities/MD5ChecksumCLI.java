@@ -12,7 +12,7 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
 /**
- * Print a message redirecting user to the original CLI tool.
+ * Prints a message redirecting user to the original CLI tool.
  * 
  * @author Olivia Lang
  * @see scriptmanager.scripts.File_Utilities.MD5Checksum
@@ -24,6 +24,11 @@ import scriptmanager.scripts.File_Utilities.MD5Checksum;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class MD5ChecksumCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new MD5ChecksumCLI object
+	 */
+	public MD5ChecksumCLI(){}
 	
 	@Parameters( index = "0", description = "The file we want to calculate the MD5checksum for. Alternatively use md5 <file> or md5checksum <file>")
 	private File input;
@@ -31,6 +36,10 @@ public class MD5ChecksumCLI implements Callable<Integer> {
 	@Option(names = {"-o", "--output"}, description = "specify output filepath")
 	private File output = null;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws Exception Invalid input
+	 */
 	@Override
 	public Integer call() throws Exception {
 		String md5hash = MD5Checksum.calculateMD5(input.getAbsolutePath());

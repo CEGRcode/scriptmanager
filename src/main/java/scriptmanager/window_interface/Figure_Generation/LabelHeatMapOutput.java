@@ -20,6 +20,15 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 import scriptmanager.util.ExtensionFileFilter;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Figure_Generation.LabelHeatMap} and
+ * reporting composite results
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.scripts.Figure_Generation.LabelHeatMap
+ * @see scriptmanager.window_interface.Figure_Generation.LabelHeatMapWindow
+ */
 @SuppressWarnings("serial")
 public class LabelHeatMapOutput extends JFrame {
 
@@ -68,6 +77,11 @@ public class LabelHeatMapOutput extends JFrame {
 		yLabel = yLABEL;
 	}
 
+	/**
+	 * Runs the LabelHeatMap script and reports when completed
+	 * @throws IOException Invalid file or parameters
+	 * @throws OptionException
+	 */
 	public void run() throws IOException, OptionException {
 		LogItem old_li = null;
 		for (int x = 0; x < SAMPLE.size(); x++) {

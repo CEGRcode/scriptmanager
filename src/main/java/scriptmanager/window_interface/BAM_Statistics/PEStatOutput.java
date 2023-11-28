@@ -25,6 +25,15 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Statistics.PEStats;
 import scriptmanager.util.ExtensionFileFilter;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.BAM_Statistics.PEStats} and reporting the
+ * histograms and statistics
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.BAM_Statistics.PEStats
+ * @see scriptmanager.window_interface.BAM_Statistics.PEStatOutput
+ */
 @SuppressWarnings("serial")
 public class PEStatOutput extends JFrame {
 	

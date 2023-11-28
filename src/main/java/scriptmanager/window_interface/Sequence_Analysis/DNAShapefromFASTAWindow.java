@@ -34,9 +34,8 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical interface window for calculating various aspects of DNA shape
- * across a set of FASTA sequences by calling the methods implemented in the
- * scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
@@ -45,6 +44,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
@@ -55,6 +57,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
 	private JProgressBar progressBar;
@@ -64,10 +67,13 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	private JCheckBox chckbxHelicalTwist;
 	private JCheckBox chckbxPropellerTwist;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -86,7 +92,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 					OUTPUT_TYPE[2] = chckbxHelicalTwist.isSelected();
 					OUTPUT_TYPE[3] = chckbxRoll.isSelected();
 
-					DNAShapefromFASTAOutput output_obj = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE);
+					DNAShapefromFASTAOutput output_obj = new DNAShapefromFASTAOutput(FASTAFiles, OUT_DIR, OUTPUT_TYPE, chckbxGzipOutput.isSelected());
 					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -147,7 +153,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoad, 10, SpringLayout.WEST, contentPane);
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa");
+				File[] newFASTAFiles = FileSelection.getFiles(fc, "fa", true);
 				if (newFASTAFiles != null) {
 					for (int x = 0; x < newFASTAFiles.length; x++) {
 						FASTAFiles.add(newFASTAFiles[x]);
@@ -177,6 +183,11 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnCalculate, 165, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -165, SpringLayout.EAST, contentPane);
 		contentPane.add(btnCalculate);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH, contentPane);
@@ -279,6 +290,9 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		btnCalculate.addActionListener(this);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -302,6 +316,11 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

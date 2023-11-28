@@ -16,8 +16,11 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 
 /**
-	BAM_Format_ConverterCLI/SEStatsCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Format_Converter.BAMtoBED}
+ * 
+ * @author Olivia Lang
+ */
 @Command(name = "bam-to-bed", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_bed_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -25,6 +28,11 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtoBEDCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new BAMtoBEDCLI object
+	 */
+	public BAMtoBEDCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file from which we generate a new file.")
 	private File bamFile;
@@ -33,6 +41,8 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 	private File output = null;
 	@Option(names = {"-s", "--stdout"}, description = "stream output file to STDOUT (cannot be used with \"-o\" flag)" )
 	private boolean stdout = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	
 	//Read
 	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nSelect Read to output:%n\t@|fg(red) (select no more than one of these options)|@%n")
@@ -60,6 +70,10 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 	private int STRAND = -9999;
 	private int PAIR;
 	
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file type 
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">BAMtoBEDCLI.call()" );
@@ -70,7 +84,7 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BAMtoBED script_obj = new BAMtoBED(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null);
+		BAMtoBED script_obj = new BAMtoBED(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println("Conversion Complete");
@@ -95,10 +109,6 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 			r += "(!)BAM file does not exist: " + bamFile.getName() + "\n";
 			return(r);
 		}
-		//check input extensions
-		if(!"bam".equals(ExtensionFileFilter.getExtension(bamFile))){
-			r += "(!)Is this a BAM file? Check extension: " + bamFile.getName() + "\n";
-		}
 		//check BAI exists
 		File f = new File(bamFile+".bai");
 		if(!f.exists() || f.isDirectory()){
@@ -116,13 +126,7 @@ public class BAMtoBEDCLI implements Callable<Integer> {
 		}else if(stdout){
 			if(output!=null){ r += "(!)Cannot use -s flag with -o.\n"; }
 		//check output filename is valid
-		}else{
-			//check ext
-			try{
-				if(!"bed".equals(ExtensionFileFilter.getExtension(output))){
-					r += "(!)Use BED extension for output filename. Try: " + ExtensionFileFilter.stripExtension(output) + ".bed\n";
-				}
-			} catch( NullPointerException e){ r += "(!)Output filename must have extension: use BED extension for output filename. Try: " + output + ".bed\n"; }
+		} else {
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");
