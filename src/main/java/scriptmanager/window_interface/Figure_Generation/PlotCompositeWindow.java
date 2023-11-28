@@ -92,9 +92,6 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script
-	 */
-	/**
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
@@ -307,7 +304,7 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 		txtPixelWidth.setEnabled(activate);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override

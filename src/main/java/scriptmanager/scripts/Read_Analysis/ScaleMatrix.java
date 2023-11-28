@@ -34,6 +34,7 @@ public class ScaleMatrix {
 	 * @param s Scaling factor
 	 * @param r Starting row (1-indexed)
 	 * @param c Starting column (1-indexed)
+	 * @param gzOutput   whether or not to gzip output
 	 */
 	public ScaleMatrix(File m, File o, double s, int r, int c, boolean gzOutput) {
 		MATRIX = m;

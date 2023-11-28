@@ -26,9 +26,11 @@ public class SEStats {
 	 * Outputs BAM Header including alignment statistics and parameters given any
 	 * indexed (BAI) BAM File
 	 * 
-	 * @param out_filepath File path to output text file to
-	 * @param bamFile      input BAM file (indexed)
-	 * @param ps           Output print stream
+	 * @param bamFile       the BAM file to get statistics on (from header)
+	 * @param output        text file to write output to (if OUTPUT_STATUS=true)
+	 * @param OUTPUT_STATUS whether or not to write output info
+	 * @param ps            stream for GUI output display
+	 * @throws IOException
 	 */
 	public static void getSEStats(File bamFile, File output, boolean OUTPUT_STATUS, PrintStream ps ) throws IOException {
 		
@@ -93,13 +95,13 @@ public class SEStats {
 	}	
 	
 	/**
-	*Helper method to de-clutter method above:
-	*Prints output to both pop-up window (for GUI) and output file (GUI and CLI)
-	*
-	*@param p PrintStream to GUI output
-	*@param out PrintStream to file
-	*@param line Line to print
-	*/
+	 * Helper method to print output to both pop-up window (for GUI) and output file
+	 * (GUI and CLI)
+	 * 
+	 * @param p    stream wrapper to GUI output window
+	 * @param out  stream to output file (used by both GUI and CLI)
+	 * @param line string to print to both streams
+	 */
 	private static void printBoth( PrintStream p, PrintStream out, String line ){
 		if (p != null) { p.println( line ); }
 		if (out != null) { out.println( line ); }
@@ -110,7 +112,7 @@ public class SEStats {
 	 * @return Timestamp The time at which the BAM file was analyzed
 	 */
 	private static String getTimeStamp() {
-		Date date= new Date();
+		Date date = new Date();
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
 	}

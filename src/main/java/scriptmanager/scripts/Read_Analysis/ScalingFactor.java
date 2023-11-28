@@ -83,14 +83,14 @@ public class ScalingFactor {
 	 *                     determine background signal
 	 * @param out_basename the filepath base name (the script will append suffixes)
 	 *                     for the output files
-	 * @param out          whether or not to write the output (write =true, don't
-	 *                     write = false)
 	 * @param scale        an integer value encoding the scaling type strategy to
 	 *                     use (1=Total Tag, 2=NCIS, 3=NCISwithTotal)
 	 * @param win          the NCIS parameter for the window/bin size (only used if
 	 *                     scale!=1)
 	 * @param min          the NCIS parameter for the minimum fraction (only used if
 	 *                     scale!=1)
+	 * @param out          whether or not to write the output (write =true, don't
+	 *                     write = false)
 	 */
 	public ScalingFactor(File bamFile, File bl, File c, File out_basename, int scale, int win, double min, boolean out) {
 		BAMFile = bamFile;

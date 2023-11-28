@@ -262,6 +262,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

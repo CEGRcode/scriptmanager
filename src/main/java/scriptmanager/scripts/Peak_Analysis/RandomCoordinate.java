@@ -30,7 +30,7 @@ public class RandomCoordinate {
 	 * 
 	 * @param GENOME     the String encoding the genome build to tile (matches
 	 *                   util.GenomeSizeReference)
-	 * @param OUTPUT     the file to write the coordinate tile output to (if null, a
+	 * @param output     the file to write the coordinate tile output to (if null, a
 	 *                   default filename is determined using
 	 *                   &lt;GENOME&gt;_&lt;numSites&gt;SITES_&lt;windowSize&gt;bp.&lt;ext&gt;)
 	 * @param BEDout     coordinate file format of output where BED-format is used
@@ -38,6 +38,7 @@ public class RandomCoordinate {
 	 * @param numSites   the number of random coordinate sites to sample
 	 * @param windowSize the base-pair length of each coordinate interval
 	 * @param gzOutput   whether or not to gzip output
+	 * @throws OptionException thrown when window size is larger than a chromosome/contig in GENOME
 	 * @throws IOException Invalid file or parameters
 	 * @throws IllegalArgumentException
 	 */

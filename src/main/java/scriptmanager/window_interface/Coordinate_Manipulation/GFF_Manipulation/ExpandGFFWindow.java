@@ -261,7 +261,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		btnConvert.addActionListener(this);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -277,6 +277,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Invoked when task's progress property changes and updates the progress bar
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

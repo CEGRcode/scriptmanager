@@ -19,6 +19,7 @@ import scriptmanager.scripts.Figure_Generation.PlotComposite;
  * Command line interface for {@link scriptmanager.scripts.Figure_Generation.PlotComposite}
  * 
  * @author Olivia Lang
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
  */
 @Command(name = "composite-plot", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.composite_description,

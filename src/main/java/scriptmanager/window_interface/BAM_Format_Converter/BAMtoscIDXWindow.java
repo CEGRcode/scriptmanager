@@ -371,9 +371,6 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	}
 
 	/**
-	 * Runs when a task is invoked, making window non-interactive and executing the task..
-	 */
-	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -389,6 +386,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

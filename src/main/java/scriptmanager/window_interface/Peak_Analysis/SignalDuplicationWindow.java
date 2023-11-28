@@ -220,8 +220,9 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 	}
 	
 	/**
-     * Invoked when task's progress property changes and updates the progress bar.
-     */
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();

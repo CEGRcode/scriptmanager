@@ -71,9 +71,6 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script
-	 */
-	/**
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
@@ -216,7 +213,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(chckbxGzipOutput);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -232,6 +229,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

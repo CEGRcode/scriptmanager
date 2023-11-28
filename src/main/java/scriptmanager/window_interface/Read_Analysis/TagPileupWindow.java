@@ -1039,7 +1039,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Extract read aspect and read output to update the cartoon accordingly.
+	 * Extract read aspect and read output to upddate the cartoon accordingly.
 	 */
 	public void updateCartoon() {
 		int aspect = cbox_ReadAspect.getSelectedIndex();
@@ -1151,6 +1151,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

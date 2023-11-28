@@ -282,6 +282,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

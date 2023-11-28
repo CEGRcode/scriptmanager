@@ -226,6 +226,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	/**
 	 * Invoked when task's progress property changes and updates the progress bar
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

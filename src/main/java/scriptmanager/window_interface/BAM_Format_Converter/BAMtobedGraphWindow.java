@@ -384,6 +384,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	/**
 	 * Invoked when the task's progress changes
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

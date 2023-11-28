@@ -401,7 +401,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(btnLoadCdtFile);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -417,6 +417,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	/**
 	 * Invoked when task's progress property changes and updates the progress bar
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

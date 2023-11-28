@@ -46,7 +46,6 @@ public class FilterBEDbyProximity{
 	 */
 	public FilterBEDbyProximity(File input, File outputBase, int cutoff, PrintStream ps, boolean gzOutput) throws IOException {
 		INPUT = input;
-		//OUT_BASENAME = outputBase;
 		CUTOFF = cutoff;
 		PS = ps;
 		

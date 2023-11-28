@@ -401,7 +401,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 		btnExecute.addActionListener(this);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override

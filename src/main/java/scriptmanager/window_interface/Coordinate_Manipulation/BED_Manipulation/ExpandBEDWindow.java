@@ -81,9 +81,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script
-	 */
-	/**
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
@@ -268,7 +265,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		btnExecute.addActionListener(this);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -284,6 +281,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Invoked when task's progress property changes and updates the progress bar
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
@@ -293,9 +291,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
-	/**
-	 * Invoked when task's progress property changes and updates the progress bar
-	 */
 	/**
 	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive

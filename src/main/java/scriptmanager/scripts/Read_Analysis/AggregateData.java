@@ -40,6 +40,7 @@ public class AggregateData {
 	 * @param c     Starting column (1-indexed)
 	 * @param index Operation to be performed (0 = sum, 1 = average, 2 = median, 3 =
 	 *              mode, 4 = min, 5 = max, 6 = positional variance)
+	 * @param gzOutput   whether or not to gzip output
 	 */
 	public AggregateData(ArrayList<File> in, File out, boolean m, int r, int c, int index, boolean gzOutput) {
 		INPUT = in;

@@ -346,15 +346,18 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 	}
 	
 	/**
-     * Invoked when task's progress property changes.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
-    }
-	
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
+	}
+
 	/**
 	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive

@@ -47,6 +47,7 @@ public class BAMtoscIDXOutput extends JFrame {
 	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
 	 * @param min_size Minimum acceptable insert size
 	 * @param max_size Maximum acceptable insert size
+	 * @param gzOutput   whether or not to gzip output
 	 */
 	public BAMtoscIDXOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
 		setTitle("BAM to scIDX Progress");
