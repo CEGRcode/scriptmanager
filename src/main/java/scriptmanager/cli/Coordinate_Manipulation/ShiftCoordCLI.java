@@ -56,9 +56,9 @@ public class ShiftCoordCLI implements Callable<Integer> {
 		}
 
 		if(isGFF) {
-			ShiftCoord.shiftGFFInterval(new File(outputFilepath), input, shift, stranded, gzOutput);
+			ShiftCoord.shiftGFFInterval(input, new File(outputFilepath), shift, stranded, gzOutput);
 		} else {
-			ShiftCoord.shiftBEDInterval(new File(outputFilepath), input, shift, stranded, gzOutput);
+			ShiftCoord.shiftBEDInterval(input, new File(outputFilepath), shift, stranded, gzOutput);
 		}
 
 		System.err.println("Shift Complete");
@@ -92,7 +92,8 @@ public class ShiftCoordCLI implements Callable<Integer> {
 		}
 		return(r);
 	}
-	public static String getCLIcommand(File input, File output, int shift, boolean stranded, boolean gzOutput, boolean isGFF) {
+
+	public static String getCLIcommand(File input, File output, int shift, boolean stranded, boolean isGFF, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation shift-coord";
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();

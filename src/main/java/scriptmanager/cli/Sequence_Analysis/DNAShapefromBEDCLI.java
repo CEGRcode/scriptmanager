@@ -185,11 +185,13 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	 * @param type  a four-element boolean list for specifying shape type to output
 	 *              (no enforcement on size)
 	 * @param str  force strandedness (true=forced, false=not forced)
+	 * @param gzOutput   whether or not to gzip output
 	 * @return command line to execute with formatted inputs
 	 */
-	public static String getCLIcommand(File gen, File input, String out, boolean[] type, boolean str) {
+	public static String getCLIcommand(File gen, File input, String out, boolean[] type, boolean str, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER sequence-analysis dna-shape-bed";
 		command += " -o " + out;
+		command += gzOutput ? " -z " : "";
 		command += type[0] ? " --groove" : "";
 		command += type[1] ? " --propeller" : "";
 		command += type[2] ? " --helical" : "";

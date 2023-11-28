@@ -125,7 +125,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 				BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 			}
 			// Initialize LogItem
-			String command = DNAShapefromFASTACLI.getCLIcommand(FASTA.get(x), BASENAME, OUTPUT_TYPE);
+			String command = DNAShapefromFASTACLI.getCLIcommand(FASTA.get(x), BASENAME, OUTPUT_TYPE, OUTPUT_GZIP);
 			LogItem new_li = new LogItem(command);
 			firePropertyChange("log", old_li, new_li);
 

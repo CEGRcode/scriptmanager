@@ -94,7 +94,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				if (SIZE < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Expansion Size!!! Must be larger than 0 bp");
 				} else {
-					boolean GZIP = chckbxGzipOutput.isSelected();
 					setProgress(0);
 					LogItem old_li = new LogItem("");
 					for (int x = 0; x < BEDFiles.size(); x++) {
@@ -107,14 +106,14 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
 						// Add suffix
-						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed" + (GZIP? ".gz": "");
+						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed" + (chckbxGzipOutput.isSelected() ? ".gz": "");
 
 						// Initialize LogItem
-						String command = ExpandBEDCLI.getCLIcommand(XBED, new File(OUTPUT), SIZE, chckbxGzipOutput.isSelected(), rdbtnExpandFromCenter.isSelected());
+						String command = ExpandBEDCLI.getCLIcommand(XBED, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
-						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), GZIP);
+						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));

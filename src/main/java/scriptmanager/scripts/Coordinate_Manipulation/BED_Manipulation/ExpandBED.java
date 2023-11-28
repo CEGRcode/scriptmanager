@@ -20,14 +20,14 @@ public class ExpandBED {
 	/**
 	 * Self-contained method for expanding the BED-formatted intervals in a BED file by user-specified distance and strategy. This method accounts for even-sized BED interval expansion in midpoint calculations by using the strand-aware downstream nucleotide between the two center nucleotides.
 	 * 
-	 * @param out_filepath Filepath to save expanded BED-formatted files. If null, outputs to STDOUT.
 	 * @param input Filepath to starting BED-formatted coordinates we want to shift. Supports automatic detection and handling of GZipped BED-formatted files. Must have at least 3 tab-delimited columns per BED specifications.
+	 * @param out_filepath Filepath to save expanded BED-formatted files. If null, outputs to STDOUT.
 	 * @param SIZE Integer value indicating number of nucleotides to expand by (must be a positive integer).
 	 * @param ExCenter Specifies expansion strategy: if true, size expansion will be performed from the midpoint of each BED interval, if false, size expansion will be performed from the border/edges of the BED intervals (default=true).
 	 * @param gzOutput If this is true, the output file will be gzipped.
 	 * @throws IOException Invalid file or parameters
 	 */
-	public static void expandBEDBorders(File out_filepath, File input, int SIZE, boolean ExCenter, boolean gzOutput ) throws IOException {
+	public static void expandBEDBorders(File input, File out_filepath, int SIZE, boolean ExCenter, boolean gzOutput ) throws IOException {
 		// Initialize output writer
 		PrintStream OUT = System.out;
 		if (out_filepath != null) {

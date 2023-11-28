@@ -15,7 +15,6 @@ import htsjdk.samtools.SAMException;
  * @see scriptmanager.window_interface.BAM_Manipulation.BAMMarkDupWindow
  */
 public class BAMMarkDuplicates {
-	
 	/**
 	 * Runs MarkDuplicates picard tool
 	 * @param in BAM file to be marked

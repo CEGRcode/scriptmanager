@@ -23,14 +23,14 @@ public class SortGFF {
 	/**
 	 * Sort a GFF file by the values from a CDT matrix file. 
 	 * 
-	 * @param outname Filepath basename (without ext) to save the sorted GFF (&lt;basename&gt;.gff) and sorted CDT (&lt;basename&gt;.cdt) files.
 	 * @param gff input GFF file to sort
 	 * @param cdt input CDT file with values to sort by
+	 * @param outname Filepath basename (without ext) to save the sorted GFF (&lt;basename&gt;.gff) and sorted CDT (&lt;basename&gt;.cdt) files.
 	 * @param START_INDEX the start column to consider when summing values to sort
 	 * @param STOP_INDEX The last column to consider when summing values (non-inclusive)
 	 * @param gzOutput whether or not to gzip output
 	 */
-	public static void sortGFFbyCDT(String outname, File gff, File cdt, int START_INDEX, int STOP_INDEX, boolean gzOutput)
+	public static void sortGFFbyCDT(File gff, File cdt, File outname, int START_INDEX, int STOP_INDEX, boolean gzOutput)
 			throws IOException {
 		ArrayList<GFFCoord> SORT = new ArrayList<GFFCoord>();
 		HashMap<String, String> CDTFile = new HashMap<String, String>();
@@ -58,8 +58,8 @@ public class SortGFF {
 		Collections.sort(SORT, GFFCoord.ScoreComparator);
 
 		// Output sorted CDT File
-		String SUFFIX = ".cdt" + (gzOutput? ".gz": "");
-		PrintStream OUT = GZipUtilities.makePrintStream(new File(outname + SUFFIX), gzOutput);
+		String SUFFIX = ".cdt" + (gzOutput ? ".gz": "");
+		PrintStream OUT = GZipUtilities.makePrintStream(new File(outname.getCanonicalFile() + SUFFIX), gzOutput);
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(CDTFile.get(SORT.get(x).getName()));
@@ -83,8 +83,8 @@ public class SortGFF {
 		br.close();
 
 		// Output sorted GFF File
-		SUFFIX = ".gff" + (gzOutput? ".gz": "");
-		OUT = GZipUtilities.makePrintStream(new File(outname + SUFFIX), gzOutput);
+		SUFFIX = ".gff" + (gzOutput ? ".gz": "");
+		OUT = GZipUtilities.makePrintStream(new File(outname.getCanonicalFile() + SUFFIX), gzOutput);
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(GFFFile.get(SORT.get(x).getName()));
 		}

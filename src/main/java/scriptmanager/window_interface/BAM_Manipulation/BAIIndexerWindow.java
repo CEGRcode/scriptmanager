@@ -176,7 +176,7 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
         btnIndex.addActionListener(this);
 	}
 	
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -200,9 +200,9 @@ public class BAIIndexerWindow extends JFrame implements ActionListener, Property
 		} else if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
-    }
+	}
 	
-    /**
+	/**
 	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive
 	 * @param status If the window should be interactive

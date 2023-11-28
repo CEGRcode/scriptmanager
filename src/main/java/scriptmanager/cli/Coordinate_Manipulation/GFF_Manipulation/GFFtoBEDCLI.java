@@ -51,7 +51,7 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		GFFtoBED.convertGFFtoBED(output, gffFile, gzOutput);
+		GFFtoBED.convertGFFtoBED(gffFile, output, gzOutput);
 		
 		System.err.println("Conversion Complete");
 		return(0);
@@ -83,10 +83,12 @@ public class GFFtoBEDCLI implements Callable<Integer> {
 		
 		return(r);
 	}
-	public static String getCLIcommand(File GFF, File output) {
+
+	public static String getCLIcommand(File GFF, File output, boolean gzOutput) {
 		String command = "java -jar  $SCRIPTMANAGER coordinate-manipulation gff-to-bed";
 		command += " " + GFF.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " -z " : "";
 		return command;
 	}
 }

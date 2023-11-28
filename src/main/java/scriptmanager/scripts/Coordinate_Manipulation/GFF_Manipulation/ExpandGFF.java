@@ -24,14 +24,14 @@ public class ExpandGFF {
 	/**
 	 * Self-contained method for expanding the GFF-formatted intervals in a GFF file by user-specified distance and strategy. This method accounts for even-sized GFF interval expansion in midpoint calculations by using the strand-aware downstream nucleotide between the two center nucleotides.
 	 * 
-	 * @param out_filepath Filepath to save expanded GFF-formatted files. If null, outputs to STDOUT.
 	 * @param input Filepath to starting GFF-formatted coordinates we want to shift. Supports automatic detection and handling of GZipped GFF-formatted files. Must have at least 3 tab-delimited columns per GFF specifications.
+	 * @param out_filepath Filepath to save expanded GFF-formatted files. If null, outputs to STDOUT.
 	 * @param SIZE Integer value indicating number of nucleotides to expand by (must be a positive integer).
 	 * @param ExCenter Specifies expansion strategy: if true, size expansion will be performed from the midpoint of each GFF interval, if false, size expansion will be performed from the border/edges of the GFF intervals (default=true).
 	 * @param gzOutput    whether or not to gzip output
 	 * @throws IOException Invalid file or parameters
 	 */
-	public static void expandGFFBorders(File out_filepath, File input, int SIZE, boolean ExCenter, boolean gzOutput) throws IOException {
+	public static void expandGFFBorders(File input, File out_filepath, int SIZE, boolean ExCenter, boolean gzOutput) throws IOException {
 		// GFF: chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
 		// GFF: chr12 bed2gff chr12_384641_384659_+ 384642 384659 42.6 + .
 		// chr12_384641_384659_+;

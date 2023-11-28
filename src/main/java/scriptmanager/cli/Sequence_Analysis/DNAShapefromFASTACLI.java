@@ -175,11 +175,13 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	 *             to)
 	 * @param type a four-element boolean list for specifying shape type to output
 	 *             (no enforcement on size)
+	 * @param gzOutput   whether or not to gzip output
 	 * @return command line to execute with formatted inputs
 	 */
-	public static String getCLIcommand(File fa, String out, boolean[] type) {
+	public static String getCLIcommand(File fa, String out, boolean[] type, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER sequence-analysis dna-shape-fasta";
 		command += " -o " + out;
+		command += gzOutput ? " -z " : "";
 		command += type[0] ? " --groove" : "";
 		command += type[1] ? " --propeller" : "";
 		command += type[2] ? " --helical" : "";

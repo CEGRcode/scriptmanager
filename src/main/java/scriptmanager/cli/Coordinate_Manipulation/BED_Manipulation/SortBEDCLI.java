@@ -35,7 +35,7 @@ public class SortBEDCLI implements Callable<Integer> {
 	private File cdtFile;
 
 	@Option(names = {"-o", "--output"}, description = "specify output file basename with no .cdt/.bed/.jtv extension (default=<bedFile>_SORT")
-	private String outputBasename = null;
+	private File outputBasename = null;
 	@Option(names = {"-c", "--center"}, description = "sort by center on the input size of expansion in bins (default=100)")
 	private int center = -999;
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
@@ -66,7 +66,7 @@ public class SortBEDCLI implements Callable<Integer> {
 			index[1] = (CDT_SIZE / 2) + (center / 2);
 		}
 
-		SortBED.sortBEDbyCDT(outputBasename, bedFile, cdtFile, index[0], index[1], gzOutput);
+		SortBED.sortBEDbyCDT(bedFile, cdtFile, outputBasename, index[0], index[1], gzOutput);
 
 		System.err.println("Sort Complete");
 		return(0);
@@ -93,16 +93,15 @@ public class SortBEDCLI implements Callable<Integer> {
 
 		//set default output filename
 		if(outputBasename==null){
-			outputBasename = ExtensionFileFilter.stripExtensionIgnoreGZ(bedFile) + "_SORT";
+			outputBasename = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(bedFile) + "_SORT");
 		//check output filename is valid
 		}else{
 			//no extension check
 			//check directory
-			File BASEFILE = new File(outputBasename);
-			if(BASEFILE.getParent()==null){
+			if(outputBasename.getParent()==null){
 // 				System.err.println("default to current directory");
-			} else if(!new File(BASEFILE.getParent()).exists()){
-				r += "(!)Check output directory exists: " + BASEFILE.getParent() + "\n";
+			} else if(!new File(outputBasename.getParent()).exists()){
+				r += "(!)Check output directory exists: " + outputBasename.getParent() + "\n";
 			}
 		}
 
@@ -124,13 +123,13 @@ public class SortBEDCLI implements Callable<Integer> {
 		return(r);
 	}
 
-	public static String getCLIcommand(File OUTPUT, File BED, File CDT, int startidx, int stopidx, boolean gzOutput) {
+	public static String getCLIcommand(File input, File CDT, File OUTPUT, int startidx, int stopidx, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation sort-bed";
-		command += " " + BED.getAbsolutePath();
+		command += " " + input.getAbsolutePath();
 		command += " " + CDT.getAbsolutePath();
 		command += " -x " + startidx + " " + stopidx;
-		command += gzOutput ? " -z" : "";
 		command += " -o " + OUTPUT.getAbsolutePath();
+		command += gzOutput ? " -z" : "";
 		return command;
 	}
 }

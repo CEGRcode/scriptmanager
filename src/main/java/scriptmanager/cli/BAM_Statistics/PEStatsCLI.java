@@ -55,7 +55,7 @@ public class PEStatsCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		PEStats.getPEStats( outputBasename, bamFile, dup, MIN_INSERT, MAX_INSERT, null, null, sum);
+		PEStats.getPEStats(bamFile, outputBasename, dup, MIN_INSERT, MAX_INSERT, null, null, sum);
 		
 		System.err.println("Calculations Complete");
 		return(0);

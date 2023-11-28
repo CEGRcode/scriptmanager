@@ -69,7 +69,7 @@ public class ExpandGFFCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		ExpandGFF.expandGFFBorders(output, gffFile, SIZE, byCenter, gzOutput);
+		ExpandGFF.expandGFFBorders(gffFile, output, SIZE, byCenter, gzOutput);
 		
 		System.err.println("Expansion Complete");
 		return(0);
@@ -131,10 +131,11 @@ public class ExpandGFFCLI implements Callable<Integer> {
 		
 		return(r);
 	}
-	public static String getCLIcommand(File bedFile, File output, int size, boolean byCenter) {
+	public static String getCLIcommand(File input, File output, int size, boolean byCenter, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation expand-gff";
-		command += " " + bedFile.getAbsolutePath();
+		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " -z " : "";
 		command += byCenter ? " -c " + size : " -b " + size;
 		return command;
 	}

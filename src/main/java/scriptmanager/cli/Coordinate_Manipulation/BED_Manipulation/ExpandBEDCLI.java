@@ -68,7 +68,7 @@ public class ExpandBEDCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		ExpandBED.expandBEDBorders(output, bedFile, SIZE, byCenter, gzOutput);
+		ExpandBED.expandBEDBorders(bedFile, output, SIZE, byCenter, gzOutput);
 
 		System.err.println("Expansion Complete");
 		return(0);
@@ -127,11 +127,11 @@ public class ExpandBEDCLI implements Callable<Integer> {
 
 		return(r);
 	}
-	public static String getCLIcommand(File bedFile, File output, int size, boolean gzOutput, boolean byCenter) {
+	public static String getCLIcommand(File input, File output, int size, boolean byCenter, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed";
-		command += " " + bedFile.getAbsolutePath();
-		command += gzOutput ? " -z " : "";
+		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " -z " : "";
 		command += byCenter ? " -c " + size : " -b " + size;
 		return command;
 	}

@@ -79,22 +79,21 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 		public Void doInBackground() throws IOException {
-			boolean GZIP = chckbxGzipOutput.isSelected();
 			setProgress(0);
 			LogItem old_li = new LogItem("");
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XBED = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED) + ".gff" + (GZIP? ".gz": "");
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED) + ".gff" + (chckbxGzipOutput.isSelected()? ".gz": "");
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
 				// Initialize LogItem
-				String command = BEDtoGFFCLI.getCLIcommand(new File(OUTPUT), XBED, GZIP);
+				String command = BEDtoGFFCLI.getCLIcommand(XBED, new File(OUTPUT), chckbxGzipOutput.isSelected());
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
 				// Execute conversion and update progress
-				BEDtoGFF.convertBEDtoGFF(new File(OUTPUT), XBED, GZIP);
+				BEDtoGFF.convertBEDtoGFF(XBED, new File(OUTPUT), chckbxGzipOutput.isSelected());
 				// Update log item
 				new_li.setStopTime(new Timestamp(new Date().getTime()));
 				new_li.setStatus(0);

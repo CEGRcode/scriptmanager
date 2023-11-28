@@ -103,11 +103,11 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
 						// Initialize LogItem
-						String command = ExpandGFFCLI.getCLIcommand(XGFF, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected());
+						String command = ExpandGFFCLI.getCLIcommand(XGFF, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
-						ExpandGFF.expandGFFBorders(new File(OUTPUT), XGFF, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
+						ExpandGFF.expandGFFBorders(XGFF, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / GFFFiles.size()) * 100);
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));

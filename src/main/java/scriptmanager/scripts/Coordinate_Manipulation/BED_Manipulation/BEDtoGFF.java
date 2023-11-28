@@ -20,12 +20,12 @@ public class BEDtoGFF {
 	/**
 	 * Read the BED-formatted input file and write it as a GFF-formatted output file.
 	 * 
-	 * @param outpath the filepath destination of the GFF-formatted output
 	 * @param input the BED-formatted file to convert
+	 * @param outpath the filepath destination of the GFF-formatted output
 	 * @param gzOutput If this is true, the output file will be gzipped.
 	 * @throws IOException Invalid file or parameters
 	 */
-	public static void convertBEDtoGFF(File outpath, File input, boolean gzOutput) throws IOException {
+	public static void convertBEDtoGFF(File input, File outpath, boolean gzOutput) throws IOException {
 		// chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
 		// Initialize output writer
 		PrintStream OUT = System.out;
