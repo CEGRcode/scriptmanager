@@ -35,6 +35,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import scriptmanager.cli.BAM_Manipulation.MergeBAMCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
@@ -106,11 +107,14 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 				// Update progress
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Merging Complete");
+			} catch (SAMException se) {
+				JOptionPane.showMessageDialog(null, se.getMessage());
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
-			} catch (SAMException se) {
-				JOptionPane.showMessageDialog(null, se.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
         	return null;

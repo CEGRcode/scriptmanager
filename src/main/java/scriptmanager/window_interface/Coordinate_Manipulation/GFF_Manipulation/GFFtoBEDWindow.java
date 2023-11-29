@@ -32,6 +32,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDCLI;
@@ -75,7 +76,8 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
+			try {
 			setProgress(0);
 			LogItem old_li = null;
 			for (int x = 0; x < BEDFiles.size(); x++) {
@@ -102,6 +104,14 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 			firePropertyChange("log", old_li, null);
 			setProgress(100);
 			JOptionPane.showMessageDialog(null, "Conversion Complete");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
+			}
+			setProgress(100);
 			return null;
 		}
 

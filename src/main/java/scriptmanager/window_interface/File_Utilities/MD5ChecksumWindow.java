@@ -34,7 +34,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 import scriptmanager.objects.LogItem;
-
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.cli.File_Utilities.MD5ChecksumCLI;
 import scriptmanager.scripts.File_Utilities.MD5Checksum;
 
@@ -110,6 +110,9 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

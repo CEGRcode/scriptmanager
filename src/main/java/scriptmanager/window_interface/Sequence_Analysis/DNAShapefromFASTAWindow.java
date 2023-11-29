@@ -31,6 +31,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -77,7 +78,7 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			try {
 				if (FASTAFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No FASTA Files Loaded!!!");
@@ -112,6 +113,12 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

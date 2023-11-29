@@ -42,6 +42,7 @@ import java.util.Date;
 import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI;
 import scriptmanager.cli.Coordinate_Manipulation.ShiftCoordCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -95,7 +96,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			try {
 				int SHIFT = Integer.parseInt(txtShift.getText());
 				if (SHIFT == 0) {
@@ -173,7 +174,14 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 

@@ -34,6 +34,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Read_Analysis.AggregateData;
 
 /**
@@ -81,7 +82,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			setProgress(0);
 			try {
 				if (Integer.parseInt(txtRow.getText()) < 1) {
@@ -106,6 +107,12 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}

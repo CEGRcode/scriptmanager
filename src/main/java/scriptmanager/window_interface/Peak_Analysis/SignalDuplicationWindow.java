@@ -29,6 +29,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Peak_Analysis.SignalDuplication;
 
 /**
@@ -67,7 +68,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException {
+        public Void doInBackground() {
         	try {
         		if(Double.parseDouble(txtWindow.getText()) < 1) {
         			JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
@@ -86,13 +87,17 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 				        	setProgress(percentComplete);
 					     }
 					 });
-	        		
         			signal.setVisible(true);
         			signal.run();
-					
         		}
-        	} catch(NumberFormatException nfe){
+			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
         	return null;
         }

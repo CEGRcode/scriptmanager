@@ -37,6 +37,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
@@ -197,12 +198,15 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 				output_obj.run();
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (OptionException oe) {
 				oe.printStackTrace();
 				JOptionPane.showMessageDialog(null, oe.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

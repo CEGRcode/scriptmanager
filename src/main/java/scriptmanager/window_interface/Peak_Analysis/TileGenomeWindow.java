@@ -32,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 import scriptmanager.cli.Peak_Analysis.TileGenomeCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
@@ -68,7 +69,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if(txtSize.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "No Window Size Entered!!!");
@@ -103,6 +104,9 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}

@@ -13,8 +13,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -37,8 +35,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-import scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI;
-import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -89,7 +86,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if (chckbxFilterByMinimum.isSelected() && Integer.parseInt(txtMin.getText()) < 0) {
 					JOptionPane.showMessageDialog(null,
@@ -145,6 +142,15 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Unexpected InterruptedException: " + ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}

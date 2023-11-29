@@ -41,6 +41,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import scriptmanager.charts.HeatMap;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
@@ -137,12 +138,15 @@ public class BAMGenomeCorrelationWindow extends JFrame implements ActionListener
 				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (OptionException oe) {
 				oe.printStackTrace();
 				JOptionPane.showMessageDialog(null, oe.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

@@ -39,6 +39,7 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
@@ -82,7 +83,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if (FASTAFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No FASTA Files Loaded!!!");
@@ -123,6 +124,12 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Seed!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

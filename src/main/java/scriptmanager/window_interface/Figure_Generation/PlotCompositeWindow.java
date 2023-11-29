@@ -34,6 +34,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -125,14 +126,17 @@ public class PlotCompositeWindow extends JFrame implements ActionListener, Prope
 					output_obj.setVisible(true);
 					output_obj.run();
 				}
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (NoSuchElementException nsee){
 				nsee.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Check that your input files are properly formatted!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

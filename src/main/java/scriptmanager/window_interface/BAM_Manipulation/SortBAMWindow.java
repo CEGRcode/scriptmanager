@@ -35,6 +35,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.cli.BAM_Manipulation.SortBAMCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.BAM_Manipulation.BAMFileSort;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -105,11 +106,14 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Sorting Complete");
+			} catch (SAMException se) {
+				JOptionPane.showMessageDialog(null, se.getMessage());
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
-			} catch (SAMException se) {
-				JOptionPane.showMessageDialog(null, se.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
         	return null;
         }

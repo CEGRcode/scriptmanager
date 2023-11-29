@@ -35,6 +35,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Peak_Calling.PeakPair;
 
 /**
@@ -90,7 +91,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException {
+        public Void doInBackground() {
         	try {
 				if(Integer.parseInt(txtUp.getText()) < 0) {
 					JOptionPane.showMessageDialog(null, "Invalid Upstream Distance!!!");
@@ -131,6 +132,12 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}	
         	return null;
         }

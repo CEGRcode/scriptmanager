@@ -35,6 +35,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.SortBEDCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.CDTUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -101,7 +102,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			try {
 				if (rdbtnSortbyCenter.isSelected() && Integer.parseInt(txtMid.getText()) > CDT_SIZE) {
 					JOptionPane.showMessageDialog(null, "Sort Size is larger than CDT File!!!");
@@ -141,6 +142,12 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}

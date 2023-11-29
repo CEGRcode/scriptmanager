@@ -38,6 +38,7 @@ import java.beans.PropertyChangeListener;
 
 import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -124,6 +125,12 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}

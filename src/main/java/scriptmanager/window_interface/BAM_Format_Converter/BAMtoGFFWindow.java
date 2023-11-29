@@ -39,6 +39,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -90,7 +91,7 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if (chckbxFilterByMinimum.isSelected() && Integer.parseInt(txtMin.getText()) < 0) {
 					JOptionPane.showMessageDialog(null,
@@ -149,6 +150,15 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Unexpected InterruptedException: " + ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}

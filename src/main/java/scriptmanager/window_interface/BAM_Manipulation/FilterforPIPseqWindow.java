@@ -36,6 +36,7 @@ import javax.swing.SwingConstants;
 
 import scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
@@ -118,12 +119,15 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Permanganate-Seq Filtering Complete");
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 				JOptionPane.showMessageDialog(null, "InterruptedException - " + ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

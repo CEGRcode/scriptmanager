@@ -50,6 +50,7 @@ import htsjdk.samtools.SAMException;
 import scriptmanager.objects.CompositeCartoon;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
@@ -139,7 +140,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if (Integer.parseInt(txtBin.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
@@ -255,6 +256,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (SAMException se) {
 				JOptionPane.showMessageDialog(null, se.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}

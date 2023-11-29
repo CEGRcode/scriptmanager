@@ -33,6 +33,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Peak_Calling.GeneTrack;
 
 /**
@@ -81,7 +82,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException, InterruptedException {
+        public Void doInBackground() {
         	try {
 				if(Integer.parseInt(txtSigma.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Sigma!!!");
@@ -125,6 +126,12 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}	
         	return null;
         }

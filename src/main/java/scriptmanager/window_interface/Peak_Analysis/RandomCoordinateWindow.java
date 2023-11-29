@@ -32,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.CustomExceptions.OptionException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -73,7 +74,7 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 	class Task extends SwingWorker<Void, Void> {
 		@Override
 
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if(txtSites.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "No Sites Entered!!!");
@@ -115,6 +116,9 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
         }
