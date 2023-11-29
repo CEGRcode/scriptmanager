@@ -118,15 +118,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 					new_li.setStatus(0);
 					old_li = new_li;
 				}
-				// Update log item
-				new_li.setStopTime(new Timestamp(new Date().getTime()));
-				new_li.setStatus(0);
-				old_li = new_li;
-
 				// Update progress
 				int percentComplete = (int) (((double)(x + 1) / BAMFiles.size()) * 100);
 				setProgress(percentComplete);
-
 				}
 				
 			firePropertyChange("log", old_li, null);

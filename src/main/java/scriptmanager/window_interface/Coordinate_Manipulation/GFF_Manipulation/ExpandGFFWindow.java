@@ -129,6 +129,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 

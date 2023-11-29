@@ -922,20 +922,17 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUT_DIR = FileSelection.getOutputDir(fc);
-				if (OUT_DIR != null) {
-					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				File temp = FileSelection.getOutputDir(fc);
+				if(temp != null) {
+					OUT_DIR = temp;
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 					try {
 						lblDefaultToLocal.setText("..." + ExtensionFileFilter.getSubstringEnd(OUT_DIR, 35));
-					} catch (IOException e1) {
+					} catch (IOException ioe) {
 						System.err.println("Output directory may not be loaded!");
-						e1.printStackTrace();
+						ioe.printStackTrace();
 					}
-				} else {
-					OUT_DIR = new File(System.getProperty("user.dir"));
-					lblDefaultToLocal.setText("Default to Local Directory");
 				}
-				lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 			}
 		});
 

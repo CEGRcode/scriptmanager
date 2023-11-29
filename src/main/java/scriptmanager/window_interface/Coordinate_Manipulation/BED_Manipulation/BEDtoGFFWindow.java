@@ -79,7 +79,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		public Void doInBackground() {
 			try {
 			setProgress(0);
-			LogItem old_li = new LogItem("");
+			LogItem old_li = null;
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XBED = BEDFiles.get(x);
 				// Set outfilepath

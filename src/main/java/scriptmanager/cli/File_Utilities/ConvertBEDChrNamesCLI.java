@@ -89,7 +89,7 @@ public class ConvertBEDChrNamesCLI implements Callable<Integer> {
 		if (output == null) {
 			// Set output filepath with name and output directory
 			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile)
-					+ (toArabic ? "_toRoman.gff" : "_toArabic.gff")
+					+ (toArabic ? "_toArabic.bed" : "_toRoman.bed")
 					+ (gzOutput ? ".gz" : ""));
 		} else {
 			//check directory

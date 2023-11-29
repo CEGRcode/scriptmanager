@@ -103,6 +103,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 					setProgress(percentComplete);
 					
 				}
+				// final update
 				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Sorting Complete");
@@ -115,6 +116,7 @@ public class SortBAMWindow extends JFrame implements ActionListener, PropertyCha
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
         	return null;
         }
         

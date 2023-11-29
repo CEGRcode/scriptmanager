@@ -90,7 +90,7 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 		if (output == null) {
 			// Set output filepath with name and output directory
 			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile)
-					+ (toArabic ? "_toRoman.bed" : "_toArabic.bed")
+					+ (toArabic ? "_toArabic.gff" : "_toRoman.gff")
 					+ (gzOutput ? ".gz" : ""));
 		} else {
 			//check directory
