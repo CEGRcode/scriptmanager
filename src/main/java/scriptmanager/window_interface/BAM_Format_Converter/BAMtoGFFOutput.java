@@ -15,6 +15,7 @@ import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoGFF;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Output wrapper for running
@@ -88,11 +89,10 @@ public class BAMtoGFFOutput extends JFrame {
 	 */
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
-		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".gff";
+		String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(BAM) + "_" + READ + ".gff" + (OUTPUT_GZIP ? ".gz": "");
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
-		OUTPUT = OUTPUT + (OUTPUT_GZIP? ".gz": "");
 
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

@@ -351,7 +351,8 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 					String sortName = "";
 					try {
 						sortName = ExtensionFileFilter.stripExtensionIgnoreGZ(GFF_File) + "_SORT.gff";
-					} catch (IOException e1) {
+						sortName += chckbxGzipOutput.isSelected() ? ".gz" : "";
+					} catch (IOException ioe) {
 						JOptionPane.showMessageDialog(null, "Invalid GFF");
 					}
 					txtOutput.setText(sortName);

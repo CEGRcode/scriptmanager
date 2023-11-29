@@ -65,7 +65,9 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 		//no check ext
 		//set default output filename
 		if(output==null){
-			output = new File(ExtensionFileFilter.stripExtension(matrixFile) + "_TRANPOSE." + ExtensionFileFilter.getExtension(matrixFile)); 
+			output = new File(ExtensionFileFilter.stripExtension(matrixFile) + "_TRANPOSE."
+					+ ExtensionFileFilter.getExtension(matrixFile)
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
 		}else if( output.isDirectory() ){
 			r += "(!)Must indicate file (not a directory) for your output.";

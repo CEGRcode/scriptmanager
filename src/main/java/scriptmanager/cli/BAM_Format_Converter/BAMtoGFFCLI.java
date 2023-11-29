@@ -116,11 +116,11 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if(output==null &&  !stdout){
-			if(STRAND==0){ output = new File( bamFile.getName().split("\\.")[0] + "_READ1.gff" ); }
-			else if(STRAND==1){ output = new File( bamFile.getName().split("\\.")[0] + "_READ2.gff" ); }
-			else if(STRAND==2){ output = new File( bamFile.getName().split("\\.")[0] + "_COMBINED.gff" ); }
-			else if(STRAND==3){ output = new File( bamFile.getName().split("\\.")[0] + "_MIDPOINT.gff" ); }
-			else if(STRAND==4){ output = new File( bamFile.getName().split("\\.")[0] + "_FRAGMENT.gff" ); }
+			if (STRAND==0) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_READ1.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==1) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_READ2.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==2) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_COMBINED.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==3) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_MIDPOINT.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==4) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_FRAGMENT.gff" + (gzOutput ? ".gz" : "")); }
 			else { r += "(!)Somehow invalid STRAND!This error should never print. Check code if it does.\n"; }
 		//check stdout and output not both selected
 		}else if(stdout){

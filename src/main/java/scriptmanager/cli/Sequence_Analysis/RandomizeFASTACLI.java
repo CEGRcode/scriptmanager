@@ -74,8 +74,8 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 		}
 		// set default output filename
 		if (output == null) {
-			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile) + "_RAND.fa";
-			output = new File(NAME);
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile) + "_RAND.fa"
+					+ (gzOutput ? ".gz" : ""));
 			// check output filename is valid
 		} else {
 			// check directory

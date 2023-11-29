@@ -360,9 +360,10 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 					String sortName = "";
 					try {
 						sortName = ExtensionFileFilter.stripExtensionIgnoreGZ(BED_File) + "_SORT.bed";
-					} catch (IOException e1) {
+						sortName += chckbxGzipOutput.isSelected() ? ".gz" : "";
+					} catch (IOException ioe) {
 						JOptionPane.showMessageDialog(null, "Invalid BED");
-					};
+					}
 					txtOutput.setText(sortName);
 				}
 			}

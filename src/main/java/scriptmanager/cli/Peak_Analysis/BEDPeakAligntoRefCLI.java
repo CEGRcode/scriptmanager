@@ -75,7 +75,8 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 		if(!r.equals("")){ return(r); }
 		//set default output filename
 		if(output==null){
-			output = new File(ExtensionFileFilter.stripExtension(peakBED) + "_" + ExtensionFileFilter.stripExtension(refBED) + "_Output.cdt");
+			output = new File(ExtensionFileFilter.stripExtension(peakBED) + "_" + ExtensionFileFilter.stripExtension(refBED) + "_Output.cdt"
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
 		}else{
 			//check directory

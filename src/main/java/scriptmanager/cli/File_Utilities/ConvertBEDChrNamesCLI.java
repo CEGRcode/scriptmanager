@@ -87,12 +87,11 @@ public class ConvertBEDChrNamesCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if (output == null) {
-			// Set suffix format
-			String SUFFIX = toArabic ? "_toRoman.gff" : "_toArabic.gff";
 			// Set output filepath with name and output directory
-			String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile);
-			output = new File(OUTPUT + SUFFIX);
-		}else{
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile)
+					+ (toArabic ? "_toRoman.gff" : "_toArabic.gff")
+					+ (gzOutput ? ".gz" : ""));
+		} else {
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");

@@ -78,7 +78,8 @@ public class SearchMotifCLI implements Callable<Integer> {
 		// set default output filename
 		if (output == null) {
 			String NAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
-					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed";
+					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed"
+					+ (gzOutput ? ".gz" : "");
 			output = new File(NAME);
 		// check output filename is valid
 		} else {

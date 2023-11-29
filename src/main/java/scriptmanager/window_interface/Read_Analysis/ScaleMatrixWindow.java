@@ -131,8 +131,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							// Pull input file
 							File XTAB = TABFiles.get(x);
 							// Construct output filename
-							String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_SCALE." + ExtensionFileFilter.getExtensionIgnoreGZ(XTAB);
-							NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
+							String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_SCALE."
+									+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB)
+									+ (chckbxGzipOutput.isSelected() ? ".gz" : "");
 							File OUT_FILEPATH = new File(NAME);
 							if (OUT_DIR != null) {
 								OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);

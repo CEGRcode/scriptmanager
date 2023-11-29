@@ -63,10 +63,11 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
-		String ext = formatIsBed ? "bed" : "gff";
 		//set default output filename
 		if(output==null){
-			output = new File("random_coordinates_" + genomeName + "_" + numSites + "sites_" + window + "bp." + ext);
+			output = new File("random_coordinates_" + genomeName + "_" + numSites + "sites_" + window + "bp"
+					+ (formatIsBed ? ".bed" : ".gff")
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
 		}else{
 			//check directory

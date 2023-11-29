@@ -177,7 +177,7 @@ public class AggregateData {
 	 * @throws IOException Invalid file or parameters
 	 */
 	public void outputFileScore(File IN) throws FileNotFoundException, IOException {
-		String NEWNAME = ExtensionFileFilter.stripExtension(IN) + "_SCORES.out";
+		String NEWNAME = ExtensionFileFilter.stripExtensionIgnoreGZ(IN) + "_SCORES.out";
 		if (OUT_PATH != null) {
 			OUT = GZipUtilities.makePrintStream(new File(OUT_PATH.getAbsolutePath() + File.separator + NEWNAME + (OUTPUT_GZIP? ".gz": "")), OUTPUT_GZIP);
 		} else {

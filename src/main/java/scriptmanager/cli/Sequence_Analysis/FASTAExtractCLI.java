@@ -82,8 +82,8 @@ public class FASTAExtractCLI implements Callable<Integer> {
 		}
 		// set default output filename
 		if (output == null) {
-			String NAME = ExtensionFileFilter.stripExtension(bedFile) + ".fa";
-			output = new File(NAME);
+			output = new File(ExtensionFileFilter.stripExtension(bedFile) + ".fa"
+					+ (gzOutput ? ".gz" : ""));
 			// check output filename is valid
 		} else {
 			// check directory

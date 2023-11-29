@@ -61,12 +61,13 @@ public class TileGenomeCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
-		String ext = formatIsBed ? "bed" : "gff";
 		//set default output filename
-		if(output==null){
-			output = new File(genomeName + "_" + window + "bp." + ext);
+		if (output==null) {
+			output = new File(genomeName + "_" + window + "bp"
+					+ (formatIsBed ? ".bed" : ".gff")
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
-		}else{
+		} else {
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");

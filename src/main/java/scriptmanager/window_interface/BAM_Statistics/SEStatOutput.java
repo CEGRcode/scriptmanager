@@ -2,7 +2,6 @@ package scriptmanager.window_interface.BAM_Statistics;
 
 import java.awt.BorderLayout;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
@@ -87,7 +86,7 @@ public class SEStatOutput extends JFrame {
 			LogItem new_li = new LogItem(command);
 			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
-			SEStats.getSEStats(bamFiles.get(x), new File(OUT_DIR + File.separator + NAME), OUTPUT_STATUS, ps_stats);
+			SEStats.getSEStats(bamFiles.get(x), OUT_FILEPATH, OUTPUT_STATUS, ps_stats);
 			// Update log item
 			new_li.setStopTime(new Timestamp(new Date().getTime()));
 			new_li.setStatus(0);

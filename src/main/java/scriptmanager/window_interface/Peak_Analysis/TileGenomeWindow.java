@@ -77,9 +77,9 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 					JOptionPane.showMessageDialog(null, "Invalid Window Size Entered!!!");
 				} else {
 					// Construct output filename
-					String NAME = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp";
-					NAME += rdbtnBed.isSelected() ? ".bed" : ".gff";
-					NAME += chckbxGzipOutput.isSelected() ? ".gz" : "";
+					String NAME = (String)cmbGenome.getSelectedItem() + "_" + Integer.parseInt(txtSize.getText()) + "bp"
+							+ (rdbtnBed.isSelected() ? ".bed" : ".gff")
+							+ (chckbxGzipOutput.isSelected() ? ".gz" : "");
 					File OUT_FILEPATH = new File(NAME);
 					if (OUT_DIR != null) {
 						OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);

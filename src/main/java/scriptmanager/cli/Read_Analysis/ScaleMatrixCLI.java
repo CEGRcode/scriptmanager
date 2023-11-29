@@ -74,7 +74,9 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 		//no check ext
 		//set default output filename
 		if(output==null){
-			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(matrixFile) + "_SCALE." + ExtensionFileFilter.getExtensionIgnoreGZ(matrixFile)); 
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(matrixFile) + "_SCALE."
+					+ ExtensionFileFilter.getExtensionIgnoreGZ(matrixFile)
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
 		}else if( output.isDirectory() ){
 			r += "(!)Must indicate file (not a directory) for your output.";
