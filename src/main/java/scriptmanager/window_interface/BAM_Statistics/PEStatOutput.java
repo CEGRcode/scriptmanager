@@ -19,11 +19,12 @@ import javax.swing.SpringLayout;
 
 import org.jfree.chart.ChartPanel;
 
-import scriptmanager.cli.BAM_Statistics.PEStatsCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
-import scriptmanager.scripts.BAM_Statistics.PEStats;
 import scriptmanager.util.ExtensionFileFilter;
+
+import scriptmanager.cli.BAM_Statistics.PEStatsCLI;
+import scriptmanager.scripts.BAM_Statistics.PEStats;
 
 /**
  * Output wrapper for running
@@ -125,11 +126,11 @@ public class PEStatOutput extends JFrame {
 					ps_dup = new PrintStream(new CustomOutputStream( DUP_STATS ));
 				}
 				// Initialize LogItem
-				String command = PEStatsCLI.getCLIcommand(bamFiles.get(x), OUT_BASENAME, DUP_STATUS, MIN_INSERT, MAX_INSERT, false);
+				String command = PEStatsCLI.getCLIcommand(bamFiles.get(x), OUT_BASENAME, DUP_STATUS, MIN_INSERT, MAX_INSERT);
 				LogItem new_li = new LogItem(command);
 				if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
-				//Call public static method from scripts
-				Vector<ChartPanel> charts = PEStats.getPEStats(bamFiles.get(x), OUT_BASENAME, DUP_STATUS, MIN_INSERT, MAX_INSERT, ps_insert, ps_dup, false );
+				// Execute script
+				Vector<ChartPanel> charts = PEStats.getPEStats(bamFiles.get(x), OUT_BASENAME, DUP_STATUS, MIN_INSERT, MAX_INSERT, OUTPUT_STATUS, ps_insert, ps_dup );
 				// Update log item
 				new_li.setStopTime(new Timestamp(new Date().getTime()));
 				new_li.setStatus(0);
