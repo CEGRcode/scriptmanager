@@ -129,19 +129,17 @@ public class BAMtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 					if (chckbxFilterByMaximum.isSelected()) {
 						MAX = Integer.parseInt(txtMax.getText());
 					}
-
+					// process each bam
 					for (int x = 0; x < BAMFiles.size(); x++) {
-
-						BAMtoGFFOutput convert = new BAMtoGFFOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, chckbxGzipOutput.isSelected());
-						convert.addPropertyChangeListener("log", new PropertyChangeListener() {
+						BAMtoGFFOutput output_obj = new BAMtoGFFOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, chckbxGzipOutput.isSelected());
+						output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent evt) {
 								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 							}
 						});
-
-						convert.setVisible(true);
-						convert.run();
-
+						output_obj.setVisible(true);
+						output_obj.run();
+						// Update progress
 						int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
 						setProgress(percentComplete);
 					}

@@ -233,24 +233,21 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 //					param.printAll();
 
 					// Initialize, addPropertyChangeListeners, and execute
-					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
-					pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
+					TagPileupOutput output_obj = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
+					output_obj.addPropertyChangeListener("tag", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double) (temp) / (BAMFiles.size() * BEDFiles.size())) * 100);
 							setProgress(percentComplete);
 						}
 					});
-					pile.addPropertyChangeListener("log", new PropertyChangeListener() {
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent evt) {
 							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 						}
 					});
-					pile.setVisible(true);
-					pile.run();
-
-					setProgress(100);
-					return null;
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
@@ -263,6 +260,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 

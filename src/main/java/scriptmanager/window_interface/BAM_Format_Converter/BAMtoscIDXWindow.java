@@ -123,18 +123,17 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 					if (chckbxFilterByMaximum.isSelected()) {
 						MAX = Integer.parseInt(txtMax.getText());
 					}
-
+					// process each bam
 					for (int x = 0; x < BAMFiles.size(); x++) {
-
-						BAMtoscIDXOutput convert = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, chckbxGzipOutput.isSelected());
-						convert.addPropertyChangeListener("log", new PropertyChangeListener() {
+						BAMtoscIDXOutput output_obj = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, chckbxGzipOutput.isSelected());
+						output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent evt) {
 								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 							}
 						});
-
-						convert.setVisible(true);
-						
+						output_obj.setVisible(true);
+						output_obj.run();
+						// Update progress
 						int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
 						setProgress(percentComplete);
 					}

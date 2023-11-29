@@ -86,23 +86,23 @@ public class FASTAExtractWindow extends JFrame implements ActionListener, Proper
 					JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
 				} else {
 					setProgress(0);
-					FASTAExtractOutput signal = new FASTAExtractOutput(INPUT, BEDFiles, OUT_DIR,
+					FASTAExtractOutput output_obj = new FASTAExtractOutput(INPUT, BEDFiles, OUT_DIR,
 							chckbxStrand.isSelected(), rdbtnBedName.isSelected(), chckbxGzipOutput.isSelected());
 
-					signal.addPropertyChangeListener("progress", new PropertyChangeListener() {
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double) (temp) / BEDFiles.size()) * 100);
 							setProgress(percentComplete);
 						}
 					});
-					signal.addPropertyChangeListener("log", new PropertyChangeListener() {
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent evt) {
 							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 						}
 					});
-					signal.setVisible(true);
-					signal.run();
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
