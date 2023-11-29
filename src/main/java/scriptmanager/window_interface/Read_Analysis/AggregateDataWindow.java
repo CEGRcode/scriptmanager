@@ -11,7 +11,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -35,6 +37,11 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
+
+import scriptmanager.cli.Read_Analysis.AggregateDataCLI;
 import scriptmanager.scripts.Read_Analysis.AggregateData;
 
 /**
@@ -53,7 +60,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
-	private File OUT_DIR = null;
+	private File OUT_DIR = new File(System.getProperty("user.dir"));
 	final DefaultListModel<String> expList;
 	ArrayList<File> SUMFiles = new ArrayList<File>();
 
@@ -90,23 +97,46 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 				} else if (Integer.parseInt(txtCol.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Start Column!!! Must be larger than 0 (1-based)");
 				} else {
+					// Initialize LogItem
+					String command = AggregateDataCLI.getCLIcommand(SUMFiles, OUT_DIR, chckbxMergeToOne.isSelected(),
+							Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()),
+							cmbMethod.getSelectedIndex(), chckbxGzipOutput.isSelected());
+					LogItem li = new LogItem(command);
+					firePropertyChange("log", null, li);
+					// Execute script
 					AggregateData script_obj = new AggregateData(SUMFiles, OUT_DIR, chckbxMergeToOne.isSelected(),
 							Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()),
 							cmbMethod.getSelectedIndex(), chckbxGzipOutput.isSelected());
+					script_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+							int temp = (Integer) propertyChangeEvent.getNewValue();
+							int percentComplete = (int) (((double) (temp) / SUMFiles.size()) * 100);
+							setProgress(percentComplete);
+						}
+					});
+					script_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
 					script_obj.run();
-
-// 					parse.addPropertyChangeListener("file", new PropertyChangeListener() {
-// 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-// 							int temp = (Integer) propertyChangeEvent.getNewValue();
-// 							int percentComplete = (int)(((double)(temp) / (SUMFiles.size())) * 100);
-// 							setProgress(percentComplete);
-// 						}
-// 					 });
+					// Update log item
+					li.setStopTime(new Timestamp(new Date().getTime()));
+					li.setStatus(0);
+					// Update log at completion
+					firePropertyChange("log", li, null);
+					// Update progress
 					setProgress(100);
-					JOptionPane.showMessageDialog(null, script_obj.getMessage());
+					JOptionPane.showMessageDialog(null, "Data Parsed");
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (OptionException oe) {
+//				oe.printStackTrace();
+				JOptionPane.showMessageDialog(null, oe.getMessage());
+			} catch (ScriptManagerException sme) {
+//				sme.printStackTrace();
+				JOptionPane.showMessageDialog(null, sme.getMessage());
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
@@ -114,6 +144,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -234,8 +265,9 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 15, SpringLayout.SOUTH, lblColumnStart);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUT_DIR = FileSelection.getOutputDir(fc);
-				if (OUT_DIR != null) {
+				File temp = FileSelection.getOutputDir(fc);
+				if(temp != null) {
+					OUT_DIR = temp;
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
@@ -294,6 +326,8 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
