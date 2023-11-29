@@ -22,15 +22,15 @@ public class SortBED {
 	/**
 	 * Sort a BED file by the values from a CDT matrix file. Includes Gzip support.
 	 * 
-	 * @param outbase Filepath basename (without ext) to save the sorted BED (&lt;basename&gt;.bed) and sorted CDT (&lt;basename&gt;.cdt) files.
 	 * @param bed input BED file to sort
 	 * @param cdt input CDT file with values to sort by
+	 * @param outbase Filepath basename (without ext) to save the sorted BED (&lt;basename&gt;.bed) and sorted CDT (&lt;basename&gt;.cdt) files.
 	 * @param START_INDEX the start column to consider when summing values to sort
 	 * @param STOP_INDEX
 	 * @param gzOutput if true, the output files will be gzipped.
 	 * @throws IOException Invalid file or parameters
 	 */
-	public static void sortBEDbyCDT(String outbase, File bed, File cdt, int START_INDEX, int STOP_INDEX, boolean gzOutput ) throws IOException {
+	public static void sortBEDbyCDT(File bed, File cdt, File outbase, int START_INDEX, int STOP_INDEX, boolean gzOutput ) throws IOException {
 		ArrayList<BEDCoord> SORT = new ArrayList<BEDCoord>();
 		HashMap<String, String> CDTFile = new HashMap<String, String>();
 		String CDTHeader = "";
@@ -59,7 +59,7 @@ public class SortBED {
 		PrintStream OUT;
 		// Initialize output writer
 		String suffix = ".cdt" + (gzOutput? ".gz": "");
-		OUT = GZipUtilities.makePrintStream(new File(outbase + suffix), gzOutput);
+		OUT = GZipUtilities.makePrintStream(new File(outbase.getCanonicalPath() + suffix), gzOutput);
 		// Output sorted CDT File
 		OUT.println(CDTHeader);
 		for (int x = 0; x < SORT.size(); x++) {
@@ -86,7 +86,7 @@ public class SortBED {
 
 		// Initialize output writer
 		suffix = ".bed" + (gzOutput? ".gz": "");
-		OUT = GZipUtilities.makePrintStream(new File(outbase + suffix), gzOutput);
+		OUT = GZipUtilities.makePrintStream(new File(outbase.getCanonicalPath() + suffix), gzOutput);
 		// Output sorted BED File
 		for (int x = 0; x < SORT.size(); x++) {
 			OUT.println(BEDFile.get(SORT.get(x).getName()));

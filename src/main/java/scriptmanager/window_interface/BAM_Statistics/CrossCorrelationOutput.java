@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -16,8 +18,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
+import scriptmanager.cli.BAM_Statistics.CrossCorrelationCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.ArchTEx.CorrParameter;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
@@ -49,12 +53,13 @@ public class CrossCorrelationOutput extends JFrame {
 	 * Initialize tab frames for scrollable JTextArea and charts as well as save
 	 * inputs for calling the script
 	 * 
-	 * @param o the output directory to write output to
 	 * @param input the list of input BAM files to process
-	 * @param param the custom parameter storing object for running the ArchTEx script
-	 * @param ostats whether to output results to a file or not
+	 * @param o     the output directory to write output to
+	 * @param out   whether to output results to a file or not
+	 * @param param the custom parameter storing object for running the ArchTEx
+	 *              script
 	 */
-	public CrossCorrelationOutput(File o, Vector<File> input, CorrParameter param, boolean ostats) {
+	public CrossCorrelationOutput(Vector<File> input, File o, boolean out, CorrParameter param) {
 		setTitle("BAM File Cross Correlation Plots and Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 800, 600);
@@ -73,7 +78,7 @@ public class CrossCorrelationOutput extends JFrame {
 		
 		bamFiles = input;
 		OUT_DIR = o;
-		OUTPUT_STATUS = ostats;
+		OUTPUT_STATUS = out;
 		PARAM = param;
 		
 		tabbedPane_CCPlots = new JTabbedPane(JTabbedPane.TOP);
@@ -102,22 +107,16 @@ public class CrossCorrelationOutput extends JFrame {
 				BAMvalid[z] = true;
 			}
 		}
+		LogItem old_li = null;
 		//Iterate through all BAM files in Vector
 		for(int x = 0; x < bamFiles.size(); x++) {
-			System.out.println("Cross-Correlation: " + bamFiles.get(x).getName());
-			
 			if (BAMvalid[x]) {
-				// Construct Basename
-				File OUT_FILEPATH = null;
-				if(OUTPUT_STATUS){
-					try{
-						String NAME = ExtensionFileFilter.stripExtension(bamFiles.get(x).getName()) + "_CrossCorrelation.txt";
-						if(OUT_DIR == null) { OUT_FILEPATH = new File(NAME); }
-						else { OUT_FILEPATH = new File( OUT_DIR.getCanonicalPath() + File.separator + NAME); }
-					}
-					catch (FileNotFoundException e) { e.printStackTrace(); }
+				// Construct output filename
+				String NAME = ExtensionFileFilter.stripExtension(bamFiles.get(x).getName()) + "_CrossCorrelation.txt";
+				File OUT_FILEPATH = new File(NAME);
+				if (OUT_DIR != null) {
+					OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 				}
-
 				// Initialize PrintStream and TextArea for C-C Data
 				PrintStream ps_ccdata = null;
 				JTextArea CC_DATA = new JTextArea();
@@ -126,15 +125,24 @@ public class CrossCorrelationOutput extends JFrame {
 				CC_DATA.setEditable(false);
 				ps_ccdata = new PrintStream(new CustomOutputStream( CC_DATA ));
 				tabbedPane_CCData.add(bamFiles.get(x).getName(), new JScrollPane(CC_DATA, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-				
+				// Initialize LogItem
+				String command = CrossCorrelationCLI.getCLIcommand(bamFiles.get(x), OUT_FILEPATH, PARAM);
+				LogItem new_li = new LogItem(command);
+				if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 				//Call public static method from scripts
-				Component chart = CrossCorrelation.correlate(OUT_FILEPATH, bamFiles.get(x), PARAM, ps_ccdata);
+				Component chart = CrossCorrelation.correlate(bamFiles.get(x), OUT_FILEPATH, PARAM, ps_ccdata);
 				tabbedPane_CCPlots.add(bamFiles.get(x).getName(), chart);
-
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
+				// Close PrintStream
 				ps_ccdata.close();
-				firePropertyChange("bam",x, x + 1);
+				// Update progress
+				firePropertyChange("progress",x, x + 1);
 			}
 		}
+		// Update log after final input
+		if (OUTPUT_STATUS) { firePropertyChange("log", old_li, null); }
 	}
-	
 }

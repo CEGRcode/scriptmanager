@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import org.jfree.graphics2d.svg.SVGUtils;
 
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 
 /**
  * Decorate an input PNG file with plot labels and save as an SVG. <br>

@@ -35,6 +35,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -85,7 +86,7 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if (chckbxFilterByMinimum.isSelected() && Integer.parseInt(txtMin.getText()) < 0) {
 					JOptionPane.showMessageDialog(null,
@@ -121,12 +122,17 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 					if (chckbxFilterByMaximum.isSelected()) {
 						MAX = Integer.parseInt(txtMax.getText());
 					}
-
+					// process each bam
 					for (int x = 0; x < BAMFiles.size(); x++) {
-						BAMtobedGraphOutput convert = new BAMtobedGraphOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR,
-								MIN, MAX, chckbxGzipOutput.isSelected());
-						convert.setVisible(true);
-						convert.run();
+						BAMtobedGraphOutput output_obj = new BAMtobedGraphOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, chckbxGzipOutput.isSelected());
+						output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent evt) {
+								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+							}
+						});
+						output_obj.setVisible(true);
+						output_obj.run();
+						// Update progress
 						int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
 						setProgress(percentComplete);
 					}
@@ -135,6 +141,15 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Unexpected InterruptedException: " + ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}
@@ -374,10 +389,13 @@ public class BAMtobedGraphWindow extends JFrame implements ActionListener, Prope
 	/**
 	 * Invoked when the task's progress changes
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

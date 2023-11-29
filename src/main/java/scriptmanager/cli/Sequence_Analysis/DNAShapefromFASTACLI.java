@@ -38,8 +38,7 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	@Parameters(index = "0", description = "FASTA sequence file")
 	private File fastaFile;
 
-	@Option(names = { "-o",
-			"--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
+	@Option(names = { "-o", "--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
 	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;
@@ -166,5 +165,28 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 		}
 
 		return (r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param fa   the FASTA-formatted file with a fixed sequence length
+	 * @param out  the output file name base (to add _&lt;shapetype&gt;.cdt suffix
+	 *             to)
+	 * @param type a four-element boolean list for specifying shape type to output
+	 *             (no enforcement on size)
+	 * @param gzOutput   whether or not to gzip output
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File fa, String out, boolean[] type, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis dna-shape-fasta";
+		command += " -o " + out;
+		command += gzOutput ? " -z " : "";
+		command += type[0] ? " --groove" : "";
+		command += type[1] ? " --propeller" : "";
+		command += type[2] ? " --helical" : "";
+		command += type[3] ? " --roll" : "";
+		command += " " + fa;
+		return (command);
 	}
 }

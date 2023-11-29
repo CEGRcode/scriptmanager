@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
@@ -115,11 +116,11 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if(output==null &&  !stdout){
-			if(STRAND==0){ output = new File( bamFile.getName().split("\\.")[0] + "_READ1.gff" ); }
-			else if(STRAND==1){ output = new File( bamFile.getName().split("\\.")[0] + "_READ2.gff" ); }
-			else if(STRAND==2){ output = new File( bamFile.getName().split("\\.")[0] + "_COMBINED.gff" ); }
-			else if(STRAND==3){ output = new File( bamFile.getName().split("\\.")[0] + "_MIDPOINT.gff" ); }
-			else if(STRAND==4){ output = new File( bamFile.getName().split("\\.")[0] + "_FRAGMENT.gff" ); }
+			if (STRAND==0) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_READ1.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==1) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_READ2.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==2) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_COMBINED.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==3) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_MIDPOINT.gff" + (gzOutput ? ".gz" : "")); }
+			else if (STRAND==4) { output = new File( ExtensionFileFilter.stripExtensionIgnoreGZ(bamFile) + "_FRAGMENT.gff" + (gzOutput ? ".gz" : "")); }
 			else { r += "(!)Somehow invalid STRAND!This error should never print. Check code if it does.\n"; }
 		//check stdout and output not both selected
 		}else if(stdout){
@@ -142,5 +143,28 @@ public class BAMtoGFFCLI implements Callable<Integer> {
 		PAIR = matePair ? 1 : 0;
 		
 		return(r);
+	}
+	public static String getCLIcommand(File BAM, File output, int strand, int pair, int min, int max) {
+		String command = "java -jar $SCRIPTMANAGER bam-format-converter bam-to-gff";
+		command += " " + BAM.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		if (strand == 0) {
+			command += " -1 ";
+		} else if (strand == 1) {
+			command += " -2 ";
+		} else if (strand == 2) {
+			command += " -a ";
+		} else if (strand == 3 )  {
+			command += " -m ";
+		} else if (strand == 4)  {
+			command += " -f ";
+		}
+		command += pair != 0 ? " -p" : "";
+		if (min != -9999) {
+			command += " -n " + min;
+		} else if (max != -9999) {
+			command += " -x " + max;
+		}
+		return command;
 	}
 }

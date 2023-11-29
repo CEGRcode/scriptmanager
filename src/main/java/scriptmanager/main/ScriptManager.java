@@ -41,8 +41,10 @@ import scriptmanager.cli.Figure_Generation.MergeHeatMapCLI;
 import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
 
 import scriptmanager.cli.File_Utilities.MD5ChecksumCLI;
+import scriptmanager.cli.File_Utilities.CompressFileCLI;
 import scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI;
 import scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI;
+import scriptmanager.cli.File_Utilities.DecompressGZFileCLI;
 import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
@@ -188,7 +190,9 @@ class Figure_GenerationCLI extends SubcommandCLI {}
 		subcommands = {
 			MD5ChecksumCLI.class,
 			ConvertBEDChrNamesCLI.class,
-			ConvertGFFChrNamesCLI.class
+			ConvertGFFChrNamesCLI.class,
+			CompressFileCLI.class,
+			DecompressGZFileCLI.class
 		},
 		description = "Includes the tool MD5Checksum.")
 class File_UtilitiesCLI extends SubcommandCLI {}

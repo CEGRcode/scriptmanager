@@ -30,6 +30,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FASTAUtilities;
 
 /**
@@ -68,7 +69,7 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if (GenomeFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No FASTA Files Selected!!!");
@@ -82,18 +83,35 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 				} else {
 					setProgress(0);
 					for (int gfile = 0; gfile < GenomeFiles.size(); gfile++) {
-						SearchMotifOutput search = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(),
+						SearchMotifOutput output_obj = new SearchMotifOutput(GenomeFiles.get(gfile), txtMotif.getText(),
 								Integer.parseInt(txtMismatch.getText()), OUT_DIR, chckbxGzipOutput.isSelected());
-						search.setVisible(true);
-						search.run();
+						output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+							public void propertyChange(PropertyChangeEvent evt) {
+								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+							}
+						});
+						output_obj.setVisible(true);
+						output_obj.run();
+						// Update progress
 						int percentComplete = (int) (((double) (gfile + 1) / (GenomeFiles.size())) * 100);
 						setProgress(percentComplete);
 					}
+					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Search Complete");
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Unexpected InterruptedException: " + ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -254,10 +272,13 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

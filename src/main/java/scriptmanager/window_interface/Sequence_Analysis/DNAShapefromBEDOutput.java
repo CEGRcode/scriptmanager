@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -17,7 +19,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
+import scriptmanager.cli.Sequence_Analysis.DNAShapefromBEDCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
@@ -95,7 +99,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
-		try {
+			LogItem old_li = null;
 			// Move through each BED File
 			for (int x = 0; x < BED.size(); x++) {
 				// Initialize TextAreas and PrintStream wrappers
@@ -124,20 +128,16 @@ public class DNAShapefromBEDOutput extends JFrame {
 					STATS_Roll.setEditable(false);
 					PS[3] = new PrintStream(new CustomOutputStream(STATS_Roll));
 				}
-
 				// Open Output File
 				String BASENAME = BED.get(x).getName().split("\\.")[0];
-				try {
-					if (OUT_DIR != null) {
-						BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
-					}
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (OUT_DIR != null) {
+					BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 				}
-
-				// Initialize Script Object and execute calculations
+				// Initialize LogItem
+				String command = DNAShapefromBEDCLI.getCLIcommand(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND, OUTPUT_GZIP);
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
+				// Execute script
 				DNAShapefromBED script_obj = new DNAShapefromBED(GENOME, BED.get(x), BASENAME, OUTPUT_TYPE, STRAND, PS, OUTPUT_GZIP);
 				script_obj.run();
 
@@ -146,7 +146,10 @@ public class DNAShapefromBEDOutput extends JFrame {
 					JOptionPane.showMessageDialog(null, "Genome FASTA file contains invalid lines!!!\n");
 					break;
 				}
-
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
 				// Convert average and statistics to output tabs panes
 				if (OUTPUT_TYPE[0]) {
 					tabbedPane_Scatterplot.add("MGW", script_obj.getChartM());
@@ -176,14 +179,10 @@ public class DNAShapefromBEDOutput extends JFrame {
 							JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					tabbedPane_Statistics.add("Roll", Rollpane);
 				}
-				firePropertyChange("fa", x, x + 1);
-			}
-		} catch (IllegalArgumentException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (SAMException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+
+				// Update progress
+				firePropertyChange("progress", x, x + 1);
 		}
+		firePropertyChange("log", old_li, null);
 	}
 }

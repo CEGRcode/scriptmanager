@@ -55,7 +55,7 @@ public class PEStatsCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		PEStats.getPEStats( outputBasename, bamFile, dup, MIN_INSERT, MAX_INSERT, null, null, sum);
+		PEStats.getPEStats(bamFile, outputBasename, dup, MIN_INSERT, MAX_INSERT, null, null, sum);
 		
 		System.err.println("Calculations Complete");
 		return(0);
@@ -95,4 +95,27 @@ public class PEStatsCLI implements Callable<Integer> {
 		
 		return(r);
 	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param bamFile        BAM file to get statistics on
+	 * @param outputBasename basename of output files (without extensions)
+	 * @param DUP_STATUS     specifies if duplication statistics and chart should be
+	 *                       generated
+	 * @param MIN_INSERT     maximum histogram range
+	 * @param MAX_INSERT     minimum histogram range
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File bamFile, File outputBasename, boolean dup, int min, int max, boolean sum) {
+		String command = "java -jar $SCRIPTMANAGER bam-statistics pe-stat";
+		command += " " + bamFile.getAbsolutePath();
+		command += " -o " + outputBasename.getAbsolutePath();
+		command += " -n " + min;
+		command += " -x " + max;
+		command += sum ? " -s " : "";
+		command += dup ? " -d " : "";
+		return command;
+	}
+
 }

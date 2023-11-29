@@ -9,6 +9,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -28,7 +30,11 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
+
+import scriptmanager.cli.Peak_Analysis.SignalDuplicationCLI;
 import scriptmanager.scripts.Peak_Analysis.SignalDuplication;
 
 /**
@@ -67,7 +73,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException {
+        public Void doInBackground() {
         	try {
         		if(Double.parseDouble(txtWindow.getText()) < 1) {
         			JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
@@ -76,25 +82,51 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
         		} else if(BAMFiles.size() < 1) {
         			JOptionPane.showMessageDialog(null, "No BAM Files Loaded!!!");
         		} else {
-        			setProgress(0);
-        			SignalDuplication signal = new SignalDuplication(INPUT, BAMFiles, Double.parseDouble(txtWindow.getText()));
-        				
-        			signal.addPropertyChangeListener("tag", new PropertyChangeListener() {
-					    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-					    	int temp = (Integer) propertyChangeEvent.getNewValue();
-					    	int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
-				        	setProgress(percentComplete);
-					     }
-					 });
-	        		
-        			signal.setVisible(true);
-        			signal.run();
-					
+					setProgress(0);
+					/* Output class object needs to be created
+					   LogItem creation and updates should be moved to Output class along with
+					   non-script code in the current script class
+					*/
+					// Initialize LogItem
+					String command = SignalDuplicationCLI.getCLIcommand(INPUT, BAMFiles.get(0), Double.parseDouble(txtWindow.getText()));
+					LogItem li = new LogItem(command);
+					// Execute script
+					SignalDuplication output_obj = new SignalDuplication(INPUT, BAMFiles, Double.parseDouble(txtWindow.getText()));
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+							int temp = (Integer) propertyChangeEvent.getNewValue();
+							int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
+							setProgress(percentComplete);
+						}
+					});
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
+					output_obj.setVisible(true);
+					output_obj.run();
+					// Update log item
+					li.setStopTime(new Timestamp(new Date().getTime()));
+					li.setStatus(0);
+					firePropertyChange("log", li, null);
+					// Pop-up completion
+					setProgress(100);
+					JOptionPane.showMessageDialog(null, "Random Coordinate Generation Complete");
+					// Update progress
+					/* TODO */
         		}
-        	} catch(NumberFormatException nfe){
+			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
-        	return null;
+			setProgress(100);
+			return null;
         }
         
         public void done() {
@@ -212,23 +244,26 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
-    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
 	}
-	
+
 	/**
-     * Invoked when task's progress property changes and updates the progress bar.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
-    }
-	
+	 * Invoked when task's progress property changes.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
+	}
+
 	/**
 	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive

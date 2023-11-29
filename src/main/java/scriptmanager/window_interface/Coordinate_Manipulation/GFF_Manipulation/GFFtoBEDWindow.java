@@ -11,6 +11,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -29,8 +31,11 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDCLI;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.GFFtoBED;
 
 /**
@@ -71,24 +76,42 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
-			boolean GZIP = chckbxGzipOutput.isSelected();
+		public Void doInBackground() {
+			try {
 			setProgress(0);
+			LogItem old_li = null;
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XGFF = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed" + (GZIP? ".gz": "");
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XGFF) + ".bed" + (chckbxGzipOutput.isSelected()? ".gz": "");
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
-
-				// Execute conversion and update progress
-				GFFtoBED.convertGFFtoBED(new File(OUTPUT), XGFF, GZIP);
+				// Initialize LogItem
+				String command = GFFtoBEDCLI.getCLIcommand(XGFF, new File(OUTPUT), chckbxGzipOutput.isSelected());
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
+				// Execute script
+				GFFtoBED.convertGFFtoBED(XGFF, new File(OUTPUT), chckbxGzipOutput.isSelected());
+				// Update LogItem
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
+				// Update progress
 				int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 				setProgress(percentComplete);
 			}
+			firePropertyChange("log", old_li, null);
 			setProgress(100);
 			JOptionPane.showMessageDialog(null, "Conversion Complete");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
+			}
+			setProgress(100);
 			return null;
 		}
 
@@ -197,7 +220,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(chckbxGzipOutput);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -213,10 +236,13 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 	/**
 	 * Invoked when task's progress property changes and updates the progress bar
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

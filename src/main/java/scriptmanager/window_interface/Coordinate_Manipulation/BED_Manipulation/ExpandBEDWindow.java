@@ -2,6 +2,8 @@ package scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -34,6 +36,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.ExpandBEDCLI;
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -77,9 +82,6 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script
-	 */
-	/**
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
@@ -90,8 +92,8 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				if (SIZE < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Expansion Size!!! Must be larger than 0 bp");
 				} else {
-					boolean GZIP = chckbxGzipOutput.isSelected();
 					setProgress(0);
+					LogItem old_li = new LogItem("");
 					for (int x = 0; x < BEDFiles.size(); x++) {
 						// Save current BED to temp variable
 						File XBED = BEDFiles.get(x);
@@ -102,18 +104,33 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
 						// Add suffix
-						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed" + (GZIP? ".gz": "");
+						OUTPUT += "_" + Integer.toString(SIZE) + "bp.bed" + (chckbxGzipOutput.isSelected() ? ".gz": "");
 
+						// Initialize LogItem
+						String command = ExpandBEDCLI.getCLIcommand(XBED, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
-						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), GZIP);
+						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 						setProgress(percentComplete);
 					}
+					firePropertyChange("log", old_li, null);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Conversion Complete");
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}
@@ -255,7 +272,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		btnExecute.addActionListener(this);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -271,16 +288,16 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Invoked when task's progress property changes and updates the progress bar
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
-	/**
-	 * Invoked when task's progress property changes and updates the progress bar
-	 */
 	/**
 	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive

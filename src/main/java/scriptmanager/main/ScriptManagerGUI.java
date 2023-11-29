@@ -150,6 +150,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							SEStatWindow frame = new SEStatWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -179,6 +190,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							PEStatWindow frame = new PEStatWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -208,6 +230,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BAMGenomeCorrelationWindow frame = new BAMGenomeCorrelationWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -237,6 +270,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							CrossCorrelationWindow frame = new CrossCorrelationWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -271,6 +315,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BAIIndexerWindow frame = new BAIIndexerWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -299,6 +354,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							SortBAMWindow frame = new SortBAMWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -366,6 +432,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							MergeBAMWindow frame = new MergeBAMWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -397,6 +474,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							FilterforPIPseqWindow frame = new FilterforPIPseqWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -431,6 +519,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BAMtoscIDXWindow frame = new BAMtoscIDXWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -460,6 +559,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BAMtoGFFWindow frame = new BAMtoGFFWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -489,6 +599,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BAMtoBEDWindow frame = new BAMtoBEDWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -518,6 +639,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BAMtobedGraphWindow frame = new BAMtobedGraphWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -552,6 +684,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							MD5ChecksumWindow frame = new MD5ChecksumWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -580,6 +723,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ConvertBEDChrNamesWindow frame = new ConvertBEDChrNamesWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -608,6 +762,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ConvertGFFChrNamesWindow frame = new ConvertGFFChrNamesWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -636,6 +801,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							CompressFileWindow frame = new CompressFileWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -664,6 +840,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							DecompressGZFileWindow frame = new DecompressGZFileWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -698,6 +885,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							GeneTrackWindow frame = new GeneTrackWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -727,6 +925,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							PeakPairWindow frame = new PeakPairWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -781,6 +990,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							BEDPeakAligntoRefWindow frame = new BEDPeakAligntoRefWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -812,6 +1032,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							FilterBEDbyProximityWindow frame = new FilterBEDbyProximityWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -842,6 +1073,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							TileGenomeWindow frame = new TileGenomeWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -876,6 +1118,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							RandomCoordinateWindow frame = new RandomCoordinateWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -910,6 +1163,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							SignalDuplicationWindow frame = new SignalDuplicationWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -943,6 +1207,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ExpandBEDWindow frame = new ExpandBEDWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -962,6 +1237,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ExpandGFFWindow frame = new ExpandGFFWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1014,6 +1300,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							GFFtoBEDWindow frame = new GFFtoBEDWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1036,6 +1333,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							SortBEDWindow frame = new SortBEDWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1055,6 +1363,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							SortGFFWindow frame = new SortGFFWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1073,6 +1392,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ShiftIntervalWindow frame = new ShiftIntervalWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1147,6 +1477,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ScalingFactorWindow frame = new ScalingFactorWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1179,6 +1520,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ScaleMatrixWindow frame = new ScaleMatrixWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1212,6 +1564,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							AggregateDataWindow frame = new AggregateDataWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1286,6 +1649,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							FASTAExtractWindow frame = new FASTAExtractWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1314,6 +1688,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							RandomizeFASTAWindow frame = new RandomizeFASTAWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1344,6 +1729,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							SearchMotifWindow frame = new SearchMotifWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1373,6 +1769,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							DNAShapefromBEDWindow frame = new DNAShapefromBEDWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1403,6 +1810,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							DNAShapefromFASTAWindow frame = new DNAShapefromFASTAWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1437,6 +1855,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							TwoColorHeatMapWindow frame = new TwoColorHeatMapWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1469,6 +1898,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							ThreeColorHeatMapWindow frame = new ThreeColorHeatMapWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1500,6 +1940,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							MergeHeatMapWindow frame = new MergeHeatMapWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1529,6 +1980,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							LabelHeatMapWindow frame = new LabelHeatMapWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1560,6 +2022,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							FourColorSequenceWindow frame = new FourColorSequenceWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -1590,6 +2063,17 @@ public class ScriptManagerGUI {
 					public void run() {
 						try {
 							PlotCompositeWindow frame = new PlotCompositeWindow();
+							frame.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									// Add log item if logging is turned on
+									if ("log" == evt.getPropertyName() && logs.getToggleOn()) {
+										if (evt.getNewValue() != null) {
+											logs.addLogItem((LogItem) evt.getNewValue());
+										}
+										logs.updateTable();
+									}
+								}
+							});
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();

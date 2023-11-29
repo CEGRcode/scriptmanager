@@ -4,13 +4,18 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scriptmanager.cli.BAM_Format_Converter.BAMtoBEDCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.BAM_Format_Converter.BAMtoBED;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Output wrapper for running
@@ -43,6 +48,7 @@ public class BAMtoBEDOutput extends JFrame {
 	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
 	 * @param min_size Minimum acceptable insert size
 	 * @param max_size Maximum acceptable insert size
+	 * @param gzOutput   whether or not to gzip output
 	 */
 	public BAMtoBEDOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
 		setTitle("BAM to BED Progress");
@@ -83,8 +89,7 @@ public class BAMtoBEDOutput extends JFrame {
 	 */
 	public void run() throws IOException, InterruptedException {
 		// Open Output File
-		String OUTPUT = BAM.getName().split("\\.")[0] + "_" + READ + ".bed";
-		OUTPUT += (OUTPUT_GZIP? ".gz": "");
+		String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(BAM) + "_" + READ + ".bed" + (OUTPUT_GZIP ? ".gz": "");
 		if (OUT_DIR != null) {
 			OUTPUT = OUT_DIR.getCanonicalPath() + File.separator + OUTPUT;
 		}
@@ -92,8 +97,20 @@ public class BAMtoBEDOutput extends JFrame {
 		// Call script here, pass in ps and OUT
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		PS.println(OUTPUT);
+
+		// Initialize LogItem
+		String command = BAMtoBEDCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT);
+		LogItem new_li = new LogItem(command);
+		firePropertyChange("log", null, new_li);
+
+		// Execute script
 		BAMtoBED script_obj = new BAMtoBED(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS, OUTPUT_GZIP);
 		script_obj.run();
+
+		// Update LogItem
+		new_li.setStopTime(new Timestamp(new Date().getTime()));
+		new_li.setStatus(0);
+		firePropertyChange("log", new_li, null);
 
 		Thread.sleep(2000);
 		dispose();

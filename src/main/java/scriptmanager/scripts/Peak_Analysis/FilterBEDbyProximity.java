@@ -13,6 +13,7 @@ import java.util.List;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.ExtensionFileFilter;
+
 import scriptmanager.util.GZipUtilities;
 
 /**
@@ -23,40 +24,41 @@ import scriptmanager.util.GZipUtilities;
  * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityOutput
  * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityWindow
  */
-public class FilterBEDbyProximity {
+public class FilterBEDbyProximity{
 
-	private int CUTOFF;
+	
 	private File INPUT;
-	private String INPUTNAME = null;
+	private int CUTOFF;
+	private PrintStream PS = null;
+	
 	private PrintStream OUT_Filter = null;
 	private PrintStream OUT_Cluster = null;
-	private PrintStream PS = null;
 
 	/**
 	 * Creates a new instance of a FilterBEDbyProximity script
 	 * 
 	 * @param input      BED file to filter
-	 * @param cutoff     Exclusion distance (bp)
 	 * @param outputBase Base name for the output files
+	 * @param cutoff     Exclusion distance (bp)
 	 * @param ps         Output PrintStream
 	 * @param gzOutput    whether or not to gzip output
 	 * @throws IOException Invalid file or parameters
 	 */
-	public FilterBEDbyProximity(File input, int cutoff, String outputBase, PrintStream ps, boolean gzOutput) throws IOException {
+	public FilterBEDbyProximity(File input, File outputBase, int cutoff, PrintStream ps, boolean gzOutput) throws IOException {
+		INPUT = input;
 		CUTOFF = cutoff;
 		PS = ps;
 		
-		INPUT = input;
-		INPUTNAME = input.getName();
-		try{
-			if(outputBase == null) {
-				outputBase = ExtensionFileFilter.stripExtensionIgnoreGZ(input) + "_" + Integer.toString(CUTOFF) + "bp";
-			}
-			OUT_Filter = GZipUtilities.makePrintStream(new File(outputBase + "-FILTER.bed" + (gzOutput? ".gz": "")), gzOutput); 
-			OUT_Cluster = GZipUtilities.makePrintStream(new File(outputBase + "-CLUSTER.bed" + (gzOutput? ".gz": "")), gzOutput);
-		}catch (FileNotFoundException e) { e.printStackTrace(); }
-	}
+		// Construct output name
+		if (outputBase == null) {
+			outputBase = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(INPUT) + "_" + Integer.toString(CUTOFF) + "bp");
+		}
+		// Initialize output streams
+		OUT_Filter = GZipUtilities.makePrintStream(new File(outputBase.getAbsoluteFile() + "-FILTER.bed" + (gzOutput? ".gz": "")), gzOutput); 
+		OUT_Cluster = GZipUtilities.makePrintStream(new File(outputBase.getAbsoluteFile() + "-CLUSTER.bed" + (gzOutput? ".gz": "")), gzOutput);
 	
+	}
+
 	/**
 	 * Runs the filtering operation, outputting peaks to "-FILTER.bed" and other
 	 * reads to "-CLUSTER.bed"
@@ -65,23 +67,24 @@ public class FilterBEDbyProximity {
 	 * @throws InterruptedException Thrown when more than one script is run at the
 	 *                              same time
 	 */
-	public void run() throws IOException, InterruptedException
-	{
-		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUTNAME);
-		printPS("Starting: " + getTimeStamp());
-		
+	public void run() throws FileNotFoundException, IOException, InterruptedException {
+		// Print update
+		printPS("Filtering BED file with a cutoff: " + CUTOFF + " in " + INPUT.getName());
+		printPS("Starting: " + new Timestamp(new Date().getTime()).toString());
+
 		//Check if input file is compressed and assign appropriate input stream
-	    BufferedReader lines = GZipUtilities.makeReader(INPUT);
+	    BufferedReader br = GZipUtilities.makeReader(INPUT);
 	    List<BEDCoord> bedArray = new ArrayList<BEDCoord>();
 	    List<Integer> failArray = new ArrayList<Integer>();
 		
 		//load bed coords into bedArray
-	    String line;
-		while((line = lines.readLine()) != null) {
+		String line;
+		while((line = br.readLine()) != null) {
 			bedArray.add(new BEDCoord(line));
 			bedArray.get(bedArray.size() - 1).calcMid();
 			failArray.add(Integer.valueOf(0));
 		}
+		br.close();
 		Collections.sort(bedArray, BEDCoord.PeakMidpointComparator);
 		Collections.sort(bedArray, BEDCoord.PeakChromComparator);
 		
@@ -138,17 +141,13 @@ public class FilterBEDbyProximity {
 				OUT_Cluster.println(bedArray.get(x).toString()); 
 			}
 		}
+		// close streams
 		OUT_Filter.close();
 		OUT_Cluster.close();
-		printPS("Completing: " + getTimeStamp());
+		// Print update
+		printPS("Completing: " + new Timestamp(new Date().getTime()).toString());
 	}
 
-	private static String getTimeStamp() {
-		Date date= new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
-	}
-	
 	private void printPS(String message){
 		if(PS!=null) PS.println(message);
 		System.err.println(message);

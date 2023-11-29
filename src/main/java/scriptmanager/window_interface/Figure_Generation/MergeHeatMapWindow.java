@@ -19,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -27,6 +28,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -67,22 +69,31 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
-			setProgress(0);
-
-			MergeHeatMapOutput heat = new MergeHeatMapOutput(pngFiles, OUT_DIR);
-
-			heat.addPropertyChangeListener("merge", new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-					int temp = (Integer) propertyChangeEvent.getNewValue();
-					int percentComplete = (int) (((double) (temp) / (pngFiles.size() / 2)) * 100);
-					setProgress(percentComplete);
-				}
-			});
-
-			heat.setVisible(true);
-			heat.run();
-
+		public Void doInBackground() {
+			try {
+				setProgress(0);
+				MergeHeatMapOutput output_obj = new MergeHeatMapOutput(pngFiles, OUT_DIR);
+				output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+						int temp = (Integer) propertyChangeEvent.getNewValue();
+						int percentComplete = (int) (((double) (temp) / (pngFiles.size() / 2)) * 100);
+						setProgress(percentComplete);
+					}
+				});
+				output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+					}
+				});
+				output_obj.setVisible(true);
+				output_obj.run();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
+			}
 			setProgress(100);
 			return null;
 		}
@@ -214,6 +225,8 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

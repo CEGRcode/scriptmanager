@@ -9,6 +9,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -25,7 +27,11 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
+
+import scriptmanager.cli.File_Utilities.DecompressGZFileCLI;
 import scriptmanager.scripts.File_Utilities.GZipFiles;
 
 /**
@@ -61,15 +67,36 @@ public class DecompressGZFileWindow extends JFrame implements ActionListener, Pr
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
-			setProgress(0);
-			for(int x = 0; x < GZFiles.size(); x++) {
-				GZipFiles.decompressFile(GZFiles.get(x), 8192);
-				int percentComplete = (int)(((double)(x + 1) / GZFiles.size()) * 100);
-				setProgress(percentComplete);
+		public Void doInBackground() {
+			try {
+				setProgress(0);
+				LogItem old_li = null;
+				for(int x = 0; x < GZFiles.size(); x++) {
+					// Initialize LogItem
+					String command = DecompressGZFileCLI.getCLIcommand(GZFiles.get(x));
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					// Execute script
+					GZipFiles.decompressFile(GZFiles.get(x), 8192);
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
+					// Update progress
+					int percentComplete = (int)(((double)(x + 1) / GZFiles.size()) * 100);
+					setProgress(percentComplete);
+				}
+				// Update log at completion
+				firePropertyChange("log", old_li, null);
+				setProgress(100);
+				JOptionPane.showMessageDialog(null, "Decompressing Complete");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
-			setProgress(100);
-			JOptionPane.showMessageDialog(null, "Decompressing Complete");
 			return null;
 		}
 
@@ -166,10 +193,13 @@ public class DecompressGZFileWindow extends JFrame implements ActionListener, Pr
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

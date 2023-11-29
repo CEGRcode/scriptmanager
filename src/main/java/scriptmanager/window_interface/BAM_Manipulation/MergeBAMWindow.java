@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
@@ -30,6 +31,13 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
+import scriptmanager.cli.BAM_Manipulation.MergeBAMCLI;
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.scripts.BAM_Manipulation.MergeBAM;
@@ -51,7 +59,6 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	
 	final DefaultListModel<String> expList;
 	ArrayList<File> BAMFiles = new ArrayList<File>();
-    private File OUTPUT = null;
 	private File OUT_DIR = null;
 
 	private JButton btnLoad;
@@ -60,7 +67,7 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	private JButton btnOutput;
 	private JTextField txtOutput;
 	private JCheckBox chckbxUseMultipleCpus;
-	private JCheckBox chckbxGenerateBaiindex;
+	private JCheckBox chckbxGenerateBaiIndex;
 	private JProgressBar progressBar;
 	private JLabel lblDefaultToLocal;
 	
@@ -73,24 +80,51 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws Exception {
-        	setProgress(0);
+		@Override
+		public Void doInBackground() {
+			setProgress(0);
 			try {
-				// Build output filepath
-				if(OUT_DIR != null) { OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + txtOutput.getText()); }
-				else { OUTPUT = new File(txtOutput.getText()); }
+				// Construct output filename
+				File OUTPUT = new File(txtOutput.getText());
+				if(OUT_DIR != null) {
+					OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + txtOutput.getText());
+				}
+				// Initialize LogItem
+				String command = MergeBAMCLI.getCLIcommand(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
+				LogItem li = new LogItem(command);
+				firePropertyChange("log", null, li);
 				// Execute Picard wrapper
 				MergeBAM.run(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
-				// Index if checkbox selected
-				if(chckbxGenerateBaiindex.isSelected()) {
+				// Update LogItem
+				li.setStopTime(new Timestamp(new Date().getTime()));
+				li.setStatus(0);
+				// Generate index on output
+				if (chckbxGenerateBaiIndex.isSelected()) {
+					// Initialize LogItem (index BAM)
+					command = BAIIndexerCLI.getCLIcommand(OUTPUT);
+					li = new LogItem(command);
+					firePropertyChange("log", null, li);
+					// Execute script (index)
 					BAIIndexer.generateIndex(OUTPUT);
+					// Update log item
+					li.setStopTime(new Timestamp(new Date().getTime()));
+					li.setStatus(0);
 				}
+				// Update log after final input
+				firePropertyChange("log", li, null);
+				// Update progress
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Merging Complete");
 			} catch (SAMException se) {
 				JOptionPane.showMessageDialog(null, se.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
         	return null;
         }
         
@@ -190,12 +224,12 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         chckbxUseMultipleCpus.setToolTipText("Increases Merging Speed on Computers with Multiple CPUs");
         contentPane.add(chckbxUseMultipleCpus);
         
-        chckbxGenerateBaiindex = new JCheckBox("Generate BAI-Index");
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiindex, 5, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblOutputFileName, -6, SpringLayout.NORTH, chckbxGenerateBaiindex);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiindex, 0, SpringLayout.NORTH, chckbxUseMultipleCpus);
-        chckbxGenerateBaiindex.setSelected(true);
-        contentPane.add(chckbxGenerateBaiindex);
+        chckbxGenerateBaiIndex = new JCheckBox("Generate BAI-Index");
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiIndex, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblOutputFileName, -6, SpringLayout.NORTH, chckbxGenerateBaiIndex);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiIndex, 0, SpringLayout.NORTH, chckbxUseMultipleCpus);
+        chckbxGenerateBaiIndex.setSelected(true);
+        contentPane.add(chckbxGenerateBaiIndex);
                
         JLabel lblCurrent = new JLabel("Current Output:");
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 0, SpringLayout.WEST, scrollPane);
@@ -227,9 +261,6 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task., running script when 'Merge' is pressed
 	 */
-	/**
-	 * Runs when a task is invoked, making window non-interactive and executing the task.
-	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -239,16 +270,18 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         task.addPropertyChangeListener(this);
         task.execute();
 	}
-	
+
 	/**
-	 * Invoked when task's progress changes, updating the progress bar.
+	 * Invoked when task's progress property changes.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
 	}
 	
 	/**

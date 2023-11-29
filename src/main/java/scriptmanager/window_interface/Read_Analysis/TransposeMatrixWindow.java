@@ -37,7 +37,8 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.util.GZipUtilities;
 import scriptmanager.objects.LogItem;
-import scriptmanager.objects.CustomExceptions.ScriptManagerException;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.scripts.Read_Analysis.TransposeMatrix;
 
 /**
@@ -73,7 +74,7 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			try {
 				if (TABFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No Files Loaded!!!");
@@ -119,6 +120,12 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 			} catch (ScriptManagerException sme) {
 				sme.printStackTrace();
 				JOptionPane.showMessageDialog(null, sme.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;

@@ -11,7 +11,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -32,6 +34,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
+import scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI;
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 
@@ -52,7 +59,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	final DefaultListModel<String> expList;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	private File GENOME = null;
 	List<File> BAMFiles = new ArrayList<File>();
 
@@ -79,36 +86,60 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws Exception {
-			setProgress(0);
+		public Void doInBackground() {
 			try {
+				setProgress(0);
+				LogItem old_li = null;
 				for (int x = 0; x < BAMFiles.size(); x++) {
-					String[] NAME = BAMFiles.get(x).getName().split("\\.");
-					File OUTPUT = null;
-					if (OUTPUT_PATH != null) {
-						OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_PSfilter.bam");
-					} else {
-						OUTPUT = new File(NAME[0] + "_PSfilter.bam");
+					// Construct output filename
+					String NAME = ExtensionFileFilter.stripExtension(BAMFiles.get(x).getName());
+					File OUTPUT = new File(NAME + "_PSfilter.bam");
+					if (OUT_DIR != null) {
+					OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME + "_PSfilter.bam");
 					}
-					FilterforPIPseqOutput filter = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT,
-							txtSeq.getText());
-					filter.setVisible(true);
-					filter.run();
-
+					// Initialize LogItem
+					String command = FilterforPIPseqCLI.getCLIcommand(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					// Execute script
+					FilterforPIPseqOutput output_obj = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
+					output_obj.setVisible(true);
+					output_obj.run();
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
+					// Generate BAI on output if selected
 					if (chckbxGenerateBaiIndex.isSelected()) {
+						// Initialize LogItem (index BAM)
+						command = BAIIndexerCLI.getCLIcommand(BAMFiles.get(x));
+						old_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
+						// Execute script (index)
 						BAIIndexer.generateIndex(OUTPUT);
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 					}
-
+					// Update progress
 					int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);
 					setProgress(percentComplete);
 				}
+				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Permanganate-Seq Filtering Complete");
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
+				JOptionPane.showMessageDialog(null, "InterruptedException - " + ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -192,9 +223,9 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -55, SpringLayout.SOUTH, contentPane);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if (OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if (OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -255,7 +286,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 		txtSeq.setColumns(10);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -269,13 +300,15 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 	}
 
 	/**
-	 * Invoked when task's progress changes, updating the progress bar.
+	 * Invoked when task's progress property changes.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

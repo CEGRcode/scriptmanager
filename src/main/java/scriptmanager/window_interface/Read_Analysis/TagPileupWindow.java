@@ -50,6 +50,7 @@ import htsjdk.samtools.SAMException;
 import scriptmanager.objects.CompositeCartoon;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
@@ -86,7 +87,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveBlacklistfilter;
 	private JComboBox<String> cbox_ReadAspect;
 	private JComboBox<String> cbox_ReadOutput;
-	private JToggleButton tglSeperate;
+	private JToggleButton tglSeparate;
 	private JToggleButton tglCombined;
 
 	private JComboBox<String> cbox_Transform;
@@ -139,7 +140,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
+		public Void doInBackground() {
 			try {
 				if (Integer.parseInt(txtBin.getText()) < 1) {
 					JOptionPane.showMessageDialog(null, "Invalid Bin Size!!! Must be larger than 0 bp");
@@ -170,7 +171,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					// Load up parameters for the pileup into single object
 					PileupParameters param = new PileupParameters();
 					ArrayList<Color> colors = new ArrayList<Color>();
-					if (tglSeperate.isSelected()) {
+					if (tglSeparate.isSelected()) {
 						param.setStrand(0);
 						colors.add(btnSenseColor.getForeground());
 						colors.add(btnAntiColor.getForeground());
@@ -232,30 +233,34 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 //					param.printAll();
 
 					// Initialize, addPropertyChangeListeners, and execute
-					TagPileupOutput pile = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
-					pile.addPropertyChangeListener("tag", new PropertyChangeListener() {
+					TagPileupOutput output_obj = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
+					output_obj.addPropertyChangeListener("tag", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double) (temp) / (BAMFiles.size() * BEDFiles.size())) * 100);
 							setProgress(percentComplete);
 						}
 					});
-					pile.addPropertyChangeListener("log", new PropertyChangeListener() {
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent evt) {
 							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 						}
 					});
-					pile.setVisible(true);
-					pile.run();
-
-					setProgress(100);
-					return null;
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (SAMException se) {
 				JOptionPane.showMessageDialog(null, se.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -575,14 +580,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		// Stand Options
 		int SCALE = 170;
-		tglSeperate = new JToggleButton("Seperate");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, tglSeperate, 10, SpringLayout.SOUTH, pnlFilterReads);
-		sl_contentPane.putConstraint(SpringLayout.WEST, tglSeperate, 10, SpringLayout.EAST, scrollPane_BED);
-		sl_contentPane.putConstraint(SpringLayout.EAST, tglSeperate, 10 + SCALE*2, SpringLayout.EAST, scrollPane_BED);
-		tglSeperate.setSelected(true);
-		tglSeperate.addItemListener(new ItemListener() {
+		tglSeparate = new JToggleButton("Separate");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, tglSeparate, 10, SpringLayout.SOUTH, pnlFilterReads);
+		sl_contentPane.putConstraint(SpringLayout.WEST, tglSeparate, 10, SpringLayout.EAST, scrollPane_BED);
+		sl_contentPane.putConstraint(SpringLayout.EAST, tglSeparate, 10 + SCALE*2, SpringLayout.EAST, scrollPane_BED);
+		tglSeparate.setSelected(true);
+		tglSeparate.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if (tglSeperate.isSelected()) {
+				if (tglSeparate.isSelected()) {
 					btnSenseColor.setEnabled(true);
 					btnAntiColor.setEnabled(true);
 					btnCombinedColor.setEnabled(false);
@@ -594,12 +599,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				}
 			}
 		});
-		contentPane.add(tglSeperate);
+		contentPane.add(tglSeparate);
 
 		tglCombined = new JToggleButton("Combined");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, tglCombined, 0, SpringLayout.NORTH, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, tglCombined, 0, SpringLayout.EAST, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.EAST, tglCombined, SCALE, SpringLayout.EAST, tglSeperate);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, tglCombined, 0, SpringLayout.NORTH, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, tglCombined, 0, SpringLayout.EAST, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.EAST, tglCombined, SCALE, SpringLayout.EAST, tglSeparate);
 		tglCombined.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (tglCombined.isSelected()) {
@@ -616,13 +621,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(tglCombined);
 
 		ButtonGroup toggleStrand = new ButtonGroup();
-		toggleStrand.add(tglSeperate);
+		toggleStrand.add(tglSeparate);
 		toggleStrand.add(tglCombined);
 
 		btnSenseColor = new JButton("Sense Color");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnSenseColor, 0, SpringLayout.SOUTH, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnSenseColor, 0, SpringLayout.WEST, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnSenseColor, SCALE, SpringLayout.WEST, tglSeperate);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnSenseColor, 0, SpringLayout.SOUTH, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnSenseColor, 0, SpringLayout.WEST, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnSenseColor, SCALE, SpringLayout.WEST, tglSeparate);
 		btnSenseColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Color newColor = JColorChooser.showDialog(btnSenseColor, "Select an Output Color", btnSenseColor.getForeground());
@@ -639,7 +644,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		btnAntiColor = new JButton("Anti Color");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnAntiColor, 0, SpringLayout.NORTH, btnSenseColor);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnAntiColor, 0, SpringLayout.EAST, btnSenseColor);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnAntiColor, 0, SpringLayout.EAST, tglSeperate);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnAntiColor, 0, SpringLayout.EAST, tglSeparate);
 		btnAntiColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Color newColor = JColorChooser.showDialog(btnAntiColor, "Select an Output Color", btnAntiColor.getForeground());
@@ -917,20 +922,17 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUT_DIR = FileSelection.getOutputDir(fc);
-				if (OUT_DIR != null) {
-					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				File temp = FileSelection.getOutputDir(fc);
+				if(temp != null) {
+					OUT_DIR = temp;
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 					try {
 						lblDefaultToLocal.setText("..." + ExtensionFileFilter.getSubstringEnd(OUT_DIR, 35));
-					} catch (IOException e1) {
+					} catch (IOException ioe) {
 						System.err.println("Output directory may not be loaded!");
-						e1.printStackTrace();
+						ioe.printStackTrace();
 					}
-				} else {
-					OUT_DIR = new File(System.getProperty("user.dir"));
-					lblDefaultToLocal.setText("Default to Local Directory");
 				}
-				lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 			}
 		});
 
@@ -1009,7 +1011,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	 */
 	public void allowReadChoice(boolean activate) {
 		cbox_ReadOutput.setEnabled(activate);
-		tglSeperate.setEnabled(activate);
+		tglSeparate.setEnabled(activate);
 	}
 
 	/**
@@ -1039,7 +1041,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	}
 
 	/**
-	 * Extract read aspect and read output to update the cartoon accordingly.
+	 * Extract read aspect and read output to upddate the cartoon accordingly.
 	 */
 	public void updateCartoon() {
 		int aspect = cbox_ReadAspect.getSelectedIndex();
@@ -1098,7 +1100,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			if (!chckbxFilterByMax.isSelected()) {
 				txtMax.setEnabled(false);
 			}
-			if (tglSeperate.isSelected()) {
+			if (tglSeparate.isSelected()) {
 				btnSenseColor.setEnabled(true);
 				btnAntiColor.setEnabled(true);
 				btnCombinedColor.setEnabled(false);
@@ -1151,6 +1153,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();

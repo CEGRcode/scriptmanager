@@ -78,7 +78,8 @@ public class SearchMotifCLI implements Callable<Integer> {
 		// set default output filename
 		if (output == null) {
 			String NAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
-					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed";
+					+ ExtensionFileFilter.stripExtension(fastaFile) + ".bed"
+					+ (gzOutput ? ".gz" : "");
 			output = new File(NAME);
 		// check output filename is valid
 		} else {
@@ -102,5 +103,25 @@ public class SearchMotifCLI implements Callable<Integer> {
 		}
 
 		return (r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input    the FASTA sequence (often genomic) to look for motifs in
+	 * @param output   the coordinates of motif instances found
+	 * @param motif    the IUPAC formated motif to search for
+	 * @param mismatch the number of allowed mismatches in motif search
+	 * @param gzOutput whether or not to output the coordinate file gzip compressed
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output, String motif, int mismatch, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis search-motif";
+		command += " " + input.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		command += " -m " + motif;
+		command += " -n " + mismatch;
+		command += gzOutput ? " -z" : "";
+		return command;
 	}
 }

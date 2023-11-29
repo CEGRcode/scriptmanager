@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
-import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.RandomCoordinate;
 
 /**
@@ -29,7 +28,7 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "reference genome [sacCer3|sacCer3_cegr|hg38|hg38_contigs|hg19|hg19_contigs|mm10]")
 	private String genomeName;
-	
+
 	@Option(names = {"-o", "--output"}, description = "Specify output directory (default = current working directory), file name will be random_coordinates_<genomeName>_<window>bp.<ext>")
 	private File output = null;
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
@@ -55,7 +54,7 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		RandomCoordinate.execute(genomeName, numSites, window, formatIsBed, output, gzOutput); 
+		RandomCoordinate.execute(genomeName, output, formatIsBed, numSites, window, gzOutput); 
 		
 		System.err.println( "Random Coordinate Generation Complete." );
 		return(0);
@@ -64,11 +63,11 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
-		String ext = "gff";
-		if(formatIsBed){ ext = "bed"; }
 		//set default output filename
 		if(output==null){
-			output = new File("random_coordinates_" + genomeName + "_" + numSites + "sites_" + window + "bp." + ext);
+			output = new File("random_coordinates_" + genomeName + "_" + numSites + "sites_" + window + "bp"
+					+ (formatIsBed ? ".bed" : ".gff")
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
 		}else{
 			//check directory
@@ -89,5 +88,27 @@ public class RandomCoordinateCLI implements Callable<Integer> {
 		}
 		
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param genomeName the genome build to randomly sample genomic coordinates from
+	 * @param output the text file of the sampled coordinates
+	 * @param formatIsBed the format of the coordinate output (BED or GFF)
+	 * @param numSites the number of sites to sample
+	 * @param window the size of the coordinates sampled
+	 * @param gzOutput   whether or not to gzip output
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(String genomeName, File output, boolean formatIsBed, int numSites, int window, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER peak-analysis rand-coord";
+		command += " " + genomeName;
+		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " -z " : "";
+		command += formatIsBed ? "" : " --gff";
+		command += " -n " + numSites;
+		command += " -w " + window;
+		return command;
 	}
 }

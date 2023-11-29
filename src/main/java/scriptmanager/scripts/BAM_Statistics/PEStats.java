@@ -53,7 +53,7 @@ public class PEStats {
 	 * @return two-item list of charts to display (0=insert size chart,
 	 *         1=duplication chart if DUP_STATUS=true)
 	 */
-	public static Vector<ChartPanel> getPEStats( File out_basename, File bamFile, boolean DUP_STATUS, int MIN_INSERT, int MAX_INSERT, PrintStream PS_INSERT, PrintStream PS_DUP, boolean SUM_STATUS ){
+	public static Vector<ChartPanel> getPEStats(File bamFile, File out_basename, boolean DUP_STATUS, int MIN_INSERT, int MAX_INSERT, PrintStream PS_INSERT, PrintStream PS_DUP, boolean SUM_STATUS ) throws IOException {
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 		
 		// Output Vector of Charts to be returned
@@ -78,8 +78,7 @@ public class PEStats {
 				if( SUM_STATUS ){
 					OUT_INSERT_SUM = new PrintStream(new File( out_basename.getCanonicalPath() + "_InsertSummary.out"));
 				}
-			}
-			catch (IOException e) {	e.printStackTrace(); }
+			} catch (IOException e) { e.printStackTrace(); }
 		}
 		
 		//Print TimeStamp
@@ -220,9 +219,7 @@ public class PEStats {
 			}
 			
 			//Generate Insert Chart
-			try{
-				charts.add( 0, Histogram.createBarChart(HIST, DOMAIN, OUT_INSPNG) );
-			}catch( IOException e ){ e.printStackTrace(); }
+			charts.add( 0, Histogram.createBarChart(HIST, DOMAIN, OUT_INSPNG) );
 
 			//Duplication statistics
 			if(DUP_STATUS) {
@@ -245,9 +242,7 @@ public class PEStats {
 				printBoth( PS_DUP, OUT_DUP, "Unique Molecules:\n" + UNIQUE_MOLECULES);
 				
 				//Generate Duplicates Chart
-				try{
-					charts.add( 1, LineChart.createLineChart(BIN, BIN_NAME, OUT_DUPPNG) );
-				}catch( IOException e ){ e.printStackTrace(); }
+				charts.add( 1, LineChart.createLineChart(BIN, BIN_NAME, OUT_DUPPNG) );
 			}
 		} else {
 			charts.add(0, new ChartPanel(null));

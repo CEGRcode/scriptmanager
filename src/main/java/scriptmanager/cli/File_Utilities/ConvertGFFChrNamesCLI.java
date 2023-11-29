@@ -88,12 +88,11 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if (output == null) {
-			// Set suffix format
-			String SUFFIX = toArabic ? "_toRoman.bed" : "_toArabic.bed";
 			// Set output filepath with name and output directory
-			String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile);
-			output = new File(OUTPUT + SUFFIX);
-		}else{
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(coordFile)
+					+ (toArabic ? "_toArabic.gff" : "_toRoman.gff")
+					+ (gzOutput ? ".gz" : ""));
+		} else {
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");
@@ -103,5 +102,25 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 		}
 
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param RtoA whether to do a roman to arabic numeral conversion (vs arabic to roman numeral)
+	 * @param input the GFF file to convert chr names of
+	 * @param output the output BED file of converted coords
+	 * @param useChrmt whether or not to use "chrmt"
+	 * @param gzOutput gzip output
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(boolean RtoA, File input, File output, boolean useChrmt, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER file-utilities convert-gff-genome";
+		command += RtoA ? " --to-arabic" : "";
+		command += " -o " + output.getAbsolutePath();
+		command += useChrmt ? " --chrmt" : "";
+		command += gzOutput ? " --gzip" : "";
+		command += " " + input.getAbsolutePath();
+		return command;
 	}
 }

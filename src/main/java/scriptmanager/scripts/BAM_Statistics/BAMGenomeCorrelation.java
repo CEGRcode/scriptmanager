@@ -17,11 +17,11 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.swing.JOptionPane;
 
 import org.jfree.chart.ChartPanel;
 
 import scriptmanager.charts.HeatMap;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord;
 import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract;
 
@@ -49,7 +49,6 @@ public class BAMGenomeCorrelation extends Component {
 	private int CPU;
 	private int READ;
 	private short COLORSCALE;
-	private boolean GUI = false;
 	
 	SamReader reader;
 	final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
@@ -79,13 +78,14 @@ public class BAMGenomeCorrelation extends Component {
 		READ = r;
 		COLORSCALE = cs;
 	}
-	
+
 	/**
 	 * Creates correlation matrix 
 	 * @param GUI Specifies if called by window interface or by cli
 	 * @throws IOException Invalid file or parameters
 	 */
-	public void getBAMGenomeCorrelation(boolean GUI) throws IOException {
+		
+	public void getBAMGenomeCorrelation(boolean GUI) throws IOException, OptionException {
 		System.err.println(getTimeStamp());
 		// Check BAMs first
 		if(!validateBAM()) {
@@ -224,7 +224,7 @@ public class BAMGenomeCorrelation extends Component {
 	 * @return if all the input BAM files have corresponding BAI files
 	 * @throws IOException Invalid file or parameters 
 	 */
-	private boolean validateBAM() throws IOException {
+	private boolean validateBAM() throws IOException, OptionException {
 		//Check if BAI index file exists for all BAM files before we process any of them
 		ArrayList<String> chrName = new ArrayList<String>();
 		ArrayList<Integer> chrSize = new ArrayList<Integer>();
@@ -232,9 +232,7 @@ public class BAMGenomeCorrelation extends Component {
 			File XBAM = bamFiles.get(x);			
 			File f = new File(XBAM + ".bai");
 			if(!f.exists() || f.isDirectory()) {
-				if(GUI){ JOptionPane.showMessageDialog(null, "BAI Index File does not exist for: " + XBAM.getName()); }
-				else{ System.err.println("BAI Index File does not exist for: " + XBAM.getName()); }
-				return false;
+				throw new OptionException("BAI Index File does not exist for: " + XBAM.getName());
 			} else {
 				reader = factory.open(XBAM);
 				AbstractBAMFileIndex bai = (AbstractBAMFileIndex) reader.indexing().getIndex();
@@ -244,11 +242,9 @@ public class BAMGenomeCorrelation extends Component {
 						chrSize.add(reader.getFileHeader().getSequence(z).getSequenceLength());
 					}
 				} else if(bai.getNumberOfReferences() != chrName.size()) {
-					if(GUI){ JOptionPane.showMessageDialog(null, "Unequal number of chromosomes from previous: " + XBAM.getName()); }
-					else{ System.err.println("BAI Index File does not exist for: " + XBAM.getName()); }
 					reader.close();
 					bai.close();
-					return false;
+					throw new OptionException("Unequal number of chromosomes from previous: " + XBAM.getName());
 				} else {
 					boolean MATCH = true;
 					for (int z = 0; z < bai.getNumberOfReferences(); z++) {
@@ -256,11 +252,9 @@ public class BAMGenomeCorrelation extends Component {
 						if(!chrSize.get(z).equals(reader.getFileHeader().getSequence(z).getSequenceLength())) { MATCH = false; }
 					}
 					if(!MATCH) {
-						if(GUI){ JOptionPane.showMessageDialog(null, "File contains chromosome size/name which does not match previous: " + XBAM.getName()); }
-						else{ System.err.println("BAI Index File does not exist for: " + XBAM.getName()); }
 						reader.close();
 						bai.close();
-						return false;
+						throw new OptionException("File contains chromosome size/name which does not match previous: " + XBAM.getName());
 					}
 				}
 				bai.close();

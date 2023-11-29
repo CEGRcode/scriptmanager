@@ -56,9 +56,9 @@ public class ShiftCoordCLI implements Callable<Integer> {
 		}
 
 		if(isGFF) {
-			ShiftCoord.shiftGFFInterval(new File(outputFilepath), input, shift, stranded, gzOutput);
+			ShiftCoord.shiftGFFInterval(input, new File(outputFilepath), shift, stranded, gzOutput);
 		} else {
-			ShiftCoord.shiftBEDInterval(new File(outputFilepath), input, shift, stranded, gzOutput);
+			ShiftCoord.shiftBEDInterval(input, new File(outputFilepath), shift, stranded, gzOutput);
 		}
 
 		System.err.println("Shift Complete");
@@ -76,9 +76,10 @@ public class ShiftCoordCLI implements Callable<Integer> {
 
 		//set default output filename
 		if(outputFilepath==null){
-			String SUFFIX = shift < 0 ? "_shift" + shift + "bp." : "_shift+" + shift + "bp.";
-			SUFFIX += isGFF ? "gff" : "bed";
-			outputFilepath = ExtensionFileFilter.stripExtensionIgnoreGZ(input) + SUFFIX;
+			outputFilepath = ExtensionFileFilter.stripExtensionIgnoreGZ(input)
+					+ (shift < 0 ? "_shift" + shift + "bp." : "_shift+" + shift + "bp")
+					+ (isGFF ? ".gff" : ".bed")
+					+ (gzOutput ? ".gz" : "");
 		//check output filename is valid
 		}else{
 			//no extension check
@@ -91,5 +92,16 @@ public class ShiftCoordCLI implements Callable<Integer> {
 			}
 		}
 		return(r);
+	}
+
+	public static String getCLIcommand(File input, File output, int shift, boolean stranded, boolean gzOutput, boolean isGFF) {
+		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation shift-coord";
+		command += " " + input.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		command += " -t " + shift;
+		command += stranded ? " -u " : "";
+		command += isGFF ? " --gff " : "";
+		command += gzOutput ? " -z " : "";
+		return command;
 	}
 }

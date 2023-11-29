@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +35,10 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
@@ -55,7 +59,7 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	
 	final DefaultListModel<String> expList;
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	List<File> BAMFiles = new ArrayList<File>();
 
 	private JButton btnLoad;
@@ -77,52 +81,61 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws Exception {
-        	setProgress(0);
-			LogItem old_li = new LogItem("");
+		@Override
+		public Void doInBackground() {
 			try {
-				for(int x = 0; x < BAMFiles.size(); x++) {
-					String[] NAME = BAMFiles.get(x).getName().split("\\.");
-					File OUTPUT = null;
-					File METRICS = null;
-
-					if(OUTPUT_PATH != null) {
-						OUTPUT = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.bam");
-						METRICS = new File(OUTPUT_PATH.getCanonicalPath() + File.separator + NAME[0] + "_dedup.metrics");
-					} else {
-						OUTPUT = new File(NAME[0] + "_dedup.bam");
-						METRICS = new File(NAME[0] + "_dedup.metrics");
-					}
-					
-
-					// Initialize LogItem
-					String command = BAMRemoveDupCLI.getCLIcommand(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
-					LogItem new_li = new LogItem(command);
+				setProgress(0);
+				LogItem old_li = null;
+			for (int x = 0; x < BAMFiles.size(); x++) {
+				// Construct output filenames
+				String NAME = ExtensionFileFilter.stripExtension(BAMFiles.get(x).getName());
+				File OUTPUT = new File(NAME + "_dedup.bam");
+				File METRICS = new File(NAME + "_dedup.metrics");
+				if (OUT_DIR != null) {
+					OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME + "_dedup.bam");
+					METRICS = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME + "_dedup.metrics");
+				}
+				// Initialize LogItem
+        	    String command = BAMRemoveDupCLI.getCLIcommand(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
+				LogItem new_li = new LogItem(command);
+				firePropertyChange("log", old_li, new_li);
+				// Execute script
+				BAMMarkDuplicates.mark(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
+				// Update log item
+				new_li.setStopTime(new Timestamp(new Date().getTime()));
+				new_li.setStatus(0);
+				old_li = new_li;
+				// Generate index on output
+				if (chckbxGenerateBaiIndex.isSelected()) {
+					// Initialize LogItem (index BAM)
+					command = BAIIndexerCLI.getCLIcommand(BAMFiles.get(x));
+					old_li = new LogItem(command);
 					firePropertyChange("log", old_li, new_li);
-					
-					// Run script
-					BAMMarkDuplicates.mark(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
-					
+					// Execute script (index)
+					BAIIndexer.generateIndex(OUTPUT);
 					// Update log item
 					new_li.setStopTime(new Timestamp(new Date().getTime()));
 					new_li.setStatus(0);
 					old_li = new_li;
-					
-					// Index output if selected
-					if(chckbxGenerateBaiIndex.isSelected()) { BAIIndexer.generateIndex(OUTPUT); }
-
-					// Update progress
-					int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
-					setProgress(percentComplete);
 				}
+				// Update progress
+				int percentComplete = (int) (((double)(x + 1) / BAMFiles.size()) * 100);
+				setProgress(percentComplete);
+				}
+				
+			firePropertyChange("log", old_li, null);
+        	setProgress(100);
+			JOptionPane.showMessageDialog(null, "Mark Duplicates Complete");
+
 			} catch (SAMException se){
 				JOptionPane.showMessageDialog(null, se.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
-			firePropertyChange("log", old_li, null);
-			setProgress(100);
-
-			JOptionPane.showMessageDialog(null, "Mark Duplicates Complete");
         	return null;
         }
         
@@ -207,9 +220,9 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -72, SpringLayout.NORTH, btnOutput);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUTPUT_PATH = FileSelection.getOutputDir(fc);
-				if(OUTPUT_PATH != null) {
-					lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -243,7 +256,7 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 		contentPane.add(chckbxRemoveDuplicates);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -255,18 +268,17 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
         task.addPropertyChangeListener(this);
         task.execute();
 	}
-	
+
 	/**
-	 * Invoked when task's progress changes, updating the progress bar.
+	 * Invoked when task's progress property changes.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
 		} else if ("log" == evt.getPropertyName()) {
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
-		
         }
 	}
 	

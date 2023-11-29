@@ -310,8 +310,8 @@ public class GeneTrack extends JFrame {
 	private int firstvalue;
 
 	/**
-	* Holds the end overlapping region of the anti strand
-	*/
+	 * Holds the end overlapping region of the anti strand
+	 */
 	private double[] antidata;
 	/**
 	 * Holds the end overlapping region of the sense strand

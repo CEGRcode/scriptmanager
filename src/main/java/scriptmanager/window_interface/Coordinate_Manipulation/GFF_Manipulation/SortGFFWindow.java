@@ -14,6 +14,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -31,6 +33,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.cli.Coordinate_Manipulation.GFF_Manipulation.SortGFFCLI;
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.CDTUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -94,7 +99,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			try {
 				if (rdbtnSortbyCenter.isSelected() && Integer.parseInt(txtMid.getText()) > CDT_SIZE) {
 					JOptionPane.showMessageDialog(null, "Sort Size is larger than CDT File!!!");
@@ -117,12 +122,29 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 					}
 
 					setProgress(0);
-					SortGFF.sortGFFbyCDT(OUTPUT, GFF_File, CDT_File, START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
+					LogItem old_li = null;
+					// Initialize LogItem
+					String command = SortGFFCLI.getCLIcommand(GFF_File, CDT_File, new File(OUTPUT), START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					// Execute Wrapper
+					SortGFF.sortGFFbyCDT(GFF_File, new File(OUTPUT), CDT_File, START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
+					firePropertyChange("log", old_li, null);
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Sort Complete");
 				}
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			return null;
 		}
@@ -329,7 +351,8 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 					String sortName = "";
 					try {
 						sortName = ExtensionFileFilter.stripExtensionIgnoreGZ(GFF_File) + "_SORT.gff";
-					} catch (IOException e1) {
+						sortName += chckbxGzipOutput.isSelected() ? ".gz" : "";
+					} catch (IOException ioe) {
 						JOptionPane.showMessageDialog(null, "Invalid GFF");
 					}
 					txtOutput.setText(sortName);
@@ -377,7 +400,7 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(btnLoadCdtFile);
 	}
 
-/**
+	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
@@ -393,10 +416,13 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 	/**
 	 * Invoked when task's progress property changes and updates the progress bar
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

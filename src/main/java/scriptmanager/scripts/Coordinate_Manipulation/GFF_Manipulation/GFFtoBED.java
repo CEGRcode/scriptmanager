@@ -16,7 +16,7 @@ import scriptmanager.util.GZipUtilities;
  * @see scriptmanager.window_interface.Coordinate_Manipulation.GFF_Manipulation.GFFtoBEDWindow
  */
 public class GFFtoBED {
-	public static void convertGFFtoBED(File out_filepath, File input, boolean gzOutput) throws IOException {
+	public static void convertGFFtoBED(File input, File out_filepath, boolean gzOutput) throws IOException {
 		// GFF: chr22 TeleGene enhancer 10000000 10001000 500 + . touch1
 		// BED: chr12 605113 605120 region_0 0 +
 

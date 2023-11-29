@@ -92,4 +92,20 @@ public class MergeHeatMapCLI implements Callable<Integer> {
 		return (r);
 	}
 
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input1 first input PNG to merge (sense)
+	 * @param input2 second input PNG to merge (anti)
+	 * @param output the merged output PNG file
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input1, File input2, File output) {
+		String command = "java -jar $SCRIPTMANAGER figure-generation merge-heatmap";
+		command += " " + input1.getAbsolutePath();
+		command += " " + input2.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		return command;
+	}
+
 }

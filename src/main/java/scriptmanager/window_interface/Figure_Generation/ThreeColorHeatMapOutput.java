@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.cli.Figure_Generation.ThreeColorHeatMapCLI;
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.ThreeColorHeatMap;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Output wrapper for running
@@ -48,7 +50,7 @@ public class ThreeColorHeatMapOutput extends JFrame {
 	protected static double MINVAL = -10;
 	protected static boolean excludeZeros = false;
 
-	protected static boolean OUTPUTSTATUS = false;
+	protected static boolean OUTPUT_STATUS = false;
 	protected static File OUT_DIR = null;
 
 	public static double COLOR_RATIO = 1;
@@ -112,49 +114,47 @@ public class ThreeColorHeatMapOutput extends JFrame {
 		excludeZeros = exZ;
 
 		OUT_DIR = out_dir;
-		OUTPUTSTATUS = outstatus;
-		System.out.println(OUTPUTSTATUS);
+		OUTPUT_STATUS = outstatus;
 	}
 
 	/**
 	 * Runs the ThreeColorHeatmap script
+	 * 
 	 * @throws IOException Invalid file or parameters
+	 * @throws OptionException thrown when thresholds are incompatible
 	 */
-	public void run() throws IOException {
-		String postRunDialog = "";
+	public void run() throws IOException, OptionException {
+		LogItem old_li = null;
 		for (int x = 0; x < SAMPLE.size(); x++) {
-			File OUTPUT = new File(SAMPLE.get(x).getName().split("\\.")[0] + "_" + scaleType + ".png");
+			// Construct output filename
+			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(SAMPLE.get(x)) + "_" + scaleType + ".png";
+			File OUT_FILEPATH = new File(NAME);
 			if (OUT_DIR != null) {
-				OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + OUTPUT);
+				OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 			}
+			// Initialize LogItem
+			String command = ThreeColorHeatMapCLI.getCLIcommand(SAMPLE.get(x), MINCOLOR, MIDCOLOR, MAXCOLOR, NANCOLOR,
+					startROW, startCOL, pixelHeight, pixelWidth, scaleType,
+					percentileMin, percentileMid, percentileMax,
+					MAXVAL, MIDVAL, MINVAL, excludeZeros, OUT_FILEPATH);
+			LogItem new_li = new LogItem(command);
+			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
-			try {
-				ThreeColorHeatMap script_object = new ThreeColorHeatMap(SAMPLE.get(x),
-						MINCOLOR, MIDCOLOR, MAXCOLOR, NANCOLOR,
-						startROW, startCOL, pixelHeight, pixelWidth, scaleType,
-						percentileMin, percentileMid, percentileMax,
-						MAXVAL, MIDVAL, MINVAL, excludeZeros, OUTPUT, OUTPUTSTATUS);
-				script_object.run();
-				// Output image/error to GUI
-				newpane.addTab(OUTPUT.getName(), new JScrollPane(script_object.getImg(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-						JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-			} catch (OptionException e) {
-				postRunDialog += e.getMessage() + "\n";
-			}
-			firePropertyChange("heat", x, x + 1);
+			ThreeColorHeatMap script_object = new ThreeColorHeatMap(SAMPLE.get(x), MINCOLOR, MIDCOLOR, MAXCOLOR, NANCOLOR,
+					startROW, startCOL, pixelHeight, pixelWidth, scaleType,
+					percentileMin, percentileMid, percentileMax,
+					MAXVAL, MIDVAL, MINVAL, excludeZeros, OUT_FILEPATH, OUTPUT_STATUS);
+			script_object.run();
+			// Update log item
+			new_li.setStopTime(new Timestamp(new Date().getTime()));
+			new_li.setStatus(0);
+			old_li = new_li;
+			// Output image
+			newpane.addTab(OUT_FILEPATH.getName(), new JScrollPane(script_object.getImg(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+			// Update progress
+			firePropertyChange("progress", x, x + 1);
 		}
-		System.out.println("Program Complete");
-		System.out.println(getTimeStamp());
-		if (!postRunDialog.equals("")) {
-			JOptionPane.showMessageDialog(null, postRunDialog);
-		}
+		// Update log at completion
+		if (OUTPUT_STATUS) { firePropertyChange("log", old_li, null); }
 	}
-
-	private static String getTimeStamp() {
-		Date date = new Date();
-		String time = new Timestamp(date.getTime()).toString();
-		return time;
-	}
-
 }
-

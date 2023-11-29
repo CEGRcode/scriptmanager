@@ -8,12 +8,14 @@ import picocli.CommandLine.Parameters;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.Callable;
-
+import java.util.stream.Collectors;
 import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.charts.HeatMap;
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.ArchTEx.CorrParameter;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
@@ -169,5 +171,60 @@ public class BAMGenomeCorrelationCLI implements Callable<Integer> {
 		else if (colorScheme.jetlike) { colorScale = HeatMap.JETLIKE; }
 		
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input      list of BAM files to correlate
+	 * @param output     file basename to write correlation matrix values and image
+	 *                   to
+	 * @param SHIFT      read shift to apply
+	 * @param BIN        bin size
+	 * @param CPU        num threads
+	 * @param READ       read encoding to use
+	 * @param COLORSCALE color scale to use
+	 * @return command line to execute with formatted inputs
+	 * @throws OptionException
+	 */
+	public static String getCLIcommand(Vector<File> input, File output, int SHIFT, int BIN, int CPU, int READ, short COLORSCALE) throws OptionException {
+		String command = "java -jar $SCRIPTMANAGER bam-statistics bam-correlation";
+		command += " -o " + output;
+		command += " -t " + SHIFT;
+		command += " -b " + BIN;
+		command += " --cpu " + CPU;
+
+		switch (READ) {
+			case 0:
+				command += " -1";
+				break;
+			case 1:
+				command += " -2";
+				break;
+			case 2:
+				command += " -a";
+				break;
+			case 3:
+				command += " -m";
+				break;
+			default:
+				throw new OptionException("invalid strand value");
+		}
+
+		switch (COLORSCALE) {
+			case HeatMap.BLUEWHITERED:
+				command += " --classic";
+				break;
+			case HeatMap.JETLIKE:
+				command += " --jet-like";
+				break;
+			default:
+				throw new OptionException("Unexpected colorscale value");
+		}
+
+		for (int x = 0; x<input.size(); x++) {
+			command += " " + input.get(x).getAbsolutePath();
+		}
+		return command;
 	}
 }

@@ -2,7 +2,7 @@ package scriptmanager.cli.Peak_Calling;
 
 import picocli.CommandLine.Command;
 import java.util.concurrent.Callable;
-
+import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
@@ -47,5 +47,23 @@ public class GeneTrackCLI implements Callable<Integer> {
 		//validate input here
 		//append messages to the user to `r`
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param id
+	 * @param s
+	 * @param e
+	 * @param f
+	 * @param u
+	 * @param d
+	 * @param path
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File id, int s, int e, int f, int u, int d, String path) {
+		String command = "# (Not yet implemented) java -jar $SCRIPTMANAGER peak-calling gene-track";
+		/* TODO: implement CLI */
+		return(command);
 	}
 }

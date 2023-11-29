@@ -7,7 +7,6 @@ import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
@@ -27,24 +26,21 @@ public class SEStats {
 	 * Outputs BAM Header including alignment statistics and parameters given any
 	 * indexed (BAI) BAM File
 	 * 
-	 * @param out_filepath File path to output text file to
-	 * @param bamFile      input BAM file (indexed)
-	 * @param ps           Output print stream
+	 * @param bamFile       the BAM file to get statistics on (from header)
+	 * @param output        text file to write output to (if OUTPUT_STATUS=true)
+	 * @param OUTPUT_STATUS whether or not to write output info
+	 * @param ps            stream for GUI output display
+	 * @throws IOException
 	 */
-	public static void getSEStats( File out_filepath, File bamFile, PrintStream ps ) {
+	public static void getSEStats(File bamFile, File output, boolean OUTPUT_STATUS, PrintStream ps ) throws IOException {
 		
 		final SamReaderFactory factory = SamReaderFactory.makeDefault().enable(SamReaderFactory.Option.INCLUDE_SOURCE_IN_RECORDS, SamReaderFactory.Option.VALIDATE_CRC_CHECKSUMS).validationStringency(ValidationStringency.SILENT);
 		
 		//Check and set output files (STDOUT if not specified)
 		PrintStream OUT = null;
-		if(out_filepath != null) {
-			try {
-				OUT = new PrintStream(out_filepath);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else{ OUT = System.out; }
+		if (OUTPUT_STATUS) {
+			OUT = new PrintStream(output);
+		}
 		
 		//Print TimeStamp
 		String time = getTimeStamp();
@@ -87,32 +83,28 @@ public class SEStats {
 			}
 			
 			printBoth( ps, OUT, "" );
-			
-			try {
-				reader.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			// Close streams
+			reader.close();
 			bai.close();
 		
 		//Print message reminder to index BAM files
 		} else { printBoth( ps, OUT, "BAI Index File does not exist for: " + bamFile.getName() + "\n" ); }
-		
-		if(out_filepath != null) OUT.close();
+
+		if (OUTPUT_STATUS) { OUT.close(); }
 		//BAMIndexMetaData.printIndexStats(bamFiles.get(x))
 	}	
 	
 	/**
-	*Helper method to de-clutter method above:
-	*Prints output to both pop-up window (for GUI) and output file (GUI and CLI)
-	*@param p PrintStream to GUI output
-	*@param out PrintStream to file
-	*@param line Line to print
-	*/
+	 * Helper method to print output to both pop-up window (for GUI) and output file
+	 * (GUI and CLI)
+	 * 
+	 * @param p    stream wrapper to GUI output window
+	 * @param out  stream to output file (used by both GUI and CLI)
+	 * @param line string to print to both streams
+	 */
 	private static void printBoth( PrintStream p, PrintStream out, String line ){
-		out.println( line );
-		if( p != null ){ p.println( line ); }
+		if (p != null) { p.println( line ); }
+		if (out != null) { out.println( line ); }
 	}
 	
 	/**
@@ -120,7 +112,7 @@ public class SEStats {
 	 * @return Timestamp The time at which the BAM file was analyzed
 	 */
 	private static String getTimeStamp() {
-		Date date= new Date();
+		Date date = new Date();
 		String time = new Timestamp(date.getTime()).toString();
 		return time;
 	}

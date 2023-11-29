@@ -115,4 +115,22 @@ public class FilterforPIPseqCLI implements Callable<Integer> {
 
 		return (r);
 	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param BAM    the BAM file to filter
+	 * @param GENOME the genomic FASTA reference file (should match BAM header)
+	 * @param OUTPUT the output BAM file
+	 * @param txtSeq the IUPAC string to filter by
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File BAM, File GENOME, File OUTPUT, String txtSeq) {
+		String command = "java -jar $SCRIPTMANAGER bam-manipulation filter-pip-seq";
+		command += " " + GENOME.getAbsolutePath();
+		command += " " + BAM.getAbsolutePath();
+		command += " -o " + OUTPUT.getAbsolutePath();
+		command += " -f " + txtSeq;
+		return command;
+	}
 }

@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 
 /**
@@ -68,11 +72,20 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
-		
+		// Initialize LogItem
+		String command = BEDPeakAligntoRefCLI.getCLIcommand(REF, PEAK, OUTFILE);
+		LogItem li = new LogItem(command);
+		firePropertyChange("log", null, li);
+		// Set-up display stream
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
+		// Execute script
 		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUTFILE, PS, OUTPUT_GZIP);
 		script_obj.run();
-		
+		// Update log item
+		li.setStopTime(new Timestamp(new Date().getTime()));
+		li.setStatus(0);
+		firePropertyChange("log", li, null);
+		// wait before disposing
 		Thread.sleep(2000);
 		dispose();
 	}

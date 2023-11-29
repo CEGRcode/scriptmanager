@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
-import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
 
 /**
@@ -53,7 +52,7 @@ public class TileGenomeCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		TileGenome.execute(genomeName, window, formatIsBed, output, gzOutput);
+		TileGenome.execute(genomeName, output, formatIsBed, window, gzOutput);
 		
 		System.err.println( "Genomic Tiling Complete." );
 		return(0);
@@ -62,13 +61,13 @@ public class TileGenomeCLI implements Callable<Integer> {
 	private String validateInput() throws IOException {
 		String r = "";
 		
-		String ext = "gff";
-		if(formatIsBed){ ext = "bed"; }
 		//set default output filename
-		if(output==null){
-			output = new File(genomeName + "_" + window + "bp." + ext);
+		if (output==null) {
+			output = new File(genomeName + "_" + window + "bp"
+					+ (formatIsBed ? ".bed" : ".gff")
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
-		}else{
+		} else {
 			//check directory
 			if(output.getParent()==null){
 	// 			System.err.println("default to current directory");
@@ -83,5 +82,25 @@ public class TileGenomeCLI implements Callable<Integer> {
 		}
 		
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param genomeName  the genome build to tile coordinates from
+	 * @param output      the text file of the tiled coordinates
+	 * @param formatIsBed the format of the coordinate output (BED or GFF)
+	 * @param window      the size of the tiles sampled
+	 * @param gzOutput    whether or not to gzip output
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(String genomeName, File output, boolean formatIsBed, int window, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER peak-analysis tile-genome";
+		command += " " + genomeName;
+		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " -z " : "";
+		command += formatIsBed ? "" : " --gff";
+		command += " -w " + window;
+		return command;
 	}
 }

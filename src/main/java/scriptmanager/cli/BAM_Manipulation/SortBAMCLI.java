@@ -5,6 +5,10 @@ import picocli.CommandLine.Command;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import htsjdk.samtools.SAMFileHeader;
+
+import java.io.File;
+
 import scriptmanager.objects.ToolDescriptions;
 
 /**
@@ -32,5 +36,20 @@ public class SortBAMCLI implements Callable<Integer> {
 							"\t'samtools sort -o <output.bam> <input.bam>'");
 		System.exit(1);
 		return(1);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input  the BAM file to be sorted (corresponds to INPUT)
+	 * @param output the file to write the sorted BAM to (corresponds to OUTPUT)
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output) {
+		String command = "java -jar $PICARD SortSam";
+		command += " INPUT=" + input.getAbsolutePath();
+		command += " OUTPUT=" + output.getAbsolutePath();
+		command += " SORT_ORDER=" + SAMFileHeader.SortOrder.coordinate;
+		return(command);
 	}
 }

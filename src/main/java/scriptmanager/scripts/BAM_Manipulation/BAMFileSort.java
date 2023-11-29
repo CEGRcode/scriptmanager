@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class BAMFileSort {
 
     /**
-     * Creates a new BAMFileSort object (unnecessary because class conly contains static methods) 
+     * Creates a new BAMFileSort object (unnecessary because class only contains static methods) 
      */
     public BAMFileSort(){}
 

@@ -2,7 +2,7 @@ package scriptmanager.objects;
 
 /**
  * This class acts as a central and shared storage location for each tool's
- * description for consistency between CLI help message and the GUI-displayed
+ * description for consistentcy betweeen CLI help message and the GUI-displayed
  * text.
  * 
  * @author Olivia Lang
@@ -23,6 +23,11 @@ public class ToolDescriptions {
 	 * The version string for the whole tool
 	 */
 	public static final String VERSION = "0.14-dev";
+	
+	/**
+	 * Message to user to direct user to open an issue ticket in case of unexpected exception. Print alongside exception's stack trace/message information
+	 */
+	public static final String UNEXPECTED_EXCEPTION_MESSAGE = "Unexpected exception encountered. Please copy the stack trace and open a Github issue ticket if a ticket does not already exist for your error.";
 
 	// BAM Statistics
 	public static final String se_stat_description = "Output BAM Header including alignment statistics and parameters given any indexed (BAI) BAM File.";

@@ -74,7 +74,9 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 		//no check ext
 		//set default output filename
 		if(output==null){
-			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(matrixFile) + "_SCALE." + ExtensionFileFilter.getExtensionIgnoreGZ(matrixFile)); 
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(matrixFile) + "_SCALE."
+					+ ExtensionFileFilter.getExtensionIgnoreGZ(matrixFile)
+					+ (gzOutput ? ".gz" : ""));
 		//check output filename is valid
 		}else if( output.isDirectory() ){
 			r += "(!)Must indicate file (not a directory) for your output.";
@@ -93,5 +95,25 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 		if(startCOL<0){ r += "(!)Column start must not be less than zero\n"; }
 		
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input         the tab-delimited matrix file to scale
+	 * @param output        the output file for the scaled matrix
+	 * @param scalingFactor the factor to scale the matrix by
+	 * @param rowStart      the matrix row start
+	 * @param colStart      the matrix col start
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output, double scalingFactor, int rowStart, int colStart) {
+		String command = "java -jar $SCRIPTMANAGER read-analysis scale-matrix";
+		command += " " + input.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		command += " -s " + scalingFactor;
+		command += " -r " + rowStart;
+		command += " -l " + colStart;
+		return command;
 	}
 }

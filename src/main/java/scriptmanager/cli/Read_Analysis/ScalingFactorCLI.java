@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
@@ -32,7 +33,7 @@ public class ScalingFactorCLI implements Callable<Integer> {
 	private File bamFile;
 	
 	@Option(names = {"-o", "--output"}, description = "Specify basename for output files (default = <bamFilename>_ScalingFactors.out")
-	private String outputBasename = null;
+	private File outputBasename = null;
 	@Option(names = {"-f", "--blacklist"}, description = "specify blacklist file to filter by")
 	private File blacklistFilter = null;
 	@Option(names = {"-c", "--control"}, description = "control BAM file")
@@ -72,7 +73,7 @@ public class ScalingFactorCLI implements Callable<Integer> {
 		}
 		System.err.println( "OUTBASE: " + outputBasename );
 		
-		ScalingFactor script_obj = new ScalingFactor(bamFile, blacklistFilter, controlBAM, outputBasename, true, scaleType, window, minFrac);
+		ScalingFactor script_obj = new ScalingFactor(bamFile, blacklistFilter, controlBAM, outputBasename, scaleType, window, minFrac, true);
 		script_obj.run();
 		
 		System.err.println("Scaling Factor Calculated.");
@@ -109,15 +110,15 @@ public class ScalingFactorCLI implements Callable<Integer> {
 		}
 		//set default output filename
 		if(outputBasename==null){
-			outputBasename = ExtensionFileFilter.stripExtension(bamFile);
+			outputBasename = new File(ExtensionFileFilter.stripExtension(bamFile));
 		//check output filename is valid
-		}else{
-			File tempOut = new File(outputBasename);
+		} else {
+			//no check ext
 			//check directory
-			if(tempOut.getParent()==null){
+			if(outputBasename.getParent()==null){
 // 				System.err.println("default to current directory");
-			} else if(!new File(tempOut.getParent()).exists()){
-				r += "(!)Check output directory exists: " + tempOut.getParent() + "\n";
+			} else if(!new File(outputBasename.getParent()).exists()){
+				r += "(!)Check output directory exists: " + outputBasename.getParent() + "\n";
 			}
 		}
 		
@@ -140,5 +141,45 @@ public class ScalingFactorCLI implements Callable<Integer> {
 		}
 		
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param bamFile the BAM file to calculate a scaling factor for
+	 * @param bl      BED formatted blacklist of regions to exclude from the
+	 *                calculation
+	 * @param c       control BAM file (used by NCIS-style scaling methods)
+	 * @param obase   output basename for storing scaling factor and other reference
+	 *                data
+	 * @param scale   scaling method
+	 * @param win     window size (used by NCIS-style scaling methods)
+	 * @param min     minimum fraction (used by NCIS-style scaling methods)
+	 * @return
+	 * @throws OptionException
+	 */
+	public static String getCLIcommand(File bamFile, File bl, File c, File obase, int scale, int win, double min) throws OptionException {
+		String command = "java -jar $SCRIPTMANAGER read-analysis scaling-factor";
+		command += " -o " + obase.getAbsolutePath();
+		command += bl==null ? "" : " -f " + bl;
+		switch (scale) {
+			case ScalingFactor.TOTAL_TAG:
+				command += " --total-tag";
+				break;
+			case ScalingFactor.NCIS:
+				command += " --ncis";
+				command += " -c " + c;
+				break;
+			case ScalingFactor.NCIS_W_TOTAL_TAG:
+				command += " --both";
+				command += " -c " + c;
+				break;
+			default:
+				throw new OptionException("invalid scaling type value");
+		}
+		command += " -w " + win;
+		command += " -m " + min;
+		command += " " + bamFile;
+		return(command);
 	}
 }

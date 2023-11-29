@@ -74,8 +74,8 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 		}
 		// set default output filename
 		if (output == null) {
-			String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile) + "_RAND.fa";
-			output = new File(NAME);
+			output = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(fastaFile) + "_RAND.fa"
+					+ (gzOutput ? ".gz" : ""));
 			// check output filename is valid
 		} else {
 			// check directory
@@ -87,5 +87,20 @@ public class RandomizeFASTACLI implements Callable<Integer> {
 		}
 
 		return (r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input  filepath to FASTA-formatted sequences to randomize
+	 * @param output filepath to write randomized sequences to
+	 * @param seed   set a random seed
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output, Integer seed) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis randomize-fasta";
+		command += " -o " + output.getAbsolutePath();
+		command += " " + input.getAbsolutePath();
+		return (command);
 	}
 }

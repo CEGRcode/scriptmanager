@@ -21,23 +21,25 @@ public class RandomizeFASTA {
 	/**
 	 * Static method to call for randomizing FASTA sequences.
 	 * 
-	 * @param FASTA filepath to FASTA-formatted sequences to randomize
-	 * @param RANDOUT filepath to write randomized sequences to
-	 * @param seed set a random seed
+	 * @param input  filepath to FASTA-formatted sequences to randomize
+	 * @param output filepath to write randomized sequences to
+	 * @param seed   set a random seed
 	 * @param gzOutput Whether to output a compressed file
 	 * @return name of output filename
 	 * @throws IOException Invalid file or parameters
 	 */
-	public static File randomizeFASTA(File FASTA, File RANDOUT, Integer seed, boolean gzOutput) throws IOException {
+	public static File randomizeFASTA(File input, File output, Integer seed, boolean gzOutput) throws IOException {
+		// Set seed if specified
 		Random randnum = new Random();
-		if( seed != null) {
+		if (seed != null) {
 			System.err.println("Set Seed=" + seed);
 			randnum.setSeed(seed);
 		}
-		PrintStream OUT = GZipUtilities.makePrintStream(RANDOUT, gzOutput);
+		// Initialize output stream
+		PrintStream OUT = GZipUtilities.makePrintStream(output, gzOutput);
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader
-		BufferedReader br = GZipUtilities.makeReader(FASTA);
+		BufferedReader br = GZipUtilities.makeReader(input);
 		String line;
 		while ((line = br.readLine()) != null) {
 			String HEADER = line;
@@ -62,7 +64,7 @@ public class RandomizeFASTA {
 
 		OUT.close();
 		br.close();
-		return RANDOUT;
+		return output;
 	}
-
+	
 }

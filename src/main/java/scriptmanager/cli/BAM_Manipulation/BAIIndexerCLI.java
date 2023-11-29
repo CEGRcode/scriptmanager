@@ -3,6 +3,7 @@ package scriptmanager.cli.BAM_Manipulation;
 import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
+import java.io.File;
 
 import scriptmanager.objects.ToolDescriptions;
 
@@ -37,4 +38,18 @@ public class BAIIndexerCLI implements Callable<Integer> {
 		System.exit(1);
 		return(1);
 	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input the BAM file to index
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input) {
+		String command = "java -jar $PICARD BuildBamIndex";
+		command += " INPUT=" + input.getAbsolutePath();
+		command += " OUTPUT=" + input.getAbsolutePath() + ".bai";
+		return command;
+	}
+
 }

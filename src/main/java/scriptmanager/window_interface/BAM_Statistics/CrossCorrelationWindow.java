@@ -38,6 +38,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.ArchTEx.CorrParameter;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -120,23 +121,30 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 					}
 					System.out.println("Parameters Loaded.\n");
 					// Initialize output window and run
-					CrossCorrelationOutput script_obj = new CrossCorrelationOutput(OUT_DIR, BAMFiles, param, chckbxOutputStatistics.isSelected());
-					script_obj.addPropertyChangeListener("bam", new PropertyChangeListener() {
+					CrossCorrelationOutput output_obj = new CrossCorrelationOutput(BAMFiles, OUT_DIR, chckbxOutputStatistics.isSelected(), param);
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
 							setProgress(percentComplete);
 						}
 					});
-					script_obj.setVisible(true);
-					script_obj.run();
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;
@@ -414,6 +422,8 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

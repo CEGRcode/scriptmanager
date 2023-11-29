@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -33,6 +34,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -88,30 +90,42 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 				} else if (expList.size() < 1) {
 					JOptionPane.showMessageDialog(null, "Must load at least one BAM file");
 				} else {
-					PEStatOutput stat = new PEStatOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), MIN, MAX);
-					stat.addPropertyChangeListener("bam", new PropertyChangeListener() {
+					PEStatOutput output_obj = new PEStatOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), MIN, MAX);
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
 							setProgress(percentComplete);
 						}
 					});
-					stat.setVisible(true);
-					stat.run();
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
-			} catch(NumberFormatException nfe){
+			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
-			} catch (IOException e) {
+			} catch (FileNotFoundException fnfe) {
+				fnfe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Could not find file: " + fnfe.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
-        	setProgress(100);
-        	return null;
-        }
+			setProgress(100);
+			return null;
+		}
 
-        public void done() {
-    		massXable(contentPane, true);
-            setCursor(null); //turn off the wait cursor
-        }
+		public void done() {
+			massXable(contentPane, true);
+			setCursor(null); //turn off the wait cursor
+		}
 	}
 
 	/**
@@ -169,12 +183,15 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 					expList.remove(listExp.getSelectedIndex());
 				}
 			}
-		});		
+		});
 		contentPane.add(btnRemoveBam);
 		
 		btnRun = new JButton("Run");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnRun, 171, SpringLayout.WEST, contentPane);
 		contentPane.add(btnRun);
+		
+		btnRun.addActionListener(this);
+		btnRun.setActionCommand("start");
 		
 		JLabel lblHistogramRange = new JLabel("Histogram Range:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblHistogramRange, 201, SpringLayout.NORTH, contentPane);
@@ -231,8 +248,6 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		      }
 		    });
 		
-		btnRun.setActionCommand("start");
-		
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 35, SpringLayout.SOUTH, txtMin);
 		btnOutputDirectory.addActionListener(new ActionListener() {
@@ -268,7 +283,6 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, chckbxDup, -8, SpringLayout.NORTH, chckbxOutputStatistics);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxDup, 0, SpringLayout.WEST, scrollPane);
 		contentPane.add(chckbxDup);
-		btnRun.addActionListener(this);
 	}
 	
 	/**
@@ -283,18 +297,20 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
         task.addPropertyChangeListener(this);
         task.execute();
 	}
-	
+
 	/**
-     * Invoked when task's progress property changes.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
-    }
-	
-    /**
+	 * Invoked when task's progress property changes.
+	 */
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
+	}
+
+	/**
 	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive
 	 * @param status If the window should be interactive

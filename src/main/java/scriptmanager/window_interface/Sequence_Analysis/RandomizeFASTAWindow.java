@@ -13,7 +13,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -35,6 +37,9 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 import scriptmanager.util.ExtensionFileFilter;
+import scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI;
+import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
 
 /**
@@ -78,40 +83,55 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException, InterruptedException {
-			if (FASTAFiles.size() < 1) {
-				JOptionPane.showMessageDialog(null, "No FASTA Files Loaded!!!");
-			} else {
-				setProgress(0);
+		public Void doInBackground() {
+			try {
+				if (FASTAFiles.size() < 1) {
+					JOptionPane.showMessageDialog(null, "No FASTA Files Loaded!!!");
+				} else {
+					setProgress(0);
+					LogItem old_li = null;
+					for (int x = 0; x < FASTAFiles.size(); x++) {
 
-				try {
-				boolean GZIP = chckbxGzipOutput.isSelected();
-				for (int x = 0; x < FASTAFiles.size(); x++) {
-					String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(FASTAFiles.get(x)) + "_RAND.fa";
-					Integer SEED = null;
-					if(chckbxSetSeed.isSelected()) {
-						SEED = Integer.valueOf(txtSeed.getText());
-						OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(FASTAFiles.get(x)) + "_s" + SEED + "_RAND.fa";
+						String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(FASTAFiles.get(x)) + "_RAND.fa";
+						Integer SEED = null;
+						if(chckbxSetSeed.isSelected()) {
+							SEED = Integer.valueOf(txtSeed.getText());
+							OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(FASTAFiles.get(x)) + "_s" + SEED + "_RAND.fa";
+						}
+						OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
+						if (OUT_DIR != null) {
+							OUTPUT = OUT_DIR + File.separator + OUTPUT;
+						}
+						// Initialize LogItem
+						String command = RandomizeFASTACLI.getCLIcommand(FASTAFiles.get(x), new File(OUTPUT), SEED);
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
+
+						// Execute script
+						RandomizeFASTA.randomizeFASTA(FASTAFiles.get(x), new File(OUTPUT), SEED, chckbxGzipOutput.isSelected());
+						// Update LogItem
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
+						firePropertyChange("log", old_li, null);
+
+						// Update progress
+						int percentComplete = (int) (((double) (x + 1) / FASTAFiles.size()) * 100);
+						setProgress(percentComplete);
 					}
-					if(GZIP){
-						OUTPUT += ".gz";
-					}
-
-					if (OUT_DIR != null) {
-						OUTPUT = OUT_DIR + File.separator + OUTPUT;
-					}
-
-					RandomizeFASTA.randomizeFASTA(FASTAFiles.get(x), new File(OUTPUT), SEED, GZIP);
-
-					int percentComplete = (int) (((double) (x + 1) / FASTAFiles.size()) * 100);
-					setProgress(percentComplete);
+					setProgress(100);
+					JOptionPane.showMessageDialog(null, "Randomization Complete");
 				}
-				setProgress(100);
-				JOptionPane.showMessageDialog(null, "Randomization Complete");
-				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(null, "Invalid Seed!!!");
-				}
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null, "Invalid Seed!!!");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -268,10 +288,13 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 

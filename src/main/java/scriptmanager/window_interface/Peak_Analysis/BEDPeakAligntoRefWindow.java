@@ -28,6 +28,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -51,7 +52,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	final DefaultListModel<String> refList;
 	ArrayList<File> PeakFiles = new ArrayList<File>();
 	ArrayList<File> RefFiles = new ArrayList<File>();
-	private File OUTPUT_PATH = null;
+	private File OUT_DIR = null;
 	
 	private JButton btnLoadPeakBed;
 	private JButton btnRemoveBedFile;
@@ -74,33 +75,45 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	 */
 	class Task extends SwingWorker<Void, Void> {
         @Override
-        public Void doInBackground() throws IOException, InterruptedException {
+        public Void doInBackground() {
         	try {
         		if(PeakFiles.size() < 1 || RefFiles.size() < 1) {
         			JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
         		} else {
         			setProgress(0);
-        			BEDPeakAligntoRefOutput align;
         			int counter = 0;
-
-    				for(int r = 0; r < RefFiles.size(); r++)
-    				{
-    					for(int p=0; p < PeakFiles.size(); p++)
-    					{
-							align = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUTPUT_PATH, chckbxGzipOutput.isSelected());	
-							align.setVisible(true);
-							align.run();
+					for (int r = 0; r < RefFiles.size(); r++) {
+						for (int p=0; p < PeakFiles.size(); p++) {
+							BEDPeakAligntoRefOutput output_obj = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUT_DIR, chckbxGzipOutput.isSelected());
+							output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+								public void propertyChange(PropertyChangeEvent evt) {
+									firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+								}
+							});
+							output_obj.setVisible(true);
+							output_obj.run();
+							// Update progress
 							counter++;
-						int percentComplete = (int)(((double)(counter) / (PeakFiles.size()*RefFiles.size())) * 100);
-					    setProgress(percentComplete);	
-    					}	
-    			}
-    				JOptionPane.showMessageDialog(null, "Alignment Complete");
-        		}
-        	} catch(NumberFormatException nfe){
+							int percentComplete = (int) (((double) (counter) / (PeakFiles.size() * RefFiles.size())) * 100);
+							setProgress(percentComplete);
+						}
+					}
+					setProgress(100);
+					JOptionPane.showMessageDialog(null, "Alignment Complete");
+				}
+			} catch (NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
+			} catch (InterruptedException ie) {
+				JOptionPane.showMessageDialog(null, ie.getMessage());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
-        	return null;
+			setProgress(100);
+			return null;
         }
         
         public void done() {
@@ -217,13 +230,13 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -175, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, scrollPane_Ref);
 		btnOutputDirectory.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
-    			}
-        	}
-        });
+			public void actionPerformed(ActionEvent e) {
+				OUT_DIR = FileSelection.getOutputDir(fc);
+				if(OUT_DIR != null) {
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				}
+			}
+		});
 		contentPane.add(btnOutputDirectory);
 		
 		lblCurrentOutput = new JLabel("Current Output:");
@@ -260,30 +273,33 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 31, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 	}
-	
+
 	/**
 	 * Runs when a task is invoked, making window non-interactive and executing the task.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
-    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
 	}
-	
+
 	/**
-     * Invoked when task's progress property changes and updates progress bar.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-        }
-    }
-	
+	 * Invoked when task's progress property changes and updates progress bar.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+		}
+	}
+
 	/**
 	 * Makes the content pane non-interactive If the window should be interactive data
 	 * @param con Content pane to make non-interactive

@@ -55,7 +55,7 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		BEDtoGFF.convertBEDtoGFF(output, bedFile, gzOutput);
+		BEDtoGFF.convertBEDtoGFF(bedFile, output, gzOutput);
 		
 		System.err.println("Conversion Complete");
 		return(0);
@@ -92,16 +92,16 @@ public class BEDtoGFFCLI implements Callable<Integer> {
 
 	/**
 	 * Returns the CLI command for replicating results with Script Manager
-	 * @param OUTPUT Output GFF file
 	 * @param BED Bed file to be converted
-	 * @param gzOutput If output should be zipped
+	 * @param OUTPUT Output GFF file
+	 * @param gzOutput   whether or not to gzip output
 	 * @return The CLI command for replicating results
 	 */
-	public static String getCLIcommand(File OUTPUT, File BED, boolean gzOutput) {
+	public static String getCLIcommand(File BED, File OUTPUT, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation bed-to-gff";
 		command += " " + BED.getAbsolutePath();
-		command += gzOutput ? " -z" : "";
 		command += " -o " + OUTPUT;
+		command += gzOutput ? " -z " : "";
 		return(command);
 	}
 }

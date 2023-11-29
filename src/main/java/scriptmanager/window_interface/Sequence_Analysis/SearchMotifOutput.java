@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 import scriptmanager.objects.CustomOutputStream;
+import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 import scriptmanager.util.ExtensionFileFilter;
 
@@ -35,7 +39,7 @@ public class SearchMotifOutput extends JFrame {
 
 	/**
 	 * Initialize a scrollable JTextArea window to display progress and save inputs
-	 * for calling the script
+	 * for calling the script.
 	 * 
 	 * @param input
 	 * @param mot
@@ -74,18 +78,25 @@ public class SearchMotifOutput extends JFrame {
 	 */
 	public void run() throws IOException, InterruptedException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
+		// Construct output filename
 		String BASENAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"
 				+ ExtensionFileFilter.stripExtensionIgnoreGZ(INPUTFILE) + ".bed";
-		if (gzOutput){
-			BASENAME += ".gz";
-		}
+		BASENAME += gzOutput ? ".gz" : "";
 		if (OUT_DIR != null) {
 			BASENAME = OUT_DIR.getCanonicalPath() + File.separator + BASENAME;
 		}
-
+		// Initialize LogItem
+		String command = SearchMotifCLI.getCLIcommand(INPUTFILE, new File(BASENAME), motif, ALLOWED_MISMATCH, gzOutput);
+		LogItem li = new LogItem(command);
+		firePropertyChange("log", null, li);
+		// Execute script
 		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS, gzOutput);
 		script_obj.run();
-
+		// Update log item
+		li.setStopTime(new Timestamp(new Date().getTime()));
+		li.setStatus(0);
+		firePropertyChange("log", li, null);
+		// Sleep and dispose
 		Thread.sleep(2000);
 		dispose();
 	}
