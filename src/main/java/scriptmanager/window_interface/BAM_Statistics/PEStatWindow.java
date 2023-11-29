@@ -65,7 +65,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 	
 	final DefaultListModel<String> expList;
 	Vector<File> BAMFiles = new Vector<File>();
-	private File OUTPUT_PATH = new File(System.getProperty("user.dir"));
+	private File OUT_DIR = new File(System.getProperty("user.dir"));
 	
 	JProgressBar progressBar;
 	/**
@@ -90,7 +90,7 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 				} else if (expList.size() < 1) {
 					JOptionPane.showMessageDialog(null, "Must load at least one BAM file");
 				} else {
-					PEStatOutput output_obj = new PEStatOutput(BAMFiles, OUTPUT_PATH, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), MIN, MAX);
+					PEStatOutput output_obj = new PEStatOutput(BAMFiles, OUT_DIR, chckbxOutputStatistics.isSelected(), chckbxDup.isSelected(), MIN, MAX);
 					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
@@ -251,13 +251,14 @@ public class PEStatWindow extends JFrame implements ActionListener, PropertyChan
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 35, SpringLayout.SOUTH, txtMin);
 		btnOutputDirectory.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-    			OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
-    			}
-        	}
-        });
+			public void actionPerformed(ActionEvent e) {
+				File temp = FileSelection.getOutputDir(fc);
+				if(temp != null) {
+					OUT_DIR = temp;
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				}
+			}
+		});
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 1, SpringLayout.NORTH, btnOutputDirectory);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 150, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -150, SpringLayout.EAST, contentPane);
