@@ -87,7 +87,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JButton btnRemoveBlacklistfilter;
 	private JComboBox<String> cbox_ReadAspect;
 	private JComboBox<String> cbox_ReadOutput;
-	private JToggleButton tglSeperate;
+	private JToggleButton tglSeparate;
 	private JToggleButton tglCombined;
 
 	private JComboBox<String> cbox_Transform;
@@ -171,7 +171,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					// Load up parameters for the pileup into single object
 					PileupParameters param = new PileupParameters();
 					ArrayList<Color> colors = new ArrayList<Color>();
-					if (tglSeperate.isSelected()) {
+					if (tglSeparate.isSelected()) {
 						param.setStrand(0);
 						colors.add(btnSenseColor.getForeground());
 						colors.add(btnAntiColor.getForeground());
@@ -582,14 +582,14 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		// Stand Options
 		int SCALE = 170;
-		tglSeperate = new JToggleButton("Seperate");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, tglSeperate, 10, SpringLayout.SOUTH, pnlFilterReads);
-		sl_contentPane.putConstraint(SpringLayout.WEST, tglSeperate, 10, SpringLayout.EAST, scrollPane_BED);
-		sl_contentPane.putConstraint(SpringLayout.EAST, tglSeperate, 10 + SCALE*2, SpringLayout.EAST, scrollPane_BED);
-		tglSeperate.setSelected(true);
-		tglSeperate.addItemListener(new ItemListener() {
+		tglSeparate = new JToggleButton("Separate");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, tglSeparate, 10, SpringLayout.SOUTH, pnlFilterReads);
+		sl_contentPane.putConstraint(SpringLayout.WEST, tglSeparate, 10, SpringLayout.EAST, scrollPane_BED);
+		sl_contentPane.putConstraint(SpringLayout.EAST, tglSeparate, 10 + SCALE*2, SpringLayout.EAST, scrollPane_BED);
+		tglSeparate.setSelected(true);
+		tglSeparate.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if (tglSeperate.isSelected()) {
+				if (tglSeparate.isSelected()) {
 					btnSenseColor.setEnabled(true);
 					btnAntiColor.setEnabled(true);
 					btnCombinedColor.setEnabled(false);
@@ -601,12 +601,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				}
 			}
 		});
-		contentPane.add(tglSeperate);
+		contentPane.add(tglSeparate);
 
 		tglCombined = new JToggleButton("Combined");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, tglCombined, 0, SpringLayout.NORTH, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, tglCombined, 0, SpringLayout.EAST, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.EAST, tglCombined, SCALE, SpringLayout.EAST, tglSeperate);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, tglCombined, 0, SpringLayout.NORTH, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, tglCombined, 0, SpringLayout.EAST, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.EAST, tglCombined, SCALE, SpringLayout.EAST, tglSeparate);
 		tglCombined.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (tglCombined.isSelected()) {
@@ -623,13 +623,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(tglCombined);
 
 		ButtonGroup toggleStrand = new ButtonGroup();
-		toggleStrand.add(tglSeperate);
+		toggleStrand.add(tglSeparate);
 		toggleStrand.add(tglCombined);
 
 		btnSenseColor = new JButton("Sense Color");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnSenseColor, 0, SpringLayout.SOUTH, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnSenseColor, 0, SpringLayout.WEST, tglSeperate);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnSenseColor, SCALE, SpringLayout.WEST, tglSeperate);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnSenseColor, 0, SpringLayout.SOUTH, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnSenseColor, 0, SpringLayout.WEST, tglSeparate);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnSenseColor, SCALE, SpringLayout.WEST, tglSeparate);
 		btnSenseColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Color newColor = JColorChooser.showDialog(btnSenseColor, "Select an Output Color", btnSenseColor.getForeground());
@@ -646,7 +646,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		btnAntiColor = new JButton("Anti Color");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnAntiColor, 0, SpringLayout.NORTH, btnSenseColor);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnAntiColor, 0, SpringLayout.EAST, btnSenseColor);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnAntiColor, 0, SpringLayout.EAST, tglSeperate);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnAntiColor, 0, SpringLayout.EAST, tglSeparate);
 		btnAntiColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Color newColor = JColorChooser.showDialog(btnAntiColor, "Select an Output Color", btnAntiColor.getForeground());
@@ -1016,7 +1016,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	 */
 	public void allowReadChoice(boolean activate) {
 		cbox_ReadOutput.setEnabled(activate);
-		tglSeperate.setEnabled(activate);
+		tglSeparate.setEnabled(activate);
 	}
 
 	/**
@@ -1105,7 +1105,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			if (!chckbxFilterByMax.isSelected()) {
 				txtMax.setEnabled(false);
 			}
-			if (tglSeperate.isSelected()) {
+			if (tglSeparate.isSelected()) {
 				btnSenseColor.setEnabled(true);
 				btnAntiColor.setEnabled(true);
 				btnCombinedColor.setEnabled(false);
