@@ -34,6 +34,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
 import scriptmanager.cli.BAM_Manipulation.FilterforPIPseqCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
@@ -100,7 +101,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 					String command = FilterforPIPseqCLI.getCLIcommand(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
 					LogItem new_li = new LogItem(command);
 					firePropertyChange("log", old_li, new_li);
-					// Execute Wrapper
+					// Execute script
 					FilterforPIPseqOutput output_obj = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
 					output_obj.setVisible(true);
 					output_obj.run();
@@ -110,7 +111,16 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 					old_li = new_li;
 					// Generate BAI on output if selected
 					if (chckbxGenerateBaiIndex.isSelected()) {
+						// Initialize LogItem (index BAM)
+						command = BAIIndexerCLI.getCLIcommand(BAMFiles.get(x));
+						old_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
+						// Execute script (index)
 						BAIIndexer.generateIndex(OUTPUT);
+						// Update log item
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
 					}
 					// Update progress
 					int percentComplete = (int) (((double) (x + 1) / BAMFiles.size()) * 100);

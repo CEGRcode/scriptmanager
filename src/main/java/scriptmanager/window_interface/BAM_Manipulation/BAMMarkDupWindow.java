@@ -38,6 +38,7 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAIIndexer;
 import scriptmanager.cli.BAM_Manipulation.BAMRemoveDupCLI;
 import scriptmanager.scripts.BAM_Manipulation.BAMMarkDuplicates;
@@ -100,14 +101,22 @@ public class BAMMarkDupWindow extends JFrame implements ActionListener, Property
 				firePropertyChange("log", old_li, new_li);
 				// Execute script
 				BAMMarkDuplicates.mark(BAMFiles.get(x), chckbxRemoveDuplicates.isSelected(), OUTPUT, METRICS);
-
 				// Update log item
 				new_li.setStopTime(new Timestamp(new Date().getTime()));
 				new_li.setStatus(0);
 				old_li = new_li;
 				// Generate index on output
 				if (chckbxGenerateBaiIndex.isSelected()) {
+					// Initialize LogItem (index BAM)
+					command = BAIIndexerCLI.getCLIcommand(BAMFiles.get(x));
+					old_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					// Execute script (index)
 					BAIIndexer.generateIndex(OUTPUT);
+					// Update log item
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
 				}
 				// Update log item
 				new_li.setStopTime(new Timestamp(new Date().getTime()));

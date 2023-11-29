@@ -33,6 +33,8 @@ import javax.swing.border.EmptyBorder;
 
 import java.sql.Timestamp;
 import java.util.Date;
+
+import scriptmanager.cli.BAM_Manipulation.BAIIndexerCLI;
 import scriptmanager.cli.BAM_Manipulation.MergeBAMCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
@@ -65,7 +67,7 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 	private JButton btnOutput;
 	private JTextField txtOutput;
 	private JCheckBox chckbxUseMultipleCpus;
-	private JCheckBox chckbxGenerateBaiindex;
+	private JCheckBox chckbxGenerateBaiIndex;
 	private JProgressBar progressBar;
 	private JLabel lblDefaultToLocal;
 	
@@ -81,7 +83,6 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 		@Override
 		public Void doInBackground() {
 			setProgress(0);
-			LogItem old_li = null;
 			try {
 				// Construct output filename
 				File OUTPUT = new File(txtOutput.getText());
@@ -89,21 +90,28 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
 					OUTPUT = new File(OUT_DIR.getCanonicalPath() + File.separator + txtOutput.getText());
 				}
 				// Initialize LogItem
-				String command = MergeBAMCLI.getCLIcommand(BAMFiles, OUTPUT,  chckbxUseMultipleCpus.isSelected());
-				LogItem new_li = new LogItem(command);
-				firePropertyChange("log", old_li, new_li);
+				String command = MergeBAMCLI.getCLIcommand(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
+				LogItem li = new LogItem(command);
+				firePropertyChange("log", null, li);
 				// Execute Picard wrapper
 				MergeBAM.run(BAMFiles, OUTPUT, chckbxUseMultipleCpus.isSelected());
 				// Update LogItem
-				new_li.setStopTime(new Timestamp(new Date().getTime()));
-				new_li.setStatus(0);
-				old_li = new_li;
-				// Index if checkbox selected
-				if(chckbxGenerateBaiindex.isSelected()) {
+				li.setStopTime(new Timestamp(new Date().getTime()));
+				li.setStatus(0);
+				// Generate index on output
+				if (chckbxGenerateBaiIndex.isSelected()) {
+					// Initialize LogItem (index BAM)
+					command = BAIIndexerCLI.getCLIcommand(OUTPUT);
+					li = new LogItem(command);
+					firePropertyChange("log", null, li);
+					// Execute script (index)
 					BAIIndexer.generateIndex(OUTPUT);
+					// Update log item
+					li.setStopTime(new Timestamp(new Date().getTime()));
+					li.setStatus(0);
 				}
 				// Update log after final input
-				firePropertyChange("log", old_li, null);
+				firePropertyChange("log", li, null);
 				// Update progress
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "Merging Complete");
@@ -216,12 +224,12 @@ public class MergeBAMWindow extends JFrame implements ActionListener, PropertyCh
         chckbxUseMultipleCpus.setToolTipText("Increases Merging Speed on Computers with Multiple CPUs");
         contentPane.add(chckbxUseMultipleCpus);
         
-        chckbxGenerateBaiindex = new JCheckBox("Generate BAI-Index");
-        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiindex, 5, SpringLayout.WEST, contentPane);
-        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblOutputFileName, -6, SpringLayout.NORTH, chckbxGenerateBaiindex);
-        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiindex, 0, SpringLayout.NORTH, chckbxUseMultipleCpus);
-        chckbxGenerateBaiindex.setSelected(true);
-        contentPane.add(chckbxGenerateBaiindex);
+        chckbxGenerateBaiIndex = new JCheckBox("Generate BAI-Index");
+        sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGenerateBaiIndex, 5, SpringLayout.WEST, contentPane);
+        sl_contentPane.putConstraint(SpringLayout.SOUTH, lblOutputFileName, -6, SpringLayout.NORTH, chckbxGenerateBaiIndex);
+        sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGenerateBaiIndex, 0, SpringLayout.NORTH, chckbxUseMultipleCpus);
+        chckbxGenerateBaiIndex.setSelected(true);
+        contentPane.add(chckbxGenerateBaiIndex);
                
         JLabel lblCurrent = new JLabel("Current Output:");
         sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 0, SpringLayout.WEST, scrollPane);
