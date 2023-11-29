@@ -93,7 +93,7 @@ public class ShiftCoordCLI implements Callable<Integer> {
 		return(r);
 	}
 
-	public static String getCLIcommand(File input, File output, int shift, boolean stranded, boolean isGFF, boolean gzOutput) {
+	public static String getCLIcommand(File input, File output, int shift, boolean stranded, boolean gzOutput, boolean isGFF) {
 		String command = "java -jar $SCRIPTMANAGER coordinate-manipulation shift-coord";
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();

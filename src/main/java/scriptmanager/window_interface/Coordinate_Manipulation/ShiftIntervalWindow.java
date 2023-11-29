@@ -118,7 +118,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 							OUTPUT = OUT_DIR + File.separator + OUTPUT;
 						}
 						// Initialize LogItem
-						String command = ShiftCoordCLI.getCLIcommand(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), false, chckbxGzipOutput.isSelected());
+						String command = ShiftCoordCLI.getCLIcommand(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected(), false);
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
