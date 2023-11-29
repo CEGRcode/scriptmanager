@@ -12,6 +12,13 @@ ScriptManager was built to be a lightweight and easy to use genomics analysis to
 * [ChIP-exo Tutorial](https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tutorials/chipexo-tutorial)
 * [Four-color Sequence Plot Tutoral](https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tutorials/genomic-features-tutorial)
 
+## Pugh Lab Favorite Tools
+:star: [Tag Pileup](https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/read-analysis/tag-pileup)
+:star: [Expand BED](https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/coordinate-manipulation/expand-bed)
+:star: [Align BED to Reference](https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/peak-analysis/peak-align-ref)
+:star: [Aggregate Data](https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/read-analysis/aggregate-data)
+:star: [Scaling Factor](https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/read-analysis/scaling-factor) :star:
+
 ## Citing Us
 If you use ScriptManager in your work, you can use the Lang et al (2022) publication or use ScriptManager's unique [RRID:SCR_021797](https://scicrunch.org/resources/data/record/nlx_144509-1/SCR_021797/resolver?q=SCR_021797%2A&l=SCR_021797%2A&i=rrid:scr_021797).
 
