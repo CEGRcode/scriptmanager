@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -49,5 +50,20 @@ public class SimilarityMatrixCLI implements Callable<Integer> {
 		r += "(!)This tool is deactivated to reflect the GUI.";
 		
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param input
+	 * @param output
+	 * @param index
+	 * @param correlateColumns
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File input, File output, int index, boolean correlateColumns) {
+		String command = "# (Not yet implemented) java -jar $SCRIPTMANAGER read-analysis similarity-matrix";
+		/* TODO: implement CLI */
+		return(command);
 	}
 }

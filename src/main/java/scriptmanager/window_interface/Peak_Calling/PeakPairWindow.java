@@ -12,6 +12,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -35,7 +37,10 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
+import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
+
+import scriptmanager.cli.Peak_Calling.PeakPairCLI;
 import scriptmanager.scripts.Peak_Calling.PeakPair;
 
 /**
@@ -119,16 +124,28 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 					if(rdbtnAbsoluteThreshold.isSelected()) ABS = Integer.parseInt(txtAbs.getText());
 					if(rdbtnRelativeThreshold.isSelected()) REL = Integer.parseInt(txtRel.getText());
 					
-		        	setProgress(0);
-		        	for(int x = 0; x < BAMFiles.size(); x++) { 
+					setProgress(0);
+					LogItem old_li = null;
+					for(int x = 0; x < BAMFiles.size(); x++) {
+						// Initialize LogItem
+						String command = PeakPairCLI.getCLIcommand(BAMFiles.get(x), MODE, UP, DOWN, BIN, ABS, REL);
+						LogItem new_li = new LogItem(command);
+						firePropertyChange("log", old_li, new_li);
+						// Execute script
 		        		PeakPair peak = new PeakPair(BAMFiles.get(x), MODE, UP, DOWN, BIN, ABS, REL);
 		        		peak.setVisible(true);
 		        		peak.run();
-
+						// Update LogItem
+						new_li.setStopTime(new Timestamp(new Date().getTime()));
+						new_li.setStatus(0);
+						old_li = new_li;
+						// Update progress
 		        		int percentComplete = (int)(((double)(x + 1) / BAMFiles.size()) * 100);
 		        		setProgress(percentComplete);
 		        	}
-		        	setProgress(100);
+					// final update
+					firePropertyChange("log", old_li, null);
+					setProgress(100);
 				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
@@ -138,7 +155,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
-			}	
+			}
         	return null;
         }
         

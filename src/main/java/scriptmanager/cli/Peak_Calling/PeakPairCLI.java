@@ -3,7 +3,7 @@ package scriptmanager.cli.Peak_Calling;
 import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
-
+import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
@@ -48,5 +48,23 @@ public class PeakPairCLI implements Callable<Integer> {
 		//validate input here
 		//append messages to the user to `r`
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param in
+	 * @param mode
+	 * @param up
+	 * @param down
+	 * @param bin
+	 * @param abs
+	 * @param rel
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File in, int mode, int up, int down, int bin, int abs, int rel) {
+		String command = "# (Not yet implemented) java -jar $SCRIPTMANAGER peak-calling peak-pair";
+		/* TODO: implement CLI */
+		return(command);
 	}
 }

@@ -11,7 +11,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -32,7 +34,9 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import scriptmanager.objects.LogItem;
 import scriptmanager.util.FileSelection;
+import scriptmanager.cli.Read_Analysis.SimilarityMatrixCLI;
 import scriptmanager.scripts.Read_Analysis.SimilarityMatrix;
 
 /**
@@ -81,18 +85,32 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 				JOptionPane.showMessageDialog(null, "No TAB Files Loaded!!!");
 			} else {
 				setProgress(0);
-
+				LogItem old_li = null;
 				for (int x = 0; x < TABFiles.size(); x++) {
+					// Initialize LogItem
+					String command = SimilarityMatrixCLI.getCLIcommand(TABFiles.get(x), OUT_DIR,
+							comboBox.getSelectedIndex(), rdbtnCorrelateColumns.isSelected());
+					LogItem new_li = new LogItem(command);
+					firePropertyChange("log", old_li, new_li);
+					// Execute script
 					SimilarityMatrix matrix = new SimilarityMatrix(TABFiles.get(x), OUT_DIR,
 							comboBox.getSelectedIndex(), rdbtnCorrelateColumns.isSelected());
 					matrix.run();
-
+					// Update LogItem
+					new_li.setStopTime(new Timestamp(new Date().getTime()));
+					new_li.setStatus(0);
+					old_li = new_li;
+					// Update progress
 					int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
 					setProgress(percentComplete);
 				}
+				// final update
+				firePropertyChange("log", old_li, null);
 				setProgress(100);
 				JOptionPane.showMessageDialog(null, "All Matrices Generated");
 			}
+			/* TODO: Add try-catch block */
+			setProgress(100);
 			return null;
 		}
 
@@ -249,6 +267,8 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
