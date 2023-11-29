@@ -9,10 +9,9 @@
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s '$input' bamfile.bam &&
-
-        #if $BAM.is_of_type('bam'):
-            #if str( $BAM.metadata.bam_index ) != "None":
-                    ln -s '${BAM.metadata.bam_index}' bamfile.bam.bai &&
+        #if $input.is_of_type('bam'):
+            #if str( $input.metadata.bam_index ) != "None":
+                    ln -s '${input.metadata.bam_index}' bamfile.bam.bai &&
             #else:
                     samtools index bamfile.bam bamfile.bai &&
             #end if
