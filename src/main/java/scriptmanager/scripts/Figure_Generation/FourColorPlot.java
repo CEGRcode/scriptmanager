@@ -39,17 +39,27 @@ public class FourColorPlot {
 		int width = w;
 
 		List<String> seq = new ArrayList<String>();
-		int maxLen = 0;
+		int maxLen = -1;
 
 		// Check if file is gzipped and instantiate appropriate BufferedReader
 		BufferedReader br = GZipUtilities.makeReader(input);
 		// Initialize line variable to loop through
 		String line = br.readLine();
 		while (line != null) {
+			// Encounter seq line
 			if (!line.contains(">")) {
-				if (maxLen < line.length())
-					maxLen = line.length();
-				seq.add(line);
+				// Append sequence to the string in the last item
+				seq.set(seq.size()-1, seq.get(seq.size()-1) + line);
+			// Encounter header line
+			} else {
+				// Check length of last seq string and update maxLen if larger
+				if (seq.size() > 0) {
+					if (maxLen < seq.get(seq.size()-1).length()) {
+						maxLen = seq.get(seq.size()-1).length();
+					}
+				}
+				// Add new empty sequence string when new header encountered
+				seq.add("");
 			}
 			line = br.readLine();
 		}
