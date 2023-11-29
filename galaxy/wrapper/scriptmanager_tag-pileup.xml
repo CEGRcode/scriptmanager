@@ -8,21 +8,20 @@
         <expand macro="requirement_samtools" />
     </requirements>
 
-    <command detect_errors="aggressive">
-        <![CDATA[
-          ln -s '$input_bam' bamfile.bam &&
-          ln -s '$input_bed' input.bed &&
-          #if $input.is_of_type('bam'):
-              #if str( $input.metadata.bam_index ) != "None":
-                        ln -s '${input.metadata.bam_index}' bamfile.bam.bai &&
-              #else:
-                        samtools index bamfile.bam bamfile.bai &&
-              #end if
-          #end if
+    <command detect_errors="aggressive"><![CDATA[
+        ln -s '$input1' localbam.bam &&
+        ln -s '$input2' input.bed &&
+        #if $input1.is_of_type('bam'):
+            #if str( $input1.metadata.bam_index ) != "None":
+                ln -s '${input1.metadata.bam_index}' localbam.bam.bai &&
+            #else:
+                samtools index localbam.bam localbam.bam.bai &&
+            #end if
+        #end if
 
         java -jar $__tool_directory__/@JAR_FILENAME@ read-analysis tag-pileup
-            input.bed
-            bamfile.bam
+            '$input2'
+            localbam.bam
             -M matrix
             -o "$composite"
 
@@ -78,17 +77,15 @@
             #end if
           #end if
 
-          #if str($require_paired_end.mate_pair) == "Yes" :
-              -p
-          #end if
-
-          #if str($require_paired_end.filter_by_min.filter_min) == "Yes" :
-              -n "$require_paired_end.filter_by_min.min_insert"
-          #end if
-
-          #if str($require_paired_end.filter_by_max.filter_max) == "Yes" :
-              -x "$require_paired_end.filter_by_max.max_insert"
-          #end if
+        #if str($require_paired_end.mate_pair) == "Yes" :
+            -p
+            #if str($require_paired_end.filter_by_min.filter_min) == "Yes" :
+                -n "$require_paired_end.filter_by_min.min_insert"
+            #end if
+            #if str($require_paired_end.filter_by_max.filter_max) == "Yes" :
+                -x "$require_paired_end.filter_by_max.max_insert"
+            #end if
+        #end if
 
           #if str($output_strands.strand) == "combined" :
               && cp matrix_combined.cdt $matrix_combined
@@ -102,8 +99,8 @@
         ]]>
     </command>
     <inputs>
-        <param name="input_bed" type="data" format="bed" label="Input BED file" />
-        <param name="input_bam" type="data" format="bam" label="Input BAM file" />
+        <param name="input1" type="data" format="bam" label="Input BAM file" />
+        <param name="input2" type="data" format="bed" label="Input BED file" />
 
         <param name="read_aspect" type="select" label="Select Read Aspect to analyze">
             <option value="5end" selected="True" >Pileup of 5' end</option>
