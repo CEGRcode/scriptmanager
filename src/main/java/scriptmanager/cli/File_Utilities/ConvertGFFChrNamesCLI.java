@@ -108,16 +108,16 @@ public class ConvertGFFChrNamesCLI implements Callable<Integer> {
 	/**
 	 * Reconstruct CLI command
 	 * 
-	 * @param AtoR whether to do a arabic to roman numeral conversion (vs roman to arabic numeral)
+	 * @param RtoA whether to do a roman to arabic numeral conversion (vs arabic to roman numeral)
 	 * @param input the GFF file to convert chr names of
 	 * @param output the output BED file of converted coords
 	 * @param useChrmt whether or not to use "chrmt"
 	 * @param gzOutput gzip output
 	 * @return command line to execute with formatted inputs
 	 */
-	public static String getCLIcommand(boolean AtoR, File input, File output, boolean useChrmt, boolean gzOutput) {
+	public static String getCLIcommand(boolean RtoA, File input, File output, boolean useChrmt, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER file-utilities convert-gff-genome";
-		command += AtoR ? "" : " --to-arabic" ;
+		command += RtoA ? " --to-arabic" : "";
 		command += " -o " + output.getAbsolutePath();
 		command += useChrmt ? " --chrmt" : "";
 		command += gzOutput ? " --gzip" : "";

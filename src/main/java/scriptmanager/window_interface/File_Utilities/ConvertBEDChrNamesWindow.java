@@ -99,14 +99,14 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 						OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 					}
 					// Initialize LogItem
-					String command = ConvertBEDChrNamesCLI.getCLIcommand(rdbtnA2R.isSelected(), XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					String command = ConvertBEDChrNamesCLI.getCLIcommand(rdbtnR2A.isSelected(), XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
 					LogItem new_li = new LogItem(command);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
-					if (rdbtnA2R.isSelected()) {
-						ConvertChrNames.convert_ArabictoRoman(XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
-					} else {
+					if (rdbtnR2A.isSelected()) {
 						ConvertChrNames.convert_RomantoArabic(XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					} else {
+						ConvertChrNames.convert_ArabictoRoman(XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
 					}
 					// Update log item
 					new_li.setStopTime(new Timestamp(new Date().getTime()));

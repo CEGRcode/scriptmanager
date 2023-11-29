@@ -99,14 +99,14 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 						OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 					}
 					// Initialize LogItem
-					String command = ConvertGFFChrNamesCLI.getCLIcommand(rdbtnA2R.isSelected(), XGFF, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					String command = ConvertGFFChrNamesCLI.getCLIcommand(rdbtnR2A.isSelected(), XGFF, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
 					LogItem new_li = new LogItem(command);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
-					if (rdbtnA2R.isSelected()) {
-						ConvertChrNames.convert_ArabictoRoman(XGFF, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
-					} else {
+					if (rdbtnR2A.isSelected()) {
 						ConvertChrNames.convert_RomantoArabic(XGFF, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
+					} else {
+						ConvertChrNames.convert_ArabictoRoman(XGFF, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
 					}
 					// Update log item
 					new_li.setStopTime(new Timestamp(new Date().getTime()));
