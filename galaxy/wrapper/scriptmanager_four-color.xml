@@ -50,7 +50,7 @@
 
     <conditional name="a_select_color_cond">
             <param name="a_select_color" type="select" label="A nucleotide: select color or specify hexadecimal color code?">
-                <option value="a_color" selected="True"> select color</option>
+                <option value="a_color" selected="True" >preset colors</option>
                 <option value="a_hex" >specify hexadecimal color code</option>
             </param>
             <when value="a_color">
@@ -65,7 +65,7 @@
 
         <conditional name="t_select_color_cond">
             <param name="t_select_color" type="select" label="T nucleotide: select color or specify hexadecimal color code?">
-                <option value="t_color" selected="True">select color</option>
+                <option value="t_color" selected="True" >preset colors</option>
                 <option value="t_hex" >specify hexadecimal color code</option>
             </param>
             <when value="t_color">
@@ -80,7 +80,7 @@
 
         <conditional name="g_select_color_cond">
             <param name="g_select_color" type="select" label="G nucleotide: select color or specify hexadecimal color code?">
-                <option value="g_color" selected="True">select color</option>
+                <option value="g_color" selected="True" >preset colors</option>
                 <option value="g_hex" >specify hexadecimal color code</option>
             </param>
             <when value="g_color">
@@ -95,7 +95,7 @@
 
         <conditional name="c_select_color_cond">
             <param name="c_select_color" type="select" label="C nucleotide: select color or specify hexadecimal color code?">
-                <option value="c_color" selected="True">select color</option>
+                <option value="c_color" selected="True" >preset colors</option>
                 <option value="c_hex" >specify hexadecimal color code</option>
             </param>
             <when value="c_color">
@@ -110,7 +110,7 @@
 
         <conditional name="n_select_color_cond">
             <param name="n_select_color" type="select" label="N nucleotide: select color or specify hexadecimal color code?">
-                <option value="n_color" selected="True">select color</option>
+                <option value="n_color" selected="True" >preset colors</option>
                 <option value="n_hex" >specify hexadecimal color code</option>
             </param>
             <when value="n_color">
