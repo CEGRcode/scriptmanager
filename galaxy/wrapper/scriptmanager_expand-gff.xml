@@ -11,19 +11,17 @@
         ln -s '$output' output.gff &&
 
         java -jar $__tool_directory__/@JAR_FILENAME@ coordinate-manipulation expand-gff
-
-        #if str($expansion_select) == "center" :
-            -c
-        #else if str($expansion_select) == "border" :
-            -b
+        #if str($gzip) == "Yes" :
+            --gzip
         #end if
-
-        "$SIZE"
-
+        #if str($expansion_select) == "center" :
+            -c "$SIZE"
+        #else if str($expansion_select) == "border" :
+            -b "$SIZE"
+        #end if
         -o output.gff
         file.gff
     ]]></command>
-
     <inputs>
         <param type="data" name="input" format="gff" label="Input GFF File"/>
 
@@ -33,20 +31,19 @@
         </param>
 
         <param type="integer" name="SIZE" value="250" label="Size of expansion (bp)" />
-
+        <param name="gzip" type="boolean" checked="true" truevalue="Yes" falsevalue="No" label="Gzip output" />
     </inputs>
     <outputs>
         <data name="output" format="gff" label="${tool.name} on ${on_string}"/>
     </outputs>
-
     <tests>
-
     </tests>
-
     <help>
 **What it does**
 
 Expand GFF file given user-defined criteria.
+
+See Documentation: https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Tools/coordinate-manipulation/expand-gff
     </help>
     <expand macro="citations_pearc" />
 </tool>
