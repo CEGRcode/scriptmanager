@@ -19,7 +19,7 @@ import javax.swing.SpringLayout;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.cli.Read_Analysis.ScalingFactorCLI;
 import scriptmanager.objects.LogItem;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 
 /**

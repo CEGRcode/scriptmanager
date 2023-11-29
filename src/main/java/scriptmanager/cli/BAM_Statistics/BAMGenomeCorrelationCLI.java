@@ -15,7 +15,7 @@ import java.io.IOException;
 import scriptmanager.charts.HeatMap;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.ArchTEx.CorrParameter;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 

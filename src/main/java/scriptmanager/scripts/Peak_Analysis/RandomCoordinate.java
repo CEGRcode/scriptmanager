@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.objects.CoordinateObjects.GenericCoord;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.GenomeSizeReference;
 

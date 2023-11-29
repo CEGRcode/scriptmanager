@@ -38,7 +38,7 @@ import scriptmanager.util.FileSelection;
 import scriptmanager.util.GZipUtilities;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
-import scriptmanager.objects.CustomExceptions.ScriptManagerException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.scripts.Read_Analysis.TransposeMatrix;
 
 /**

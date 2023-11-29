@@ -1,4 +1,4 @@
-package scriptmanager.objects.CustomExceptions;
+package scriptmanager.objects.Exceptions;
 
 /**
  * Custom exception used with LabelHeatmap and ThreeColorHeatMap tools

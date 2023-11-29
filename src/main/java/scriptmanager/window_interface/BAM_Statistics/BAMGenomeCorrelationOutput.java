@@ -20,7 +20,7 @@ import javax.swing.SpringLayout;
 
 import scriptmanager.cli.BAM_Statistics.BAMGenomeCorrelationCLI;
 import scriptmanager.objects.LogItem;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.scripts.BAM_Statistics.BAMGenomeCorrelation;
 
 /**

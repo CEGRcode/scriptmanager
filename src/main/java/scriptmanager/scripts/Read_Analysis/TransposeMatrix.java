@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import scriptmanager.objects.CustomExceptions.ScriptManagerException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.GZipUtilities;
 
 public class TransposeMatrix {

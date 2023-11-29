@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.ScalingFactor;
 

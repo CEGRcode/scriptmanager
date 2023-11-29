@@ -14,7 +14,7 @@ import javax.swing.JTabbedPane;
 
 import scriptmanager.cli.Figure_Generation.TwoColorHeatMapCLI;
 import scriptmanager.objects.LogItem;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 import scriptmanager.util.ExtensionFileFilter;
 

@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
-import scriptmanager.objects.CustomExceptions.ScriptManagerException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Read_Analysis.TransposeMatrix;
 

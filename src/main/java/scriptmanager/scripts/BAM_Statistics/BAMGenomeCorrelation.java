@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 import org.jfree.chart.ChartPanel;
 
 import scriptmanager.charts.HeatMap;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationCoord;
 import scriptmanager.scripts.BAM_Statistics.CorrelationScripts.CorrelationExtract;
 

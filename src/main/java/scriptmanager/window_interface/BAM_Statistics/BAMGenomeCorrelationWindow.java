@@ -42,7 +42,7 @@ import javax.swing.border.TitledBorder;
 
 import scriptmanager.charts.HeatMap;
 import scriptmanager.objects.ToolDescriptions;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.FileSelection;
 
 /**

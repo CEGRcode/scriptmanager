@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
 
 import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
 import scriptmanager.objects.CustomOutputStream;
-import scriptmanager.objects.CustomExceptions.OptionException;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Figure_Generation.LabelHeatMap;
 import scriptmanager.util.ExtensionFileFilter;
