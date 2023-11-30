@@ -52,8 +52,8 @@ public class PEStatsCLI implements Callable<Integer> {
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			System.exit(1);
 		}
-		
-		PEStats.getPEStats( outputBasename, bamFile, dup, MIN_INSERT, MAX_INSERT );
+
+		PEStats.getPEStats(bamFile, outputBasename, dup, MIN_INSERT, MAX_INSERT );
 		
 		System.err.println("Calculations Complete");
 		return(0);
