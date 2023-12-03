@@ -127,8 +127,8 @@ public class SortGFFWindow extends JFrame implements ActionListener, PropertyCha
 					String command = SortGFFCLI.getCLIcommand(GFF_File, CDT_File, new File(OUTPUT), START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
 					LogItem new_li = new LogItem(command);
 					firePropertyChange("log", old_li, new_li);
-					// Execute Wrapper
-					SortGFF.sortGFFbyCDT(GFF_File, new File(OUTPUT), CDT_File, START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
+					// Execute script
+					SortGFF.sortGFFbyCDT(GFF_File, CDT_File, new File(OUTPUT), START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
 					// Update log item
 					new_li.setStopTime(new Timestamp(new Date().getTime()));
 					new_li.setStatus(0);

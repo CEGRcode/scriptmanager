@@ -77,7 +77,7 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		CrossCorrelation.correlate( outputBasename, bamFile, param, null);
+		CrossCorrelation.correlate(bamFile, outputBasename, param, null);
 		
 		System.err.println("Calculations Complete");
 		return(0);

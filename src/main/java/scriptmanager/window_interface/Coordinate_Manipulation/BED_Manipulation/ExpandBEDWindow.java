@@ -110,8 +110,8 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 						String command = ExpandBEDCLI.getCLIcommand(XBED, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						LogItem new_li = new LogItem(command);
 						firePropertyChange("log", old_li, new_li);
-						// Execute expansion and update progress
-						ExpandBED.expandBEDBorders(new File(OUTPUT), XBED, SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
+						// Execute script
+						ExpandBED.expandBEDBorders(XBED, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
 						int percentComplete = (int) (((double) (x + 1) / BEDFiles.size()) * 100);
 						// Update log item
 						new_li.setStopTime(new Timestamp(new Date().getTime()));
