@@ -31,7 +31,7 @@ public class Histogram {
 	 * @param y the list of frequencies
 	 * @param x the list of values that have frequencies (same len as y)
 	 * @return the bar-style histogram chart
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static ChartPanel createBarChart(double[] y, int[] x) throws IOException {
 		final XYSeries series = new XYSeries("Frequency");
@@ -54,7 +54,7 @@ public class Histogram {
 	 * @param x the list of values that have frequencies (same len as y)
 	 * @param output the path of the PNG file to save the chart image to
 	 * @return the bar-style histogram chart
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static ChartPanel createBarChart(double[] y, int[] x, File output) throws IOException {
 		final XYSeries series = new XYSeries("Frequency");
@@ -82,7 +82,7 @@ public class Histogram {
 	 * 
 	 * @param dataset the formatted dataset to plot
 	 * @return the formatted and configured histogram chart
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private static JFreeChart createChart(IntervalXYDataset dataset) throws IOException {
         final JFreeChart chart = ChartFactory.createXYBarChart(

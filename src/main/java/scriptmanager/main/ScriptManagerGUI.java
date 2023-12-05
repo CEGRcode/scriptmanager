@@ -117,7 +117,6 @@ public class ScriptManagerGUI {
 		pnlStat.add(initializeToolPanel("Cross Correlation", ToolDescriptions.archtex_crosscorrelation_description,
 				Class.forName("scriptmanager.window_interface.BAM_Statistics.CrossCorrelationWindow")));
 
-
 		// ======== BAM_Manipulation ========
 		JPanel pnlBamManip = new JPanel();
 		BoxLayout bl_pnlBamManip = new BoxLayout(pnlBamManip, BoxLayout.PAGE_AXIS);
@@ -141,7 +140,6 @@ public class ScriptManagerGUI {
 		pnlBamManip.add(initializeToolPanel("Filter for PIP-seq", ToolDescriptions.filter_pip_seq_description,
 				Class.forName("scriptmanager.window_interface.BAM_Manipulation.FilterforPIPseqWindow")));
 
-
 		// ======== BAM_Format_Converter ========
 		JPanel pnlBamConvert = new JPanel();
 		BoxLayout bl_pnlBamConvert = new BoxLayout(pnlBamConvert, BoxLayout.PAGE_AXIS);
@@ -162,7 +160,6 @@ public class ScriptManagerGUI {
 		// BAMtobedGraph
 		pnlBamConvert.add(initializeToolPanel("BAM to bedGraph", ToolDescriptions.bam_to_bedgraph_description,
 				Class.forName("scriptmanager.window_interface.BAM_Format_Converter.BAMtobedGraphWindow")));
-
 
 		// ======== File_Utilities ========
 		JPanel pnlFileUtility = new JPanel();
@@ -187,7 +184,6 @@ public class ScriptManagerGUI {
 		pnlFileUtility.add(initializeToolPanel("Decompress Files", ToolDescriptions.decompressFileDescription,
 				Class.forName("scriptmanager.window_interface.File_Utilities.DecompressGZFileWindow")));
 
-
 		// ======== Peak_Calling ========
 		JPanel pnlPeakCalling = new JPanel();
 		BoxLayout bl_pnlPeakCalling = new BoxLayout(pnlPeakCalling, BoxLayout.PAGE_AXIS);
@@ -204,7 +200,6 @@ public class ScriptManagerGUI {
 //		// ReplicateMatching
 //		pnlPeakCalling.add(initializeToolPanel("Replicate Match", ToolDescriptions.replicate_match_description,
 //				Class.forName("scriptmanager.window_interface.Peak_Calling.CLASS")));
-
 
 		// ======== Peak_Analysis ========
 		JPanel pnlPeakAnalysis = new JPanel();
@@ -231,7 +226,6 @@ public class ScriptManagerGUI {
 				"Output signal duplication statistics",
 				Class.forName("scriptmanager.window_interface.Peak_Analysis.SignalDuplicationWindow")));
 
-
 		// ======== Coordinate_Manipulation ========
 		JPanel pnlCoordManip = new JPanel();
 		pnlCoordManip.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 5));
@@ -239,7 +233,6 @@ public class ScriptManagerGUI {
 
 		JSplitPane splitPaneExpand = new JSplitPane();
 		pnlCoordManip.add(splitPaneExpand);
-
 		// ExpandBED
 		splitPaneExpand.setLeftComponent(initializeToolPanel("Expand BED File", null, ToolDescriptions.expand_bed_description,
 				Class.forName("scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.ExpandBEDWindow")));
@@ -249,7 +242,6 @@ public class ScriptManagerGUI {
 
 		JSplitPane splitPaneConvert = new JSplitPane();
 		pnlCoordManip.add(splitPaneConvert);
-
 		// BEDtoGFF
 		splitPaneConvert.setLeftComponent(initializeToolPanel("Convert BED to GFF", null, ToolDescriptions.bed_to_gff_description,
 				Class.forName("scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFWindow")));
@@ -259,7 +251,6 @@ public class ScriptManagerGUI {
 
 		JSplitPane splitPaneSort = new JSplitPane();
 		pnlCoordManip.add(splitPaneSort);
-
 		// SortBED
 		splitPaneSort.setLeftComponent(initializeToolPanel("Sort BED by CDT", null, ToolDescriptions.sort_bed_description,
 				Class.forName("scriptmanager.window_interface.Coordinate_Manipulation.BED_Manipulation.SortBEDWindow")));
@@ -270,7 +261,6 @@ public class ScriptManagerGUI {
 		// ShiftInterval
 		pnlCoordManip.add(initializeToolPanel("Shift Coordinate Interval", null, ToolDescriptions.shift_coordinate_description,
 				Class.forName("scriptmanager.window_interface.Coordinate_Manipulation.ShiftIntervalWindow")));
-
 
 		// ======== Read_Analysis ========
 		JPanel pnlReadAnalysis = new JPanel();
@@ -291,7 +281,9 @@ public class ScriptManagerGUI {
 		// AggregateData
 		pnlReadAnalysis.add(initializeToolPanel("Aggregate Data", ToolDescriptions.aggregate_data_description,
 				Class.forName("scriptmanager.window_interface.Read_Analysis.AggregateDataWindow")));
-
+		// TransposeMatrix
+		pnlReadAnalysis.add(initializeToolPanel("Transpose Matrix", ToolDescriptions.transpose_matrix_description,
+				Class.forName("scriptmanager.window_interface.Read_Analysis.TransposeMatrixWindow")));
 
 		// ========= Sequence_Analysis ==========
 		JPanel pnlSeqAnalysis = new JPanel();
@@ -316,7 +308,6 @@ public class ScriptManagerGUI {
 		pnlSeqAnalysis.add(initializeToolPanel("DNA Shape from FASTA", ToolDescriptions.dna_shape_from_fasta_description,
 				"Calculate intrinsic DNA shape given input FASTA file",
 				Class.forName("scriptmanager.window_interface.Sequence_Analysis.DNAShapefromFASTAWindow")));
-
 
 		// ======== Figure_Generation ========
 		JPanel pnlFigure = new JPanel();
@@ -474,6 +465,4 @@ public class ScriptManagerGUI {
 			}
 		});
 	}
-
-
 }

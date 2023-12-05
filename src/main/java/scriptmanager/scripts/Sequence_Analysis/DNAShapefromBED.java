@@ -6,6 +6,7 @@ import htsjdk.samtools.reference.IndexedFastaSequenceFile;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,14 +17,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import scriptmanager.charts.CompositePlot;
 import scriptmanager.util.FASTAUtilities;
+import scriptmanager.util.GZipUtilities;
 import scriptmanager.util.DNAShapeReference;
 
 /**
- * This script calculates various aspects of DNA shape across a set of BED
+ * Calculate and score various aspects of DNA shape across a set of BED
  * intervals.
  * 
  * @author William KM Lai
@@ -37,6 +38,7 @@ public class DNAShapefromBED {
 	private String OUTBASENAME = null;
 	private boolean[] OUTPUT_TYPE = null;
 	private File BED = null;
+	private boolean GZIP_OUTPUT;
 
 	private boolean STRAND = true;
 	private boolean INDEX = true;
@@ -72,9 +74,10 @@ public class DNAShapefromBED {
 	 * @param str  force strandedness (true=forced, false=not forced)
 	 * @param ps   list of four PrintStream objects corresponding to each shape type
 	 *             (for GUI)
-	 * @throws IOException
+	 * @param gzOutput Whether to output compressed file
+	 * @throws IOException Invalid file or parameters
 	 */
-	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps)
+	public DNAShapefromBED(File gen, File b, String out, boolean[] type, boolean str, PrintStream[] ps, boolean gzOutput)
 			throws IOException {
 		GENOME = gen;
 		BED = b;
@@ -82,6 +85,7 @@ public class DNAShapefromBED {
 		OUTPUT_TYPE = type;
 		STRAND = str;
 		PS = ps;
+		GZIP_OUTPUT = gzOutput;
 
 		File FAI = new File(GENOME + ".fai");
 		// Check if FAI index file exists
@@ -96,8 +100,8 @@ public class DNAShapefromBED {
 	 * Execute script to calculate DNA shape for all types across the input
 	 * sequence.
 	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
 	public void run() throws IOException, InterruptedException {
 		try {
@@ -278,7 +282,7 @@ public class DNAShapefromBED {
 	 * SAMException thrown by FastaSequenceIndexCreator to account for malformed
 	 * FASTA file.
 	 * 
-	 * @return
+	 * @return Returns true
 	 */
 	public boolean getFAIstatus() {
 		return INDEX;
@@ -348,13 +352,15 @@ public class DNAShapefromBED {
 	 * 
 	 * @param INPUT a BED-formatted file
 	 * @return the parsed BED coordinate objects
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException Script could not find valid input file
 	 */
-	public ArrayList<BEDCoord> loadCoord(File INPUT) throws FileNotFoundException {
-		Scanner scan = new Scanner(INPUT);
+	public ArrayList<BEDCoord> loadCoord(File INPUT) throws IOException{
+		String line;
+		// Check if file is gzipped and instantiate appropriate BufferedReader
+		BufferedReader br = GZipUtilities.makeReader(INPUT);
 		ArrayList<BEDCoord> COORD = new ArrayList<BEDCoord>();
-		while (scan.hasNextLine()) {
-			String[] temp = scan.nextLine().split("\t");
+		while ((line = br.readLine()) != null) {
+			String[] temp = line.split("\t");
 			if (temp.length > 2) {
 				if (!temp[0].contains("track") && !temp[0].contains("#")) {
 					String name = "";
@@ -377,7 +383,7 @@ public class DNAShapefromBED {
 				}
 			}
 		}
-		scan.close();
+		br.close();
 		return COORD;
 	}
 
@@ -390,19 +396,20 @@ public class DNAShapefromBED {
 		}
 		// Open Output File
 		try {
+			String SUFFIX = ".cdt" + (GZIP_OUTPUT? ".gz": "");
 			if (OUTPUT_TYPE[0]) {
-				OUT_M = new PrintStream(new File(OUTBASENAME + "_MGW.cdt"));
+				OUT_M = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_MGW" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[1]) {
-				OUT_P = new PrintStream(new File(OUTBASENAME + "_PropT.cdt"));
+				OUT_P = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_PropT" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[2]) {
-				OUT_H = new PrintStream(new File(OUTBASENAME + "_HelT.cdt"));
+				OUT_H = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_HelT" + SUFFIX), GZIP_OUTPUT);
 			}
 			if (OUTPUT_TYPE[3]) {
-				OUT_R = new PrintStream(new File(OUTBASENAME + "_Roll.cdt"));
+				OUT_R = GZipUtilities.makePrintStream(new File(OUTBASENAME + "_Roll" + SUFFIX), GZIP_OUTPUT);
 			}
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

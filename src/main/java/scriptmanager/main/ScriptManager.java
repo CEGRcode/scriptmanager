@@ -41,8 +41,10 @@ import scriptmanager.cli.Figure_Generation.MergeHeatMapCLI;
 import scriptmanager.cli.Figure_Generation.LabelHeatMapCLI;
 
 import scriptmanager.cli.File_Utilities.MD5ChecksumCLI;
+import scriptmanager.cli.File_Utilities.CompressFileCLI;
 import scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI;
 import scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI;
+import scriptmanager.cli.File_Utilities.DecompressGZFileCLI;
 import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
@@ -57,6 +59,7 @@ import scriptmanager.cli.Read_Analysis.ScaleMatrixCLI;
 import scriptmanager.cli.Read_Analysis.ScalingFactorCLI;
 //import cli.Read_Analysis.SimilarityMatrixCLI;
 import scriptmanager.cli.Read_Analysis.TagPileupCLI;
+import scriptmanager.cli.Read_Analysis.TransposeMatrixCLI;
 
 import scriptmanager.cli.Sequence_Analysis.DNAShapefromBEDCLI;
 import scriptmanager.cli.Sequence_Analysis.DNAShapefromFASTACLI;
@@ -64,6 +67,12 @@ import scriptmanager.cli.Sequence_Analysis.FASTAExtractCLI;
 import scriptmanager.cli.Sequence_Analysis.RandomizeFASTACLI;
 import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 
+
+/**
+ * Provides command line access to ScriptManager sub-commands
+ * 
+ * @author William KM Lai
+ */
 @Command(name = "script-manager",
 		subcommands = {
 			BAM_Format_ConverterCLI.class,
@@ -181,7 +190,9 @@ class Figure_GenerationCLI extends SubcommandCLI {}
 		subcommands = {
 			MD5ChecksumCLI.class,
 			ConvertBEDChrNamesCLI.class,
-			ConvertGFFChrNamesCLI.class
+			ConvertGFFChrNamesCLI.class,
+			CompressFileCLI.class,
+			DecompressGZFileCLI.class
 		},
 		description = "Includes the tool MD5Checksum.")
 class File_UtilitiesCLI extends SubcommandCLI {}
@@ -214,9 +225,10 @@ class Peak_CallingCLI extends SubcommandCLI {}
 			ScaleMatrixCLI.class,
 			ScalingFactorCLI.class,
 // 			SimilarityMatrixCLI.class,
-			TagPileupCLI.class
+			TagPileupCLI.class,
+			TransposeMatrixCLI.class
 		},
-		description = "Includes tools like AggregateDataCLI, ScaleMatrixCLI, ScalingFactorCLI, SimilarityMatrixCLI, and TagPileupCLI.")
+		description = "Includes tools like AggregateDataCLI, ScaleMatrixCLI, ScalingFactorCLI, SimilarityMatrixCLI, TagPileupCLI and TransposeMatrix.")
 class Read_AnalysisCLI extends SubcommandCLI {}
 
 

@@ -13,10 +13,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,14 +38,29 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import scriptmanager.objects.LogItem;
 import scriptmanager.objects.PasteableTable;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+
+import scriptmanager.cli.Read_Analysis.ScaleMatrixCLI;
 import scriptmanager.scripts.Read_Analysis.ScaleMatrix;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Read_Analysis.ScaleMatrix}
+ * 
+ * @author William KM Lai
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ * @see scriptmanager.window_interface.Read_Analysis.ScalingFactorOutput
+ */
 @SuppressWarnings("serial")
 public class ScaleMatrixWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	ArrayList<File> TABFiles = new ArrayList<File>();
@@ -50,6 +70,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	private JButton btnRemoveBam;
 	private JButton btnCalculate;
 	private JButton btnOutput;
+	private JCheckBox chckbxGzipOutput;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrent;
 	private JProgressBar progressBar;
@@ -64,14 +85,17 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 
 	private DefaultTableModel expTable;
 
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
 			try {
 				if (TABFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No Files Loaded!!!");
@@ -86,45 +110,65 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 						try {
 							Double.parseDouble(expTable.getValueAt(x, 1).toString());
 						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null,
-									TABFiles.get(x).getName() + " possesses an invalid scaling factor!!!");
+							JOptionPane.showMessageDialog(null, TABFiles.get(x).getName() + " possesses an invalid scaling factor!!!");
 							ALLNUM = false;
 						}
 					}
-
+					// Loop through matrix files with valid scaling factors
 					if (ALLNUM) {
 						setProgress(0);
 						double SCALE = 0;
 						if (rdbtnUniformScaling.isSelected()) {
 							SCALE = Double.parseDouble(txtUniform.getText());
 						}
-
+						LogItem old_li = null;
 						for (int x = 0; x < TABFiles.size(); x++) {
+							// Pull input file
+							File XTAB = TABFiles.get(x);
+							// Construct output filename
+							String NAME = ExtensionFileFilter.stripExtensionIgnoreGZ(XTAB) + "_SCALE."
+									+ ExtensionFileFilter.getExtensionIgnoreGZ(XTAB)
+									+ (chckbxGzipOutput.isSelected() ? ".gz" : "");
+							File OUT_FILEPATH = new File(NAME);
+							if (OUT_DIR != null) {
+								OUT_FILEPATH = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
+							}
+							// Determine out scaling factor
 							if (rdbtnFilespecifcScaling.isSelected()) {
 								SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString());
 							}
-
-							File XTAB = TABFiles.get(x);
-							String OUTPUT = ExtensionFileFilter.stripExtension(XTAB) + "_SCALE."
-									+ ExtensionFileFilter.getExtension(XTAB);
-							if (OUT_DIR != null) {
-								OUTPUT = OUT_DIR + File.separator + OUTPUT;
-							}
-
-							ScaleMatrix scale = new ScaleMatrix(XTAB, new File(OUTPUT), SCALE,
-									Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
-							scale.run();
-
+							// Initialize LogItem
+							String command = ScaleMatrixCLI.getCLIcommand(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
+							LogItem new_li = new LogItem(command);
+							firePropertyChange("log", old_li, new_li);
+							// Execute script
+							ScaleMatrix script_obj = new ScaleMatrix(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
+							script_obj.run();
+							// Update log item
+							new_li.setStopTime(new Timestamp(new Date().getTime()));
+							new_li.setStatus(0);
+							old_li = new_li;
+							// Update progress
 							int percentComplete = (int) (((double) (x + 1) / TABFiles.size()) * 100);
 							setProgress(percentComplete);
 						}
+						// Update log after final input
+						firePropertyChange("log", old_li, null);
+						// Update progress
 						setProgress(100);
 						JOptionPane.showMessageDialog(null, "All Matrices Scaled");
 					}
 				}
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Invalid Scaling Factor!!! Must be number");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
+			setProgress(100);
 			return null;
 		}
 
@@ -251,6 +295,11 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		});
 		contentPane.add(btnOutput);
 
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
+		contentPane.add(chckbxGzipOutput);
+
 		rdbtnFilespecifcScaling = new JRadioButton("File-specifc Scaling");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnFilespecifcScaling, 8, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, rdbtnFilespecifcScaling, -66, SpringLayout.EAST, contentPane);
@@ -284,6 +333,13 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		txtUniform.setText("1");
 		contentPane.add(txtUniform);
 		txtUniform.setColumns(10);
+		txtUniform.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int x = 0; x < expTable.getRowCount(); x++) {
+					expTable.setValueAt(txtUniform.getText(), x, 1);
+				}
+        	}
+		});
 
 		JLabel lblRow = new JLabel("Start at Row:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblRow, 10, SpringLayout.SOUTH, lblUniformScalingFactor);
@@ -339,6 +395,9 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 		lblCurrent.setEnabled(activate);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -352,13 +411,21 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);

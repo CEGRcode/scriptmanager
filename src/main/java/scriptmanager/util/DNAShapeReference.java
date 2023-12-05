@@ -14,6 +14,10 @@ import java.util.Map;
  * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
  */
 public class DNAShapeReference {
+	/**
+	 * Creates a new DNAShapeReference object
+	 */
+	public DNAShapeReference(){}
 	
 	/**
 	 * A collection of 5-mers DNA strings with a list of constants that describe

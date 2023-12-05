@@ -17,25 +17,33 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
 
 /**
- * Command line interface class for calculating various aspects of DNA shape
- * across a set of FASTA sequences by calling the methods implemented in the
- * scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA
  */
-@Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_fasta_description, version = "ScriptManager "
-		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
+@Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.dna_shape_from_fasta_description,
+	version = "ScriptManager " + ToolDescriptions.VERSION,
+	sortOptions = false,
+	exitCodeOnInvalidInput = 1,
+	exitCodeOnExecutionException = 1)
 public class DNAShapefromFASTACLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new DNAShapefromFASTACLI object
+	 */
+	public DNAShapefromFASTACLI(){}
 
 	@Parameters(index = "0", description = "FASTA sequence file")
 	private File fastaFile;
 
-	@Option(names = { "-o",
-			"--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
+	@Option(names = { "-o", "--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
 	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 
 	@ArgGroup(validate = false, heading = "Shape Options%n")
 	ShapeType shape = new ShapeType();
@@ -56,6 +64,10 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 
 	private boolean[] OUTPUT_TYPE = new boolean[] { false, false, false, false };
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">DNAShapefromFASTACLI.call()");
@@ -68,7 +80,7 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 
 		// Generate Composite Plot
 		DNAShapefromFASTA script_obj = new DNAShapefromFASTA(fastaFile, outputBasename, OUTPUT_TYPE,
-				new PrintStream[] { null, null, null, null });
+				new PrintStream[] { null, null, null, null }, gzOutput);
 		script_obj.run();
 
 		// Print Composite Scores
@@ -101,10 +113,10 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";
@@ -114,18 +126,12 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 			r += "(!)FASTA file does not exist: " + fastaFile.getName() + "\n";
 			return (r);
 		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(fastaFile)) {
-			r += "(!)Is this a FASTA file? Check extension: " + fastaFile.getName() + "\n";
-		}
 		// set default output filename
 		if (outputBasename == null) {
 			outputBasename = ExtensionFileFilter.stripExtension(fastaFile);
 			// check output filename is valid
 		} else {
 			String outParent = new File(outputBasename).getParent();
-			// no extension check
 			// check directory
 			if (outParent == null) {
 // 				System.err.println("default to current directory");
@@ -159,5 +165,28 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 		}
 
 		return (r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param fa   the FASTA-formatted file with a fixed sequence length
+	 * @param out  the output file name base (to add _&lt;shapetype&gt;.cdt suffix
+	 *             to)
+	 * @param type a four-element boolean list for specifying shape type to output
+	 *             (no enforcement on size)
+	 * @param gzOutput   whether or not to gzip output
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File fa, String out, boolean[] type, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis dna-shape-fasta";
+		command += " -o " + out;
+		command += gzOutput ? " -z " : "";
+		command += type[0] ? " --groove" : "";
+		command += type[1] ? " --propeller" : "";
+		command += type[2] ? " --helical" : "";
+		command += type[3] ? " --roll" : "";
+		command += " " + fa;
+		return (command);
 	}
 }
