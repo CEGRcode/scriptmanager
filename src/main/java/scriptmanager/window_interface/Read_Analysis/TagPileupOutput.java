@@ -27,7 +27,9 @@ import scriptmanager.scripts.Read_Analysis.TagPileup;
 import scriptmanager.util.BAMUtilities;
 
 /**
- * Graphical window for displaying composite results of TagPileup's output.
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Read_Analysis.TagPileup} and reporting composite
+ * results
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Read_Analysis.TagPileup
@@ -95,7 +97,7 @@ public class TagPileupOutput extends JFrame {
 	 * labeled with the BAM filename. These tabs are "subtabs" in the "Pileup
 	 * Plot" tab.
 	 * 
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public void run() throws IOException {
 		// Check if BAI index file exists for all BAM files

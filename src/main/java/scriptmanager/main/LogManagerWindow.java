@@ -36,6 +36,7 @@ import javax.swing.table.DefaultTableModel;
 import scriptmanager.util.FileSelection;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 
 /**
  * Store, update, and manage the set of LogItems that make up a ScriptManager
@@ -48,6 +49,9 @@ import scriptmanager.objects.ToolDescriptions;
 public class LogManagerWindow extends JFrame {
 
 //	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
@@ -74,10 +78,8 @@ public class LogManagerWindow extends JFrame {
 
 	private ArrayList<LogItem> logItems;
 	private Timestamp logStart;
-	private int verbosity = 0;
 
 	private File odir = null;
-	private String ofilename;
 
 	private boolean on = true;
 
@@ -90,7 +92,6 @@ public class LogManagerWindow extends JFrame {
 		// Initilize log timestamp
 		logStart = new Timestamp(new Date().getTime());
 		logItems = new ArrayList<LogItem>();
-		ofilename = logStart.toString().replace(' ', '_').replace(':', '-') + "_logfile.sh";
 		initialize();
 	}
 
@@ -197,7 +198,7 @@ public class LogManagerWindow extends JFrame {
 		sl_pnlSettings.putConstraint(SpringLayout.NORTH, txtOutputFilename, 0, SpringLayout.NORTH, lblFileSeparator);
 		sl_pnlSettings.putConstraint(SpringLayout.WEST, txtOutputFilename, 10, SpringLayout.EAST, lblFileSeparator);
 		sl_pnlSettings.putConstraint(SpringLayout.EAST, txtOutputFilename, -10, SpringLayout.EAST, pnl_Settings);
-		txtOutputFilename.setText(getFilename());
+		txtOutputFilename.setText(logStart.toString().replace(' ', '_').replace(':', '-') + "_logfile.sh");
 		pnl_Settings.add(txtOutputFilename);
 		txtOutputFilename.setColumns(100);
 
@@ -208,6 +209,8 @@ public class LogManagerWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					writeLogShell();
+				} catch (ScriptManagerException sme) {
+					JOptionPane.showMessageDialog(null, sme.getMessage());
 				} catch (IOException ioe) {
 					JOptionPane.showMessageDialog(null, ioe.getMessage());
 				}
@@ -286,15 +289,11 @@ public class LogManagerWindow extends JFrame {
 	public ArrayList<LogItem> getLogItems() { return logItems; }
 	public LogItem getLogItem(int i) { return logItems.get(i); }
 	public Timestamp getLogStart() { return logStart; }
-	public int getVerbosity() { return verbosity; }
-	public String getFilename() { return ofilename; }
 	public File getOutputDirectory() { return odir; }
 
 	// Setters
 	public void setToggleOn(boolean toggle) { on = toggle; }
 	public void setLogStart(Timestamp time) { logStart = time; }
-	public void setVerbosity(int v) { verbosity = v; }
-	public void setFilename(String o) { ofilename = o; }
 	public void setOutputDirectory(File o) { odir = o; }
 
 	// Status - getters, setters, and Comparators
@@ -331,16 +330,35 @@ public class LogManagerWindow extends JFrame {
 	}
 
 	/**
+	 * Get the verbosity value from the radio buttons
+	 * 
+	 * @return verbosity level (1, 2, or 3)
+	 */
+	public short getLogVerbosity() throws ScriptManagerException {
+		if (verbosity1.isSelected()) {
+			return 1;
+		} else if (verbosity2.isSelected()) {
+			return 2;
+		} else if (verbosity3.isSelected()) {
+			return 3;
+		}
+		throw new ScriptManagerException("Unrecognized verbosity level. This should never throw");
+	}
+
+	/**
 	 * Write the contents of the log as a shell script
 	 *
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
-	public void writeLogShell() throws IOException {
+	public void writeLogShell() throws IOException, ScriptManagerException {
 		// Create File & initialize stream
-		PrintStream OUT = new PrintStream(new File(OUT_DIR + File.separator + ofilename));
+		PrintStream OUT = new PrintStream(new File(OUT_DIR + File.separator + txtOutputFilename.getText()));
+
+		// Determine verbosity of output
+		short verbosity = getLogVerbosity();
 
 		// Write Header (V=1+)
-		OUT.println("# VERSION\t" + ToolDescriptions.VERSION);
+		OUT.println("# VERSION\t" + ToolDescriptions.VERSION + "\tVerbosity Level:" + verbosity);
 		OUT.println("SCRIPTMANAGER=/path/to/ScriptManager.jar");
 		OUT.println("PICARD=/path/to/picard.jar");
 		OUT.println();
@@ -348,7 +366,7 @@ public class LogManagerWindow extends JFrame {
 		// Write LogInfo start time (V=1+)
 		OUT.println("# Log start time: " + logStart.toString());
 
-		// Sort LogItems for writing--not needed unless fireproperty adding out of order
+		// Add later: Sort LogItems for writing--not needed unless fireproperty adding out of order
 
 		// Record each LogItem
 		for (int i = 0; i<logItems.size(); i++) {
@@ -361,16 +379,19 @@ public class LogManagerWindow extends JFrame {
 			}
 
 			// Write LogItem command string (V=1+)
+			if (item.getStopTime()==null) {
+				OUT.print("# ");
+			}
 			OUT.println(item.getCommand());
 
 			if(verbosity>=2) {
 				// Write LogItem status (V=2+)
-				OUT.println("# " + item.getStatus());
+				OUT.println("# Exit status: " + item.getStatus());
 				// Write LogItem end time (V=2+)
-				OUT.println("# " + item.getStopTime().toString());
+				OUT.println(item.getStopTime()==null ? "#Incomplete" : "# " + item.getStopTime().toString());
 				// Write LogItem runtime (V=3+)
 				if(verbosity>=3) {
-					OUT.println("# Runtime: " + (item.getStopTime().getTime() - item.getStartTime().getTime()));
+					OUT.println(item.getStopTime()==null ? "# Runtime: -" : "# Runtime: " + (item.getStopTime().getTime() - item.getStartTime().getTime()));
 				}
 			}
 			// TODO: Write Toggle Log info

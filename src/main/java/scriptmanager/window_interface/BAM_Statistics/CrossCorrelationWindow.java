@@ -38,13 +38,14 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.ArchTEx.CorrParameter;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
 /**
- * Graphical window for user argument selection and execution of the
- * CrossCorrelation script. <br>
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation} <br>
  * Code largely sourced from ArchTEx.components.CorrelationParametersWindow in
  * <a href=
  * "https://github.com/WilliamKMLai/ArchTEx">https://github.com/WilliamKMLai/ArchTEx</a>
@@ -57,6 +58,9 @@ import scriptmanager.util.FileSelection;
 @SuppressWarnings("serial")
 public class CrossCorrelationWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));	
 	private JCheckBox chckbxOutputStatistics;
 	private JButton btnLoad;
@@ -79,10 +83,16 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organize user inputs for calling script
+	 */
+	/**
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
@@ -111,23 +121,30 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 					}
 					System.out.println("Parameters Loaded.\n");
 					// Initialize output window and run
-					CrossCorrelationOutput script_obj = new CrossCorrelationOutput(OUT_DIR, BAMFiles, param, chckbxOutputStatistics.isSelected());
-					script_obj.addPropertyChangeListener("bam", new PropertyChangeListener() {
+					CrossCorrelationOutput output_obj = new CrossCorrelationOutput(BAMFiles, OUT_DIR, chckbxOutputStatistics.isSelected(), param);
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int)(((double)(temp) / BAMFiles.size()) * 100);
 							setProgress(percentComplete);
 						}
 					});
-					script_obj.setVisible(true);
-					script_obj.run();
+					output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+						}
+					});
+					output_obj.setVisible(true);
+					output_obj.run();
 				}
 			} catch(NumberFormatException nfe){
 				JOptionPane.showMessageDialog(null, "Input Fields Must Contain Integers");
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;
@@ -384,6 +401,9 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 		btnCorrelate.addActionListener(this);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -402,9 +422,16 @@ public class CrossCorrelationWindow extends JFrame implements ActionListener, Pr
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
+		} else if ("log" == evt.getPropertyName()) {
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);

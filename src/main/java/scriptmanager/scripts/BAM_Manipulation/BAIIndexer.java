@@ -10,16 +10,20 @@ import java.util.ArrayList;
  * Picard wrapper for BuildBamIndex
  * 
  * @author Erik Pavloski
- * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWIndow
+ * @see scriptmanager.window_interface.BAM_Manipulation.BAIIndexerWindow
  */
 public class BAIIndexer {
+	/**
+	 * Creates a new BAIIndexer object (unnecessary becuase this class is a collection of static methods)
+	 */
+	public BAIIndexer(){}
 	/**
 	 * Index a BAM file and output said index to a file of the same name with a .bai
 	 * extension
 	 * 
 	 * @param input the BAM file to index
 	 * @return the BAM index file (.bai)
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	public static File generateIndex(File input) throws IOException {
 		// Tells user that their file is being generated

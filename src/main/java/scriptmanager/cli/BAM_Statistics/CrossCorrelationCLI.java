@@ -8,18 +8,18 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.ArchTEx.CorrParameter;
 import scriptmanager.scripts.BAM_Statistics.CrossCorrelation;
 import scriptmanager.util.ExtensionFileFilter;
 
 /**
- * Command line interface class for performing the ArchTEX cross correlation
- * analysis by calling a method implemented in the scripts package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.BAM_Statistics.CrossCorrelation}
  * 
  * @author Olivia Lang
  * @see scriptmanager.objects.ArchTEx.CorrParameter
- * @see scriptmanager.scripts.BAM_Statistics.CrossCorrelation
  */
 @Command(name = "cross-corr", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.archtex_crosscorrelation_description,
@@ -28,6 +28,11 @@ import scriptmanager.util.ExtensionFileFilter;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class CrossCorrelationCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new CrossCorrelationCLI object
+	 */
+	public CrossCorrelationCLI(){}
 	
 	@Parameters( index = "0", description = "The BAM file to perform the cross-correlation on")
 	private File bamFile;
@@ -47,7 +52,7 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 	@Option(names = {"-t", "--cpu"}, description = "set number of threads for performance tuning (default=1)")
 	private int cpu = 1;
 
-	@ArgGroup(exclusive = true, multiplicity = "0..1", heading = "%nRandom Sampling Options:%n\t@|fg(red) (ignored if full genome correlation method selected)|@%n")
+	@ArgGroup(exclusive = false, multiplicity = "0..1", heading = "%nRandom Sampling Options:%n\t@|fg(red) (ignored if full genome correlation method selected)|@%n")
 	SamplingParams samplingParams = new SamplingParams();
 	static class SamplingParams {
 		@Option(names = {"-w", "--window"}, description = "set window frame size for each extraction (default=50kb)")
@@ -58,6 +63,10 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 	
 	CorrParameter param = new CorrParameter();
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println( ">CrossCorrelationCLI.call()" );
@@ -68,17 +77,17 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 		
-		CrossCorrelation.correlate( outputBasename, bamFile, param, null);
+		CrossCorrelation.correlate(bamFile, outputBasename, param, null);
 		
 		System.err.println("Calculations Complete");
 		return(0);
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";
@@ -122,5 +131,28 @@ public class CrossCorrelationCLI implements Callable<Integer> {
 		param.setThreads(cpu);
 
 		return(r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param bamFile BAM file to get statistics on
+	 * @param output  text file to write output to
+	 * @param param   cross correlation parameters
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File bamFile, File output, CorrParameter param) {
+		String command = "java -jar $SCRIPTMANAGER bam-statistics cross-corr";
+		command += " " + bamFile.getAbsolutePath();
+		command += " -o " + output.getAbsolutePath();
+		command += " --cpu " + param.getThreads();
+		if (param.getCorrType()) {
+			command += " -g";
+		} else {
+			command += " -r";
+			command += " -w " + param.getCorrWindow();
+			command += " -i " + param.getIterations();
+		}
+		return command;
 	}
 }

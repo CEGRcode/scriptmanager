@@ -17,16 +17,19 @@ import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED;
 
 /**
- * Command line interface class for calculating various aspects of DNA shape
- * across a set of BED intervals by calling a script implemented in the scripts
- * package.
+ * Command line interface for
+ * {@link scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED}
  * 
  * @author Olivia Lang
- * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
  */
 @Command(name = "dna-shape-bed", mixinStandardHelpOptions = true, description = ToolDescriptions.dna_shape_from_bed_description, version = "ScriptManager "
 		+ ToolDescriptions.VERSION, sortOptions = false, exitCodeOnInvalidInput = 1, exitCodeOnExecutionException = 1)
 public class DNAShapefromBEDCLI implements Callable<Integer> {
+
+	/**
+	 * Creates a new DNAShapefromBEDCLI object
+	 */
+	public DNAShapefromBEDCLI(){}
 
 	@Parameters(index = "0", description = "reference genome FASTA file")
 	private File genomeFASTA;
@@ -36,6 +39,8 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	@Option(names = { "-o",
 			"--output" }, description = "Specify basename for output files, files for each shape indicated will share this name with a different suffix")
 	private String outputBasename = null;
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
+	private boolean gzOutput = false;
 	@Option(names = { "--avg-composite" }, description = "Save average composite")
 	private boolean avgComposite = false;
 	@Option(names = { "--avg-cdt" }, description = "Save average (composite) CDT")
@@ -55,13 +60,16 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		private boolean propeller = false;
 		@Option(names = { "-l", "--helical" }, description = "output helical twist")
 		private boolean helical = false;
-		@Option(names = { "-a",
-				"--all" }, description = "output groove, roll, propeller twist, and helical twist (equivalent to -grpl).")
+		@Option(names = { "-a", "--all" }, description = "output groove, roll, propeller twist, and helical twist (equivalent to -grpl).")
 		private boolean all = false;
 	}
 
 	private boolean[] OUTPUT_TYPE = new boolean[] { false, false, false, false };
 
+	/**
+	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
+	 * @throws IOException Invalid file or parameters
+	 */
 	@Override
 	public Integer call() throws Exception {
 		System.err.println(">DNAShapefromBEDCLI.call()");
@@ -76,7 +84,7 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		try {
 			// Generate Composite Plot
 			DNAShapefromBED script_obj = new DNAShapefromBED(genomeFASTA, bedFile, outputBasename, OUTPUT_TYPE,
-					forceStrand, new PrintStream[] { null, null, null, null }, avgCDT);
+					forceStrand, new PrintStream[] { null, null, null, null }, avgCDT, gzOutput);
 			script_obj.run();
 
 			if (avgComposite) {
@@ -107,10 +115,10 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 	}
 
 	/**
-	 * Validate the input values before executing the script.
+	 * Validate the input values before executing the script
 	 * 
 	 * @return a multi-line string describing input validation issues
-	 * @throws IOException
+	 * @throws IOException Invalid file or parameters
 	 */
 	private String validateInput() throws IOException {
 		String r = "";
@@ -125,14 +133,6 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		}
 		if (!r.equals("")) {
 			return (r);
-		}
-		// check input extensions
-		ExtensionFileFilter faFilter = new ExtensionFileFilter("fa");
-		if (!faFilter.accept(genomeFASTA)) {
-			r += "(!)Is this a FASTA file? Check extension: " + genomeFASTA.getName() + "\n";
-		}
-		if (!"bed".equals(ExtensionFileFilter.getExtension(bedFile))) {
-			r += "(!)Is this a BED file? Check extension: " + bedFile.getName() + "\n";
 		}
 		// set default output filename
 		if (outputBasename == null) {
@@ -174,5 +174,35 @@ public class DNAShapefromBEDCLI implements Callable<Integer> {
 		}
 
 		return (r);
+	}
+
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param gen   the reference genome sequence in FASTA-format (FAI will be
+	 *              automatically generated)
+	 * @param input the BED-formatted coordinate intervals to extract sequence from
+	 * @param out   the output file name base (to add _&lt;shapetype&gt;.cdt suffix
+	 *              to)
+	 * @param type  a four-element boolean list for specifying shape type to output
+	 *              (no enforcement on size)
+	 * @param str  force strandedness (true=forced, false=not forced)
+	 * @param averageMatrix whether to output an "averages" cdt
+	 * @param gzOutput   whether or not to gzip output
+	 * @return command line to execute with formatted inputs
+	 */
+	public static String getCLIcommand(File gen, File input, String out, boolean[] type, boolean str, boolean averageMatrix, boolean gzOutput) {
+		String command = "java -jar $SCRIPTMANAGER sequence-analysis dna-shape-bed";
+		command += " -o " + out;
+		command += gzOutput ? " -z " : "";
+		command += type[0] ? " --groove" : "";
+		command += type[1] ? " --propeller" : "";
+		command += type[2] ? " --helical" : "";
+		command += type[3] ? " --roll" : "";
+		command += str ? "" : "--no-force";
+		command += averageMatrix ? "--avg-cdt" : "";
+		command += " " + gen;
+		command += " " + input;
+		return (command);
 	}
 }
