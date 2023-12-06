@@ -3,6 +3,8 @@ package scriptmanager.objects;
 import java.io.File;
 import java.io.PrintStream;
 
+import scriptmanager.objects.Exceptions.OptionException;
+
 /**
  * Object for storing pileup-related parameter information and constants.
  *
@@ -146,6 +148,32 @@ public class PileupParameters {
 		System.out.println( "private int MAX_INSERT = " + MAX_INSERT );
 		System.out.println();
 		System.out.println( "<><><><><><><><><><><><><><><><><><><><>" );
+	}
+
+	public String getAspectString() throws OptionException {
+		switch (ASPECT) {
+			case PileupParameters.FIVE:
+				return("Read Aspect: Five");
+			case PileupParameters.THREE:
+				return("Read Aspect: Three");
+			case PileupParameters.MIDPOINT:
+				return("Read Aspect: Midpoint");
+			case PileupParameters.FRAGMENT:
+				return("Read Aspect: Fragment");
+		}
+		throw new OptionException("Unknown PileupParameters read aspect value: " + ASPECT);
+	}
+
+	public String getReadString() throws OptionException {
+		switch (READ) {
+			case PileupParameters.READ1:
+				return("Read Output: Read1");
+			case PileupParameters.THREE:
+				return("Read Output: Read2");
+			case PileupParameters.MIDPOINT:
+				return("Read Output: All Reads");
+		}
+		throw new OptionException("Unknown PileupParameters read output value: " + READ);
 	}
 
 	/**
@@ -604,27 +632,55 @@ public class PileupParameters {
 	 * settings.
 	 *
 	 * @return the string of flags and options
+	 * @throws OptionException when PileupParameters value is unrecognized
 	 */
-	public String getCLIOptions(){
+	public String getCLIOptions() throws OptionException {
 		String cliCommand = "";
 
 		// Add ASPECT
-		if (ASPECT == PileupParameters.FIVE ) { cliCommand += " -5"; }
-		else if (ASPECT == PileupParameters.THREE ) { cliCommand += " -3"; }
-		else if (ASPECT == PileupParameters.MIDPOINT ) { cliCommand += " -m"; }
-		else if (ASPECT == PileupParameters.FRAGMENT ) { cliCommand += " --full-fragment"; }
-		else { System.err.println("This should not print."); }
+		switch (ASPECT) {
+			case PileupParameters.FIVE:
+				cliCommand += " -5";
+				break;
+			case PileupParameters.THREE:
+				cliCommand += " -3";
+				break;
+			case PileupParameters.MIDPOINT:
+				cliCommand += " -m";
+				break;
+			case PileupParameters.FRAGMENT:
+				cliCommand += " --full-fragment";
+				break;
+			default:
+				throw new OptionException("Unknown PileupParameters read aspect value: " + ASPECT);
+		}
 
 		// Add READ
-		if (READ == PileupParameters.READ1) { cliCommand += " -1"; }
-		else if (READ == PileupParameters.READ2) { cliCommand += " -2"; }
-		else if (READ == PileupParameters.ALLREADS) { cliCommand += " -a"; }
-		else { System.err.println("This should not print."); }
+		switch (READ) {
+			case PileupParameters.READ1:
+				cliCommand += " -1";
+				break;
+			case PileupParameters.READ2:
+				cliCommand += " -2";
+				break;
+			case PileupParameters.ALLREADS:
+				cliCommand += " -a";
+				break;
+			default:
+				throw new OptionException("Unknown PileupParameters read output value: " + READ);
+		}
 
 		// Add STRAND
-		if (STRAND == 0) { cliCommand += " --separate"; }
-		else if (STRAND == 1) { cliCommand += " --combined"; }
-		else { System.err.println("This should not print."); }
+		switch (STRAND) {
+			case PileupParameters.SEPARATE:
+				cliCommand += " --separate";
+				break;
+			case PileupParameters.COMBINED:
+				cliCommand += " --combined";
+				break;
+			default:
+				throw new OptionException("Unknown PileupParameters strand value: " + STRAND);
+		}
 
 		// Add TRANS
 		if(TRANS==0){
