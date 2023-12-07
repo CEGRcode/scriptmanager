@@ -36,6 +36,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
@@ -136,6 +137,8 @@ public class DNAShapefromFASTAWindow extends JFrame implements ActionListener, P
 					output_obj.setVisible(true);
 					output_obj.run();
 				}
+			} catch (ScriptManagerException sme) {
+				JOptionPane.showMessageDialog(null, sme.getMessage());
 			} catch (OptionException oe) {
 				JOptionPane.showMessageDialog(null, oe.getMessage());
 			} catch (NumberFormatException nfe) {

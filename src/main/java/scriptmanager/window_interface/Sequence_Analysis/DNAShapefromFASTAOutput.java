@@ -19,6 +19,7 @@ import javax.swing.SpringLayout;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.ExtensionFileFilter;
 
 import scriptmanager.cli.Sequence_Analysis.DNAShapefromFASTACLI;
@@ -100,7 +101,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException Thrown when more than one script is run at the same time
 	 */
-	public void run() throws OptionException, FileNotFoundException, IOException, InterruptedException {
+	public void run() throws ScriptManagerException, OptionException, FileNotFoundException, IOException, InterruptedException {
 			LogItem old_li = null;
 			// Move through each BED File
 			for (int x = 0; x < FASTA.size(); x++) {
