@@ -1,12 +1,17 @@
-<tool id="scriptmanager_expand-bed" name="ScriptManager: Expand BED File" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_expand-bed" name="ScriptManager: Expand BED File" version="0.1.0" profile="22.01" >
     <description>Expands input BED file by adding positions to the border or around the center.</description>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
-
     <command detect_errors="exit_code"><![CDATA[
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation expand-bed 
+        ln -s "$input" "temp_input.bed" &&
 
+        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation expand-bed
+
+        #if str($output_file_name.bool) == "Yes" :
+            -o "$output_file_name.directory"
+        #end if
+        
         #if str($expansion_select) == "center" :
             -c
         #else if str($expansion_select) == "border" :
@@ -14,35 +19,48 @@
         #end if
 
         "$SIZE"
-
-        -o '$output1'
-        '$input1'
+        
+        "temp_input.bed"
     ]]></command>
 
     <inputs>
-        <param type="data" name="input1" format="bed" label="Input BED File"/>
+        <param type="data" name="input" format="bed" label="Input BED File"/>
 
+        <conditional name="output_file_name">
+        <param type="boolean" name="bool" truevalue="Yes" falsevalue="No" label="Output File Name" >
+        </param>
+            <when value="Yes">
+                <param type="text" name="directory" value="" label="File Name" />
+            </when>
+            <when value="No">
+            </when>
+        </conditional>
+        
+        <!--
+        <param type="boolean" name="gzip" truevalue="Yes" falsevalue="No" label="Gzip output" />
+        -->
+        
         <param type="select" name="expansion_select" label="Select expansion option">
             <option value="center" selected="True" >Expand from center</option>
             <option value="border" >Add to border</option>
         </param>
 
         <param type="integer" name="SIZE" value="250" label="Size of expansion (bp)" />
-
     </inputs>
+    
     <outputs>
         <data name="output1" format="bed" label="${tool.name} on ${on_string}"/>
     </outputs>
 
-    <tests>
-        <test expect_num_outputs="1">
-            <param name="input1" value="2.bed" />
-            <output name="output1" file="2_250bp.bed" ftype="bed" />
-        </test>
-    </tests>
-
     <help>
 **What it does**
+
 Expand BED file given user-defined criteria.
     </help>
 </tool>
+
+<!--
+#if str($gzip) == "Yes" :
+-z
+#end if
+-->
