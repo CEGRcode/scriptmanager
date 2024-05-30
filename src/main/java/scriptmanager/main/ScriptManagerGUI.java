@@ -225,6 +225,9 @@ public class ScriptManagerGUI {
 		pnlPeakAnalysis.add(initializeToolPanel("Signal Duplication", ToolDescriptions.signal_dup_description,
 				"Output signal duplication statistics",
 				Class.forName("scriptmanager.window_interface.Peak_Analysis.SignalDuplicationWindow")));
+		// FRiXCalculator
+		pnlPeakAnalysis.add(initializeToolPanel("FRiX Score Calculator", ToolDescriptions.frix_description,
+				Class.forName("scriptmanager.window_interface.Peak_Analysis.FRiXCalculatorWindow")));
 
 		// ======== Coordinate_Manipulation ========
 		JPanel pnlCoordManip = new JPanel();
