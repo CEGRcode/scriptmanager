@@ -20,11 +20,13 @@ import javax.swing.SpringLayout;
 
 import scriptmanager.charts.CompositePlot;
 import scriptmanager.objects.PileupParameters;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
+import scriptmanager.util.BAMUtilities;
+
 import scriptmanager.cli.Read_Analysis.TagPileupCLI;
 import scriptmanager.scripts.Read_Analysis.TagPileup;
-import scriptmanager.util.BAMUtilities;
 
 /**
  * Output wrapper for running
@@ -32,7 +34,6 @@ import scriptmanager.util.BAMUtilities;
  * results
  * 
  * @author William KM Lai
- * @see scriptmanager.scripts.Read_Analysis.TagPileup
  * @see scriptmanager.window_interface.Read_Analysis.TagPileupWindow
  */
 @SuppressWarnings("serial")
@@ -98,8 +99,9 @@ public class TagPileupOutput extends JFrame {
 	 * Plot" tab.
 	 * 
 	 * @throws IOException Invalid file or parameters
+	 * @throws OptionException invalid input values for read, aspect, or strand
 	 */
-	public void run() throws IOException {
+	public void run() throws OptionException, IOException {
 		// Check if BAI index file exists for all BAM files
 		boolean[] BAMvalid = new boolean[BAMFiles.size()];
 		for (int z = 0; z < BAMFiles.size(); z++) {
@@ -114,7 +116,7 @@ public class TagPileupOutput extends JFrame {
 			}
 		}
 
-		LogItem old_li = new LogItem("");
+		LogItem old_li = null;
 		int PROGRESS = 0;
 		for (int z = 0; z < BAMFiles.size(); z++) {
 			File BAM = BAMFiles.get(z); // Pull current BAM file
@@ -141,7 +143,7 @@ public class TagPileupOutput extends JFrame {
 					LogItem new_li = new LogItem(command);
 					firePropertyChange("log", old_li, new_li);
 
-					// Execute conversion and update progress
+					// Execute script
 					TagPileup script_obj = new TagPileup(XBED, BAM, PARAM, ps, null);
 					script_obj.run();
 					// Update log item
@@ -162,7 +164,7 @@ public class TagPileupOutput extends JFrame {
 					tabbedPane_Statistics.add(BAM.getName(), newpane);
 
 					// Update progress
-					firePropertyChange("tag", PROGRESS, PROGRESS + 1);
+					firePropertyChange("progress", PROGRESS, PROGRESS + 1);
 					PROGRESS++;
 				}
 			}

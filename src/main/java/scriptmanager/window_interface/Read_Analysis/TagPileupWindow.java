@@ -47,10 +47,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import htsjdk.samtools.SAMException;
+
 import scriptmanager.objects.CompositeCartoon;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
@@ -59,7 +61,6 @@ import scriptmanager.util.FileSelection;
  * {@link scriptmanager.scripts.Read_Analysis.TagPileup}
  * 
  * @author William KM Lai
- * @see scriptmanager.scripts.Read_Analysis.TagPileup
  * @see scriptmanager.window_interface.Read_Analysis.TagPileupOutput
  */
 @SuppressWarnings("serial")
@@ -229,12 +230,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					param.setTagExtend(Integer.parseInt(txtTagExtend.getText()));
 					param.setCPU(Integer.parseInt(txtCPU.getText()));
 
-					//debug gui by printing params
-//					param.printAll();
-
-					// Initialize, addPropertyChangeListeners, and execute
+					// Execute script
 					TagPileupOutput output_obj = new TagPileupOutput(BEDFiles, BAMFiles, param, colors);
-					output_obj.addPropertyChangeListener("tag", new PropertyChangeListener() {
+					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 							int temp = (Integer) propertyChangeEvent.getNewValue();
 							int percentComplete = (int) (((double) (temp) / (BAMFiles.size() * BEDFiles.size())) * 100);
@@ -253,6 +251,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (SAMException se) {
 				JOptionPane.showMessageDialog(null, se.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
+			} catch (OptionException oe) {
+				oe.printStackTrace();
+				JOptionPane.showMessageDialog(null, oe.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
@@ -348,7 +349,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BAM, 10, SpringLayout.SOUTH, btnLoadBamFiles);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BAM, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BAM, 380, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BAM, -525, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BAM, 0, SpringLayout.EAST, scrollPane_BED);
 		contentPane.add(scrollPane_BAM);
 
 		expList = new DefaultListModel<String>();
@@ -978,8 +979,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		txtCPU = new JTextField();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -1, SpringLayout.NORTH, lblCpusToUse);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 10, SpringLayout.EAST, lblCpusToUse);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 70, SpringLayout.EAST, lblCpusToUse);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 100, SpringLayout.WEST, lblCpusToUse);
+		sl_contentPane.putConstraint(SpringLayout.EAST, txtCPU, 120, SpringLayout.EAST, lblCpusToUse);
 		txtCPU.setHorizontalAlignment(SwingConstants.CENTER);
 		txtCPU.setText("1");
 		txtCPU.setColumns(10);

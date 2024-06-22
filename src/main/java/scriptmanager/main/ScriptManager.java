@@ -6,7 +6,6 @@ import picocli.CommandLine.Command;
 import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
-
 import scriptmanager.cli.BAM_Format_Converter.BAMtoBEDCLI;
 import scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI;
 import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
@@ -45,11 +44,13 @@ import scriptmanager.cli.File_Utilities.CompressFileCLI;
 import scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI;
 import scriptmanager.cli.File_Utilities.ConvertGFFChrNamesCLI;
 import scriptmanager.cli.File_Utilities.DecompressGZFileCLI;
+
 import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
 import scriptmanager.cli.Peak_Analysis.SignalDuplicationCLI;
 import scriptmanager.cli.Peak_Analysis.TileGenomeCLI;
+import scriptmanager.cli.Peak_Analysis.FRiXCalculatorCLI;
 
 import scriptmanager.cli.Peak_Calling.GeneTrackCLI;
 import scriptmanager.cli.Peak_Calling.PeakPairCLI;
@@ -204,7 +205,8 @@ class File_UtilitiesCLI extends SubcommandCLI {}
 			FilterBEDbyProximityCLI.class,
 			RandomCoordinateCLI.class,
 			SignalDuplicationCLI.class,
-			TileGenomeCLI.class
+			TileGenomeCLI.class,
+			FRiXCalculatorCLI.class
 		},
 		description = "Includes tools like BEDPeakAligntoRefCLI, FilterBEDbyProximityCLI, RandomCoordinateCLI, SignalDuplicationCLI, and TileGenomeCLI.")
 class Peak_AnalysisCLI extends SubcommandCLI {}

@@ -13,9 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import scriptmanager.util.BAMUtilities;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.util.BAMUtilities;
+
 import scriptmanager.scripts.Read_Analysis.TagPileup;
 
 /**
@@ -310,11 +312,20 @@ public class TagPileupCLI implements Callable<Integer> {
 		return(r);
 	}
 	
-	public static String getCLIcommand(File BED, File BAM, PileupParameters PARAM) {
+	/**
+	 * Reconstruct CLI command
+	 * 
+	 * @param BED   input BED file
+	 * @param BAM   input BAM file
+	 * @param PARAM parameters for tag pileup
+	 * @return command line to execute with formatted inputs
+	 * @throws OptionException thrown by PileupParameters if invalid param values given
+	 */
+	public static String getCLIcommand(File BED, File BAM, PileupParameters PARAM) throws OptionException {
 		String command = "java -jar $SCRIPTMANAGER read-analysis tag-pileup";
-		command += " " + PARAM.getCLIOptions();
 		command += " " + BED.getAbsolutePath();
 		command += " " + BAM.getAbsolutePath();
+		command += " " + PARAM.getCLIOptions();
 		String NAME = PARAM.getOutputDirectory() + File.separator + PARAM.generateFileBase(BED.getName(), BAM.getName());
 		command += " -M " + NAME + " -o " + NAME;
 		return(command);
