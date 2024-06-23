@@ -66,6 +66,9 @@ public class CorrExtract implements Runnable {
 	}
 
 	@Override
+	/**
+	 * Checks for valid input and runs analysis on CorrNodes
+	 */
 	public void run() {
 		for(int x = INDEX; x < INDEX + SUBSETSIZE; x++) {
 			try {

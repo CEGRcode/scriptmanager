@@ -32,14 +32,15 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.cli.Coordinate_Manipulation.BED_Manipulation.BEDtoGFFCLI;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 
 /**
- * Graphical interface window for converting BED-formatted coordinates to
- * GFF-format by calling a script implemented in the scripts package.
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF}
  * 
  * @author William KM Lai
  * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF
@@ -47,6 +48,9 @@ import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.BEDtoGFF;
 @SuppressWarnings("serial")
 public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyChangeListener {
 	private JPanel contentPane;
+	/**
+	 * FileChooser which opens to user's directory
+	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 
 	private File OUT_DIR = null;
@@ -58,6 +62,9 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	private JButton btnConvert;
 
 	private JProgressBar progressBar;
+	/**
+	 * Used to run the script efficiently
+	 */
 	public Task task;
 	private JLabel lblCurrent;
 	private JLabel lblDefaultToLocal;
@@ -65,27 +72,27 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	private static JCheckBox chckbxGzipOutput;
 
 	/**
-	 * Organize user inputs for calling script.
+	 * Organizes user inputs for calling script
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() throws IOException {
+		public Void doInBackground() {
+			try {
 			setProgress(0);
-			LogItem old_li = new LogItem("");
+			LogItem old_li = null;
 			for (int x = 0; x < BEDFiles.size(); x++) {
 				File XBED = BEDFiles.get(x);
 				// Set outfilepath
-				String OUTPUT = ExtensionFileFilter.stripExtension(XBED) + ".gff";
+				String OUTPUT = ExtensionFileFilter.stripExtensionIgnoreGZ(XBED) + ".gff" + (chckbxGzipOutput.isSelected()? ".gz": "");
 				if (OUT_DIR != null) {
 					OUTPUT = OUT_DIR + File.separator + OUTPUT;
 				}
-				OUTPUT += chckbxGzipOutput.isSelected() ? ".gz" : "";
 				// Initialize LogItem
-				String command = BEDtoGFFCLI.getCLIcommand(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
+				String command = BEDtoGFFCLI.getCLIcommand(XBED, new File(OUTPUT), chckbxGzipOutput.isSelected());
 				LogItem new_li = new LogItem(command);
 				firePropertyChange("log", old_li, new_li);
 				// Execute conversion and update progress
-				BEDtoGFF.convertBEDtoGFF(new File(OUTPUT), XBED, chckbxGzipOutput.isSelected());
+				BEDtoGFF.convertBEDtoGFF(XBED, new File(OUTPUT), chckbxGzipOutput.isSelected());
 				// Update log item
 				new_li.setStopTime(new Timestamp(new Date().getTime()));
 				new_li.setStatus(0);
@@ -97,6 +104,15 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 			firePropertyChange("log", old_li, null);
 			setProgress(100);
 			JOptionPane.showMessageDialog(null, "Conversion Complete");
+
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				JOptionPane.showMessageDialog(null, "I/O issues: " + ioe.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
+			}
+			setProgress(100);
 			return null;
 		}
 
@@ -202,12 +218,15 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		contentPane.add(btnOutput);
 		btnConvert.addActionListener(this);
 
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -10, SpringLayout.EAST, contentPane);
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnConvert);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 36, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxGzipOutput);
 	}
 
+	/**
+	 * Runs when a task is invoked, making window non-interactive and executing the task.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
@@ -221,6 +240,7 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 	/**
 	 * Invoked when task's progress property changes.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
@@ -230,6 +250,11 @@ public class BEDtoGFFWindow extends JFrame implements ActionListener, PropertyCh
 		}
 	}
 
+	/**
+	 * Makes the content pane non-interactive If the window should be interactive data
+	 * @param con Content pane to make non-interactive
+	 * @param status If the window should be interactive
+	 */
 	public void massXable(Container con, boolean status) {
 		for (Component c : con.getComponents()) {
 			c.setEnabled(status);
