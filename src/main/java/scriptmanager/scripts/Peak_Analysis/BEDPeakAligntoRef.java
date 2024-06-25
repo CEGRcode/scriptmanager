@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.GZipUtilities;
 
 /**
@@ -54,56 +56,60 @@ public class BEDPeakAligntoRef {
 	 */
 	public void run() throws IOException, InterruptedException {
 
-		printPS("Mapping: " + peakBED.getName() + " to " + refBED.getName());
-		printPS("Starting: " + new Timestamp(new Date().getTime()).toString());
-		
-		int counter = 0;
+		// Write starting message
+		printPS(PS, "Mapping: " + peakBED.getName() + " to " + refBED.getName());
+		printPS(PS, "Starting: " + new Timestamp(new Date().getTime()).toString());
+
+
+		// =====Make peakMap=====
+		Map<String, List<String>> peakMap = new HashMap<>();
+		String key ;
 		//Checks if BED file is compressed, creates appropriate input stream
 		BufferedReader br = GZipUtilities.makeReader(peakBED);
-		
-		String key ;
-//--------------
-		Map<String, List<String>> peakMap = new HashMap<>();
 		for (String line; (line = br.readLine()) != null; ) {
-			key = line.split("\t")[0];
+			key = new BEDCoord(line).getChrom();
 			if(!peakMap.containsKey(key)) {
 				peakMap.put(key, new ArrayList<String>());
 				peakMap.get(key).add(line);
 			} else {
-				peakMap.get(key).add(line + "\t");
+				peakMap.get(key).add(line);
 			}
 		}
 		br.close();
-	
-//============
+
+		// =====Overlay on Reference=====
+		int counter = 0; // for tracking progress
 		//Checks if BED file is compressed, creates appropriate input stream
 		br = GZipUtilities.makeReader(refBED);
 		for (String line; (line = br.readLine()) != null;) {
-			String[] str = line.split("\t");
-			String chr = str[0];
-			String[] peakLine;
-			int cdtLength = (Integer.parseInt(str[2])) - (Integer.parseInt(str[1]));
+			// Parse ref BED record and chromosome
+			BEDCoord refCoord = new BEDCoord(line);
+			String chr = refCoord.getChrom();
+			// Initialize CDT row array
+			int cdtLength = (int)(refCoord.getStop() - refCoord.getStart());
 			int cdtArr[] = new int[cdtLength];
+			// Process one chr at a time
 			if (peakMap.containsKey(chr)) {
 				for (int i = 0; i < peakMap.get(chr).size(); i++) {
-					peakLine = peakMap.get(chr).get(i).split("\t");
-					if (Integer.parseInt(peakLine[1]) <= Integer.parseInt(str[2]) && Integer.parseInt(peakLine[1]) >= Integer.parseInt(str[1])) {
-						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
-						int STOP = START + (Integer.parseInt(peakLine[2]) - Integer.parseInt(peakLine[1]));
-						for(int x = START; x <= STOP; x++) {
-							if(x >= 0 && x < cdtLength) { cdtArr[x]++; }
-						}
-					} else if (Integer.parseInt(peakLine[2]) >= Integer.parseInt(str[1]) && Integer.parseInt(peakLine[2]) <= Integer.parseInt(str[2])) {
-						int START = Integer.parseInt(peakLine[1]) - Integer.parseInt(str[1]);
-						int STOP = START + (Integer.parseInt(peakLine[2]) - Integer.parseInt(peakLine[1]));
-						for (int c = START; c <= STOP; c++) {
-							if (c >= 0 && c < cdtLength) {
-								cdtArr[c]++;
-							}
+					// Parse peak BED record
+					BEDCoord peakCoord = new BEDCoord(peakMap.get(chr).get(i));
+					// Skip peak if range does not overlap ref
+					if (peakCoord.getStop() < refCoord.getStart() || refCoord.getStop() <= peakCoord.getStart()) {
+						continue;
+					}
+					// Calculate coordinate range of CDT
+					int START = (int)(peakCoord.getStart() - refCoord.getStart());
+					int STOP = START + (int)(peakCoord.getStop() - peakCoord.getStart());
+					// Loop through CDT range
+					for(int x = START; x <= STOP; x++) {
+						// Check if valid coordinate range
+						if(x >= 0 && x < cdtLength) {
+							cdtArr[x]++;
 						}
 					}
 				}
 			}
+			// Print CDT header
 			if (counter == 0) {
 				OUT.print("YORF" + "\t" + "NAME");
 				for (int j = 0; j < cdtLength; j++) {
@@ -111,31 +117,42 @@ public class BEDPeakAligntoRef {
 				}
 				OUT.print("\n");
 			}
-			OUT.print(str[3] + "\t" + str[3]);
-			if (str[5].equalsIgnoreCase("+")) {
-				for (int i = 0; i < cdtLength; i++) {
-					OUT.print("\t" + cdtArr[i]);
-				}
-			} else {
+			// Print row header
+			OUT.print(refCoord.getName() + "\t" + refCoord.getName());
+			// Print array contents
+			if (refCoord.getDir().equals("-")) {
 				for (int j = cdtLength - 1; j >= 0; j--) {
 					OUT.print("\t" + cdtArr[j]);
+				}
+			} else {
+				for (int i = 0; i < cdtLength; i++) {
+					OUT.print("\t" + cdtArr[i]);
 				}
 			}
 			OUT.print("\n");
 			counter++;
 			
 			if(counter % 1000 == 0) {
-				printPS("Reference rows processed: " + counter);
+				printPS(PS, "Reference rows processed: " + counter);
 			}
 		}
+		// Close file streams
 		br.close();
 		OUT.close();
 		// Print update
-		printPS("Completing: " + new Timestamp(new Date().getTime()).toString());
+		printPS(PS, "Completing: " + new Timestamp(new Date().getTime()).toString());
 	}
 
-	private void printPS(String message){
-		if(PS!=null) PS.println(message);
+	/**
+	 * Write a message to both STDERR and the provided PrintStream if PS is non-null
+	 * 
+	 * @param PS      the object to attempt to write to
+	 * @param message the message
+	 */
+	private static void printPS(PrintStream PS, String message) {
+		if (PS != null) {
+			PS.println(message);
+		}
 		System.err.println(message);
 	}
 }
