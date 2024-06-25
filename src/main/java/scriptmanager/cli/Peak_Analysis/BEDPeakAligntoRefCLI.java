@@ -93,16 +93,18 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	/**
 	 * Reconstruct CLI command
 	 * 
-	 * @param refBED the reference BED windows to align to
-	 * @param peakBED the BED coordinate signal to mark the reference windows with
-	 * @param output the aligned output matrix file
+	 * @param refBED   the reference BED windows to align to
+	 * @param peakBED  the BED coordinate signal to mark the reference windows with
+	 * @param output   the aligned output matrix file
+	 * @param gzOutput whether or not to gzip output
 	 * @return command line to execute with formatted inputs
 	 */
-	public static String getCLIcommand(File refBED, File peakBED, File output) {
+	public static String getCLIcommand(File refBED, File peakBED, File output, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER peak-analysis peak-align-ref";
 		command += " " + peakBED.getAbsolutePath();
 		command += " " + refBED.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " -z " : "";
 		return command;
 	}
 }

@@ -15,6 +15,7 @@ import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
+import scriptmanager.util.ExtensionFileFilter;
 
 /**
  * Output wrapper for running
@@ -29,12 +30,12 @@ import scriptmanager.scripts.Peak_Analysis.BEDPeakAligntoRef;
 public class BEDPeakAligntoRefOutput extends JFrame{
 	private File PEAK = null;
 	private File REF = null;
-	private File OUTFILE = null;
+	private File OUT_DIR = null;
 	private boolean OUTPUT_GZIP = false;
 
 	private JTextArea textArea;
 
-	public BEDPeakAligntoRefOutput(File ref, File peak, File outpath, boolean gzOutput) throws IOException {
+	public BEDPeakAligntoRefOutput(File ref, File peak, File odir, boolean gzOutput) throws IOException {
 	/**
 	 * Creates a new BEDPeakAligntoRefOutput with two BED files and an output directory
 	 * @param ref Reference BAM file
@@ -55,31 +56,33 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		
 		REF = ref;
 		PEAK = peak;
+		OUT_DIR = odir;
 		OUTPUT_GZIP = gzOutput;
-		if(outpath != null) {
-			OUTFILE = new File(outpath.getCanonicalPath() + File.separator + PEAK.getName().split("\\.")[0] + "_" + REF.getName().split("\\.")[0] + "_Output.cdt");
-		} else {
-			OUTFILE = new File(PEAK.getName().split("\\.")[0] + "_" + REF.getName().split("\\.")[0] + "_Output.cdt");
-		}
-		if (OUTPUT_GZIP){
-			OUTFILE = new File(OUTFILE.getAbsolutePath() + ".gz");
-		}
 	}
-		
+
 	/**
 	 * Runs the BEDPeakAligntoRef script
-	 * @throws IOException Invalid file or parameters
-	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 * 
+	 * @throws IOException          Invalid file or parameters
+	 * @throws InterruptedException Thrown when more than one script is run at the
+	 *                              same time
 	 */
 	public void run() throws IOException, InterruptedException {
+		// Construct output basename
+		String NAME = ExtensionFileFilter.stripExtension(PEAK.getName()) + "_" + ExtensionFileFilter.stripExtension(REF.getName()) + "_Output.cdt";
+		NAME += OUTPUT_GZIP ? ".gz" : "";
+		File OUT_BASENAME = new File(NAME);
+		if (OUT_DIR != null) {
+			OUT_BASENAME = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
+		}
 		// Initialize LogItem
-		String command = BEDPeakAligntoRefCLI.getCLIcommand(REF, PEAK, OUTFILE);
+		String command = BEDPeakAligntoRefCLI.getCLIcommand(REF, PEAK, OUT_BASENAME, OUTPUT_GZIP);
 		LogItem li = new LogItem(command);
 		firePropertyChange("log", null, li);
 		// Set-up display stream
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		// Execute script
-		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUTFILE, PS, OUTPUT_GZIP);
+		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUT_BASENAME, PS, OUTPUT_GZIP);
 		script_obj.run();
 		// Update log item
 		li.setStopTime(new Timestamp(new Date().getTime()));
