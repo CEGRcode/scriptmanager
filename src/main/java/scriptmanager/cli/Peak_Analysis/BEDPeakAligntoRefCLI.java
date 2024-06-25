@@ -36,8 +36,10 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	@Parameters( index = "1", description = "The BED reference file")
 	private File refBED = null;
 	
-	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peakBED>_<refBED>_Output.cdt)")
+	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peakBED>_<refBED>_PeakAlign_<separate/combined>.cdt)")
 	private File output = null;
+	@Option(names = {"-s", "--separate"}, description = "separate by strand-matching (default=false)")
+	private boolean separate = false;
 	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	
@@ -54,9 +56,8 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 			System.err.println("Invalid input. Check usage using '-h' or '--help'");
 			System.exit(1);
 		}
-		
-		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(refBED, peakBED, output, null, gzOutput);
-		script_obj.run();
+		// Execute script
+		BEDPeakAligntoRef.execute(refBED, peakBED, output, separate, null, gzOutput);
 		
 		System.err.println( "Peak Align Complete." );	
 		return(0);
@@ -75,8 +76,7 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 		if(!r.equals("")){ return(r); }
 		//set default output filename
 		if(output==null){
-			output = new File(ExtensionFileFilter.stripExtension(peakBED) + "_" + ExtensionFileFilter.stripExtension(refBED) + "_Output.cdt"
-					+ (gzOutput ? ".gz" : ""));
+			output = new File(ExtensionFileFilter.stripExtension(peakBED) + "_" + ExtensionFileFilter.stripExtension(refBED) + "_PeakAlign");
 		//check output filename is valid
 		}else{
 			//check directory
@@ -96,15 +96,17 @@ public class BEDPeakAligntoRefCLI implements Callable<Integer> {
 	 * @param refBED   the reference BED windows to align to
 	 * @param peakBED  the BED coordinate signal to mark the reference windows with
 	 * @param output   the aligned output matrix file
+	 * @param separate whether or not to separate outputs by strand-matching
 	 * @param gzOutput whether or not to gzip output
 	 * @return command line to execute with formatted inputs
 	 */
-	public static String getCLIcommand(File refBED, File peakBED, File output, boolean gzOutput) {
+	public static String getCLIcommand(File refBED, File peakBED, File output, boolean separate, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER peak-analysis peak-align-ref";
 		command += " " + peakBED.getAbsolutePath();
 		command += " " + refBED.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
 		command += gzOutput ? " -z " : "";
+		command += separate ? " -s " : "";
 		return command;
 	}
 }

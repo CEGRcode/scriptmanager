@@ -31,11 +31,12 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	private File PEAK = null;
 	private File REF = null;
 	private File OUT_DIR = null;
+	private boolean SEPARATE = false;
 	private boolean OUTPUT_GZIP = false;
 
 	private JTextArea textArea;
 
-	public BEDPeakAligntoRefOutput(File ref, File peak, File odir, boolean gzOutput) throws IOException {
+	public BEDPeakAligntoRefOutput(File ref, File peak, File output, boolean s, boolean gzOutput) throws IOException {
 	/**
 	 * Creates a new BEDPeakAligntoRefOutput with two BED files and an output directory
 	 * @param ref Reference BAM file
@@ -56,7 +57,8 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		
 		REF = ref;
 		PEAK = peak;
-		OUT_DIR = odir;
+		OUT_DIR = output;
+		SEPARATE = s;
 		OUTPUT_GZIP = gzOutput;
 	}
 
@@ -69,21 +71,19 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 	 */
 	public void run() throws IOException, InterruptedException {
 		// Construct output basename
-		String NAME = ExtensionFileFilter.stripExtension(PEAK.getName()) + "_" + ExtensionFileFilter.stripExtension(REF.getName()) + "_Output.cdt";
-		NAME += OUTPUT_GZIP ? ".gz" : "";
+		String NAME = ExtensionFileFilter.stripExtension(PEAK.getName()) + "_" + ExtensionFileFilter.stripExtension(REF.getName()) + "_PeakAlign";
 		File OUT_BASENAME = new File(NAME);
 		if (OUT_DIR != null) {
 			OUT_BASENAME = new File(OUT_DIR.getCanonicalPath() + File.separator + NAME);
 		}
 		// Initialize LogItem
-		String command = BEDPeakAligntoRefCLI.getCLIcommand(REF, PEAK, OUT_BASENAME, OUTPUT_GZIP);
+		String command = BEDPeakAligntoRefCLI.getCLIcommand(REF, PEAK, OUT_BASENAME, SEPARATE, OUTPUT_GZIP);
 		LogItem li = new LogItem(command);
 		firePropertyChange("log", null, li);
 		// Set-up display stream
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		// Execute script
-		BEDPeakAligntoRef script_obj = new BEDPeakAligntoRef(REF, PEAK, OUT_BASENAME, PS, OUTPUT_GZIP);
-		script_obj.run();
+		BEDPeakAligntoRef.execute(REF, PEAK, OUT_BASENAME, SEPARATE, PS, OUTPUT_GZIP);
 		// Update log item
 		li.setStopTime(new Timestamp(new Date().getTime()));
 		li.setStatus(0);

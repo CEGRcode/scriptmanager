@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
@@ -13,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -24,9 +27,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
@@ -59,12 +64,16 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	private JButton btnLoadRefBed;
 	private JButton btnRemoveRefBed;
 	private JButton btnOutputDirectory;
-	private JButton btnCalculate;
 	private JCheckBox chckbxGzipOutput;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
+
+	private JToggleButton tglSeparate;
+	private JToggleButton tglCombined;
+
 	private JProgressBar progressBar;
-	
+	private JButton btnCalculate;
+
 	/**
 	 * Used to run the script efficiently
 	 */
@@ -84,7 +93,8 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
         			int counter = 0;
 					for (int r = 0; r < RefFiles.size(); r++) {
 						for (int p=0; p < PeakFiles.size(); p++) {
-							BEDPeakAligntoRefOutput output_obj = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUT_DIR, chckbxGzipOutput.isSelected());
+							// Execute script
+							BEDPeakAligntoRefOutput output_obj = new BEDPeakAligntoRefOutput(RefFiles.get(r), PeakFiles.get(p), OUT_DIR, tglSeparate.isSelected(), chckbxGzipOutput.isSelected());
 							output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 								public void propertyChange(PropertyChangeEvent evt) {
 									firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -128,7 +138,8 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 	public BEDPeakAligntoRefWindow() {
 		setTitle("BED Peaks Alignment");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 500, 505);
+		setBounds(100, 100, 500, 530);
+		setMinimumSize(new Dimension(450, 505));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -148,6 +159,7 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_Peak, 12, SpringLayout.SOUTH, btnLoadPeakBed);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_Peak, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_Peak, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_Peak, -314, SpringLayout.SOUTH, contentPane);
 		contentPane.add(scrollPane_Peak);
 		
 		peakList = new DefaultListModel<String>();
@@ -224,35 +236,71 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		});
 		contentPane.add(btnRemoveRefBed);
 
+		// Options
+		JPanel pnlOptions = new JPanel();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlOptions, 10, SpringLayout.SOUTH, scrollPane_Ref);
+		sl_contentPane.putConstraint(SpringLayout.WEST, pnlOptions, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, pnlOptions, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlOptions, -35, SpringLayout.SOUTH, contentPane);
+		contentPane.add(pnlOptions);
+
+		SpringLayout sl_Options = new SpringLayout();
+		pnlOptions.setLayout(sl_Options);
+		TitledBorder ttlReadManipulation = BorderFactory.createTitledBorder("Options");
+		ttlReadManipulation.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		pnlOptions.setBorder(ttlReadManipulation);
+
 		//Initialize output directory
 		btnOutputDirectory = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 175, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -175, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, scrollPane_Ref);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 20, SpringLayout.WEST, pnlOptions);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, pnlOptions);
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OUT_DIR = FileSelection.getOutputDir(fc);
-				if(OUT_DIR != null) {
+				File temp = FileSelection.getOutputDir(fc);
+				if(temp != null) {
+					OUT_DIR = temp;
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
-		contentPane.add(btnOutputDirectory);
-		
+		pnlOptions.add(btnOutputDirectory);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_Options.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutputDirectory);
+		sl_Options.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 10, SpringLayout.EAST, btnOutputDirectory);
+		pnlOptions.add(chckbxGzipOutput);
+
+		tglCombined = new JToggleButton("Combined");
+		sl_Options.putConstraint(SpringLayout.NORTH, tglCombined, 0, SpringLayout.NORTH, btnOutputDirectory);
+		sl_Options.putConstraint(SpringLayout.WEST, tglCombined, 20, SpringLayout.EAST, chckbxGzipOutput);
+		pnlOptions.add(tglCombined);
+
+		tglSeparate = new JToggleButton("Separate");
+		sl_Options.putConstraint(SpringLayout.NORTH, tglSeparate, 0, SpringLayout.NORTH, tglCombined);
+		sl_Options.putConstraint(SpringLayout.WEST, tglSeparate, 0, SpringLayout.EAST, tglCombined);
+		pnlOptions.add(tglSeparate);
+
+		ButtonGroup strand = new ButtonGroup();
+		strand.add(tglCombined);
+		strand.add(tglSeparate);
+		tglCombined.setSelected(true);
+
 		lblCurrentOutput = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 3, SpringLayout.SOUTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 5, SpringLayout.WEST, contentPane);
+		sl_Options.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 3, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_Options.putConstraint(SpringLayout.WEST, lblCurrentOutput, 5, SpringLayout.WEST, pnlOptions);
 		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblCurrentOutput.setForeground(Color.BLACK);
-		contentPane.add(lblCurrentOutput);		
-		
+		pnlOptions.add(lblCurrentOutput);
+
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 5, SpringLayout.SOUTH, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 15, SpringLayout.WEST, contentPane);
+		sl_Options.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 5, SpringLayout.SOUTH, lblCurrentOutput);
+		sl_Options.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 15, SpringLayout.WEST, pnlOptions);
 		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
 		lblDefaultToLocal.setForeground(Color.BLACK);
-		contentPane.add(lblDefaultToLocal);
-		
+		pnlOptions.add(lblDefaultToLocal);
+
+		// Run and progress
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, -150, SpringLayout.EAST, progressBar);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -5, SpringLayout.SOUTH, contentPane);
@@ -267,11 +315,6 @@ public class BEDPeakAligntoRefWindow extends JFrame implements ActionListener, P
 		contentPane.add(btnCalculate);
 		btnCalculate.setActionCommand("start");
 		btnCalculate.addActionListener(this);
-
-		chckbxGzipOutput = new JCheckBox("Output GZip");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 31, SpringLayout.WEST, contentPane);
-		contentPane.add(chckbxGzipOutput);
 	}
 
 	/**

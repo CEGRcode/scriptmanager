@@ -24,28 +24,7 @@ import scriptmanager.util.GZipUtilities;
  * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
  * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
  */
-public class BEDPeakAligntoRef {
-	private File refBED = null;
-	private File peakBED = null;
-	private PrintStream PS = null;
-	private PrintStream OUT = null;
-
-	/**
-	 * Create a new instance of a BEDPeakAligntoRef script
-	 * 
-	 * @param ref    Reference BAM file
-	 * @param peak   BAM file to be alligned
-	 * @param output Output CDT file
-	 * @param ps     PrintStream for reporting process
-	 * @param gzOutput    whether or not to gzip output
-	 * @throws IOException Invalid file or parameters
-	 */
-	public BEDPeakAligntoRef(File ref, File peak, File output, PrintStream ps, boolean gzOutput) throws FileNotFoundException, IOException {
-		refBED = ref;
-		peakBED = peak;
-		PS = ps;
-		OUT = GZipUtilities.makePrintStream(output, gzOutput);
-	}
+public final class BEDPeakAligntoRef {
 
 	/**
 	 * Runs the peak alignment, writing to output file and reporting progress
@@ -54,12 +33,23 @@ public class BEDPeakAligntoRef {
 	 * @throws InterruptedException Thrown when more than one script is run at the
 	 *                              same time
 	 */
-	public void run() throws IOException, InterruptedException {
-
+	public static void execute(File refBED, File peakBED, File OUTPUT, boolean separate, PrintStream PS, boolean gzOutput) throws FileNotFoundException, IOException, InterruptedException {
 		// Write starting message
 		printPS(PS, "Mapping: " + peakBED.getName() + " to " + refBED.getName());
 		printPS(PS, "Starting: " + new Timestamp(new Date().getTime()).toString());
 
+		// Set-up PrintStreams
+		PrintStream OUT1 = null;
+		PrintStream OUT2 = null;
+		if (separate) {
+			File TEMP1 = new File(OUTPUT.getAbsolutePath() + "_sense.cdt" + (gzOutput ? ".gz": ""));
+			File TEMP2 = new File(OUTPUT.getAbsolutePath() + "_anti.cdt" + (gzOutput ? ".gz": ""));
+			OUT1 = GZipUtilities.makePrintStream(TEMP1, gzOutput);
+			OUT2 = GZipUtilities.makePrintStream(TEMP2, gzOutput);
+		} else {
+			File TEMP1 = new File(OUTPUT.getAbsolutePath() + "_combined.cdt" + (gzOutput ? ".gz": ""));
+			OUT1 = GZipUtilities.makePrintStream(TEMP1, gzOutput);
+		}
 
 		// =====Make peakMap=====
 		Map<String, List<String>> peakMap = new HashMap<>();
@@ -70,10 +60,8 @@ public class BEDPeakAligntoRef {
 			key = new BEDCoord(line).getChrom();
 			if(!peakMap.containsKey(key)) {
 				peakMap.put(key, new ArrayList<String>());
-				peakMap.get(key).add(line);
-			} else {
-				peakMap.get(key).add(line);
 			}
+			peakMap.get(key).add(line);
 		}
 		br.close();
 
@@ -85,9 +73,10 @@ public class BEDPeakAligntoRef {
 			// Parse ref BED record and chromosome
 			BEDCoord refCoord = new BEDCoord(line);
 			String chr = refCoord.getChrom();
-			// Initialize CDT row array
+			// Initialize CDT row arrays
 			int cdtLength = (int)(refCoord.getStop() - refCoord.getStart());
-			int cdtArr[] = new int[cdtLength];
+			int cdtArr1[] = new int[cdtLength];
+			int cdtArr2[] = new int[cdtLength];
 			// Process one chr at a time
 			if (peakMap.containsKey(chr)) {
 				for (int i = 0; i < peakMap.get(chr).size(); i++) {
@@ -100,45 +89,71 @@ public class BEDPeakAligntoRef {
 					// Calculate coordinate range of CDT
 					int START = (int)(peakCoord.getStart() - refCoord.getStart());
 					int STOP = START + (int)(peakCoord.getStop() - peakCoord.getStart());
-					// Loop through CDT range
-					for(int x = START; x <= STOP; x++) {
+					// Loop through CDT range (use exclusive notation but mark at least 1 in cases of START=STOP)
+					for(int x = START; x < Math.max(STOP, START+1); x++) {
 						// Check if valid coordinate range
 						if(x >= 0 && x < cdtLength) {
-							cdtArr[x]++;
+							// Mark in appropriate arrays
+							if (separate) {
+								// Use verbose strand check to ensure non "-" chars default to positive
+								if (peakCoord.getDir().equals("-")) {
+									if (refCoord.getDir().equals("-")) {
+										cdtArr1[x]++;
+									} else {
+										cdtArr2[x]++;
+									}
+								} else {
+									if (refCoord.getDir().equals("-")) {
+										cdtArr2[x]++;
+									} else {
+										cdtArr1[x]++;
+									}
+								}
+							} else {
+								cdtArr1[x]++;
+							}
 						}
 					}
 				}
 			}
 			// Print CDT header
 			if (counter == 0) {
-				OUT.print("YORF" + "\t" + "NAME");
+				OUT1.print("YORF" + "\t" + "NAME");
+				if (separate) { OUT2.print("YORF" + "\t" + "NAME"); }
 				for (int j = 0; j < cdtLength; j++) {
-					OUT.print("\t" + j);
+					OUT1.print("\t" + j);
+					if (separate) { OUT2.print("\t" + j); }
 				}
-				OUT.print("\n");
+				OUT1.print("\n");
+				if (separate) { OUT2.print("\n"); }
 			}
 			// Print row header
-			OUT.print(refCoord.getName() + "\t" + refCoord.getName());
+			OUT1.print(refCoord.getName() + "\t" + refCoord.getName());
+			if (separate) { OUT2.print(refCoord.getName() + "\t" + refCoord.getName()); }
 			// Print array contents
 			if (refCoord.getDir().equals("-")) {
 				for (int j = cdtLength - 1; j >= 0; j--) {
-					OUT.print("\t" + cdtArr[j]);
+					OUT1.print("\t" + cdtArr1[j]);
+					if (separate) { OUT2.print("\t" + cdtArr2[j]); }
 				}
 			} else {
 				for (int i = 0; i < cdtLength; i++) {
-					OUT.print("\t" + cdtArr[i]);
+					OUT1.print("\t" + cdtArr1[i]);
+					if (separate) { OUT2.print("\t" + cdtArr2[i]); }
 				}
 			}
-			OUT.print("\n");
+			OUT1.print("\n");
+			if (separate) { OUT2.print("\n"); }
+			// Increment and report proress counter
 			counter++;
-			
 			if(counter % 1000 == 0) {
 				printPS(PS, "Reference rows processed: " + counter);
 			}
 		}
 		// Close file streams
 		br.close();
-		OUT.close();
+		OUT1.close();
+		if (separate) { OUT2.close(); }
 		// Print update
 		printPS(PS, "Completing: " + new Timestamp(new Date().getTime()).toString());
 	}
