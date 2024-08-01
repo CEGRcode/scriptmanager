@@ -38,6 +38,8 @@ public class SortByDistCLI implements Callable<Integer> {
 	private Long upstreamBound = null;
 	@Option(names = {"-d"}, description = "Restrict search to exclude peaks downstream of this distance (default = no bound)")
 	private Long downstreamBound = null;
+	@Option(names = {"-m", "--match-strand"}, description = "Output compressed GFF file" )
+	private boolean matchStrand = false;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
 	private boolean gzOutput = false;
 	@Option(names = {"--gff"}, description = "input is GFF format (default=BED format)")
@@ -54,7 +56,7 @@ public class SortByDistCLI implements Callable<Integer> {
 		}
 
 		// Execute script
-		SortByDist script_obj = new SortByDist(ref, peak, output, gzOutput, upstreamBound, downstreamBound, null);
+		SortByDist script_obj = new SortByDist(ref, peak, output, gzOutput, matchStrand, upstreamBound, downstreamBound, null);
 		if (isGFF) {
 			script_obj.sortGFF();
 		} else { 
@@ -97,12 +99,13 @@ public class SortByDistCLI implements Callable<Integer> {
 		return(r);
 	}
 
-	public static String getCLIcommand(File ref, File peak, File out, boolean gff, boolean gzOutput, Long upstream, Long downstream){
+	public static String getCLIcommand(File ref, File peak, File out, boolean gff, boolean gzOutput, boolean mstrand, Long upstream, Long downstream){
 		String command = "java -jar $SCRIPTMANAGER peak-analysis sort-by-dist";
 		command += gff? " --gff": "";
-		command += gzOutput? " -z": "";
-		command += upstream == null? "": " -u " + upstream;
-		command += downstream == null? "": " -d " + downstream;
+		command += gzOutput ? " -z": "";
+		command += mstrand ? " -m": "";
+		command += upstream == null ? "": " -u " + upstream;
+		command += downstream == null ? "": " -d " + downstream;
 		command += " -o " + out.getAbsolutePath();
 		command += " " + peak.getAbsolutePath();
 		command += " " + ref.getAbsolutePath();

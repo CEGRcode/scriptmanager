@@ -32,14 +32,16 @@ public class SortByDistOutput extends JFrame{
 	private File PEAK = null;
 	private File REF = null;
 	private File OUTFILE = null;
-	private Boolean GZIP_OUTPUT = false;
-	private Boolean GFF = false;
+	private boolean GZIP_OUTPUT = false;
+	private boolean GFF = false;
+
+	private boolean MATCH_STRAND = false;
 	private Long UPSTREAM_BOUND = null;
 	private Long DOWNSTREAM_BOUND = null;
 
 	private JTextArea textArea;
 
-	public SortByDistOutput(File ref, File peak, File outpath, boolean gzOutput, boolean gff, Long upstream, Long downstream) throws IOException {
+	public SortByDistOutput(File ref, File peak, File outpath, boolean gzOutput, boolean gff, boolean strand, Long upstream, Long downstream) throws IOException {
 		setTitle("Align to Reference Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -55,6 +57,7 @@ public class SortByDistOutput extends JFrame{
 		PEAK = peak;
 		GFF = gff;
 		GZIP_OUTPUT = gzOutput;
+		MATCH_STRAND = strand;
 		UPSTREAM_BOUND = upstream;
 		DOWNSTREAM_BOUND = downstream;
 
@@ -69,11 +72,11 @@ public class SortByDistOutput extends JFrame{
 		// Initialize PrintStream object that displays progress
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		// Initialize LogItem
-		String command = SortByDistCLI.getCLIcommand(REF, PEAK, OUTFILE, GFF, GZIP_OUTPUT, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
+		String command = SortByDistCLI.getCLIcommand(REF, PEAK, OUTFILE, GFF, GZIP_OUTPUT, MATCH_STRAND, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
 		LogItem li = new LogItem(command);
 		firePropertyChange("log", null, li);
 		// Execute script
-		SortByDist script_obj = new SortByDist(REF, PEAK, OUTFILE, GZIP_OUTPUT, UPSTREAM_BOUND, DOWNSTREAM_BOUND, PS);
+		SortByDist script_obj = new SortByDist(REF, PEAK, OUTFILE, GZIP_OUTPUT, MATCH_STRAND, UPSTREAM_BOUND, DOWNSTREAM_BOUND, PS);
 		if (GFF) {
 			script_obj.sortGFF();
 		} else {

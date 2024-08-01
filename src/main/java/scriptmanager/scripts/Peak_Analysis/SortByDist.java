@@ -31,25 +31,25 @@ public class SortByDist {
 	private File PEAK = null;
 	private File REF = null;
 
+	private boolean matchStrand = false;
 	private Long maxUp = null;
 	private Long maxDown = null;
 
 //	// TODO: add strand match restriction
 //	private boolean restrictStrandedness = false;
 
-	public SortByDist(File ref, File peak, File out, boolean gzOutput, Long upstream, Long downstream, PrintStream ps) throws IOException {
+	public SortByDist(File ref, File peak, File out, boolean gzOutput, boolean m, Long upstream, Long downstream, PrintStream ps) throws IOException {
 		PS = ps;
 		OUT = GZipUtilities.makePrintStream(out, gzOutput);
 		PEAK = peak;
 		REF = ref;
+		matchStrand = m;
 		if (upstream != null) {
 			maxUp = upstream.longValue();
 		}
 		if (downstream != null) {
 			maxDown = downstream.longValue();
 		}
-		
-		// TODO: add strand match restriction
 	}
 
 	public void sortGFF() throws IOException, InterruptedException {
@@ -228,6 +228,8 @@ public class SortByDist {
 		long distPeakRef = (peak.getMid() - ref.getMid()) * (ref.getDir().equals("-") ? -1 : 1);
 		// Determine if this distance is closer than min
 		boolean closer = Math.abs(minDistance) >= Math.abs(distPeakRef);
+		// Check if peak matches strand if user option is set
+		if (matchStrand && (peak.getDir().equals("-") != ref.getDir().equals("-"))) { return false; }
 		// Check if peak is within bounds and return false if not
 		if (closer) {
 			// Check bounds

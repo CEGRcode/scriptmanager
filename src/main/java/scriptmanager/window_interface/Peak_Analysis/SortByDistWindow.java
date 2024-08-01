@@ -74,10 +74,9 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 	private JButton btnOutputDirectory;
 	private JButton btnCalculate;
 	private JCheckBox chckbxGzipOutput;
+	private JCheckBox chckbxMatchStrand;
 	private JCheckBox chckbxRestrictUpstreamDistance;
 	private JCheckBox chckbxRestrictDownstreamDistance;
-//	// TODO: Strand match restriction
-//	private JCheckBox chckbxMatchStrand;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
@@ -118,7 +117,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 						for (File RefBED : RefBEDFiles) {
 							for (File PeakBED : PeakBEDFiles) {
 								// Execute script
-								SortByDistOutput output_obj = new SortByDistOutput(RefBED, PeakBED, OUT_DIR, chckbxGzipOutput.isSelected(), false, UPSTREAM, DOWNSTREAM);
+								SortByDistOutput output_obj = new SortByDistOutput(RefBED, PeakBED, OUT_DIR, chckbxGzipOutput.isSelected(), false, chckbxMatchStrand.isSelected(), UPSTREAM, DOWNSTREAM);
 								output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
 										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -140,7 +139,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 						for (File RefBED : RefBEDFiles) {
 							for (File PeakBED : PeakBEDFiles) {
 								// Execute script
-								SortByDistOutput output_obj = new SortByDistOutput(RefBED, PeakBED, OUT_DIR, chckbxGzipOutput.isSelected(), true, UPSTREAM, DOWNSTREAM);
+								SortByDistOutput output_obj = new SortByDistOutput(RefBED, PeakBED, OUT_DIR, chckbxGzipOutput.isSelected(), true, chckbxMatchStrand.isSelected(), UPSTREAM, DOWNSTREAM);
 								output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
 										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -456,12 +455,11 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		lblSizeAdmonishment.setFont(new Font("Dialog", Font.ITALIC, 12));
 		pnlSearchOptions.add(lblSizeAdmonishment);
 
-//		// TODO: Strand match restriction
-//		chckbxMatchStrand = new JCheckBox("Strand matched");
-//		sl_SearchOptions.putConstraint(SpringLayout.SOUTH, chckbxMatchStrand, 0, SpringLayout.SOUTH, pnlSearchOptions);
-//		sl_SearchOptions.putConstraint(SpringLayout.EAST, chckbxMatchStrand, 0, SpringLayout.EAST, pnlSearchOptions);
-//		chckbxMatchStrand.setToolTipText("Only check peaks that are on the same strand as the RefPT");
-//		pnlSearchOptions.add(chckbxMatchStrand);
+		chckbxMatchStrand = new JCheckBox("Strand matched");
+		sl_SearchOptions.putConstraint(SpringLayout.SOUTH, chckbxMatchStrand, 0, SpringLayout.SOUTH, pnlSearchOptions);
+		sl_SearchOptions.putConstraint(SpringLayout.EAST, chckbxMatchStrand, 0, SpringLayout.EAST, pnlSearchOptions);
+		chckbxMatchStrand.setToolTipText("Only check peaks that are on the same strand as the RefPT");
+		pnlSearchOptions.add(chckbxMatchStrand);
 
 		// Output Options
 		JPanel pnlOutputOptions = new JPanel();
