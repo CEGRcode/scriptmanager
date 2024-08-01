@@ -18,6 +18,14 @@ import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.objects.CoordinateObjects.GenomicCoord;
 import scriptmanager.util.GZipUtilities;
 
+/**
+ * Sort RefPT BED file by distance to closest peak within a range.
+ * 
+ * @author Olivia Lang
+ * @see scriptmanager.cli.Peak_Analysis.SortByDistCLI
+ * @see scriptmanager.window_interface.Peak_Analysis.PileupScripts.SortByDistOutput
+ * @see scriptmanager.window_interface.Peak_Analysis.PileupScripts.SortByDistWindow
+ */
 public class SortByDist {
 	private PrintStream PS = null;
 	private PrintStream OUT = null;
@@ -257,7 +265,7 @@ public class SortByDist {
 	}
 	
 	private void printPS(String message){
-		if(PS!=null) PS.println(message);
+		if (PS!=null) { PS.println(message); }
 		System.err.println(message);
 	}
 }

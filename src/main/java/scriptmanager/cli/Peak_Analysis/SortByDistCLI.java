@@ -12,10 +12,13 @@ import java.io.IOException;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.scripts.Peak_Analysis.SortByDist;
-	
+
 /**
-	Peak_AnalysisCLI/SortByDistCLI
-*/
+ * Command line interface for
+ * {@link scriptmanager.scripts.Peak_Analysis.SortByDist}
+ * 
+ * @author Ben Beer
+ */
 @Command(name = "sort-by-dist", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.sort_by_dist_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
@@ -57,7 +60,7 @@ public class SortByDistCLI implements Callable<Integer> {
 			script_obj.sortBED();
 		}
 		
-		System.err.println( "Sorting Complete." );	
+		System.err.println( "Sorting Complete." );
 		return(0);
 	}
 	

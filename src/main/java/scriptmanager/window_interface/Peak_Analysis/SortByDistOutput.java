@@ -17,6 +17,14 @@ import scriptmanager.objects.LogItem;
 import scriptmanager.cli.Peak_Analysis.SortByDistCLI;
 import scriptmanager.scripts.Peak_Analysis.SortByDist;
 
+/**
+ * Output wrapper for running
+ * {@link scriptmanager.scripts.Peak_Analysis.SortByDist} and displaying
+ * progress.
+ * 
+ * @author Ben Beer
+ * @see scriptmanager.window_interface.Peak_Analysis.SortByDistWindow
+ */
 @SuppressWarnings("serial")
 public class SortByDistOutput extends JFrame{
 	private File PEAK = null;
@@ -26,21 +34,21 @@ public class SortByDistOutput extends JFrame{
 	private Boolean GFF = false;
 	private Long UPSTREAM_BOUND = null;
 	private Long DOWNSTREAM_BOUND = null;
-	
+
 	private JTextArea textArea;
-		
+
 	public SortByDistOutput(File ref, File peak, File outpath, boolean gzOutput, boolean gff, Long upstream, Long downstream) throws IOException {
 		setTitle("Align to Reference Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
+
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		scrollPane.setViewportView(textArea);
-		
+
 		REF = ref;
 		PEAK = peak;
 		GFF = gff;
@@ -56,7 +64,7 @@ public class SortByDistOutput extends JFrame{
 			"_Output." + ExtensionFileFilter.getExtensionIgnoreGZ(REF));
 		}
 	}
-		
+
 	public void run() throws IOException, InterruptedException {
 		String command = SortByDistCLI.getCLIcommand(REF, PEAK, OUTFILE, GFF, GZIP_OUTPUT, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
 		LogItem li = new LogItem(command);
@@ -80,7 +88,7 @@ public class SortByDistOutput extends JFrame{
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ("log" == evt.getPropertyName()){
-				firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
+			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
 	}
 }

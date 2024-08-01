@@ -37,12 +37,20 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 
+/**
+ * GUI for collecting inputs to be processed by
+ * {@link scriptmanager.scripts.Peak_Analysis.SortByRef}
+ * 
+ * @author Ben Beer
+ * @see scriptmanager.scripts.Peak_Analysis.SortByRef
+ * @see scriptmanager.window_interface.Peak_Analysis.SortByRefOutput
+ */
 @SuppressWarnings("serial")
 public class SortByDistWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
-	
+
 	final DefaultListModel<String> peakBEDList;
 	final DefaultListModel<String> peakGFFList;
 	final DefaultListModel<String> refBEDList;
@@ -75,9 +83,9 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 	private JRadioButton rdbtnGff;
 	private JTextField txtUpstream;
 	private JTextField txtDownstream;
-	
+
 	public Task task;
-	
+
 	class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() throws IOException, InterruptedException {
@@ -210,12 +218,12 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		SpringLayout sl_gffInputPane = new SpringLayout();
 		gffInputPane.setLayout(sl_gffInputPane);
 		inputCards.add(gffInputPane, "gff");
-		
+
 		//Initialize buttons and list for peak BED files
 		btnLoadPeakBed = new JButton("Load Peak BED");
 		sl_bedInputPane.putConstraint(SpringLayout.NORTH, btnLoadPeakBed, 5, SpringLayout.NORTH, bedInputPane);
 		sl_bedInputPane.putConstraint(SpringLayout.WEST, btnLoadPeakBed, 5, SpringLayout.WEST, bedInputPane);
-		
+
 		btnRemovePeakBed = new JButton("Remove Peak BED");
 		sl_bedInputPane.putConstraint(SpringLayout.NORTH, btnRemovePeakBed, 5, SpringLayout.NORTH, bedInputPane);
 		sl_bedInputPane.putConstraint(SpringLayout.EAST, btnRemovePeakBed, -5, SpringLayout.EAST, bedInputPane);
@@ -225,13 +233,13 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		sl_bedInputPane.putConstraint(SpringLayout.WEST, scrollPaneBedPeak, 5, SpringLayout.WEST, bedInputPane);
 		sl_bedInputPane.putConstraint(SpringLayout.EAST, scrollPaneBedPeak, -5, SpringLayout.EAST, bedInputPane);
 		bedInputPane.add(scrollPaneBedPeak);
-		
+
 		peakBEDList = new DefaultListModel<String>();
 		final JList<String> listPeak = new JList<String>(peakBEDList);
 		listPeak.setForeground(Color.BLACK);
 		listPeak.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		scrollPaneBedPeak.setViewportView(listPeak);
-		
+
 		btnLoadPeakBed.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
@@ -244,7 +252,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 			}
 		});
 		bedInputPane.add(btnLoadPeakBed);
-		
+
 		btnRemovePeakBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listPeak.getSelectedIndex() > -1) {
@@ -252,14 +260,14 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 					peakBEDList.remove(listPeak.getSelectedIndex());
 				}
 			}
-		});	
+		});
 		bedInputPane.add(btnRemovePeakBed);
-		
+
 		//Initialize buttons and list for reference BED files
 		btnLoadRefBed = new JButton("Load Reference BED");
 		sl_bedInputPane.putConstraint(SpringLayout.NORTH, btnLoadRefBed, 10, SpringLayout.SOUTH, scrollPaneBedPeak);
 		sl_bedInputPane.putConstraint(SpringLayout.WEST, btnLoadRefBed, 5, SpringLayout.WEST, bedInputPane);
-		
+
 		btnRemoveRefBed = new JButton("Remove Reference BED");
 		sl_bedInputPane.putConstraint(SpringLayout.NORTH, btnRemoveRefBed, 10, SpringLayout.SOUTH, scrollPaneBedPeak);
 		sl_bedInputPane.putConstraint(SpringLayout.EAST, btnRemoveRefBed, -5, SpringLayout.EAST, bedInputPane);
@@ -278,10 +286,10 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		scrollPaneBedRef.setViewportView(listRef);
 		
 		btnLoadRefBed.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
-					for(int x = 0; x < newBEDFiles.length; x++) { 
+					for(int x = 0; x < newBEDFiles.length; x++) {
 						RefBEDFiles.add(newBEDFiles[x]);
 						refBEDList.addElement(newBEDFiles[x].getName());
 					}
@@ -289,7 +297,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 			}
 		});
 		bedInputPane.add(btnLoadRefBed);
-		
+
 		btnRemoveRefBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listRef.getSelectedIndex() > -1) {
@@ -304,7 +312,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		btnLoadPeakGff = new JButton("Load Peak GFF");
 		sl_gffInputPane.putConstraint(SpringLayout.NORTH, btnLoadPeakGff, 5, SpringLayout.NORTH, gffInputPane);
 		sl_gffInputPane.putConstraint(SpringLayout.WEST, btnLoadPeakGff, 5, SpringLayout.WEST, gffInputPane);
-		
+
 		btnRemovePeakGff = new JButton("Remove Peak GFF");
 		sl_gffInputPane.putConstraint(SpringLayout.NORTH, btnRemovePeakGff, 5, SpringLayout.NORTH, gffInputPane);
 		sl_gffInputPane.putConstraint(SpringLayout.EAST, btnRemovePeakGff, -5, SpringLayout.EAST, gffInputPane);
@@ -314,18 +322,18 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		sl_gffInputPane.putConstraint(SpringLayout.WEST, scrollPaneGffPeak, 5, SpringLayout.WEST, gffInputPane);
 		sl_gffInputPane.putConstraint(SpringLayout.EAST, scrollPaneGffPeak, -5, SpringLayout.EAST, gffInputPane);
 		gffInputPane.add(scrollPaneGffPeak);
-		
+
 		peakGFFList = new DefaultListModel<String>();
 		final JList<String> listGFFPeak = new JList<String>(peakGFFList);
 		listGFFPeak.setForeground(Color.BLACK);
 		listGFFPeak.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		scrollPaneGffPeak.setViewportView(listGFFPeak);
-		
+
 		btnLoadPeakGff.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				File[] newGFFFiles = FileSelection.getFiles(fc,"GFF");
 				if(newGFFFiles != null) {
-					for(int x = 0; x < newGFFFiles.length; x++) { 
+					for(int x = 0; x < newGFFFiles.length; x++) {
 						PeakGFFFiles.add(newGFFFiles[x]);
 						peakGFFList.addElement(newGFFFiles[x].getName());
 					}
@@ -333,7 +341,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 			}
 		});
 		gffInputPane.add(btnLoadPeakGff);
-		
+
 		btnRemovePeakGff.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listGFFPeak.getSelectedIndex() > -1) {
@@ -341,36 +349,36 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 					peakGFFList.remove(listGFFPeak.getSelectedIndex());
 				}
 			}
-		});	
+		});
 		gffInputPane.add(btnRemovePeakGff);
-		
+
 		//Initialize buttons and list for reference GFF files
 		btnLoadRefGff = new JButton("Load Reference GFF");
 		sl_gffInputPane.putConstraint(SpringLayout.NORTH, btnLoadRefGff, 10, SpringLayout.SOUTH, scrollPaneGffPeak);
 		sl_gffInputPane.putConstraint(SpringLayout.WEST, btnLoadRefGff, 5, SpringLayout.WEST, gffInputPane);
-		
+
 		btnRemoveReGff = new JButton("Remove Reference GFF");
 		sl_gffInputPane.putConstraint(SpringLayout.NORTH, btnRemoveReGff, 10, SpringLayout.SOUTH, scrollPaneGffPeak);
 		sl_gffInputPane.putConstraint(SpringLayout.EAST, btnRemoveReGff, -5, SpringLayout.EAST, gffInputPane);
-		
+
 		JScrollPane scrollPaneGffRef = new JScrollPane();
 		sl_gffInputPane.putConstraint(SpringLayout.NORTH, scrollPaneGffRef, 10, SpringLayout.SOUTH, btnLoadRefGff);
 		//sl_gffInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneGffRef, -100, SpringLayout.SOUTH, btnLoadRefGff);
 		sl_gffInputPane.putConstraint(SpringLayout.WEST, scrollPaneGffRef, 5, SpringLayout.WEST, gffInputPane);
 		sl_gffInputPane.putConstraint(SpringLayout.EAST, scrollPaneGffRef, -5, SpringLayout.EAST, gffInputPane);
 		gffInputPane.add(scrollPaneGffRef);
-		
+
 		refGFFList = new DefaultListModel<String>();
 		final JList<String> listGFFRef = new JList<String>(refGFFList);
 		listGFFRef.setForeground(Color.BLACK);
 		listGFFRef.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		scrollPaneGffRef.setViewportView(listGFFRef);
-		
+
 		btnLoadRefGff.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				File[] newGFFFiles = FileSelection.getFiles(fc,"GFF");
 				if(newGFFFiles != null) {
-					for(int x = 0; x < newGFFFiles.length; x++) { 
+					for(int x = 0; x < newGFFFiles.length; x++) {
 						RefGFFFiles.add(newGFFFiles[x]);
 						refGFFList.addElement(newGFFFiles[x].getName());
 					}
@@ -378,7 +386,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 			}
 		});
 		gffInputPane.add(btnLoadRefGff);
-		
+
 		btnRemoveReGff.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				while(listGFFRef.getSelectedIndex() > -1) {
@@ -497,8 +505,8 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
-		
 		btnCalculate = new JButton("Align");
+
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnCalculate, -5, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnCalculate, 175, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -175, SpringLayout.EAST, contentPane);
@@ -530,29 +538,29 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 
 		btnCalculate.addActionListener(this);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		massXable(contentPane, false);
-    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
-        task = new Task();
-        task.addPropertyChangeListener(this);
-        task.execute();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		task = new Task();
+		task.addPropertyChangeListener(this);
+		task.execute();
 	}
-	
+
 	/**
-     * Invoked when task's progress property changes.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
+	 * Invoked when task's progress property changes.
+	 */
+	public void propertyChange(PropertyChangeEvent evt) {
 		if ("progress" == evt.getPropertyName()) {
 			int progress = (Integer) evt.getNewValue();
 			progressBar.setValue(progress);
 		} else if ("log" == evt.getPropertyName()){
 			firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 		}
-    }
-	
+	}
+
 	public void massXable(Container con, boolean status) {
 		for(Component c : con.getComponents()) {
 			c.setEnabled(status);
