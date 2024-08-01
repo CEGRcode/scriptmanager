@@ -225,9 +225,9 @@ public class ScriptManagerGUI {
 				"Output signal duplication statistics",
 				Class.forName("scriptmanager.window_interface.Peak_Analysis.SignalDuplicationWindow")));
 		// SortByRef
-		pnlPeakAnalysis.add(initializeToolPanel("Sort Coordinates By Reference", ToolDescriptions.sort_by_ref_description,
-				"Sort BED/GFF files by reference BED/GFF",
-				Class.forName("scriptmanager.window_interface.Peak_Analysis.SortByRefWindow")));
+		pnlPeakAnalysis.add(initializeToolPanel("Sort Coordinates By Distance", ToolDescriptions.sort_by_dist_description,
+				"Sort BED/GFF files by distance to peak BED/GFF",
+				Class.forName("scriptmanager.window_interface.Peak_Analysis.SortByDistWindow")));
 		// FRiXCalculator
 		pnlPeakAnalysis.add(initializeToolPanel("FRiX Score Calculator", ToolDescriptions.frix_description,
 				Class.forName("scriptmanager.window_interface.Peak_Analysis.FRiXCalculatorWindow")));

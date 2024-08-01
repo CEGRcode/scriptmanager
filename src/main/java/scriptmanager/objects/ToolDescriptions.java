@@ -66,7 +66,7 @@ public class ToolDescriptions {
 	public static final String tile_genome_description = "Generate a coordinate file that tiles (non-overlapping) across an entire genome.";
 	public static final String rand_coord_description = "Generate random BED coordinates based on reference genome.";
 	public static final String signal_dup_description = "Calculate duplication statistics at user-specified regions.";
-	public static final String sort_by_ref_description = "Sort BED/GFF with a reference BED/GFF.";
+	public static final String sort_by_dist_description = "Sort BED/GFF by distance to another BED/GFF (e.g. peak annotations).";
 	public static final String frix_description = "Quantify library enrichment around a set of Reference points (Fraction of Reads in Peak/Motif, aka FRiP/FRiM).";
 
 	// Coordinate Manipulation

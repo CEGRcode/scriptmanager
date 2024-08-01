@@ -18,7 +18,7 @@ import scriptmanager.objects.CoordinateObjects.GFFCoord;
 import scriptmanager.objects.CoordinateObjects.GenomicCoord;
 import scriptmanager.util.GZipUtilities;
 
-public class SortByRef {
+public class SortByDist {
 	private PrintStream PS = null;
 	private PrintStream OUT = null;
 	private File PEAK = null;
@@ -29,7 +29,7 @@ public class SortByRef {
 	private boolean BOUNDED_UPSTREAM = false;
 	private boolean BOUNDED_DOWNSTREAM = false;
 	
-	public SortByRef(File ref, File peak, File out, boolean gzOutput, PrintStream ps, Long upstream, Long downstream) throws IOException {
+	public SortByDist(File ref, File peak, File out, boolean gzOutput, PrintStream ps, Long upstream, Long downstream) throws IOException {
 		PS = ps;
 		OUT = GZipUtilities.makePrintStream(out, gzOutput);
 		PEAK = peak;

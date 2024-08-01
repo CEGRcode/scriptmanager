@@ -38,7 +38,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.util.FileSelection;
 
 @SuppressWarnings("serial")
-public class SortByRefWindow extends JFrame implements ActionListener, PropertyChangeListener {
+public class SortByDistWindow extends JFrame implements ActionListener, PropertyChangeListener {
 
 	private JPanel contentPane;
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
@@ -97,7 +97,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 						JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
 					} else {
 						setProgress(0);
-						SortByRefOutput align;
+						SortByDistOutput align;
 						int counter = 0;
 
 						for(int r = 0; r < RefBEDFiles.size(); r++)
@@ -105,8 +105,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 							for(int p=0; p < PeakBEDFiles.size(); p++)
 							{
 								// Execute Script and update progress
-								align = new SortByRefOutput(RefBEDFiles.get(r), PeakBEDFiles.get(p), OUTPUT_PATH,
-								chckbxGzipOutput.isSelected(), false, UPSTREAM, DOWNSTREAM);	
+								align = new SortByDistOutput(RefBEDFiles.get(r), PeakBEDFiles.get(p), OUTPUT_PATH, chckbxGzipOutput.isSelected(), false, UPSTREAM, DOWNSTREAM);
 								align.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
 										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -127,7 +126,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 						JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
 					} else {
 						setProgress(0);
-						SortByRefOutput align;
+						SortByDistOutput align;
 						int counter = 0;
 
 						for(int r = 0; r < RefGFFFiles.size(); r++)
@@ -135,8 +134,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 							for(int p=0; p < PeakGFFFiles.size(); p++)
 							{
 								// Execute Script and update progress
-								align = new SortByRefOutput(RefGFFFiles.get(r), PeakGFFFiles.get(p), OUTPUT_PATH, 
-								chckbxGzipOutput.isSelected(), true, UPSTREAM, DOWNSTREAM);	
+								align = new SortByDistOutput(RefGFFFiles.get(r), PeakGFFFiles.get(p), OUTPUT_PATH, chckbxGzipOutput.isSelected(), true, UPSTREAM, DOWNSTREAM);
 								align.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
 										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -146,7 +144,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
 								align.run();
 								counter++;
 							int percentComplete = (int)(((double)(counter) / (PeakGFFFiles.size()*RefGFFFiles.size())) * 100);
-							setProgress(percentComplete);	
+							setProgress(percentComplete);
 							}	
 					}
 						setProgress(100);
@@ -171,7 +169,7 @@ public class SortByRefWindow extends JFrame implements ActionListener, PropertyC
         }
 	}
 	
-	public SortByRefWindow() {
+	public SortByDistWindow() {
 		setTitle("Sort Coordinate By Reference");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 500, 630);

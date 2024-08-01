@@ -11,13 +11,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import scriptmanager.objects.CustomOutputStream;
-import scriptmanager.scripts.Peak_Analysis.SortByRef;
 import scriptmanager.util.ExtensionFileFilter;
-import scriptmanager.cli.Peak_Analysis.SortByRefCLI;
 import scriptmanager.objects.LogItem;
 
+import scriptmanager.cli.Peak_Analysis.SortByDistCLI;
+import scriptmanager.scripts.Peak_Analysis.SortByDist;
+
 @SuppressWarnings("serial")
-public class SortByRefOutput extends JFrame{
+public class SortByDistOutput extends JFrame{
 	private File PEAK = null;
 	private File REF = null;
 	private File OUTFILE = null;
@@ -28,7 +29,7 @@ public class SortByRefOutput extends JFrame{
 	
 	private JTextArea textArea;
 		
-	public SortByRefOutput(File ref, File peak, File outpath, boolean gzOutput, boolean gff, Long upstream, Long downstream) throws IOException {
+	public SortByDistOutput(File ref, File peak, File outpath, boolean gzOutput, boolean gff, Long upstream, Long downstream) throws IOException {
 		setTitle("Align to Reference Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -57,15 +58,15 @@ public class SortByRefOutput extends JFrame{
 	}
 		
 	public void run() throws IOException, InterruptedException {
-		String command = SortByRefCLI.getCLIcommand(REF, PEAK, OUTFILE, GFF, GZIP_OUTPUT, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
+		String command = SortByDistCLI.getCLIcommand(REF, PEAK, OUTFILE, GFF, GZIP_OUTPUT, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
 		LogItem li = new LogItem(command);
 		firePropertyChange("log", null, li);
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		SortByRef script_obj = new SortByRef(REF, PEAK, OUTFILE, GZIP_OUTPUT, PS, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
-		if (GFF) {	
-			script_obj.sortGFF(); 
+		SortByDist script_obj = new SortByDist(REF, PEAK, OUTFILE, GZIP_OUTPUT, PS, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
+		if (GFF) {
+			script_obj.sortGFF();
 		} else {
-			script_obj.sortBED(); 
+			script_obj.sortBED();
 		}
 
 		li.setStatus(0);

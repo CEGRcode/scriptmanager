@@ -11,18 +11,18 @@ import java.io.IOException;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.ExtensionFileFilter;
-import scriptmanager.scripts.Peak_Analysis.SortByRef;
+import scriptmanager.scripts.Peak_Analysis.SortByDist;
 	
 /**
-	Peak_AnalysisCLI/SortByRefCLI
+	Peak_AnalysisCLI/SortByDistCLI
 */
-@Command(name = "sort-by-ref", mixinStandardHelpOptions = true,
-	description = ToolDescriptions.peak_align_ref_description,
+@Command(name = "sort-by-dist", mixinStandardHelpOptions = true,
+	description = ToolDescriptions.sort_by_dist_description,
 	version = "ScriptManager "+ ToolDescriptions.VERSION,
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
-public class SortByRefCLI implements Callable<Integer> {
+public class SortByDistCLI implements Callable<Integer> {
 	
 	@Parameters( index = "0", description = "The coordinate peak file")
 	private File peak = null;
@@ -42,7 +42,7 @@ public class SortByRefCLI implements Callable<Integer> {
 	
 	@Override
 	public Integer call() throws Exception {
-		System.err.println( ">SortByRefCLI.call()" );
+		System.err.println( ">SortByDistCLI.call()" );
 		String validate = validateInput();
 		if(!validate.equals("")){
 			System.err.println( validate );
@@ -50,7 +50,7 @@ public class SortByRefCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SortByRef script_obj = new SortByRef(ref, peak, output, gzOutput, null, upstreamBound, downstreamBound);
+		SortByDist script_obj = new SortByDist(ref, peak, output, gzOutput, null, upstreamBound, downstreamBound);
 		if (isGFF){
 			script_obj.sortGFF();
 		} else { 
@@ -121,7 +121,7 @@ public class SortByRefCLI implements Callable<Integer> {
 	}
 
 	public static String getCLIcommand(File ref, File peak, File out, boolean gff, boolean gzOutput, Long upstream, Long downstream){
-		String command = "java -jar $SCRIPTMANAGER peak-analysis sort-by-ref";
+		String command = "java -jar $SCRIPTMANAGER peak-analysis sort-by-dist";
 		command += gff? " --gff": "";
 		command += gzOutput? " -z": "";
 		command += upstream == null? "": " -u " + upstream;
