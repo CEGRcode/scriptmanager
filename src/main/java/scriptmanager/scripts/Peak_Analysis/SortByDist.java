@@ -6,12 +6,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.stream.Collectors;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.objects.CoordinateObjects.GFFCoord;
@@ -32,113 +31,105 @@ public class SortByDist {
 	private File PEAK = null;
 	private File REF = null;
 
-	private long MAX_UPSTREAM = 0;
-	private long MAX_DOWNSTREAM = 0;
-	private boolean BOUNDED_UPSTREAM = false;
-	private boolean BOUNDED_DOWNSTREAM = false;
-	
-	public SortByDist(File ref, File peak, File out, boolean gzOutput, PrintStream ps, Long upstream, Long downstream) throws IOException {
+	private Long maxUp = null;
+	private Long maxDown = null;
+
+//	// TODO: add strand match restriction
+//	private boolean restrictStrandedness = false;
+
+	public SortByDist(File ref, File peak, File out, boolean gzOutput, Long upstream, Long downstream, PrintStream ps) throws IOException {
 		PS = ps;
 		OUT = GZipUtilities.makePrintStream(out, gzOutput);
 		PEAK = peak;
 		REF = ref;
-		if (!(upstream == null)){
-			BOUNDED_UPSTREAM = true;
-			MAX_UPSTREAM = upstream.longValue();
+		if (upstream != null) {
+			maxUp = upstream.longValue();
 		}
-		if (!(downstream == null)){
-			BOUNDED_DOWNSTREAM = true;
-			MAX_DOWNSTREAM = downstream.longValue();
+		if (downstream != null) {
+			maxDown = downstream.longValue();
 		}
-	}
 		
+		// TODO: add strand match restriction
+	}
+
 	public void sortGFF() throws IOException, InterruptedException {
 		printPS("Mapping: " + PEAK + " to " + REF);
 		printPS("Starting: " + getTimeStamp());
 
-		//Create a HashMap for peak coords and an ArrayList for reference coords
-		HashMap<String, HashMap<Long, GFFCoord>> peakCoords = new HashMap<String, HashMap<Long, GFFCoord>>();
-		ArrayList<GFFCoord> refCoords = new ArrayList<GFFCoord>();
-		
-		//load peak coords into map
+		// Initialize maps to store peak and ref info
+		Map<String, ArrayList<String>> peakMap = new HashMap<String, ArrayList<String>>();
+		Map<String, Long> refMapDist = new HashMap<String, Long>();
+
+		printPS("Loading Peaks...");
+		String key ;
+		// Load peak file, group by chrname
 		BufferedReader br = GZipUtilities.makeReader(PEAK);
-		String line;
-		HashMap<Long, GFFCoord> currentMap;
-		GFFCoord currentCoord;
-		Long currentIndex = (long)0;
-		while((line = br.readLine()) != null) {
-			currentCoord = new GFFCoord(line);
-			if (!peakCoords.containsKey(currentCoord.getChrom())){
-				peakCoords.put(currentCoord.getChrom(), currentMap = new HashMap<>());
-				currentMap.put(currentIndex, currentCoord);
-			} else {
-				peakCoords.get(currentCoord.getChrom()).put(currentIndex, currentCoord);
+		for (String line; (line = br.readLine()) != null; ) {
+			key = new GFFCoord(line).getChrom();
+			if(!peakMap.containsKey(key)) {
+				peakMap.put(key, new ArrayList<String>());
 			}
-			currentCoord.calcMid();
-			currentIndex++;
+			peakMap.get(key).add(line);
 		}
 		br.close();
 
-		//load ref coords into array
+		printPS("Processing Ref coordinates...");
+		int counter = 0;
+		// Parse ref file
 		br = GZipUtilities.makeReader(REF);
-		line = "";
-		while((line = br.readLine()) != null) {
-			refCoords.add(currentCoord = new GFFCoord(line));
-			currentCoord.calcMid();
+		for (String line; (line = br.readLine()) != null; ) {
+			// Initialize ref GFFCoord object
+			GFFCoord refCoord = new GFFCoord(line);
+			refCoord.calcMid();
+			// Initialize minDiff update var
+			long minDist = Long.MAX_VALUE;
+			// Check that peakList contains peaks with ref's chromosome
+			if (peakMap.containsKey(refCoord.getChrom())) {
+				// Iterate through these chr-matched peaks
+				for (String pLine : peakMap.get(refCoord.getChrom())) {
+					// Initialize peak object
+					GFFCoord peakCoord = new GFFCoord(pLine);
+					peakCoord.calcMid();
+					// Check if this peak is closer and update min dist score if closer
+					if (validateCoord(peakCoord, refCoord, minDist)) {
+						// Store directional distance
+						minDist = peakCoord.getMid() - refCoord.getMid();
+						if (refCoord.getDir().equals("-")) { minDist *= -1; }
+					}
+				}
+			}
+			// Add ref line with minDist
+			refMapDist.put(line, minDist);
+
+			// Update progress
+			counter++;
+			if (counter % 1000 == 0){
+				printPS("Reference rows processed: " + counter);
+			}
 		}
 		br.close();
 
-		//Makes matching array
-		long[][] matches = new long[refCoords.size()][3];
+		printPS("Sorting...");
+		List<String> sortedRefLines = refMapDist.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue())
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
 
-		//Iterate through reference coords, matching to closest valid peak coord index
-		for (int i = 0; i < refCoords.size(); i++){
-			GFFCoord refCoord  = refCoords.get(i);
-			long minDiff = Long.MAX_VALUE;
-			long peakIndex = -1;
-			//Get peak coords with matching chr
-			HashMap<Long, GFFCoord> peakCoordMap = peakCoords.get(refCoord.getChrom());
-			for (Map.Entry<Long, GFFCoord> coord : peakCoordMap.entrySet()){
-				GFFCoord peakCoord = coord.getValue();
-				if (validateCoord(peakCoord, refCoord, minDiff))
-				{
-					//Store difference and index in original file
-					minDiff = Math.abs(peakCoord.getMid() - refCoord.getMid());
-					peakIndex = coord.getKey();
-				}
-			}
-			matches[i] = new long[] {minDiff, peakIndex, i};
-			printPS(matches[i][0] + "," + matches[i][1] + "," + matches[i][2]);
-		}
-
-		//Go through all peak values
-		for (int i = 0; i < currentIndex; i++){
-			//Get all of the matching coordinates
-			ArrayList<Long[]> refMatches = new ArrayList<Long[]>();
-			for(long[] match: matches){
-				if (match[1] == i){
-					refMatches.add(ArrayUtils.toObject(match));
-				}
-			}
-			//Sort by distance
-			Collections.sort(refMatches, (a, b) -> Long.compare(a[0], b[0]));
-			//Print the coordinates, closest to furthest
-			for (Long[] coord: refMatches){
-				OUT.println(refCoords.get(coord[2].intValue()));
-			}
-			if (i % 1000 == 0){
-				printPS("Reference rows processed: " + i);
-			}
-		}
-
-		//Print invalid coords
-		for(long[] coord: matches){
-			if(coord[1] == -1){
-				OUT.println(refCoords.get((int)coord[2]));
-			}
+		printPS("Writing...");
+		for (int i = 0; i < sortedRefLines.size(); i++) {
+			OUT.println(sortedRefLines.get(i));
 		}
 		OUT.close();
-		
+
+//		// TODO: rewrite to sort stream and write in same step (to reduce data held in memory)
+//		printPS("Sort and write...");
+//		refMapDist.entrySet().stream()
+//			.sorted(Map.Entry.comparingByValue())
+//			.map(Map.Entry::getKey)
+//			.forEach(line -> {
+//				OUT.println(line);
+//			});
+
 		printPS("Completing: " + getTimeStamp());
 	}
 
@@ -146,117 +137,105 @@ public class SortByDist {
 		printPS("Mapping: " + PEAK + " to " + REF);
 		printPS("Starting: " + getTimeStamp());
 
-		//Create a HashMap for peak coords and an ArrayList for reference coords
-		HashMap<String, HashMap<Long, BEDCoord>> peakCoords = new HashMap<String, HashMap<Long, BEDCoord>>();
-		ArrayList<BEDCoord> refCoords = new ArrayList<BEDCoord>();
-		
-		//load peak coords into map
+		// Initialize maps to store peak and ref info
+		Map<String, ArrayList<String>> peakMap = new HashMap<String, ArrayList<String>>();
+		Map<String, Long> refMapDist = new HashMap<String, Long>();
+
+		printPS("Loading Peaks...");
+		String key ;
+		// Load peak file, group by chrname
 		BufferedReader br = GZipUtilities.makeReader(PEAK);
-		String line;
-		HashMap<Long, BEDCoord> currentMap;
-		BEDCoord currentCoord;
-		Long currentIndex = (long)0;
-		while((line = br.readLine()) != null) {
-			currentCoord = new BEDCoord(line);
-			if (!peakCoords.containsKey(currentCoord.getChrom())){
-				peakCoords.put(currentCoord.getChrom(), currentMap = new HashMap<>());
-				currentMap.put(currentIndex, currentCoord);
-			} else {
-				peakCoords.get(currentCoord.getChrom()).put(currentIndex, currentCoord);
+		for (String line; (line = br.readLine()) != null; ) {
+			key = new BEDCoord(line).getChrom();
+			if(!peakMap.containsKey(key)) {
+				peakMap.put(key, new ArrayList<String>());
 			}
-			currentCoord.calcMid();
-			currentIndex++;
+			peakMap.get(key).add(line);
 		}
 		br.close();
 
-		//load ref coords into array
+		printPS("Processing Ref coordinates...");
+		int counter = 0;
+		// Parse ref file
 		br = GZipUtilities.makeReader(REF);
-		line = "";
-		while((line = br.readLine()) != null) {
-			refCoords.add(currentCoord = new BEDCoord(line));
-			currentCoord.calcMid();
+		for (String line; (line = br.readLine()) != null; ) {
+			// Initialize ref BEDCoord object
+			BEDCoord refCoord = new BEDCoord(line);
+			refCoord.calcMid();
+			// Initialize minDiff update var
+			long minDist = Long.MAX_VALUE;
+			// Check that peakList contains peaks with ref's chromosome
+			if (peakMap.containsKey(refCoord.getChrom())) {
+				// Iterate through these chr-matched peaks
+				for (String pLine : peakMap.get(refCoord.getChrom())) {
+					// Initialize peak object
+					BEDCoord peakCoord = new BEDCoord(pLine);
+					peakCoord.calcMid();
+					// Check if this peak is closer and update min dist score if closer
+					if (validateCoord(peakCoord, refCoord, minDist)) {
+						// Store directional distance
+						minDist = peakCoord.getMid() - refCoord.getMid();
+						if (refCoord.getDir().equals("-")) { minDist *= -1; }
+					}
+				}
+			}
+			// Add ref line with minDist
+			refMapDist.put(line, minDist);
+
+			// Update progress
+			counter++;
+			if (counter % 1000 == 0){
+				printPS("Reference rows processed: " + counter);
+			}
 		}
 		br.close();
 
-		//Makes matching array
-		long[][] matches = new long[refCoords.size()][3];
+		printPS("Sorting...");
+		List<String> sortedRefLines = refMapDist.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue())
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
 
-		//Iterate through reference coords, matching to closest valid peak coord index
-		for (int i = 0; i < refCoords.size(); i++){
-			BEDCoord refCoord  = refCoords.get(i);
-			long minDiff = Long.MAX_VALUE;
-			long peakIndex = -1;
-			//Get peak coords with matching chr
-			HashMap<Long, BEDCoord> peakCoordMap = peakCoords.get(refCoord.getChrom());
-			for (Map.Entry<Long, BEDCoord> coord : peakCoordMap.entrySet()){
-				BEDCoord peakCoord = coord.getValue();
-				if (validateCoord(peakCoord, refCoord, minDiff))
-				{
-					//Store difference and index in original file
-					minDiff = Math.abs(peakCoord.getMid() - refCoord.getMid());
-					peakIndex = coord.getKey();
-				}
-			}
-			matches[i] = new long[] {minDiff, peakIndex, i};
-		}
-
-		//Go through all peak values
-		for (int i = 0; i < currentIndex; i++){
-			//Get all of the matching coordinates
-			ArrayList<Long[]> refMatches = new ArrayList<Long[]>();
-			for(long[] match: matches){
-				if (match[1] == i){
-					refMatches.add(ArrayUtils.toObject(match));
-				}
-			}
-			//Sort by distance
-			Collections.sort(refMatches, (a, b) -> Long.compare(a[0], b[0]));
-			//Print the coordinates, closest to furthest
-			for (Long[] coord: refMatches){
-				OUT.println(refCoords.get(coord[2].intValue()));
-			}
-			if (i % 1000 == 0){
-				printPS("Reference rows processed: " + i);
-			}
-		}
-
-		//Print invalid coords
-		for(long[] coord: matches){
-			if(coord[1] == -1){
-				OUT.println(refCoords.get((int)coord[2]));
-			}
+		printPS("Writing...");
+		for (String line : sortedRefLines) {
+			OUT.println(line + "\t" + (refMapDist.get(line) == Long.MAX_VALUE ? "NaN" : refMapDist.get(line)));
 		}
 		OUT.close();
+
+//		// TODO: rewrite to sort stream and write in same step (to reduce data held in memory)
+//		printPS("Sort and write...");
+//		refMapDist.entrySet().stream()
+//			.sorted(Map.Entry.comparingByValue())
+//			.map(Map.Entry::getKey)
+//			.forEach(line -> {
+//				OUT.println(line);
+//			});
 
 		printPS("Completing: " + getTimeStamp());
 	}
 
-	private boolean validateCoord(GenomicCoord peak, GenomicCoord ref, long minDistance){
-		boolean closer = (minDistance >= Math.abs(peak.getMid() - ref.getMid()));
-		boolean inBounds = true;
-		//If ref strand is negative
-		if(ref.getDir().equals("-")){
-			//If ref is downstream
-			if (ref.getMid() <= peak.getMid() && BOUNDED_DOWNSTREAM){
-				//MAX_DOWNSTREAM is positive int
-				inBounds = peak.getMid() - ref.getMid() <= MAX_DOWNSTREAM;
-			} else if (BOUNDED_UPSTREAM) {
-				//MAX_UPSTREAM is negative int, and peak is greater than ref
-				inBounds = peak.getMid() - ref.getMid() >= MAX_UPSTREAM;
-			}
-		} else {
-			//If ref is downstream
-			if (ref.getMid() >= peak.getMid() && BOUNDED_DOWNSTREAM){
-				//MAX_DOWNSTREAM is positive int
-				inBounds = ref.getMid() - peak.getMid() <= MAX_DOWNSTREAM;
-			} else if (BOUNDED_UPSTREAM) {
-				//MAX_UPSTREAM is negative int, and peak is less than than ref
-				inBounds = peak.getMid() - ref.getMid() >= MAX_UPSTREAM;
-			}
+	/**
+	 * Check if the distance (abs value) between the two input coordinates (peak -
+	 * ref) is smaller than the (abs value) of the provided minDistance.
+	 * 
+	 * @param peak        peak midpoint
+	 * @param ref         reference point peak midpoint
+	 * @param minDistance min distance to compare against
+	 * @return true if closer, false if not
+	 */
+	private boolean validateCoord(GenomicCoord peak, GenomicCoord ref, long minDistance) {
+		// Calculate strand-adjusted directional distance
+		long distPeakRef = (peak.getMid() - ref.getMid()) * (ref.getDir().equals("-") ? -1 : 1);
+		// Determine if this distance is closer than min
+		boolean closer = Math.abs(minDistance) >= Math.abs(distPeakRef);
+		// Check if peak is within bounds and return false if not
+		if (closer) {
+			// Check bounds
+			if (maxDown != null && distPeakRef > maxDown) { return false; }
+			if (maxUp != null && distPeakRef < maxUp) { return false; }
 		}
-		return closer && inBounds;
+		return closer;
 	}
-
 
 	private static String getTimeStamp() {
 		Date date= new Date();

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 import scriptmanager.util.FileSelection;
 
@@ -59,10 +61,8 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 	ArrayList<File> PeakGFFFiles = new ArrayList<File>();
 	ArrayList<File> RefBEDFiles = new ArrayList<File>();
 	ArrayList<File> RefGFFFiles = new ArrayList<File>();
-	private File OUTPUT_PATH = null;
-	Long UPSTREAM = null;
-	Long DOWNSTREAM = null;
-	
+	private File OUT_DIR = null;
+
 	private JButton btnLoadPeakBed;
 	private JButton btnLoadPeakGff;
 	private JButton btnRemovePeakBed;
@@ -74,7 +74,10 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 	private JButton btnOutputDirectory;
 	private JButton btnCalculate;
 	private JCheckBox chckbxGzipOutput;
-	private JCheckBox chckbxRestrictDistance;
+	private JCheckBox chckbxRestrictUpstreamDistance;
+	private JCheckBox chckbxRestrictDownstreamDistance;
+//	// TODO: Strand match restriction
+//	private JCheckBox chckbxMatchStrand;
 	private JLabel lblCurrentOutput;
 	private JLabel lblDefaultToLocal;
 	private JProgressBar progressBar;
@@ -87,90 +90,83 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 	public Task task;
 
 	class Task extends SwingWorker<Void, Void> {
-        @Override
-        public Void doInBackground() throws IOException, InterruptedException {
-        	try {
-			UPSTREAM = (txtUpstream.getText().equals(""))? null: Long.parseLong(txtUpstream.getText());
-			DOWNSTREAM = (txtDownstream.getText().equals(""))? null: Long.parseLong(txtDownstream.getText());
-			boolean validUpstream = UPSTREAM == null || UPSTREAM <= 0;
-			boolean validDownstream = DOWNSTREAM == null || DOWNSTREAM >= 0;
-			if (!validUpstream){
-				throw new NumberFormatException("upstream");
-			}
-			else if (!validDownstream){
-				throw new NumberFormatException("downstream");
-			}
-			if (rdbtnBed.isSelected()) {
-					if(PeakBEDFiles.size() < 1 || RefBEDFiles.size() < 1) {
-						JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
-					} else {
+		@Override
+		public Void doInBackground() throws IOException, InterruptedException {
+			try {
+				if (chckbxRestrictUpstreamDistance.isSelected() && chckbxRestrictDownstreamDistance.isSelected() && (Long.parseLong(txtUpstream.getText()) > Long.parseLong(txtDownstream.getText()))) {
+					JOptionPane.showMessageDialog(null, "Invalid distance bounds!!! Upstream bound distance must be a lower integer value than the downstream bound", "Validate Input", JOptionPane.ERROR_MESSAGE);
+				} else if (rdbtnGff.isSelected() && PeakGFFFiles.size() < 1) {
+					JOptionPane.showMessageDialog(null, "No Peak GFF Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
+				} else if (rdbtnGff.isSelected() && RefGFFFiles.size() < 1) {
+					JOptionPane.showMessageDialog(null, "No RefPT GFF Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
+				} else if (rdbtnBed.isSelected() && PeakBEDFiles.size() < 1) {
+					JOptionPane.showMessageDialog(null, "No Peak BED Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
+				} else if (rdbtnBed.isSelected() && RefBEDFiles.size() < 1) {
+					JOptionPane.showMessageDialog(null, "No RefPT BED Files Loaded!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
+				} else {
+					Long UPSTREAM = null;
+					Long DOWNSTREAM = null;
+					if (chckbxRestrictDownstreamDistance.isSelected()) {
+						DOWNSTREAM = Long.parseLong(txtDownstream.getText());
+					}
+					if (chckbxRestrictUpstreamDistance.isSelected()) {
+						UPSTREAM = Long.parseLong(txtUpstream.getText());
+					}
+					if (rdbtnBed.isSelected()) {
 						setProgress(0);
-						SortByDistOutput align;
 						int counter = 0;
-
-						for(int r = 0; r < RefBEDFiles.size(); r++)
-						{
-							for(int p=0; p < PeakBEDFiles.size(); p++)
-							{
-								// Execute Script and update progress
-								align = new SortByDistOutput(RefBEDFiles.get(r), PeakBEDFiles.get(p), OUTPUT_PATH, chckbxGzipOutput.isSelected(), false, UPSTREAM, DOWNSTREAM);
-								align.addPropertyChangeListener("log", new PropertyChangeListener() {
+						for (File RefBED : RefBEDFiles) {
+							for (File PeakBED : PeakBEDFiles) {
+								// Execute script
+								SortByDistOutput output_obj = new SortByDistOutput(RefBED, PeakBED, OUT_DIR, chckbxGzipOutput.isSelected(), false, UPSTREAM, DOWNSTREAM);
+								output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
 										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 									}
 								});
-								align.setVisible(true);
-								align.run();
+								output_obj.setVisible(true);
+								output_obj.run();
+								// Update progress
 								counter++;
-							int percentComplete = (int)(((double)(counter) / (PeakBEDFiles.size() * RefBEDFiles.size())) * 100);
-							setProgress(percentComplete);	
-							}	
-					}
+								int percentComplete = (int) (((double) (counter) / (PeakBEDFiles.size() * RefBEDFiles.size())) * 100);
+								setProgress(percentComplete);
+							}
+						}
 						setProgress(100);
-						JOptionPane.showMessageDialog(null, "Alignment Complete");
-					}
-				} else {
-					if(PeakGFFFiles.size() < 1 || RefGFFFiles.size() < 1) {
-						JOptionPane.showMessageDialog(null, "No BED Files Loaded!!!");
+						JOptionPane.showMessageDialog(null, "Sort Complete");
 					} else {
 						setProgress(0);
-						SortByDistOutput align;
 						int counter = 0;
-
-						for(int r = 0; r < RefGFFFiles.size(); r++)
-						{
-							for(int p=0; p < PeakGFFFiles.size(); p++)
-							{
-								// Execute Script and update progress
-								align = new SortByDistOutput(RefGFFFiles.get(r), PeakGFFFiles.get(p), OUTPUT_PATH, chckbxGzipOutput.isSelected(), true, UPSTREAM, DOWNSTREAM);
-								align.addPropertyChangeListener("log", new PropertyChangeListener() {
+						for (File RefBED : RefBEDFiles) {
+							for (File PeakBED : PeakBEDFiles) {
+								// Execute script
+								SortByDistOutput output_obj = new SortByDistOutput(RefBED, PeakBED, OUT_DIR, chckbxGzipOutput.isSelected(), true, UPSTREAM, DOWNSTREAM);
+								output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
 										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
 									}
 								});
-								align.setVisible(true);
-								align.run();
+								output_obj.setVisible(true);
+								output_obj.run();
+								// Update progress
 								counter++;
-							int percentComplete = (int)(((double)(counter) / (PeakGFFFiles.size()*RefGFFFiles.size())) * 100);
-							setProgress(percentComplete);
-							}	
-					}
+								int percentComplete = (int) (((double) (counter) / (PeakGFFFiles.size() * RefGFFFiles.size())) * 100);
+								setProgress(percentComplete);
+							}
+						}
 						setProgress(100);
-						JOptionPane.showMessageDialog(null, "Alignment Complete");
+						JOptionPane.showMessageDialog(null, "Sort Complete");
 					}
 				}
-        	} catch(NumberFormatException nfe){
-				if (nfe.getMessage().equals("upstream")){
-					JOptionPane.showMessageDialog(null, "Upstream bound must be a negative integer");
-				} else if (nfe.getMessage().equals("downstream")) {
-					JOptionPane.showMessageDialog(null, "Downstream must be a positive integer");
-				} else {
-					JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
-				}
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null, "Distance bound inputs are invalid!!! They must be formatted like valid integers.");
 			}
-        	return null;
-        }
-        
+			setProgress(100);
+			return null;
+		}
+
         public void done() {
         	massXable(contentPane, true);
             setCursor(null); //turn off the wait cursor
@@ -189,7 +185,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 
 		rdbtnBed = new JRadioButton("BED input");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnBed, 6, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnBed, 155, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnBed, 150, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnBed);
 
 		rdbtnGff = new JRadioButton("GFF input");
@@ -203,10 +199,10 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		rdbtnBed.setSelected(true);
 
 		JPanel inputCards = new JPanel(new CardLayout());
-		sl_contentPane.putConstraint(SpringLayout.NORTH, inputCards, 10, SpringLayout.SOUTH, rdbtnBed);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, inputCards, 0, SpringLayout.SOUTH, rdbtnBed);
 		sl_contentPane.putConstraint(SpringLayout.WEST, inputCards, 0, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, inputCards, 0, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -205, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, inputCards, -230, SpringLayout.SOUTH, contentPane);
 		contentPane.add(inputCards);
 
 		JPanel bedInputPane = new JPanel();
@@ -241,10 +237,10 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		scrollPaneBedPeak.setViewportView(listPeak);
 
 		btnLoadPeakBed.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
 				if(newBEDFiles != null) {
-					for(int x = 0; x < newBEDFiles.length; x++) { 
+					for(int x = 0; x < newBEDFiles.length; x++) {
 						PeakBEDFiles.add(newBEDFiles[x]);
 						peakBEDList.addElement(newBEDFiles[x].getName());
 					}
@@ -271,20 +267,21 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		btnRemoveRefBed = new JButton("Remove Reference BED");
 		sl_bedInputPane.putConstraint(SpringLayout.NORTH, btnRemoveRefBed, 10, SpringLayout.SOUTH, scrollPaneBedPeak);
 		sl_bedInputPane.putConstraint(SpringLayout.EAST, btnRemoveRefBed, -5, SpringLayout.EAST, bedInputPane);
-		
-		JScrollPane scrollPaneBedRef = new JScrollPane();
-		sl_bedInputPane.putConstraint(SpringLayout.NORTH, scrollPaneBedRef, 10, SpringLayout.SOUTH, btnLoadRefBed);
-		//sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneBedRef, -100, SpringLayout.SOUTH, btnLoadRefBed);
-		sl_bedInputPane.putConstraint(SpringLayout.WEST, scrollPaneBedRef, 5, SpringLayout.WEST, bedInputPane);
-		sl_bedInputPane.putConstraint(SpringLayout.EAST, scrollPaneBedRef, -5, SpringLayout.EAST, bedInputPane);
-		bedInputPane.add(scrollPaneBedRef);
-		
+
+		JScrollPane scrollPane_Ref = new JScrollPane();
+		sl_bedInputPane.putConstraint(SpringLayout.NORTH, scrollPane_Ref, 10, SpringLayout.SOUTH, btnLoadRefBed);
+		//sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPane_Ref, -100, SpringLayout.SOUTH, btnLoadRefBed);
+		sl_bedInputPane.putConstraint(SpringLayout.WEST, scrollPane_Ref, 5, SpringLayout.WEST, bedInputPane);
+		sl_bedInputPane.putConstraint(SpringLayout.EAST, scrollPane_Ref, -5, SpringLayout.EAST, bedInputPane);
+		sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPane_Ref, 0, SpringLayout.SOUTH, bedInputPane);
+		bedInputPane.add(scrollPane_Ref);
+
 		refBEDList = new DefaultListModel<String>();
 		final JList<String> listRef = new JList<String>(refBEDList);
 		listRef.setForeground(Color.BLACK);
 		listRef.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-		scrollPaneBedRef.setViewportView(listRef);
-		
+		scrollPane_Ref.setViewportView(listRef);
+
 		btnLoadRefBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
@@ -366,6 +363,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		//sl_gffInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneGffRef, -100, SpringLayout.SOUTH, btnLoadRefGff);
 		sl_gffInputPane.putConstraint(SpringLayout.WEST, scrollPaneGffRef, 5, SpringLayout.WEST, gffInputPane);
 		sl_gffInputPane.putConstraint(SpringLayout.EAST, scrollPaneGffRef, -5, SpringLayout.EAST, gffInputPane);
+		sl_gffInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneGffRef, 0, SpringLayout.SOUTH, gffInputPane);
 		gffInputPane.add(scrollPaneGffRef);
 
 		refGFFList = new DefaultListModel<String>();
@@ -397,128 +395,138 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		});
 		gffInputPane.add(btnRemoveReGff);
 
-		//Initialize restrict distance checkbox
-		chckbxRestrictDistance = new JCheckBox("Restrict maximum distance from peak");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRestrictDistance, 3, SpringLayout.SOUTH, inputCards);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRestrictDistance, 105, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxRestrictDistance, -105, SpringLayout.EAST, contentPane);
-		
-		//Initialize upstream text input
-		JLabel lblUpstream = new JLabel("<html><font color='gray'>Max distance upstream:</font></html>");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblUpstream, 3, SpringLayout.SOUTH, chckbxRestrictDistance);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblUpstream, 20, SpringLayout.WEST, contentPane);
-		contentPane.add(lblUpstream);
+		// Search Options
+		JPanel pnlSearchOptions = new JPanel();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlSearchOptions, 10, SpringLayout.SOUTH, inputCards);
+		sl_contentPane.putConstraint(SpringLayout.WEST, pnlSearchOptions, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, pnlSearchOptions, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlSearchOptions, -125, SpringLayout.SOUTH, contentPane);
+		contentPane.add(pnlSearchOptions);
 
-		txtUpstream = new JTextField();
-		txtUpstream.setEnabled(false);
+		SpringLayout sl_SearchOptions = new SpringLayout();
+		pnlSearchOptions.setLayout(sl_SearchOptions);
+		TitledBorder ttlSearch = BorderFactory.createTitledBorder("Search Options");
+		ttlSearch.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		pnlSearchOptions.setBorder(ttlSearch);
+
+		//Initialize upstream restrict distance checkbox and input
+		chckbxRestrictUpstreamDistance = new JCheckBox("Restrict upstream bound (bp):");
+		sl_SearchOptions.putConstraint(SpringLayout.NORTH, chckbxRestrictUpstreamDistance, 0, SpringLayout.NORTH, pnlSearchOptions);
+		sl_SearchOptions.putConstraint(SpringLayout.WEST, chckbxRestrictUpstreamDistance, 10, SpringLayout.WEST, pnlSearchOptions);
+		pnlSearchOptions.add(chckbxRestrictUpstreamDistance);
+
+		txtUpstream = new JTextField("-1000");
+		sl_SearchOptions.putConstraint(SpringLayout.NORTH, txtUpstream, 1, SpringLayout.NORTH, chckbxRestrictUpstreamDistance);
+		sl_SearchOptions.putConstraint(SpringLayout.WEST, txtUpstream, 250, SpringLayout.WEST, pnlSearchOptions);
 		txtUpstream.setColumns(10);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtUpstream, 3, SpringLayout.SOUTH, lblUpstream);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtUpstream, 20, SpringLayout.WEST, lblUpstream);
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtUpstream, -20, SpringLayout.EAST, lblUpstream);
-		txtUpstream.setToolTipText("Must be a negative integer");
 		txtUpstream.setHorizontalAlignment(SwingConstants.CENTER);
-		txtUpstream.setText("");
-		contentPane.add(txtUpstream);
+		txtUpstream.setEnabled(false);
+		pnlSearchOptions.add(txtUpstream);
 
-		JLabel bpUpstream = new JLabel("<html><font color='gray'>bp</font></html>");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bpUpstream, 0, SpringLayout.NORTH, txtUpstream);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bpUpstream, 3, SpringLayout.EAST, txtUpstream);
-		contentPane.add(bpUpstream);
-
-		//Initialize downstream text input
-		JLabel lblDownstream= new JLabel("<html><font color='gray'>Max distance downstream:</font></html>");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDownstream, 3, SpringLayout.SOUTH, chckbxRestrictDistance);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblDownstream, -20, SpringLayout.EAST, contentPane);
-		contentPane.add(lblDownstream);
-
-		txtDownstream = new JTextField();
-		txtDownstream.setEnabled(false);
-		txtDownstream.setColumns(10);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtDownstream, 3, SpringLayout.SOUTH, lblDownstream);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtDownstream, 30, SpringLayout.WEST, lblDownstream);
-		sl_contentPane.putConstraint(SpringLayout.EAST, txtDownstream, -30, SpringLayout.EAST, lblDownstream);
-		txtDownstream.setToolTipText("Must be a positive integer");
-		txtDownstream.setHorizontalAlignment(SwingConstants.CENTER);
-		txtDownstream.setText("");
-		contentPane.add(txtDownstream);
-
-		JLabel bpDownstream = new JLabel("<html><font color='gray'>bp</font></html>");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bpDownstream, 0, SpringLayout.NORTH, txtDownstream);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bpDownstream, 3, SpringLayout.EAST, txtDownstream);
-		contentPane.add(bpDownstream);
-
-		chckbxRestrictDistance.addItemListener(new ItemListener() {
+		chckbxRestrictUpstreamDistance.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if (chckbxRestrictDistance.isSelected()) {
-					txtUpstream.setEnabled(true);
-					lblUpstream.setText("<html><font color='black'>Max distance upstream:</font></html>");
-					bpUpstream.setText("<html><font color='black'>bp</font></html>");
-					txtDownstream.setEnabled(true);
-					lblDownstream.setText("<html><font color='black'>Max distance downstream:</font></html>");
-					bpDownstream.setText("<html><font color='black'>bp</font></html>");
-				} else {
-					txtUpstream.setEnabled(false);
-					txtUpstream.setText("");
-					lblUpstream.setText("<html><font color='gray'>Max distance upstream:</font></html>");
-					bpUpstream.setText("<html><font color='gray'>bp</font></html>");
-					txtDownstream.setEnabled(false);
-					txtDownstream.setText("");
-					lblDownstream.setText("<html><font color='gray'>Max distance downstream:</font></html>");
-					bpDownstream.setText("<html><font color='gray'>bp</font></html>");
-				}
+				txtUpstream.setEnabled(chckbxRestrictUpstreamDistance.isSelected());
 			}
 		});
-		contentPane.add(chckbxRestrictDistance);
+
+		//Initialize downstream restrict distance checkbox and input
+		chckbxRestrictDownstreamDistance = new JCheckBox("Restrict downstream bound (bp):");
+		sl_SearchOptions.putConstraint(SpringLayout.NORTH, chckbxRestrictDownstreamDistance, 0, SpringLayout.SOUTH, chckbxRestrictUpstreamDistance);
+		sl_SearchOptions.putConstraint(SpringLayout.WEST, chckbxRestrictDownstreamDistance, 0, SpringLayout.WEST, chckbxRestrictUpstreamDistance);
+		pnlSearchOptions.add(chckbxRestrictDownstreamDistance);
+
+		txtDownstream = new JTextField("1000");
+		sl_SearchOptions.putConstraint(SpringLayout.NORTH, txtDownstream, 1, SpringLayout.NORTH, chckbxRestrictDownstreamDistance);
+		sl_SearchOptions.putConstraint(SpringLayout.WEST, txtDownstream, 250, SpringLayout.WEST, pnlSearchOptions);
+		txtDownstream.setColumns(10);
+		txtDownstream.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDownstream.setEnabled(false);
+		pnlSearchOptions.add(txtDownstream);
+
+		chckbxRestrictDownstreamDistance.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				txtDownstream.setEnabled(chckbxRestrictDownstreamDistance.isSelected());
+			}
+		});
+
+		// Add admonishment label
+		JLabel lblSizeAdmonishment = new JLabel("upstream(-) and downstream(+)");
+		sl_SearchOptions.putConstraint(SpringLayout.NORTH, lblSizeAdmonishment, 6, SpringLayout.SOUTH, chckbxRestrictDownstreamDistance);
+		sl_SearchOptions.putConstraint(SpringLayout.WEST, lblSizeAdmonishment, 0, SpringLayout.WEST, chckbxRestrictDownstreamDistance);
+		lblSizeAdmonishment.setFont(new Font("Dialog", Font.ITALIC, 12));
+		pnlSearchOptions.add(lblSizeAdmonishment);
+
+//		// TODO: Strand match restriction
+//		chckbxMatchStrand = new JCheckBox("Strand matched");
+//		sl_SearchOptions.putConstraint(SpringLayout.SOUTH, chckbxMatchStrand, 0, SpringLayout.SOUTH, pnlSearchOptions);
+//		sl_SearchOptions.putConstraint(SpringLayout.EAST, chckbxMatchStrand, 0, SpringLayout.EAST, pnlSearchOptions);
+//		chckbxMatchStrand.setToolTipText("Only check peaks that are on the same strand as the RefPT");
+//		pnlSearchOptions.add(chckbxMatchStrand);
+
+		// Output Options
+		JPanel pnlOutputOptions = new JPanel();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlOutputOptions, 0, SpringLayout.SOUTH, pnlSearchOptions);
+		sl_contentPane.putConstraint(SpringLayout.WEST, pnlOutputOptions, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, pnlOutputOptions, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlOutputOptions, -35, SpringLayout.SOUTH, contentPane);
+		contentPane.add(pnlOutputOptions);
+
+		SpringLayout sl_OutputOptions = new SpringLayout();
+		pnlOutputOptions.setLayout(sl_OutputOptions);
+		TitledBorder ttlOutput = BorderFactory.createTitledBorder("Output Options");
+		ttlOutput.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		pnlOutputOptions.setBorder(ttlOutput);
 
 		//Initialize output directory
 		btnOutputDirectory = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 175, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -175, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 10, SpringLayout.SOUTH, txtDownstream);
+		sl_OutputOptions.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 0, SpringLayout.NORTH, pnlOutputOptions);
+		sl_OutputOptions.putConstraint(SpringLayout.WEST, btnOutputDirectory, 10, SpringLayout.WEST, pnlOutputOptions);
 		btnOutputDirectory.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		OUTPUT_PATH = FileSelection.getOutputDir(fc);
-    			if(OUTPUT_PATH != null) {
-    				lblDefaultToLocal.setText(OUTPUT_PATH.getAbsolutePath());
-    			}
-        	}
-        });
-		contentPane.add(btnOutputDirectory);
-		
+			public void actionPerformed(ActionEvent e) {
+				File temp = FileSelection.getOutputDir(fc);
+				if(temp != null) {
+					OUT_DIR = temp;
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+				}
+			}
+		});
+		pnlOutputOptions.add(btnOutputDirectory);
+
+		chckbxGzipOutput = new JCheckBox("Output GZip");
+		sl_OutputOptions.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutputDirectory);
+		sl_OutputOptions.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 10, SpringLayout.EAST, btnOutputDirectory);
+		pnlOutputOptions.add(chckbxGzipOutput);
+
 		lblCurrentOutput = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 3, SpringLayout.SOUTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 5, SpringLayout.WEST, contentPane);
+		sl_OutputOptions.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 3, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_OutputOptions.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, btnOutputDirectory);
 		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		lblCurrentOutput.setForeground(Color.BLACK);
-		contentPane.add(lblCurrentOutput);		
-		
+		pnlOutputOptions.add(lblCurrentOutput);
+
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 5, SpringLayout.SOUTH, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 15, SpringLayout.WEST, contentPane);
+		sl_OutputOptions.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 5, SpringLayout.SOUTH, lblCurrentOutput);
+		sl_OutputOptions.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.WEST, btnOutputDirectory);
 		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
 		lblDefaultToLocal.setForeground(Color.BLACK);
-		contentPane.add(lblDefaultToLocal);
-		
+		pnlOutputOptions.add(lblDefaultToLocal);
+
+		// Progress bar and calculate
 		progressBar = new JProgressBar();
 		sl_contentPane.putConstraint(SpringLayout.WEST, progressBar, -150, SpringLayout.EAST, progressBar);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -5, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
-		btnCalculate = new JButton("Align");
 
+		btnCalculate = new JButton("Sort");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnCalculate, -5, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnCalculate, 175, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnCalculate, -175, SpringLayout.EAST, contentPane);
 		contentPane.add(btnCalculate);
 		btnCalculate.setActionCommand("start");
 
-		//Initialize GZip checkbox
-		chckbxGzipOutput = new JCheckBox("Output GZIP");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 31, SpringLayout.WEST, contentPane);
-		contentPane.add(chckbxGzipOutput);
-		
 		rdbtnBed.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (rdbtnBed.isSelected()) {
@@ -562,9 +570,15 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 	}
 
 	public void massXable(Container con, boolean status) {
-		for(Component c : con.getComponents()) {
+		for (Component c : con.getComponents()) {
 			c.setEnabled(status);
-			if(c instanceof Container) { massXable((Container)c, status); }
+			if (c instanceof Container) {
+				massXable((Container) c, status);
+			}
+		}
+		if (status) {
+			txtUpstream.setEnabled(chckbxRestrictUpstreamDistance.isSelected());
+			txtDownstream.setEnabled(chckbxRestrictDownstreamDistance.isSelected());
 		}
 	}
 }

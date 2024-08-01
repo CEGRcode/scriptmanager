@@ -5,6 +5,8 @@ import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -55,30 +57,33 @@ public class SortByDistOutput extends JFrame{
 		GZIP_OUTPUT = gzOutput;
 		UPSTREAM_BOUND = upstream;
 		DOWNSTREAM_BOUND = downstream;
-		
+
+		OUTFILE = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(PEAK) + "_" + ExtensionFileFilter.stripExtensionIgnoreGZ(REF) + 
+				"_DistSort." + ExtensionFileFilter.getExtensionIgnoreGZ(REF));
 		if(outpath != null) {
-			OUTFILE = new File(outpath.getCanonicalPath() + File.separator + PEAK.getName().split("\\.")[0] + "_" + 
-			REF.getName().split("\\.")[0] + "_Output." + ExtensionFileFilter.getExtensionIgnoreGZ(REF));
-		} else {
-			OUTFILE = new File(PEAK.getName().split("\\.")[0] + "_" + REF.getName().split("\\.")[0] + 
-			"_Output." + ExtensionFileFilter.getExtensionIgnoreGZ(REF));
+			OUTFILE = new File(outpath.getCanonicalPath() + OUTFILE.getName());
 		}
 	}
 
 	public void run() throws IOException, InterruptedException {
+		// Initialize PrintStream object that displays progress
+		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
+		// Initialize LogItem
 		String command = SortByDistCLI.getCLIcommand(REF, PEAK, OUTFILE, GFF, GZIP_OUTPUT, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
 		LogItem li = new LogItem(command);
 		firePropertyChange("log", null, li);
-		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
-		SortByDist script_obj = new SortByDist(REF, PEAK, OUTFILE, GZIP_OUTPUT, PS, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
+		// Execute script
+		SortByDist script_obj = new SortByDist(REF, PEAK, OUTFILE, GZIP_OUTPUT, UPSTREAM_BOUND, DOWNSTREAM_BOUND, PS);
 		if (GFF) {
 			script_obj.sortGFF();
 		} else {
 			script_obj.sortBED();
 		}
-
+		// Update log item
+		li.setStopTime(new Timestamp(new Date().getTime()));
 		li.setStatus(0);
 		firePropertyChange("log", li, null);
+		// Sleep and close
 		Thread.sleep(2000);
 		dispose();
 	}

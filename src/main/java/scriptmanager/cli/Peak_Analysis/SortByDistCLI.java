@@ -34,9 +34,9 @@ public class SortByDistCLI implements Callable<Integer> {
 	
 	@Option(names = {"-o", "--output"}, description = "Specify output file (default = <peak>_<ref>_Output.bed/gff)")
 	private File output = null;
-	@Option(names = {"-u"}, description = "Maximum distance to upstream of peak (negative integer, default = no maximum)")
+	@Option(names = {"-u"}, description = "Restrict search to exclude peaks upstream of this distance (default = no bound)")
 	private Long upstreamBound = null;
-	@Option(names = {"-d"}, description = "Maximum distance to downstream of peak (positive integer, default = no maximum)")
+	@Option(names = {"-d"}, description = "Restrict search to exclude peaks downstream of this distance (default = no bound)")
 	private Long downstreamBound = null;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
 	private boolean gzOutput = false;
@@ -53,8 +53,9 @@ public class SortByDistCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		SortByDist script_obj = new SortByDist(ref, peak, output, gzOutput, null, upstreamBound, downstreamBound);
-		if (isGFF){
+		// Execute script
+		SortByDist script_obj = new SortByDist(ref, peak, output, gzOutput, upstreamBound, downstreamBound, null);
+		if (isGFF) {
 			script_obj.sortGFF();
 		} else { 
 			script_obj.sortBED();
@@ -68,58 +69,31 @@ public class SortByDistCLI implements Callable<Integer> {
 		String r = "";
 
 		//check inputs exist
-		if(!peak.exists()){
+		if (!peak.exists()) {
 			r += "(!)Coordinate-peak file does not exist: " + peak.getName() + "\n";
 		}
-		if(!ref.exists()){
+		if (!ref.exists()) {
 			r += "(!)Coordinate-ref file does not exist: " + ref.getName() + "\n";
 		}
-		if(!r.equals("")){ return(r); }
-		//check input extensions
-		if(!("bed".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)) || "gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)))){
-			r += "(!)Is this a coordinate file? Check extension: " + peak.getName() + "\n";
-		}
-		if(!("bed".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)) || "gff".equals(ExtensionFileFilter.getExtensionIgnoreGZ(peak)))){
-			r += "(!)Is this a coordinate file? Check extension: " + ref.getName() + "\n";
-		}
-		if(!ExtensionFileFilter.getExtensionIgnoreGZ(peak).equals(ExtensionFileFilter.getExtensionIgnoreGZ(ref))){
-			r += "(!)Format of the peak and reference don't match \n";
-		}
+		if (!r.equals("")) { return(r); }
 		//set default output filename
-		if(output==null){
-			output = new File(ExtensionFileFilter.stripExtension(peak) + "_" + ExtensionFileFilter.stripExtension(ref) + "_Output." + ExtensionFileFilter.getExtensionIgnoreGZ(ref));
+		if (output==null) {
+			output = new File(ExtensionFileFilter.stripExtension(peak) + "_" + ExtensionFileFilter.stripExtension(ref) + "_DistSort." + ExtensionFileFilter.getExtensionIgnoreGZ(ref));
 		//check output filename is valid
-		}else{
-			//check ext
-			try{
-				if(!ExtensionFileFilter.getExtensionIgnoreGZ(ref).equals(ExtensionFileFilter.getExtensionIgnoreGZ(output))){
-					r += "(!)Output extensions does not match coordinate files";
-				}
-			} catch( NullPointerException e){ r += "(!)Output extensions does not match coordinate files"; }
+		} else {
 			//check directory
-			if(output.getParent()==null){
+			if (output.getParent()==null) {
 // 				System.err.println("default to current directory");
-			} else if(!new File(output.getParent()).exists()){
+			} else if (!new File(output.getParent()).exists()) {
 				r += "(!)Check output directory exists: " + output.getParent() + "\n";
 			}
 		}
 
 		//check bounds
-		boolean validUpstream = upstreamBound.equals("");
-		if (!upstreamBound.equals(null)){
-			validUpstream = upstreamBound <= 0;
+		if (upstreamBound != null && downstreamBound != null) {
+			r += upstreamBound > downstreamBound ? "(!)Check that upstream bound isn't greater than downstream bound" : "";
 		}
-		if (!validUpstream){
-			r += "Upstream bound must be a negative integer";
-		}
-		boolean validDownstream = downstreamBound.equals("");
-		if (!downstreamBound.equals(null)){
-			validDownstream = downstreamBound >= 0;
-		}		
-		if (!validDownstream){
-			r += "Downstream bound must be a positive integer";
-		}
-		
+
 		return(r);
 	}
 
