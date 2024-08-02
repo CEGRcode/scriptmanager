@@ -1,11 +1,14 @@
 <tool id="scriptmanager_tile-genome" name="ScriptManager: Genomic Coordinate Tiling Generator"
     version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Genomic Coordinate Tiling Generator </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar peak-analysis tile-genome
+        java -jar $__tool_directory__/@JAR_FILENAME@ peak-analysis tile-genome
 
         "$genome_name"
         
@@ -20,7 +23,7 @@
         #if str($window) != "200" :
             -w "$window"
         #end if
-        
+
     ]]></command>
     <inputs>
         <param type="select" name="genome_name" label="Genome Name">

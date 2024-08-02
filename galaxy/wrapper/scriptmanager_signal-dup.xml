@@ -1,14 +1,18 @@
-<tool id="scriptmanager_signal-dup" name="ScriptManager: Signal Duplication"
+<tool id="scriptmanager_signal-dup" name="(DONOTUSE) ScriptManager: Signal Duplication"
     version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Signal Duplication </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
+
     <command detect_errors="exit_code"><![CDATA[
         ln -s "$input_gff" "temp_input1.gff" &&
         ln -s "$input_bam" "temp_input2.bam" &&
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar peak-analysis signal-dup
+        java -jar $__tool_directory__/@JAR_FILENAME@ peak-analysis signal-dup
 
         #if str($output_file_name.bool) == "Yes" :
             -o "$output_file_name.file_name"

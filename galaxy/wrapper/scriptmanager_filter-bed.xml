@@ -1,13 +1,16 @@
 <tool id="scriptmanager_filter-bed" name="ScriptManager: Filter Bed"
     version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Filter BED by Proximity </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s "$input" "temp_input.bed" &&
         
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar peak-analysis filter-bed
+        java -jar $__tool_directory__/@JAR_FILENAME@ peak-analysis filter-bed
         
         #if str($output_file_name.bool) == "Yes" :
             -o "$output_file_name.file_name"

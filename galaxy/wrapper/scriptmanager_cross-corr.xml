@@ -1,15 +1,17 @@
 <tool id="scriptmanager_cross-corr" name="ScriptManager: Cross Correlation"
     version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> BAM Cross Correlation </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s "$input" "temp_input.bam" &&
         samtools index "temp_input.bam" &&
 
-        
-        java -jar $__tool_directory__/ScriptManager-v0.14-bugfix153.jar bam-statistics cross-corr
+        java -jar $__tool_directory__/@JAR_FILENAME@ bam-statistics cross-corr
         
         #if str($output_file_name.bool) == "Yes" :
             -o "$output_file_name.file_name"
