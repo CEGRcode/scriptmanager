@@ -18,6 +18,7 @@ public class GFFCoord implements GenomicCoord {
 	private String DIR = "+";
 	private String FRAME = ".";
 	private String ATTRIBUTE = ".";
+	private long MID = 0;
 	
 	public String LINE = "";
 
@@ -219,6 +220,18 @@ public class GFFCoord implements GenomicCoord {
 	 */
 	public void setScore(double sco) {
 		SCORE = sco;
+	}
+
+	public void calcMid() {
+		MID = (START + STOP) / 2;
+	}
+	
+	public void setMid(int m) {
+		MID = m;
+	}
+	
+	public long getMid() {
+		return MID;
 	}
 	
 	/**

@@ -75,10 +75,13 @@ public interface GenomicCoord {
 	 */
 	public void setName(String na);
 
+	public long getMid();
+	public void calcMid();
+
 	/**
 	 * Default, Object toString() method
 	 * @return A string representation of the object.
 	 */
 	public String toString();
-		
+
 }

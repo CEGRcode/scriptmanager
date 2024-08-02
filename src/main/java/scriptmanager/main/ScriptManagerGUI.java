@@ -2,7 +2,6 @@ package scriptmanager.main;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -225,6 +224,10 @@ public class ScriptManagerGUI {
 		pnlPeakAnalysis.add(initializeToolPanel("Signal Duplication", ToolDescriptions.signal_dup_description,
 				"Output signal duplication statistics",
 				Class.forName("scriptmanager.window_interface.Peak_Analysis.SignalDuplicationWindow")));
+		// SortByRef
+		pnlPeakAnalysis.add(initializeToolPanel("Sort Coordinates By Distance", ToolDescriptions.sort_by_dist_description,
+				"Sort BED/GFF files by distance to peak BED/GFF",
+				Class.forName("scriptmanager.window_interface.Peak_Analysis.SortByDistWindow")));
 		// FRiXCalculator
 		pnlPeakAnalysis.add(initializeToolPanel("FRiX Score Calculator", ToolDescriptions.frix_description,
 				Class.forName("scriptmanager.window_interface.Peak_Analysis.FRiXCalculatorWindow")));

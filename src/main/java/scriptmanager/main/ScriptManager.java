@@ -47,10 +47,11 @@ import scriptmanager.cli.File_Utilities.DecompressGZFileCLI;
 
 import scriptmanager.cli.Peak_Analysis.BEDPeakAligntoRefCLI;
 import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
+import scriptmanager.cli.Peak_Analysis.FRiXCalculatorCLI;
 import scriptmanager.cli.Peak_Analysis.RandomCoordinateCLI;
 import scriptmanager.cli.Peak_Analysis.SignalDuplicationCLI;
+import scriptmanager.cli.Peak_Analysis.SortByDistCLI;
 import scriptmanager.cli.Peak_Analysis.TileGenomeCLI;
-import scriptmanager.cli.Peak_Analysis.FRiXCalculatorCLI;
 
 import scriptmanager.cli.Peak_Calling.GeneTrackCLI;
 import scriptmanager.cli.Peak_Calling.PeakPairCLI;
@@ -206,6 +207,7 @@ class File_UtilitiesCLI extends SubcommandCLI {}
 			RandomCoordinateCLI.class,
 			SignalDuplicationCLI.class,
 			TileGenomeCLI.class,
+			SortByDistCLI.class,
 			FRiXCalculatorCLI.class
 		},
 		description = "Includes tools like BEDPeakAligntoRefCLI, FilterBEDbyProximityCLI, RandomCoordinateCLI, SignalDuplicationCLI, and TileGenomeCLI.")

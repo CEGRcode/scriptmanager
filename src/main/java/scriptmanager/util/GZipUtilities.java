@@ -95,16 +95,17 @@ public final class GZipUtilities {
 	}
 
 	/**
-	 * Creates a new PrintStream for writing compressed or uncompressed data to a given file, and adds or strips ".gz" extension if needed
+	 * Creates a new PrintStream for writing compressed or uncompressed data to a specified file
 	 * @param f File to write
+	 * @param gzip whether or not to compress the stream
 	 * @return PrintStream which outputs compressed or uncompressed data to given file
 	 * @throws IOException Invalid file
 	 */
-	public static PrintStream makePrintStream(File o, boolean gzip) throws IOException{
+	public static PrintStream makePrintStream(File f, boolean gzip) throws IOException{
 		if(gzip){
-			return new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(o)))); 
+			return new PrintStream(new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(f)))); 
 		} else {
-			return new PrintStream(new BufferedOutputStream(new FileOutputStream(o)));
+			return new PrintStream(new BufferedOutputStream(new FileOutputStream(f)));
 		}
 	}
 }

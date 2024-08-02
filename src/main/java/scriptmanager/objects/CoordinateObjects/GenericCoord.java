@@ -13,6 +13,7 @@ public class GenericCoord implements GenomicCoord {
 	private long START = 0;
 	private long STOP = 0;
 	private String DIR = "+";
+	private long MID = 0;
 	
 	private String NAME = ".";
 	private double SCORE = 0;
@@ -53,6 +54,18 @@ public class GenericCoord implements GenomicCoord {
 		STOP = sto;
 		DIR = di;
 		NAME = na;
+	}
+
+	public void calcMid() {
+		MID = (START + STOP) / 2;
+	}
+	
+	public void setMid(int m) {
+		MID = m;
+	}
+	
+	public long getMid() {
+		return MID;
 	}
 	
 	/**
