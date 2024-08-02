@@ -197,7 +197,7 @@ public class PileupExtract implements Runnable{
 				}
 			}
 		} else if (param.getRead() == PileupParameters.READ1 || param.getRead() == PileupParameters.ALLREADS) {
-			// Set marker (left side default, right side if positive strand and 5 prime or negative strand and 3 prime
+			// Set marker (read start default, read end if negative strand)
 			int mark = sr.getUnclippedStart() - 1;
 			if(sr.getReadNegativeStrandFlag()) {
 				mark = sr.getUnclippedEnd() - 1;
@@ -261,10 +261,10 @@ public class PileupExtract implements Runnable{
 				}
 			}
 		} else if (param.getRead() == PileupParameters.READ1 || param.getRead() == PileupParameters.ALLREADS) {
-			// Set marker (left side default, right side if positive strand and 5 prime or negative strand and 3 prime
-			int mark = sr.getUnclippedStart() - 1;
+			// Set marker (read end default, read start if negative strand)
+			int mark = sr.getUnclippedEnd() - 1;
 			if(sr.getReadNegativeStrandFlag()) {
-				mark = sr.getUnclippedEnd() - 1;
+				mark = sr.getUnclippedStart() - 1;
 			}
 			// Shift as needed
 			if(sr.getReadNegativeStrandFlag()) { mark -= param.getShift(); }
