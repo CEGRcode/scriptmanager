@@ -38,7 +38,7 @@ public class SortByDistCLI implements Callable<Integer> {
 	private Long upstreamBound = null;
 	@Option(names = {"-d"}, description = "Restrict search to exclude peaks downstream of this distance (default = no bound)")
 	private Long downstreamBound = null;
-	@Option(names = {"-m", "--match-strand"}, description = "Output compressed GFF file" )
+	@Option(names = {"-m", "--match-strand"}, description = "only check peaks with strand matching reference" )
 	private boolean matchStrand = false;
 	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
 	private boolean gzOutput = false;
@@ -101,7 +101,7 @@ public class SortByDistCLI implements Callable<Integer> {
 
 	public static String getCLIcommand(File ref, File peak, File out, boolean gff, boolean gzOutput, boolean mstrand, Long upstream, Long downstream){
 		String command = "java -jar $SCRIPTMANAGER peak-analysis sort-by-dist";
-		command += gff? " --gff": "";
+		command += gff ? " --gff": "";
 		command += gzOutput ? " -z": "";
 		command += mstrand ? " -m": "";
 		command += upstream == null ? "": " -u " + upstream;

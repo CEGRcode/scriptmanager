@@ -37,6 +37,7 @@ import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
 
 /**
@@ -61,7 +62,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 	ArrayList<File> PeakGFFFiles = new ArrayList<File>();
 	ArrayList<File> RefBEDFiles = new ArrayList<File>();
 	ArrayList<File> RefGFFFiles = new ArrayList<File>();
-	private File OUT_DIR = null;
+	private File OUT_DIR = new File(System.getProperty("user.dir"));
 
 	private JButton btnLoadPeakBed;
 	private JButton btnLoadPeakGff;
@@ -136,10 +137,10 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 					} else {
 						setProgress(0);
 						int counter = 0;
-						for (File RefBED : RefBEDFiles) {
-							for (File PeakBED : PeakBEDFiles) {
+						for (File RefGFF : RefGFFFiles) {
+							for (File PeakGFF : PeakGFFFiles) {
 								// Execute script
-								SortByDistOutput output_obj = new SortByDistOutput(RefBED, PeakBED, OUT_DIR, chckbxGzipOutput.isSelected(), true, chckbxMatchStrand.isSelected(), UPSTREAM, DOWNSTREAM);
+								SortByDistOutput output_obj = new SortByDistOutput(RefGFF, PeakGFF, OUT_DIR, chckbxGzipOutput.isSelected(), true, chckbxMatchStrand.isSelected(), UPSTREAM, DOWNSTREAM);
 								output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 									public void propertyChange(PropertyChangeEvent evt) {
 										firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -161,6 +162,9 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 				ioe.printStackTrace();
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Distance bound inputs are invalid!!! They must be formatted like valid integers.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, ToolDescriptions.UNEXPECTED_EXCEPTION_MESSAGE + e.getMessage());
 			}
 			setProgress(100);
 			return null;
@@ -237,7 +241,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 
 		btnLoadPeakBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) {
 						PeakBEDFiles.add(newBEDFiles[x]);
@@ -267,23 +271,23 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		sl_bedInputPane.putConstraint(SpringLayout.NORTH, btnRemoveRefBed, 10, SpringLayout.SOUTH, scrollPaneBedPeak);
 		sl_bedInputPane.putConstraint(SpringLayout.EAST, btnRemoveRefBed, -5, SpringLayout.EAST, bedInputPane);
 
-		JScrollPane scrollPane_Ref = new JScrollPane();
-		sl_bedInputPane.putConstraint(SpringLayout.NORTH, scrollPane_Ref, 10, SpringLayout.SOUTH, btnLoadRefBed);
-		//sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPane_Ref, -100, SpringLayout.SOUTH, btnLoadRefBed);
-		sl_bedInputPane.putConstraint(SpringLayout.WEST, scrollPane_Ref, 5, SpringLayout.WEST, bedInputPane);
-		sl_bedInputPane.putConstraint(SpringLayout.EAST, scrollPane_Ref, -5, SpringLayout.EAST, bedInputPane);
-		sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPane_Ref, 0, SpringLayout.SOUTH, bedInputPane);
-		bedInputPane.add(scrollPane_Ref);
+		JScrollPane scrollPaneBedRef = new JScrollPane();
+		sl_bedInputPane.putConstraint(SpringLayout.NORTH, scrollPaneBedRef, 10, SpringLayout.SOUTH, btnLoadRefBed);
+		//sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneBedRef, -100, SpringLayout.SOUTH, btnLoadRefBed);
+		sl_bedInputPane.putConstraint(SpringLayout.WEST, scrollPaneBedRef, 5, SpringLayout.WEST, bedInputPane);
+		sl_bedInputPane.putConstraint(SpringLayout.EAST, scrollPaneBedRef, -5, SpringLayout.EAST, bedInputPane);
+		sl_bedInputPane.putConstraint(SpringLayout.SOUTH, scrollPaneBedRef, 0, SpringLayout.SOUTH, bedInputPane);
+		bedInputPane.add(scrollPaneBedRef);
 
 		refBEDList = new DefaultListModel<String>();
 		final JList<String> listRef = new JList<String>(refBEDList);
 		listRef.setForeground(Color.BLACK);
 		listRef.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-		scrollPane_Ref.setViewportView(listRef);
+		scrollPaneBedRef.setViewportView(listRef);
 
 		btnLoadRefBed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newBEDFiles = FileSelection.getFiles(fc,"bed");
+				File[] newBEDFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newBEDFiles != null) {
 					for(int x = 0; x < newBEDFiles.length; x++) {
 						RefBEDFiles.add(newBEDFiles[x]);
@@ -327,7 +331,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 
 		btnLoadPeakGff.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getFiles(fc,"GFF");
+				File[] newGFFFiles = FileSelection.getFiles(fc,"gff", true);
 				if(newGFFFiles != null) {
 					for(int x = 0; x < newGFFFiles.length; x++) {
 						PeakGFFFiles.add(newGFFFiles[x]);
@@ -373,7 +377,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 
 		btnLoadRefGff.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File[] newGFFFiles = FileSelection.getFiles(fc,"GFF");
+				File[] newGFFFiles = FileSelection.getFiles(fc,"gff", true);
 				if(newGFFFiles != null) {
 					for(int x = 0; x < newGFFFiles.length; x++) {
 						RefGFFFiles.add(newGFFFiles[x]);
@@ -394,7 +398,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		});
 		gffInputPane.add(btnRemoveReGff);
 
-		// Search Options
+		// >>>>> Search Options <<<<<
 		JPanel pnlSearchOptions = new JPanel();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlSearchOptions, 10, SpringLayout.SOUTH, inputCards);
 		sl_contentPane.putConstraint(SpringLayout.WEST, pnlSearchOptions, 10, SpringLayout.WEST, contentPane);
@@ -408,7 +412,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		ttlSearch.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
 		pnlSearchOptions.setBorder(ttlSearch);
 
-		//Initialize upstream restrict distance checkbox and input
+		// Upstream restrict distance checkbox and input
 		chckbxRestrictUpstreamDistance = new JCheckBox("Restrict upstream bound (bp):");
 		sl_SearchOptions.putConstraint(SpringLayout.NORTH, chckbxRestrictUpstreamDistance, 0, SpringLayout.NORTH, pnlSearchOptions);
 		sl_SearchOptions.putConstraint(SpringLayout.WEST, chckbxRestrictUpstreamDistance, 10, SpringLayout.WEST, pnlSearchOptions);
@@ -428,7 +432,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 			}
 		});
 
-		//Initialize downstream restrict distance checkbox and input
+		// Downstream restrict distance checkbox and input
 		chckbxRestrictDownstreamDistance = new JCheckBox("Restrict downstream bound (bp):");
 		sl_SearchOptions.putConstraint(SpringLayout.NORTH, chckbxRestrictDownstreamDistance, 0, SpringLayout.SOUTH, chckbxRestrictUpstreamDistance);
 		sl_SearchOptions.putConstraint(SpringLayout.WEST, chckbxRestrictDownstreamDistance, 0, SpringLayout.WEST, chckbxRestrictUpstreamDistance);
@@ -455,13 +459,14 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		lblSizeAdmonishment.setFont(new Font("Dialog", Font.ITALIC, 12));
 		pnlSearchOptions.add(lblSizeAdmonishment);
 
+		// Add strand match selection option
 		chckbxMatchStrand = new JCheckBox("Strand matched");
 		sl_SearchOptions.putConstraint(SpringLayout.SOUTH, chckbxMatchStrand, 0, SpringLayout.SOUTH, pnlSearchOptions);
 		sl_SearchOptions.putConstraint(SpringLayout.EAST, chckbxMatchStrand, 0, SpringLayout.EAST, pnlSearchOptions);
 		chckbxMatchStrand.setToolTipText("Only check peaks that are on the same strand as the RefPT");
 		pnlSearchOptions.add(chckbxMatchStrand);
 
-		// Output Options
+		// >>>>> Output Options <<<<<
 		JPanel pnlOutputOptions = new JPanel();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlOutputOptions, 0, SpringLayout.SOUTH, pnlSearchOptions);
 		sl_contentPane.putConstraint(SpringLayout.WEST, pnlOutputOptions, 10, SpringLayout.WEST, contentPane);
@@ -475,7 +480,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		ttlOutput.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
 		pnlOutputOptions.setBorder(ttlOutput);
 
-		//Initialize output directory
+		// Output directory
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_OutputOptions.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 0, SpringLayout.NORTH, pnlOutputOptions);
 		sl_OutputOptions.putConstraint(SpringLayout.WEST, btnOutputDirectory, 10, SpringLayout.WEST, pnlOutputOptions);
@@ -491,6 +496,7 @@ public class SortByDistWindow extends JFrame implements ActionListener, Property
 		});
 		pnlOutputOptions.add(btnOutputDirectory);
 
+		// Gzip Output
 		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_OutputOptions.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnOutputDirectory);
 		sl_OutputOptions.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 10, SpringLayout.EAST, btnOutputDirectory);

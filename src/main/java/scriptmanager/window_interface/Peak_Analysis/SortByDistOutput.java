@@ -41,7 +41,7 @@ public class SortByDistOutput extends JFrame{
 
 	private JTextArea textArea;
 
-	public SortByDistOutput(File ref, File peak, File outpath, boolean gzOutput, boolean gff, boolean strand, Long upstream, Long downstream) throws IOException {
+	public SortByDistOutput(File ref, File peak, File odir, boolean gzOutput, boolean gff, boolean strand, Long upstream, Long downstream) throws IOException {
 		setTitle("Align to Reference Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -62,9 +62,9 @@ public class SortByDistOutput extends JFrame{
 		DOWNSTREAM_BOUND = downstream;
 
 		OUTFILE = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(PEAK) + "_" + ExtensionFileFilter.stripExtensionIgnoreGZ(REF) + 
-				"_DistSort." + ExtensionFileFilter.getExtensionIgnoreGZ(REF));
-		if(outpath != null) {
-			OUTFILE = new File(outpath.getCanonicalPath() + OUTFILE.getName());
+				"_DistSort." + ExtensionFileFilter.getExtensionIgnoreGZ(REF) + (gzOutput ? ".gz" : ""));
+		if(odir != null) {
+			OUTFILE = new File(odir.getCanonicalPath() + File.separator + OUTFILE.getName());
 		}
 	}
 
@@ -82,7 +82,7 @@ public class SortByDistOutput extends JFrame{
 		} else {
 			script_obj.sortBED();
 		}
-		// Update log item
+		// Update LogItem
 		li.setStopTime(new Timestamp(new Date().getTime()));
 		li.setStatus(0);
 		firePropertyChange("log", li, null);

@@ -34,10 +34,7 @@ public class SortByDist {
 	private boolean matchStrand = false;
 	private Long maxUp = null;
 	private Long maxDown = null;
-
-//	// TODO: add strand match restriction
-//	private boolean restrictStrandedness = false;
-
+	
 	public SortByDist(File ref, File peak, File out, boolean gzOutput, boolean m, Long upstream, Long downstream, PrintStream ps) throws IOException {
 		PS = ps;
 		OUT = GZipUtilities.makePrintStream(out, gzOutput);
