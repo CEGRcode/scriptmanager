@@ -48,14 +48,14 @@ import scriptmanager.objects.Exceptions.ScriptManagerException;
 @SuppressWarnings("serial")
 public class LogManagerWindow extends JFrame {
 
-//	private JPanel contentPane;
+	private JPanel contentPane;
+	private JTabbedPane tabbedPane;
+
 	/**
 	 * FileChooser which opens to user's directory
 	 */
 	protected JFileChooser fc = new JFileChooser(new File(System.getProperty("user.dir")));
 	private File OUT_DIR = new File(System.getProperty("user.dir"));
-
-	private JTabbedPane tabbedPane;
 
 	private String[] column = {"Status","Command","Start Time", "Stop Time"};;
 
@@ -103,14 +103,33 @@ public class LogManagerWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(125, 125, 650, 350);
 
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		setContentPane(tabbedPane);
-		SpringLayout sl_tabbedPane = new SpringLayout();
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		SpringLayout sl_contentPane = new SpringLayout();
+		contentPane.setLayout(sl_contentPane);
 
-		sl_tabbedPane.putConstraint(SpringLayout.NORTH, tabbedPane, 10, SpringLayout.NORTH, getContentPane());
-		sl_tabbedPane.putConstraint(SpringLayout.WEST, tabbedPane, 10, SpringLayout.WEST, getContentPane());
-		sl_tabbedPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -10, SpringLayout.SOUTH, getContentPane());
-		sl_tabbedPane.putConstraint(SpringLayout.EAST, tabbedPane, -10, SpringLayout.EAST, getContentPane());
+		// Add banner notifying user of beta-feature
+		JPanel bannerPane = new JPanel();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, bannerPane, 5, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, bannerPane, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, bannerPane, 10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, bannerPane, 30, SpringLayout.NORTH, contentPane);
+		bannerPane.setBackground(new Color(102, 102, 153)); // Color from MetalTheme docs (https://docs.oracle.com/javase/8/docs/api/javax/swing/plaf/metal/DefaultMetalTheme.html#getPrimary1--)
+		contentPane.add(bannerPane);
+
+		// Text of banner pane
+		JLabel bannerText = new JLabel("Logging is currently a beta feature, please report any bugs to Github.");
+		bannerText.setForeground(Color.WHITE);
+		bannerPane.add(bannerText);
+
+		// Set-up tabbed panel
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, tabbedPane, 5, SpringLayout.SOUTH, bannerPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, tabbedPane, 10, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -10, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, tabbedPane, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(tabbedPane);
 
 		// >>>>>>>> Settings <<<<<<<<
 		pnl_Settings = new JPanel();
