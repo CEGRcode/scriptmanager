@@ -1,13 +1,16 @@
 <tool id="scriptmanager_randomize-fasta" name="ScriptManager: Randomize Fasta"
     version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Randomize Fasta </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s "$input" "temp_input.fasta" &&
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar sequence-analysis randomize-fasta
+        java -jar $__tool_directory__/@JAR_FILENAME@ sequence-analysis randomize-fasta
         
         #if str($output_file_name.bool) == "Yes" :
             -o "$output_file_name.file_name"

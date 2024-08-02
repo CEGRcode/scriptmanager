@@ -1,12 +1,14 @@
 <tool id="scriptmanager_expand-bed" name="ScriptManager: Expand BED File" version="0.1.0" profile="22.01" >
     <description>Expands input BED file by adding positions to the border or around the center.</description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
         <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
-        ln -s "$input" "temp_input.bed" &&
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation expand-bed
+        java -jar $__tool_directory__/@JAR_FILENAME@ coordinate-manipulation expand-bed
 
         #if str($output_file_name.bool) == "Yes" :
             -o "$output_file_name.directory"
@@ -57,8 +59,8 @@
 
 Expand BED file given user-defined criteria.
     </help>
+    <expand macro="citations_pearc" />
 </tool>
-
 <!--
 #if str($gzip) == "Yes" :
 -z

@@ -1,12 +1,12 @@
-<tool id="bamcorrelation_test" name="ScriptManager: BAM Correlation" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_bam-correlation" name="ScriptManager: BAM Correlation" version="0.1.0" profile="22.01" >
     <description> Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files. </description>
-    <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
-        <requirement type="package" version="1.9">samtools</requirement>
-    </requirements>
     <macros>
-        <import>macros.xml</import>
+        <import>scriptmanager_macros.xml</import>
     </macros>
+    <requirements>
+        <expand macro="requirement_openjdk" />
+        <expand macro="requirement_samtools" />
+    </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s '$BAM' bamfile.bam &&
         ln -s '$output1' output1.tab &&
@@ -18,9 +18,10 @@
             #end if
         #end if
 
-        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar bam-statistics bam-correlation 
+        java -jar $__tool_directory__/@JAR_FILENAME@ bam-statistics bam-correlation
 
-        
+
+
         #if str($read) == "read_1" :
             -1
         #else if str($read) == "read_2" :
@@ -33,14 +34,14 @@
 
         -b "$bin_size"
         --cpu "$cpu"
-        
-        '$output1' 
-        
+
+        '$output1'
+
         -t "$tag_shift"
-        
+
         bamfile.bam
 
-        
+
     ]]></command>
     <inputs>
         <param type="data" name="BAM" format="bam" multiple="True" label="Input BAM files"/>
@@ -61,7 +62,8 @@
     </outputs>
     <help>
 **What it does**
-Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.
 
+Genome-Genome correlations for replicate comparisons given multiple sorted and indexed (BAI) BAM files.
     </help>
+    <expand macro="citations_pearc" />
 </tool>

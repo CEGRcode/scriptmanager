@@ -1,14 +1,17 @@
-<tool id="mergeheatmap_test" name="ScriptManager: Merge Heatmap" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="mergeheatmap_test" name="ScriptManager: Merge Heatmap" version="0.1.0" profile="22.01" >
     <description> Merges two PNG files into a third PNG file that is an average of each corresponding pair of pixels from the input files. </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s '$sense' sense.png &&
         ln -s '$anti' anti.png &&
         ln -s '$output' output.png &&
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar figure-generation merge-heatmap
+        java -jar $__tool_directory__/@JAR_FILENAME@ figure-generation merge-heatmap
         -o output.png
         sense.png
         anti.png
@@ -22,6 +25,8 @@
     </outputs>
     <help>
 **What it does**
+
 Merges two PNG files into a third PNG file that is an average of each corresponding pair of pixels from the input files.
     </help>
+    <expand macro="citations_pearc" />
 </tool>

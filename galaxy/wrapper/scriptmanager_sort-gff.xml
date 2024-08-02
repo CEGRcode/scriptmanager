@@ -1,7 +1,10 @@
-<tool id="scriptmanager_sort-gff" name="ScriptManager: Sort GFF by CDT" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+<tool id="scriptmanager_sort-gff" name="ScriptManager: Sort GFF by CDT" version="0.1.0" profile="22.01" >
     <description> Sort GFF file by CDT file statistics. </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
 
     <command detect_errors="exit_code"><![CDATA[
@@ -9,16 +12,16 @@
         ln -s '$input2' file.cdt &&
         ln -s '$output1' output.gff &&
         ln -s '$output2' output.cdt &&
-        java -jar $__tool_directory__/ScriptManager-v0.14-dev.jar coordinate-manipulation sort-gff
+        java -jar $__tool_directory__/@JAR_FILENAME@ coordinate-manipulation sort-gff
 
         #if str($sort_options.sort) == "center" :
             -c "$sort_options.size_expansion"
         #else if str($sort_options.sort) == "index" :
             -x "$sort_options.index_start" "$sort_options.index_stop"
         #end if
-        
+
         -o output
-        
+
         file.gff
         file.cdt
     ]]></command>
@@ -50,6 +53,8 @@
     </outputs>
     <help>
 **What it does**
+
 Sort a CDT file and its corresponding GFF file by the total score in the CDT file across the specified interval.
-</help>
+    </help>
+    <expand macro="citations_pearc" />
 </tool>

@@ -1,9 +1,12 @@
 <tool id="scriptmanager_filter-pip-seq" name="ScriptManager: Filter Pip Seq"
     version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Filter Pip Seq </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="1.10">samtools</requirement>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
+        <expand macro="requirement_samtools" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s "$input1" "temp_input1.fasta" &&
@@ -12,7 +15,7 @@
         samtools faidx "temp_input1.fasta" &&
         samtools index "temp_input2.bam" &&
         
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar bam-manipulation filter-pip-seq
+        java -jar $__tool_directory__/@JAR_FILENAME@ bam-manipulation filter-pip-seq
 
         #if str($output_file_name.bool) == "Yes" :
             -o "$output_file_name.file_name"

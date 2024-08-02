@@ -45,14 +45,27 @@ sudo git clone https://github.com/CEGRcode/scriptmanager-galaxy_tools.git
 2. Tell galaxy where to look for scriptmanager tools by adding the following section to `/mnt/mountpoint/srv/galaxy/config/local_tool_conf.xml` file.
 
 ```
-<section id="ScriptManager" name="ScriptManager" > 
-
-       <tool file="scriptmanager-galaxy_tools/script_manager_heatmap.xml" />
-       <tool file="scriptmanager-galaxy_tools/script_manager_tag_pileup.xml" />
-       <tool file="scriptmanager-galaxy_tools/scriptmanager_heatmap_add_label.xml" /> 
-       <tool file="scriptmanager-galaxy_tools/script_manager_4color.xml" />
-       
-</section>
+    <section id="scriptmanager-owlang" name="ScriptManager" > 
+        <tool file="scriptmanager-owlang/scriptmanager_bam-correlation.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_bam-to-bed.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_bam-to-bedgraph.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_bam-to-gff.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_bam-to-scidx.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_bed-to-gff.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_expand-bed.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_expand-gff.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_four-color.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_gff-to-bed.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_heatmap.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_label-heatmap.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_merge-heatmap.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_pe-stat.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_se-stat.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_shift-coord.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_sort-bed.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_sort-gff.xml" />
+        <tool file="scriptmanager-owlang/scriptmanager_tag-pileup.xml" />
+    </section>
 ```
 
 3. Restart Galaxy
@@ -66,3 +79,4 @@ sudo git clone https://github.com/CEGRcode/scriptmanager-galaxy_tools.git
 
 
 Thank you to Ali Nematbakhsh(https://github.com/AliNemat) and Audrey Sackey(https://github.com/Adjekai) for their initial work in writing these wrappers.
+

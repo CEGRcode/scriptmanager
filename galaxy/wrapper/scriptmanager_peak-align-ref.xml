@@ -1,14 +1,17 @@
 <tool id="scriptmanager_peak_align_ref" name="ScriptManager: Align BED to Reference"
     version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
     <description> Align BED to Reference </description>
+    <macros>
+        <import>scriptmanager_macros.xml</import>
+    </macros>
     <requirements>
-        <requirement type="package" version="11.0.11">openjdk</requirement>
+        <expand macro="requirement_openjdk" />
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
         ln -s "$input_peak" "temp_input_peak.bed" &&
         ln -s "$input_ref" "temp_input_ref.bed" &&
 
-        java -jar $__tool_directory__/ScriptManager-v0.14.jar peak-analysis peak-align-ref
+        java -jar $__tool_directory__/@JAR_FILENAME@ peak-analysis peak-align-ref
         
         #if str($output_file_name.bool) == "Yes" :
             -o "$output_file_name.file_name"
