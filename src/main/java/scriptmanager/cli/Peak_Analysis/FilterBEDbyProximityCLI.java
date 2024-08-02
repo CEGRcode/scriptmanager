@@ -100,6 +100,7 @@ public class FilterBEDbyProximityCLI implements Callable<Integer> {
 		String command = "java -jar $SCRIPTMANAGER peak-analysis filter-bed";
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " -z " : "";
 		command += " -e " + exclusion;
 		return command;
 	}
