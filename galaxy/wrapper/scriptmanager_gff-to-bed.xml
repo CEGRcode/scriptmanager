@@ -1,0 +1,40 @@
+<tool id="scriptmanager_gff-to-bed" name="ScriptManager: Convert GFF to BED" version="0.0.1">
+    <description>Convert GFF file to BED file.</description>
+    <requirements>
+        <requirement type="package" version="11.0.11">openjdk</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        java -jar $__tool_directory__/ScriptManager-v0.14.jar coordinate-manipulation gff-to-bed -o '$output' '$input'
+    ]]></command>
+<inputs>
+     <param name="input" type="data" format="gff" label="Input file in GFF format"/>
+     </inputs>
+
+<outputs>
+        <data name="output" format="bed" label="${tool.name} on ${on_string}"></data>
+</outputs>
+
+<tests>
+    <test expect_num_outputs="1">
+        <param name="input" value="1.gff"/>
+        <output name="output" file="1.bed" ftype="bed" />
+    </test>
+
+</tests>
+
+<help>
+**What it does**
+
+This tool converts a file extension from GFF to BED
+
+**Example**
+
+Input File::
+input_file.gff
+
+Converting to gff returns this::
+output_file.bed
+
+
+    </help>
+</tool>
