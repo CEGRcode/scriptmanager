@@ -56,5 +56,5 @@ shadowJar {
     archiveVersion.set(version)
 
     // Reduce fat jar to only include dependencies used
-    minimize()
+    //minimize()
 }
