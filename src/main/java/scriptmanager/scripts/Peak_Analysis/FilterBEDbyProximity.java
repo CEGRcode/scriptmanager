@@ -13,42 +13,43 @@ import java.util.List;
 
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.util.ExtensionFileFilter;
-
 import scriptmanager.util.GZipUtilities;
 
 /**
  * Filter coordinate peaks in a BED file by a given exclusion distance
  * 
- * @author William KM Lai
+ * @author Abeer Almutairy
  * @see scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI
  * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityOutput
  * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityWindow
  */
-public class FilterBEDbyProximity{
+public class FilterBEDbyProximity {
 
-	
 	private File INPUT;
 	private int CUTOFF;
 	private PrintStream PS = null;
-	
+
 	private PrintStream OUT_Filter = null;
 	private PrintStream OUT_Cluster = null;
 
 	/**
-	 * Creates a new instance of a FilterBEDbyProximity script
+	 * Initialize input arguments for running FilterBEDbyProximity
 	 * 
 	 * @param input      BED file to filter
-	 * @param outputBase Base name for the output files
-	 * @param cutoff     Exclusion distance (bp)
-	 * @param ps         Output PrintStream
-	 * @param gzOutput    whether or not to gzip output
-	 * @throws IOException Invalid file or parameters
+	 * @param outputBase basename for "-FILTER.bed" and "-CLUSTER.bed" output files
+	 * @param cutoff     exclusion distance (bp) to filter peaks by
+	 * @param ps         if non-null, progress updates will be printed to this
+	 *                   PrintStream. (i.e. GUI passes a PrintStream that wraps the
+	 *                   TextArea component of the Output window to display progress
+	 *                   updates to the user)
+	 * @param gzOutput   whether or not to gzip output
+	 * @throws IOException
 	 */
 	public FilterBEDbyProximity(File input, File outputBase, int cutoff, PrintStream ps, boolean gzOutput) throws IOException {
 		INPUT = input;
 		CUTOFF = cutoff;
 		PS = ps;
-		
+
 		// Construct output name
 		if (outputBase == null) {
 			outputBase = new File(ExtensionFileFilter.stripExtensionIgnoreGZ(INPUT) + "_" + Integer.toString(CUTOFF) + "bp");
@@ -73,9 +74,9 @@ public class FilterBEDbyProximity{
 		printPS("Starting: " + new Timestamp(new Date().getTime()).toString());
 
 		//Check if input file is compressed and assign appropriate input stream
-	    BufferedReader br = GZipUtilities.makeReader(INPUT);
-	    List<BEDCoord> bedArray = new ArrayList<BEDCoord>();
-	    List<Integer> failArray = new ArrayList<Integer>();
+		BufferedReader br = GZipUtilities.makeReader(INPUT);
+		List<BEDCoord> bedArray = new ArrayList<BEDCoord>();
+		List<Integer> failArray = new ArrayList<Integer>();
 		
 		//load bed coords into bedArray
 		String line;
@@ -148,6 +149,10 @@ public class FilterBEDbyProximity{
 		printPS("Completing: " + new Timestamp(new Date().getTime()).toString());
 	}
 
+	/**
+	 * Print logs to both STDERR and the object's PrintStream object(PS) if non-null.
+	 * @param message
+	 */
 	private void printPS(String message){
 		if(PS!=null) PS.println(message);
 		System.err.println(message);

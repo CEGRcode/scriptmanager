@@ -3,10 +3,19 @@ package scriptmanager.objects.CoordinateObjects;
 import java.util.Comparator;
 
 /**
- * Object for storing reads of a BED file
+ * Object for storing BED-formatted records from a file
  * 
  * @author William KM Lai
- * @see scriptmanager.objects.CoordinateObjects.GenomicCoord
+ * @see scriptmanager.util.BEDUtilities
+ * @see scriptmanager.util.BAMUtilities
+ * @see scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED
+ * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
+ * @see scriptmanager.scripts.Peak_Analysis.RandomCoordinate
+ * @see scriptmanager.scripts.Peak_Analysis.TileGenome
+ * @see scriptmanager.scripts.Read_Analysis.ScalingFactor
+ * @see scriptmanager.scripts.Read_Analysis.TagPileup
+ * @see scriptmanager.scripts.Sequence_Analysis.DNAShapefromBED
+ * @see scriptmanager.scripts.Sequence_Analysis.FASTAExtract
  */
 public class BEDCoord implements GenomicCoord {
 	private String CHROM = "";
@@ -21,15 +30,16 @@ public class BEDCoord implements GenomicCoord {
 	
 	private double[] Fstrand = null;
 	private double[] Rstrand = null;
-	
+
 	/**
 	 * Creates a new BEDCoord object with default values
 	 */
 	public BEDCoord() {}
-	
+
 	/**
-	 * Creates a new BEDCoord object with a given line of a BED file
-	 * @param line Line to parse in order to create BEDCoord file
+	 * Instantiate object from a BED-formatted string
+	 * 
+	 * @param line BED-formatted string to parse
 	 */
 	public BEDCoord(String line) {
 		String[] bed = line.split("\t");
@@ -45,12 +55,13 @@ public class BEDCoord implements GenomicCoord {
 	}
 	
 	/**
-	 * Creates a new BEDCoord object
-	 * @param c Chromosome name
-	 * @param sta Start coordinate 
-	 * @param sto Ending coordinate
-	 * @param di Strand direction (+/-)
-	 * @param na Name of coord
+	 * Instantiate object from coordinate values
+	 * 
+	 * @param c   the chromosome name
+	 * @param sta start coordinate (0-based, inclusive)
+	 * @param sto stop coordinate (0-based, exclusive)
+	 * @param di  direction/strand information
+	 * @param na  record name
 	 */
 	public BEDCoord(String c, long sta, long sto, String di, String na) {
 		CHROM = c;
@@ -61,11 +72,12 @@ public class BEDCoord implements GenomicCoord {
 	}
 	
 	/**
-	 * Creates a new BEDCoord object
-	 * @param c Chromosome name
-	 * @param sta Start coordinate 
-	 * @param sto Ending coordinate
-	 * @param di Strand direction (+/-)
+	 * Instantiate nameless object from coordinate values
+	 *
+	 * @param c   the chromosome name
+	 * @param sta start coordinate (0-based, inclusive)
+	 * @param sto stop coordinate (0-based, exclusive)
+	 * @param di  the direction/strand information
 	 */
 	public BEDCoord(String c, long sta, long sto, String di) {
 		CHROM = c;
@@ -76,9 +88,10 @@ public class BEDCoord implements GenomicCoord {
 	}
 	
 	/**
-	 * Creates a new BEDCoord object with a name and score
-	 * @param na Name of coord
-	 * @param sco Score
+	 * Instantiate object with just name and score
+	 * 
+	 * @param na  record name
+	 * @param sco record score
 	 */
 	public BEDCoord(String na, double sco) {
 		NAME = na;
@@ -86,165 +99,180 @@ public class BEDCoord implements GenomicCoord {
 	}
 	
 	/**
-	 * Calculates the middle position of a BED coordinate pair
+	 * calculates a midpoint based on the start and stop coordinates, strand agnostic (left select if even interval)
 	 */
 	public void calcMid() {
 		MID = (START + STOP) / 2;
 	}
-	
+
 	/**
-	 * Sets the middle position of a BED coordinate pair
-	 * @param m New middle position
+	 * set the midpoint coordinate
+	 * 
+	 * @param m midpoint coordinate (overwrite)
 	 */
 	public void setMid(int m) {
 		MID = m;
 	}
-	
+
 	/**
-	 * Returns the middle position of a BED coordinate pair
-	 * @return The middle position of a BED coordinate pair
+	 * get the stored midpoint coordinate
+	 * 
+	 * @return midpoint coordinate
 	 */
 	public long getMid() {
 		return MID;
 	}
-	
+
 	/**
-	 * Returns the Pileup scores for the forward strand
-	 * @return The Pileup scores for the forward strand
+	 * get forward/combined strand pileup counts
+	 * 
+	 * @return the stored forward/combined strand counts
 	 */
 	public double[] getFStrand() {
 		return Fstrand;
 	}
-	
+
 	/**
-	 * Returns the Pileup scores for the reverse strand
-	 * @return The Pileup scores for the reverse strand
+	 * get reverse strand pileup counts
+	 * 
+	 * @return the stored reverse strand counts
 	 */
 	public double[] getRStrand() {
 		return Rstrand;
 	}
 	
 	/**
-	 * Sets the Pileup scores for the forward strand
-	 * @param f The Pileup scores for the forward strand
+	 * set forward/combined strand pileup counts
+	 * 
+	 * @param f a list of forward/combined strand counts
 	 */
 	public void setFstrand(double[] f) {
 		Fstrand = f;
 	}
 	
 	/**
-	 * Sets the Pileup scores for the reverse strand
-	 * @param r The Pileup scores for the reverse strand
+	 * set reverse strand pileup counts
+	 * @param r a list of reverse strand counts
 	 */
 	public void setRstrand(double[] r) {
 		Rstrand = r;
 	}
 	
 	/**
-	 * Returns the chromosome name
-	 * @return the stored chromosome
+	 * get chromosome name
+	 * 
+	 * @return chromosome name
 	 */
 	public String getChrom() {
 		return CHROM;
 	}
 	
 	/**
-	 * Sets the chromosome name
-	 * @param chr The new chromosome
+	 * set chromosome name
+	 * 
+	 * @param chr chromosome name
 	 */
 	public void setChrom(String chr) {
 		CHROM = chr;
 	}
 	
 	/**
-	 * Returns the starting coordinate of the BEDCoord
-	 * @return the starting coordinate of the BEDCord
+	 * get start coordinate
+	 * 
+	 * @return start coordinate (0-indexed, inclusive)
 	 */
 	public long getStart() {
 		return START;
 	}
 	
 	/**
-	 * Sets the starting coordinate of the BEDCoord
-	 * @param sta The starting coordinate of the BEDCord
+	 * set start coordinate
+	 * 
+	 * @param sta start coordinate (0-indexed, inclusive)
 	 */
 	public void setStart(int sta) {
 		START = sta;
 	}
 	
 	/**
-	 * Returns the ending coordinate of the BEDCoord
-	 * @return the ending coordinate of the BEDCoord
+	 * get end coordinatec
+	 * 
+	 * @return end coordinate (0-indexed, inclusive)
 	 */
 	public long getStop() {
 		return STOP;
 	}
 	
 	/**
-	 * Sets the ending coordinate of the BEDCoord
-	 * @param sto The ending coordinate of the BEDCoord
+	 * set end coordinate
+	 * 
+	 * @param sto end coordinate (0-indexed, inclusive)
 	 */
 	public void setStop(int sto) {
 		STOP = sto;
 	}
 	
 	/**
-	 * Returns the strand direction
-	 * @return the strand direction (+/-)
+	 * get strand direction
+	 * 
+	 * @return strand ("+"/"\-")
 	 */
 	public String getDir() {
 		return DIR;
 	}
 	
 	/**
-	 * Sets the strand direction
-	 * @param di The strand direction (+/-)
+	 * set strand direction
+	 * 
+	 * @param di strand ("+"/"\-")
 	 */
 	public void setDir(String di) {
 		DIR = di;
 	}
 	
 	/**
-	 * Returns the name of the BEDCoord
-	 * @return The name of the BEDCoord
+	 * get record name
+	 * 
+	 * @return record name
 	 */
 	public String getName() {
 		return NAME;
 	}
 	
 	/**
-	 * Sets the name of the BEDCoord
-	 * @param na The name of the BEDCoord
+	 * set record name
+	 * @param na record name
 	 */
 	public void setName(String na) {
 		NAME = na;
 	}
 	
 	/**
-	 * Returns the score of the BEDCoord
-	 * @return The score of the BEDCoord
+	 * get record score
+	 * @return record score
 	 */
 	public double getScore() {
 		return SCORE;
 	}
 
 	/**
-	 * Sets the score of the BEDCoord
-	 * @param sco The new score of the BEDCoord
+	 * set record score
+	 * @param sco record score
 	 */
 	public void setScore(double sco) {
 		SCORE = sco;
 	}
 	
 	/**
-	 * Returns the different variables of a BEDCoord represented by a string
-	 * @return The different variables of a BEDCoord represented by a string
+	 * format coordinate info in a BED-formatted string
+	 * 
+	 * @return coordinate info in BED-format
 	 */
 	public String toString() {
 		String line = CHROM + "\t" + START + "\t" + STOP + "\t" + NAME + "\t" + SCORE + "\t" + DIR;
 		return line;
 	}
-	
+
 	/**
 	 * Creates a new comparator which compares BEDCoords based on their chromosomes
 	 */
@@ -257,7 +285,7 @@ public class BEDCoord implements GenomicCoord {
 		 */
 		public int compare(BEDCoord node1, BEDCoord node2) {
 			return node1.getChrom().compareTo(node2.getChrom());
-	}
+		}
 	};
 
 	/**
@@ -278,7 +306,7 @@ public class BEDCoord implements GenomicCoord {
 			else return 0;
 	}
 	};
-	
+
 	/**
 	 * Creates a new comparator which compares BEDCoords based the coordinates on their mid point
 	 */
@@ -297,7 +325,7 @@ public class BEDCoord implements GenomicCoord {
 			else return 0;
 	}
 	};
-	
+
 	/**
 	 * Creates a new comparator which compares BEDCoords based the coordinates on their score
 	 */
