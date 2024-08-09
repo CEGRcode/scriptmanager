@@ -23,7 +23,7 @@ public class CorrParameter {
 	private boolean corrType = false; //Default randomly sample genome
 
 	//Random Sampling Parameters
-	private int windowSize = 50000;	//Default set Window frame for each extraction to 50kb
+	private int windowSize = 50_000;	//Default set Window frame for each extraction to 50kb
 	private int iterations = 10;	//Default set number of random iterations per chromosome
 
 	//TODO if time add resolution and window frame variables
