@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.Exceptions.OptionException;
@@ -54,20 +55,42 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 	@ArgGroup(validate = false, heading = "Shape Options%n")
 	ShapeType shape = new ShapeType();
 
-	static class ShapeType {
+	public static class ShapeType {
 		@Option(names = { "-g", "--groove" }, description = "output minor groove width")
-		private boolean groove = false;
+		public boolean groove = false;
 		@Option(names = { "-r", "--roll" }, description = "output roll")
-		private boolean roll = false;
+		public boolean roll = false;
 		@Option(names = { "-p", "--propeller" }, description = "output propeller twist")
-		private boolean propeller = false;
+		public boolean propeller = false;
 		@Option(names = { "-l", "--helical" }, description = "output helical twist")
-		private boolean helical = false;
+		public boolean helical = false;
+		@Option(names = { "--electrostatic-potential" }, description = "output electrostatic potential")
+		public boolean ep = false;
+		@Option(names = { "--stretch" }, description = "output stretch")
+		public boolean stretch = false;
+		@Option(names = { "--buckle" }, description = "output buckle")
+		public boolean buckle = false;
+		@Option(names = { "--shear" }, description = "output shear")
+		public boolean shear = false;
+		@Option(names = { "--opening" }, description = "output opening")
+		public boolean opening = false;
+		@Option(names = { "--stagger" }, description = "output stagger")
+		public boolean stagger = false;
+		@Option(names = { "--tilt" }, description = "output tilt")
+		public boolean tilt = false;
+		@Option(names = { "--slide" }, description = "output slide")
+		public boolean slide = false;
+		@Option(names = { "--rise" }, description = "output rise")
+		public boolean rise = false;
+		@Option(names = { "--shift" }, description = "output shift")
+		public boolean shift = false;
 		@Option(names = { "-a", "--all" }, description = "output groove, roll, propeller twist, and helical twist (equivalent to -grpl).")
-		private boolean all = false;
+		public boolean all = false;
+		@Option(names = { "-e", "--everything" }, description = "output all 13 metrics")
+		public boolean everything = false;
 	}
 
-	private boolean[] OUTPUT_TYPE = new boolean[] { false, false, false, false };
+	private boolean[] OUTPUT_TYPE = new boolean[13];
 	private short outputMatrix = DNAShapefromBED.NO_MATRIX;
 
 	/**
@@ -85,7 +108,7 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 		}
 
 		// Generate Composite Plot
-		DNAShapefromFASTA script_obj = new DNAShapefromFASTA(fastaFile, outputBasename, OUTPUT_TYPE,
+		DNAShapefromFASTA script_obj = new DNAShapefromFASTA(fastaFile, outputBasename, shape,
 				composite, outputMatrix, gzOutput);
 		script_obj.run();
 		// Print Composite Scoress
@@ -144,28 +167,26 @@ public class DNAShapefromFASTACLI implements Callable<Integer> {
 			}
 		}
 
-		// Check & set output_type
-		if (!(shape.groove || shape.propeller || shape.helical || shape.roll || shape.all)) {
-			r += "(!)Please select at least one of the shape flags.\n";
-		} else if ((shape.groove || shape.propeller || shape.helical || shape.roll) && shape.all) {
-			r += "(!)Please avoid mixing the \"-a\" flag with the other shape flags.\n";
-		}
 
-		if (shape.groove) {
-			OUTPUT_TYPE[0] = true;
+		
+		if (shape.everything){
+			shape.all = true;
+			shape.ep = true;
+			shape.stretch = true;
+			shape.buckle = true;
+			shape.shear = true;
+			shape.opening = true;
+			shape.stagger = true;
+			shape.tilt = true;
+			shape.slide = true;
+			shape.rise = true;
+			shape.shift = true;
 		}
-		if (shape.propeller) {
-			OUTPUT_TYPE[1] = true;
-		}
-		if (shape.helical) {
-			OUTPUT_TYPE[2] = true;
-		}
-		if (shape.roll) {
-			OUTPUT_TYPE[3] = true;
-		}
-
-		if (shape.all) {
-			OUTPUT_TYPE = new boolean[] { true, true, true, true };
+		if (shape.all){
+			shape.groove = true;
+			shape.roll = true;
+			shape.propeller = true;
+			shape.helical = true;
 		}
 
 		if (matrix && cdt) {
