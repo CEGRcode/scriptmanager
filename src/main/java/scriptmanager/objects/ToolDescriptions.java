@@ -22,7 +22,7 @@ public class ToolDescriptions {
 	/**
 	 * The version string for the whole tool
 	 */
-	public static final String VERSION = "0.14-dev";
+	public static final String VERSION = "0.15";
 	
 	/**
 	 * Message to user to direct user to open an issue ticket in case of unexpected exception. Print alongside exception's stack trace/message information
