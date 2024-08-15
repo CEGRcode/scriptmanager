@@ -37,20 +37,24 @@ public class BAMtoscIDXOutput extends JFrame {
 	private static int PAIR = 1;
 	private static int MIN_INSERT = -9999;
 	private static int MAX_INSERT = -9999;
+	private static int SHIFT = 0;
 
 	private JTextArea textArea;
 
 	/**
 	 * Creates a new instance of a BAMtoscIDX script with a single BAM file
-	 * @param b BAM file
-	 * @param out_dir Output directory
-	 * @param s Specifies which reads to output
-	 * @param pair_status Specifies if proper pairs are required (0 = not required, !0 = required)
-	 * @param min_size Minimum acceptable insert size
-	 * @param max_size Maximum acceptable insert size
-	 * @param gzOutput   whether or not to gzip output
+	 * 
+	 * @param b           BAM file
+	 * @param out_dir     Output directory
+	 * @param s           Specifies which reads to output
+	 * @param pair_status Specifies if proper pairs are required (0 = not required,
+	 *                    !0 = required)
+	 * @param min_size    Minimum acceptable insert size
+	 * @param max_size    Maximum acceptable insert size
+	 * @param shift       set a tag shift in bp
+	 * @param gzOutput    whether or not to gzip output
 	 */
-	public BAMtoscIDXOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, boolean gzOutput) {
+	public BAMtoscIDXOutput(File b, File out_dir, int s, int pair_status, int min_size, int max_size, int shift, boolean gzOutput) {
 		setTitle("BAM to scIDX Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(150, 150, 600, 800);
@@ -68,6 +72,7 @@ public class BAMtoscIDXOutput extends JFrame {
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
 		MAX_INSERT = max_size;
+		SHIFT = shift;
 		if (STRAND == 0) {
 			READ = "READ1";
 		} else if (STRAND == 1) {
@@ -97,12 +102,12 @@ public class BAMtoscIDXOutput extends JFrame {
 		PS.println(OUTPUT);
 
 		// Initialize LogItem
-		String command = BAMtoscIDXCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT);
+		String command = BAMtoscIDXCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, SHIFT);
 		LogItem new_li = new LogItem(command);
 		firePropertyChange("log", null, new_li);
 
 		// Execute script
-		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, PS, OUTPUT_GZIP);
+		BAMtoscIDX script_obj = new BAMtoscIDX(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, SHIFT, PS, OUTPUT_GZIP);
 		script_obj.run();
 
 		// Update LogItem

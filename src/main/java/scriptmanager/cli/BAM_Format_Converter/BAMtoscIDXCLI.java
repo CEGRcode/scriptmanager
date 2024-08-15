@@ -62,7 +62,10 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 	@Option(names = {"-n", "--min-insert"}, description = "filter by min insert size in bp")
 	private int MIN_INSERT = -9999;
 	@Option(names = {"-x", "--max-insert"}, description = "filter by max insert size in bp")
-	private int MAX_INSERT = -9999;	
+	private int MAX_INSERT = -9999;
+	@Option(names = {"--shift"}, description = "set a shift in bp (default=0bp)")
+	private int SHIFT = 0;
+	
 	
 	private int STRAND = -9999;
 	private int PAIR;
@@ -81,7 +84,7 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 			System.exit(1);
 		}
 
-		BAMtoscIDX script_obj = new BAMtoscIDX(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, null, gzOutput);
+		BAMtoscIDX script_obj = new BAMtoscIDX(bamFile, output, STRAND, PAIR, MIN_INSERT, MAX_INSERT, SHIFT, null, gzOutput);
 		script_obj.run();
 		
 		System.err.println("Conversion Complete");
@@ -139,7 +142,7 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		PAIR = matePair ? 1 : 0;
 		return(r);
 	}
-	public static String getCLIcommand(File BAM, File output, int strand, int pair, int min, int max) {
+	public static String getCLIcommand(File BAM, File output, int strand, int pair, int min, int shift, int max) {
 		String command = "java -jar $SCRIPTMANAGER bam-format-converter bam-to-scidx";
 		System.out.println(output);
 		System.out.println(BAM);
@@ -160,6 +163,7 @@ public class BAMtoscIDXCLI implements Callable<Integer> {
 		} else if (max != -9999) {
 			command += " -x " + max;
 		}
+		command += " --shift " + shift;
 		return command;
 	}
 }
