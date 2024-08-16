@@ -213,10 +213,10 @@ public class DNAShapefromFASTA {
 						}
 						if (OUTPUT_TYPE.tilt){
 							if (z == 0) {
-								Tilt.add(-1 * SCORES.get(12));
+								Tilt.add(SCORES.get(12));
 								Tilt.add(SCORES.get(13));
 							} else {
-								Tilt.set(Tilt.size() - 1, (Tilt.get(Tilt.size() - 1) + SCORES.get(12)) / -2);
+								Tilt.set(Tilt.size() - 1, (Tilt.get(Tilt.size() - 1) + SCORES.get(12)) / 2);
 								Tilt.add(SCORES.get(13));
 							}
 						}
@@ -532,16 +532,16 @@ public class DNAShapefromFASTA {
 									OUT_SHIFT.print("\tNAME");
 								}
 								// print domain
-								for (int z = 0; z < Rise.size(); z++) {
+								for (int z = 0; z < Shift.size(); z++) {
 									OUT_SHIFT.print("\t" + z);
 								}
 								OUT_SHIFT.println();
 							}
 						}
 						// Initialize AVG storage object
-						AVG_Shift = new double[Rise.size()];
+						AVG_Shift = new double[Shift.size()];
 						// print matrix data and store avg data
-						AVG_Shift = printVals(HEADER, Rise, AVG_Shift, OUT_SHIFT);
+						AVG_Shift = printVals(HEADER, Shift, AVG_Shift, OUT_SHIFT);
 					}
 					} // if seq contains 'N's
 					counter++;
