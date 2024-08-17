@@ -105,12 +105,14 @@ public class ScaleMatrixCLI implements Callable<Integer> {
 	 * @param scalingFactor the factor to scale the matrix by
 	 * @param rowStart      the matrix row start
 	 * @param colStart      the matrix col start
+	 * @param gzOutput      gzip output
 	 * @return command line to execute with formatted inputs
 	 */
-	public static String getCLIcommand(File input, File output, double scalingFactor, int rowStart, int colStart) {
+	public static String getCLIcommand(File input, File output, double scalingFactor, int rowStart, int colStart, boolean gzOutput) {
 		String command = "java -jar $SCRIPTMANAGER read-analysis scale-matrix";
 		command += " " + input.getAbsolutePath();
 		command += " -o " + output.getAbsolutePath();
+		command += gzOutput ? " --gzip" : "";
 		command += " -s " + scalingFactor;
 		command += " -r " + rowStart;
 		command += " -l " + colStart;

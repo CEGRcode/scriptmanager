@@ -36,9 +36,9 @@ import scriptmanager.util.FileSelection;
  * GUI for collecting inputs to be processed by
  * {@link scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity}
  * 
- * @author William KM Lai
+ * @author Abeer Almutairy
  * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
- * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefOutput
+ * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityOutput
  */
 @SuppressWarnings("serial")
 public class FilterBEDbyProximityWindow extends JFrame implements ActionListener, PropertyChangeListener {
@@ -57,9 +57,8 @@ public class FilterBEDbyProximityWindow extends JFrame implements ActionListener
 	private JTextField txtCutoff;
 	JProgressBar progressBar;
 	
-	
-public Task task;
-	
+	public Task task;
+
 	/**
 	 * Organizes user inputs for calling script
 	 */
@@ -111,7 +110,10 @@ public Task task;
             setCursor(null); //turn off the wait cursor
         }
 	}
-	
+
+	/**
+	 * Instantiate window with graphical interface design.
+	 */
 	public FilterBEDbyProximityWindow() {
 		setTitle("Filter BED File by Proximity");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -126,7 +128,7 @@ public Task task;
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnLoadBedFile, 5, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnLoadBedFile, 5, SpringLayout.WEST, contentPane);
 		btnLoadBedFile.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				File[] newGenomeFiles = FileSelection.getFiles(fc,"bed", true);
 				if(newGenomeFiles != null) {
 					for(int x = 0; x < newGenomeFiles.length; x++) { 

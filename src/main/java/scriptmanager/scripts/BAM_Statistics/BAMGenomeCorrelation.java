@@ -164,13 +164,13 @@ public class BAMGenomeCorrelation extends Component {
 			//System.err.println("Analyzing: " + seq.getSequenceName());
 			
 			//Break chromosome into 100kb chunks and assign to independent nodes
-			int numwindows = (int) (seq.getSequenceLength() / 100000);
+			int numwindows = (int) (seq.getSequenceLength() / 100_000);
 			for(int x = 0; x < numwindows; x++) {
-				int start = x * 100000;
-				int stop = start + 100000;
+				int start = x * 100_000;
+				int stop = start + 100_000;
 				ChromosomeWindows.add(new CorrelationCoord(seq.getSequenceName(), start, stop));
 			}
-			int finalstart = numwindows * 100000;
+			int finalstart = numwindows * 100_000;
 			int finalstop = (seq.getSequenceLength() / BIN) * BIN;
 			ChromosomeWindows.add(new CorrelationCoord(seq.getSequenceName(), finalstart, finalstop));
 			

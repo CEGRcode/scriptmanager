@@ -121,15 +121,15 @@ public class CrossCorrelation {
 				
 			} else {
 				//Break chromosome into 100kb chunks and assign to independent BLASTNodes
-				int numwindows = (int) (seq.getSequenceLength() / 100000);
+				int numwindows = (int) (seq.getSequenceLength() / 100_000);
 				int Resolution = param.getResolution();	// Resolution controls increment
 				int windowSize = param.getCorrWindow(); // Size of theoretical sliding window
 				for(int x = 0; x < numwindows; x++) {
-					int start = x * 100000;
-					int stop = start + 100000 + windowSize;
+					int start = x * 100_000;
+					int stop = start + 100_000 + windowSize;
 					ChromosomeWindows.add(new CorrNode(seq.getSequenceName(), start, stop));
 				}
-				int finalstart = numwindows * 100000;
+				int finalstart = numwindows * 100_000;
 				int finalstop = (seq.getSequenceLength() / Resolution) * Resolution;
 				ChromosomeWindows.add(new CorrNode(seq.getSequenceName(), finalstart, finalstop));
 			}

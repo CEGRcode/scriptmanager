@@ -11,23 +11,24 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
-import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 import scriptmanager.util.ExtensionFileFilter;
+
+import scriptmanager.cli.Peak_Analysis.FilterBEDbyProximityCLI;
+import scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity;
 
 /**
  * Output wrapper for running
  * {@link scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity} and
  * reporting progress
  * 
- * @author William KM Lai
+ * @author Abeer Almutairy
  * @see scriptmanager.scripts.Peak_Analysis.FilterBEDbyProximity
- * @see scriptmanager.window_interface.Peak_Analysis.BEDPeakAligntoRefWindow
+ * @see scriptmanager.window_interface.Peak_Analysis.FilterBEDbyProximityWindow
  */
 @SuppressWarnings({"serial"})
-public class FilterBEDbyProximityOutput extends JFrame{
+public class FilterBEDbyProximityOutput extends JFrame {
 	
 	private int CUTOFF;
 	private File INPUT;
@@ -36,6 +37,15 @@ public class FilterBEDbyProximityOutput extends JFrame{
 	
 	private JTextArea textArea;
 
+	/**
+	 * Create a window for displaying progress of script as a scrollable JTextArea.
+	 * 
+	 * @param input  the BED file input from the Window class for the script
+	 * @param cutoff the exclusion zone from the Window class for the script
+	 * @param outdir the output basename from the Window class for the script
+	 * @param gz     whether to gzip output from the Window class for the script
+	 * @throws IOException
+	 */
 	public FilterBEDbyProximityOutput(File input, File odir, int cutoff, boolean gzOutput) throws IOException {
 		setTitle("BED File Filter Progress");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -55,7 +65,8 @@ public class FilterBEDbyProximityOutput extends JFrame{
 	}
 
 	/**
-	 * Runs the FilterBEDbyProximity script
+	 * Runs the FilterBEDbyProximity script (pause 1 sec before disposing this
+	 * output frame object).
 	 * 
 	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException Thrown when more than one script is run at the same time

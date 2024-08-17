@@ -34,6 +34,7 @@ public class BAMtoscIDX {
 	private int STRAND = 0;
 	private String READ = "READ1";
 	private static int PAIR = 1;
+	private int SHIFT = 0;
 	private static int MIN_INSERT = -9999;
 	private static int MAX_INSERT = -9999;
 
@@ -56,10 +57,11 @@ public class BAMtoscIDX {
 	 *                    !0 = required)
 	 * @param min_size    minimum acceptable insert size
 	 * @param max_size    maximum acceptable insert size
+	 * @param shift       shift tags in bp
 	 * @param ps          PrintStream to output results
 	 * @param gzOutput    whether or not to gzip output
 	 */
-	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size, PrintStream ps, boolean gzOutput) {
+	public BAMtoscIDX(File b, File o, int s, int pair_status, int min_size, int max_size, int shift, PrintStream ps, boolean gzOutput) {
 		BAM = b;
 		OUTFILE = o;
 		PS = ps;
@@ -67,6 +69,7 @@ public class BAMtoscIDX {
 		PAIR = pair_status;
 		MIN_INSERT = min_size;
 		MAX_INSERT = max_size;
+		SHIFT = shift;
 		if (STRAND == 0) {
 			READ = "READ1";
 		} else if (STRAND == 1) {
@@ -129,6 +132,8 @@ public class BAMtoscIDX {
 				printPS("Maximum insert size required to output: " + MAX_INSERT);
 			}
 
+			printPS("Tag shift: " + SHIFT);
+
 			if (OUTPUT_GZIP){
 				printPS("Output GZip: yes");
 			} else {
@@ -168,11 +173,11 @@ public class BAMtoscIDX {
 	 */
 	public void addTag(SAMRecord sr) {
 		// Get the start of the record
-		int recordStart = sr.getUnclippedStart();// .getAlignmentStart();
+		int recordStart = sr.getUnclippedStart() + SHIFT;// .getAlignmentStart();
 		// Accounts for reverse tag reporting 3' end of tag and converting BED to
 		// IDX/GFF format
 		if (sr.getReadNegativeStrandFlag()) {
-			recordStart = sr.getUnclippedEnd();
+			recordStart = sr.getUnclippedEnd() - SHIFT;
 		} // .getAlignmentEnd(); }
 
 		// Make sure we only add tags that have valid starts
@@ -232,7 +237,10 @@ public class BAMtoscIDX {
 			recordStart = sr.getMateAlignmentStart() - 1;
 			recordStop = sr.getUnclippedEnd();
 		}
+		// calculate midpoint
 		int recordMid = (recordStart + recordStop) / 2;
+		// strand-aware tag shift
+		recordMid += (sr.getReadNegativeStrandFlag() ? - SHIFT : SHIFT);
 
 		// Make sure we only add tags that have valid midpoints
 		if (recordMid > 0 && recordMid <= CHROMSTOP) {

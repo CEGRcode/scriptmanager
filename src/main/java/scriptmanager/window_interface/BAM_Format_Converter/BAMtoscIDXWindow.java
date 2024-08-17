@@ -75,6 +75,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 	private JCheckBox chckbxFilterByMinimum;
 	private JTextField txtMin;
 	private JTextField txtMax;
+	private JTextField txtShift;
 
 	JProgressBar progressBar;
 	/**
@@ -123,9 +124,10 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 					if (chckbxFilterByMaximum.isSelected()) {
 						MAX = Integer.parseInt(txtMax.getText());
 					}
+					int SHIFT = Integer.parseInt(txtShift.getText());
 					// process each bam
 					for (int x = 0; x < BAMFiles.size(); x++) {
-						BAMtoscIDXOutput output_obj = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, chckbxGzipOutput.isSelected());
+						BAMtoscIDXOutput output_obj = new BAMtoscIDXOutput(BAMFiles.get(x), OUT_DIR, STRAND, PAIR, MIN, MAX, SHIFT, chckbxGzipOutput.isSelected());
 						output_obj.addPropertyChangeListener("log", new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent evt) {
 								firePropertyChange("log", evt.getOldValue(), evt.getNewValue());
@@ -287,8 +289,8 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		contentPane.add(btnOutputDirectory);
 
 		chckbxGzipOutput = new JCheckBox("Output GZip");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnIndex);
-		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxGzipOutput, -83, SpringLayout.WEST, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 2, SpringLayout.NORTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 20, SpringLayout.EAST, btnOutputDirectory);
 		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();
@@ -301,13 +303,13 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		btnIndex.setActionCommand("start");
 
 		chckbxRequireProperMatepair = new JCheckBox("Require Proper Mate-Pair");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRequireProperMatepair, 6, SpringLayout.SOUTH,
-				rdbtnRead2);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxRequireProperMatepair, 6, SpringLayout.SOUTH, rdbtnRead2);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRequireProperMatepair, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(chckbxRequireProperMatepair);
 
-		chckbxFilterByMinimum = new JCheckBox("Filter by Min Insert Size (bp)");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxFilterByMinimum, 35, SpringLayout.SOUTH, rdbtnRead1);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxFilterByMinimum, 10, SpringLayout.WEST, contentPane);
+		chckbxFilterByMinimum = new JCheckBox("Filter Min Insert Size (bp)");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxFilterByMinimum, 0, SpringLayout.NORTH, chckbxRequireProperMatepair);
+		sl_contentPane.putConstraint(SpringLayout.EAST, chckbxFilterByMinimum, -150, SpringLayout.EAST, contentPane);
 		chckbxFilterByMinimum.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (chckbxFilterByMinimum.isSelected()) {
@@ -325,19 +327,18 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		contentPane.add(chckbxFilterByMinimum);
 
 		txtMin = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxRequireProperMatepair, 0, SpringLayout.WEST, txtMin);
-		txtMin.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMin, 2, SpringLayout.NORTH, chckbxFilterByMinimum);
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtMin, 6, SpringLayout.EAST, chckbxFilterByMinimum);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtMin, 75, SpringLayout.EAST, chckbxFilterByMinimum);
 		txtMin.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMin.setText("0");
 		contentPane.add(txtMin);
+		txtMin.setEnabled(false);
 		txtMin.setColumns(10);
 
-		chckbxFilterByMaximum = new JCheckBox("Filter by Max Insert Size (bp)");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxFilterByMaximum, 35, SpringLayout.SOUTH, rdbtnCombined);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxFilterByMaximum, 25, SpringLayout.EAST, txtMin);
+		chckbxFilterByMaximum = new JCheckBox("Filter Max Insert Size (bp)");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxFilterByMaximum, 3, SpringLayout.SOUTH, chckbxFilterByMinimum);
+		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxFilterByMaximum, 0, SpringLayout.WEST, chckbxFilterByMinimum);
 		chckbxFilterByMaximum.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (chckbxFilterByMaximum.isSelected()) {
@@ -355,14 +356,28 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 		contentPane.add(chckbxFilterByMaximum);
 
 		txtMax = new JTextField();
-		txtMax.setEnabled(false);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, 2, SpringLayout.NORTH, chckbxFilterByMaximum);
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtMax, 6, SpringLayout.EAST, chckbxFilterByMaximum);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, txtMax, 2, SpringLayout.NORTH, chckbxFilterByMinimum);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtMax, 75, SpringLayout.EAST, chckbxFilterByMaximum);
 		txtMax.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMax.setText("1000");
-		contentPane.add(txtMax);
 		txtMax.setColumns(10);
+		txtMax.setEnabled(false);
+		contentPane.add(txtMax);
+
+		JLabel lblTagShift = new JLabel("Tag Shift (bp):");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblTagShift, 6, SpringLayout.SOUTH, chckbxRequireProperMatepair);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblTagShift, 10, SpringLayout.WEST, contentPane);
+		contentPane.add(lblTagShift);
+
+		txtShift = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, txtShift, -1, SpringLayout.NORTH, lblTagShift);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtShift, 100, SpringLayout.WEST, lblTagShift);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtShift, 120, SpringLayout.WEST, contentPane);
+		txtShift.setText("0");
+		txtShift.setHorizontalAlignment(SwingConstants.CENTER);
+		txtShift.setColumns(10);
+		contentPane.add(txtShift);
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -372,6 +387,7 @@ public class BAMtoscIDXWindow extends JFrame implements ActionListener, Property
 				}
 			}
 		});
+
 	}
 
 	/**

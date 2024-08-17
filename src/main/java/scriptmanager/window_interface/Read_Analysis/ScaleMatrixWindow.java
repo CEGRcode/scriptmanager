@@ -16,12 +16,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.StringTokenizer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -95,7 +93,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 	 */
 	class Task extends SwingWorker<Void, Void> {
 		@Override
-		public Void doInBackground() {
+		public Void doInBackground() throws IOException {
 			try {
 				if (TABFiles.size() < 1) {
 					JOptionPane.showMessageDialog(null, "No Files Loaded!!!");
@@ -106,12 +104,24 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 				} else {
 					// Check that all scaling numbers are valid
 					boolean ALLNUM = true;
-					for (int x = 0; x < TABFiles.size(); x++) {
+					if (rdbtnUniformScaling.isSelected()) {
+						System.out.println("Uniform scaling factor check...");
 						try {
-							Double.parseDouble(expTable.getValueAt(x, 1).toString());
+							Double.parseDouble(txtUniform.getText());
 						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null, TABFiles.get(x).getName() + " possesses an invalid scaling factor!!!");
+							JOptionPane.showMessageDialog(null, "Uniform scaling value an invalid scaling factor (" + txtUniform.getText() + ") !!!");
 							ALLNUM = false;
+						}
+					} else {
+						System.out.println("File-sspecific scaling factor check...");
+						for (int x = 0; x < TABFiles.size(); x++) {
+							System.out.println(x);
+							try {
+								Double.parseDouble(expTable.getValueAt(x, 1).toString());
+							} catch (NumberFormatException e) {
+								JOptionPane.showMessageDialog(null, TABFiles.get(x).getName() + " possesses an invalid scaling factor (" + expTable.getValueAt(x, 1) + ") !!!");
+								ALLNUM = false;
+							}
 						}
 					}
 					// Loop through matrix files with valid scaling factors
@@ -138,7 +148,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 								SCALE = Double.parseDouble(expTable.getValueAt(x, 1).toString());
 							}
 							// Initialize LogItem
-							String command = ScaleMatrixCLI.getCLIcommand(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()));
+							String command = ScaleMatrixCLI.getCLIcommand(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
 							LogItem new_li = new LogItem(command);
 							firePropertyChange("log", old_li, new_li);
 							// Execute script
@@ -209,8 +219,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 			}
 		};
 		JTable tableScale = new JTable(expTable);
-		// Allow for the selection of multiple OR individual cells across either rows or
-		// columns
+		// Allow for the selection of multiple OR individual cells across either rows or columns
 		tableScale.setCellSelectionEnabled(true);
 		tableScale.setColumnSelectionAllowed(true);
 		tableScale.setRowSelectionAllowed(true);
