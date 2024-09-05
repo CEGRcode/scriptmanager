@@ -34,7 +34,7 @@ public class TransposeMatrixCLI implements Callable<Integer> {
 	private int startROW = 0;
 	@Option(names = {"-l", "--start-col"}, description = "Column to start transposing the matrix (zero indexed)")
 	private int startCOL = 0;
-	@Option(names = {"-z", "--compression"}, description = "Output compressed file" )
+	@Option(names = { "-z", "--gzip" }, description = "gzip output (default=false)")
 	private boolean gzOutput = false;
 	
 	

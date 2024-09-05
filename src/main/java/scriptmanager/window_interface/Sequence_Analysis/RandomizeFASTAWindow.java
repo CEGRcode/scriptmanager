@@ -203,7 +203,6 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 0, SpringLayout.NORTH, btnCalculate);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 30, SpringLayout.WEST, contentPane);
-		chckbxGzipOutput.setEnabled(false);
 		contentPane.add(chckbxGzipOutput);
 
 		progressBar = new JProgressBar();

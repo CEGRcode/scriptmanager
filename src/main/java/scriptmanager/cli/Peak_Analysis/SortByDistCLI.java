@@ -40,7 +40,7 @@ public class SortByDistCLI implements Callable<Integer> {
 	private Long downstreamBound = null;
 	@Option(names = {"-m", "--match-strand"}, description = "only check peaks with strand matching reference" )
 	private boolean matchStrand = false;
-	@Option(names = {"-z", "--compression"}, description = "Output compressed GFF file" )
+	@Option(names = {"-z", "--gzip"}, description = "gzip output (default=false)" )
 	private boolean gzOutput = false;
 	@Option(names = {"--gff"}, description = "input is GFF format (default=BED format)")
 	private boolean isGFF = false;
