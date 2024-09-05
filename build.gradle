@@ -19,7 +19,7 @@ plugins {
 }
 
 mainClassName = "scriptmanager.main.ScriptManager"
-version = 'v0.15'
+version = 'v0.15-dev'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
