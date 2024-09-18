@@ -3,9 +3,11 @@ package scriptmanager.main;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.awt.HeadlessException;
 import java.util.concurrent.Callable;
 
 import scriptmanager.objects.ToolDescriptions;
+
 import scriptmanager.cli.BAM_Format_Converter.BAMtoBEDCLI;
 import scriptmanager.cli.BAM_Format_Converter.BAMtobedGraphCLI;
 import scriptmanager.cli.BAM_Format_Converter.BAMtoGFFCLI;
@@ -96,11 +98,28 @@ import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 public class ScriptManager implements Callable<Integer> {
 
 	@Override
-	public Integer call(){
-		System.out.println( "Use '-h' or '--help' for command-line usage guide" );
-		ScriptManagerGUI gui = new ScriptManagerGUI();
-		gui.launchApplication();
-		return(0);
+	public Integer call() {
+		try {
+			ScriptManagerGUI gui = new ScriptManagerGUI();
+			System.out.println( "Use '-h' or '--help' for command-line usage guide" );
+			gui.launchApplication();
+			return(0);
+		} catch (HeadlessException he) {
+			he.printStackTrace();
+			System.out.println("\n"
+					+ "(ERROR!) Caught \"java.awt.HeadlessException\""
+					+ "\n\n"
+					+ "====What does this mean?====\n"
+					+ "This usually means you attempted to access ScriptManager's GUI on a machine that does not have a graphical interface."
+					+ "\n\n"
+					+ "Please confirm you are working on a system that supports graphical interfaces and if it does not, you can...\n"
+					+ "  1. set up X11 forwarding or\n"
+					+ "  2. switch to using the command line interface (CLI):\n"
+					+ "    - https://pughlab.mbg.cornell.edu/scriptmanager-docs/docs/Guides/Getting-Started/command-line"
+					+ "\n\n"
+			);
+		}
+		return(1);
 	}
 
 	public static void main(String[] args) {
