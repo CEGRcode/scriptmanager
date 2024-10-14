@@ -26,6 +26,7 @@ import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.scripts.Read_Analysis.PileupScripts.PileupExtract;
 import scriptmanager.util.ArrayUtilities;
 
@@ -78,8 +79,12 @@ public class TagPileup {
 	 * Runs the TagPileup script
 	 * 
 	 * @throws IOException Invalid file or parameters
+	 * @throws ScriptManagerException 
 	 */
-	public void run() throws IOException {
+	public void run() throws IOException, ScriptManagerException {
+		// Check params
+		PARAM.validate();
+
 		// Set-up Matrix output writers
 		int STRAND = PARAM.getStrand();
 		if (PARAM.getOutputType() != 0) {

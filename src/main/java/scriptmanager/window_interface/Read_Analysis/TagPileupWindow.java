@@ -53,6 +53,7 @@ import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ReadFragmentCartoon;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 
@@ -246,6 +247,8 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					output_obj.setVisible(true);
 					output_obj.run();
 				}
+			} catch (ScriptManagerException sme) {
+				JOptionPane.showMessageDialog(null, sme.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!", "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (SAMException se) {

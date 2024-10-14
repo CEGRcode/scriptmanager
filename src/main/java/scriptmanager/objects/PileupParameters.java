@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintStream;
 
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 
 /**
  * Object for storing pileup-related parameter information and constants.
@@ -721,4 +722,79 @@ public class PileupParameters {
 
 		return(cliCommand);
 	}
+
+	/**
+	 * Validate parameters and throw exception on invalid combinations of parameters
+	 * 
+	 * @throws ScriptManagerException
+	 */
+	public void validate() throws ScriptManagerException {
+		
+		// Validate read encoding params
+		if (ASPECT == PileupParameters.MIDPOINT && READ != PileupParameters.READ1) {
+			throw new ScriptManagerException("When \"Midpoint\" is selected for read aspect, read output must be \"Read 1\"");
+		}
+		if (ASPECT == PileupParameters.FRAGMENT && READ != PileupParameters.READ1) {
+			throw new ScriptManagerException("When \"Full Fragment\" is selected for read aspect, read output must be \"Read 1\"");
+		}
+
+		// Check RequirePE force options match
+		if (ASPECT == PileupParameters.MIDPOINT && !requirePE) {
+			throw new ScriptManagerException("When \"Midpoint\" is selected for read aspect, require PE must be selected");
+		}
+		if (ASPECT == PileupParameters.FRAGMENT && !requirePE) {
+			throw new ScriptManagerException("When \"Full Fragment\" is selected for read aspect, require PE must be selected");
+		}
+		if (MIN_INSERT != -9999 && !requirePE) {
+			throw new ScriptManagerException("When a minimum insert size filter is selected, require PE must be selected");
+		}
+		if (MAX_INSERT != -9999 && !requirePE) {
+			throw new ScriptManagerException("When a maximum insert size filter is selected, require PE must be selected");
+		}
+
+		// Validate insert sizes
+		if(MIN_INSERT < 0 && MIN_INSERT!=-9999) {
+			throw new ScriptManagerException("Invalid minimum insert size (" + MIN_INSERT + "). Must be a positive integer value.");
+		}
+		if(MAX_INSERT < 0 && MAX_INSERT!=-9999) {
+			throw new ScriptManagerException("Invalid maximum insert size (" + MAX_INSERT + "). Must be a positive integer value.");
+		}
+		if(MIN_INSERT != -9999 && MAX_INSERT!=-9999 && MAX_INSERT < MIN_INSERT) {
+			throw new ScriptManagerException("The maximum insert size must be larger or equal to the minimum insert size ("
+					+ MAX_INSERT + " >= " + MIN_INSERT + ").");
+		}
+
+		// Validate smoothing params
+		if (TRANS == PileupParameters.WINDOW) {
+			if (SMOOTH < 1) {
+				throw new ScriptManagerException("Invalid Smoothing Window Size (" + SMOOTH + "). Must be larger than 0 bins.");
+			}
+			if (SMOOTH % 2 == 0) {
+				throw new ScriptManagerException("Invalid Smoothing Window Size (" + SMOOTH + "). Must be odd for symmetrical smoothing (so that the window is centered properly).");
+			}
+		} else if (TRANS == PileupParameters.GAUSSIAN) {
+			if (STDSIZE < 1) {
+				throw new ScriptManagerException("Invalid Standard Deviation Size (" + STDSIZE + "). Must be larger than 0 bins.");
+			}
+			if (STDNUM < 1) {
+				throw new ScriptManagerException("Invalid Number of Standard Deviations (" + STDNUM + "). Must be larger than 0 bins.");
+			}
+		}
+
+		// ASK: Does shift actually need to be non-negative?
+		if (TAGEXTEND < 0) {
+			throw new ScriptManagerException("Invalid tag extend length (" + TAGEXTEND + "). Must be non-negative bp length - consider adding a shift if you are interested in negative extensions.");
+		}
+		if (SHIFT < 0) {
+			throw new ScriptManagerException("Invalid shift (" + SHIFT + "). Must be non-negative.");
+		}
+		if (BIN < 1) {
+			throw new ScriptManagerException("Invalid bin size (" + BIN + "). Must use at least 1 bp.");
+		}
+		if (CPU < 1) {
+			throw new ScriptManagerException("Invalid CPU count (" + CPU + "). Must use at least 1.");
+		}
+
+	}
+
 }

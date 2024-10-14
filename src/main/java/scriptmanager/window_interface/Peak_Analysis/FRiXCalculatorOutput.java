@@ -26,6 +26,7 @@ import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.BAMUtilities;
 
 import scriptmanager.cli.Peak_Analysis.FRiXCalculatorCLI;
@@ -125,8 +126,9 @@ public class FRiXCalculatorOutput extends JFrame {
 	 * 
 	 * @throws IOException Invalid file or parameters
 	 * @throws OptionException invalid input values for read, aspect, or strand
+	 * @throws ScriptManagerException 
 	 */
-	public void run() throws OptionException, IOException {
+	public void run() throws OptionException, IOException, ScriptManagerException {
 		// Check if BAI index file exists for all BAM files
 		boolean[] BAMvalid = new boolean[BAMFiles.size()];
 		for (int z = 0; z < BAMFiles.size(); z++) {

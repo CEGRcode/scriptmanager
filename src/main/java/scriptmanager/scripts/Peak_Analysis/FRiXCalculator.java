@@ -28,6 +28,7 @@ import scriptmanager.charts.Histogram;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.BAMUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.ArrayUtilities;
@@ -96,9 +97,13 @@ public class FRiXCalculator {
 	 * Runs the FRiXCalculator script
 	 * 
 	 * @throws OptionException
+	 * @throws ScriptManagerException
 	 * @throws IOException
 	 */
-	public void run() throws OptionException, IOException {
+	public void run() throws OptionException, ScriptManagerException, IOException {
+		// Check params
+		PARAM.validate();
+
 		if (OBASENAME == null) {
 			// Set output file
 			String bedname = ExtensionFileFilter.stripExtensionIgnoreGZ(BED);

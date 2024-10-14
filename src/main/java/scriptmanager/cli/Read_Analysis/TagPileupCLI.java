@@ -16,6 +16,7 @@ import java.io.PrintStream;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.BAMUtilities;
 
 import scriptmanager.scripts.Read_Analysis.TagPileup;
@@ -160,12 +161,15 @@ public class TagPileupCLI implements Callable<Integer> {
 			System.err.println(outputOptions.outputMatrix.get(0));
 			System.exit(1);
 		}
-		
-		TagPileup script_obj = new TagPileup(bedFile, bamFile, p, null, outputOptions.outputMatrix.get(0));
-		script_obj.run();
-		
-		System.err.println( "Calculations complete" );
-		return(0);
+		try {
+			TagPileup script_obj = new TagPileup(bedFile, bamFile, p, null, outputOptions.outputMatrix.get(0));
+			script_obj.run();
+			System.err.println( "Calculations complete" );
+			return(0);
+		} catch (ScriptManagerException sme) {
+			System.err.println(sme.getMessage());
+		}
+		return(1);
 	}
 
 	private String validateInput() throws IOException {
@@ -208,28 +212,6 @@ public class TagPileupCLI implements Callable<Integer> {
 			}
 		}
 
-		//validate smooth params
-		if(smoothType.winVals!=-9999 && smoothType.winVals<1){ r += "(!)Invalid Smoothing Window Size. Must be larger than 0 bins, winSize=" + smoothType.winVals + "\n"; }
-		if(smoothType.winVals!=-9999 && smoothType.winVals%2==0){ r += "(!)Invalid Smoothing Window Size. Must be odd for symmetrical smoothing (so that the window is centered properly), winSize=" + smoothType.winVals + "\n"; }
-		if(smoothType.gaussVals[0]!=-9999 && smoothType.gaussVals[0]<1){ r += "(!)Invalid Standard Deviation Size. Must be larger than 0 bins, stdSize=" + smoothType.gaussVals[0] + "\n"; }
-		if(smoothType.gaussVals[1]!=-9999 && smoothType.gaussVals[1]<1){ r += "(!)Invalid Number of Standard Deviations. Must be larger than 0 standard deviations, stdNum=" + smoothType.gaussVals[1] + "\n"; }
-		
-		//set require PE for appropriate flags
-		p.setPErequire(filterOptions.requirePE);
-		if( filterOptions.MIN_INSERT!=-9999 || filterOptions.MAX_INSERT!=-9999 || p.getAspect()==2) { p.setPErequire(true); }
-		
-		//validate shift, binSize, and CPUs
-		if(calcOptions.shift<0){  r += "(!)Invalid shift! Must be non-negative, shift=" + calcOptions.shift + "\n"; }
-		if(calcOptions.binSize<1){  r += "(!)Invalid Bin Size! Must use at least 1bp, binSize=" + calcOptions.binSize + "\n"; }
-		if(calcOptions.cpu<1){  r += "(!)Invalid Number of CPU's! Must use at least 1, CPU=" + calcOptions.cpu + "\n"; }
-		
-		//validate insert sizes
-		if( filterOptions.MIN_INSERT<0 && filterOptions.MIN_INSERT!=-9999 ){ r += "(!)MIN_INSERT must be a positive integer value: " + p.getMinInsert() + "\n"; }
-		if( filterOptions.MAX_INSERT<0 && filterOptions.MAX_INSERT!=-9999 ){ r += "(!)MAX_INSERT must be a positive integer value: " + p.getMaxInsert() + "\n"; }
-		if( filterOptions.MIN_INSERT!=-9999 && filterOptions.MAX_INSERT!=-9999 && filterOptions.MAX_INSERT<filterOptions.MIN_INSERT ){
-			r += "(!)MAX_INSERT must be larger/equal to MIN_INSERT: " + filterOptions.MIN_INSERT + "," + filterOptions.MAX_INSERT + "\n";
-		}
-		
 		// No Matrix Output
 		if(outputOptions.outputMatrix.size() > 1){
 			p.setOutputType(0);
@@ -304,11 +286,14 @@ public class TagPileupCLI implements Callable<Integer> {
 		}else if( p.getStandard() ){
 			p.setRatio(BAMUtilities.calculateStandardizationRatio(bamFile, p.getRead()));
 		}
-		
+
+		//set require PE for appropriate flags
+		p.setPErequire(filterOptions.requirePE);
+
 		//Set MIN_INSERT & MAX_INSERT
 		p.setMinInsert(filterOptions.MIN_INSERT);
 		p.setMaxInsert(filterOptions.MAX_INSERT);
-		
+
 		return(r);
 	}
 	
