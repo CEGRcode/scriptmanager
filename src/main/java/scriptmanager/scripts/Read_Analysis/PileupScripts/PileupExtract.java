@@ -163,7 +163,7 @@ public class PileupExtract implements Runnable{
 	 * @param coord BEDCoord to be analyzed
 	 * @param GENOMIC_SHIFT BEDSTART-QUERYWINDOW
 	 */
-	public void addFivePrime(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
+	private void addFivePrime(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
 		if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 			if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
 				int mark = sr.getUnclippedStart() - 1;
@@ -227,7 +227,7 @@ public class PileupExtract implements Runnable{
 	 * @param coord BEDCoord to be analyzed
 	 * @param GENOMIC_SHIFT BEDSTART-QUERYWINDOW
 	 */
-	public void addThreePrime(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
+	private void addThreePrime(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
 		if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 			if((sr.getProperPairFlag() && param.getPErequire()) || !param.getPErequire()) { //Must either be properly paired if paired-end or don't care about requirement
 				int mark = sr.getUnclippedEnd() - 1;
@@ -291,7 +291,7 @@ public class PileupExtract implements Runnable{
 	 * @param coord BEDCoord to be analyzed
 	 * @param GENOMIC_SHIFT BEDSTART-QUERYWINDOW
 	 */
-	public void addMidpoint(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
+	private void addMidpoint(SAMRecord sr, BEDCoord coord, int GENOMIC_SHIFT) {
 		if(sr.getReadPairedFlag()) { //Must be PAIRED-END mapped
 			if(sr.getProperPairFlag() && sr.getFirstOfPairFlag()) { //Must either be properly paired for midpoint, only first in pair to avoid double-counting
 				// Apply insert size filters

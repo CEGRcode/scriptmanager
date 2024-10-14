@@ -100,7 +100,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 	private JLabel lblNumStd;
 	private JLabel lblDefaultToLocal;
 	private JLabel lblCurrentBlacklist;
-	private JLabel lblCpusToUse;
 	private JLabel lblNoBlacklistLoaded;
 	private JTextField txtMin;
 	private JTextField txtMax;
@@ -579,7 +578,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		pnlReadManipulation.add(txtTagExtend);
 
 
-		// Stand Options
+		// Strand Options
 		int SCALE = 170;
 		tglSeparate = new JToggleButton("Separate");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, tglSeparate, 10, SpringLayout.SOUTH, pnlFilterReads);
@@ -914,8 +913,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 					txtCompositeName.setEnabled(true);
 				} else {
 					txtCompositeName.setEnabled(false);
-					if (!chckbxOutputData.isSelected()) {
-					}
 				}
 				activateOutput();
 			}
@@ -971,7 +968,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			}
 		});
 
-		lblCpusToUse = new JLabel("CPU's to Use:");
+		JLabel lblCpusToUse = new JLabel("CPU's to Use:");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCpusToUse, -10, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 10, SpringLayout.WEST, contentPane);
 		lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -1006,7 +1003,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 	/**
 	 * Update components to allow for read choice or not--Disable or enable BOTH
-	 * Read Output choices and and "Combined" toggle.
+	 * Read Output choices and "Separate"/"Combined" toggle.
 	 * 
 	 * @param activate to enable (true) or disable (false) the two components
 	 */
@@ -1029,25 +1026,27 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		}
 	}
 
+	/**
+	 * Activate/deactivate blacklist options
+	 * 
+	 * @param activate Whether to enable or disable blacklist-related components.
+	 */
 	public void activateBlacklist(boolean activate) {
 		btnLoadBlacklistFilter.setEnabled(activate);
 		btnRemoveBlacklistfilter.setEnabled(activate);
 		lblCurrentBlacklist.setEnabled(activate);
 		lblNoBlacklistLoaded.setEnabled(activate);
-		if (activate) {
-			btnRemoveBlacklistfilter.setBackground(Color.BLACK);
-		} else {
-			btnRemoveBlacklistfilter.setBackground(Color.GRAY);
-		}
 	}
 
 	/**
-	 * Extract read aspect and read output to upddate the cartoon accordingly.
+	 * Extract read aspect and read output to update the cartoon accordingly.
 	 */
 	public void updateCartoon() {
+		// Extract read/aspect info
 		int aspect = cbox_ReadAspect.getSelectedIndex();
 		int read = cbox_ReadOutput.getSelectedIndex();
 
+		// Update other read-related options
 		if (aspect > 1) {
 			chckbxRequireProperPe.setEnabled(false);
 		} else {
@@ -1058,6 +1057,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			}
 		}
 
+		// Redraw cartoon arrows
 		readCartoon.redrawArrows(aspect, read);
 	}
 
