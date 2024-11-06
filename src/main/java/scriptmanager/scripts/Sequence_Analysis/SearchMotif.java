@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.GZipUtilities;
 
 /**
@@ -54,6 +55,7 @@ public class SearchMotif {
 		PS = ps;
 		gzOutput = gz;
 
+		IUPAC_HASH.put("N", "N");
 		IUPAC_HASH.put("A", "A");
 		IUPAC_HASH.put("T", "T");
 		IUPAC_HASH.put("G", "G");
@@ -69,6 +71,7 @@ public class SearchMotif {
 		IUPAC_HASH.put("H", "ACT");
 		IUPAC_HASH.put("V", "ACG");
 
+		RC_HASH.put("N", "N");
 		RC_HASH.put("V", "B");
 		RC_HASH.put("H", "D");
 		RC_HASH.put("D", "H");
@@ -91,34 +94,31 @@ public class SearchMotif {
 	 * 
 	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 * @throws ScriptManagerException 
 	 */
-	public void run() throws IOException, InterruptedException {
+	public void run() throws IOException, InterruptedException, ScriptManagerException {
 		PS.println("Searching motif: " + motif + " in " + input.getName());
 		PS.println("Starting: " + getTimeStamp());
 
 		char[] ORIG = motif.toUpperCase().toCharArray();
 		List<String> MOTIF = new ArrayList<>();
 		for (int i = 0; i < ORIG.length; i++) {
-			if (ORIG[i] == 'N')
-				MOTIF.add("N");
-			else
-				MOTIF.add(IUPAC_HASH.get(Character.toString(ORIG[i])));
+			MOTIF.add(IUPAC_HASH.get(Character.toString(ORIG[i])));
 		}
 		List<String> RCMOTIF = new ArrayList<>();
 		for (int j = ORIG.length - 1; j >= 0; j--) {
-			if (ORIG[j] == 'N')
-				RCMOTIF.add("N");
-			else {
-				String key = RC_HASH.get(Character.toString(ORIG[j]));
-				RCMOTIF.add(IUPAC_HASH.get(key));
-			}
+			String key = RC_HASH.get(Character.toString(ORIG[j]));
+			RCMOTIF.add(IUPAC_HASH.get(key));
+		}
+		
+		if (RCMOTIF.size()!=MOTIF.size()) {
+			throw new ScriptManagerException("Motif and reverse complement motif are different lengths.");
 		}
 
 		String currentChrom = "";
 		String currentLine = "";
 		int currentBP = 0;
 		int currentEND = 0;
-		String ID;
 
 		// Initialize output writer
 		PrintStream OUT = System.out;
@@ -132,58 +132,55 @@ public class SearchMotif {
 		String line = br.readLine();
 		while (line != null) {
 			line = line.trim();
+			// Parse FASTA header
 			if (line.startsWith(">")) {
 				currentChrom = line.substring(1);
 				currentLine = "";
 				currentBP = 0;
 				currentEND = currentBP + motif.length();
 				PS.println("Proccessing: " + currentChrom);
+			// Parse FASTA sequence
 			} else {
+				// Merge trailing sequence from last line with new line
 				currentLine = currentLine + line;
-				// System.out.println(currentLine);
-				char[] array = currentLine.toCharArray();
-				for (int x = 0; x < array.length - motif.length(); x++) {
+				// Loop through each sequence nucleotide
+				for (int x = 0; x < currentLine.length() - motif.length(); x++) {
+					// Slice out motif-lengthed sequence to match against motif
 					char[] SEQ = currentLine.substring(x, x + ORIG.length).toCharArray();
-					// System.out.println(SEQ.length);
+					// Track forward and reverse mismatches
 					int MISMATCH = SEQ.length;
+					int MISMATCH_RC = SEQ.length;
+					// Slice out motif-lengthed sequence to match
 					for (int i = 0; i < SEQ.length; i++) {
-						// System.out.print(SEQ[i]);
 						for (int j = 0; j < MOTIF.get(i).length(); j++) {
+							// Forward seq search
 							if (SEQ[i] == MOTIF.get(i).charAt(j) || MOTIF.get(i).charAt(j) == 'N') {
 								MISMATCH--;
 							}
+							// Reverse complement search
+							if (SEQ[i] == RCMOTIF.get(i).charAt(j) || RCMOTIF.get(i).charAt(j) == 'N') {
+								MISMATCH_RC--;
+							}
 						}
 					}
-					// System.out.println();
+					// Write forward if mismatch count passes threshold
 					if (MISMATCH <= ALLOWED_MISMATCH) {
-						ID = currentChrom + "_" + Integer.toString(currentBP) + "_" + Integer.toString(currentEND)
-								+ "_+";
-						OUT.print(currentChrom + "\t" + currentBP + "\t" + Integer.toString(currentEND) + "\t" + ID
-								+ "\t" + Integer.toString(MISMATCH) + "\t+\n");
+						String ID = currentChrom + "_" + Integer.toString(currentBP) + "_" + Integer.toString(currentEND) + "_+";
+						OUT.println(String.join("\t", currentChrom, Integer.toString(currentBP), Integer.toString(currentEND), ID, Integer.toString(MISMATCH), "+"));
 					}
-
-					// Reverse-complement now
-					MISMATCH = SEQ.length;
-					for (int i = 0; i < SEQ.length; i++) {
-						for (int j = 0; j < RCMOTIF.get(i).length(); j++) {
-							if (SEQ[i] == RCMOTIF.get(i).charAt(j) || RCMOTIF.get(i).charAt(j) == 'N')
-								MISMATCH--;
-						}
-					}
-					if (MISMATCH <= ALLOWED_MISMATCH) {
-						ID = currentChrom + "_" + Integer.toString(currentBP) + "_" + Integer.toString(currentEND)
-								+ "_-";
-						OUT.print(currentChrom + "\t" + currentBP + "\t" + Integer.toString(currentEND) + "\t" + ID
-								+ "\t" + Integer.toString(MISMATCH) + "\t-\n");
+					// Write rev comp if mismatch count passes threshold
+					if (MISMATCH_RC <= ALLOWED_MISMATCH) {
+						String ID = currentChrom + "_" + Integer.toString(currentBP) + "_" + Integer.toString(currentEND) + "_-";
+						OUT.println(String.join("\t", currentChrom, Integer.toString(currentBP), Integer.toString(currentEND), ID, Integer.toString(MISMATCH_RC), "-"));
 					}
 					currentBP++;
 					currentEND++;
 				}
-				// System.out.print(currentLine + "\t");
+				// Save unsearched trailing sequence for next sequence line
 				String tmp = currentLine.substring(currentLine.length() - motif.length());
-				// System.out.println(tmp);
 				currentLine = tmp;
 			}
+			// Next line
 			line = br.readLine();
 		}
 		br.close();

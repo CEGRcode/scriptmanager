@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 import scriptmanager.cli.Sequence_Analysis.SearchMotifCLI;
 import scriptmanager.objects.CustomOutputStream;
 import scriptmanager.objects.LogItem;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.scripts.Sequence_Analysis.SearchMotif;
 import scriptmanager.util.ExtensionFileFilter;
 
@@ -75,8 +76,9 @@ public class SearchMotifOutput extends JFrame {
 	 * 
 	 * @throws IOException Invalid file or parameters
 	 * @throws InterruptedException Thrown when more than one script is run at the same time
+	 * @throws ScriptManagerException 
 	 */
-	public void run() throws IOException, InterruptedException {
+	public void run() throws IOException, InterruptedException, ScriptManagerException {
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		// Construct output filename
 		String BASENAME = motif + "_" + Integer.toString(ALLOWED_MISMATCH) + "Mismatch_"

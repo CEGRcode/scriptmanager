@@ -31,6 +31,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.FileSelection;
 import scriptmanager.objects.ToolDescriptions;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.util.FASTAUtilities;
 
 /**
@@ -99,6 +100,8 @@ public class SearchMotifWindow extends JFrame implements ActionListener, Propert
 					setProgress(100);
 					JOptionPane.showMessageDialog(null, "Search Complete");
 				}
+			} catch (ScriptManagerException sme) {
+				JOptionPane.showMessageDialog(null, sme.getMessage(), "Validate Input", JOptionPane.ERROR_MESSAGE);
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Invalid Input in Fields!!!");
 			} catch (InterruptedException ie) {
