@@ -250,7 +250,7 @@ public class PileupExtract implements Runnable{
 				mark -= GENOMIC_SHIFT;
 				//Determine final array strandedness
 				boolean useTAG_S2 = false;
-				if(param.getStrand() == 0 && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
+				if (param.getStrand() == PileupParameters.SEPARATE && (sr.getReadNegativeStrandFlag() != coord.getDir().equals("-"))) { useTAG_S2 = true; }
 				//Increment Final Array keeping track of pileup
 				for(int m = 0; m < param.getTagExtend() + 1; m++) {
 					if(mark >= 0 && mark < TAG_S1.length) {

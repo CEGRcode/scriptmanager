@@ -1091,7 +1091,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 			}
 		}
 		if (status) {
-			if (cbox_ReadAspect.getSelectedIndex() == 2) {
+			if (cbox_ReadAspect.getSelectedIndex() == PileupParameters.MIDPOINT) {
 				chckbxRequireProperPe.setEnabled(false);
 				allowReadChoice(false);
 			}
@@ -1113,7 +1113,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				btnAntiColor.setEnabled(false);
 				btnCombinedColor.setEnabled(true);
 			}
-			if (cbox_Transform.getSelectedIndex()==0) {
+			if (cbox_Transform.getSelectedIndex() == PileupParameters.NO_SMOOTH) {
 				lblWindowSizebin.setEnabled(false);
 				lblStdDevSize.setEnabled(false);
 				lblNumStd.setEnabled(false);
@@ -1121,7 +1121,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				txtStdSize.setEnabled(false);
 				txtNumStd.setEnabled(false);
 			}
-			if (cbox_Transform.getSelectedIndex()==2) {
+			if (cbox_Transform.getSelectedIndex() == PileupParameters.GAUSSIAN) {
 				lblWindowSizebin.setEnabled(false);
 				lblStdDevSize.setEnabled(true);
 				lblNumStd.setEnabled(true);
@@ -1129,7 +1129,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 				txtStdSize.setEnabled(true);
 				txtNumStd.setEnabled(true);
 			}
-			if (cbox_Transform.getSelectedIndex()==1) {
+			if (cbox_Transform.getSelectedIndex() == PileupParameters.WINDOW) {
 				lblWindowSizebin.setEnabled(true);
 				lblStdDevSize.setEnabled(false);
 				lblNumStd.setEnabled(false);
