@@ -18,6 +18,7 @@ import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.util.CloseableIterator;
 
 import scriptmanager.objects.Exceptions.OptionException;
+import scriptmanager.objects.Exceptions.ScriptManagerException;
 import scriptmanager.objects.PileupParameters;
 import scriptmanager.objects.CoordinateObjects.BEDCoord;
 
@@ -67,7 +68,7 @@ public class BAMUtilities {
 	 * @throws OptionException
 	 * @throws IOException
 	 */
-	public static double getReadCount(File BAM, PileupParameters p) throws OptionException, IOException {
+	public static double getReadCount(File BAM, PileupParameters p) throws OptionException, ScriptManagerException, IOException {
 		// Pre-calculate criteria
 		int ASPECT = p.getAspect();
 		int READ = p.getRead();
@@ -75,8 +76,12 @@ public class BAMUtilities {
 		boolean checkR2 = (READ == PileupParameters.READ2 || READ == PileupParameters.ALLREADS);
 		boolean checkFiveOrThree = (ASPECT == PileupParameters.FIVE || ASPECT == PileupParameters.THREE);
 
-		// Get total aligned
-		double totalAligned = 0;
+		// Check all parameters are not in conflict
+		p.validate();
+		// Do not handle parameter validation past this point.
+
+		// Instantiate variables
+		double totalAligned = 0; // total count to return
 
 		SamReader factory = SamReaderFactory.makeDefault().open(BAM);
 		CloseableIterator<SAMRecord> iter = factory.iterator();
@@ -263,7 +268,7 @@ public class BAMUtilities {
 	 */
 	private static HashMap<String, ArrayList<BEDCoord>> loadBlacklist(File BLACKFile) throws FileNotFoundException {
 		HashMap<String, ArrayList<BEDCoord>>  BLACKLIST = new HashMap<String, ArrayList<BEDCoord>>();
-	    Scanner scan = new Scanner(BLACKFile);
+		Scanner scan = new Scanner(BLACKFile);
 		while (scan.hasNextLine()) {
 			String[] temp = scan.nextLine().split("\t");
 			if(temp.length > 2) {
@@ -272,18 +277,18 @@ public class BAMUtilities {
 						int start = Integer.parseInt(temp[1]);
 						int stop = Integer.parseInt(temp[2]);
 						BEDCoord coord = new BEDCoord(temp[0], start, stop , ".");
-						if(BLACKLIST.containsKey(temp[0])) { BLACKLIST.get(temp[0]).add(coord);	}
+						if (BLACKLIST.containsKey(temp[0])) { BLACKLIST.get(temp[0]).add(coord); }
 						else {
 							ArrayList<BEDCoord> newchrom = new ArrayList<BEDCoord>();
 							newchrom.add(coord);
 							BLACKLIST.put(temp[0], newchrom);
-						}			
+						}
 					} else {
 						System.err.println("Invalid Coordinate in File!!!\n" + Arrays.toString(temp));
 					}
 				}
 			}
-	    }
+		}
 		scan.close();
 		return BLACKLIST;
 	}
