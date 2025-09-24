@@ -64,6 +64,7 @@ public class BAMUtilities {
 	 * Loop through BAM index metadata and tally up total aligned read count according to PileupParameters criteria.
 	 * 
 	 * @param BAM input BAM-formatted file
+	 * @param p parameter storage object for read encoding information (aspect/read)
 	 * @return Number of total reads in the BAM file
 	 * @throws OptionException
 	 * @throws IOException
@@ -75,7 +76,6 @@ public class BAMUtilities {
 		// Pull R1, R2, and 5'/3'end encodings
 		boolean checkR1 = (READ == PileupParameters.READ1 || READ == PileupParameters.ALLREADS);
 		boolean checkR2 = (READ == PileupParameters.READ2 || READ == PileupParameters.ALLREADS);
-		boolean checkFiveOrThree = (ASPECT == PileupParameters.FIVE || ASPECT == PileupParameters.THREE);
 
 		// Check all parameters are not in conflict
 		p.validate();
