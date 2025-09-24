@@ -72,6 +72,7 @@ public class BAMUtilities {
 		// Pre-calculate criteria
 		int ASPECT = p.getAspect();
 		int READ = p.getRead();
+		// Pull R1, R2, and 5'/3'end encodings
 		boolean checkR1 = (READ == PileupParameters.READ1 || READ == PileupParameters.ALLREADS);
 		boolean checkR2 = (READ == PileupParameters.READ2 || READ == PileupParameters.ALLREADS);
 		boolean checkFiveOrThree = (ASPECT == PileupParameters.FIVE || ASPECT == PileupParameters.THREE);
@@ -82,49 +83,67 @@ public class BAMUtilities {
 
 		// Instantiate variables
 		double totalAligned = 0; // total count to return
+		boolean unpairedWarning = false; // track Midpoint/Fragment encoding with reads missing read paired flag
 
 		SamReader factory = SamReaderFactory.makeDefault().open(BAM);
 		CloseableIterator<SAMRecord> iter = factory.iterator();
 		while (iter.hasNext()) {
+			// Get record
 			SAMRecord sr = iter.next();
-			// Test for mappability
-			if(!sr.getReadUnmappedFlag()) {
-				// Test for paired-end status
-				if(sr.getReadPairedFlag()) {
-					// count read 1
-					if (sr.getFirstOfPairFlag()) {
-						// count reads if Read1 or All Reads
-						if (checkR1) {
-							// count properly paired reads if midpoint
-							if (sr.getProperPairFlag()) {
-								if (ASPECT == PileupParameters.MIDPOINT) {
-									totalAligned++;
-								} else if (ASPECT == PileupParameters.FRAGMENT) {
-									throw new OptionException("PileupParameters.FRAGMENT not supported for getting read counts");
-								}
-							// count reads if 5' or 3'
-							} else if (checkFiveOrThree) {
-								totalAligned++;
-							}
+
+			// Ignore all unmapped reads
+			if (sr.getReadUnmappedFlag()) {
+				continue;
+			}
+			// Paired reads
+			if(sr.getReadPairedFlag()) {
+				// Read 1
+				if (sr.getFirstOfPairFlag()) {
+					// Count for R1 - 5/3 prime
+					if (checkR1) {
+						// Only count properly-paired when params set to require paired-end
+						if (!p.getPErequire() || (p.getPErequire() && sr.getProperPairFlag())) {
+							totalAligned++;
 						}
-					// count read 2
-					} else {
-						// count reads if Read2 or All Reads && 5' or 3'
-						if (checkR2 && checkFiveOrThree) {
+					// Count for Midpoint (require PE)
+					} else if (ASPECT == PileupParameters.MIDPOINT && sr.getProperPairFlag()) {
+						totalAligned++;
+					// Count for Full Fragment (require PE)
+					} else if (ASPECT == PileupParameters.FRAGMENT && sr.getProperPairFlag()) {
+						totalAligned += sr.getInferredInsertSize();
+					}
+				// Read 2
+				} else {
+					// Count for R2 - 5/3 prime
+					if (checkR2) {
+						// Only count properly-paired when params set to require paired-end
+						if (!p.getPErequire() || (p.getPErequire() && sr.getProperPairFlag())) {
 							totalAligned++;
 						}
 					}
-				//If the read is mapped but not paired-end, default to read 1
-				} else {
-					// count reads if Read1 or All Reads && 5' or 3'
-					if (checkR1 && checkFiveOrThree) {
-						totalAligned++;
-					}
 				}
-			} // ignore all unmapped reads
+			// Non-paired (i.e. single-end)
+			} else {
+				// Count for R1 - 5/3 prime
+				if (checkR1) {
+					totalAligned++;
+				} else if (ASPECT == PileupParameters.MIDPOINT || ASPECT == PileupParameters.FRAGMENT) { // Should not be true...
+					// TODO: How do we want to handle cases that reach here with PileupParameters.MIDPOINT or PileupParameters.FRAGMENT?
+					// Throw exception and handle as warning? Printing message to STDERR for now...
+					// Update boolean to log warning to STDERR
+					unpairedWarning = true;
+				}
+			}
 		}
 		iter.close();
 		factory.close();
+
+		// Print warnings to STDERR and throw exceptions
+		if (totalAligned == 0) {
+			throw new ScriptManagerException("This BAM file contains zero aligned reads that can be counted for according to the BAMUtilities.getReadCount() criteria. Check that you aren't trying to count midpoints or full fragments from a set of single-end alignments.");
+		} else if (unpairedWarning) {
+			System.err.println("WARNING: Check your BAM file. You indicated midpoint or full fragment encoding but unpaired reads were found.\nPlease make sure your BAM file isn't a mixture of single-end and paired-end reads to avoid calculation errors.");
+		}
 
 		return (totalAligned);
 	}
