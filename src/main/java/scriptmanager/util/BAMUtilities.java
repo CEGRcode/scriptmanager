@@ -60,8 +60,9 @@ public class BAMUtilities {
 		return (totalGenome);
 	}
 
+
 	/**
-	 * Loop through BAM index metadata and tally up total aligned read count according to PileupParameters criteria.
+	 * Loop through BAM index metadata and tally-up total aligned read count according to PileupParameters criteria. (No filtering with blacklist)
 	 * 
 	 * @param BAM input BAM-formatted file
 	 * @param p parameter storage object for read encoding information (aspect/read)
