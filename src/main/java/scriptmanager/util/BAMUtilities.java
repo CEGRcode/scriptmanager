@@ -171,9 +171,9 @@ public class BAMUtilities {
 
 	/**
 	 * Calculates the standardization ratio for a given BAM file, ignoring blacklisted reads
-	 * @param BAM BAM file used to calculate ratio 
+	 * @param BAM BAM file used to calculate ratio
+	 * @parm p store read aspect and read output encodings
 	 * @param BLACKFile BED file containing blacklisted regions
-	 * @param read Read Type (1 = Read1, 1 = Read2, 3 = All reads)
 	 * @return The standardization ratio for a given BAM file
 	 * @throws IOException Invalid file or parameters
 	 */
@@ -200,7 +200,7 @@ public class BAMUtilities {
 
 		//Load Blacklist into HashMap
 		HashMap<String, ArrayList<BEDCoord>> BLACKLIST = loadBlacklist(BLACKFile);
-		
+
 		inputBAM = SamReaderFactory.makeDefault().open(BAM);
 		for(int x = 0; x < chromName.size(); x++) {
 			String seq = chromName.get(x);
@@ -212,6 +212,7 @@ public class BAMUtilities {
 			//SAMRecords are 1-based
 			while (iter.hasNext()) {
 				SAMRecord sr = iter.next();
+				
 				int FivePrime = sr.getUnclippedStart() - 1;
 				if(sr.getReadNegativeStrandFlag()) { FivePrime = sr.getUnclippedEnd(); }
 				int INDEX = (FivePrime / windowSize);
