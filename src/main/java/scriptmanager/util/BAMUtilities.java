@@ -60,8 +60,9 @@ public class BAMUtilities {
 		return (totalGenome);
 	}
 
+
 	/**
-	 * Loop through BAM index metadata and tally up total aligned read count according to PileupParameters criteria.
+	 * Loop through BAM index metadata and tally-up total aligned read count according to PileupParameters criteria. (No filtering with blacklist)
 	 * 
 	 * @param BAM input BAM-formatted file
 	 * @param p parameter storage object for read encoding information (aspect/read)
@@ -151,31 +152,28 @@ public class BAMUtilities {
 	/**
 	 * Calculates the standardization ratio for a given BAM file
 	 * @param BAM BAM file used to calculate ratio
-	 * @param read Read Type (1 = Read1, 1 = Read2, 3 = All reads)
+	 * @parm p store read aspect and read output encodings
 	 * @return The standardization ratio for a given BAM file
 	 * @throws IOException Invalid file or parameters
 	 * @throws ScriptManagerException 
+	 * @throws OptionException 
 	 */
-	public static double calculateStandardizationRatio(File BAM, int read) throws IOException {
+	public static double calculateStandardizationRatio(File BAM, PileupParameters p) throws IOException, OptionException, ScriptManagerException {
 		// Get Genome Size
 		double totalGenome = getGenomeSize(BAM);
-
 		// Get total aligned
-		//System.out.println("Genome Size: " + totalGenome + "\nTotal tags: " + totalAligned + "\nDetected Read 1: " + READ1 + "\nDetected Read 2: " + READ2 + "\nDetected Midpoints: " + MID);
-		if(read == 0) { totalAligned = READ1; }
-		else if(read == 1) { totalAligned = READ2; }
-		else if(read == 2) { totalAligned = READ1 + READ2; }
-		else if(read == 3) { totalAligned = MID; }
-
+		double totalAligned = getReadCount(BAM, p);
+		// Divide for ratio
 		if(totalAligned > 0) { return (totalGenome / totalAligned); }
-		else { return 1; }
+		// Return default
+		return 1;
 	}
 
 	/**
 	 * Calculates the standardization ratio for a given BAM file, ignoring blacklisted reads
-	 * @param BAM BAM file used to calculate ratio 
+	 * @param BAM BAM file used to calculate ratio
+	 * @parm p store read aspect and read output encodings
 	 * @param BLACKFile BED file containing blacklisted regions
-	 * @param read Read Type (1 = Read1, 1 = Read2, 3 = All reads)
 	 * @return The standardization ratio for a given BAM file
 	 * @throws IOException Invalid file or parameters
 	 */
@@ -202,7 +200,7 @@ public class BAMUtilities {
 
 		//Load Blacklist into HashMap
 		HashMap<String, ArrayList<BEDCoord>> BLACKLIST = loadBlacklist(BLACKFile);
-		
+
 		inputBAM = SamReaderFactory.makeDefault().open(BAM);
 		for(int x = 0; x < chromName.size(); x++) {
 			String seq = chromName.get(x);
@@ -214,6 +212,7 @@ public class BAMUtilities {
 			//SAMRecords are 1-based
 			while (iter.hasNext()) {
 				SAMRecord sr = iter.next();
+				
 				int FivePrime = sr.getUnclippedStart() - 1;
 				if(sr.getReadNegativeStrandFlag()) { FivePrime = sr.getUnclippedEnd(); }
 				int INDEX = (FivePrime / windowSize);
