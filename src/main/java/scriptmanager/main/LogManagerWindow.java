@@ -109,23 +109,9 @@ public class LogManagerWindow extends JFrame {
 		SpringLayout sl_contentPane = new SpringLayout();
 		contentPane.setLayout(sl_contentPane);
 
-		// Add banner notifying user of beta-feature
-		JPanel bannerPane = new JPanel();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, bannerPane, 5, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, bannerPane, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, bannerPane, 10, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, bannerPane, 30, SpringLayout.NORTH, contentPane);
-		bannerPane.setBackground(new Color(102, 102, 153)); // Color from MetalTheme docs (https://docs.oracle.com/javase/8/docs/api/javax/swing/plaf/metal/DefaultMetalTheme.html#getPrimary1--)
-		contentPane.add(bannerPane);
-
-		// Text of banner pane
-		JLabel bannerText = new JLabel("Logging is currently a beta feature, please report any bugs to Github.");
-		bannerText.setForeground(Color.WHITE);
-		bannerPane.add(bannerText);
-
 		// Set-up tabbed panel
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, tabbedPane, 5, SpringLayout.SOUTH, bannerPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, tabbedPane, 10, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, tabbedPane, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -10, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, tabbedPane, -10, SpringLayout.EAST, contentPane);
