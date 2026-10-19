@@ -23,11 +23,16 @@ import scriptmanager.scripts.Figure_Generation.PlotComposite;
  */
 @Command(name = "composite-plot", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.composite_description,
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + CompositePlotCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class CompositePlotCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	/**
 	 * Creates a CompositePlotCLI object

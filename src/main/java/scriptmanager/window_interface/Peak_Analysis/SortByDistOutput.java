@@ -73,7 +73,7 @@ public class SortByDistOutput extends JFrame{
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));
 		// Initialize LogItem
 		String command = SortByDistCLI.getCLIcommand(REF, PEAK, OUTFILE, GFF, GZIP_OUTPUT, MATCH_STRAND, UPSTREAM_BOUND, DOWNSTREAM_BOUND);
-		LogItem li = new LogItem(command);
+		LogItem li = new LogItem(command, SortByDistCLI.VERSION);
 		firePropertyChange("log", null, li);
 		// Execute script
 		SortByDist script_obj = new SortByDist(REF, PEAK, OUTFILE, GZIP_OUTPUT, MATCH_STRAND, UPSTREAM_BOUND, DOWNSTREAM_BOUND, PS);

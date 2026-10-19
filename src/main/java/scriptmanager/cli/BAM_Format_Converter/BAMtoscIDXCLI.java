@@ -23,11 +23,16 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtoscIDX;
  */
 @Command(name = "bam-to-scidx", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_scidx_description,
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + BAMtoscIDXCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtoscIDXCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	/**
 	 * Creates a new BAMtoscIDXCLI object

@@ -26,11 +26,16 @@ import scriptmanager.scripts.Sequence_Analysis.DNAShapefromFASTA;
  */
 @Command(name = "dna-shape-fasta", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.dna_shape_from_fasta_description,
-	version = "ScriptManager " + ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + DNAShapefromFASTACLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class DNAShapefromFASTACLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	/**
 	 * Creates a new DNAShapefromFASTACLI object

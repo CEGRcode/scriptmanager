@@ -94,7 +94,7 @@ public class RandomCoordinateWindow extends JFrame implements ActionListener, Pr
 					}
 					// Initialize LogItem
 					String command = RandomCoordinateCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());
-					LogItem li = new LogItem(command);
+					LogItem li = new LogItem(command, RandomCoordinateCLI.VERSION);
 					firePropertyChange("log", null, li);
 					// Execute script
 					RandomCoordinate.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSites.getText()), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());

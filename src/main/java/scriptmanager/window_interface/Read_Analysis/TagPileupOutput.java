@@ -140,7 +140,7 @@ public class TagPileupOutput extends JFrame {
 
 					// Initialize LogItem
 					String command = TagPileupCLI.getCLIcommand(XBED, BAM, PARAM);
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, TagPileupCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 
 					// Execute script

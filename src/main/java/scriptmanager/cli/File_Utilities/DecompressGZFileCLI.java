@@ -17,10 +17,15 @@ import scriptmanager.objects.ToolDescriptions;
 	description = ToolDescriptions.decompressFileDescription + "\n"+
 		"@|bold **Please use the command line gzip this job**|@ \n"+
 		"@|bold,yellow 'gzip -dk infile.txt.txt'|@",
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + DecompressGZFileCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class DecompressGZFileCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 	@Override
 	public Integer call() throws Exception {
 		System.err.println("***Please use the command line gzip for this job***\n"+

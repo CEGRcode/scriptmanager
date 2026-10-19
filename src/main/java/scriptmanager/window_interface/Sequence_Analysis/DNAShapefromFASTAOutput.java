@@ -140,7 +140,7 @@ public class DNAShapefromFASTAOutput extends JFrame {
 				}
 				// Initialize LogItem
 				String command = DNAShapefromFASTACLI.getCLIcommand(XFASTA, OUT_BASENAME, OUTPUT_TYPE, OUTPUT_COMPOSITE, OUTPUT_MATRIX, OUTPUT_GZIP);
-				LogItem new_li = new LogItem(command);
+				LogItem new_li = new LogItem(command, DNAShapefromFASTACLI.VERSION);
 				firePropertyChange("log", old_li, new_li);
 				// Execute script
 				DNAShapefromFASTA script_obj = new DNAShapefromFASTA(XFASTA, OUT_BASENAME, OUTPUT_TYPE, OUTPUT_COMPOSITE, OUTPUT_MATRIX, OUTPUT_GZIP, PS);

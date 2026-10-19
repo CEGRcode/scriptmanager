@@ -87,7 +87,7 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 					}
 					// Initialize LogItem
 					String command = TileGenomeCLI.getCLIcommand((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());
-					LogItem li = new LogItem(command);
+					LogItem li = new LogItem(command, TileGenomeCLI.VERSION);
 					firePropertyChange("log", null, li);
 					// Execute script
 					TileGenome.execute((String)cmbGenome.getSelectedItem(), OUT_FILEPATH, rdbtnBed.isSelected(), Integer.parseInt(txtSize.getText()), chckbxGzipOutput.isSelected());

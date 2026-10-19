@@ -103,7 +103,7 @@ public class BAMtoscIDXOutput extends JFrame {
 
 		// Initialize LogItem
 		String command = BAMtoscIDXCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT, SHIFT);
-		LogItem new_li = new LogItem(command);
+		LogItem new_li = new LogItem(command, BAMtoscIDXCLI.VERSION);
 		firePropertyChange("log", null, new_li);
 
 		// Execute script

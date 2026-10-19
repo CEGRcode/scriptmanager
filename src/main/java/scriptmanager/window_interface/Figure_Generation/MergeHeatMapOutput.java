@@ -85,7 +85,7 @@ public class MergeHeatMapOutput extends JFrame {
 			if (matchIndex != -999) {
 				// Initialize LogItem
 				String command = MergeHeatMapCLI.getCLIcommand(senseFile.get(x), antiFile.get(matchIndex), OUT_FILEPATH);
-				LogItem new_li = new LogItem(command);
+				LogItem new_li = new LogItem(command, MergeHeatMapCLI.VERSION);
 				firePropertyChange("log", old_li, new_li);
 				// Execute script
 				JLabel pic = MergeHeatMapPlot.mergePNG(senseFile.get(x), antiFile.get(matchIndex), OUT_FILEPATH);

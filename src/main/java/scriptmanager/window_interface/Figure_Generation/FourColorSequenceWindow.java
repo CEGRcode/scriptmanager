@@ -116,7 +116,7 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 						}
 						// Initialize LogItem
 						String command = FourColorSequenceCLI.getCLIcommand(fastaFiles.get(x), OUT_FILEPATH, COLORS, Integer.parseInt(txtHeight.getText()), Integer.parseInt(txtWidth.getText()));
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, FourColorSequenceCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
 						FourColorPlot.generatePLOT(fastaFiles.get(x), OUT_FILEPATH, COLORS, Integer.parseInt(txtHeight.getText()), Integer.parseInt(txtWidth.getText()));

@@ -27,11 +27,16 @@ import scriptmanager.scripts.Figure_Generation.TwoColorHeatMap;
 @Command(name = "heatmap",
 	mixinStandardHelpOptions = true,
 	description = ToolDescriptions.heatmap_description,
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + TwoColorHeatMapCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class TwoColorHeatMapCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	@Parameters(index = "0", description = "")
 	private File CDT;

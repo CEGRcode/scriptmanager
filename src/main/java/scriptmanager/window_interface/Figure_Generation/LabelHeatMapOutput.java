@@ -100,7 +100,7 @@ public class LabelHeatMapOutput extends JFrame {
 					borderWidth, xTickHeight, fontSize,
 					xLeftLabel, xMidLabel, xRightLabel,
 					xLabel, yLabel);
-			LogItem new_li = new LogItem(command);
+			LogItem new_li = new LogItem(command, LabelHeatMapCLI.VERSION);
 			firePropertyChange("log", old_li, new_li);
 			// Execute script
 			LabelHeatMap script_obj = new LabelHeatMap(SAMPLE.get(x), OUT_FILEPATH, color,

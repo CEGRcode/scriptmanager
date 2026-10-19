@@ -127,7 +127,7 @@ public class CrossCorrelationOutput extends JFrame {
 				tabbedPane_CCData.add(bamFiles.get(x).getName(), new JScrollPane(CC_DATA, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 				// Initialize LogItem
 				String command = CrossCorrelationCLI.getCLIcommand(bamFiles.get(x), OUT_FILEPATH, PARAM);
-				LogItem new_li = new LogItem(command);
+				LogItem new_li = new LogItem(command, CrossCorrelationCLI.VERSION);
 				if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 				//Call public static method from scripts
 				Component chart = CrossCorrelation.correlate(bamFiles.get(x), OUT_FILEPATH, PARAM, ps_ccdata);

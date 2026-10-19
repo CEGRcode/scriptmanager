@@ -103,7 +103,7 @@ public class TwoColorHeatMapOutput extends JFrame {
 			// Initialize LogItem
 			String command = TwoColorHeatMapCLI.getCLIcommand(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,
 					pixelHeight, pixelWidth, scaleType, absolute, quantile, OUT_FILEPATH, transparentBackground);
-			LogItem new_li = new LogItem(command);
+			LogItem new_li = new LogItem(command, TwoColorHeatMapCLI.VERSION);
 			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
 			TwoColorHeatMap script_object = new TwoColorHeatMap(SAMPLE.get(x), MAXCOLOR, startROW, startCOL,

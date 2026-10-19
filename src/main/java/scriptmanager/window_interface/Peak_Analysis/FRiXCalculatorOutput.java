@@ -162,7 +162,7 @@ public class FRiXCalculatorOutput extends JFrame {
 					PrintStream ps = new PrintStream(new CustomOutputStream(STATS));
 					// Initialize LogItem
 					String command = FRiXCalculatorCLI.getCLIcommand(XBED, BAM, PARAM);
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, FRiXCalculatorCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
 					FRiXCalculator script_obj = new FRiXCalculator(BEDFiles.get(BED_Index), BAM, PARAM, ps, null);

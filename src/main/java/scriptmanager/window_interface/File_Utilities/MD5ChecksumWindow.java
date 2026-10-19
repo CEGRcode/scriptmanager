@@ -87,7 +87,7 @@ public class MD5ChecksumWindow extends JFrame implements ActionListener, Propert
 				for(int x = 0; x < inputs.size(); x++) {
 					// Initialize LogItem
 					String command = MD5ChecksumCLI.getCLIcommand(inputs.get(x), OUT_FILEPATH);
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, MD5ChecksumCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script (calculate MD5 for each file)
 					String md5hash = MD5Checksum.calculateMD5(inputs.get(x).getAbsolutePath());

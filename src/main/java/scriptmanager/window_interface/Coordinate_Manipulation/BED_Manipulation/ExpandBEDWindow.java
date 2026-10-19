@@ -109,7 +109,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 
 						// Initialize LogItem
 						String command = ExpandBEDCLI.getCLIcommand(XBED, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, ExpandBEDCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
 						ExpandBED.expandBEDBorders(XBED, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());

@@ -102,7 +102,7 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 					}
 					// Initialize LogItem
 					String command = ConvertBEDChrNamesCLI.getCLIcommand(rdbtnR2A.isSelected(), XBED, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, ConvertBEDChrNamesCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
 					if (rdbtnR2A.isSelected()) {

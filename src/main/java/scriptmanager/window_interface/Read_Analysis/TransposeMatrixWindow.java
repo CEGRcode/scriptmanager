@@ -98,7 +98,7 @@ public class TransposeMatrixWindow extends JFrame implements ActionListener, Pro
 						// Initialize LogItem
 						String command = TransposeMatrixCLI.getCLIcommand(XTAB, OUT_FILEPATH,
 								Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, TransposeMatrixCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
 						TransposeMatrix.transpose(XTAB, OUT_FILEPATH,

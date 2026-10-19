@@ -103,7 +103,7 @@ public class BAMGenomeCorrelationOutput extends JFrame {
 
 		// Initialize LogItem
 		String command = BAMGenomeCorrelationCLI.getCLIcommand(bamFiles, OUT_FILEPATH, SHIFT, BIN, CPU, READ, COLORSCALE );
-		LogItem li = new LogItem(command);
+		LogItem li = new LogItem(command, BAMGenomeCorrelationCLI.VERSION);
 		if (OUTPUT_STATUS) { firePropertyChange("log", null, li); }
 		// Execute script
 		BAMGenomeCorrelation script_obj = new BAMGenomeCorrelation(bamFiles, OUT_FILEPATH, SHIFT, BIN, CPU, READ, COLORSCALE );

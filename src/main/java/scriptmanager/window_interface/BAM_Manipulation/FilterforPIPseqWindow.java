@@ -99,7 +99,7 @@ public class FilterforPIPseqWindow extends JFrame implements ActionListener, Pro
 					}
 					// Initialize LogItem
 					String command = FilterforPIPseqCLI.getCLIcommand(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, FilterforPIPseqCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
 					FilterforPIPseqOutput output_obj = new FilterforPIPseqOutput(BAMFiles.get(x), GENOME, OUTPUT, txtSeq.getText());

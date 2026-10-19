@@ -123,7 +123,7 @@ public class GeneTrackWindow extends JFrame implements ActionListener, PropertyC
 					for(int x = 0; x < IDXFiles.size(); x++) {
 						// Initialize LogItem
 						String command = GeneTrackCLI.getCLIcommand(IDXFiles.get(x), SIGMA, EXCLUSION, FILTER, UP, DOWN, DIRECTORY);
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, GeneTrackCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
 		        		GeneTrack track = new GeneTrack(IDXFiles.get(x), SIGMA, EXCLUSION, FILTER, UP, DOWN, DIRECTORY);

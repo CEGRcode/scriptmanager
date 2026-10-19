@@ -106,7 +106,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 						}
 						// Initialize LogItem
 						String command = ExpandGFFCLI.getCLIcommand(XGFF, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, ExpandGFFCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute expansion and update progress
 						ExpandGFF.expandGFFBorders(XGFF, new File(OUTPUT), SIZE, rdbtnExpandFromCenter.isSelected(), chckbxGzipOutput.isSelected());

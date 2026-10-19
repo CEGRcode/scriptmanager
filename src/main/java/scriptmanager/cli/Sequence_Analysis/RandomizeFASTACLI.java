@@ -21,11 +21,16 @@ import scriptmanager.scripts.Sequence_Analysis.RandomizeFASTA;
  */
 @Command(name = "randomize-fasta", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.randomize_fasta_description,
-	version = "ScriptManager " + ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + RandomizeFASTACLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class RandomizeFASTACLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	@Parameters(index = "0", description = "the FASTA file ")
 	private File fastaFile;

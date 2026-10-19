@@ -96,7 +96,7 @@ public class FASTAExtractOutput extends JFrame {
 				PS.println("Proccessing File: " + BED.get(x).getName());
 				// Initialize LogItem
 				String command = FASTAExtractCLI.getCLIcommand(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, gzOutput);
-				LogItem new_li = new LogItem(command);
+				LogItem new_li = new LogItem(command, FASTAExtractCLI.VERSION);
 				firePropertyChange("log", old_li, new_li);
 				// Execute Script object
 				FASTAExtract script_obj = new FASTAExtract(GENOME, BED.get(x), OUTFILE, STRAND, HEADER, PS, gzOutput);

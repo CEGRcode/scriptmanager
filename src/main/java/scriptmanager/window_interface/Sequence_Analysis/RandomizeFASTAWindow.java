@@ -104,7 +104,7 @@ public class RandomizeFASTAWindow extends JFrame implements ActionListener, Prop
 						}
 						// Initialize LogItem
 						String command = RandomizeFASTACLI.getCLIcommand(FASTAFiles.get(x), new File(OUTPUT), SEED);
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, RandomizeFASTACLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 
 						// Execute script

@@ -20,10 +20,15 @@ import scriptmanager.objects.ToolDescriptions;
 		"@|bold **Please run the picard/samtools tools directly:**|@ \n"+
 		"@|bold,yellow 'java -jar picard.jar MarkDuplicates I=<in.bam> O=<marked.bam>\n"+
 		"samtools view -F 1024 <marked.bam> > <out.bam>'|@",
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + BAMRemoveDupCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMRemoveDupCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	/**
 	 * Runs when this subcommand is called, running script in respective script package with user defined arguments

@@ -22,10 +22,15 @@ import scriptmanager.objects.ToolDescriptions;
 	description = ToolDescriptions.sort_bam_description + "\n"+
 		"@|bold **Please run the samtools tool directly:**|@ \n"+
 		"@|bold,yellow 'samtools sort -o <output.bam> <input.bam>'|@",
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + SortBAMCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class SortBAMCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 	/**
 	 * Runs when this subcommand is called, running script in respective script package with user defined arguments
 	 * @throws IOException Invalid file or parameters

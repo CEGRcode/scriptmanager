@@ -410,6 +410,11 @@ public class LogManagerWindow extends JFrame {
 				OUT.println("# " + item.getStartTime().toString());
 			}
 
+			if(verbosity>=3 && item.getToolVersion()!=null) {
+				// Write LogItem tool version (V=3+)
+				OUT.println("# Tool version: " + item.getToolVersion());
+			}
+
 			// Write LogItem command string (V=1+)
 			if (item.getStopTime()==null) {
 				OUT.print("# ");

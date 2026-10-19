@@ -83,7 +83,7 @@ public class PlotCompositeOutput extends JFrame {
 		for (int x = 0; x < SAMPLE.size(); x++) {
 			// Initialize LogItem
 			String command = CompositePlotCLI.getCLIcommand(SAMPLE.get(x), OUT_DIR, SAMPLE.get(x).getName(), null, includeLegend, pxHeight, pxWidth);
-			LogItem new_li = new LogItem(command);
+			LogItem new_li = new LogItem(command, CompositePlotCLI.VERSION);
 			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
 			ChartPanel chart = new ChartPanel(PlotComposite.plotCompositeFile(SAMPLE.get(x), OUT_DIR, OUTPUT_STATUS, SAMPLE.get(x).getName(), null, includeLegend, pxHeight, pxWidth));

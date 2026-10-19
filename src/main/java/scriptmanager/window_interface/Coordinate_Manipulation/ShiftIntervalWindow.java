@@ -119,7 +119,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						}
 						// Initialize LogItem
 						String command = ShiftCoordCLI.getCLIcommand(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected(), false);
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, ShiftCoordCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
 						ShiftCoord.shiftBEDInterval(XBED, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());
@@ -154,7 +154,7 @@ public class ShiftIntervalWindow extends JFrame implements ActionListener, Prope
 						}
 						// Initialize LogItem
 						String command = ShiftCoordCLI.getCLIcommand(XGFF, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected(), true);
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, ShiftCoordCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
 						ShiftCoord.shiftGFFInterval(XGFF, new File(OUTPUT + SUFFIX), SHIFT, chckbxStranded.isSelected(), chckbxGzipOutput.isSelected());

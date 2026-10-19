@@ -100,7 +100,7 @@ public class ConvertGFFChrNamesWindow extends JFrame implements ActionListener, 
 					}
 					// Initialize LogItem
 					String command = ConvertGFFChrNamesCLI.getCLIcommand(rdbtnR2A.isSelected(), XGFF, OUT_FILEPATH, chckbxChrmt.isSelected(), chckbxGzipOutput.isSelected());
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, ConvertGFFChrNamesCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
 					if (rdbtnR2A.isSelected()) {

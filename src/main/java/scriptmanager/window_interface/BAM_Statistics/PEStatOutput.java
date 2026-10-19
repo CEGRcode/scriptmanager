@@ -127,7 +127,7 @@ public class PEStatOutput extends JFrame {
 				}
 				// Initialize LogItem
 				String command = PEStatsCLI.getCLIcommand(bamFiles.get(x), OUT_BASENAME, DUP_STATUS, MIN_INSERT, MAX_INSERT);
-				LogItem new_li = new LogItem(command);
+				LogItem new_li = new LogItem(command, PEStatsCLI.VERSION);
 				if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 				// Execute script
 				Vector<ChartPanel> charts = PEStats.getPEStats(bamFiles.get(x), OUT_BASENAME, DUP_STATUS, MIN_INSERT, MAX_INSERT, OUTPUT_STATUS, ps_insert, ps_dup );

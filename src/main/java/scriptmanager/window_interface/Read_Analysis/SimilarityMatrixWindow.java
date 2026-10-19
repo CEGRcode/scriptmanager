@@ -90,7 +90,7 @@ public class SimilarityMatrixWindow extends JFrame implements ActionListener, Pr
 					// Initialize LogItem
 					String command = SimilarityMatrixCLI.getCLIcommand(TABFiles.get(x), OUT_DIR,
 							comboBox.getSelectedIndex(), rdbtnCorrelateColumns.isSelected());
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, SimilarityMatrixCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
 					SimilarityMatrix matrix = new SimilarityMatrix(TABFiles.get(x), OUT_DIR,

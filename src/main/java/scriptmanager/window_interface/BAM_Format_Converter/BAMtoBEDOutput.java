@@ -100,7 +100,7 @@ public class BAMtoBEDOutput extends JFrame {
 
 		// Initialize LogItem
 		String command = BAMtoBEDCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT);
-		LogItem new_li = new LogItem(command);
+		LogItem new_li = new LogItem(command, BAMtoBEDCLI.VERSION);
 		firePropertyChange("log", null, new_li);
 
 		// Execute script

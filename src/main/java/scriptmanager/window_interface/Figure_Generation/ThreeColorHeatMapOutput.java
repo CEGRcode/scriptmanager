@@ -137,7 +137,7 @@ public class ThreeColorHeatMapOutput extends JFrame {
 					startROW, startCOL, pixelHeight, pixelWidth, scaleType,
 					percentileMin, percentileMid, percentileMax,
 					MAXVAL, MIDVAL, MINVAL, excludeZeros, OUT_FILEPATH);
-			LogItem new_li = new LogItem(command);
+			LogItem new_li = new LogItem(command, ThreeColorHeatMapCLI.VERSION);
 			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
 			ThreeColorHeatMap script_object = new ThreeColorHeatMap(SAMPLE.get(x), MINCOLOR, MIDCOLOR, MAXCOLOR, NANCOLOR,

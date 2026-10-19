@@ -147,6 +147,8 @@ abstract class SubcommandCLI implements Callable<Integer>{
 
 
 @Command(name = "bam-format-converter",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			BAMtoBEDCLI.class,
 			BAMtobedGraphCLI.class,
@@ -158,6 +160,8 @@ class BAM_Format_ConverterCLI extends SubcommandCLI {}
 
 
 @Command(name = "bam-manipulation",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			BAIIndexerCLI.class,
 			BAMRemoveDupCLI.class,
@@ -170,6 +174,8 @@ class BAM_ManipulationCLI extends SubcommandCLI {}
 
 
 @Command(name = "bam-statistics",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			CrossCorrelationCLI.class,
 			BAMGenomeCorrelationCLI.class,
@@ -181,6 +187,8 @@ class BAM_StatisticsCLI extends SubcommandCLI {}
 
 
 @Command(name = "coordinate-manipulation",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			ShiftCoordCLI.class,
 			BEDtoGFFCLI.class,
@@ -195,6 +203,8 @@ class Coordinate_ManipulationCLI extends SubcommandCLI {}
 
 
 @Command(name = "figure-generation",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			CompositePlotCLI.class,
 			FourColorSequenceCLI.class,
@@ -208,6 +218,8 @@ class Figure_GenerationCLI extends SubcommandCLI {}
 
 
 @Command(name = "file-utilities",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			MD5ChecksumCLI.class,
 			ConvertBEDChrNamesCLI.class,
@@ -220,6 +232,8 @@ class File_UtilitiesCLI extends SubcommandCLI {}
 
 
 @Command(name = "peak-analysis",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			BEDPeakAligntoRefCLI.class,
 			FilterBEDbyProximityCLI.class,
@@ -234,6 +248,8 @@ class Peak_AnalysisCLI extends SubcommandCLI {}
 
 
 @Command(name = "peak-calling",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			GeneTrackCLI.class,
 			PeakPairCLI.class
@@ -243,6 +259,8 @@ class Peak_CallingCLI extends SubcommandCLI {}
 
 
 @Command(name = "read-analysis",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			AggregateDataCLI.class,
 			ScaleMatrixCLI.class,
@@ -256,6 +274,8 @@ class Read_AnalysisCLI extends SubcommandCLI {}
 
 
 @Command(name = "sequence-analysis",
+		version = "ScriptManager "+ ToolDescriptions.VERSION,
+		mixinStandardHelpOptions = true,
 		subcommands = {
 			DNAShapefromBEDCLI.class,
 			DNAShapefromFASTACLI.class,

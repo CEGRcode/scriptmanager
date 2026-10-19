@@ -87,7 +87,7 @@ public class SearchMotifOutput extends JFrame {
 		}
 		// Initialize LogItem
 		String command = SearchMotifCLI.getCLIcommand(INPUTFILE, new File(BASENAME), motif, ALLOWED_MISMATCH, gzOutput);
-		LogItem li = new LogItem(command);
+		LogItem li = new LogItem(command, SearchMotifCLI.VERSION);
 		firePropertyChange("log", null, li);
 		// Execute script
 		SearchMotif script_obj = new SearchMotif(INPUTFILE, motif, ALLOWED_MISMATCH, new File(BASENAME), PS, gzOutput);

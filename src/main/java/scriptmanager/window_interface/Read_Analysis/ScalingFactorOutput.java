@@ -115,7 +115,7 @@ public class ScalingFactorOutput extends JFrame {
 
 			// Initialize LogItem
 			String command = ScalingFactorCLI.getCLIcommand(SAMPLE, BLACKLISTFile, CONTROL, OUT_BASENAME, scaleType, windowSize, minFraction);
-			LogItem new_li = new LogItem(command);
+			LogItem new_li = new LogItem(command, ScalingFactorCLI.VERSION);
 			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
 			ScalingFactor script_obj = new ScalingFactor(SAMPLE, BLACKLISTFile, CONTROL, OUT_BASENAME, scaleType, windowSize, minFraction, OUTPUT_STATUS);

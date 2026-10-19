@@ -89,7 +89,7 @@ public class GFFtoBEDWindow extends JFrame implements ActionListener, PropertyCh
 				}
 				// Initialize LogItem
 				String command = GFFtoBEDCLI.getCLIcommand(XGFF, new File(OUTPUT), chckbxGzipOutput.isSelected());
-				LogItem new_li = new LogItem(command);
+				LogItem new_li = new LogItem(command, GFFtoBEDCLI.VERSION);
 				firePropertyChange("log", old_li, new_li);
 				// Execute script
 				GFFtoBED.convertGFFtoBED(XGFF, new File(OUTPUT), chckbxGzipOutput.isSelected());

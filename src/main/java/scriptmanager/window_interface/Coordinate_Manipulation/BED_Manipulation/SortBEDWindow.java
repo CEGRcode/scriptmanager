@@ -130,7 +130,7 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 					LogItem old_li = null;
 					// Initialize LogItem
 					String command = SortBEDCLI.getCLIcommand(BED_File, CDT_File, new File(OUTPUT), START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());
-					LogItem new_li = new LogItem(command);
+					LogItem new_li = new LogItem(command, SortBEDCLI.VERSION);
 					firePropertyChange("log", old_li, new_li);
 					// Execute script
 					SortBED.sortBEDbyCDT(BED_File, CDT_File, new File(OUTPUT), START_INDEX, STOP_INDEX, chckbxGzipOutput.isSelected());

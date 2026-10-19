@@ -147,7 +147,7 @@ public class DNAShapefromBEDOutput extends JFrame {
 				}
 				// Initialize LogItem
 				String command = DNAShapefromBEDCLI.getCLIcommand(GENOME, XBED, OUT_BASENAME, OUTPUT_TYPE, STRAND, OUTPUT_COMPOSITE, OUTPUT_MATRIX, OUTPUT_GZIP);
-				LogItem new_li = new LogItem(command);
+				LogItem new_li = new LogItem(command, DNAShapefromBEDCLI.VERSION);
 				firePropertyChange("log", old_li, new_li);
 				// Execute script
 				DNAShapefromBED script_obj = new DNAShapefromBED(GENOME, XBED, OUT_BASENAME, OUTPUT_TYPE, STRAND, OUTPUT_COMPOSITE, OUTPUT_MATRIX, OUTPUT_GZIP, PS);

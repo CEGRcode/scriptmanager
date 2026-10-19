@@ -23,11 +23,16 @@ import scriptmanager.scripts.BAM_Format_Converter.BAMtobedGraph;
  */
 @Command(name = "bam-to-bedgraph", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.bam_to_bedgraph_description,
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + BAMtobedGraphCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class BAMtobedGraphCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	/**
 	 * Creates a new BAMtobedGraphCLI object

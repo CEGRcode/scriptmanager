@@ -14,6 +14,7 @@ public class LogItem {
 	private Timestamp start;
 	private Timestamp stop = null;
 	private String command;
+	private String toolVersion = null;
 	private int status = -1;	// -1=incomplete, 0=complete, 1=error
 
 	/**
@@ -24,6 +25,17 @@ public class LogItem {
 	public LogItem(String cmd) {
 		start = new Timestamp(new Date().getTime());
 		command = cmd;
+	}
+
+	/**
+	 * Initialize LogItem right before execution (sets start time to current instantiation time)
+	 * 
+	 * @param cmd the string for cli execution (java -jar $SCRIPTMANAGER ...)
+	 * @param version the version of the tool executed by the command
+	 */
+	public LogItem(String cmd, String version) {
+		this(cmd);
+		toolVersion = version;
 	}
 
 	/**
@@ -45,6 +57,7 @@ public class LogItem {
 	public Timestamp getStartTime() { return start; }
 	public Timestamp getStopTime() { return stop; }
 	public String getCommand() { return command; }
+	public String getToolVersion() { return toolVersion; }
 	public int getStatus() { return status; }
 	
 	public String getStatusString() {
@@ -60,6 +73,7 @@ public class LogItem {
 	public void setStartTime(Timestamp s) { start = s; }
 	public void setStopTime(Timestamp s) { stop = s; }
 	public void changeCommand(String cmd) { command = cmd; }
+	public void setToolVersion(String v) { toolVersion = v; }
 	public void setStatus(int s) { status = s; }
 
 

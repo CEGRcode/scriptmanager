@@ -89,7 +89,7 @@ public class SignalDuplicationWindow extends JFrame implements ActionListener, P
 					*/
 					// Initialize LogItem
 					String command = SignalDuplicationCLI.getCLIcommand(INPUT, BAMFiles.get(0), Double.parseDouble(txtWindow.getText()));
-					LogItem li = new LogItem(command);
+					LogItem li = new LogItem(command, SignalDuplicationCLI.VERSION);
 					// Execute script
 					SignalDuplication output_obj = new SignalDuplication(INPUT, BAMFiles, Double.parseDouble(txtWindow.getText()));
 					output_obj.addPropertyChangeListener("progress", new PropertyChangeListener() {

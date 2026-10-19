@@ -78,7 +78,7 @@ public class BEDPeakAligntoRefOutput extends JFrame{
 		}
 		// Initialize LogItem
 		String command = BEDPeakAligntoRefCLI.getCLIcommand(REF, PEAK, OUT_BASENAME, SEPARATE, OUTPUT_GZIP);
-		LogItem li = new LogItem(command);
+		LogItem li = new LogItem(command, BEDPeakAligntoRefCLI.VERSION);
 		firePropertyChange("log", null, li);
 		// Set-up display stream
 		PrintStream PS = new PrintStream(new CustomOutputStream(textArea));

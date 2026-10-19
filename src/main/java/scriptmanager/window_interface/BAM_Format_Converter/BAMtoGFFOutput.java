@@ -100,7 +100,7 @@ public class BAMtoGFFOutput extends JFrame {
 
 		// Initialize LogItem
 		String command = BAMtoGFFCLI.getCLIcommand(BAM, new File(OUTPUT), STRAND, PAIR, MIN_INSERT, MAX_INSERT);
-		LogItem new_li = new LogItem(command);
+		LogItem new_li = new LogItem(command, BAMtoGFFCLI.VERSION);
 		firePropertyChange("log", null, new_li);
 
 		// Execute script

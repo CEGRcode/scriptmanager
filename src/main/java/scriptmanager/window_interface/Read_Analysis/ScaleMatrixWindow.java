@@ -149,7 +149,7 @@ public class ScaleMatrixWindow extends JFrame implements ActionListener, Propert
 							}
 							// Initialize LogItem
 							String command = ScaleMatrixCLI.getCLIcommand(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());
-							LogItem new_li = new LogItem(command);
+							LogItem new_li = new LogItem(command, ScaleMatrixCLI.VERSION);
 							firePropertyChange("log", old_li, new_li);
 							// Execute script
 							ScaleMatrix script_obj = new ScaleMatrix(XTAB, OUT_FILEPATH, SCALE, Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()), chckbxGzipOutput.isSelected());

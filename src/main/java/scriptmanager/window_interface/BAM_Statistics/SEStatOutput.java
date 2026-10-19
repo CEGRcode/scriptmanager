@@ -83,7 +83,7 @@ public class SEStatOutput extends JFrame {
 			tabbedPane.add(bamFiles.get(x).getName(), se_pane);
 			// Initialize LogItem
 			String command = SEStatsCLI.getCLIcommand(bamFiles.get(x), OUT_FILEPATH);
-			LogItem new_li = new LogItem(command);
+			LogItem new_li = new LogItem(command, SEStatsCLI.VERSION);
 			if (OUTPUT_STATUS) { firePropertyChange("log", old_li, new_li); }
 			// Execute script
 			SEStats.getSEStats(bamFiles.get(x), OUT_FILEPATH, OUTPUT_STATUS, ps_stats);

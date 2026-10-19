@@ -129,7 +129,7 @@ public class PeakPairWindow extends JFrame implements ActionListener, PropertyCh
 					for(int x = 0; x < BAMFiles.size(); x++) {
 						// Initialize LogItem
 						String command = PeakPairCLI.getCLIcommand(BAMFiles.get(x), MODE, UP, DOWN, BIN, ABS, REL);
-						LogItem new_li = new LogItem(command);
+						LogItem new_li = new LogItem(command, PeakPairCLI.VERSION);
 						firePropertyChange("log", old_li, new_li);
 						// Execute script
 		        		PeakPair peak = new PeakPair(BAMFiles.get(x), MODE, UP, DOWN, BIN, ABS, REL);

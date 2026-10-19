@@ -21,11 +21,16 @@ import scriptmanager.scripts.Coordinate_Manipulation.ShiftCoord;
  */
 @Command(name = "shift-coord", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.shift_coordinate_description,
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + ShiftCoordCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class ShiftCoordCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	@Parameters( index = "0", description = "the coordinate file (BED/GFF format) to shift")
 	private File input;

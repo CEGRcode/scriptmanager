@@ -97,7 +97,7 @@ public class BAMtobedGraphOutput extends JFrame {
 
 		// Initialize LogItem
 		String command = BAMtobedGraphCLI.getCLIcommand(BAM, new File(OUTBASENAME), STRAND, PAIR, MIN_INSERT, MAX_INSERT);
-		LogItem new_li = new LogItem(command);
+		LogItem new_li = new LogItem(command, BAMtobedGraphCLI.VERSION);
 		firePropertyChange("log", null, new_li);
 
 		// Execute script

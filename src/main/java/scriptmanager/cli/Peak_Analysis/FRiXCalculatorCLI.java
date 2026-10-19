@@ -25,7 +25,7 @@ import scriptmanager.scripts.Peak_Analysis.FRiXCalculator;
  */
 @Command(name = "frix", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.frix_description,
-	version = "ScriptManager "+ ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + FRiXCalculatorCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	descriptionHeading = "%nDescription:%n%n",
 	parameterListHeading = "%nParameters:%n",
 	optionListHeading = "%nGeneral Options:%n",
@@ -33,6 +33,11 @@ import scriptmanager.scripts.Peak_Analysis.FRiXCalculator;
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class FRiXCalculatorCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	@Parameters( index = "0", description = "The BED file with reference coordinate windows to tally from.")
 	private File bedFile;

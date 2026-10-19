@@ -101,7 +101,7 @@ public class AggregateDataWindow extends JFrame implements ActionListener, Prope
 					String command = AggregateDataCLI.getCLIcommand(SUMFiles, OUT_DIR, chckbxMergeToOne.isSelected(),
 							Integer.parseInt(txtRow.getText()), Integer.parseInt(txtCol.getText()),
 							cmbMethod.getSelectedIndex(), chckbxGzipOutput.isSelected());
-					LogItem li = new LogItem(command);
+					LogItem li = new LogItem(command, AggregateDataCLI.VERSION);
 					firePropertyChange("log", null, li);
 					// Execute script
 					AggregateData script_obj = new AggregateData(SUMFiles, OUT_DIR, chckbxMergeToOne.isSelected(),

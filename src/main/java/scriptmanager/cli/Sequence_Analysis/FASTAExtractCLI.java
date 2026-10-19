@@ -21,11 +21,16 @@ import scriptmanager.scripts.Sequence_Analysis.FASTAExtract;
  */
 @Command(name = "fasta-extract", mixinStandardHelpOptions = true,
 	description = ToolDescriptions.fasta_extract_description,
-	version = "ScriptManager " + ToolDescriptions.VERSION,
+	version = { "${COMMAND-FULL-NAME} " + FASTAExtractCLI.VERSION, "ScriptManager " + ToolDescriptions.VERSION },
 	sortOptions = false,
 	exitCodeOnInvalidInput = 1,
 	exitCodeOnExecutionException = 1)
 public class FASTAExtractCLI implements Callable<Integer> {
+
+	/**
+	 * The version of this tool (independent of the ScriptManager version)
+	 */
+	public static final String VERSION = "1.0.0";
 
 	@Parameters(index = "0", description = "reference genome FASTA file")
 	private File genomeFASTA;
