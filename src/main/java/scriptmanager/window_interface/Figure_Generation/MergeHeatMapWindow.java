@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -111,7 +113,10 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		setTitle("Heat Map Plot Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 320);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -159,10 +164,9 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		contentPane.add(btnRemovePNG);
 
 		btnGen = new JButton("Generate");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -92, SpringLayout.NORTH, btnGen);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
+		scrollPane.setPreferredSize(new Dimension(420, 135));
+		// Centered at its preferred width; vertically chained below the output path at the end.
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnGen, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnGen);
 
 		progressBar = new JProgressBar();
@@ -174,23 +178,22 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 		btnGen.setActionCommand("start");
 
 		lblCurrentOutput = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 39, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
-		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutput.setFont(lblCurrentOutput.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrentOutput);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 10, SpringLayout.SOUTH, lblCurrentOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.WEST, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 313, SpringLayout.EAST, lblCurrentOutput);
-		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -10, SpringLayout.EAST, contentPane);
+		lblDefaultToLocal.setFont(lblDefaultToLocal.getFont().deriveFont(Font.PLAIN));
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 6, SpringLayout.SOUTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 145, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -145, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnOutputDirectory, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnOutputDirectory);
 
 		btnOutputDirectory.addActionListener(new ActionListener() {
@@ -198,11 +201,18 @@ public class MergeHeatMapWindow extends JFrame implements ActionListener, Proper
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
 
 		btnGen.addActionListener(this);
+
+		// Output block and Generate chained below the file list (previously a fixed 39 px
+		// gap and a bottom-pinned button), then size from content.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 8, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnGen, 10, SpringLayout.SOUTH, lblDefaultToLocal);
+		WindowLayout.pack(this, sl_contentPane, contentPane, 440, btnGen, scrollPane);
 	}
 
 /**

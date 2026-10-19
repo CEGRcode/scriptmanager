@@ -3,6 +3,7 @@ package scriptmanager.window_interface.Figure_Generation;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -31,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
@@ -39,6 +41,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -154,7 +157,10 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 		setTitle("Labeled Heatmap Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 600);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -202,10 +208,10 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 		contentPane.add(btnRemove);
 
 		btnGen = new JButton("Generate");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -325, SpringLayout.NORTH, btnGen);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
+		// File list gets a fixed preferred height (it was derived from the bottom-pinned Generate button).
+		scrollPane.setPreferredSize(new Dimension(410, 175));
+		// Centered at its preferred width; vertically chained below "Current Output" at the end.
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnGen, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnGen);
 
 		progressBar = new JProgressBar();
@@ -395,7 +401,7 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 
 		
 		JLabel lblXLabel = new JLabel("X-axis Label:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblXLabel, 50, SpringLayout.SOUTH, txtFontSize);
+		// Vertical position set at the end of the constructor (depends on the label column).
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblXLabel, 0, SpringLayout.WEST, lblSelectColor);
 		contentPane.add(lblXLabel);
 
@@ -428,23 +434,24 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 //		contentPane.add(separator2);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -30, SpringLayout.NORTH, btnGen);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
+		// Centered below the label options (previously pinned 30 px above the Generate button).
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnOutput, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 15, SpringLayout.SOUTH, txtYLabel);
 		contentPane.add(btnOutput);
 
 		lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 5, SpringLayout.SOUTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, lblAxisLineFormat);
-		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutput.setFont(lblCurrentOutput.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrentOutput);
 
 		lblOutput = new JLabel("Default to Local Directory");
 		lblOutput.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutput, 0, SpringLayout.NORTH, lblCurrentOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutput, 6, SpringLayout.EAST, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblOutput, 0, SpringLayout.EAST, contentPane);
-		lblOutput.setFont(new Font("Dialog", Font.PLAIN, 12));
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblOutput, -10, SpringLayout.EAST, contentPane);
+		lblOutput.setFont(lblOutput.getFont().deriveFont(Font.PLAIN));
 		lblOutput.setBackground(Color.WHITE);
 		contentPane.add(lblOutput);
 
@@ -453,11 +460,28 @@ public class LabelHeatMapWindow extends JFrame implements ActionListener, Proper
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblOutput.setText(OUT_DIR.getAbsolutePath());
+					lblOutput.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
 
 		btnGen.addActionListener(this);
+
+		// Left/Mid/Right label column starts 50 px past "Label formatting", or further right
+		// if larger text pushes the Font Size field past that point.
+		sl_contentPane.getConstraints(lblLeftLabel).setX(Spring.max(
+				Spring.sum(sl_contentPane.getConstraint(SpringLayout.EAST, lblLabelFormat), Spring.constant(50)),
+				Spring.sum(sl_contentPane.getConstraint(SpringLayout.EAST, txtFontSize), Spring.constant(15))));
+
+		// X-axis label row starts 50 px below Font Size, or below the Left/Mid/Right label
+		// column if larger text makes that column taller.
+		sl_contentPane.getConstraints(lblXLabel).setY(Spring.max(
+				Spring.sum(sl_contentPane.getConstraint(SpringLayout.SOUTH, txtFontSize), Spring.constant(50)),
+				Spring.sum(sl_contentPane.getConstraint(SpringLayout.SOUTH, txtRightLabel), Spring.constant(12))));
+
+		// Bottom row chained below the form, then size from content.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnGen, 10, SpringLayout.SOUTH, lblCurrentOutput);
+		WindowLayout.pack(this, sl_contentPane, contentPane, 440, btnGen, scrollPane, txtXTickHeight, btnColor);
 	}
 
 	

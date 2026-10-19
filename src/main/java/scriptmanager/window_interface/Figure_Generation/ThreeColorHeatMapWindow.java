@@ -40,6 +40,7 @@ import javax.swing.border.EmptyBorder;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -225,7 +226,10 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 		setTitle("Hi-Lo Heatmap Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 550, 720);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -275,9 +279,8 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 		btnGen = new JButton("Generate");
 		// sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -400,
 		// SpringLayout.NORTH, btnGen);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
+		// Centered at its preferred width; vertically chained below "Current Output" at the end.
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnGen, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnGen);
 
 		progressBar = new JProgressBar();
@@ -652,27 +655,26 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 
 		btnOutput = new JButton("Output Directory");
 		btnOutput.setEnabled(false);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
+		// Placed after the checkbox on its row at its preferred size (previously squeezed
+		// between fixed 150 px margins and forced to the checkbox's height).
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 20, SpringLayout.EAST, chckbxOutputHeatmap);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, -2, SpringLayout.NORTH, chckbxOutputHeatmap);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -2, SpringLayout.SOUTH, chckbxOutputHeatmap);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
 		contentPane.add(btnOutput);
 
 		lblCurrentOutput = new JLabel("Current Output:");
 		lblCurrentOutput.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 6, SpringLayout.SOUTH, btnOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrentOutput, 10, SpringLayout.NORTH, btnGen);
-		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutput.setFont(lblCurrentOutput.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrentOutput);
 
 		lblOutput = new JLabel("Default to Local Directory");
 		lblOutput.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblOutput, 0, SpringLayout.NORTH, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblOutput, 0, SpringLayout.SOUTH, lblCurrentOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblOutput, 6, SpringLayout.EAST, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblOutput, 0, SpringLayout.EAST, contentPane);
-		lblOutput.setFont(new Font("Dialog", Font.PLAIN, 12));
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblOutput, -10, SpringLayout.EAST, contentPane);
+		lblOutput.setFont(lblOutput.getFont().deriveFont(Font.PLAIN));
 		lblOutput.setBackground(Color.BLACK);
 		contentPane.add(lblOutput);
 
@@ -681,11 +683,19 @@ public class ThreeColorHeatMapWindow extends JFrame implements ActionListener, P
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblOutput.setText(OUT_DIR.getAbsolutePath());
+					lblOutput.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
 
 		btnGen.addActionListener(this);
+
+		// Bottom row chained below the form, then size from content: at least the original
+		// width, wider if an option row needs it.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnGen, 10, SpringLayout.SOUTH, lblCurrentOutput);
+		WindowLayout.pack(this, sl_contentPane, contentPane, 540, btnGen, scrollPane, txtCol, rdbtnMinPercentileValue,
+				rdbtnMidPercentileValue, rdbtnMaxPercentileValue, txtPercentMin, txtPercentMid, txtPercentMax,
+				chckbxExcludeZeros, chckbxOutStats, txtWidth, rdbtnNearestNeighbor, btnOutput);
 	}
 
 	public void activateOutput(boolean activate) {

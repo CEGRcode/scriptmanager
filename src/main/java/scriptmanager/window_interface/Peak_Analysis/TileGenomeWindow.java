@@ -34,6 +34,7 @@ import scriptmanager.cli.Peak_Analysis.TileGenomeCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Peak_Analysis.TileGenome;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -120,7 +121,10 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 	public TileGenomeWindow() {
 		setTitle("Genomic Coordinate Tiling Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 375, 300);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(100, 100);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -142,35 +146,35 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 		
 		final JLabel lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 5, SpringLayout.WEST, contentPane);
-		lblDefaultToLocal.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -5, SpringLayout.EAST, contentPane);
+		lblDefaultToLocal.setFont(lblDefaultToLocal.getFont().deriveFont(Font.PLAIN));
 		contentPane.add(lblDefaultToLocal);
 		
 		JButton btnOutputDirectory = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 100, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -100, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnOutputDirectory, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if(OUT_DIR != null) {
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
 		contentPane.add(btnOutputDirectory);
 
 		JButton btnTile = new JButton("Tile Genome");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnTile, 100, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnTile, -5, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnTile, -100, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnTile, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnTile, 10, SpringLayout.SOUTH, lblDefaultToLocal);
 		contentPane.add(btnTile);
 		btnTile.setActionCommand("start");
 		btnTile.addActionListener(this);
 		
 		JLabel lblCurrentOutputDirectory = new JLabel("Current Output:");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, -75, SpringLayout.SOUTH, btnTile);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutputDirectory, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutputDirectory);
-		lblCurrentOutputDirectory.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutputDirectory.setFont(lblCurrentOutputDirectory.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrentOutputDirectory);	
 		
 		cmbGenome = new JComboBox<String>();
@@ -210,8 +214,14 @@ public class TileGenomeWindow extends JFrame implements ActionListener, Property
 
 		chckbxGzipOutput = new JCheckBox("Output GZip");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxGzipOutput, 10, SpringLayout.SOUTH, btnOutputDirectory);
-		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxGzipOutput, 133, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, chckbxGzipOutput, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(chckbxGzipOutput);
+
+		// "Current Output" block and Tile button chained below the form.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutputDirectory, 8, SpringLayout.SOUTH, chckbxGzipOutput);
+
+		// Size the window from its content; the Tile button stays at the bottom when enlarged.
+		WindowLayout.pack(this, sl_contentPane, contentPane, 365, btnTile, null);
 	}
 
 	/**

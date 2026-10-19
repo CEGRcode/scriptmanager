@@ -40,7 +40,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
+import javax.swing.UIManager;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
@@ -55,6 +57,7 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.objects.Exceptions.OptionException;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -280,8 +283,10 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		setTitle("Tag Pileup");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 950, 585);
-		setMinimumSize(new Dimension(900, 585));
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -348,7 +353,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		JScrollPane scrollPane_BAM = new JScrollPane();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, scrollPane_BAM, 10, SpringLayout.SOUTH, btnLoadBamFiles);
 		sl_contentPane.putConstraint(SpringLayout.WEST, scrollPane_BAM, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane_BAM, 380, SpringLayout.NORTH, contentPane);
+		// Natural height (was a fixed bottom edge 380 px from the top); takes any extra
+		// height when the window is enlarged.
+		scrollPane_BAM.setPreferredSize(new Dimension(400, 150));
 		sl_contentPane.putConstraint(SpringLayout.EAST, scrollPane_BAM, 0, SpringLayout.EAST, scrollPane_BED);
 		contentPane.add(scrollPane_BAM);
 
@@ -374,19 +381,18 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlReadEncoding, 0, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, pnlReadEncoding, 10, SpringLayout.EAST, scrollPane_BED);
 		sl_contentPane.putConstraint(SpringLayout.EAST, pnlReadEncoding, -10, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlReadEncoding, 60, SpringLayout.NORTH, contentPane);
 		contentPane.add(pnlReadEncoding);
 
 		SpringLayout sl_ReadEncoding = new SpringLayout();
 		pnlReadEncoding.setLayout(sl_ReadEncoding);
 		TitledBorder ttlReadEncoding = BorderFactory.createTitledBorder("Select Read Encoding");
-		ttlReadEncoding.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		ttlReadEncoding.setTitleFont(UIManager.getFont("TitledBorder.font").deriveFont(Font.ITALIC));
 		pnlReadEncoding.setBorder(ttlReadEncoding);
 
 		JLabel lblAspectRead = new JLabel("Read aspect:");
 		sl_ReadEncoding.putConstraint(SpringLayout.NORTH, lblAspectRead, 10, SpringLayout.NORTH, pnlReadEncoding);
 		sl_ReadEncoding.putConstraint(SpringLayout.WEST, lblAspectRead, 10, SpringLayout.WEST, pnlReadEncoding);
-		lblAspectRead.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		lblAspectRead.setFont(lblAspectRead.getFont().deriveFont(Font.BOLD));
 		pnlReadEncoding.add(lblAspectRead);
 
 		cbox_ReadAspect = new JComboBox<String>(readAspectOptions);
@@ -421,7 +427,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		JLabel lblOutputRead = new JLabel("Output read:");
 		sl_ReadEncoding.putConstraint(SpringLayout.NORTH, lblOutputRead, 0, SpringLayout.NORTH, lblAspectRead);
 		sl_ReadEncoding.putConstraint(SpringLayout.WEST, lblOutputRead, 20, SpringLayout.EAST, cbox_ReadAspect);
-		lblOutputRead.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		lblOutputRead.setFont(lblOutputRead.getFont().deriveFont(Font.BOLD));
 		pnlReadEncoding.add(lblOutputRead);
 
 		cbox_ReadOutput = new JComboBox<String>(readOutputOptions);
@@ -454,13 +460,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlFilterReads, 20, SpringLayout.SOUTH, readCartoon);
 		sl_contentPane.putConstraint(SpringLayout.WEST, pnlFilterReads, 10, SpringLayout.EAST, scrollPane_BED);
 		sl_contentPane.putConstraint(SpringLayout.EAST, pnlFilterReads, 290, SpringLayout.EAST, scrollPane_BED);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlFilterReads, 120, SpringLayout.SOUTH, readCartoon);
 		contentPane.add(pnlFilterReads);
 
 		SpringLayout sl_FilterReads = new SpringLayout();
 		pnlFilterReads.setLayout(sl_FilterReads);
 		TitledBorder ttlFilterReads = BorderFactory.createTitledBorder("Filter Reads");
-		ttlFilterReads.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		ttlFilterReads.setTitleFont(UIManager.getFont("TitledBorder.font").deriveFont(Font.ITALIC));
 		pnlFilterReads.setBorder(ttlFilterReads);
 
 		chckbxRequireProperPe = new JCheckBox("Require Proper Paired-End");
@@ -487,7 +492,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		txtMin = new JTextField();
 		sl_FilterReads.putConstraint(SpringLayout.NORTH, txtMin, 2, SpringLayout.NORTH, chckbxFilterByMin);
-		sl_FilterReads.putConstraint(SpringLayout.WEST, txtMin, 190, SpringLayout.WEST, chckbxFilterByMin);
+		sl_FilterReads.getConstraints(txtMin).setX(Spring.max(
+				Spring.sum(sl_FilterReads.getConstraint(SpringLayout.WEST, chckbxFilterByMin), Spring.constant(190)),
+				Spring.sum(sl_FilterReads.getConstraint(SpringLayout.EAST, chckbxFilterByMin), Spring.constant(4))));
 		sl_FilterReads.putConstraint(SpringLayout.EAST, txtMin, -6, SpringLayout.EAST, pnlFilterReads);
 		txtMin.setEnabled(false);
 		txtMin.setHorizontalAlignment(SwingConstants.CENTER);
@@ -514,7 +521,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		txtMax = new JTextField();
 		sl_FilterReads.putConstraint(SpringLayout.NORTH, txtMax, 2, SpringLayout.NORTH, chckbxFilterByMax);
-		sl_FilterReads.putConstraint(SpringLayout.WEST, txtMax, 190, SpringLayout.WEST, chckbxFilterByMax);
+		sl_FilterReads.getConstraints(txtMax).setX(Spring.max(
+				Spring.sum(sl_FilterReads.getConstraint(SpringLayout.WEST, chckbxFilterByMax), Spring.constant(190)),
+				Spring.sum(sl_FilterReads.getConstraint(SpringLayout.EAST, chckbxFilterByMax), Spring.constant(4))));
 		sl_FilterReads.putConstraint(SpringLayout.EAST, txtMax, -6, SpringLayout.EAST, pnlFilterReads);
 		txtMax.setEnabled(false);
 		txtMax.setHorizontalAlignment(SwingConstants.CENTER);
@@ -533,7 +542,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		SpringLayout sl_ReadManipulation = new SpringLayout();
 		pnlReadManipulation.setLayout(sl_ReadManipulation);
 		TitledBorder ttlReadManipulation = BorderFactory.createTitledBorder("Read Manipulation");
-		ttlReadManipulation.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		ttlReadManipulation.setTitleFont(UIManager.getFont("TitledBorder.font").deriveFont(Font.ITALIC));
 		pnlReadManipulation.setBorder(ttlReadManipulation);
 
 		JLabel lblTagShift = new JLabel("Tag Shift (bp):");
@@ -543,7 +552,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		txtShift = new JTextField();
 		sl_ReadManipulation.putConstraint(SpringLayout.NORTH, txtShift, -1, SpringLayout.NORTH, lblTagShift);
-		sl_ReadManipulation.putConstraint(SpringLayout.WEST, txtShift, 120, SpringLayout.WEST, lblTagShift);
 		sl_ReadManipulation.putConstraint(SpringLayout.EAST, txtShift, -6, SpringLayout.EAST, pnlReadManipulation);
 		txtShift.setText("0");
 		txtShift.setHorizontalAlignment(SwingConstants.CENTER);
@@ -557,7 +565,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		txtBin = new JTextField();
 		sl_ReadManipulation.putConstraint(SpringLayout.NORTH, txtBin, -1, SpringLayout.NORTH, lblBinSizebp);
-		sl_ReadManipulation.putConstraint(SpringLayout.WEST, txtBin, 120, SpringLayout.WEST, lblBinSizebp);
 		sl_ReadManipulation.putConstraint(SpringLayout.EAST, txtBin, -6, SpringLayout.EAST, pnlReadManipulation);
 		txtBin.setText("1");
 		txtBin.setHorizontalAlignment(SwingConstants.CENTER);
@@ -571,7 +578,15 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		txtTagExtend = new JTextField();
 		sl_ReadManipulation.putConstraint(SpringLayout.NORTH, txtTagExtend, -1, SpringLayout.NORTH, lblTagExtend);
-		sl_ReadManipulation.putConstraint(SpringLayout.WEST, txtTagExtend, 120, SpringLayout.WEST, lblTagExtend);
+		Spring fieldColumn = Spring.max(
+				Spring.sum(sl_ReadManipulation.getConstraint(SpringLayout.WEST, lblTagShift), Spring.constant(120)),
+				Spring.sum(Spring.max(sl_ReadManipulation.getConstraint(SpringLayout.EAST, lblTagShift),
+						Spring.max(sl_ReadManipulation.getConstraint(SpringLayout.EAST, lblBinSizebp),
+								sl_ReadManipulation.getConstraint(SpringLayout.EAST, lblTagExtend))),
+						Spring.constant(6)));
+		sl_ReadManipulation.getConstraints(txtShift).setX(fieldColumn);
+		sl_ReadManipulation.getConstraints(txtBin).setX(fieldColumn);
+		sl_ReadManipulation.getConstraints(txtTagExtend).setX(fieldColumn);
 		sl_ReadManipulation.putConstraint(SpringLayout.EAST, txtTagExtend, -6, SpringLayout.EAST, pnlReadManipulation);
 		txtTagExtend.setText("0");
 		txtTagExtend.setHorizontalAlignment(SwingConstants.CENTER);
@@ -683,13 +698,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlEqualStrands, 10, SpringLayout.SOUTH, btnCombinedColor);
 		sl_contentPane.putConstraint(SpringLayout.WEST, pnlEqualStrands, 0, SpringLayout.WEST, pnlFilterReads);
 		sl_contentPane.putConstraint(SpringLayout.EAST, pnlEqualStrands, -10, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlEqualStrands, 90, SpringLayout.SOUTH, btnCombinedColor);
 		contentPane.add(pnlEqualStrands);
 
 		SpringLayout sl_EqualStrands = new SpringLayout();
 		pnlEqualStrands.setLayout(sl_EqualStrands);
 		TitledBorder ttlStrandOutput = BorderFactory.createTitledBorder("Scaling Options");
-		ttlStrandOutput.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		ttlStrandOutput.setTitleFont(UIManager.getFont("TitledBorder.font").deriveFont(Font.ITALIC));
 		pnlEqualStrands.setBorder(ttlStrandOutput);
 
 		chckbxTagStandard = new JCheckBox("Set Tags to Be Equal");
@@ -716,7 +730,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_EqualStrands.putConstraint(SpringLayout.NORTH, lblCurrentBlacklist, 2, SpringLayout.NORTH, btnRemoveBlacklistfilter);
 		sl_EqualStrands.putConstraint(SpringLayout.WEST, lblCurrentBlacklist, 10, SpringLayout.EAST, btnRemoveBlacklistfilter);
 		lblCurrentBlacklist.setEnabled(false);
-		lblCurrentBlacklist.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblCurrentBlacklist.setFont(lblCurrentBlacklist.getFont().deriveFont(Font.BOLD));
 		pnlEqualStrands.add(lblCurrentBlacklist);
 
 		lblNoBlacklistLoaded = new JLabel("No Blacklist Loaded");
@@ -724,7 +738,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_EqualStrands.putConstraint(SpringLayout.WEST, lblNoBlacklistLoaded, 6, SpringLayout.EAST, lblCurrentBlacklist);
 		lblNoBlacklistLoaded.setToolTipText("No Blacklist Loaded");
 		lblNoBlacklistLoaded.setEnabled(false);
-		lblNoBlacklistLoaded.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblNoBlacklistLoaded.setFont(lblNoBlacklistLoaded.getFont().deriveFont(Font.PLAIN));
 		pnlEqualStrands.add(lblNoBlacklistLoaded);
 
 
@@ -733,13 +747,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlTransformation, 10, SpringLayout.SOUTH, pnlEqualStrands);
 		sl_contentPane.putConstraint(SpringLayout.WEST, pnlTransformation, 0, SpringLayout.WEST, pnlFilterReads);
 		sl_contentPane.putConstraint(SpringLayout.EAST, pnlTransformation, -10, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlTransformation, 90, SpringLayout.SOUTH, pnlEqualStrands);
 		contentPane.add(pnlTransformation);
 
 		SpringLayout sl_Transformation = new SpringLayout();
 		pnlTransformation.setLayout(sl_Transformation);
 		TitledBorder ttlTransformation = BorderFactory.createTitledBorder("Composite Transformation");
-		ttlTransformation.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		ttlTransformation.setTitleFont(UIManager.getFont("TitledBorder.font").deriveFont(Font.ITALIC));
 		pnlTransformation.setBorder(ttlTransformation);
 
 		cbox_Transform = new JComboBox<String>(transformationOptions);
@@ -800,13 +813,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		pnlTransformation.add(lblStdDevSize);
 
 		lblNumStd = new JLabel("# of Std Dev:");
-		sl_Transformation.putConstraint(SpringLayout.NORTH, lblNumStd, 0, SpringLayout.NORTH, lblStdDevSize);
+		sl_Transformation.putConstraint(SpringLayout.NORTH, lblNumStd, 8, SpringLayout.SOUTH, lblStdDevSize);
 		lblNumStd.setEnabled(false);
 		pnlTransformation.add(lblNumStd);
 
 		txtStdSize = new JTextField();
 		sl_Transformation.putConstraint(SpringLayout.EAST, txtStdSize, 50, SpringLayout.EAST, lblStdDevSize);
-		sl_Transformation.putConstraint(SpringLayout.WEST, lblNumStd, 8, SpringLayout.EAST, txtStdSize);
+		sl_Transformation.putConstraint(SpringLayout.WEST, lblNumStd, 0, SpringLayout.WEST, lblStdDevSize);
 		sl_Transformation.putConstraint(SpringLayout.WEST, txtStdSize, 0, SpringLayout.WEST, txtSmooth);
 		sl_Transformation.putConstraint(SpringLayout.NORTH, txtStdSize, -1, SpringLayout.NORTH, lblStdDevSize);
 		txtStdSize.setEnabled(false);
@@ -816,9 +829,9 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		pnlTransformation.add(txtStdSize);
 
 		txtNumStd = new JTextField();
-		sl_Transformation.putConstraint(SpringLayout.NORTH, txtNumStd, -1, SpringLayout.NORTH, lblStdDevSize);
-		sl_Transformation.putConstraint(SpringLayout.WEST, txtNumStd, 8, SpringLayout.EAST, lblNumStd);
-		sl_Transformation.putConstraint(SpringLayout.EAST, txtNumStd, 50, SpringLayout.EAST, lblNumStd);
+		sl_Transformation.putConstraint(SpringLayout.NORTH, txtNumStd, -1, SpringLayout.NORTH, lblNumStd);
+		sl_Transformation.putConstraint(SpringLayout.WEST, txtNumStd, 0, SpringLayout.WEST, txtStdSize);
+		sl_Transformation.putConstraint(SpringLayout.EAST, txtNumStd, 0, SpringLayout.EAST, txtStdSize);
 		txtNumStd.setEnabled(false);
 		txtNumStd.setHorizontalAlignment(SwingConstants.CENTER);
 		txtNumStd.setText("3");
@@ -831,13 +844,12 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, pnlOutputOptions, 6, SpringLayout.SOUTH, scrollPane_BAM);
 		sl_contentPane.putConstraint(SpringLayout.WEST, pnlOutputOptions, 0, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, pnlOutputOptions, -10, SpringLayout.WEST, pnlTransformation);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, pnlOutputOptions, -35, SpringLayout.SOUTH, contentPane);
 		contentPane.add(pnlOutputOptions);
 
 		SpringLayout sl_OutputOptions = new SpringLayout();
 		pnlOutputOptions.setLayout(sl_OutputOptions);
 		TitledBorder ttlOutputOptions = BorderFactory.createTitledBorder("Output Options");
-		ttlOutputOptions.setTitleFont(new Font("Lucida Grande", Font.ITALIC, 13));
+		ttlOutputOptions.setTitleFont(UIManager.getFont("TitledBorder.font").deriveFont(Font.ITALIC));
 		pnlOutputOptions.setBorder(ttlOutputOptions);
 
 		chckbxOutputData = new JCheckBox("Output Heatmap Matrix");
@@ -862,8 +874,7 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		tglCdt.setSelected(true);
 
 		chckbxOutputGzip = new JCheckBox("Output GZip");
-		sl_OutputOptions.putConstraint(SpringLayout.NORTH, chckbxOutputGzip, 0, SpringLayout.NORTH, chckbxOutputData);
-		sl_OutputOptions.putConstraint(SpringLayout.WEST, chckbxOutputGzip, 6, SpringLayout.EAST, tglTab);
+		sl_OutputOptions.putConstraint(SpringLayout.EAST, chckbxOutputGzip, -6, SpringLayout.EAST, pnlOutputOptions);
 		pnlOutputOptions.add(chckbxOutputGzip);
 
 		chckbxOutputCompositeData = new JCheckBox("Output Composite");
@@ -886,9 +897,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		pnlOutputOptions.add(btnOutputDirectory);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
-		sl_OutputOptions.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 2, SpringLayout.NORTH, btnOutputDirectory);
-		sl_OutputOptions.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, btnOutputDirectory);
-		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+		sl_OutputOptions.putConstraint(SpringLayout.NORTH, chckbxOutputGzip, 2, SpringLayout.NORTH, btnOutputDirectory);
+		sl_OutputOptions.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, btnOutputDirectory);
+		sl_OutputOptions.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 0, SpringLayout.WEST, btnOutputDirectory);
+		sl_OutputOptions.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -6, SpringLayout.EAST, pnlOutputOptions);
+		// The panel's height follows its content.
+		sl_OutputOptions.putConstraint(SpringLayout.SOUTH, pnlOutputOptions, 6, SpringLayout.SOUTH, lblDefaultToLocal);
+		lblDefaultToLocal.setFont(lblDefaultToLocal.getFont().deriveFont(Font.PLAIN));
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		lblDefaultToLocal.setToolTipText("Directory path");
 		pnlOutputOptions.add(lblDefaultToLocal);
@@ -972,14 +987,13 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 		});
 
 		lblCpusToUse = new JLabel("CPU's to Use:");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCpusToUse, -10, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCpusToUse, 10, SpringLayout.WEST, contentPane);
-		lblCpusToUse.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCpusToUse.setFont(lblCpusToUse.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCpusToUse);
 
 		txtCPU = new JTextField();
 		sl_contentPane.putConstraint(SpringLayout.NORTH, txtCPU, -1, SpringLayout.NORTH, lblCpusToUse);
-		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 100, SpringLayout.WEST, lblCpusToUse);
+		sl_contentPane.putConstraint(SpringLayout.WEST, txtCPU, 6, SpringLayout.EAST, lblCpusToUse);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtCPU, 120, SpringLayout.EAST, lblCpusToUse);
 		txtCPU.setHorizontalAlignment(SwingConstants.CENTER);
 		txtCPU.setText("1");
@@ -988,8 +1002,6 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		btnPileup = new JButton("Pile Tags");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnPileup, 400, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnPileup, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnPileup, -400, SpringLayout.EAST, contentPane);
 		contentPane.add(btnPileup);
 
 		progressBar = new JProgressBar();
@@ -1002,6 +1014,36 @@ public class TagPileupWindow extends JFrame implements ActionListener, PropertyC
 
 		updateCartoon();
 		btnPileup.addActionListener(this);
+
+		// Panels keep their original heights but grow if larger text needs more room.
+		sl_ReadEncoding.putConstraint(SpringLayout.SOUTH, pnlReadEncoding, 8, SpringLayout.SOUTH, cbox_ReadAspect);
+		sl_FilterReads.putConstraint(SpringLayout.SOUTH, pnlFilterReads, 4, SpringLayout.SOUTH, chckbxFilterByMax);
+		sl_EqualStrands.putConstraint(SpringLayout.SOUTH, pnlEqualStrands, 6, SpringLayout.SOUTH, lblCurrentBlacklist);
+		sl_Transformation.putConstraint(SpringLayout.SOUTH, pnlTransformation, 6, SpringLayout.SOUTH, txtNumStd);
+		atLeast(sl_contentPane, pnlReadEncoding, 60);
+		atLeast(sl_contentPane, pnlFilterReads, 100);
+		atLeast(sl_contentPane, pnlEqualStrands, 80);
+		atLeast(sl_contentPane, pnlTransformation, 80);
+
+		// Pile Tags row sits below whichever column (Output Options or Composite Transformation)
+		// ends lower, then the window is sized from its content at the original width.
+		sl_contentPane.getConstraints(btnPileup).setY(Spring.max(
+				Spring.sum(sl_contentPane.getConstraint(SpringLayout.SOUTH, pnlOutputOptions), Spring.constant(6)),
+				Spring.sum(sl_contentPane.getConstraint(SpringLayout.SOUTH, pnlTransformation), Spring.constant(6))));
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCpusToUse, 4, SpringLayout.NORTH, btnPileup);
+		WindowLayout.pack(this, sl_contentPane, contentPane, 940, btnPileup, scrollPane_BAM);
+	}
+
+	/**
+	 * Sets a panel's height to its original fixed height, or to its preferred
+	 * (content) height if that is larger.
+	 *
+	 * @param layout    layout of the panel's parent
+	 * @param panel     the panel
+	 * @param minHeight the panel's original fixed height in pixels
+	 */
+	private static void atLeast(SpringLayout layout, JPanel panel, int minHeight) {
+		layout.getConstraints(panel).setHeight(Spring.max(Spring.constant(minHeight), Spring.height(panel)));
 	}
 
 	/**

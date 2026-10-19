@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -116,7 +117,10 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 		setTitle("BAM File Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 345);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -164,7 +168,6 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 		contentPane.add(btnRemoveBam);
 
 		chckbxOutputStatistics = new JCheckBox("Output Statistics");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 199, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, chckbxOutputStatistics, 6, SpringLayout.SOUTH, scrollPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, chckbxOutputStatistics, 0, SpringLayout.WEST, scrollPane);
 		chckbxOutputStatistics.addItemListener(new ItemListener() {
@@ -184,14 +187,14 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 
 		btnOutputDirectory = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 6, SpringLayout.SOUTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 150, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -150, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, 0, SpringLayout.EAST, scrollPane);
 		btnOutputDirectory.setEnabled(false);
 		btnOutputDirectory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUTPUT_DIR = FileSelection.getOutputDir(fc);
 				if(OUTPUT_DIR != null) {
 					lblDefaultToLocal.setText(OUTPUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUTPUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -200,34 +203,37 @@ public class SEStatWindow extends JFrame implements ActionListener, PropertyChan
 		lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 10, SpringLayout.SOUTH, chckbxOutputStatistics);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
-		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutput.setFont(lblCurrentOutput.getFont().deriveFont(Font.BOLD));
 		lblCurrentOutput.setEnabled(false);
 		contentPane.add(lblCurrentOutput);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
-		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -10, SpringLayout.EAST, contentPane);
+		lblDefaultToLocal.setFont(lblDefaultToLocal.getFont().deriveFont(Font.PLAIN));
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		lblDefaultToLocal.setEnabled(false);
 		contentPane.add(lblDefaultToLocal);
 
 		btnRun = new JButton("Run");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, 90, SpringLayout.SOUTH, scrollPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnRun, 171, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -171, SpringLayout.EAST, contentPane);
+		// Centered at its preferred width, chained below "Current Output".
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnRun, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, 10, SpringLayout.SOUTH, lblCurrentOutput);
 		contentPane.add(btnRun);
 
 		progressBar = new JProgressBar();
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, progressBar, -8, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, progressBar, 3, SpringLayout.NORTH, btnRun);
 		sl_contentPane.putConstraint(SpringLayout.EAST, progressBar, -5, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnRun, -3, SpringLayout.NORTH, progressBar);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnRun, -18, SpringLayout.WEST, progressBar);
 		progressBar.setStringPainted(true);
 		contentPane.add(progressBar);
 
 		btnRun.addActionListener(this);
 		btnRun.setActionCommand("start");
+
+		// Size the window from its content; the file list takes any extra height when enlarged.
+		WindowLayout.pack(this, sl_contentPane, contentPane, 440, btnRun, scrollPane);
 	}
 
 	@Override

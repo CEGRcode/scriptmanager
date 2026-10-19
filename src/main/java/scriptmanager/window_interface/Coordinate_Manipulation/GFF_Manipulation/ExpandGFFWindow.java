@@ -42,6 +42,7 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Coordinate_Manipulation.GFF_Manipulation.ExpandGFF;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -146,7 +147,10 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		setTitle("Expand GFF File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 345);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -194,9 +198,8 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(btnRemoveGFF);
 
 		btnConvert = new JButton("Convert");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnConvert, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConvert, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnConvert, -175, SpringLayout.EAST, contentPane);
+		// Centered at its preferred width; vertically chained below "Current Output" at the end.
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnConvert, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnConvert);
 
 		progressBar = new JProgressBar();
@@ -209,12 +212,14 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 
 		lblCurrent = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
-		lblCurrent.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrent.setFont(lblCurrent.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrent);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrent);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -10, SpringLayout.EAST, contentPane);
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
 
@@ -225,6 +230,7 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -266,7 +272,13 @@ public class ExpandGFFWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblSizeOfExpansion, 100, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 40, SpringLayout.SOUTH, lblSizeOfExpansion);
 		contentPane.add(lblSizeOfExpansion);
+		// Bottom row chained below the form; the window is sized from its content at the end.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnConvert, 10, SpringLayout.SOUTH, lblCurrent);
+
 		btnConvert.addActionListener(this);
+
+		// Size the window from its content; the file list takes any extra height when enlarged.
+		WindowLayout.pack(this, sl_contentPane, contentPane, 440, btnConvert, scrollPane);
 	}
 
 	/**

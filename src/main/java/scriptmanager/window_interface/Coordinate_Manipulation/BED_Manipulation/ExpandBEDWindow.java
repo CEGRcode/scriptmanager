@@ -42,6 +42,7 @@ import scriptmanager.objects.ToolDescriptions;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.ExpandBED;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -148,7 +149,10 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		setTitle("Expand BED File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 345);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -196,9 +200,9 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		contentPane.add(btnRemoveBED);
 
 		btnExecute = new JButton("Expand");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnExecute, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnExecute, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnExecute, -175, SpringLayout.EAST, contentPane);
+		// Centered at its preferred width (never squeezed); vertical position is
+		// chained below "Current Output" further down, so it cannot overlap it.
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnExecute, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnExecute);
 
 		progressBar = new JProgressBar();
@@ -211,12 +215,17 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 
 		lblCurrent = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
-		lblCurrent.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		// Derive from the look-and-feel font instead of "Lucida Grande", which only
+		// exists on macOS and silently falls back to a different font elsewhere.
+		lblCurrent.setFont(lblCurrent.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrent);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrent);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
+		// Bound the path label so long output paths are elided ("...") instead of
+		// running under other components; full path is shown as a tooltip.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -10, SpringLayout.EAST, contentPane);
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
 
@@ -227,6 +236,7 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -269,7 +279,14 @@ public class ExpandBEDWindow extends JFrame implements ActionListener, PropertyC
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 40, SpringLayout.SOUTH, lblSizeOfExpansion);
 		contentPane.add(lblSizeOfExpansion);
 
+		// Bottom row chained below the rest of the form instead of pinned to the window
+		// bottom; the window is sized from its content at the end.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnExecute, 10, SpringLayout.SOUTH, lblCurrent);
+
 		btnExecute.addActionListener(this);
+
+		// Size the window from its content; the file list takes any extra height when enlarged.
+		WindowLayout.pack(this, sl_contentPane, contentPane, 440, btnExecute, scrollPane);
 	}
 
 	/**

@@ -29,6 +29,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
@@ -40,6 +41,7 @@ import scriptmanager.util.FileSelection;
 
 import scriptmanager.cli.File_Utilities.ConvertBEDChrNamesCLI;
 import scriptmanager.scripts.File_Utilities.ConvertChrNames;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -144,7 +146,10 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		setTitle("Convert Yeast Reference Genome for BED Files");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 360);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -192,9 +197,8 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		contentPane.add(btnRemoveBED);
 
 		btnConvert = new JButton("Convert");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnConvert, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConvert, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnConvert, -175, SpringLayout.EAST, contentPane);
+		// Centered at its preferred width; vertically chained below "Current Output".
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnConvert, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnConvert);
 
 		progressBar = new JProgressBar();
@@ -231,23 +235,21 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 		contentPane.add(chckbxGzipOutput);
 
 		btnOutput = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, -85, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 150, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutput, -150, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 10, SpringLayout.SOUTH, chckbxChrmt);
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnOutput, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnOutput);
 
 		lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 6, SpringLayout.SOUTH, btnOutput);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrentOutput, 0, SpringLayout.NORTH, btnConvert);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 0, SpringLayout.WEST, scrollPane);
-		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutput.setFont(lblCurrentOutput.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrentOutput);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.NORTH, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutput);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, 0, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 0, SpringLayout.EAST, lblCurrentOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrentOutput);
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrentOutput);
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
 
@@ -256,11 +258,20 @@ public class ConvertBEDChrNamesWindow extends JFrame implements ActionListener, 
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
 
+		// Bottom row chained below the form.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnConvert, 10, SpringLayout.SOUTH, lblCurrentOutput);
 		btnConvert.addActionListener(this);
+
+		// Size the window from its content: 440 px wide or whatever the chrM + GZip row
+		// needs, whichever is larger; the file list takes any extra height when enlarged.
+		Spring width = Spring.max(Spring.constant(440), Spring.sum(sl_contentPane.getConstraint(SpringLayout.EAST, chckbxChrmt),
+				Spring.sum(Spring.constant(25), sl_contentPane.getConstraints(chckbxGzipOutput).getWidth())));
+		WindowLayout.pack(this, sl_contentPane, contentPane, width, btnConvert, scrollPane);
 	}
 
 	/**

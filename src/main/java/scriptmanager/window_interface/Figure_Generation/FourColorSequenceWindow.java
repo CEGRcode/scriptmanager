@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,7 @@ import javax.swing.border.EmptyBorder;
 
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
+import scriptmanager.util.WindowLayout;
 import scriptmanager.cli.Figure_Generation.FourColorSequenceCLI;
 import scriptmanager.objects.LogItem;
 import scriptmanager.objects.ToolDescriptions;
@@ -161,7 +163,10 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		setTitle("Four Color Sequence Plot Generator");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 376);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -209,10 +214,10 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 		contentPane.add(btnRemoveBam);
 
 		btnGen = new JButton("Generate");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, scrollPane, -148, SpringLayout.NORTH, btnGen);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnGen, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnGen, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnGen, -175, SpringLayout.EAST, contentPane);
+		// File list gets a fixed preferred height (it was derived from the bottom-pinned Generate button).
+		scrollPane.setPreferredSize(new Dimension(420, 135));
+		// Centered at its preferred width; vertically chained below the output path at the end.
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnGen, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnGen);
 
 		progressBar = new JProgressBar();
@@ -225,22 +230,21 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 
 		lblCurrentOutput = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrentOutput, 5, SpringLayout.WEST, contentPane);
-		lblCurrentOutput.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrentOutput.setFont(lblCurrentOutput.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrentOutput);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -20, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrentOutput, -6, SpringLayout.NORTH, lblDefaultToLocal);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblDefaultToLocal, -6, SpringLayout.NORTH, btnGen);
-		lblDefaultToLocal.setFont(new Font("Dialog", Font.PLAIN, 12));
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 6, SpringLayout.SOUTH, lblCurrentOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnGen, 6, SpringLayout.SOUTH, lblDefaultToLocal);
+		lblDefaultToLocal.setFont(lblDefaultToLocal.getFont().deriveFont(Font.PLAIN));
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutputDirectory = new JButton("Output Directory");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutputDirectory, 145, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutputDirectory, -70, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnOutputDirectory, -145, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnOutputDirectory, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrentOutput, 6, SpringLayout.SOUTH, btnOutputDirectory);
 		contentPane.add(btnOutputDirectory);
 
 		btnAColor = new JButton("A Color");
@@ -336,11 +340,17 @@ public class FourColorSequenceWindow extends JFrame implements ActionListener, P
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
 
 		btnGen.addActionListener(this);
+
+		// Output Directory placed below the pixel-size row (previously 70 px above the
+		// window bottom), then size from content.
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutputDirectory, 12, SpringLayout.SOUTH, txtWidth);
+		WindowLayout.pack(this, sl_contentPane, contentPane, 440, btnGen, scrollPane, btnNColor, txtWidth);
 	}
 
 /**

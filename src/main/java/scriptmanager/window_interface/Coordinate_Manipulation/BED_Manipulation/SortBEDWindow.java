@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
@@ -40,6 +41,7 @@ import scriptmanager.util.CDTUtilities;
 import scriptmanager.util.ExtensionFileFilter;
 import scriptmanager.util.FileSelection;
 import scriptmanager.scripts.Coordinate_Manipulation.BED_Manipulation.SortBED;
+import scriptmanager.util.WindowLayout;
 
 /**
  * GUI for collecting inputs to be processed by
@@ -165,7 +167,10 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		setTitle("Sort BED File");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(125, 125, 450, 345);
+		// Size the window from its content (see pack() at end of constructor) rather
+		// than fixing the outer frame size, which includes OS-specific title bars and
+		// borders and so leaves less room on Windows than on macOS.
+		setLocation(125, 125);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -173,9 +178,8 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.setLayout(sl_contentPane);
 
 		btnExecute = new JButton("Sort");
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnExecute, 167, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnExecute, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnExecute, -175, SpringLayout.EAST, contentPane);
+		// Centered at its preferred width; vertically chained below "Current Output" at the end.
+		sl_contentPane.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnExecute, 0, SpringLayout.HORIZONTAL_CENTER, contentPane);
 		contentPane.add(btnExecute);
 
 		progressBar = new JProgressBar();
@@ -188,24 +192,25 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 
 		lblCurrent = new JLabel("Current Output:");
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblCurrent, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblCurrent, -33, SpringLayout.SOUTH, contentPane);
-		lblCurrent.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		lblCurrent.setFont(lblCurrent.getFont().deriveFont(Font.BOLD));
 		contentPane.add(lblCurrent);
 
 		lblDefaultToLocal = new JLabel("Default to Local Directory");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDefaultToLocal, 1, SpringLayout.NORTH, lblCurrent);
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblDefaultToLocal, 6, SpringLayout.EAST, lblCurrent);
+		// Bounded so long output paths are elided rather than running under other components.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblDefaultToLocal, -10, SpringLayout.EAST, contentPane);
 		lblDefaultToLocal.setBackground(Color.WHITE);
 		contentPane.add(lblDefaultToLocal);
 
 		btnOutput = new JButton("Output Directory");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnOutput, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnOutput, -6, SpringLayout.NORTH, lblDefaultToLocal);
 		btnOutput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OUT_DIR = FileSelection.getOutputDir(fc);
 				if (OUT_DIR != null) {
 					lblDefaultToLocal.setText(OUT_DIR.getAbsolutePath());
+					lblDefaultToLocal.setToolTipText(OUT_DIR.getAbsolutePath());
 				}
 			}
 		});
@@ -233,7 +238,6 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		});
 
 		rdbtnSortbyCenter = new JRadioButton("Sort by Center");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSortbyCenter, 129, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, rdbtnSortbyCenter, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(rdbtnSortbyCenter);
 
@@ -310,12 +314,18 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 		contentPane.add(lblIndexStart);
 
 		lblIndexStop = new JLabel("Index Stop:");
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblIndexStop, 0, SpringLayout.WEST, progressBar);
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblIndexStop, 15, SpringLayout.EAST, txtStart);
 		sl_contentPane.putConstraint(SpringLayout.EAST, txtStop, 59, SpringLayout.EAST, lblIndexStop);
 		lblIndexStop.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.WEST, txtStop, 6, SpringLayout.EAST, lblIndexStop);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblIndexStop, 4, SpringLayout.NORTH, rdbtnSortbyIndex);
 		contentPane.add(lblIndexStop);
+
+		// Output block and bottom row chained below the form (previously stacked upward
+		// from the window bottom).
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnOutput, 10, SpringLayout.SOUTH, txtOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblCurrent, 8, SpringLayout.SOUTH, btnOutput);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnExecute, 10, SpringLayout.SOUTH, lblCurrent);
 		btnExecute.addActionListener(this);
 
 		rdbtnSortbyCenter.addItemListener(new ItemListener() {
@@ -407,6 +417,25 @@ public class SortBEDWindow extends JFrame implements ActionListener, PropertyCha
 			}
 		});
 		contentPane.add(btnLoadCdtFile);
+
+		// Option labels start 150 px in, or just past the wider radio button if text is larger.
+		Spring optionColumn = Spring.max(Spring.constant(150), Spring.sum(Spring.max(
+				sl_contentPane.getConstraint(SpringLayout.EAST, rdbtnSortbyCenter),
+				sl_contentPane.getConstraint(SpringLayout.EAST, rdbtnSortbyIndex)), Spring.constant(10)));
+		sl_contentPane.getConstraints(lblSizeOfExpansion).setX(optionColumn);
+		sl_contentPane.getConstraints(lblIndexStart).setX(optionColumn);
+
+		// Sort options placed below the file rows (previously a fixed 129 px from the top).
+		sl_contentPane.putConstraint(SpringLayout.NORTH, rdbtnSortbyCenter, 15, SpringLayout.SOUTH, lblCdtFileStatistics);
+
+		// Bound file-name/status labels so long names are elided instead of overflowing.
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblBEDFile, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblCDTFile, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblColumnCount, -10, SpringLayout.EAST, contentPane);
+
+		// Size the window from its content: 440 px wide or whatever the Index Start/Stop
+		// row needs; the Sort button stays at the bottom when enlarged.
+		WindowLayout.pack(this, sl_contentPane, contentPane, 440, btnExecute, null, txtStop);
 	}
 
 	/**
