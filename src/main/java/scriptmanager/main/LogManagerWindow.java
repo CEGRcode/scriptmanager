@@ -377,13 +377,26 @@ public class LogManagerWindow extends JFrame {
 		short verbosity = getLogVerbosity();
 
 		// Write Header (V=1+)
-		OUT.println("# VERSION\t" + ToolDescriptions.VERSION + "\tVerbosity Level:" + verbosity);
-		OUT.println("SCRIPTMANAGER=/path/to/ScriptManager.jar");
-		OUT.println("PICARD=/path/to/picard.jar");
+		String divider = "# " + String.join("", java.util.Collections.nCopies(60, "="));
+		String row = "#   %-15s: %s%n";
+		OUT.println(divider);
+		OUT.println("# ScriptManager Log");
+		OUT.println(divider);
+		OUT.println("# Versions");
+		OUT.printf(row, "ScriptManager", ToolDescriptions.VERSION);
+		OUT.printf(row, "Picard", getPicardVersion());
+		OUT.println("#");
+		OUT.println("# System");
+		OUT.printf(row, "OS", System.getProperty("os.name") + " " + System.getProperty("os.version") + " (" + System.getProperty("os.arch") + ")");
+		OUT.printf(row, "CPU", Runtime.getRuntime().availableProcessors() + " cores");
+		OUT.printf(row, "RAM", getTotalRAM() + " (JVM max heap: " + formatBytes(Runtime.getRuntime().maxMemory()) + ")");
+		OUT.println("#");
+		OUT.println("# Log");
+		OUT.printf(row, "Verbosity", verbosity);
+		OUT.printf(row, "Start time", logStart.toString());
+		OUT.println(divider);
 		OUT.println();
-
-		// Write LogInfo start time (V=1+)
-		OUT.println("# Log start time: " + logStart.toString());
+		OUT.println("SCRIPTMANAGER=" + getJarPath()); // path to this jar
 
 		// Add later: Sort LogItems for writing--not needed unless fireproperty adding out of order
 
@@ -421,5 +434,55 @@ public class LogManagerWindow extends JFrame {
 		OUT.println("# Written at " + new Timestamp(new Date().getTime()).toString());
 
 		OUT.close();
+	}
+
+	/**
+	 * Get the absolute path of the ScriptManager jar (or class directory when
+	 * run outside a jar) that this class was loaded from.
+	 *
+	 * @return path to the running ScriptManager jar
+	 */
+	private static String getJarPath() {
+		try {
+			return new File(LogManagerWindow.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
+		} catch (Exception e) {
+			return "/path/to/ScriptManager.jar";
+		}
+	}
+
+	/**
+	 * Get the Picard version bundled with this build. Reads the Picard manifest
+	 * when available (e.g. lib/picard.jar on the classpath) and otherwise falls
+	 * back to the version bundled into the ScriptManager fat jar.
+	 *
+	 * @return Picard version string
+	 */
+	private static String getPicardVersion() {
+		try {
+			Package pkg = Class.forName("picard.cmdline.PicardCommandLine").getPackage();
+			if (pkg != null && "Picard".equals(pkg.getImplementationTitle()) && pkg.getImplementationVersion() != null) {
+				return pkg.getImplementationVersion();
+			}
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException for picard.cmdline.PicardCommandLine");
+		}
+		return "Unknown";
+	}
+
+	/**
+	 * Get the total physical memory of the local machine.
+	 *
+	 * @return formatted total RAM, or "unknown" if not supported by the JVM
+	 */
+	private static String getTotalRAM() {
+		java.lang.management.OperatingSystemMXBean os = java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+		if (os instanceof com.sun.management.OperatingSystemMXBean) {
+			return formatBytes(((com.sun.management.OperatingSystemMXBean) os).getTotalPhysicalMemorySize());
+		}
+		return "unknown";
+	}
+
+	private static String formatBytes(long bytes) {
+		return String.format("%.2f GB", bytes / (1024.0 * 1024.0 * 1024.0));
 	}
 }

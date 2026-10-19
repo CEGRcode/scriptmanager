@@ -55,6 +55,14 @@ shadowJar {
     archiveClassifier.set('')
     archiveVersion.set(version)
 
+    // Keep Picard's version info, which is lost when its manifest is merged
+    def picardAttrs = new java.util.jar.JarFile(file('lib/picard.jar')).manifest.mainAttributes
+    manifest {
+        attributes(['Implementation-Title'  : picardAttrs.getValue('Implementation-Title'),
+                    'Implementation-Version': picardAttrs.getValue('Implementation-Version')],
+                   'picard/cmdline/')
+    }
+
     // Reduce fat jar to only include dependencies used
     //minimize()
 }
